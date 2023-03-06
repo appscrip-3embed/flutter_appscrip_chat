@@ -1,6 +1,5 @@
+import 'package:chat_component/chat_component_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-
-import 'chat_component_method_channel.dart';
 
 abstract class ChatComponentPlatform extends PlatformInterface {
   /// Constructs a ChatComponentPlatform.

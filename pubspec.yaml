@@ -8,16 +8,16 @@ environment:
   flutter: ">=2.5.0"
 
 dependencies:
+  dio: ^5.0.1
   flutter:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
-  plugin_platform_interface: ^2.0.2
-  dio: ^5.0.1
   get: ^4.6.5
   http: ^0.13.5
   objectbox: ^1.7.2
   objectbox_flutter_libs: any
+  plugin_platform_interface: ^2.0.2
 
 dev_dependencies:
   build_runner: ^2.3.3
@@ -28,7 +28,6 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter packages.
 flutter:
   # This section identifies this Flutter project as a plugin project.
@@ -51,7 +50,6 @@ flutter:
       web:
         pluginClass: ChatComponentWeb
         fileName: chat_component_web.dart
-
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
@@ -62,7 +60,6 @@ flutter:
   #
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
-
   # To add custom fonts to your plugin package, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

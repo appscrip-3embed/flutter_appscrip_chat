@@ -1,7 +1,6 @@
+import 'package:chat_component/chat_component_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-
-import 'chat_component_platform_interface.dart';
 
 /// An implementation of [ChatComponentPlatform] that uses method channels.
 class MethodChannelChatComponent extends ChatComponentPlatform {
@@ -11,7 +10,8 @@ class MethodChannelChatComponent extends ChatComponentPlatform {
 
   @override
   Future<String?> getPlatformVersion() async {
-    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
+    final version =
+        await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
 }
