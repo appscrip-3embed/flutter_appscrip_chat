@@ -2,6 +2,8 @@ library chat_component;
 
 import 'package:chat_component/chat_component_platform_interface.dart';
 
+export 'src/app/app.dart';
+export 'src/controllers/controllers.dart';
 export 'src/data/data.dart';
 export 'src/models/models.dart';
 export 'src/res/res.dart';

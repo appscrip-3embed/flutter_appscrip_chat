@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:get/get.dart';
 
 abstract class ChatTranslations extends Translations {
@@ -6,11 +8,15 @@ abstract class ChatTranslations extends Translations {
     if (locales.length != keys.entries.length) {
       var mapKeys = keys.keys;
       if (locales.length > mapKeys.length) {
-        var translation = locales.where((l) => !mapKeys.contains(l)).join(', ');
+        var translation = locales
+            .map((e) => e.languageCode)
+            .where((l) => !mapKeys.contains(l))
+            .join(', ');
         missing = 'Missing translation(s) are - $translation';
       } else {
-        var missingLocales =
-            mapKeys.where((l) => !locales.contains(l)).join(', ');
+        var missingLocales = mapKeys
+            .where((l) => !locales.map((e) => e.languageCode).contains(l))
+            .join(', ');
         missing = 'Extra translation(s) are - $missingLocales';
       }
     }
@@ -20,7 +26,7 @@ abstract class ChatTranslations extends Translations {
     );
   }
 
-  List<String> get locales;
+  List<Locale> get locales;
 
   @override
   Map<String, Map<String, String>> get keys;

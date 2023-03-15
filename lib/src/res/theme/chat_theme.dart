@@ -6,6 +6,7 @@ class ChatThemeData with Diagnosticable {
   const ChatThemeData({
     this.chatListTheme,
     this.primaryColor,
+    this.backgroundColor,
     this.floatingActionButtonTheme,
     this.iconTheme,
   });
@@ -15,6 +16,7 @@ class ChatThemeData with Diagnosticable {
   factory ChatThemeData.light() => const ChatThemeData(
         chatListTheme: ChatListThemeData.light(),
         primaryColor: ChatColors.primaryColorLight,
+        backgroundColor: ChatColors.backgroundColorLight,
         floatingActionButtonTheme: FloatingActionButtonThemeData(
           backgroundColor: ChatColors.primaryColorLight,
           foregroundColor: ChatColors.whiteColor,
@@ -27,6 +29,7 @@ class ChatThemeData with Diagnosticable {
   factory ChatThemeData.dark() => const ChatThemeData(
         chatListTheme: ChatListThemeData.dark(),
         primaryColor: ChatColors.primaryColorDark,
+        backgroundColor: ChatColors.backgroundColorDark,
         floatingActionButtonTheme: FloatingActionButtonThemeData(
           backgroundColor: ChatColors.primaryColorDark,
           foregroundColor: ChatColors.whiteColor,
@@ -37,6 +40,8 @@ class ChatThemeData with Diagnosticable {
       );
 
   final Color? primaryColor;
+
+  final Color? backgroundColor;
 
   final ChatListThemeData? chatListTheme;
 

@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
-import 'package:chat_component/src/models/models.dart';
-import 'package:chat_component/src/res/strings.dart';
-import 'package:chat_component/src/utilities/utilities.dart';
+import 'package:chat_component/chat_component.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,6 +13,9 @@ class ChatApiWrapper {
     bool showLoader = false,
     required Map<String, String> headers,
   }) async {
+    if (kDebugMode) {
+      ChatLog('GET $api');
+    }
     var uri = Uri.parse(api);
     if (showLoader) {
       ChatUtility.showLoader();
@@ -48,6 +48,9 @@ class ChatApiWrapper {
     required Map<String, String> headers,
     bool showLoader = false,
   }) async {
+    if (kDebugMode) {
+      ChatLog('POST $api $payload');
+    }
     var uri = Uri.parse(api);
     if (showLoader) {
       ChatUtility.showLoader();
@@ -84,6 +87,9 @@ class ChatApiWrapper {
     required Map<String, String> headers,
     bool showLoader = false,
   }) async {
+    if (kDebugMode) {
+      ChatLog('PUT $api $payload');
+    }
     var uri = Uri.parse(api);
     if (showLoader) {
       ChatUtility.showLoader();
@@ -120,6 +126,9 @@ class ChatApiWrapper {
     required Map<String, String> headers,
     bool showLoader = false,
   }) async {
+    if (kDebugMode) {
+      ChatLog('PATCH $api $payload');
+    }
     var uri = Uri.parse(api);
     if (showLoader) {
       ChatUtility.showLoader();
@@ -156,6 +165,9 @@ class ChatApiWrapper {
     required Map<String, String> headers,
     bool showLoader = false,
   }) async {
+    if (kDebugMode) {
+      ChatLog('DELETE $api $payload');
+    }
     var uri = Uri.parse(api);
     if (showLoader) {
       ChatUtility.showLoader();
@@ -188,7 +200,8 @@ class ChatApiWrapper {
 
   static ResponseModel _processResponse(http.Response response) {
     if (kDebugMode) {
-      log('[${ChatStrings.name}] - ${response.request?.method} ${response.request?.url}\n${response.statusCode} ${response.body}');
+      ChatLog(
+          '${response.request?.method} ${response.statusCode} ${response.request?.url}\n${response.body}');
     }
     switch (response.statusCode) {
       case 200:

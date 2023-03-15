@@ -2,6 +2,7 @@
 class ChatCommunicationConfig {
   const ChatCommunicationConfig({
     required this.accountId,
+    required this.userToken,
     required this.appSecret,
     required this.userSecret,
     required this.keySetId,
@@ -14,6 +15,7 @@ class ChatCommunicationConfig {
   });
 
   final String accountId;
+  final String userToken;
   final String appSecret;
   final String userSecret;
   final String keySetId;

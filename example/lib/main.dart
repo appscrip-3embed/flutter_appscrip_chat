@@ -1,11 +1,25 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:chat_component/chat_component.dart';
+import 'package:chat_component_example/data/database/database.dart';
+import 'package:chat_component_example/res/res.dart';
+import 'package:chat_component_example/views/login_view.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
-void main() {
+late ObjectBox objectBox;
+
+void main() async {
+  await initialize();
   runApp(const MyApp());
+}
+
+Future<void> initialize() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  objectBox = await ObjectBox.create();
 }
 
 class MyApp extends StatefulWidget {
@@ -49,14 +63,25 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
-        ),
+    return ScreenUtilInit(
+      builder: (_, child) => child!,
+      child: GetMaterialApp(
+        key: const Key('ChatApp'),
+        locale: const Locale('en', 'US'),
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
+        supportedLocales: const [
+          Locale('en', 'US'),
+        ],
+        theme: ThemeData.light(useMaterial3: true)
+            .copyWith(primaryColor: AppColors.primaryColorLight),
+        darkTheme: ThemeData.light(useMaterial3: true)
+            .copyWith(primaryColor: AppColors.primaryColorDark),
+        // darkTheme: ThemeData.dark(useMaterial3: true)
+        //     .copyWith(primaryColor: AppColors.primaryColorDark),
+        debugShowCheckedModeBanner: false,
+        translations: AppTranslations(),
+        initialRoute: LoginView.route,
+        getPages: AppPages.pages,
       ),
     );
   }
