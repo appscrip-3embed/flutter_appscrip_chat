@@ -13,6 +13,7 @@ class ChatConversationsViewModel extends GetxController {
       var response = await ChatApiWrapper.get(
         '${ChatAPI.getChatConversations}?skip=$chatSkip&limit=$chatLimit',
         headers: ChatUtility.tokenCommonHeader(),
+        showLoader: true,
       );
       if (response.hasError) {
         return null;

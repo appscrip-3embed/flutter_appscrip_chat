@@ -6,32 +6,35 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ChatUtility {
+  const ChatUtility._();
+
   static bool isLoaderOpen = Get.isDialogOpen ?? false;
 
   /// Show loader
   static void showLoader() async {
     if (!isLoaderOpen) {
       await Get.dialog<void>(
-        (ChatConstants.loadingDialog) ??
-            Center(
-              child: SizedBox(
-                height: 60,
-                width: 60,
-                child: Card(
-                  color: ChatTheme.of(Get.context!).backgroundColor,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: CircularProgressIndicator(
-                      color: ChatTheme.of(Get.context!).primaryColor,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+        (ChatConstants.loadingDialog) ?? loadingDialog(),
         barrierDismissible: false,
       );
     }
   }
+
+  static Widget loadingDialog() => Center(
+        child: SizedBox(
+          height: 60,
+          width: 60,
+          child: Card(
+            color: ChatTheme.of(Get.context!).backgroundColor,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CircularProgressIndicator(
+                color: ChatTheme.of(Get.context!).primaryColor,
+              ),
+            ),
+          ),
+        ),
+      );
 
   static void closeLoader() {
     if (isLoaderOpen) {

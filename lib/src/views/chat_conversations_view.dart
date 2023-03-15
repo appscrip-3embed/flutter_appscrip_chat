@@ -36,6 +36,9 @@ class _ChatConversationsState extends State<ChatConversations> {
   @override
   Widget build(BuildContext context) => GetX<ChatConversationsController>(
         builder: (controller) {
+          if (controller.isConversationsLoading) {
+            return ChatUtility.loadingDialog();
+          }
           if (controller.conversations.isEmpty) {
             return const Center(
               child: Text('No Conversations'),

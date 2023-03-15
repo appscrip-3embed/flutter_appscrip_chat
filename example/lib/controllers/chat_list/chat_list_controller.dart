@@ -11,7 +11,7 @@ class ChatListController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    var userDetails = objectBox.userDetailsBox.getAll().first;
+    var userDetails = objectBox.userDetailsBox.getAll().last;
     userToken = userDetails.userToken!;
   }
 }

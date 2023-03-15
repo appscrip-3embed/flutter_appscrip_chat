@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:chat_component_example/utilities/utilities.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
@@ -18,7 +19,7 @@ class ApiWrapper {
     }
     var uri = Uri.parse(api);
     if (showLoader) {
-      ChatUtility.showLoader();
+      Utility.showLoader();
     }
     try {
       final response = await http
@@ -26,13 +27,13 @@ class ApiWrapper {
           .timeout(const Duration(seconds: 60));
 
       if (showLoader) {
-        ChatUtility.closeLoader();
+        Utility.closeLoader();
       }
 
       return _processResponse(response);
     } on TimeoutException catch (_) {
       if (showLoader) {
-        ChatUtility.closeLoader();
+        Utility.closeLoader();
       }
       return const ResponseModel(
         data: '{"message":"Request timed out"}',
@@ -53,7 +54,7 @@ class ApiWrapper {
     }
     var uri = Uri.parse(api);
     if (showLoader) {
-      ChatUtility.showLoader();
+      Utility.showLoader();
     }
     try {
       final response = await http
@@ -65,13 +66,13 @@ class ApiWrapper {
           .timeout(const Duration(seconds: 60));
 
       if (showLoader) {
-        ChatUtility.closeLoader();
+        Utility.closeLoader();
       }
 
       return _processResponse(response);
     } on TimeoutException catch (_) {
       if (showLoader) {
-        ChatUtility.closeLoader();
+        Utility.closeLoader();
       }
       return const ResponseModel(
         data: '{"message":"Request timed out"}',
@@ -92,7 +93,7 @@ class ApiWrapper {
     }
     var uri = Uri.parse(api);
     if (showLoader) {
-      ChatUtility.showLoader();
+      Utility.showLoader();
     }
     try {
       final response = await http
@@ -104,13 +105,13 @@ class ApiWrapper {
           .timeout(const Duration(seconds: 60));
 
       if (showLoader) {
-        ChatUtility.closeLoader();
+        Utility.closeLoader();
       }
 
       return _processResponse(response);
     } on TimeoutException catch (_) {
       if (showLoader) {
-        ChatUtility.closeLoader();
+        Utility.closeLoader();
       }
       return const ResponseModel(
         data: '{"message":"Request timed out"}',
@@ -131,7 +132,7 @@ class ApiWrapper {
     }
     var uri = Uri.parse(api);
     if (showLoader) {
-      ChatUtility.showLoader();
+      Utility.showLoader();
     }
     try {
       final response = await http
@@ -143,13 +144,13 @@ class ApiWrapper {
           .timeout(const Duration(seconds: 60));
 
       if (showLoader) {
-        ChatUtility.closeLoader();
+        Utility.closeLoader();
       }
 
       return _processResponse(response);
     } on TimeoutException catch (_) {
       if (showLoader) {
-        ChatUtility.closeLoader();
+        Utility.closeLoader();
       }
       return const ResponseModel(
         data: '{"message":"Request timed out"}',
@@ -170,7 +171,7 @@ class ApiWrapper {
     }
     var uri = Uri.parse(api);
     if (showLoader) {
-      ChatUtility.showLoader();
+      Utility.showLoader();
     }
     try {
       final response = await http
@@ -182,13 +183,13 @@ class ApiWrapper {
           .timeout(const Duration(seconds: 60));
 
       if (showLoader) {
-        ChatUtility.closeLoader();
+        Utility.closeLoader();
       }
 
       return _processResponse(response);
     } on TimeoutException catch (_) {
       if (showLoader) {
-        ChatUtility.closeLoader();
+        Utility.closeLoader();
       }
       return const ResponseModel(
         data: '{"message":"Request timed out"}',

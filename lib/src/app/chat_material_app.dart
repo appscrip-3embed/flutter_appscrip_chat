@@ -1,5 +1,5 @@
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/app/chat_constant.dart';
-import 'package:appscrip_chat_component/src/res/res.dart';
 import 'package:flutter/material.dart';
 
 class ChatMaterialApp extends StatelessWidget {
@@ -11,6 +11,7 @@ class ChatMaterialApp extends StatelessWidget {
     this.chatDarkTheme,
     this.loadingDialog,
   }) {
+    ChatConstants.loadingDialog = loadingDialog;
     ChatConstants.communicationConfig = communicationConfig;
     ChatConstants.chatTheme = chatTheme ?? ChatThemeData.fallback();
     ChatConstants.chatDarkTheme =
