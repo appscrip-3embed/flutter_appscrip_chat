@@ -5,13 +5,34 @@ import 'package:get/get.dart';
 class ChatConversations extends StatefulWidget {
   const ChatConversations({
     super.key,
-    this.childBuiler,
+    this.childBuilder,
     this.itemBuilder,
+    this.profileImageBuilder,
     this.height,
   });
 
-  final Widget? Function(BuildContext, int, ChatConversationModel)? childBuiler;
+  /// `itemBuilder` will handle how child items are rendered on the screen.
+  ///
+  /// You can pass `childBuilder` callback to change the UI for each child item.
+  ///
+  /// It takes 3 parameters
+  /// ```dart
+  /// final BuildContext context;
+  /// final int index;
+  /// final ChatConversationModel conversation;
+  /// ```
+  /// `conversation` of type [ChatConversationModel] will provide you with data of single chat item
+  ///
+  /// You can playaround with index parameter for your logics.
+  final Widget? Function(BuildContext, int, ChatConversationModel)?
+      childBuilder;
+
+  /// The `itemBuilder` callback can be provided if you want to change how the chat items are rendered on the screen.
+  ///
+  /// Provide it like you are passing itemBuilder for `ListView` or any constructor of [ListView]
   final Widget? Function(BuildContext, int)? itemBuilder;
+
+  final Widget? Function(BuildContext, int, String)? profileImageBuilder;
 
   /// Provide this height parameter to set the maximum height for conversation list
   ///
@@ -49,8 +70,8 @@ class _ChatConversationsState extends State<ChatConversations> {
               itemCount: controller.conversations.length,
               itemBuilder: widget.itemBuilder ??
                   (_, index) {
-                    if (widget.childBuiler != null) {
-                      return widget.childBuiler!(
+                    if (widget.childBuilder != null) {
+                      return widget.childBuilder!(
                         _,
                         index,
                         controller.conversations[index],
@@ -61,10 +82,17 @@ class _ChatConversationsState extends State<ChatConversations> {
                       height: 80,
                       width: MediaQuery.of(context).size.width,
                       child: ListTile(
-                        leading: ChatImage(
-                          conversation.opponentDetails.userProfileImageUrl,
-                          name: conversation.chatName,
-                        ),
+                        leading: widget.profileImageBuilder != null
+                            ? widget.profileImageBuilder!(
+                                _,
+                                index,
+                                conversation
+                                    .opponentDetails.userProfileImageUrl)
+                            : ChatImage(
+                                conversation
+                                    .opponentDetails.userProfileImageUrl,
+                                name: conversation.chatName,
+                              ),
                         title: Text(conversation.chatName),
                         subtitle: Text(conversation.lastMessageDetails.body),
                       ),
