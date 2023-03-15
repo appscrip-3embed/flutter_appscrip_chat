@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:chat_component/src/data/data.dart';
-import 'package:chat_component/src/models/models.dart';
-import 'package:chat_component/src/utilities/utilities.dart';
+import 'package:appscrip_chat_component/src/data/data.dart';
+import 'package:appscrip_chat_component/src/models/models.dart';
+import 'package:appscrip_chat_component/src/utilities/utilities.dart';
 import 'package:get/get.dart';
 
 class ChatConversationsViewModel extends GetxController {

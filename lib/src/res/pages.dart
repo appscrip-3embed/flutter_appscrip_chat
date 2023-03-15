@@ -1,5 +1,5 @@
-import 'package:chat_component/src/controllers/controllers.dart';
-import 'package:chat_component/src/views/chat_conversations_view.dart';
+import 'package:appscrip_chat_component/src/controllers/controllers.dart';
+import 'package:appscrip_chat_component/src/views/chat_conversations_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

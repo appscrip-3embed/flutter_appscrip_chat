@@ -1,6 +1,6 @@
 # chat_component_example
 
-Demonstrates how to use the chat_component plugin.
+Demonstrates how to use the appscrip_chat_component plugin.
 
 ## Getting Started
 

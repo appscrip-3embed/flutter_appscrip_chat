@@ -1,4 +1,4 @@
-import 'package:chat_component/chat_component_platform_interface.dart';
+import 'package:appscrip_chat_component/appscrip_chat_component_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 class MethodChannelChatComponent extends ChatComponentPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  final methodChannel = const MethodChannel('chat_component');
+  final methodChannel = const MethodChannel('appscrip_chat_component');
 
   @override
   Future<String?> getPlatformVersion() async {

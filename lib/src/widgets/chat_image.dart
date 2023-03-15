@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chat_component/src/res/res.dart';
-import 'package:chat_component/src/utilities/utilities.dart';
+import 'package:appscrip_chat_component/src/res/res.dart';
+import 'package:appscrip_chat_component/src/utilities/utilities.dart';
 import 'package:flutter/material.dart';
 
 class ChatImage extends StatelessWidget {

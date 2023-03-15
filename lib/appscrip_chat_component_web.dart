@@ -4,7 +4,7 @@
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html show window;
 
-import 'package:chat_component/chat_component_platform_interface.dart';
+import 'package:appscrip_chat_component/appscrip_chat_component_platform_interface.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 /// A web implementation of the ChatComponentPlatform of the ChatComponent plugin.

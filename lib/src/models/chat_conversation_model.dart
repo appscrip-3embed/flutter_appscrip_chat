@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:chat_component/src/models/models.dart';
+import 'package:appscrip_chat_component/src/models/models.dart';
 import 'package:flutter/foundation.dart';
 
 class ChatConversationModel {

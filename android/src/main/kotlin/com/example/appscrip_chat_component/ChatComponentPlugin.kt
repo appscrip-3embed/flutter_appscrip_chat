@@ -1,4 +1,4 @@
-package com.example.chat_component
+package com.example.appscrip_chat_component
 
 import androidx.annotation.NonNull
 
@@ -17,7 +17,7 @@ class ChatComponentPlugin: FlutterPlugin, MethodCallHandler {
   private lateinit var channel : MethodChannel
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "chat_component")
+    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "appscrip_chat_component")
     channel.setMethodCallHandler(this)
   }
 

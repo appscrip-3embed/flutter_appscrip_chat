@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:chat_component/src/utilities/utilities.dart';
+import 'package:appscrip_chat_component/src/utilities/utilities.dart';
 
 class LastMessageDetails {
   factory LastMessageDetails.fromJson(String source) =>

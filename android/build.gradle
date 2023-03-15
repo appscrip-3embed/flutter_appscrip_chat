@@ -1,4 +1,4 @@
-group 'com.example.chat_component'
+group 'com.example.appscrip_chat_component'
 version '1.0-SNAPSHOT'
 
 buildscript {

@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:chat_component/chat_component.dart';
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/res/strings.dart';
 
 class AppTranslations extends ChatTranslations {

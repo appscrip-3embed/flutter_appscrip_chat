@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:chat_component/src/res/strings.dart';
+import 'package:appscrip_chat_component/src/res/strings.dart';
 
 class ChatLog {
   ///This Constructor of `ChatLog` take 2 parameters

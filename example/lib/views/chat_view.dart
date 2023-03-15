@@ -1,4 +1,4 @@
-import 'package:chat_component/chat_component.dart';
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/controllers/controllers.dart';
 import 'package:chat_component_example/res/res.dart';
 import 'package:flutter/material.dart';

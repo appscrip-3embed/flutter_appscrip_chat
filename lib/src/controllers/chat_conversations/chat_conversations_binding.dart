@@ -1,4 +1,4 @@
-import 'package:chat_component/chat_component.dart';
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:get/get.dart';
 
 class ChatConversationsBinding extends Bindings {
