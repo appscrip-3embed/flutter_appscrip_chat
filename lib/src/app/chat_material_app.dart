@@ -38,11 +38,4 @@ class ChatMaterialApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => child;
-  // @override
-  // Widget build(BuildContext context) => GetMaterialApp(
-  //     key: const Key('Chat Component'),
-  //     debugShowCheckedModeBanner: false,
-  //     initialRoute: '/',
-  //     getPages: ChatPages.pages(child),
-  //   );
 }

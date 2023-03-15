@@ -10,8 +10,6 @@ class ChatConversations extends StatefulWidget {
     this.height,
   });
 
-  static const String route = '/chatConversations';
-
   final Widget? Function(BuildContext, int, ChatConversationModel)? childBuiler;
   final Widget? Function(BuildContext, int)? itemBuilder;
 

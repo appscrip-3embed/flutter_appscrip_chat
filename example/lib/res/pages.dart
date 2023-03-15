@@ -1,4 +1,3 @@
-import 'package:chat_component_example/controllers/chat_list/chat_list.dart';
 import 'package:chat_component_example/controllers/controllers.dart';
 import 'package:chat_component_example/views/chat_view.dart';
 import 'package:chat_component_example/views/login_view.dart';
