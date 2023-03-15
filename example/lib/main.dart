@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/data/database/database.dart';
 import 'package:chat_component_example/res/res.dart';
+import 'package:chat_component_example/views/chat_view.dart';
 import 'package:chat_component_example/views/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +21,7 @@ void main() async {
 Future<void> initialize() async {
   WidgetsFlutterBinding.ensureInitialized();
   objectBox = await ObjectBox.create();
+  await AppscripChatComponent.initialize();
 }
 
 class MyApp extends StatefulWidget {
@@ -31,7 +33,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
-  final _chatComponentPlugin = ChatComponent();
+  final _chatComponentPlugin = AppscripChatComponent();
 
   @override
   void initState() {
@@ -80,7 +82,9 @@ class _MyAppState extends State<MyApp> {
         //     .copyWith(primaryColor: AppColors.primaryColorDark),
         debugShowCheckedModeBanner: false,
         translations: AppTranslations(),
-        initialRoute: LoginView.route,
+        initialRoute: objectBox.userDetailsBox.getAll().isNotEmpty
+            ? ChatView.route
+            : LoginView.route,
         getPages: AppPages.pages,
       ),
     );

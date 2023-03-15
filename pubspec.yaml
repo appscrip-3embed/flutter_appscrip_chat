@@ -12,12 +12,14 @@ dependencies:
   dio: ^5.0.1
   flutter:
     sdk: flutter
+  flutter_screenutil: ^5.7.0
   flutter_web_plugins:
     sdk: flutter
   get: ^4.6.5
   http: ^0.13.5
   objectbox: ^1.7.2
   objectbox_flutter_libs: any
+  path_provider: ^2.0.13
   plugin_platform_interface: ^2.0.2
 
 dev_dependencies:
@@ -27,6 +29,9 @@ dev_dependencies:
     sdk: flutter
   objectbox_generator: any
 
+objectbox:
+  output_dir:
+    lib: src/data/database
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.

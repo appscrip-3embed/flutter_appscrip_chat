@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/src/models/models.dart';
+import 'package:objectbox/objectbox.dart';
 
+@Entity()
 class UserDetails {
   factory UserDetails.fromJson(String source) =>
       UserDetails.fromMap(json.decode(source) as Map<String, dynamic>);
@@ -10,28 +12,44 @@ class UserDetails {
         userProfileImageUrl: map['userProfileImageUrl'] as String,
         userName: map['userName'] as String,
         userIdentifier: map['userIdentifier'] as String,
-        userId: map['userId'] as String,
+        userId: map['userId'] != null ? map['userId'] as String : '',
         online: map['online'] as bool,
-        metaData: ChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
+        // metaData: ChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
         lastSeen: map['lastSeen'] as int,
+        visibility:
+            map['visibility'] != null ? map['visibility'] as bool : true,
+        notification:
+            map['notification'] != null ? map['notification'] as bool : null,
+        language: map['language'] != null ? map['language'] as String : null,
       );
 
-  const UserDetails({
+  UserDetails({
+    this.id = 0,
     required this.userProfileImageUrl,
     required this.userName,
     required this.userIdentifier,
     required this.userId,
     required this.online,
-    required this.metaData,
+    // required this.metaData,
     required this.lastSeen,
+    this.visibility,
+    this.notification,
+    this.language,
   });
+
+  @Id()
+  int id;
   final String userProfileImageUrl;
   final String userName;
   final String userIdentifier;
   final String userId;
   final bool online;
-  final ChatMetaData metaData;
+  // @Transient()
+  // final ChatMetaData metaData;
   final int lastSeen;
+  final bool? visibility;
+  final bool? notification;
+  final String? language;
 
   UserDetails copyWith({
     String? userProfileImageUrl,
@@ -41,6 +59,9 @@ class UserDetails {
     bool? online,
     ChatMetaData? metaData,
     int? lastSeen,
+    bool? visibility,
+    bool? notification,
+    String? language,
   }) =>
       UserDetails(
         userProfileImageUrl: userProfileImageUrl ?? this.userProfileImageUrl,
@@ -48,8 +69,11 @@ class UserDetails {
         userIdentifier: userIdentifier ?? this.userIdentifier,
         userId: userId ?? this.userId,
         online: online ?? this.online,
-        metaData: metaData ?? this.metaData,
+        // metaData: metaData ?? this.metaData,
         lastSeen: lastSeen ?? this.lastSeen,
+        visibility: visibility ?? this.visibility,
+        notification: notification ?? this.notification,
+        language: language ?? this.language,
       );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
@@ -58,15 +82,18 @@ class UserDetails {
         'userIdentifier': userIdentifier,
         'userId': userId,
         'online': online,
-        'metaData': metaData.toMap(),
+        // 'metaData': metaData.toMap(),
         'lastSeen': lastSeen,
+        'visibility': visibility,
+        'notification': notification,
+        'language': language,
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'UserDetails(userProfileImageUrl: $userProfileImageUrl, userName: $userName, userIdentifier: $userIdentifier, userId: $userId, online: $online, metaData: $metaData, lastSeen: $lastSeen)';
+      'UserDetails(userProfileImageUrl: $userProfileImageUrl, userName: $userName, userIdentifier: $userIdentifier, userId: $userId, online: $online, lastSeen: $lastSeen, visibility: $visibility, notification: $notification, language: $language)';
 
   @override
   bool operator ==(covariant UserDetails other) {
@@ -77,8 +104,11 @@ class UserDetails {
         other.userIdentifier == userIdentifier &&
         other.userId == userId &&
         other.online == online &&
-        other.metaData == metaData &&
-        other.lastSeen == lastSeen;
+        // other.metaData == metaData &&
+        other.lastSeen == lastSeen &&
+        other.visibility == visibility &&
+        other.notification == notification &&
+        other.language == language;
   }
 
   @override
@@ -88,6 +118,9 @@ class UserDetails {
       userIdentifier.hashCode ^
       userId.hashCode ^
       online.hashCode ^
-      metaData.hashCode ^
-      lastSeen.hashCode;
+      // metaData.hashCode ^
+      lastSeen.hashCode ^
+      visibility.hashCode ^
+      notification.hashCode ^
+      language.hashCode;
 }

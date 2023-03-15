@@ -6,18 +6,22 @@ import 'package:flutter/material.dart';
 class ChatImage extends StatelessWidget {
   const ChatImage(
     this.imageUrl, {
-    this.name = 'U',
+    this.name,
+    this.dimensions = 48,
     super.key,
-  });
+  }) : _name = 'U';
 
   final String imageUrl;
-  final String name;
+  final String? name;
+  final double dimensions;
+
+  final String _name;
 
   @override
   Widget build(BuildContext context) => SizedBox.square(
-        dimension: 48,
+        dimension: dimensions,
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(dimensions / 2),
           child: CachedNetworkImage(
             imageUrl: imageUrl,
             fit: BoxFit.cover,
@@ -31,7 +35,7 @@ class ChatImage extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: Text(
-                name[0],
+                _name[0],
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 24,
@@ -40,7 +44,7 @@ class ChatImage extends StatelessWidget {
               ),
             ),
             errorWidget: (context, url, error) {
-              ChatLog.error('ImageError');
+              ChatLog.error('ImageError - $url\n$error');
               return Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
@@ -48,7 +52,7 @@ class ChatImage extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: Text(
-                  name[0],
+                  _name[0],
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 24,

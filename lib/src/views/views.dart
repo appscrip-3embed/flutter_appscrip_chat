@@ -1,1 +1,1 @@
-export 'chat_conversations_view.dart';
+export 'chat_conversations/chat_conversations.dart';

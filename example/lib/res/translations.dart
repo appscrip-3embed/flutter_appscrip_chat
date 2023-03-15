@@ -1,9 +1,7 @@
-import 'dart:ui';
-
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/res/strings.dart';
+import 'package:get/get.dart';
 
-class AppTranslations extends ChatTranslations {
+class AppTranslations extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
         'en': {
@@ -20,7 +18,4 @@ class AppTranslations extends ChatTranslations {
           TranslationKeys.mustContain: 'Password must contain @character',
         },
       };
-
-  @override
-  List<Locale> get locales => [const Locale('en')];
 }

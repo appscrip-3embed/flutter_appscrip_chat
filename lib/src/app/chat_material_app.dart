@@ -10,7 +10,11 @@ class ChatMaterialApp extends StatelessWidget {
     this.chatTheme,
     this.chatDarkTheme,
     this.loadingDialog,
+    this.databaseName,
   }) {
+    assert(ChatConstants.isInitialized,
+        'ChatObjectBox is not initialized\nYou are getting this error because the ChatObjectBox class is not initialized, to initialize ChatObjectBox class call AppscripChatComponent.initialize() before your runApp()');
+    ChatConstants.dbName = databaseName ?? ChatStrings.dbname;
     ChatConstants.loadingDialog = loadingDialog;
     ChatConstants.communicationConfig = communicationConfig;
     ChatConstants.chatTheme = chatTheme ?? ChatThemeData.fallback();
@@ -35,6 +39,11 @@ class ChatMaterialApp extends StatelessWidget {
   ///
   /// loadingDialog takes a widget which override the classic [CircularProgressIndicator], and will be shown incase of api call or loading something
   final Widget? loadingDialog;
+
+  /// databaseName is to be provided if you want to specify some name for the local database file.
+  ///
+  /// If not provided `appscrip_chat_component` will be used by default
+  final String? databaseName;
 
   @override
   Widget build(BuildContext context) => child;

@@ -2,8 +2,21 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ChatConversations extends StatefulWidget {
-  const ChatConversations({
+/// `ChatConversationList` can be used to show the list of all the conversations user has done.
+///
+/// It takes 4 parameters
+/// ```dart
+/// const ChatConversationList({
+///    this.childBuilder,
+///    this.itemBuilder,
+///    this.profileImageBuilder,
+///    this.height,
+/// });
+/// ```
+///
+/// Certain properties can be modified as per requirement. You can read about each of them by hovering over the property
+class ChatConversationList extends StatefulWidget {
+  const ChatConversationList({
     super.key,
     this.childBuilder,
     this.itemBuilder,
@@ -32,7 +45,7 @@ class ChatConversations extends StatefulWidget {
   /// Provide it like you are passing itemBuilder for `ListView` or any constructor of [ListView]
   final Widget? Function(BuildContext, int)? itemBuilder;
 
-  final Widget? Function(BuildContext, int, String)? profileImageBuilder;
+  final Widget? Function(BuildContext, String)? profileImageBuilder;
 
   /// Provide this height parameter to set the maximum height for conversation list
   ///
@@ -40,10 +53,10 @@ class ChatConversations extends StatefulWidget {
   final double? height;
 
   @override
-  State<ChatConversations> createState() => _ChatConversationsState();
+  State<ChatConversationList> createState() => _ChatConversationListState();
 }
 
-class _ChatConversationsState extends State<ChatConversations> {
+class _ChatConversationListState extends State<ChatConversationList> {
   late ChatConversationsController controller;
 
   @override
@@ -78,24 +91,9 @@ class _ChatConversationsState extends State<ChatConversations> {
                       );
                     }
                     var conversation = controller.conversations[index];
-                    return SizedBox(
-                      height: 80,
-                      width: MediaQuery.of(context).size.width,
-                      child: ListTile(
-                        leading: widget.profileImageBuilder != null
-                            ? widget.profileImageBuilder!(
-                                _,
-                                index,
-                                conversation
-                                    .opponentDetails.userProfileImageUrl)
-                            : ChatImage(
-                                conversation
-                                    .opponentDetails.userProfileImageUrl,
-                                name: conversation.chatName,
-                              ),
-                        title: Text(conversation.chatName),
-                        subtitle: Text(conversation.lastMessageDetails.body),
-                      ),
+                    return ChatConversationCard(
+                      conversation,
+                      profileImageBuilder: widget.profileImageBuilder,
                     );
                   },
             ),
