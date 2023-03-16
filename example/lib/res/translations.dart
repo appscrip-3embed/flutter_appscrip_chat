@@ -15,6 +15,7 @@ class AppTranslations extends Translations {
           TranslationKeys.lowercase: 'Lowercase alphabets (a-z)',
           TranslationKeys.uppercase: 'Uppercase alphabets (A-Z)',
           TranslationKeys.symbol: 'Special symbols (@,\$,! etc)',
+          TranslationKeys.lengthCharacters: 'atleast 8 characters',
           TranslationKeys.mustContain: 'Password must contain @character',
         },
       };

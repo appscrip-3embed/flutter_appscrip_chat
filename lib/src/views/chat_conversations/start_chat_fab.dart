@@ -8,13 +8,19 @@ class StartChatFAB extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Theme(
-        data: ThemeData(
-            floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor: ChatTheme.of(context).primaryColor,
-        )),
+        data: ThemeData.light(useMaterial3: true).copyWith(
+          floatingActionButtonTheme:
+              ChatTheme.of(context).floatingActionButtonTheme ??
+                  FloatingActionButtonThemeData(
+                    backgroundColor: ChatTheme.of(context).primaryColor,
+                  ),
+        ),
         child: FloatingActionButton(
-          onPressed: onTap,
-          child: const Icon(Icons.chat_rounded),
+          onPressed: onTap ?? () {},
+          child: const Icon(
+            Icons.chat_rounded,
+            color: ChatColors.whiteColor,
+          ),
         ),
       );
 }

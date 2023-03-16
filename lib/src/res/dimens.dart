@@ -19,7 +19,7 @@ class ChatDimens {
   static final double hundred = 100.sp;
 
   static final double appBarHeight = 56.sp;
-  static final double appBarElevation = 16.sp;
+  static final double appBarElevation = 8.sp;
 
   static final Widget boxHeight8 = SizedBox(height: eight);
   static final Widget boxHeight16 = SizedBox(height: sixteen);
@@ -30,4 +30,7 @@ class ChatDimens {
 
   static final EdgeInsets egdeInsets16 = EdgeInsets.all(sixteen);
   static final EdgeInsets egdeInsets10 = EdgeInsets.all(ten);
+  static final EdgeInsets egdeInsets0_10 = EdgeInsets.symmetric(vertical: ten);
+  static final EdgeInsets egdeInsets10_0 =
+      EdgeInsets.symmetric(horizontal: ten);
 }

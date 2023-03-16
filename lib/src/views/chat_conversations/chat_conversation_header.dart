@@ -37,7 +37,7 @@ class ChatListHeader extends StatelessWidget implements PreferredSizeWidget {
         builder: (controller) => AppBar(
           automaticallyImplyLeading: false,
           elevation: ChatDimens.appBarElevation,
-          title: InkWell(
+          title: TapHandler(
             onTap: () => Get.bottomSheet(
               LogutBottomSheet(signOutTap: () {
                 onSignOut();
@@ -53,6 +53,7 @@ class ChatListHeader extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
             child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 if (profileImage != null)
                   profileImage!

@@ -18,6 +18,9 @@ class AppValidator {
     if (value == null || value.isEmpty) {
       return Strings.required;
     }
+    if (value.length < 8) {
+      return Strings.passwordMustContain(Strings.lengthCharacters);
+    }
     if (!value.contains(RegExp('[a-z]'))) {
       return Strings.passwordMustContain(Strings.lowercase);
     }

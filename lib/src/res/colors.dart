@@ -5,7 +5,7 @@ class ChatColors {
 
   static const Color primaryColorLight = Color(0xFF8F3CF0);
 
-  static const Color backgroundColorLight = Color(0xFFF8F8F8);
+  static const Color backgroundColorLight = Color(0xFFF4EFFB);
 
   static const Color whiteColor = Color(0xFFFBFBFB);
 

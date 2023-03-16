@@ -20,9 +20,8 @@ class ChatConversationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-        height: 80,
-        width: MediaQuery.of(context).size.width,
         child: ListTile(
+          dense: true,
           leading: profileImageBuilder?.call(
                   context, conversation.opponentDetails.userProfileImageUrl) ??
               ChatImage(
@@ -38,6 +37,8 @@ class ChatConversationCard extends StatelessWidget {
                   context, conversation.lastMessageDetails.body) ??
               Text(
                 conversation.lastMessageDetails.body,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: ChatStyles.w400Black12,
               ),
         ),

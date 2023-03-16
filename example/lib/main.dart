@@ -76,8 +76,8 @@ class _MyAppState extends State<MyApp> {
         ],
         theme: ThemeData.light(useMaterial3: true)
             .copyWith(primaryColor: AppColors.primaryColorLight),
-        darkTheme: ThemeData.light(useMaterial3: true)
-            .copyWith(primaryColor: AppColors.primaryColorDark),
+        // darkTheme: ThemeData.dark(useMaterial3: true)
+        //     .copyWith(primaryColor: AppColors.primaryColorDark),
         // darkTheme: ThemeData.dark(useMaterial3: true)
         //     .copyWith(primaryColor: AppColors.primaryColorDark),
         debugShowCheckedModeBanner: false,

@@ -47,7 +47,10 @@ class ChatConversationsController extends GetxController {
   }
 
   Future<dynamic> getUserData() async {
-    await _viewModel.getUserData();
+    var user = await _viewModel.getUserData();
+    if (user != null) {
+      userDetails = user;
+    }
   }
 
   void onSearch(String query) {

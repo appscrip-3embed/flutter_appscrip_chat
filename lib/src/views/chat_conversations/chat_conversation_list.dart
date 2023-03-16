@@ -78,9 +78,11 @@ class _ChatConversationListState extends State<ChatConversationList> {
           }
           return SizedBox(
             height: widget.height ?? MediaQuery.of(context).size.height,
-            child: ListView.builder(
+            child: ListView.separated(
+              padding: ChatDimens.egdeInsets0_10,
               shrinkWrap: true,
               itemCount: controller.conversations.length,
+              separatorBuilder: (_, __) => ChatDimens.boxHeight8,
               itemBuilder: widget.itemBuilder ??
                   (_, index) {
                     if (widget.childBuilder != null) {

@@ -14,6 +14,7 @@ class TranslationKeys {
   static const String lowercase = 'lowercase';
   static const String uppercase = 'uppercase';
   static const String symbol = 'symbol';
+  static const String lengthCharacters = 'lengthCharacters';
 }
 
 class Strings {
@@ -31,6 +32,7 @@ class Strings {
   static String lowercase = TranslationKeys.lowercase.tr;
   static String uppercase = TranslationKeys.uppercase.tr;
   static String symbol = TranslationKeys.symbol.tr;
+  static String lengthCharacters = TranslationKeys.lengthCharacters.tr;
 
   static String passwordMustContain(String character) =>
       TranslationKeys.mustContain.trParams({'character': character});
