@@ -1,8 +1,8 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:chat_component_example/models/models.dart';
 import 'package:chat_component_example/res/strings.dart';
+import 'package:chat_component_example/utilities/app_log.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'objectbox.g.dart';
@@ -33,12 +33,12 @@ class ObjectBox {
     return ObjectBox._create(store);
   }
 
-
- /// delete object box
-   void deleteLocalDb() async {
+  /// delete object box
+  void deleteLocalDb() async {
     userDetailsBox.removeAll();
+    AppLog.success('[CLEARED] - All entries are removed from database');
   }
-  
+
   /// Create an instance of ObjectBox to use throughout the presenter.
   static Future<ObjectBox> create() async {
     // Future<Store> openStore() {...} is defined in the generated objectbox.g.dart.
@@ -47,10 +47,10 @@ class ObjectBox {
       _dbPath = '${docDir.path}/${Strings.name}';
       return await _openStore();
     } on ObjectBoxException catch (e) {
-      log('[ObjectBox create] - Error : $e');
+      AppLog.error('[ObjectBox create] - Error : $e');
       var directory = Directory(_dbPath);
       await directory.delete(recursive: true);
-      log('[DELETED] - Database');
+      AppLog.info('[DELETED] - Database');
       return await _openStore();
     }
   }

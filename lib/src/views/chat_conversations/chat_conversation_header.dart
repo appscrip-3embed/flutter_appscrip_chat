@@ -1,13 +1,12 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/app/chat_constant.dart';
 import 'package:appscrip_chat_component/src/views/chat_conversations/logout_bottomsheet.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 
 class ChatListHeader extends StatelessWidget implements PreferredSizeWidget {
   const ChatListHeader({
     super.key,
+    required this.onSignOut,
     this.height,
     this.profileImage,
     this.title,
@@ -25,6 +24,7 @@ class ChatListHeader extends StatelessWidget implements PreferredSizeWidget {
   final bool showSearch;
   final VoidCallback? onSearchTap;
   final List<Widget>? actions;
+  final VoidCallback onSignOut;
 
   /// Defines the height of the [ChatListHeader]
   final double? height;
@@ -39,7 +39,10 @@ class ChatListHeader extends StatelessWidget implements PreferredSizeWidget {
           elevation: ChatDimens.appBarElevation,
           title: InkWell(
             onTap: () => Get.bottomSheet(
-              LogutBottomSheet(signOutTap: controller.signOut),
+              LogutBottomSheet(signOutTap: () {
+                onSignOut();
+                controller.signOut();
+              }),
               elevation: ChatDimens.twenty,
               enableDrag: true,
               backgroundColor: ChatColors.whiteColor,

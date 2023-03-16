@@ -7,12 +7,13 @@ class ChatSearchDelegate extends SearchDelegate<void> {
 
   @override
   List<Widget> buildActions(BuildContext context) => [
-        IconButton(
-          icon: const Icon(Icons.clear_rounded),
-          onPressed: () {
-            query = '';
-          },
-        ),
+        if (query.isNotEmpty)
+          IconButton(
+            icon: const Icon(Icons.clear_rounded),
+            onPressed: () {
+              query = '';
+            },
+          ),
       ];
 
   @override
@@ -26,7 +27,12 @@ class ChatSearchDelegate extends SearchDelegate<void> {
   @override
   Widget buildResults(BuildContext context) => Obx(
         () => _controller.suggestions.isEmpty
-            ? const Text(ChatStrings.noMatch)
+            ? Center(
+                child: Text(
+                  ChatStrings.noMatch,
+                  style: ChatStyles.w600Black20,
+                ),
+              )
             : ListView.builder(
                 itemCount: _controller.suggestions.length,
                 itemBuilder: (_, index) =>
@@ -39,11 +45,71 @@ class ChatSearchDelegate extends SearchDelegate<void> {
     _controller.onSearch(query);
     return Obx(
       () => _controller.suggestions.isEmpty
-          ? const Text(ChatStrings.noMatch)
+          ? Center(
+              child: Text(
+                ChatStrings.noMatch,
+                style: ChatStyles.w600Black20,
+              ),
+            )
           : ListView.builder(
               itemCount: _controller.suggestions.length,
-              itemBuilder: (_, index) =>
-                  ChatConversationCard(_controller.suggestions[index]),
+              itemBuilder: (_, index) => ChatConversationCard(
+                _controller.suggestions[index],
+                nameBuilder: (_, name) {
+                  if (!name.didMatch(query)) {
+                    return null;
+                  }
+                  var before = name.substring(
+                      0, name.toLowerCase().indexOf(query.toLowerCase()));
+                  var match = name.substring(
+                      before.length, before.length + query.length);
+                  var after = name.substring(before.length + match.length);
+                  return RichText(
+                    text: TextSpan(
+                      text: before,
+                      style: ChatStyles.w600Black14,
+                      children: [
+                        TextSpan(
+                          text: match,
+                          style: TextStyle(
+                              color: ChatTheme.of(context).primaryColor),
+                        ),
+                        TextSpan(
+                          text: after,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                subtitleBuilder: (_, msg) {
+                  if (!msg.didMatch(query)) {
+                    return null;
+                  }
+                  var before = msg.substring(
+                      0, msg.toLowerCase().indexOf(query.toLowerCase()));
+                  var match = msg.substring(
+                      before.length, before.length + query.length);
+                  var after = msg.substring(before.length + match.length);
+                  return RichText(
+                    text: TextSpan(
+                      text: before,
+                      style: ChatStyles.w400Black12,
+                      children: [
+                        TextSpan(
+                          text: match,
+                          style: TextStyle(
+                            color: ChatTheme.of(context).primaryColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        TextSpan(
+                          text: after,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
     );
   }

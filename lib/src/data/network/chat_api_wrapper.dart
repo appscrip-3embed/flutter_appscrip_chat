@@ -14,7 +14,7 @@ class ChatApiWrapper {
     required Map<String, String> headers,
   }) async {
     if (kDebugMode) {
-      ChatLog('GET $api');
+      ChatLog('Request - GET $api');
     }
     var uri = Uri.parse(api);
     if (showLoader) {
@@ -49,7 +49,7 @@ class ChatApiWrapper {
     bool showLoader = false,
   }) async {
     if (kDebugMode) {
-      ChatLog('POST $api $payload');
+      ChatLog('Request - POST $api $payload');
     }
     var uri = Uri.parse(api);
     if (showLoader) {
@@ -88,7 +88,7 @@ class ChatApiWrapper {
     bool showLoader = false,
   }) async {
     if (kDebugMode) {
-      ChatLog('PUT $api $payload');
+      ChatLog('Request - PUT $api $payload');
     }
     var uri = Uri.parse(api);
     if (showLoader) {
@@ -127,7 +127,7 @@ class ChatApiWrapper {
     bool showLoader = false,
   }) async {
     if (kDebugMode) {
-      ChatLog('PATCH $api $payload');
+      ChatLog('Request - PATCH $api $payload');
     }
     var uri = Uri.parse(api);
     if (showLoader) {
@@ -166,7 +166,7 @@ class ChatApiWrapper {
     bool showLoader = false,
   }) async {
     if (kDebugMode) {
-      ChatLog('DELETE $api $payload');
+      ChatLog('Request - DELETE $api $payload');
     }
     var uri = Uri.parse(api);
     if (showLoader) {
@@ -201,7 +201,7 @@ class ChatApiWrapper {
   static ResponseModel _processResponse(http.Response response) {
     if (kDebugMode) {
       ChatLog(
-          '${response.request?.method} ${response.statusCode} ${response.request?.url}\n${response.body}');
+          'Response - ${response.request?.method} ${response.statusCode} ${response.request?.url}\n${response.body}');
     }
     switch (response.statusCode) {
       case 200:

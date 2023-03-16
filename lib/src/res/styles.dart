@@ -4,9 +4,30 @@ import 'package:flutter/material.dart';
 class ChatStyles {
   const ChatStyles._();
 
+  static TextStyle w400Black12 = TextStyle(
+    color: ChatColors.blackColor,
+    fontSize: ChatDimens.twelve,
+    fontWeight: FontWeight.w400,
+  );
+  static TextStyle w400Black14 = TextStyle(
+    color: ChatColors.blackColor,
+    fontSize: ChatDimens.forteen,
+    fontWeight: FontWeight.w400,
+  );
+  static TextStyle w400Black16 = TextStyle(
+    color: ChatColors.blackColor,
+    fontSize: ChatDimens.sixteen,
+    fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle w600Black14 = TextStyle(
+    color: ChatColors.blackColor,
+    fontSize: ChatDimens.sixteen,
+    fontWeight: FontWeight.w600,
+  );
   static TextStyle w600Black16 = TextStyle(
     color: ChatColors.blackColor,
-    fontSize: ChatDimens.sixTeen,
+    fontSize: ChatDimens.sixteen,
     fontWeight: FontWeight.w600,
   );
 
@@ -24,13 +45,13 @@ class ChatStyles {
 
   static TextStyle w400White16 = TextStyle(
     color: ChatColors.whiteColor,
-    fontSize: ChatDimens.sixTeen,
+    fontSize: ChatDimens.sixteen,
     fontWeight: FontWeight.w400,
   );
 
   static TextStyle w400White14 = TextStyle(
     color: ChatColors.whiteColor,
-    fontSize: ChatDimens.forTeen,
+    fontSize: ChatDimens.forteen,
     fontWeight: FontWeight.w400,
   );
 }

@@ -33,8 +33,9 @@ class ChatObjectBox {
   }
 
   /// delete chat object box
-   void deleteChatLocalDb() async {
+  void deleteChatLocalDb() async {
     userDetailsBox.removeAll();
+    ChatLog.success('[CLEARED] - All entries are removed from database');
   }
 
   /// Create an instance of ObjectBox to use throughout the presenter.

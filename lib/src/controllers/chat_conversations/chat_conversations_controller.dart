@@ -58,9 +58,7 @@ class ChatConversationsController extends GetxController {
           .where(
             (e) =>
                 e.chatName.didMatch(query) ||
-                e.createdByUserName.didMatch(query) ||
-                e.opponentDetails.userName.didMatch(query) ||
-                e.opponentDetails.userIdentifier.didMatch(query),
+                e.lastMessageDetails.body.didMatch(query),
           )
           .toList();
     }

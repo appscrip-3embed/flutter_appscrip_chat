@@ -24,8 +24,8 @@ class ChatView extends GetView<ChatListController> {
           mqttHostName: Constants.hostname,
           mqttPort: Constants.port,
         ),
-        child: const ChatConversations(
-          showAppBar: true,
+        child: ChatConversations(
+          onSignOut: controller.onSignOut,
         ),
       ),
     );

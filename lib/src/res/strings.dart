@@ -6,5 +6,5 @@ class ChatStrings {
 
   static const String chats = 'Chats';
 
-  static const String noMatch = 'No Match';
+  static const String noMatch = 'Oops! No Match Found';
 }
