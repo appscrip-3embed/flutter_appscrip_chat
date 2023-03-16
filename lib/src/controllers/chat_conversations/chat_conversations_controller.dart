@@ -65,4 +65,8 @@ class ChatConversationsController extends GetxController {
           .toList();
     }
   }
+
+  Future<void> signOut() async {
+    ChatConstants.objectBox.deleteChatLocalDb();
+  }
 }

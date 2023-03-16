@@ -9,7 +9,7 @@ class ChatImage extends StatelessWidget {
     this.name,
     this.dimensions = 48,
     super.key,
-  }) : _name = 'U';
+  }) : _name = name ?? 'U';
 
   final String imageUrl;
   final String? name;

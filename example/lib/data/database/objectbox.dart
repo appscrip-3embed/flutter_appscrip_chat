@@ -33,6 +33,12 @@ class ObjectBox {
     return ObjectBox._create(store);
   }
 
+
+ /// delete object box
+   void deleteLocalDb() async {
+    userDetailsBox.removeAll();
+  }
+  
   /// Create an instance of ObjectBox to use throughout the presenter.
   static Future<ObjectBox> create() async {
     // Future<Store> openStore() {...} is defined in the generated objectbox.g.dart.

@@ -24,7 +24,9 @@ class ChatView extends GetView<ChatListController> {
           mqttHostName: Constants.hostname,
           mqttPort: Constants.port,
         ),
-        child: const ChatConversations(),
+        child: const ChatConversations(
+          showAppBar: true,
+        ),
       ),
     );
   }

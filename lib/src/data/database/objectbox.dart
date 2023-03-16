@@ -32,6 +32,11 @@ class ChatObjectBox {
     return ChatObjectBox._create(store);
   }
 
+  /// delete chat object box
+   void deleteChatLocalDb() async {
+    userDetailsBox.removeAll();
+  }
+
   /// Create an instance of ObjectBox to use throughout the presenter.
   static Future<ChatObjectBox> create([String? databaseName]) async {
     // Future<Store> openStore() {...} is defined in the generated objectbox.g.dart.
