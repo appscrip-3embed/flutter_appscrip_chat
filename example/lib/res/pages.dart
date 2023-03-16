@@ -1,5 +1,6 @@
 import 'package:chat_component_example/controllers/controllers.dart';
-import 'package:chat_component_example/views/chat_view.dart';
+import 'package:chat_component_example/views/chat_list.dart';
+import 'package:chat_component_example/views/chat_message_view.dart';
 import 'package:chat_component_example/views/login_view.dart';
 import 'package:get/get.dart';
 
@@ -11,8 +12,13 @@ class AppPages {
       binding: AuthBinding(),
     ),
     GetPage(
-      name: ChatView.route,
-      page: ChatView.new,
+      name: ChatList.route,
+      page: ChatList.new,
+      binding: ChatConversationBinding(),
+    ),
+    GetPage(
+      name: ChatMessageView.route,
+      page: ChatMessageView.new,
       binding: ChatConversationBinding(),
     ),
   ];

@@ -4,9 +4,8 @@ import 'package:appscrip_chat_component/src/app/chat_constant.dart';
 import 'package:appscrip_chat_component/src/data/data.dart';
 import 'package:appscrip_chat_component/src/models/models.dart';
 import 'package:appscrip_chat_component/src/utilities/utilities.dart';
-import 'package:get/get.dart';
 
-class ChatConversationsViewModel extends GetxController {
+class ChatConversationsViewModel {
   var chatSkip = 0;
   var chatLimit = 20;
   Future<List<ChatConversationModel>?> getChatConversations() async {

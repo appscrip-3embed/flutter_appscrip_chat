@@ -1,13 +1,14 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/controllers/controllers.dart';
 import 'package:chat_component_example/res/res.dart';
+import 'package:chat_component_example/utilities/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ChatView extends GetView<ChatListController> {
-  const ChatView({super.key});
+class ChatList extends GetView<ChatListController> {
+  const ChatList({super.key});
 
-  static const String route = AppRoutes.chatConversations;
+  static const String route = AppRoutes.chatList;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,8 @@ class ChatView extends GetView<ChatListController> {
       body: ChatMaterialApp(
         communicationConfig: ChatCommunicationConfig(
           accountId: Constants.accountId,
-          userToken: controller.userToken,
+          userToken: controller.userDetails.userToken!,
+          userId: controller.userDetails.userId!,
           appSecret: Constants.appSecret,
           userSecret: Constants.userSecret,
           keySetId: Constants.keysetId,
@@ -25,7 +27,9 @@ class ChatView extends GetView<ChatListController> {
           mqttPort: Constants.port,
         ),
         child: ChatConversations(
+          showAppBar: true,
           onSignOut: controller.onSignOut,
+          onChatTap: (_, __) => RouteManagement.goToChatMessages(),
         ),
       ),
     );

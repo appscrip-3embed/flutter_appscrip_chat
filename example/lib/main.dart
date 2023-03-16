@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/data/database/database.dart';
 import 'package:chat_component_example/res/res.dart';
-import 'package:chat_component_example/views/chat_view.dart';
+import 'package:chat_component_example/views/chat_list.dart';
 import 'package:chat_component_example/views/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -83,7 +83,7 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         translations: AppTranslations(),
         initialRoute: objectBox.userDetailsBox.getAll().isNotEmpty
-            ? ChatView.route
+            ? ChatList.route
             : LoginView.route,
         getPages: AppPages.pages,
       ),

@@ -18,11 +18,14 @@ import 'package:get/get.dart';
 class ChatConversationList extends StatefulWidget {
   const ChatConversationList({
     super.key,
+    required this.onTap,
     this.childBuilder,
     this.itemBuilder,
     this.profileImageBuilder,
     this.height,
   });
+
+  final void Function(BuildContext, ChatConversationModel) onTap;
 
   /// `itemBuilder` will handle how child items are rendered on the screen.
   ///
@@ -72,8 +75,14 @@ class _ChatConversationListState extends State<ChatConversationList> {
             return ChatUtility.loadingDialog();
           }
           if (controller.conversations.isEmpty) {
-            return const Center(
-              child: Text('No Conversations'),
+            return Center(
+              child: Text(
+                ChatStrings.noConversation,
+                style: ChatStyles.w600Black20.copyWith(
+                  color: ChatTheme.of(context).primaryColor,
+                ),
+                textAlign: TextAlign.center,
+              ),
             );
           }
           return SizedBox(
@@ -96,6 +105,10 @@ class _ChatConversationListState extends State<ChatConversationList> {
                     return ChatConversationCard(
                       conversation,
                       profileImageBuilder: widget.profileImageBuilder,
+                      onTap: () {
+                        controller.currentConversation = conversation;
+                        widget.onTap(_, conversation);
+                      },
                     );
                   },
             ),

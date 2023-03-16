@@ -6,5 +6,7 @@ class ChatStrings {
 
   static const String chats = 'Chats';
 
+  static const String noConversation =
+      "You don't seem to have talked to anyone, so let your buddies know you're thinking about them.";
   static const String noMatch = 'Oops! No Match Found';
 }

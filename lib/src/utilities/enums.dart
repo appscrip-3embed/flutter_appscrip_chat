@@ -67,7 +67,7 @@ enum CustomMessageType {
       '${name[0].toUpperCase()}${name.substring(1).toLowerCase()}';
 }
 
-enum MQTTConnectionState {
+enum ChatConnectionState {
   connected,
   disconnected,
   connecting,

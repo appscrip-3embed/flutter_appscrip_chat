@@ -25,6 +25,8 @@ class ChatConversationsController extends GetxController {
   UserDetails? get userDetails => _userDetails.value;
   set userDetails(UserDetails? value) => _userDetails.value = value;
 
+  ChatConversationModel? currentConversation;
+
   @override
   onInit() {
     super.onInit();

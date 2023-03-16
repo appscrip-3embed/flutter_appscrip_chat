@@ -15,8 +15,6 @@ class AuthController extends GetxController {
   void validateLogin() {
     if (loginFormKey.currentState!.validate()) {
       login();
-    } else {
-      // show popup
     }
   }
 
@@ -27,7 +25,7 @@ class AuthController extends GetxController {
     );
 
     if (isLoggedIn) {
-      Get.offNamed(AppRoutes.chatConversations);
+      Get.offNamed(AppRoutes.chatList);
     }
   }
 }

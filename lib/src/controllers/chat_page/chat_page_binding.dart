@@ -1,12 +1,12 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:get/get.dart';
 
-class ChatConversationsBinding extends Bindings {
+class ChatPageBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(
-      () => ChatConversationsController(
-        ChatConversationsViewModel(),
+    Get.lazyPut<ChatPageController>(
+      () => ChatPageController(
+        ChatPageViewModel(),
       ),
     );
   }

@@ -3,6 +3,7 @@ class ChatCommunicationConfig {
   const ChatCommunicationConfig({
     required this.accountId,
     required this.userToken,
+    required this.userId,
     required this.appSecret,
     required this.userSecret,
     required this.keySetId,
@@ -10,12 +11,14 @@ class ChatCommunicationConfig {
     required this.projectId,
     required this.mqttHostName,
     required this.mqttPort,
-    this.username,
-    this.password,
-  });
+    String? username,
+    String? password,
+  })  : username = username ?? '2$accountId$projectId',
+        password = password ?? '$licenseKey$keySetId';
 
   final String accountId;
   final String userToken;
+  final String userId;
   final String appSecret;
   final String userSecret;
   final String keySetId;
