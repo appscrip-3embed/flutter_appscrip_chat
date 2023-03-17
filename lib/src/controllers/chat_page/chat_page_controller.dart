@@ -14,6 +14,10 @@ class ChatPageController extends GetxController {
 
   var chatInputController = TextEditingController();
 
+  final _messages = <ChatMessageModel>[].obs;
+  List<ChatMessageModel> get messages => _messages;
+  set messages(List<ChatMessageModel> value) => _messages.value = value;
+
   final RxBool _showSendButton = false.obs;
   bool get showSendButton => _showSendButton.value;
   set showSendButton(bool value) => _showSendButton.value = value;
@@ -31,8 +35,14 @@ class ChatPageController extends GetxController {
     focusNode.requestFocus();
   }
 
-  void getChatMessages() async => _viewModel.getChatMessages(
-        conversationId: conversation.conversationId,
-        lastMessageTimestamp: 0,
-      );
+  void getChatMessages() async {
+    var data = await _viewModel.getChatMessages(
+      conversationId: conversation.conversationId,
+      lastMessageTimestamp: 0,
+    );
+
+    if (data != null) {
+      messages = data;
+    }
+  }
 }

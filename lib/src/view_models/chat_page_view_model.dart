@@ -5,7 +5,7 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 class ChatPageViewModel {
   var messageSkip = 0;
   var messageLimit = 20;
-  Future<dynamic> getChatMessages({
+  Future<List<ChatMessageModel>?> getChatMessages({
     required String conversationId,
     required int lastMessageTimestamp,
   }) async {
@@ -18,9 +18,9 @@ class ChatPageViewModel {
         return null;
       }
       var data = jsonDecode(response.data);
-      // return (data['conversations'] as List)
-      //     .map((e) => ChatConversationModel.fromMap(e as Map<String, dynamic>))
-      //     .toList();
+      return (data['messages'] as List)
+          .map((e) => ChatMessageModel.fromMap(e as Map<String, dynamic>))
+          .toList();
     } catch (e, st) {
       ChatLog.error('GetChatMessages $e', st);
       return null;

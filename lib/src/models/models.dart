@@ -1,3 +1,4 @@
+export 'attachment_model.dart';
 export 'chat_conversation_model.dart';
 export 'chat_message_model.dart';
 export 'conversation_config.dart';

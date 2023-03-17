@@ -75,11 +75,33 @@ enum CustomMessageType {
     }
   }
 
-  // factory CustomMessageType.fromString(String value) {
-  //   const map = <String, CustomMessageType>{
-  //     'text': CustomMessageType.text,
-  //   };
-  // }
+  factory CustomMessageType.fromString(String value) {
+    const map = <String, CustomMessageType>{
+      'text': CustomMessageType.text,
+      'file': CustomMessageType.file,
+      'replyText': CustomMessageType.reply,
+      'image': CustomMessageType.image,
+      'voice': CustomMessageType.audio,
+      'video': CustomMessageType.video,
+      'location': CustomMessageType.location,
+      'block': CustomMessageType.block,
+      'unblock': CustomMessageType.unblock,
+    };
+
+    var type = value.split('.').last;
+    return map[type] ?? CustomMessageType.text;
+  }
+
+  factory CustomMessageType.fromMap(dynamic value) {
+    if (value.runtimeType != int || value.runtimeType != String) {
+      return CustomMessageType.text;
+    }
+    if (value.runtimeType == int) {
+      return CustomMessageType.fromValue(value as int);
+    } else {
+      return CustomMessageType.fromString(value as String);
+    }
+  }
 
   final int value;
 
@@ -136,4 +158,30 @@ enum ConversationType {
   @override
   String toString() =>
       '${name[0].toUpperCase()}${name.substring(1).toLowerCase()}';
+}
+
+enum AttachmentType {
+  image(0),
+  video(1),
+  audio(2),
+  file(3);
+
+  const AttachmentType(this.value);
+
+  factory AttachmentType.fromMap(int value) {
+    switch (value) {
+      case 0:
+        return AttachmentType.image;
+      case 1:
+        return AttachmentType.video;
+      case 2:
+        return AttachmentType.audio;
+      case 3:
+        return AttachmentType.file;
+      default:
+        return AttachmentType.image;
+    }
+  }
+
+  final int value;
 }

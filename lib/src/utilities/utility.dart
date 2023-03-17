@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:appscrip_chat_component/src/app/chat_constant.dart';
 import 'package:appscrip_chat_component/src/res/res.dart';
+import 'package:appscrip_chat_component/src/utilities/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -65,7 +66,14 @@ class ChatUtility {
   }
 
   /// this is for change encoded string to decode string
-  static String decodePayload(String value) => utf8.fuse(base64).decode(value);
+  static String decodePayload(String value) {
+    try {
+      return utf8.fuse(base64).decode(value);
+    } catch (e) {
+      ChatLog.error('Decode Error - $value');
+      return value;
+    }
+  }
 
   /// this is for change decode string to encode string
   static String encodePayload(String value) => utf8.fuse(base64).encode(value);

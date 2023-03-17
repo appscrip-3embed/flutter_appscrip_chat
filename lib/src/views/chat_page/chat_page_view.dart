@@ -17,7 +17,7 @@ class _ChatPageViewState extends State<ChatPageView> {
   }
 
   @override
-  Widget build(BuildContext context) => GetBuilder<ChatPageController>(
+  Widget build(BuildContext context) => GetX<ChatPageController>(
         builder: (controller) => Scaffold(
           resizeToAvoidBottomInset: true,
           appBar: const ChatPageHeader(),
@@ -28,7 +28,9 @@ class _ChatPageViewState extends State<ChatPageView> {
                   onTap: controller.focusNode.unfocus,
                   child: Center(
                     child: Text(
-                      ChatStrings.noConversation,
+                      controller.messages.isEmpty
+                          ? ChatStrings.noConversation
+                          : controller.messages.length.toString(),
                       style: ChatStyles.w600Black20.copyWith(
                         color: ChatTheme.of(context).primaryColor,
                       ),
