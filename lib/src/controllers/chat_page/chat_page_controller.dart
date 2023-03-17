@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ChatPageController extends GetxController {
@@ -9,6 +10,14 @@ class ChatPageController extends GetxController {
 
   late ChatConversationModel conversation;
 
+  var focusNode = FocusNode();
+
+  var chatInputController = TextEditingController();
+
+  final RxBool _showSendButton = false.obs;
+  bool get showSendButton => _showSendButton.value;
+  set showSendButton(bool value) => _showSendButton.value = value;
+
   @override
   void onInit() {
     super.onInit();
@@ -16,6 +25,10 @@ class ChatPageController extends GetxController {
       conversation = _conversationController.currentConversation!;
       getChatMessages();
     }
+    chatInputController.addListener(() {
+      showSendButton = chatInputController.text.isNotEmpty;
+    });
+    focusNode.requestFocus();
   }
 
   void getChatMessages() async => _viewModel.getChatMessages(

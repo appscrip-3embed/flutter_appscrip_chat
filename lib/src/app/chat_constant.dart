@@ -11,4 +11,5 @@ class ChatConstants {
   static late ChatObjectBox objectBox;
   static String dbName = ChatStrings.dbname;
   static bool isInitialized = false;
+  static Duration animationDuration = const Duration(milliseconds: 300);
 }

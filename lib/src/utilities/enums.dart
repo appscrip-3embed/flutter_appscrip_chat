@@ -6,6 +6,21 @@ enum MessageType {
 
   const MessageType(this.value);
 
+  factory MessageType.fromValue(int value) {
+    switch (value) {
+      case 0:
+        return MessageType.normal;
+      case 1:
+        return MessageType.forward;
+      case 2:
+        return MessageType.reply;
+      case 3:
+        return MessageType.admin;
+      default:
+        return MessageType.normal;
+    }
+  }
+
   final int value;
 
   @override
@@ -60,6 +75,12 @@ enum CustomMessageType {
     }
   }
 
+  // factory CustomMessageType.fromString(String value) {
+  //   const map = <String, CustomMessageType>{
+  //     'text': CustomMessageType.text,
+  //   };
+  // }
+
   final int value;
 
   @override
@@ -88,4 +109,31 @@ enum MessageStatus {
   const MessageStatus(this.value);
 
   final int value;
+}
+
+enum ConversationType {
+  private(0),
+  public(1),
+  open(2);
+
+  const ConversationType(this.value);
+
+  factory ConversationType.fromValue(int value) {
+    switch (value) {
+      case 0:
+        return ConversationType.private;
+      case 1:
+        return ConversationType.public;
+      case 2:
+        return ConversationType.open;
+      default:
+        return ConversationType.public;
+    }
+  }
+
+  final int value;
+
+  @override
+  String toString() =>
+      '${name[0].toUpperCase()}${name.substring(1).toLowerCase()}';
 }

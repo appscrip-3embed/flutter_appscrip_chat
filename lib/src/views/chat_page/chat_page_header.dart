@@ -30,7 +30,7 @@ class ChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                   controller.conversation.opponentDetails.userProfileImageUrl,
                   name: controller.conversation.chatName,
                 ),
-                ChatDimens.boxWidth8,
+                ChatDimens.boxWidth16,
                 Text(
                   controller.conversation.chatName,
                   style: ChatStyles.w600White18,
