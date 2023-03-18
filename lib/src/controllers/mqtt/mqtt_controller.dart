@@ -1,5 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/app/chat_constant.dart';
+import 'package:appscrip_chat_component/src/app/chat_config.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:get/get.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -26,7 +26,7 @@ class MqttController extends GetxController {
   void onInit() async {
     super.onInit();
     await _getDeviceId();
-    _communicationConfig = ChatConstants.communicationConfig;
+    _communicationConfig = IsmChatConfig.communicationConfig;
     messageTopic =
         '/${_communicationConfig.accountId}/${_communicationConfig.projectId}/Message/${_communicationConfig.userId}';
     statusTopic =

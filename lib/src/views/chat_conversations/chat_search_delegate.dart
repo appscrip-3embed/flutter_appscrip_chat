@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ChatSearchDelegate extends SearchDelegate<void> {
-  final _controller = Get.find<ChatConversationsController>();
+  final _controller = Get.find<IsmChatConversationsController>();
 
   @override
   List<Widget> buildActions(BuildContext context) => [

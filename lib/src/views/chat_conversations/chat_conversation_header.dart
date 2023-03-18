@@ -33,7 +33,7 @@ class ChatListHeader extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(height ?? ChatDimens.appBarHeight);
 
   @override
-  Widget build(BuildContext context) => GetX<ChatConversationsController>(
+  Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
         builder: (controller) => AppBar(
           automaticallyImplyLeading: false,
           elevation: ChatDimens.appBarElevation,

@@ -1,8 +1,8 @@
 /// ChatAPI class is a singleton class
 ///
 /// It  will be used for API endpoint constants
-class ChatAPI {
-  const ChatAPI._();
+class IsmChatAPI {
+  const IsmChatAPI._();
 
   static const String baseUrl = 'https://apis.isometrik.io';
 

@@ -1,65 +1,75 @@
 import 'dart:convert';
 
-import 'package:appscrip_chat_component/src/models/models.dart';
-import 'package:appscrip_chat_component/src/utilities/utilities.dart';
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/app/chat_config.dart';
 import 'package:flutter/foundation.dart';
 
 class ChatMessageModel {
   factory ChatMessageModel.fromJson(String source) =>
       ChatMessageModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
-  factory ChatMessageModel.fromMap(Map<String, dynamic> map) =>
-      ChatMessageModel(
-        body: map['body'] != null && (map['body'] as String).isNotEmpty
-            ? ChatUtility.decodePayload(map['body'] as String)
-            : '',
-        action: map['action'] as String?,
-        updatedAt: map['updatedAt'] as int? ?? 0,
-        sentAt: map['sentAt'] as int? ?? 0,
-        unreadMessagesCount: map['unreadMessagesCount'] as int? ?? 0,
-        searchableTags: map['searchableTags'] != null
-            ? List<String>.from(map['searchableTags'] as List<dynamic>)
-            : [],
-        privateOneToOne: map['privateOneToOne'] as bool? ?? false,
-        showInConversation: map['showInConversation'] as bool? ?? true,
-        readByAll: map['readByAll'] as bool? ?? false,
-        senderInfo: map['senderInfo'] != null &&
-                (map['senderInfo'] as Map<String, dynamic>).keys.isNotEmpty
-            ? UserDetails.fromMap(map['senderInfo'] as Map<String, dynamic>)
-            : null,
-        metaData: map['metaData'] != null
-            ? ChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>)
-            : null,
-        messagingDisabled: map['messagingDisabled'] as bool? ?? false,
-        membersCount: map['membersCount'] as int? ?? 0,
-        lastReadAt: LastReadAt.fromNetworkMap(
-            map['lastReadAt'] as Map<String, dynamic>? ?? {}),
-        attachments: map['attachments'] != null
-            ? (map['attachments'] as List<dynamic>)
-                .map((e) => AttachmentModel.fromMap(e as Map<String, dynamic>))
-                .toList()
-            : null,
-        lastMessageSentAt: map['lastMessageSentAt'] as int? ?? 0,
-        isGroup: map['isGroup'] as bool? ?? false,
-        deliveredToAll: map['deliveredToAll'] as bool? ?? false,
-        customType: map['customType'] != null
-            ? CustomMessageType.fromMap(map['customType'])
-            : null,
-        createdByUserName: map['createdByUserName'] as String? ?? '',
-        createdByUserImageUrl: map['createdByUserImageUrl'] as String? ?? '',
-        createdBy: map['createdBy'] as String? ?? '',
-        createdAt: map['createdAt'] as int? ?? 0,
-        conversationType: map['conversationType'] as int? ?? 0,
-        conversationTitle: map['conversationTitle'] as String?,
-        conversationImageUrl: map['conversationImageUrl'] as String?,
-        conversationId: map['conversationId'] as String? ?? '',
-        messageId: map['messageId'] as String? ?? '',
-        deviceId: map['deviceId'] as String? ?? '',
-        parentMessageId: map['parentMessageId'] as String? ?? '',
-        adminCount: map['adminCount'] as int? ?? 0,
-        messageType: MessageType.fromValue(map['messageType'] as int? ?? 0),
-        mentionedUsers: map['mentionedUsers'],
-      );
+  factory ChatMessageModel.fromMap(Map<String, dynamic> map) {
+    var model = ChatMessageModel(
+      body: map['body'] != null && (map['body'] as String).isNotEmpty
+          ? ChatUtility.decodePayload(map['body'] as String)
+          : '',
+      action: map['action'] as String?,
+      updatedAt: map['updatedAt'] as int? ?? 0,
+      sentAt: map['sentAt'] as int? ?? 0,
+      unreadMessagesCount: map['unreadMessagesCount'] as int? ?? 0,
+      searchableTags: map['searchableTags'] != null
+          ? List<String>.from(map['searchableTags'] as List<dynamic>)
+          : [],
+      privateOneToOne: map['privateOneToOne'] as bool? ?? false,
+      showInConversation: map['showInConversation'] as bool? ?? true,
+      readByAll: map['readByAll'] as bool? ?? false,
+      senderInfo: map['senderInfo'] != null &&
+              (map['senderInfo'] as Map<String, dynamic>).keys.isNotEmpty
+          ? UserDetails.fromMap(map['senderInfo'] as Map<String, dynamic>)
+          : null,
+      metaData: map['metaData'] != null
+          ? ChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>)
+          : null,
+      messagingDisabled: map['messagingDisabled'] as bool? ?? false,
+      membersCount: map['membersCount'] as int? ?? 0,
+      lastReadAt: LastReadAt.fromNetworkMap(
+          map['lastReadAt'] as Map<String, dynamic>? ?? {}),
+      attachments: map['attachments'] != null
+          ? (map['attachments'] as List<dynamic>)
+              .map((e) => AttachmentModel.fromMap(e as Map<String, dynamic>))
+              .toList()
+          : null,
+      lastMessageSentAt: map['lastMessageSentAt'] as int? ?? 0,
+      isGroup: map['isGroup'] as bool? ?? false,
+      deliveredToAll: map['deliveredToAll'] as bool? ?? false,
+      customType: map['customType'] != null
+          ? CustomMessageType.fromMap(map['customType'])
+          : null,
+      createdByUserName: map['createdByUserName'] as String? ?? '',
+      createdByUserImageUrl: map['createdByUserImageUrl'] as String? ?? '',
+      createdBy: map['createdBy'] as String? ?? '',
+      conversationType: map['conversationType'] as int? ?? 0,
+      conversationTitle: map['conversationTitle'] as String?,
+      conversationImageUrl: map['conversationImageUrl'] as String?,
+      conversationId: map['conversationId'] as String? ?? '',
+      messageId: map['messageId'] as String? ?? '',
+      deviceId: map['deviceId'] as String? ?? '',
+      parentMessageId: map['parentMessageId'] as String? ?? '',
+      adminCount: map['adminCount'] as int? ?? 0,
+      messageType: MessageType.fromValue(map['messageType'] as int? ?? 0),
+      sentByMe: true,
+      mentionedUsers: map['mentionedUsers'],
+    );
+    return model.copyWith(
+      customType:
+          model.customType != null && model.customType != CustomMessageType.text
+              ? model.customType
+              : CustomMessageType.withBody(model.body),
+      sentByMe: model.senderInfo != null
+          ? model.senderInfo!.userId == IsmChatConfig.communicationConfig.userId
+          : true,
+    );
+  }
 
   ChatMessageModel({
     required this.body,
@@ -84,7 +94,6 @@ class ChatMessageModel {
     required this.createdByUserName,
     required this.createdByUserImageUrl,
     required this.createdBy,
-    required this.createdAt,
     required this.conversationType,
     this.conversationTitle,
     this.conversationImageUrl,
@@ -94,6 +103,7 @@ class ChatMessageModel {
     required this.deviceId,
     required this.adminCount,
     required this.messageType,
+    required this.sentByMe,
     this.mentionedUsers,
   });
 
@@ -118,7 +128,6 @@ class ChatMessageModel {
   final String createdByUserName;
   final String createdByUserImageUrl;
   final String createdBy;
-  final int createdAt;
   final int conversationType;
   final String? conversationTitle;
   final String? conversationImageUrl;
@@ -130,6 +139,8 @@ class ChatMessageModel {
   final MessageType messageType;
   final dynamic mentionedUsers;
   final CustomMessageType? customType;
+  final bool sentByMe;
+  // final String initiatorId;
 
   String get chatName => conversationTitle ?? senderInfo?.userName ?? '';
 
@@ -157,7 +168,6 @@ class ChatMessageModel {
     String? createdByUserName,
     String? createdByUserImageUrl,
     String? createdBy,
-    int? createdAt,
     int? conversationType,
     String? conversationTitle,
     String? conversationImageUrl,
@@ -168,6 +178,7 @@ class ChatMessageModel {
     ConversationConfig? config,
     int? adminCount,
     MessageType? messageType,
+    bool? sentByMe,
     dynamic mentionedUsers,
   }) =>
       ChatMessageModel(
@@ -194,7 +205,6 @@ class ChatMessageModel {
         createdByUserImageUrl:
             createdByUserImageUrl ?? this.createdByUserImageUrl,
         createdBy: createdBy ?? this.createdBy,
-        createdAt: createdAt ?? this.createdAt,
         conversationType: conversationType ?? this.conversationType,
         conversationTitle: conversationTitle ?? this.conversationTitle,
         conversationImageUrl: conversationImageUrl ?? this.conversationImageUrl,
@@ -204,6 +214,7 @@ class ChatMessageModel {
         deviceId: deviceId ?? this.deviceId,
         adminCount: adminCount ?? this.adminCount,
         messageType: messageType ?? this.messageType,
+        sentByMe: sentByMe ?? this.sentByMe,
         mentionedUsers: mentionedUsers ?? this.mentionedUsers,
       );
 
@@ -230,7 +241,6 @@ class ChatMessageModel {
         'createdByUserName': createdByUserName,
         'createdByUserImageUrl': createdByUserImageUrl,
         'createdBy': createdBy,
-        'createdAt': createdAt,
         'conversationType': conversationType,
         'conversationTitle': conversationTitle,
         'conversationImageUrl': conversationImageUrl,
@@ -240,6 +250,7 @@ class ChatMessageModel {
         'deviceId': deviceId,
         'adminCount': adminCount,
         'messageType': messageType.value,
+        'sentByMe': sentByMe,
         'mentionedUsers': mentionedUsers,
       };
 
@@ -247,7 +258,7 @@ class ChatMessageModel {
 
   @override
   String toString() =>
-      'ChatMessageModel(body: $body, action: $action, updatedAt: $updatedAt, sentAt: $sentAt, unreadMessagesCount: $unreadMessagesCount, searchableTags: $searchableTags, privateOneToOne: $privateOneToOne, showInConversation: $showInConversation, readByAll: $readByAll, senderInfo: $senderInfo, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, attachments: $attachments, lastMessageSentAt: $lastMessageSentAt, isGroup: $isGroup, deliveredToAll: $deliveredToAll, customType: $customType, createdByUserName: $createdByUserName, createdByUserImageUrl: $createdByUserImageUrl, createdBy: $createdBy, createdAt: $createdAt, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, parentMessageId: $parentMessageId, messageId: $messageId, deviceId: $deviceId, adminCount: $adminCount, messageType: $messageType, mentionedUsers: $mentionedUsers)';
+      'ChatMessageModel(body: $body, action: $action, updatedAt: $updatedAt, sentAt: $sentAt, unreadMessagesCount: $unreadMessagesCount, searchableTags: $searchableTags, privateOneToOne: $privateOneToOne, showInConversation: $showInConversation, readByAll: $readByAll, senderInfo: $senderInfo, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, attachments: $attachments, lastMessageSentAt: $lastMessageSentAt, isGroup: $isGroup, deliveredToAll: $deliveredToAll, customType: $customType, createdByUserName: $createdByUserName, createdByUserImageUrl: $createdByUserImageUrl, createdBy: $createdBy, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, parentMessageId: $parentMessageId, messageId: $messageId, deviceId: $deviceId, adminCount: $adminCount, messageType: $messageType, sentByMe: $sentByMe, mentionedUsers: $mentionedUsers)';
 
   @override
   bool operator ==(Object other) {
@@ -276,7 +287,6 @@ class ChatMessageModel {
         other.createdByUserName == createdByUserName &&
         other.createdByUserImageUrl == createdByUserImageUrl &&
         other.createdBy == createdBy &&
-        other.createdAt == createdAt &&
         other.conversationType == conversationType &&
         other.conversationTitle == conversationTitle &&
         other.conversationImageUrl == conversationImageUrl &&
@@ -286,6 +296,7 @@ class ChatMessageModel {
         other.deviceId == deviceId &&
         other.messageType == messageType &&
         other.mentionedUsers == mentionedUsers &&
+        other.sentByMe == sentByMe &&
         other.adminCount == adminCount;
   }
 
@@ -313,7 +324,6 @@ class ChatMessageModel {
       createdByUserName.hashCode ^
       createdByUserImageUrl.hashCode ^
       createdBy.hashCode ^
-      createdAt.hashCode ^
       conversationType.hashCode ^
       conversationTitle.hashCode ^
       conversationImageUrl.hashCode ^
@@ -323,5 +333,6 @@ class ChatMessageModel {
       deviceId.hashCode ^
       messageType.hashCode ^
       mentionedUsers.hashCode ^
+      sentByMe.hashCode ^
       adminCount.hashCode;
 }

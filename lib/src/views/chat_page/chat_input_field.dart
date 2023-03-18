@@ -1,5 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/app/chat_constant.dart';
+import 'package:appscrip_chat_component/src/app/chat_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -7,7 +7,7 @@ class ChatInputField extends StatelessWidget {
   const ChatInputField({super.key});
 
   @override
-  Widget build(BuildContext context) => GetX<ChatPageController>(
+  Widget build(BuildContext context) => GetX<IsmChatPageController>(
         builder: (controller) => Container(
           height: ChatDimens.inputFieldHeight,
           width: Get.width,
@@ -22,7 +22,7 @@ class ChatInputField extends StatelessWidget {
                     filled: true,
                     fillColor: ChatTheme.of(context).backgroundColor,
                     prefixIcon: IconButton(
-                      color: ChatConstants.chatTheme.primaryColor,
+                      color: IsmChatConfig.chatTheme.primaryColor,
                       icon: const Icon(Icons.emoji_emotions_rounded),
                       onPressed: () {},
                     ),
@@ -53,7 +53,7 @@ class ChatInputField extends StatelessWidget {
                     foregroundColor: ChatColors.whiteColor,
                   ),
                   child: AnimatedSwitcher(
-                    duration: ChatConstants.animationDuration,
+                    duration: IsmChatConfig.animationDuration,
                     transitionBuilder: (child, animation) => ScaleTransition(
                       scale: animation,
                       child: child,
@@ -76,13 +76,13 @@ class ChatInputField extends StatelessWidget {
       );
 }
 
-class AttachmentIcon extends GetView<ChatPageController> {
+class AttachmentIcon extends GetView<IsmChatPageController> {
   const AttachmentIcon({super.key});
 
   @override
   Widget build(BuildContext context) => IconButton(
         onPressed: () {},
-        color: ChatConstants.chatTheme.primaryColor,
+        color: IsmChatConfig.chatTheme.primaryColor,
         icon: const Icon(Icons.attach_file_rounded),
       );
 }

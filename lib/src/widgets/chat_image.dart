@@ -1,3 +1,4 @@
+import 'package:appscrip_chat_component/src/app/chat_config.dart';
 import 'package:appscrip_chat_component/src/res/res.dart';
 import 'package:appscrip_chat_component/src/utilities/utilities.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -28,6 +29,13 @@ class ChatImage extends StatelessWidget {
             alignment: Alignment.center,
             height: 48,
             cacheKey: imageUrl,
+            imageBuilder: (_, image) => Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: IsmChatConfig.chatTheme.backgroundColor!,
+                image: DecorationImage(image: image, fit: BoxFit.cover),
+              ),
+            ),
             placeholder: (context, url) => Container(
               alignment: Alignment.center,
               decoration: BoxDecoration(

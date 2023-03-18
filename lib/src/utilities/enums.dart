@@ -1,3 +1,5 @@
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+
 enum MessageType {
   normal(0),
   forward(1),
@@ -31,15 +33,16 @@ enum MessageType {
 enum CustomMessageType {
   text(1),
   reply(2),
-  image(3),
-  video(4),
-  audio(5),
-  file(6),
-  location(7),
-  block(8),
-  unblock(9),
-  deletedForMe(10),
-  deletedForEveryone(11),
+  forward(3),
+  image(4),
+  video(5),
+  audio(6),
+  file(7),
+  location(8),
+  block(9),
+  unblock(10),
+  deletedForMe(11),
+  deletedForEveryone(12),
   date(100);
 
   const CustomMessageType(this.value);
@@ -51,22 +54,24 @@ enum CustomMessageType {
       case 2:
         return CustomMessageType.reply;
       case 3:
-        return CustomMessageType.image;
+        return CustomMessageType.forward;
       case 4:
-        return CustomMessageType.video;
+        return CustomMessageType.image;
       case 5:
-        return CustomMessageType.audio;
+        return CustomMessageType.video;
       case 6:
-        return CustomMessageType.file;
+        return CustomMessageType.audio;
       case 7:
-        return CustomMessageType.location;
+        return CustomMessageType.file;
       case 8:
-        return CustomMessageType.block;
+        return CustomMessageType.location;
       case 9:
-        return CustomMessageType.unblock;
+        return CustomMessageType.block;
       case 10:
-        return CustomMessageType.deletedForMe;
+        return CustomMessageType.unblock;
       case 11:
+        return CustomMessageType.deletedForMe;
+      case 12:
         return CustomMessageType.deletedForEveryone;
       case 100:
         return CustomMessageType.date;
@@ -93,7 +98,7 @@ enum CustomMessageType {
   }
 
   factory CustomMessageType.fromMap(dynamic value) {
-    if (value.runtimeType != int || value.runtimeType != String) {
+    if (value.runtimeType != int && value.runtimeType != String) {
       return CustomMessageType.text;
     }
     if (value.runtimeType == int) {
@@ -101,6 +106,32 @@ enum CustomMessageType {
     } else {
       return CustomMessageType.fromString(value as String);
     }
+  }
+
+  factory CustomMessageType.withBody(String body) {
+    if (body.isEmpty) {
+      return CustomMessageType.text;
+    }
+    if (body.toLowerCase().contains('map')) {
+      return CustomMessageType.location;
+    }
+    if (IsmChatConstants.imageExtensions
+        .any((e) => body.toLowerCase().contains(e.toLowerCase()))) {
+      return CustomMessageType.image;
+    }
+    if (IsmChatConstants.videoExtensions
+        .any((e) => body.toLowerCase().contains(e.toLowerCase()))) {
+      return CustomMessageType.video;
+    }
+    if (IsmChatConstants.audioExtensions
+        .any((e) => body.toLowerCase().contains(e.toLowerCase()))) {
+      return CustomMessageType.audio;
+    }
+    if (IsmChatConstants.fileExtensions
+        .any((e) => body.toLowerCase().contains(e.toLowerCase()))) {
+      return CustomMessageType.file;
+    }
+    return CustomMessageType.text;
   }
 
   final int value;

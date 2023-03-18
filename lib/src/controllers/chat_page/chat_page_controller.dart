@@ -2,17 +2,23 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ChatPageController extends GetxController {
-  ChatPageController(this._viewModel);
+class IsmChatPageController extends GetxController {
+  IsmChatPageController(this._viewModel);
   final ChatPageViewModel _viewModel;
 
-  final _conversationController = Get.find<ChatConversationsController>();
+  final _conversationController = Get.find<IsmChatConversationsController>();
 
   late ChatConversationModel conversation;
 
   var focusNode = FocusNode();
 
   var chatInputController = TextEditingController();
+
+  var messagesScrollController = ScrollController();
+
+  final RxBool _isMessagesLoading = true.obs;
+  bool get isMessagesLoading => _isMessagesLoading.value;
+  set isMessagesLoading(bool value) => _isMessagesLoading.value = value;
 
   final _messages = <ChatMessageModel>[].obs;
   List<ChatMessageModel> get messages => _messages;
@@ -32,17 +38,27 @@ class ChatPageController extends GetxController {
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
     });
-    focusNode.requestFocus();
   }
 
   void getChatMessages() async {
+    isMessagesLoading = true;
     var data = await _viewModel.getChatMessages(
       conversationId: conversation.conversationId,
       lastMessageTimestamp: 0,
     );
+    isMessagesLoading = false;
 
     if (data != null) {
-      messages = data;
+      messages = _viewModel.sortMessages(data);
+      await Future.delayed(
+        const Duration(milliseconds: 10),
+        () async => await messagesScrollController.animateTo(
+          messagesScrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 100),
+          curve: Curves.easeInOut,
+        ),
+      );
+      focusNode.requestFocus();
     }
   }
 }

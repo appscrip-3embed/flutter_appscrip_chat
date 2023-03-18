@@ -1,7 +1,7 @@
 library appscrip_chat_component;
 
 import 'package:appscrip_chat_component/appscrip_chat_component_platform_interface.dart';
-import 'package:appscrip_chat_component/src/app/chat_constant.dart';
+import 'package:appscrip_chat_component/src/app/chat_config.dart';
 import 'package:appscrip_chat_component/src/data/data.dart';
 
 export 'src/app/app.dart';
@@ -19,7 +19,7 @@ class AppscripChatComponent {
       ChatComponentPlatform.instance.getPlatformVersion();
 
   static Future<void> initialize() async {
-    ChatConstants.objectBox = await ChatObjectBox.create();
-    ChatConstants.isInitialized = true;
+    IsmChatConfig.objectBox = await IsmChatObjectBox.create();
+    IsmChatConfig.isInitialized = true;
   }
 }

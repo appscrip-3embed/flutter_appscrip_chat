@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 class ChatStyles {
   const ChatStyles._();
 
+  static TextStyle w400Grey10 = TextStyle(
+    color: ChatColors.greyColor,
+    fontSize: ChatDimens.ten,
+    fontWeight: FontWeight.w400,
+  );
   static TextStyle w400Black12 = TextStyle(
     color: ChatColors.blackColor,
     fontSize: ChatDimens.twelve,
@@ -53,6 +58,18 @@ class ChatStyles {
     color: ChatColors.whiteColor,
     fontSize: ChatDimens.eighteen,
     fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle w500White16 = TextStyle(
+    color: ChatColors.whiteColor,
+    fontSize: ChatDimens.sixteen,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle w500Black16 = TextStyle(
+    color: ChatColors.textColor,
+    fontSize: ChatDimens.sixteen,
+    fontWeight: FontWeight.w500,
   );
 
   static TextStyle w600White16 = TextStyle(

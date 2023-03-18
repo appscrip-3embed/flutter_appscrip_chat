@@ -1,9 +1,7 @@
 import 'dart:convert';
 
-import 'package:appscrip_chat_component/src/app/chat_constant.dart';
-import 'package:appscrip_chat_component/src/res/res.dart';
-import 'package:appscrip_chat_component/src/utilities/utilities.dart';
-import 'package:flutter/material.dart';
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/app/chat_config.dart';
 import 'package:get/get.dart';
 
 class ChatUtility {
@@ -15,27 +13,11 @@ class ChatUtility {
   static void showLoader() async {
     if (!isLoaderOpen) {
       await Get.dialog<void>(
-        (ChatConstants.loadingDialog) ?? loadingDialog(),
+        (IsmChatConfig.loadingDialog) ?? const LoadingDialog(),
         barrierDismissible: false,
       );
     }
   }
-
-  static Widget loadingDialog() => Center(
-        child: SizedBox(
-          height: 60,
-          width: 60,
-          child: Card(
-            color: ChatTheme.of(Get.context!).backgroundColor,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CircularProgressIndicator(
-                color: ChatTheme.of(Get.context!).primaryColor,
-              ),
-            ),
-          ),
-        ),
-      );
 
   static void closeLoader() {
     if (isLoaderOpen) {
@@ -47,9 +29,9 @@ class ChatUtility {
   static Map<String, String> commonHeader() {
     var header = <String, String>{
       'Content-Type': 'application/json',
-      'licenseKey': ChatConstants.communicationConfig.licenseKey,
-      'appSecret': ChatConstants.communicationConfig.appSecret,
-      'userSecret': ChatConstants.communicationConfig.userSecret,
+      'licenseKey': IsmChatConfig.communicationConfig.licenseKey,
+      'appSecret': IsmChatConfig.communicationConfig.appSecret,
+      'userSecret': IsmChatConfig.communicationConfig.userSecret,
     };
     return header;
   }
@@ -58,9 +40,9 @@ class ChatUtility {
   static Map<String, String> tokenCommonHeader() {
     var header = <String, String>{
       'Content-Type': 'application/json',
-      'licenseKey': ChatConstants.communicationConfig.licenseKey,
-      'appSecret': ChatConstants.communicationConfig.appSecret,
-      'userToken': ChatConstants.communicationConfig.userToken,
+      'licenseKey': IsmChatConfig.communicationConfig.licenseKey,
+      'appSecret': IsmChatConfig.communicationConfig.appSecret,
+      'userToken': IsmChatConfig.communicationConfig.userToken,
     };
     return header;
   }

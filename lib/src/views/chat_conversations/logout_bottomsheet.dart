@@ -1,7 +1,6 @@
 import 'package:appscrip_chat_component/src/controllers/chat_conversations/chat_conversations_controller.dart';
 import 'package:appscrip_chat_component/src/res/res.dart';
 import 'package:appscrip_chat_component/src/widgets/widgets.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,7 +10,7 @@ class LogutBottomSheet extends StatelessWidget {
   final VoidCallback signOutTap;
 
   @override
-  Widget build(BuildContext context) => GetX<ChatConversationsController>(
+  Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
       builder: (controller) => Container(
           padding: ChatDimens.egdeInsets10,
           height: ChatDimens.hundred,

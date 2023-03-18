@@ -1,9 +1,9 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/app/chat_constant.dart';
+import 'package:appscrip_chat_component/src/app/chat_config.dart';
 import 'package:get/get.dart';
 
-class ChatConversationsController extends GetxController {
-  ChatConversationsController(this._viewModel);
+class IsmChatConversationsController extends GetxController {
+  IsmChatConversationsController(this._viewModel);
   final ChatConversationsViewModel _viewModel;
 
   final _conversations = <ChatConversationModel>[].obs;
@@ -30,7 +30,7 @@ class ChatConversationsController extends GetxController {
   @override
   onInit() {
     super.onInit();
-    var users = ChatConstants.objectBox.userDetailsBox.getAll();
+    var users = IsmChatConfig.objectBox.userDetailsBox.getAll();
     if (users.isNotEmpty) {
       userDetails = users.last;
     } else {
@@ -70,6 +70,6 @@ class ChatConversationsController extends GetxController {
   }
 
   Future<void> signOut() async {
-    ChatConstants.objectBox.deleteChatLocalDb();
+    IsmChatConfig.objectBox.deleteChatLocalDb();
   }
 }

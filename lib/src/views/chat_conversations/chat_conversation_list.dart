@@ -60,19 +60,19 @@ class ChatConversationList extends StatefulWidget {
 }
 
 class _ChatConversationListState extends State<ChatConversationList> {
-  late ChatConversationsController controller;
+  late IsmChatConversationsController controller;
 
   @override
   void initState() {
     super.initState();
-    ChatConversationsBinding().dependencies();
+    IsmChatConversationsBinding().dependencies();
   }
 
   @override
-  Widget build(BuildContext context) => GetX<ChatConversationsController>(
+  Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
         builder: (controller) {
           if (controller.isConversationsLoading) {
-            return ChatUtility.loadingDialog();
+            return const LoadingDialog();
           }
           if (controller.conversations.isEmpty) {
             return Center(

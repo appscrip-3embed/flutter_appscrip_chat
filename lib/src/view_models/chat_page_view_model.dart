@@ -10,8 +10,8 @@ class ChatPageViewModel {
     required int lastMessageTimestamp,
   }) async {
     try {
-      var response = await ChatApiWrapper.get(
-        '${ChatAPI.chatMessages}?conversationId=$conversationId&limit=$messageLimit&skip=$messageSkip&lastMessageTimestamp=$lastMessageTimestamp',
+      var response = await IsmChatApiWrapper.get(
+        '${IsmChatAPI.chatMessages}?conversationId=$conversationId&limit=$messageLimit&skip=$messageSkip&lastMessageTimestamp=$lastMessageTimestamp',
         headers: ChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
@@ -25,5 +25,10 @@ class ChatPageViewModel {
       ChatLog.error('GetChatMessages $e', st);
       return null;
     }
+  }
+
+  List<ChatMessageModel> sortMessages(List<ChatMessageModel> messages) {
+    messages.sort((a, b) => a.sentAt.compareTo(b.sentAt));
+    return messages;
   }
 }

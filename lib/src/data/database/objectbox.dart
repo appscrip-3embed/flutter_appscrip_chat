@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/app/chat_constant.dart';
+import 'package:appscrip_chat_component/src/app/chat_config.dart';
 import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -10,8 +10,8 @@ import 'package:path_provider/path_provider.dart';
 /// Provides access to the ObjectBox Store throughout the presenter.
 ///
 /// Create this in the apps main function.
-class ChatObjectBox {
-  ChatObjectBox._create(this.store) {
+class IsmChatObjectBox {
+  IsmChatObjectBox._create(this.store) {
     userDetailsBox = Box<UserDetails>(store);
   }
 
@@ -25,11 +25,11 @@ class ChatObjectBox {
 
   // static Query<UserMessage> query = noteBox.query(UserMessage_.conversationId.equals())
 
-  static Future<ChatObjectBox> _openStore() async {
+  static Future<IsmChatObjectBox> _openStore() async {
     // Future<Store> openStore() {...} is defined in the generated objectbox.g.dart.
     final store = await openStore(directory: _dbPath);
     ChatLog.success('[CREATED] - Objectbox databse at $_dbPath');
-    return ChatObjectBox._create(store);
+    return IsmChatObjectBox._create(store);
   }
 
   /// delete chat object box
@@ -39,10 +39,10 @@ class ChatObjectBox {
   }
 
   /// Create an instance of ObjectBox to use throughout the presenter.
-  static Future<ChatObjectBox> create([String? databaseName]) async {
+  static Future<IsmChatObjectBox> create([String? databaseName]) async {
     // Future<Store> openStore() {...} is defined in the generated objectbox.g.dart.
     try {
-      var dbName = databaseName ?? ChatConstants.dbName;
+      var dbName = databaseName ?? IsmChatConfig.dbName;
       var docDir = await getApplicationDocumentsDirectory();
       _dbPath = '${docDir.path}/$dbName';
       return await _openStore();

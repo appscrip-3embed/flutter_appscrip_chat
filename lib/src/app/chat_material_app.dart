@@ -1,9 +1,9 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/app/chat_constant.dart';
+import 'package:appscrip_chat_component/src/app/chat_config.dart';
 import 'package:flutter/material.dart';
 
-class ChatMaterialApp extends StatelessWidget {
-  ChatMaterialApp({
+class IsmChatMaterialApp extends StatelessWidget {
+  IsmChatMaterialApp({
     super.key,
     required this.communicationConfig,
     required this.child,
@@ -12,13 +12,13 @@ class ChatMaterialApp extends StatelessWidget {
     this.loadingDialog,
     this.databaseName,
   }) {
-    assert(ChatConstants.isInitialized,
+    assert(IsmChatConfig.isInitialized,
         'ChatObjectBox is not initialized\nYou are getting this error because the ChatObjectBox class is not initialized, to initialize ChatObjectBox class call AppscripChatComponent.initialize() before your runApp()');
-    ChatConstants.dbName = databaseName ?? ChatStrings.dbname;
-    ChatConstants.loadingDialog = loadingDialog;
-    ChatConstants.communicationConfig = communicationConfig;
-    ChatConstants.chatTheme = chatTheme ?? ChatThemeData.fallback();
-    ChatConstants.chatDarkTheme =
+    IsmChatConfig.dbName = databaseName ?? ChatStrings.dbname;
+    IsmChatConfig.loadingDialog = loadingDialog;
+    IsmChatConfig.communicationConfig = communicationConfig;
+    IsmChatConfig.chatTheme = chatTheme ?? ChatThemeData.fallback();
+    IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? ChatThemeData.fallback();
   }
 

@@ -5,6 +5,7 @@ class ChatDimens {
   const ChatDimens._();
 
   static final double zero = 0.sp;
+  static final double two = 2.sp;
   static final double four = 4.sp;
   static final double eight = 8.sp;
   static final double ten = 10.sp;
@@ -32,9 +33,12 @@ class ChatDimens {
   static final Widget boxWidth16 = SizedBox(width: sixteen);
   static final Widget boxWidth32 = SizedBox(width: thirtyTwo);
 
-  static final EdgeInsets egdeInsets16 = EdgeInsets.all(sixteen);
-  static final EdgeInsets egdeInsets10 = EdgeInsets.all(ten);
+  static final EdgeInsets egdeInsets4 = EdgeInsets.all(four);
+  static final EdgeInsets egdeInsets8_4 =
+      EdgeInsets.symmetric(horizontal: eight, vertical: four);
   static final EdgeInsets egdeInsets8 = EdgeInsets.all(eight);
+  static final EdgeInsets egdeInsets10 = EdgeInsets.all(ten);
+  static final EdgeInsets egdeInsets16 = EdgeInsets.all(sixteen);
   static final EdgeInsets egdeInsets0_10 = EdgeInsets.symmetric(vertical: ten);
   static final EdgeInsets egdeInsets10_0 =
       EdgeInsets.symmetric(horizontal: ten);

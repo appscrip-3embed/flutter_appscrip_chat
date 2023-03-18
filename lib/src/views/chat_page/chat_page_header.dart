@@ -14,7 +14,7 @@ class ChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(height ?? ChatDimens.appBarHeight);
 
   @override
-  Widget build(BuildContext context) => GetBuilder<ChatPageController>(
+  Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
         builder: (controller) => Theme(
           data: ThemeData.light(useMaterial3: true).copyWith(
             appBarTheme: AppBarTheme(

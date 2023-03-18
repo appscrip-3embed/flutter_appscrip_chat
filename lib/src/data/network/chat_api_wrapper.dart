@@ -5,8 +5,8 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-class ChatApiWrapper {
-  const ChatApiWrapper._();
+class IsmChatApiWrapper {
+  const IsmChatApiWrapper._();
 
   static Future<ResponseModel> get(
     String api, {

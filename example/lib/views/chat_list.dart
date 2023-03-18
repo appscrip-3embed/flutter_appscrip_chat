@@ -13,7 +13,7 @@ class ChatList extends GetView<ChatListController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ChatMaterialApp(
+      body: IsmChatMaterialApp(
         communicationConfig: ChatCommunicationConfig(
           accountId: Constants.accountId,
           userToken: controller.userDetails.userToken!,
