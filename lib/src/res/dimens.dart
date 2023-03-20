@@ -34,6 +34,8 @@ class ChatDimens {
   static final Widget boxWidth32 = SizedBox(width: thirtyTwo);
 
   static final EdgeInsets egdeInsets4 = EdgeInsets.all(four);
+  static final EdgeInsets egdeInsets4_0 =
+      EdgeInsets.symmetric(horizontal: four);
   static final EdgeInsets egdeInsets8_4 =
       EdgeInsets.symmetric(horizontal: eight, vertical: four);
   static final EdgeInsets egdeInsets8 = EdgeInsets.all(eight);

@@ -7,19 +7,21 @@ class TextMessage extends StatelessWidget {
   final ChatMessageModel message;
 
   @override
-  Widget build(BuildContext context) => UnconstrainedBox(
+  Widget build(BuildContext context) => IntrinsicWidth(
         child: Container(
           alignment:
               message.sentByMe ? Alignment.centerRight : Alignment.centerLeft,
           constraints: const BoxConstraints(
             minHeight: 36,
           ),
-          padding: ChatDimens.egdeInsets10_0,
+          padding: ChatDimens.egdeInsets4,
           child: Text(
             message.body,
             style: message.sentByMe
-                ? ChatStyles.w500White16
-                : ChatStyles.w500Black16,
+                ? ChatStyles.w500White14
+                : ChatStyles.w500Black14,
+            softWrap: true,
+            maxLines: null,
           ),
         ),
       );

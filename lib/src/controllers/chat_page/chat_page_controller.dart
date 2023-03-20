@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class IsmChatPageController extends GetxController {
   IsmChatPageController(this._viewModel);
@@ -27,6 +30,9 @@ class IsmChatPageController extends GetxController {
   final RxBool _showSendButton = false.obs;
   bool get showSendButton => _showSendButton.value;
   set showSendButton(bool value) => _showSendButton.value = value;
+
+  final Completer<GoogleMapController> googleMapCompleter =
+      Completer<GoogleMapController>();
 
   @override
   void onInit() {

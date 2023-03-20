@@ -81,10 +81,10 @@ class ChatMessage extends StatelessWidget {
                   topRight: Radius.circular(ChatDimens.twelve),
                   topLeft: message.sentByMe
                       ? Radius.circular(ChatDimens.twelve)
-                      : Radius.circular(ChatDimens.two),
+                      : Radius.circular(ChatDimens.four),
                   bottomLeft: Radius.circular(ChatDimens.twelve),
                   bottomRight: message.sentByMe
-                      ? Radius.circular(ChatDimens.two)
+                      ? Radius.circular(ChatDimens.four)
                       : Radius.circular(ChatDimens.twelve),
                 ),
               ),

@@ -60,15 +60,15 @@ class ChatStyles {
     fontWeight: FontWeight.w400,
   );
 
-  static TextStyle w500White16 = TextStyle(
+  static TextStyle w500White14 = TextStyle(
     color: ChatColors.whiteColor,
-    fontSize: ChatDimens.sixteen,
+    fontSize: ChatDimens.forteen,
     fontWeight: FontWeight.w500,
   );
 
-  static TextStyle w500Black16 = TextStyle(
+  static TextStyle w500Black14 = TextStyle(
     color: ChatColors.textColor,
-    fontSize: ChatDimens.sixteen,
+    fontSize: ChatDimens.forteen,
     fontWeight: FontWeight.w500,
   );
 
@@ -87,6 +87,11 @@ class ChatStyles {
   static TextStyle w400White14 = TextStyle(
     color: ChatColors.whiteColor,
     fontSize: ChatDimens.forteen,
+    fontWeight: FontWeight.w400,
+  );
+  static TextStyle w400White12 = TextStyle(
+    color: ChatColors.whiteColor,
+    fontSize: ChatDimens.twelve,
     fontWeight: FontWeight.w400,
   );
 }

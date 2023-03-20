@@ -1,5 +1,7 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
 extension MatchString on String {
@@ -60,4 +62,38 @@ extension ChildWidget on CustomMessageType {
         return DateMessage(message);
     }
   }
+}
+
+extension GetLink on String {
+  /// Here we are extracting location coordinates from the url of the app
+  /// <BaseUrl>?<Params>&query=`Lat`%2C`Lng`&<Rest Params>
+  LatLng get position {
+    if (!contains('map')) {
+      throw const InvalidMapUrlException(
+          "Invalid url, link doesn't contains map link to extract position coordinates");
+    }
+    var position = split('query=')
+        .last
+        .split('&')
+        .first
+        .split('%2C')
+        .map(double.parse)
+        .toList();
+
+    return LatLng(position.first, position.last);
+  }
+}
+
+extension AddressString on Placemark {
+  /// This function is an extension on `Placemark` class from [geocoding](https://pub.dev/packages/geocoding) package
+  /// This will return a formatted address
+  String toAddress() => [
+        name,
+        street,
+        subLocality,
+        locality,
+        administrativeArea,
+        country,
+        postalCode
+      ].join(', ');
 }
