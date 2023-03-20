@@ -28,9 +28,7 @@ class LocationMessage extends StatelessWidget {
       overlayColor: MaterialStateProperty.all(Colors.transparent),
       onTap: () async {
         await launchUrl(
-          Uri.parse(
-            'https://${message.body.replaceAll('https://', '').replaceAll('http://', '')}',
-          ),
+          Uri.parse(message.body),
           mode: LaunchMode.externalApplication,
         );
       },
@@ -40,7 +38,7 @@ class LocationMessage extends StatelessWidget {
             height: ChatDimens.oneHundredFifty,
             width: context.width * 0.8,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(ChatDimens.eight),
+              borderRadius: BorderRadius.circular(ChatDimens.ten),
               child: IgnorePointer(
                 child: GetBuilder<IsmChatPageController>(
                   builder: (controller) => GoogleMap(
@@ -64,7 +62,7 @@ class LocationMessage extends StatelessWidget {
               ),
             ),
           ),
-          ChatDimens.boxHeight8,
+          ChatDimens.boxHeight4,
           FutureBuilder<List<Placemark>>(
             future: GeocodingPlatform.instance.placemarkFromCoordinates(
               position.latitude,
@@ -98,6 +96,7 @@ class LocationMessage extends StatelessWidget {
               );
             },
           ),
+          ChatDimens.boxHeight4,
         ],
       ),
     );

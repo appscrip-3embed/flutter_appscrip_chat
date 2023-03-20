@@ -26,7 +26,7 @@ class ChatList extends GetView<ChatListController> {
           mqttHostName: Constants.hostname,
           mqttPort: Constants.port,
         ),
-        child: ChatConversations(
+        child: IsmChatConversations(
           showAppBar: true,
           onSignOut: controller.onSignOut,
           onChatTap: (_, __) => RouteManagement.goToChatMessages(),

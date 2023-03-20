@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class TapHandler extends StatelessWidget {
-  const TapHandler({super.key, this.onTap, required this.child});
+class IsmTapHandler extends StatelessWidget {
+  const IsmTapHandler({super.key, this.onTap, required this.child});
 
   final VoidCallback? onTap;
   final Widget child;

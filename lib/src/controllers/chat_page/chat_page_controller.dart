@@ -67,4 +67,9 @@ class IsmChatPageController extends GetxController {
       focusNode.requestFocus();
     }
   }
+
+  ChatMessageModel getMessageByid(String id) => _viewModel.getMessageByid(
+        parentId: id,
+        data: messages,
+      );
 }

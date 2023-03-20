@@ -16,19 +16,21 @@ class ChatDimens {
   static final double twenty = 20.sp;
   static final double twentyFour = 24.sp;
   static final double thirtyTwo = 32.sp;
+  static final double forty = 40.sp;
   static final double fifty = 50.sp;
-  static final double thirty = 40.sp;
   static final double eighty = 80.sp;
-  static final double oneHundredFifty = 150.sp;
   static final double hundred = 100.sp;
+  static final double oneHundredFifty = 150.sp;
 
   static final double inputFieldHeight = 48.sp;
   static final double appBarHeight = 56.sp;
   static final double appBarElevation = 8.sp;
 
+  static final Widget boxHeight4 = SizedBox(height: four);
   static final Widget boxHeight8 = SizedBox(height: eight);
   static final Widget boxHeight16 = SizedBox(height: sixteen);
   static final Widget boxHeight32 = SizedBox(height: thirtyTwo);
+  static final Widget boxWidth4 = SizedBox(width: four);
   static final Widget boxWidth8 = SizedBox(width: eight);
   static final Widget boxWidth16 = SizedBox(width: sixteen);
   static final Widget boxWidth32 = SizedBox(width: thirtyTwo);

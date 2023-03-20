@@ -1,8 +1,8 @@
 import 'package:appscrip_chat_component/src/res/res.dart';
 import 'package:flutter/material.dart';
 
-class LoadingDialog extends StatelessWidget {
-  const LoadingDialog({super.key});
+class IsmLoadingDialog extends StatelessWidget {
+  const IsmLoadingDialog({super.key});
 
   @override
   Widget build(BuildContext context) => Center(

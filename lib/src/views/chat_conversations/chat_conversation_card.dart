@@ -1,8 +1,8 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
-class ChatConversationCard extends StatelessWidget {
-  const ChatConversationCard(
+class IsmChatConversationCard extends StatelessWidget {
+  const IsmChatConversationCard(
     this.conversation, {
     this.profileImageBuilder,
     this.nameBuilder,
@@ -19,14 +19,14 @@ class ChatConversationCard extends StatelessWidget {
   final Widget? Function(BuildContext, String)? subtitleBuilder;
 
   @override
-  Widget build(BuildContext context) => TapHandler(
+  Widget build(BuildContext context) => IsmTapHandler(
         onTap: onTap,
         child: SizedBox(
           child: ListTile(
             dense: true,
             leading: profileImageBuilder?.call(context,
                     conversation.opponentDetails.userProfileImageUrl) ??
-                ChatImage(
+                IsmChatImage.profile(
                   conversation.opponentDetails.userProfileImageUrl,
                   name: conversation.chatName,
                 ),

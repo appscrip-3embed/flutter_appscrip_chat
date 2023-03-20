@@ -3,14 +3,14 @@ import 'package:appscrip_chat_component/src/app/chat_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ChatPageView extends StatefulWidget {
-  const ChatPageView({super.key});
+class IsmChatPageView extends StatefulWidget {
+  const IsmChatPageView({super.key});
 
   @override
-  State<ChatPageView> createState() => _ChatPageViewState();
+  State<IsmChatPageView> createState() => _IsmChatPageViewState();
 }
 
-class _ChatPageViewState extends State<ChatPageView> {
+class _IsmChatPageViewState extends State<IsmChatPageView> {
   @override
   void initState() {
     super.initState();
@@ -21,17 +21,17 @@ class _ChatPageViewState extends State<ChatPageView> {
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
         builder: (controller) => Scaffold(
           resizeToAvoidBottomInset: true,
-          appBar: const ChatPageHeader(),
+          appBar: const IsmChatPageHeader(),
           body: Column(
             children: [
               Expanded(
                 child: Visibility(
                   visible: !controller.isMessagesLoading,
-                  replacement: const LoadingDialog(),
+                  replacement: const IsmLoadingDialog(),
                   child: Visibility(
                     visible: controller.messages.isNotEmpty &&
                         controller.messages.length != 1,
-                    replacement: const NoMessage(),
+                    replacement: const IsmNoMessage(),
                     child: ListView.separated(
                       controller: controller.messagesScrollController,
                       keyboardDismissBehavior:
@@ -45,7 +45,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                   ),
                 ),
               ),
-              const ChatInputField(),
+              const IsmChatInputField(),
             ],
           ),
         ),

@@ -1,8 +1,8 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
-class ChatConversations extends StatefulWidget {
-  const ChatConversations({
+class IsmChatConversations extends StatefulWidget {
+  const IsmChatConversations({
     required this.onChatTap,
     this.onSignOut,
     this.showAppBar = false,
@@ -18,10 +18,10 @@ class ChatConversations extends StatefulWidget {
   final void Function(BuildContext, ChatConversationModel) onChatTap;
 
   @override
-  State<ChatConversations> createState() => _ChatConversationsState();
+  State<IsmChatConversations> createState() => _IsmChatConversationsState();
 }
 
-class _ChatConversationsState extends State<ChatConversations> {
+class _IsmChatConversationsState extends State<IsmChatConversations> {
   @override
   void initState() {
     super.initState();
@@ -31,10 +31,10 @@ class _ChatConversationsState extends State<ChatConversations> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: widget.showAppBar
-            ? ChatListHeader(onSignOut: widget.onSignOut!)
+            ? IsmChatListHeader(onSignOut: widget.onSignOut!)
             : null,
         body: SafeArea(
-          child: ChatConversationList(
+          child: IsmChatConversationList(
             onTap: widget.onChatTap,
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:any_link_preview/any_link_preview.dart';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 
 enum MessageType {
@@ -43,6 +44,7 @@ enum CustomMessageType {
   unblock(10),
   deletedForMe(11),
   deletedForEveryone(12),
+  link(13),
   date(100);
 
   const CustomMessageType(this.value);
@@ -73,6 +75,8 @@ enum CustomMessageType {
         return CustomMessageType.deletedForMe;
       case 12:
         return CustomMessageType.deletedForEveryone;
+      case 13:
+        return CustomMessageType.link;
       case 100:
         return CustomMessageType.date;
       default:
@@ -116,20 +120,24 @@ enum CustomMessageType {
       return CustomMessageType.location;
     }
     if (IsmChatConstants.imageExtensions
-        .any((e) => body.toLowerCase().contains(e.toLowerCase()))) {
+        .any((e) => body.toLowerCase().endsWith(e.toLowerCase()))) {
       return CustomMessageType.image;
     }
     if (IsmChatConstants.videoExtensions
-        .any((e) => body.toLowerCase().contains(e.toLowerCase()))) {
+        .any((e) => body.toLowerCase().endsWith(e.toLowerCase()))) {
       return CustomMessageType.video;
     }
     if (IsmChatConstants.audioExtensions
-        .any((e) => body.toLowerCase().contains(e.toLowerCase()))) {
+        .any((e) => body.toLowerCase().endsWith(e.toLowerCase()))) {
       return CustomMessageType.audio;
     }
     if (IsmChatConstants.fileExtensions
-        .any((e) => body.toLowerCase().contains(e.toLowerCase()))) {
+        .any((e) => body.toLowerCase().endsWith(e.toLowerCase()))) {
       return CustomMessageType.file;
+    }
+    if (AnyLinkPreview.isValidLink(body) ||
+        body.toLowerCase().contains('.com')) {
+      return CustomMessageType.link;
     }
     return CustomMessageType.text;
   }

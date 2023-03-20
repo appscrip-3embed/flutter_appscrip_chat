@@ -4,8 +4,8 @@ import 'package:appscrip_chat_component/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LogutBottomSheet extends StatelessWidget {
-  const LogutBottomSheet({required this.signOutTap, super.key});
+class IsmLogutBottomSheet extends StatelessWidget {
+  const IsmLogutBottomSheet({required this.signOutTap, super.key});
 
   final VoidCallback signOutTap;
 
@@ -20,8 +20,8 @@ class LogutBottomSheet extends StatelessWidget {
               style: ChatStyles.w600Black16,
             ),
             subtitle: Text(controller.userDetails?.userIdentifier ?? ''),
-            leading:
-                ChatImage(controller.userDetails?.userProfileImageUrl ?? ''),
+            leading: IsmChatImage.profile(
+                controller.userDetails?.userProfileImageUrl ?? ''),
             trailing: InkWell(
               onTap: signOutTap,
               child: Container(
@@ -30,7 +30,7 @@ class LogutBottomSheet extends StatelessWidget {
                     borderRadius: BorderRadius.circular(ChatDimens.ten),
                     color: ChatTheme.of(context).primaryColor),
                 width: ChatDimens.eighty,
-                height: ChatDimens.thirty,
+                height: ChatDimens.forty,
                 child: Text('Sign out', style: ChatStyles.w400White14),
               ),
             ),

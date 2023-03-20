@@ -2,8 +2,8 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
-  const ChatPageHeader({
+class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
+  const IsmChatPageHeader({
     this.height,
     super.key,
   });
@@ -26,7 +26,7 @@ class ChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
             title: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ChatImage(
+                IsmChatImage.profile(
                   controller.conversation.opponentDetails.userProfileImageUrl,
                   name: controller.conversation.chatName,
                 ),

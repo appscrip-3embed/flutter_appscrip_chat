@@ -3,8 +3,8 @@ import 'package:appscrip_chat_component/src/app/chat_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ChatInputField extends StatelessWidget {
-  const ChatInputField({super.key});
+class IsmChatInputField extends StatelessWidget {
+  const IsmChatInputField({super.key});
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
@@ -27,11 +27,11 @@ class ChatInputField extends StatelessWidget {
                       onPressed: () {},
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(ChatDimens.thirty),
+                      borderRadius: BorderRadius.circular(ChatDimens.forty),
                       borderSide: const BorderSide(color: Colors.transparent),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(ChatDimens.thirty),
+                      borderRadius: BorderRadius.circular(ChatDimens.forty),
                       borderSide: BorderSide(
                         color: ChatTheme.of(context).primaryColor!,
                       ),

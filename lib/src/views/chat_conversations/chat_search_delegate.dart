@@ -2,7 +2,7 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ChatSearchDelegate extends SearchDelegate<void> {
+class IsmChatSearchDelegate extends SearchDelegate<void> {
   final _controller = Get.find<IsmChatConversationsController>();
 
   @override
@@ -36,7 +36,7 @@ class ChatSearchDelegate extends SearchDelegate<void> {
             : ListView.builder(
                 itemCount: _controller.suggestions.length,
                 itemBuilder: (_, index) =>
-                    ChatConversationCard(_controller.suggestions[index]),
+                    IsmChatConversationCard(_controller.suggestions[index]),
               ),
       );
 
@@ -53,7 +53,7 @@ class ChatSearchDelegate extends SearchDelegate<void> {
             )
           : ListView.builder(
               itemCount: _controller.suggestions.length,
-              itemBuilder: (_, index) => ChatConversationCard(
+              itemBuilder: (_, index) => IsmChatConversationCard(
                 _controller.suggestions[index],
                 nameBuilder: (_, name) {
                   if (!name.didMatch(query)) {

@@ -1,3 +1,16 @@
+class IsmAssets {
+  const IsmAssets._();
+
+  static const String _base = 'packages/appscrip_chat_component/assets';
+
+  static const String _svgBase = '$_base/svg';
+  static const String _imageBase = '$_base/svg';
+
+  static const String pdfSvg = '$_svgBase/pdf.svg';
+  static const String txtSvg = '$_svgBase/txt.svg';
+  static const String xlsSvg = '$_svgBase/xls.svg';
+}
+
 class IsmChatConstants {
   const IsmChatConstants._();
 

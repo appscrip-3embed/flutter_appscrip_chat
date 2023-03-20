@@ -7,8 +7,5 @@ class ImageMessage extends StatelessWidget {
   final ChatMessageModel message;
 
   @override
-  Widget build(BuildContext context) => Text(
-        message.body,
-        style: ChatStyles.w400Black12,
-      );
+  Widget build(BuildContext context) => IsmChatImage(message.body);
 }

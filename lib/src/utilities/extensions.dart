@@ -6,6 +6,9 @@ import 'package:intl/intl.dart';
 
 extension MatchString on String {
   bool didMatch(String other) => toLowerCase().contains(other.toLowerCase());
+
+  String get convertToValidUrl =>
+      'https://${replaceAll('http://', '').replaceAll('https://', '')}';
 }
 
 extension DateConvertor on int {
@@ -57,6 +60,9 @@ extension ChildWidget on CustomMessageType {
 
       case CustomMessageType.deletedForEveryone:
         return DeletedMessage(message);
+
+      case CustomMessageType.link:
+        return LinkMessage(message);
 
       case CustomMessageType.date:
         return DateMessage(message);

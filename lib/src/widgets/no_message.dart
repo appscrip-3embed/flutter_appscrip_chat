@@ -2,8 +2,8 @@ import 'package:appscrip_chat_component/src/app/chat_config.dart';
 import 'package:appscrip_chat_component/src/res/res.dart';
 import 'package:flutter/material.dart';
 
-class NoMessage extends StatelessWidget {
-  const NoMessage({super.key});
+class IsmNoMessage extends StatelessWidget {
+  const IsmNoMessage({super.key});
 
   @override
   Widget build(BuildContext context) => Center(

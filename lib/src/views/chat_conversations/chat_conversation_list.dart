@@ -15,8 +15,8 @@ import 'package:get/get.dart';
 /// ```
 ///
 /// Certain properties can be modified as per requirement. You can read about each of them by hovering over the property
-class ChatConversationList extends StatefulWidget {
-  const ChatConversationList({
+class IsmChatConversationList extends StatefulWidget {
+  const IsmChatConversationList({
     super.key,
     required this.onTap,
     this.childBuilder,
@@ -56,10 +56,11 @@ class ChatConversationList extends StatefulWidget {
   final double? height;
 
   @override
-  State<ChatConversationList> createState() => _ChatConversationListState();
+  State<IsmChatConversationList> createState() =>
+      _IsmChatConversationListState();
 }
 
-class _ChatConversationListState extends State<ChatConversationList> {
+class _IsmChatConversationListState extends State<IsmChatConversationList> {
   late IsmChatConversationsController controller;
 
   @override
@@ -72,7 +73,7 @@ class _ChatConversationListState extends State<ChatConversationList> {
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
         builder: (controller) {
           if (controller.isConversationsLoading) {
-            return const LoadingDialog();
+            return const IsmLoadingDialog();
           }
           if (controller.conversations.isEmpty) {
             return Center(
@@ -102,7 +103,7 @@ class _ChatConversationListState extends State<ChatConversationList> {
                       );
                     }
                     var conversation = controller.conversations[index];
-                    return ChatConversationCard(
+                    return IsmChatConversationCard(
                       conversation,
                       profileImageBuilder: widget.profileImageBuilder,
                       onTap: () {

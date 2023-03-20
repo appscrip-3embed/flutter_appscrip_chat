@@ -3,8 +3,8 @@ import 'package:appscrip_chat_component/src/views/chat_conversations/logout_bott
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ChatListHeader extends StatelessWidget implements PreferredSizeWidget {
-  const ChatListHeader({
+class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
+  const IsmChatListHeader({
     super.key,
     required this.onSignOut,
     this.height,
@@ -26,7 +26,7 @@ class ChatListHeader extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final VoidCallback onSignOut;
 
-  /// Defines the height of the [ChatListHeader]
+  /// Defines the height of the [IsmChatListHeader]
   final double? height;
 
   @override
@@ -37,9 +37,9 @@ class ChatListHeader extends StatelessWidget implements PreferredSizeWidget {
         builder: (controller) => AppBar(
           automaticallyImplyLeading: false,
           elevation: ChatDimens.appBarElevation,
-          title: TapHandler(
+          title: IsmTapHandler(
             onTap: () => Get.bottomSheet(
-              LogutBottomSheet(signOutTap: () {
+              IsmLogutBottomSheet(signOutTap: () {
                 onSignOut();
                 controller.signOut();
               }),
@@ -58,7 +58,7 @@ class ChatListHeader extends StatelessWidget implements PreferredSizeWidget {
                 if (profileImage != null)
                   profileImage!
                 else
-                  ChatImage(
+                  IsmChatImage.profile(
                     controller.userDetails?.userProfileImageUrl ?? '',
                     name: controller.userDetails?.userName,
                     dimensions: ChatDimens.appBarHeight * 0.8,
@@ -105,7 +105,7 @@ class _SearchAction extends StatelessWidget {
             () {
               showSearch<void>(
                 context: context,
-                delegate: ChatSearchDelegate(),
+                delegate: IsmChatSearchDelegate(),
               );
             },
         icon: const Icon(Icons.search_rounded),

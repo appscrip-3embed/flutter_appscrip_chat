@@ -13,7 +13,7 @@ class ChatUtility {
   static void showLoader() async {
     if (!isLoaderOpen) {
       await Get.dialog<void>(
-        (IsmChatConfig.loadingDialog) ?? const LoadingDialog(),
+        (IsmChatConfig.loadingDialog) ?? const IsmLoadingDialog(),
         barrierDismissible: false,
       );
     }

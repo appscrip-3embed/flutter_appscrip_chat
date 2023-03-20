@@ -31,4 +31,10 @@ class ChatPageViewModel {
     messages.sort((a, b) => a.sentAt.compareTo(b.sentAt));
     return messages;
   }
+
+  ChatMessageModel getMessageByid({
+    required String parentId,
+    required List<ChatMessageModel> data,
+  }) =>
+      data.firstWhere((e) => e.messageId == parentId);
 }

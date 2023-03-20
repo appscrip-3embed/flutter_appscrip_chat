@@ -8,12 +8,14 @@ environment:
   flutter: ">=2.5.0"
 
 dependencies:
+  any_link_preview: ^3.0.0
   cached_network_image: ^3.2.3
   device_info_plus: ^8.1.0
   dio: ^5.0.1
   flutter:
     sdk: flutter
   flutter_screenutil: ^5.7.0
+  flutter_svg: ^2.0.4
   flutter_web_plugins:
     sdk: flutter
   geocoding: ^2.1.0
@@ -26,6 +28,7 @@ dependencies:
   objectbox_flutter_libs: any
   path_provider: ^2.0.13
   plugin_platform_interface: ^2.0.2
+  syncfusion_flutter_pdfviewer: ^20.4.54
   url_launcher: ^6.1.10
 
 dev_dependencies:
@@ -63,7 +66,9 @@ flutter:
         pluginClass: ChatComponentWeb
         fileName: chat_component_web.dart
   # To add assets to your plugin package, add an assets section, like this:
-  # assets:
+  assets:
+    - assets/svg/
+    - assets/images/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   #

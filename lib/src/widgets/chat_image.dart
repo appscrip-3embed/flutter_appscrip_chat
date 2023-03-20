@@ -3,35 +3,48 @@ import 'package:appscrip_chat_component/src/res/res.dart';
 import 'package:appscrip_chat_component/src/utilities/utilities.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class ChatImage extends StatelessWidget {
-  const ChatImage(
+class IsmChatImage extends StatelessWidget {
+  const IsmChatImage(
+    this.imageUrl, {
+    this.name,
+    this.dimensions,
+    super.key,
+  })  : _name = name ?? 'U',
+        _isProfileImage = false;
+
+  const IsmChatImage.profile(
     this.imageUrl, {
     this.name,
     this.dimensions = 48,
     super.key,
-  }) : _name = name ?? 'U';
+  })  : _name = name ?? 'U',
+        _isProfileImage = true,
+        assert(dimensions != null, 'Dimensions cannot be null');
 
   final String imageUrl;
   final String? name;
-  final double dimensions;
+  final double? dimensions;
 
   final String _name;
+  final bool _isProfileImage;
 
   @override
   Widget build(BuildContext context) => SizedBox.square(
-        dimension: dimensions,
+        dimension: _isProfileImage ? dimensions : context.width * 0.6,
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(dimensions / 2),
+          borderRadius: _isProfileImage
+              ? BorderRadius.circular(dimensions! / 2)
+              : BorderRadius.circular(ChatDimens.eight),
           child: CachedNetworkImage(
             imageUrl: imageUrl,
             fit: BoxFit.cover,
             alignment: Alignment.center,
-            height: 48,
             cacheKey: imageUrl,
             imageBuilder: (_, image) => Container(
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
+                shape: _isProfileImage ? BoxShape.circle : BoxShape.rectangle,
                 color: IsmChatConfig.chatTheme.backgroundColor!,
                 image: DecorationImage(image: image, fit: BoxFit.cover),
               ),
@@ -40,16 +53,20 @@ class ChatImage extends StatelessWidget {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: ChatTheme.of(context).primaryColor!.withOpacity(0.2),
-                shape: BoxShape.circle,
+                shape: _isProfileImage ? BoxShape.circle : BoxShape.rectangle,
               ),
-              child: Text(
-                _name[0],
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                  color: ChatTheme.of(context).primaryColor,
-                ),
-              ),
+              child: _isProfileImage
+                  ? Text(
+                      _name[0],
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                        color: ChatTheme.of(context).primaryColor,
+                      ),
+                    )
+                  : const Center(
+                      child: CircularProgressIndicator.adaptive(),
+                    ),
             ),
             errorWidget: (context, url, error) {
               ChatLog.error('ImageError - $url\n$error');
@@ -57,16 +74,27 @@ class ChatImage extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: ChatTheme.of(context).primaryColor!.withOpacity(0.2),
-                  shape: BoxShape.circle,
+                  shape: _isProfileImage ? BoxShape.circle : BoxShape.rectangle,
                 ),
-                child: Text(
-                  _name[0],
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                    color: ChatTheme.of(context).primaryColor,
-                  ),
-                ),
+                child: _isProfileImage
+                    ? Text(
+                        _name[0],
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                          color: ChatTheme.of(context).primaryColor,
+                        ),
+                      )
+                    : Container(
+                        decoration: BoxDecoration(
+                          color: ChatColors.greyColor.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(ChatDimens.eight),
+                        ),
+                        alignment: Alignment.center,
+                        child: const Text(
+                          ChatStrings.errorLoadingImage,
+                        ),
+                      ),
               );
             },
           ),
