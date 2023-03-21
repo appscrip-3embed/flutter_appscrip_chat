@@ -1,17 +1,27 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/src/utilities/utilities.dart';
 
 class AttachmentModel {
-  final String thumbnailUrl;
-  final num size;
-  final String name;
-  final String mimeType;
-  final String mediaUrl;
-  final String mediaId;
-  final String extension;
-  final AttachmentType attachmentType;
+  factory AttachmentModel.fromJson(String source) =>
+      AttachmentModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  factory AttachmentModel.fromMap(Map<String, dynamic> map) => AttachmentModel(
+        thumbnailUrl: map['thumbnailUrl'] != null &&
+                (map['thumbnailUrl'] as String).isNotEmpty
+            ? ChatUtility.decodePayload(map['thumbnailUrl'] as String)
+            : '',
+        size: map['size'] as num,
+        name: map['name'] as String,
+        mimeType: map['mimeType'] as String,
+        mediaUrl:
+            map['mediaUrl'] != null && (map['mediaUrl'] as String).isNotEmpty
+                ? ChatUtility.decodePayload(map['mediaUrl'] as String)
+                : '',
+        mediaId: map['mediaId'] as String,
+        extension: map['extension'] as String,
+        attachmentType: AttachmentType.fromMap(map['attachmentType'] as int),
+      );
 
   const AttachmentModel({
     required this.thumbnailUrl,
@@ -23,6 +33,14 @@ class AttachmentModel {
     required this.extension,
     required this.attachmentType,
   });
+  final String thumbnailUrl;
+  final num size;
+  final String name;
+  final String mimeType;
+  final String mediaUrl;
+  final String mediaId;
+  final String extension;
+  final AttachmentType attachmentType;
 
   AttachmentModel copyWith({
     String? thumbnailUrl,
@@ -56,21 +74,7 @@ class AttachmentModel {
         'attachmentType': attachmentType.value,
       };
 
-  factory AttachmentModel.fromMap(Map<String, dynamic> map) => AttachmentModel(
-        thumbnailUrl: map['thumbnailUrl'] as String,
-        size: map['size'] as num,
-        name: map['name'] as String,
-        mimeType: map['mimeType'] as String,
-        mediaUrl: map['mediaUrl'] as String,
-        mediaId: map['mediaId'] as String,
-        extension: map['extension'] as String,
-        attachmentType: AttachmentType.fromMap(map['attachmentType'] as int),
-      );
-
   String toJson() => json.encode(toMap());
-
-  factory AttachmentModel.fromJson(String source) =>
-      AttachmentModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() =>

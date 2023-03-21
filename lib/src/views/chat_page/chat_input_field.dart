@@ -21,11 +21,11 @@ class IsmChatInputField extends StatelessWidget {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: ChatTheme.of(context).backgroundColor,
-                    prefixIcon: IconButton(
-                      color: IsmChatConfig.chatTheme.primaryColor,
-                      icon: const Icon(Icons.emoji_emotions_rounded),
-                      onPressed: () {},
-                    ),
+                    // prefixIcon: IconButton(
+                    //   color: IsmChatConfig.chatTheme.primaryColor,
+                    //   icon: const Icon(Icons.emoji_emotions_rounded),
+                    //   onPressed: () {},
+                    // ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(ChatDimens.forty),
                       borderSide: const BorderSide(color: Colors.transparent),
@@ -85,4 +85,13 @@ class AttachmentIcon extends GetView<IsmChatPageController> {
         color: IsmChatConfig.chatTheme.primaryColor,
         icon: const Icon(Icons.attach_file_rounded),
       );
+}
+
+class AttachmentCard extends StatelessWidget {
+  const AttachmentCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
 }
