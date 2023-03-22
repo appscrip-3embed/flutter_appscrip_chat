@@ -71,6 +71,42 @@ class ChatMessageModel {
     );
   }
 
+  factory ChatMessageModel.fromDate(int sentAt) => ChatMessageModel(
+        body: sentAt.toMessageDateString(),
+        action: '',
+        updatedAt: 0,
+        sentAt: sentAt,
+        unreadMessagesCount: 0,
+        searchableTags: [],
+        privateOneToOne: false,
+        showInConversation: true,
+        readByAll: false,
+        senderInfo: null,
+        metaData: null,
+        messagingDisabled: false,
+        membersCount: 0,
+        lastReadAt: [],
+        attachments: null,
+        lastMessageSentAt: 0,
+        isGroup: false,
+        deliveredToAll: false,
+        customType: CustomMessageType.date,
+        createdByUserName: '',
+        createdByUserImageUrl: '',
+        createdBy: '',
+        conversationType: 0,
+        conversationTitle: null,
+        conversationImageUrl: null,
+        conversationId: '',
+        messageId: '',
+        deviceId: '',
+        parentMessageId: '',
+        adminCount: 0,
+        messageType: MessageType.normal,
+        sentByMe: true,
+        mentionedUsers: null,
+      );
+
   ChatMessageModel({
     required this.body,
     this.action,

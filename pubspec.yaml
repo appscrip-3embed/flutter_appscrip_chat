@@ -26,6 +26,7 @@ dependencies:
   image_painter: ^0.5.0
   image_picker: ^0.8.7
   intl: ^0.17.0
+  link_preview_generator: ^1.2.0
   mqtt_client: ^9.8.0
   objectbox: ^1.7.2
   objectbox_flutter_libs: any

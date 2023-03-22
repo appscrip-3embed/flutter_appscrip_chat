@@ -30,6 +30,10 @@ class FileMessage extends StatelessWidget {
                   canShowPaginationDialog: false,
                   canShowScrollHead: false,
                   enableTextSelection: false,
+                  canShowPasswordDialog: false,
+                  canShowScrollStatus: false,
+                  enableDocumentLinkAnnotation: false,
+                  enableHyperlinkNavigation: false,
                 ),
               ),
               Container(

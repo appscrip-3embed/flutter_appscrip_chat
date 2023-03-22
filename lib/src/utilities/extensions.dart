@@ -14,12 +14,53 @@ extension MatchString on String {
 extension DateConvertor on int {
   DateTime toDate() => DateTime.fromMillisecondsSinceEpoch(this);
 
-  String toDateString() =>
+  String toTimeString() =>
       DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(this));
+
+  String get weekDayString {
+    if (this > 7 || this < 1) {
+      throw const InvalidWeekdayNumber('Value should be between 1 & 7');
+    }
+    var weekDays = {
+      1: 'Monday',
+      2: 'Tuesday',
+      3: 'Wednesday',
+      4: 'Thursday',
+      5: 'Friday',
+      6: 'Saturday',
+      7: 'Sunday',
+    };
+    return weekDays[this]!;
+  }
+
+  String toMessageDateString() {
+    var now = DateTime.now();
+    var date = toDate();
+    if (now.isSameDay(date)) {
+      return 'Today';
+    }
+    if (now.isSameMonth(date)) {
+      if (now.day - date.day == 1) {
+        return 'Yesterday';
+      }
+      if (now.difference(date) < const Duration(days: 8)) {
+        return date.weekday.weekDayString;
+      }
+      return date.toDateString();
+    }
+    return date.toDateString();
+  }
 }
 
 extension DateFormats on DateTime {
-  String toDateString() => DateFormat.jm().format(this);
+  String toTimeString() => DateFormat.jm().format(this);
+
+  bool isSameDay(DateTime other) => isSameMonth(other) && day == other.day;
+
+  bool isSameMonth(DateTime other) =>
+      year == other.year && month == other.month;
+
+  String toDateString() => DateFormat('dd MMM yyyy').format(this);
 }
 
 extension ChildWidget on CustomMessageType {

@@ -38,7 +38,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                           ScrollViewKeyboardDismissBehavior.onDrag,
                       padding: ChatDimens.egdeInsets8,
                       itemCount: controller.messages.length,
-                      separatorBuilder: (_, __) => ChatDimens.boxHeight8,
+                      separatorBuilder: (_, __) => ChatDimens.boxHeight4,
                       itemBuilder: (_, index) =>
                           ChatMessage(controller.messages[index]),
                     ),
@@ -58,46 +58,71 @@ class ChatMessage extends StatelessWidget {
   final ChatMessageModel message;
 
   @override
-  Widget build(BuildContext context) => UnconstrainedBox(
-        alignment:
-            message.sentByMe ? Alignment.centerRight : Alignment.centerLeft,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: message.sentByMe
-              ? CrossAxisAlignment.end
-              : CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: ChatDimens.egdeInsets4,
-              constraints: BoxConstraints(
-                maxWidth: context.width * .8,
-                minWidth: context.width * .1,
-              ),
-              decoration: BoxDecoration(
-                color: message.sentByMe
-                    ? IsmChatConfig.chatTheme.primaryColor
-                    : IsmChatConfig.chatTheme.backgroundColor,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(ChatDimens.twelve),
-                  topLeft: message.sentByMe
-                      ? Radius.circular(ChatDimens.twelve)
-                      : Radius.circular(ChatDimens.four),
-                  bottomLeft: Radius.circular(ChatDimens.twelve),
-                  bottomRight: message.sentByMe
-                      ? Radius.circular(ChatDimens.four)
-                      : Radius.circular(ChatDimens.twelve),
-                ),
-              ),
-              child: message.customType!.messageType(message),
-            ),
+  Widget build(BuildContext context) {
+    var isDateType = message.customType! == CustomMessageType.date;
+    return UnconstrainedBox(
+      alignment: isDateType
+          ? Alignment.center
+          : message.sentByMe
+              ? Alignment.centerRight
+              : Alignment.centerLeft,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: message.sentByMe
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: ChatDimens.egdeInsets4,
+            constraints: isDateType
+                ? null
+                : BoxConstraints(
+                    maxWidth: context.width * .8,
+                    minWidth: context.width * .1,
+                  ),
+            decoration: isDateType
+                ? null
+                : BoxDecoration(
+                    color: message.sentByMe
+                        ? IsmChatConfig.chatTheme.primaryColor
+                        : IsmChatConfig.chatTheme.backgroundColor,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(ChatDimens.twelve),
+                      topLeft: message.sentByMe
+                          ? Radius.circular(ChatDimens.twelve)
+                          : Radius.circular(ChatDimens.four),
+                      bottomLeft: Radius.circular(ChatDimens.twelve),
+                      bottomRight: message.sentByMe
+                          ? Radius.circular(ChatDimens.four)
+                          : Radius.circular(ChatDimens.twelve),
+                    ),
+                  ),
+            child: message.customType!.messageType(message),
+          ),
+          if (!isDateType)
             Padding(
-              padding: ChatDimens.egdeInsets4,
-              child: Text(
-                message.sentAt.toDateString(),
-                style: ChatStyles.w400Grey10,
+              padding: ChatDimens.egdeInsets0_4,
+              child: Row(
+                children: [
+                  Text(
+                    message.sentAt.toTimeString(),
+                    style: ChatStyles.w400Grey10,
+                  ),
+                  if (message.sentByMe) ...[
+                    ChatDimens.boxWidth2,
+                    Icon(
+                      message.deliveredToAll
+                          ? Icons.done_all_rounded
+                          : Icons.done_rounded,
+                      color: message.readByAll ? Colors.blue : Colors.grey,
+                      size: ChatDimens.forteen,
+                    ),
+                  ],
+                ],
               ),
             ),
-          ],
-        ),
-      );
+        ],
+      ),
+    );
+  }
 }

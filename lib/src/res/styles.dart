@@ -66,6 +66,11 @@ class ChatStyles {
     fontWeight: FontWeight.w500,
   );
 
+  static TextStyle w500Black12 = TextStyle(
+    color: ChatColors.textColor,
+    fontSize: ChatDimens.twelve,
+    fontWeight: FontWeight.w500,
+  );
   static TextStyle w500Black14 = TextStyle(
     color: ChatColors.textColor,
     fontSize: ChatDimens.forteen,

@@ -30,6 +30,7 @@ class ChatDimens {
   static final Widget boxHeight8 = SizedBox(height: eight);
   static final Widget boxHeight16 = SizedBox(height: sixteen);
   static final Widget boxHeight32 = SizedBox(height: thirtyTwo);
+  static final Widget boxWidth2 = SizedBox(width: two);
   static final Widget boxWidth4 = SizedBox(width: four);
   static final Widget boxWidth8 = SizedBox(width: eight);
   static final Widget boxWidth16 = SizedBox(width: sixteen);
@@ -38,6 +39,7 @@ class ChatDimens {
   static final EdgeInsets egdeInsets4 = EdgeInsets.all(four);
   static final EdgeInsets egdeInsets4_0 =
       EdgeInsets.symmetric(horizontal: four);
+  static final EdgeInsets egdeInsets0_4 = EdgeInsets.symmetric(vertical: four);
   static final EdgeInsets egdeInsets8_4 =
       EdgeInsets.symmetric(horizontal: eight, vertical: four);
   static final EdgeInsets egdeInsets8 = EdgeInsets.all(eight);

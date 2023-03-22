@@ -64,7 +64,7 @@ class IsmChatPageController extends GetxController {
           curve: Curves.easeInOut,
         ),
       );
-      focusNode.requestFocus();
+      // focusNode.requestFocus();
     }
   }
 
