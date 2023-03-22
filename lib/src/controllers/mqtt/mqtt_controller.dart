@@ -124,7 +124,6 @@ class MqttController extends GetxController {
 
       var payload =
           MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
-
       ChatLog.info(payload);
     });
   }

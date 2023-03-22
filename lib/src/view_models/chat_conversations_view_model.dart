@@ -45,4 +45,23 @@ class ChatConversationsViewModel {
       return null;
     }
   }
+
+  Future<void> ismMessageDelivery(
+      {required String conversationId, required String messageId}) async {
+    try {
+      var payload = {'messageId': messageId, 'conversationId': conversationId};
+      var response = await IsmChatApiWrapper.put(
+        IsmChatAPI.deliveredIndicator,
+        payload: payload,
+        headers: ChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return;
+      }
+    } catch (e, st) {
+      ChatLog.error('Delivery Message $e', st);
+    }
+  }
+
+ 
 }

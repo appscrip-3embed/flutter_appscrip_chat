@@ -114,4 +114,37 @@ class ChatPageViewModel {
     required List<ChatMessageModel> data,
   }) =>
       data.firstWhere((e) => e.messageId == parentId);
+
+  Future<void> ismMessageRead(
+      {required String conversationId, required String messageId}) async {
+    try {
+      var payload = {'messageId': messageId, 'conversationId': conversationId};
+      var response = await IsmChatApiWrapper.put(
+        IsmChatAPI.readIndicator,
+        payload: payload,
+        headers: ChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return;
+      }
+    } catch (e, st) {
+      ChatLog.error('Read Message $e', st);
+    }
+  }
+
+  Future<void> ismTypingIndicator({required String conversationId}) async {
+    try {
+      var payload = {'conversationId': conversationId};
+      var response = await IsmChatApiWrapper.put(
+        IsmChatAPI.typingIndicator,
+        payload: payload,
+        headers: ChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return;
+      }
+    } catch (e, st) {
+      ChatLog.error('Typing Message $e', st);
+    }
+  }
 }

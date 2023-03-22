@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:get/get.dart';
 
@@ -71,4 +73,12 @@ class IsmChatConversationsController extends GetxController {
   Future<void> signOut() async {
     IsmChatConfig.objectBox.deleteChatLocalDb();
   }
+
+  Future<void> ismMessageDelivery(
+      {required String conversationId, required String messageId}) async {
+    await _viewModel.ismMessageDelivery(
+        conversationId: conversationId, messageId: messageId);
+  }
+
+ 
 }

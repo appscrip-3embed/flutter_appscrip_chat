@@ -76,6 +76,8 @@ class IsmChatPageController extends GetxController {
       );
 
   void sendMessage() {
+    
+    // final query = IsmChatConfig.objectBox.userDetailsBox.query()
     ismPostMessage(
       deviceId: _deviceConfig.deviceId!,
       body: ChatUtility.encodePayload(chatInputController.text.trim()),
@@ -110,5 +112,15 @@ class IsmChatPageController extends GetxController {
         conversationId: conversationId,
         body: body,
         customType: customType);
+  }
+
+  Future<void> ismMessageRead(
+      {required String conversationId, required String messageId}) async {
+    await _viewModel.ismMessageRead(
+        conversationId: conversationId, messageId: messageId);
+  }
+
+  Future<void> ismTypingIndicator({required String conversationId}) async {
+    await _viewModel.ismTypingIndicator(conversationId: conversationId);
   }
 }
