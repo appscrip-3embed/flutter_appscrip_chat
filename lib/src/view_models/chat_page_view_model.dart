@@ -27,6 +27,51 @@ class ChatPageViewModel {
     }
   }
 
+  Future<void> imsPostMessage({
+    required bool isLoading,
+    required bool showInConversation,
+    required int messageType,
+    required bool encrypted,
+    required String deviceId,
+    required String conversationId,
+    required String body,
+    String? parentMessageId,
+    Map<String, dynamic>? metaData,
+    List<Map<String, dynamic>>? mentionedUsers,
+    Map<String, dynamic>? events,
+    String? customType,
+    List<Map<String, dynamic>>? attachments,
+  }) async {
+    try {
+      final payload = {
+        'showInConversation': showInConversation,
+        'messageType': messageType,
+        'encrypted': encrypted,
+        'deviceId': deviceId,
+        'conversationId': conversationId,
+        'body': body,
+        'parentMessageId': parentMessageId,
+        'metaData': metaData,
+        'events': events,
+        'customType': customType,
+        'attachments': attachments
+      };
+      var response = await IsmChatApiWrapper.post(IsmChatAPI.sendMessage,
+          payload: payload, headers: ChatUtility.tokenCommonHeader());
+      if (response.hasError) {
+        return;
+      }
+      var data = jsonDecode(response.data);
+       ChatLog.success(data);
+      // return (data['messages'] as List)
+      //     .map((e) => ChatMessageModel.fromMap(e as Map<String, dynamic>))
+      //     .toList();
+    } catch (e, st) {
+      ChatLog.error('Send Message $e', st);
+      return;
+    }
+  }
+
   List<ChatMessageModel> sortMessages(List<ChatMessageModel> messages) {
     messages.sort((a, b) => a.sentAt.compareTo(b.sentAt));
     return _parseMessagesWithDate(messages);

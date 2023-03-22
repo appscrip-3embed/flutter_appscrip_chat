@@ -72,4 +72,32 @@ class IsmChatPageController extends GetxController {
         parentId: id,
         data: messages,
       );
+
+  void sendMessage() {}
+
+  Future<void> ismPostMessage(
+      {required String deviceId,
+      required String body,
+      required String customType,
+      required int createdAt,
+      required String conversationId,
+      int? messageType,
+      String? parentMessageId,
+      String nameWithExtension = '',
+      int size = 0,
+      String extension = '',
+      String mediaId = '',
+      String locationName = '',
+      int attachmentType = 0,
+      bool forwardMultiple = false}) async {
+     await _viewModel.imsPostMessage(
+        isLoading: false,
+        showInConversation: true,
+        messageType: messageType!,
+        encrypted: true,
+        deviceId: deviceId,
+        conversationId: conversationId,
+        body: body);
+        
+  }
 }

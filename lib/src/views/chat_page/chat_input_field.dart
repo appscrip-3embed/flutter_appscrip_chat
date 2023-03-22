@@ -44,7 +44,7 @@ class IsmChatInputField extends StatelessWidget {
               AspectRatio(
                 aspectRatio: 1,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: controller.showSendButton? controller.sendMessage :() {},
                   style: ElevatedButton.styleFrom(
                     fixedSize: Size.square(ChatDimens.inputFieldHeight),
                     alignment: Alignment.center,
