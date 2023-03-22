@@ -1,8 +1,8 @@
 library appscrip_chat_component;
 
 import 'package:appscrip_chat_component/appscrip_chat_component_platform_interface.dart';
-import 'package:appscrip_chat_component/src/app/chat_config.dart';
 import 'package:appscrip_chat_component/src/data/data.dart';
+import 'package:appscrip_chat_component/src/utilities/config/chat_config.dart';
 
 export 'src/app/app.dart';
 export 'src/controllers/controllers.dart';

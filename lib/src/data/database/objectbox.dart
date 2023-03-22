@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/app/chat_config.dart';
 import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
 import 'package:path_provider/path_provider.dart';
 

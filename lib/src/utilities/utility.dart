@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/app/chat_config.dart';
+import 'package:appscrip_chat_component/src/utilities/config/chat_config.dart';
 import 'package:get/get.dart';
 
 class ChatUtility {

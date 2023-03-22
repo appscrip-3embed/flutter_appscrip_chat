@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 class MqttBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(
-      () => MqttController(
+    Get.put(
+      MqttController(
         MqttViewModel(),
       ),
     );

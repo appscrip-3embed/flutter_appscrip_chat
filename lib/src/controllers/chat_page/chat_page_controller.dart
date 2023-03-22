@@ -11,6 +11,8 @@ class IsmChatPageController extends GetxController {
 
   final _conversationController = Get.find<IsmChatConversationsController>();
 
+  final _deviceConfig = Get.find<DeviceConfig>();
+
   late ChatConversationModel conversation;
 
   var focusNode = FocusNode();
@@ -57,7 +59,7 @@ class IsmChatPageController extends GetxController {
     if (data != null) {
       messages = _viewModel.sortMessages(data);
       await Future.delayed(
-        const Duration(milliseconds: 10),
+        const Duration(milliseconds: 1),
         () async => await messagesScrollController.animateTo(
           messagesScrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 100),
@@ -73,7 +75,17 @@ class IsmChatPageController extends GetxController {
         data: messages,
       );
 
-  void sendMessage() {}
+  void sendMessage() {
+    ismPostMessage(
+      deviceId: _deviceConfig.deviceId!,
+      body: ChatUtility.encodePayload(chatInputController.text.trim()),
+      customType: CustomMessageType.text.name,
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+      conversationId: conversation.conversationId,
+      messageType: MessageType.normal.value,
+    );
+    chatInputController.clear();
+  }
 
   Future<void> ismPostMessage(
       {required String deviceId,
@@ -90,14 +102,13 @@ class IsmChatPageController extends GetxController {
       String locationName = '',
       int attachmentType = 0,
       bool forwardMultiple = false}) async {
-     await _viewModel.imsPostMessage(
-        isLoading: false,
+    await _viewModel.imsPostMessage(
         showInConversation: true,
         messageType: messageType!,
         encrypted: true,
         deviceId: deviceId,
         conversationId: conversationId,
-        body: body);
-        
+        body: body,
+        customType: customType);
   }
 }

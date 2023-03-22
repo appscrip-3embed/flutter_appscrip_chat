@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/app/chat_config.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:get/get.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -125,6 +124,8 @@ class MqttController extends GetxController {
 
       var payload =
           MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+
+      ChatLog.info(payload);
     });
   }
 

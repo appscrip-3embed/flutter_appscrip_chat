@@ -89,6 +89,7 @@ enum CustomMessageType {
       'text': CustomMessageType.text,
       'file': CustomMessageType.file,
       'replyText': CustomMessageType.reply,
+      'reply': CustomMessageType.reply,
       'image': CustomMessageType.image,
       'voice': CustomMessageType.audio,
       'video': CustomMessageType.video,

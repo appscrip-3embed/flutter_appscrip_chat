@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/app/chat_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -44,7 +43,9 @@ class IsmChatInputField extends StatelessWidget {
               AspectRatio(
                 aspectRatio: 1,
                 child: ElevatedButton(
-                  onPressed: controller.showSendButton? controller.sendMessage :() {},
+                  onPressed: controller.showSendButton
+                      ? controller.sendMessage
+                      : () {},
                   style: ElevatedButton.styleFrom(
                     fixedSize: Size.square(ChatDimens.inputFieldHeight),
                     alignment: Alignment.center,
@@ -91,7 +92,5 @@ class AttachmentCard extends StatelessWidget {
   const AttachmentCard({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
+  Widget build(BuildContext context) => const Placeholder();
 }

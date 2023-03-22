@@ -21,6 +21,8 @@ void main() async {
 Future<void> initialize() async {
   WidgetsFlutterBinding.ensureInitialized();
   objectBox = await ObjectBox.create();
+  var deviceConfig = Get.put(DeviceConfig());
+  deviceConfig.init();
   await AppscripChatComponent.initialize();
 }
 

@@ -1,4 +1,4 @@
-import 'package:appscrip_chat_component/src/app/chat_config.dart';
+import 'package:appscrip_chat_component/src/utilities/config/chat_config.dart';
 import 'package:appscrip_chat_component/src/res/res.dart';
 import 'package:flutter/material.dart';
 

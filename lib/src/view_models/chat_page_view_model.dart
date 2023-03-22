@@ -28,7 +28,6 @@ class ChatPageViewModel {
   }
 
   Future<void> imsPostMessage({
-    required bool isLoading,
     required bool showInConversation,
     required int messageType,
     required bool encrypted,
@@ -62,7 +61,7 @@ class ChatPageViewModel {
         return;
       }
       var data = jsonDecode(response.data);
-       ChatLog.success(data);
+      ChatLog.success(data);
       // return (data['messages'] as List)
       //     .map((e) => ChatMessageModel.fromMap(e as Map<String, dynamic>))
       //     .toList();
