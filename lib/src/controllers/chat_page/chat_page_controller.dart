@@ -76,7 +76,6 @@ class IsmChatPageController extends GetxController {
       );
 
   void sendMessage() {
-    
     // final query = IsmChatConfig.objectBox.userDetailsBox.query()
     ismPostMessage(
       deviceId: _deviceConfig.deviceId!,
@@ -122,5 +121,82 @@ class IsmChatPageController extends GetxController {
 
   Future<void> ismTypingIndicator({required String conversationId}) async {
     await _viewModel.ismTypingIndicator(conversationId: conversationId);
+  }
+
+  Future<void> ismGeChatUserDetails(
+      {required String conversationId,
+      String? ids,
+      bool? includeMembers,
+      int? membersSkip,
+      int? membersLimit}) async {
+    await _viewModel.ismGeChatUserDetails(conversationId: conversationId);
+  }
+
+  Future<void> ismPostBlockUser({required String opponentId}) async {
+    await _viewModel.ismPostBlockUser(opponentId: opponentId);
+  }
+
+  Future<void> ismPostUnBlockUser({required String opponentId}) async {
+    await _viewModel.ismPostUnBlockUser(opponentId: opponentId);
+  }
+
+  Future<void> ismPostMediaUrl(
+      {required String conversationId,
+      required String nameWithExtension,
+      required int mediaType,
+      required String mediaId}) async {
+    await _viewModel.ismPostMediaUrl(
+        conversationId: conversationId,
+        nameWithExtension: nameWithExtension,
+        mediaType: mediaType,
+        mediaId: mediaId);
+  }
+
+  Future<void> ismGetMessageRead(
+      {required String conversationId, required String messageId}) async {
+    await _viewModel.ismGetMessageRead(
+        conversationId: conversationId, messageId: messageId);
+  }
+
+  Future<void> ismGetMessageDeliver(
+      {required String conversationId, required String messageId}) async {
+    await _viewModel.ismGetMessageDeliver(
+        conversationId: conversationId, messageId: messageId);
+  }
+
+  Future<void> ismMessageDeleteEveryOne({
+    required String conversationId,
+    required String messageIds,
+  }) async {
+    await _viewModel.ismMessageDeleteEveryOne(
+        conversationId: conversationId, messageIds: messageIds);
+  }
+
+  Future<void> ismMessageDeleteSelf({
+    required String conversationId,
+    required String messageIds,
+  }) async {
+    await _viewModel.ismMessageDeleteSelf(
+        conversationId: conversationId, messageIds: messageIds);
+  }
+
+  Future<void> ismDeleteChat({
+    required String conversationId,
+  }) async {
+    await _viewModel.ismDeleteChat(conversationId: conversationId);
+  }
+
+  Future<void> ismClearChat({
+    required String conversationId,
+  }) async {
+    await _viewModel.ismClearChat(conversationId: conversationId);
+  }
+
+  Future<void> ismReadAllMessages({
+    required String conversationId,
+    required int timestamp,
+  }) async {
+    await _viewModel.ismReadAllMessages(
+        conversationId: conversationId, timestamp: timestamp);
   }
 }

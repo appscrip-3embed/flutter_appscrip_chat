@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 
@@ -146,5 +147,225 @@ class ChatPageViewModel {
     } catch (e, st) {
       ChatLog.error('Typing Message $e', st);
     }
+  }
+
+  Future<void> ismGeChatUserDetails(
+      {required String conversationId,
+      String? ids,
+      bool? includeMembers,
+      int? membersSkip,
+      int? membersLimit}) async {
+    try {
+      var response = await IsmChatApiWrapper.get(
+        '${IsmChatAPI.conversationDetails}/$conversationId',
+        headers: ChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return;
+      }
+    } catch (e, st) {
+      ChatLog.error('Chat user Details $e', st);
+    }
+  }
+
+  Future<void> ismPostBlockUser({required String opponentId}) async {
+    try {
+      final payload = {'opponentId': opponentId};
+      var response = await IsmChatApiWrapper.post(
+        IsmChatAPI.blockUser,
+        payload: payload,
+        headers: ChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return;
+      }
+    } catch (e, st) {
+      ChatLog.error('Block user $e', st);
+    }
+  }
+
+  Future<void> ismPostUnBlockUser({required String opponentId}) async {
+    try {
+      final payload = {'opponentId': opponentId};
+      var response = await IsmChatApiWrapper.post(
+        IsmChatAPI.unblockUser,
+        payload: payload,
+        headers: ChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return;
+      }
+    } catch (e, st) {
+      ChatLog.error(' un Block user $e', st);
+    }
+  }
+
+  Future<void> ismPostMediaUrl(
+      {required String conversationId,
+      required String nameWithExtension,
+      required int mediaType,
+      required String mediaId}) async {
+    try {
+      final payload = {
+        'conversationId': conversationId,
+        'attachments': [
+          {
+            'nameWithExtension': nameWithExtension,
+            'mediaType': mediaType,
+            'mediaId': mediaId
+          }
+        ]
+      };
+      var response = await IsmChatApiWrapper.post(
+        IsmChatAPI.presignedUrls,
+        payload: payload,
+        headers: ChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return;
+      }
+    } catch (e, st) {
+      ChatLog.error('Media url $e', st);
+    }
+  }
+
+  Future<void> ismGetMessageRead(
+      {required String conversationId, required String messageId}) async {
+    try {
+      var response = await IsmChatApiWrapper.get(
+        '${IsmChatAPI.readStatus}?conversationId=$conversationId&messageId=$messageId',
+        headers: ChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return;
+      }
+    } catch (e, st) {
+      ChatLog.error('Read message $e', st);
+    }
+  }
+
+  Future<void> ismGetMessageDeliver(
+      {required String conversationId, required String messageId}) async {
+    try {
+      var response = await IsmChatApiWrapper.get(
+        '${IsmChatAPI.deliverStatus}?conversationId=$conversationId&messageId=$messageId',
+        headers: ChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return;
+      }
+    } catch (e, st) {
+      ChatLog.error('Deliver message $e', st);
+    }
+  }
+
+  Future<void> ismMessageDeleteSelf({
+    required String conversationId,
+    required String messageIds,
+  }) async {
+    try {
+      var response = await IsmChatApiWrapper.delete(
+        '${IsmChatAPI.deleteMessagesForMe}?conversationId=$conversationId&messageIds=$messageIds',
+        payload: null,
+        headers: ChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return;
+      }
+    } catch (e, st) {
+      ChatLog.error('Delete message $e', st);
+    }
+  }
+
+  Future<void> ismMessageDeleteEveryOne({
+    required String conversationId,
+    required String messageIds,
+  }) async {
+    try {
+      var response = await IsmChatApiWrapper.delete(
+        '${IsmChatAPI.deleteMessages}?conversationId=$conversationId&messageIds=$messageIds',
+        payload: null,
+        headers: ChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return;
+      }
+    } catch (e, st) {
+      ChatLog.error('Delete everyone message $e', st);
+    }
+  }
+
+  Future<void> ismClearChat({
+    required String conversationId,
+  }) async {
+    try {
+      var response = await IsmChatApiWrapper.delete(
+        '${IsmChatAPI.chatConversationClear}?conversationId=$conversationId',
+        payload: null,
+        headers: ChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return;
+      }
+    } catch (e, st) {
+      ChatLog.error('Clear chat $e', st);
+    }
+  }
+
+  Future<void> ismDeleteChat({
+    required String conversationId,
+  }) async {
+    try {
+      var response = await IsmChatApiWrapper.delete(
+        '${IsmChatAPI.chatConversationDelete}?conversationId=$conversationId',
+        payload: null,
+        headers: ChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return;
+      }
+    } catch (e, st) {
+      ChatLog.error('Delete chat $e', st);
+    }
+  }
+
+  Future<void> ismReadAllMessages({
+    required String conversationId,
+    required int timestamp,
+  }) async {
+    try {
+      var payload = {'timestamp': timestamp, 'conversationId': conversationId};
+      var response = await IsmChatApiWrapper.put(
+        IsmChatAPI.readAllMessages,
+        payload: payload,
+        headers: ChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return;
+      }
+    } catch (e, st) {
+      ChatLog.error('Read all message $e', st);
+    }
+  }
+
+  Future<void> ismGoogleApi({
+    required String latitude,
+    required String longitude,
+    required String searchKeyword,
+  }) async {
+    // try {
+      
+    //   var response = await IsmChatApiWrapper.put(
+    //      searchKeyword.isNotEmpty
+    //         ? 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&name=$searchKeyword&radius=1000000&key=AIzaSyC2YXqs5H8QSfN1NVsZKsP11XLZhfGVGPI'
+    //         : 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=500&key=AIzaSyC2YXqs5H8QSfN1NVsZKsP11XLZhfGVGPI',
+      
+    //   );
+    //   if (response.hasError) {
+    //     return;
+    //   }
+    // } catch (e, st) {
+    //   ChatLog.error('Read all message $e', st);
+    // }
   }
 }

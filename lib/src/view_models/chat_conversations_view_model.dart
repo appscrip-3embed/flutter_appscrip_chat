@@ -63,5 +63,42 @@ class ChatConversationsViewModel {
     }
   }
 
- 
+  Future<void> ismCreateConversation(
+      {required bool typingEvents,
+      required bool readEvents,
+      required bool pushNotifications,
+      required List<String> members,
+      required bool isGroup,
+      required int conversationType,
+      List<String>? searchableTags,
+      Map<String, dynamic>? metaData,
+      String? customType,
+      String? conversationTitle,
+      String? conversationImageUrl}) async {
+    try {
+      var payload = {
+        'typingEvents': typingEvents,
+        'readEvents': readEvents,
+        'pushNotifications': pushNotifications,
+        'members': members,
+        'isGroup': isGroup,
+        'conversationType': conversationType,
+        'searchableTags': searchableTags,
+        'metaData': metaData,
+        'customType': customType,
+        'conversationTitle': conversationTitle,
+        'conversationImageUrl': conversationImageUrl
+      };
+      var response = await IsmChatApiWrapper.post(
+        IsmChatAPI.chatConversation,
+        payload: payload,
+        headers: ChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return;
+      }
+    } catch (e, st) {
+      ChatLog.error('Create converstaion $e', st);
+    }
+  }
 }

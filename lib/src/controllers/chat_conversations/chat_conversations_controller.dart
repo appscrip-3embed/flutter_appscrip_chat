@@ -80,5 +80,19 @@ class IsmChatConversationsController extends GetxController {
         conversationId: conversationId, messageId: messageId);
   }
 
- 
+  Future<void> ismCreateConversation(
+      {required List<String> userId}) async {
+    await _viewModel.ismCreateConversation(
+       typingEvents: true,
+        readEvents: true,
+        pushNotifications: true,
+        members: userId,
+        isGroup: false,
+        conversationType: 0,
+        searchableTags: [' '],
+        metaData: <String, dynamic>{},
+        customType: null,
+        conversationImageUrl: '',
+        conversationTitle: '');
+  }
 }
