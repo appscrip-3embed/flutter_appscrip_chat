@@ -37,7 +37,7 @@ class ChatConversationModel {
         conversationImageUrl: map['conversationImageUrl'] as String?,
         conversationId: map['conversationId'] as String? ?? '',
         config:
-            ConversationConfig.fromMap(map['config'] as Map<String, dynamic>),
+            ConversationConfigModel.fromMap(map['config'] as Map<String, dynamic>),
         // adminCount: map['adminCount'] as int? ?? 0,
       );
 
@@ -88,7 +88,7 @@ class ChatConversationModel {
   final String? conversationTitle;
   final String? conversationImageUrl;
   final String conversationId;
-  final ConversationConfig config;
+  final ConversationConfigModel config;
   // final int adminCount;
 
   String get chatName => conversationTitle ?? opponentDetails.userName;
@@ -115,7 +115,7 @@ class ChatConversationModel {
     String? conversationTitle,
     String? conversationImageUrl,
     String? conversationId,
-    ConversationConfig? config,
+    ConversationConfigModel? config,
     int? adminCount,
   }) =>
       ChatConversationModel(

@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/src/utilities/utilities.dart';
-
+import 'package:objectbox/objectbox.dart';
+@Entity()
 class LastMessageDetails {
   factory LastMessageDetails.fromJson(String source) =>
       LastMessageDetails.fromMap(json.decode(source) as Map<String, dynamic>);
@@ -17,7 +18,8 @@ class LastMessageDetails {
         body: ChatUtility.decodePayload(map['body'] as String? ?? ''),
       );
 
-  const LastMessageDetails({
+   LastMessageDetails({
+    this.id = 0,
     required this.showInConversation,
     required this.sentAt,
     required this.senderName,
@@ -26,6 +28,7 @@ class LastMessageDetails {
     required this.conversationId,
     required this.body,
   });
+  int id;
   final bool showInConversation;
   final int sentAt;
   final String senderName;

@@ -1,31 +1,36 @@
 import 'dart:convert';
+import 'package:objectbox/objectbox.dart';
 
-class ConversationConfig {
-  factory ConversationConfig.fromJson(String source) =>
-      ConversationConfig.fromMap(json.decode(source) as Map<String, dynamic>);
+@Entity()
+class ConversationConfigModel {
+  factory ConversationConfigModel.fromJson(String source) =>
+      ConversationConfigModel.fromMap(
+          json.decode(source) as Map<String, dynamic>);
 
-  factory ConversationConfig.fromMap(Map<String, dynamic> map) =>
-      ConversationConfig(
+  factory ConversationConfigModel.fromMap(Map<String, dynamic> map) =>
+      ConversationConfigModel(
         typingEvents: map['typingEvents'] as bool,
         readEvents: map['readEvents'] as bool,
         pushNotifications: map['pushNotifications'] as bool,
       );
 
-  const ConversationConfig({
+   ConversationConfigModel({
+    this.id = 0,
     required this.typingEvents,
     required this.readEvents,
     required this.pushNotifications,
   });
+  int id;
   final bool typingEvents;
   final bool readEvents;
   final bool pushNotifications;
 
-  ConversationConfig copyWith({
+  ConversationConfigModel copyWith({
     bool? typingEvents,
     bool? readEvents,
     bool? pushNotifications,
   }) =>
-      ConversationConfig(
+      ConversationConfigModel(
         typingEvents: typingEvents ?? this.typingEvents,
         readEvents: readEvents ?? this.readEvents,
         pushNotifications: pushNotifications ?? this.pushNotifications,
@@ -44,7 +49,7 @@ class ConversationConfig {
       'ConversationConfig(typingEvents: $typingEvents, readEvents: $readEvents, pushNotifications: $pushNotifications)';
 
   @override
-  bool operator ==(covariant ConversationConfig other) {
+  bool operator ==(covariant ConversationConfigModel other) {
     if (identical(this, other)) return true;
 
     return other.typingEvents == typingEvents &&

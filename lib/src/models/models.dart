@@ -1,7 +1,8 @@
 export 'attachment_model.dart';
 export 'chat_conversation_model.dart';
 export 'chat_message_model.dart';
-export 'conversation_config.dart';
+export 'conversation_config_model.dart';
+export 'db_models/db_models.dart';
 export 'last_message_details.dart';
 export 'last_read_model.dart';
 export 'message_model.dart';

@@ -14,6 +14,13 @@ import 'package:objectbox/internal.dart'; // generated code can access "internal
 import 'package:objectbox/objectbox.dart';
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
+import '../../../src/models/attachment_model.dart';
+import '../../../src/models/conversation_config_model.dart';
+import '../../../src/models/db_models/db_conversation_model.dart';
+import '../../../src/models/db_models/db_message_model.dart';
+import '../../../src/models/db_models/forward_message_model.dart';
+import '../../../src/models/db_models/pending_message_model.dart';
+import '../../../src/models/last_message_details.dart';
 import '../../../src/models/user_details_model.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
@@ -77,6 +84,352 @@ final _entities = <ModelEntity>[
             flags: 0)
       ],
       relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(2, 938566555159714543),
+      name: 'AttachmentModel',
+      lastPropertyId: const IdUid(9, 1647565619402597063),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 8848338521945783210),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 7692651483650785627),
+            name: 'thumbnailUrl',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 5720930682286019277),
+            name: 'name',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 8605137451555092264),
+            name: 'mimeType',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 1849709319992727255),
+            name: 'mediaUrl',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 4513031995725928561),
+            name: 'mediaId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(7, 4651715439986019909),
+            name: 'extension',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(8, 8387080186469562418),
+            name: 'size',
+            type: 8,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(9, 1647565619402597063),
+            name: 'attachmentIndex',
+            type: 6,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(5, 2138670439029160943),
+      name: 'ConversationConfigModel',
+      lastPropertyId: const IdUid(4, 4670413944913812396),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 1932937733277214060),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 8640354074677636606),
+            name: 'typingEvents',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 9140035252138541505),
+            name: 'readEvents',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 4670413944913812396),
+            name: 'pushNotifications',
+            type: 1,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(6, 3624908745119452764),
+      name: 'ForwardMessageModel',
+      lastPropertyId: const IdUid(2, 1533044048543119567),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 1738285225417548326),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 1533044048543119567),
+            name: 'conversationId',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[
+        ModelRelation(
+            id: const IdUid(1, 6469044073861604259),
+            name: 'messages',
+            targetId: const IdUid(10, 6695352261664866221))
+      ],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(7, 3601465766739318501),
+      name: 'LastMessageDetails',
+      lastPropertyId: const IdUid(8, 8981372878008052135),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 8691628819685195983),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 1158207147385544543),
+            name: 'showInConversation',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 7421656422808759179),
+            name: 'sentAt',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 7192502489464200023),
+            name: 'senderName',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 3173809097688960969),
+            name: 'messageType',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 6612570512676209427),
+            name: 'messageId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(7, 5653748845204839093),
+            name: 'conversationId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(8, 8981372878008052135),
+            name: 'body',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(8, 3097049695561435300),
+      name: 'PendingMessageModel',
+      lastPropertyId: const IdUid(2, 2175284523873352332),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 1640404966680140110),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 2175284523873352332),
+            name: 'conversationId',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[
+        ModelRelation(
+            id: const IdUid(2, 8703662965513109892),
+            name: 'messages',
+            targetId: const IdUid(10, 6695352261664866221))
+      ],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(9, 3144208863203176583),
+      name: 'DBConversationModel',
+      lastPropertyId: const IdUid(12, 8941436306636774281),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 1897557699052577609),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 6362630287204851109),
+            name: 'unreadMessagesCount',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 821998317431135316),
+            name: 'opponentDetailsId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(1, 6471990731423969932),
+            relationTarget: 'UserDetails'),
+        ModelProperty(
+            id: const IdUid(4, 2315920148215526451),
+            name: 'messagingDisabled',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 4615851621041259632),
+            name: 'membersCount',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 4846432776748678520),
+            name: 'lastMessageSentAt',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(7, 5457207972232733296),
+            name: 'lastMessageDetailsId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(2, 7028592394213605641),
+            relationTarget: 'LastMessageDetails'),
+        ModelProperty(
+            id: const IdUid(8, 3334473984167523196),
+            name: 'isGroup',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(9, 1025198528314510299),
+            name: 'conversationTitle',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(10, 2868455376553941525),
+            name: 'conversationImageUrl',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(11, 2816259203537029286),
+            name: 'conversationId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(12, 8941436306636774281),
+            name: 'configId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(3, 1447646506459867452),
+            relationTarget: 'ConversationConfigModel')
+      ],
+      relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(10, 6695352261664866221),
+      name: 'DBMessageModel',
+      lastPropertyId: const IdUid(15, 6388414582076498476),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 8518104636076171627),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 8480101500964110809),
+            name: 'body',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 2885910552683566222),
+            name: 'action',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 7688739134591815653),
+            name: 'sentAt',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 8175152848824486701),
+            name: 'receiverId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 7589219670391452730),
+            name: 'readByAll',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(7, 5244593007786017178),
+            name: 'senderInfoId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(4, 1982970973084007045),
+            relationTarget: 'UserDetails'),
+        ModelProperty(
+            id: const IdUid(8, 4292339350363903924),
+            name: 'messagingDisabled',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(9, 5341478439808300329),
+            name: 'deliveredToAll',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(10, 4596157184350928383),
+            name: 'conversationId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(11, 4317776396279683234),
+            name: 'parentMessageId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(12, 3869402466833893640),
+            name: 'messageId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(13, 4703465573552064618),
+            name: 'sentByMe',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(14, 32733709291852383),
+            name: 'messageIndex',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(15, 6388414582076498476),
+            name: 'customMessageIndex',
+            type: 6,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[
+        ModelRelation(
+            id: const IdUid(3, 405050114779946002),
+            name: 'attachments',
+            targetId: const IdUid(2, 938566555159714543))
+      ],
       backlinks: <ModelBacklink>[])
 ];
 
@@ -100,13 +453,52 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(1, 329637739332878047),
-      lastIndexId: const IdUid(0, 0),
-      lastRelationId: const IdUid(0, 0),
+      lastEntityId: const IdUid(10, 6695352261664866221),
+      lastIndexId: const IdUid(4, 1982970973084007045),
+      lastRelationId: const IdUid(3, 405050114779946002),
       lastSequenceId: const IdUid(0, 0),
-      retiredEntityUids: const [],
+      retiredEntityUids: const [3536957095278829762, 8525152327066185984],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [],
+      retiredPropertyUids: const [
+        6135562772538696060,
+        8741614695739538530,
+        6571231154626712087,
+        7700009115349782480,
+        4127584087436438662,
+        2766651485068408221,
+        5420682778032237828,
+        2553422342139287984,
+        3942797834898307886,
+        551213619175399988,
+        4973386042178775422,
+        3738775923100552610,
+        7643543588663330291,
+        7859021326812023723,
+        2959409859621550685,
+        4993593895935372084,
+        8480826612125282291,
+        3466993199991864040,
+        643151627896226444,
+        5753960246820257219,
+        6872390744162861094,
+        6451592245597751455,
+        6415187126002907569,
+        7073102954851671040,
+        7172830418094854325,
+        7506691914790751355,
+        197037678496626960,
+        2411845745202330981,
+        4713977054813298769,
+        1134576386521141392,
+        5522549662831334955,
+        2344306538709525935,
+        3307942624675734363,
+        6914588496572903368,
+        2974634866523618237,
+        762126665140612619,
+        7937997236260019356,
+        329739945565553963
+      ],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -169,6 +561,359 @@ ModelDefinition getObjectBoxModel() {
               language: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 22));
 
           return object;
+        }),
+    AttachmentModel: EntityDefinition<AttachmentModel>(
+        model: _entities[1],
+        toOneRelations: (AttachmentModel object) => [],
+        toManyRelations: (AttachmentModel object) => {},
+        getId: (AttachmentModel object) => object.id,
+        setId: (AttachmentModel object, int id) {
+          object.id = id;
+        },
+        objectToFB: (AttachmentModel object, fb.Builder fbb) {
+          final thumbnailUrlOffset = fbb.writeString(object.thumbnailUrl);
+          final nameOffset = fbb.writeString(object.name);
+          final mimeTypeOffset = fbb.writeString(object.mimeType);
+          final mediaUrlOffset = fbb.writeString(object.mediaUrl);
+          final mediaIdOffset = fbb.writeString(object.mediaId);
+          final extensionOffset = fbb.writeString(object.extension);
+          fbb.startTable(10);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, thumbnailUrlOffset);
+          fbb.addOffset(2, nameOffset);
+          fbb.addOffset(3, mimeTypeOffset);
+          fbb.addOffset(4, mediaUrlOffset);
+          fbb.addOffset(5, mediaIdOffset);
+          fbb.addOffset(6, extensionOffset);
+          fbb.addFloat64(7, object.size);
+          fbb.addInt64(8, object.attachmentIndex);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = AttachmentModel(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              thumbnailUrl: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 6, ''),
+              size:
+                  const fb.Float64Reader().vTableGet(buffer, rootOffset, 18, 0),
+              name: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 8, ''),
+              mimeType: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 10, ''),
+              mediaUrl: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 12, ''),
+              mediaId: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 14, ''),
+              extension: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 16, ''))
+            ..attachmentIndex = const fb.Int64Reader()
+                .vTableGetNullable(buffer, rootOffset, 20);
+
+          return object;
+        }),
+    ConversationConfigModel: EntityDefinition<ConversationConfigModel>(
+        model: _entities[2],
+        toOneRelations: (ConversationConfigModel object) => [],
+        toManyRelations: (ConversationConfigModel object) => {},
+        getId: (ConversationConfigModel object) => object.id,
+        setId: (ConversationConfigModel object, int id) {
+          object.id = id;
+        },
+        objectToFB: (ConversationConfigModel object, fb.Builder fbb) {
+          fbb.startTable(5);
+          fbb.addInt64(0, object.id);
+          fbb.addBool(1, object.typingEvents);
+          fbb.addBool(2, object.readEvents);
+          fbb.addBool(3, object.pushNotifications);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = ConversationConfigModel(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              typingEvents:
+                  const fb.BoolReader().vTableGet(buffer, rootOffset, 6, false),
+              readEvents:
+                  const fb.BoolReader().vTableGet(buffer, rootOffset, 8, false),
+              pushNotifications: const fb.BoolReader()
+                  .vTableGet(buffer, rootOffset, 10, false));
+
+          return object;
+        }),
+    ForwardMessageModel: EntityDefinition<ForwardMessageModel>(
+        model: _entities[3],
+        toOneRelations: (ForwardMessageModel object) => [],
+        toManyRelations: (ForwardMessageModel object) => {
+              RelInfo<ForwardMessageModel>.toMany(1, object.id): object.messages
+            },
+        getId: (ForwardMessageModel object) => object.id,
+        setId: (ForwardMessageModel object, int id) {
+          object.id = id;
+        },
+        objectToFB: (ForwardMessageModel object, fb.Builder fbb) {
+          final conversationIdOffset = fbb.writeString(object.conversationId);
+          fbb.startTable(3);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, conversationIdOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = ForwardMessageModel(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              conversationId: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 6, ''));
+          InternalToManyAccess.setRelInfo(
+              object.messages,
+              store,
+              RelInfo<ForwardMessageModel>.toMany(1, object.id),
+              store.box<ForwardMessageModel>());
+          return object;
+        }),
+    LastMessageDetails: EntityDefinition<LastMessageDetails>(
+        model: _entities[4],
+        toOneRelations: (LastMessageDetails object) => [],
+        toManyRelations: (LastMessageDetails object) => {},
+        getId: (LastMessageDetails object) => object.id,
+        setId: (LastMessageDetails object, int id) {
+          object.id = id;
+        },
+        objectToFB: (LastMessageDetails object, fb.Builder fbb) {
+          final senderNameOffset = fbb.writeString(object.senderName);
+          final messageIdOffset = fbb.writeString(object.messageId);
+          final conversationIdOffset = fbb.writeString(object.conversationId);
+          final bodyOffset = fbb.writeString(object.body);
+          fbb.startTable(9);
+          fbb.addInt64(0, object.id);
+          fbb.addBool(1, object.showInConversation);
+          fbb.addInt64(2, object.sentAt);
+          fbb.addOffset(3, senderNameOffset);
+          fbb.addInt64(4, object.messageType);
+          fbb.addOffset(5, messageIdOffset);
+          fbb.addOffset(6, conversationIdOffset);
+          fbb.addOffset(7, bodyOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = LastMessageDetails(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              showInConversation:
+                  const fb.BoolReader().vTableGet(buffer, rootOffset, 6, false),
+              sentAt:
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0),
+              senderName: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 10, ''),
+              messageType:
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0),
+              messageId: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 14, ''),
+              conversationId: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 16, ''),
+              body: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 18, ''));
+
+          return object;
+        }),
+    PendingMessageModel: EntityDefinition<PendingMessageModel>(
+        model: _entities[5],
+        toOneRelations: (PendingMessageModel object) => [],
+        toManyRelations: (PendingMessageModel object) => {
+              RelInfo<PendingMessageModel>.toMany(2, object.id): object.messages
+            },
+        getId: (PendingMessageModel object) => object.id,
+        setId: (PendingMessageModel object, int id) {
+          object.id = id;
+        },
+        objectToFB: (PendingMessageModel object, fb.Builder fbb) {
+          final conversationIdOffset = fbb.writeString(object.conversationId);
+          fbb.startTable(3);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, conversationIdOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = PendingMessageModel(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              conversationId: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 6, ''));
+          InternalToManyAccess.setRelInfo(
+              object.messages,
+              store,
+              RelInfo<PendingMessageModel>.toMany(2, object.id),
+              store.box<PendingMessageModel>());
+          return object;
+        }),
+    DBConversationModel: EntityDefinition<DBConversationModel>(
+        model: _entities[6],
+        toOneRelations: (DBConversationModel object) =>
+            [object.opponentDetails, object.lastMessageDetails, object.config],
+        toManyRelations: (DBConversationModel object) => {},
+        getId: (DBConversationModel object) => object.id,
+        setId: (DBConversationModel object, int id) {
+          object.id = id;
+        },
+        objectToFB: (DBConversationModel object, fb.Builder fbb) {
+          final conversationTitleOffset = object.conversationTitle == null
+              ? null
+              : fbb.writeString(object.conversationTitle!);
+          final conversationImageUrlOffset = object.conversationImageUrl == null
+              ? null
+              : fbb.writeString(object.conversationImageUrl!);
+          final conversationIdOffset = object.conversationId == null
+              ? null
+              : fbb.writeString(object.conversationId!);
+          fbb.startTable(13);
+          fbb.addInt64(0, object.id);
+          fbb.addInt64(1, object.unreadMessagesCount);
+          fbb.addInt64(2, object.opponentDetails.targetId);
+          fbb.addBool(3, object.messagingDisabled);
+          fbb.addInt64(4, object.membersCount);
+          fbb.addInt64(5, object.lastMessageSentAt);
+          fbb.addInt64(6, object.lastMessageDetails.targetId);
+          fbb.addBool(7, object.isGroup);
+          fbb.addOffset(8, conversationTitleOffset);
+          fbb.addOffset(9, conversationImageUrlOffset);
+          fbb.addOffset(10, conversationIdOffset);
+          fbb.addInt64(11, object.config.targetId);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = DBConversationModel(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              unreadMessagesCount: const fb.Int64Reader()
+                  .vTableGetNullable(buffer, rootOffset, 6),
+              messagingDisabled: const fb.BoolReader()
+                  .vTableGetNullable(buffer, rootOffset, 10),
+              lastMessageSentAt: const fb.Int64Reader()
+                  .vTableGetNullable(buffer, rootOffset, 14),
+              membersCount: const fb.Int64Reader()
+                  .vTableGetNullable(buffer, rootOffset, 12),
+              isGroup: const fb.BoolReader()
+                  .vTableGetNullable(buffer, rootOffset, 18),
+              conversationTitle: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 20),
+              conversationImageUrl:
+                  const fb.StringReader(asciiOptimization: true)
+                      .vTableGetNullable(buffer, rootOffset, 22),
+              conversationId: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 24));
+          object.opponentDetails.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0);
+          object.opponentDetails.attach(store);
+          object.lastMessageDetails.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0);
+          object.lastMessageDetails.attach(store);
+          object.config.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0);
+          object.config.attach(store);
+          return object;
+        }),
+    DBMessageModel: EntityDefinition<DBMessageModel>(
+        model: _entities[7],
+        toOneRelations: (DBMessageModel object) => [object.senderInfo],
+        toManyRelations: (DBMessageModel object) =>
+            {RelInfo<DBMessageModel>.toMany(3, object.id): object.attachments},
+        getId: (DBMessageModel object) => object.id,
+        setId: (DBMessageModel object, int id) {
+          object.id = id;
+        },
+        objectToFB: (DBMessageModel object, fb.Builder fbb) {
+          final bodyOffset =
+              object.body == null ? null : fbb.writeString(object.body!);
+          final actionOffset =
+              object.action == null ? null : fbb.writeString(object.action!);
+          final receiverIdOffset = object.receiverId == null
+              ? null
+              : fbb.writeString(object.receiverId!);
+          final conversationIdOffset = object.conversationId == null
+              ? null
+              : fbb.writeString(object.conversationId!);
+          final parentMessageIdOffset = object.parentMessageId == null
+              ? null
+              : fbb.writeString(object.parentMessageId!);
+          final messageIdOffset = object.messageId == null
+              ? null
+              : fbb.writeString(object.messageId!);
+          fbb.startTable(16);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, bodyOffset);
+          fbb.addOffset(2, actionOffset);
+          fbb.addInt64(3, object.sentAt);
+          fbb.addOffset(4, receiverIdOffset);
+          fbb.addBool(5, object.readByAll);
+          fbb.addInt64(6, object.senderInfo.targetId);
+          fbb.addBool(7, object.messagingDisabled);
+          fbb.addBool(8, object.deliveredToAll);
+          fbb.addOffset(9, conversationIdOffset);
+          fbb.addOffset(10, parentMessageIdOffset);
+          fbb.addOffset(11, messageIdOffset);
+          fbb.addBool(12, object.sentByMe);
+          fbb.addInt64(13, object.messageIndex);
+          fbb.addInt64(14, object.customMessageIndex);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = DBMessageModel(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              body: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 6),
+              action: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 8),
+              sentAt: const fb.Int64Reader()
+                  .vTableGetNullable(buffer, rootOffset, 10),
+              readByAll: const fb.BoolReader()
+                  .vTableGetNullable(buffer, rootOffset, 14),
+              messagingDisabled: const fb.BoolReader()
+                  .vTableGetNullable(buffer, rootOffset, 18),
+              deliveredToAll: const fb.BoolReader()
+                  .vTableGetNullable(buffer, rootOffset, 20),
+              conversationId: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 22),
+              parentMessageId: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 24),
+              messageId: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 26),
+              sentByMe: const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 28))
+            ..receiverId = const fb.StringReader(asciiOptimization: true)
+                .vTableGetNullable(buffer, rootOffset, 12)
+            ..messageIndex =
+                const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 30)
+            ..customMessageIndex = const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 32);
+          object.senderInfo.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0);
+          object.senderInfo.attach(store);
+          InternalToManyAccess.setRelInfo(
+              object.attachments,
+              store,
+              RelInfo<DBMessageModel>.toMany(3, object.id),
+              store.box<DBMessageModel>());
+          return object;
         })
   };
 
@@ -216,4 +961,251 @@ class UserDetails_ {
   /// see [UserDetails.language]
   static final language =
       QueryStringProperty<UserDetails>(_entities[0].properties[9]);
+}
+
+/// [AttachmentModel] entity fields to define ObjectBox queries.
+class AttachmentModel_ {
+  /// see [AttachmentModel.id]
+  static final id =
+      QueryIntegerProperty<AttachmentModel>(_entities[1].properties[0]);
+
+  /// see [AttachmentModel.thumbnailUrl]
+  static final thumbnailUrl =
+      QueryStringProperty<AttachmentModel>(_entities[1].properties[1]);
+
+  /// see [AttachmentModel.name]
+  static final name =
+      QueryStringProperty<AttachmentModel>(_entities[1].properties[2]);
+
+  /// see [AttachmentModel.mimeType]
+  static final mimeType =
+      QueryStringProperty<AttachmentModel>(_entities[1].properties[3]);
+
+  /// see [AttachmentModel.mediaUrl]
+  static final mediaUrl =
+      QueryStringProperty<AttachmentModel>(_entities[1].properties[4]);
+
+  /// see [AttachmentModel.mediaId]
+  static final mediaId =
+      QueryStringProperty<AttachmentModel>(_entities[1].properties[5]);
+
+  /// see [AttachmentModel.extension]
+  static final extension =
+      QueryStringProperty<AttachmentModel>(_entities[1].properties[6]);
+
+  /// see [AttachmentModel.size]
+  static final size =
+      QueryDoubleProperty<AttachmentModel>(_entities[1].properties[7]);
+
+  /// see [AttachmentModel.attachmentIndex]
+  static final attachmentIndex =
+      QueryIntegerProperty<AttachmentModel>(_entities[1].properties[8]);
+}
+
+/// [ConversationConfigModel] entity fields to define ObjectBox queries.
+class ConversationConfigModel_ {
+  /// see [ConversationConfigModel.id]
+  static final id =
+      QueryIntegerProperty<ConversationConfigModel>(_entities[2].properties[0]);
+
+  /// see [ConversationConfigModel.typingEvents]
+  static final typingEvents =
+      QueryBooleanProperty<ConversationConfigModel>(_entities[2].properties[1]);
+
+  /// see [ConversationConfigModel.readEvents]
+  static final readEvents =
+      QueryBooleanProperty<ConversationConfigModel>(_entities[2].properties[2]);
+
+  /// see [ConversationConfigModel.pushNotifications]
+  static final pushNotifications =
+      QueryBooleanProperty<ConversationConfigModel>(_entities[2].properties[3]);
+}
+
+/// [ForwardMessageModel] entity fields to define ObjectBox queries.
+class ForwardMessageModel_ {
+  /// see [ForwardMessageModel.id]
+  static final id =
+      QueryIntegerProperty<ForwardMessageModel>(_entities[3].properties[0]);
+
+  /// see [ForwardMessageModel.conversationId]
+  static final conversationId =
+      QueryStringProperty<ForwardMessageModel>(_entities[3].properties[1]);
+
+  /// see [ForwardMessageModel.messages]
+  static final messages =
+      QueryRelationToMany<ForwardMessageModel, DBMessageModel>(
+          _entities[3].relations[0]);
+}
+
+/// [LastMessageDetails] entity fields to define ObjectBox queries.
+class LastMessageDetails_ {
+  /// see [LastMessageDetails.id]
+  static final id =
+      QueryIntegerProperty<LastMessageDetails>(_entities[4].properties[0]);
+
+  /// see [LastMessageDetails.showInConversation]
+  static final showInConversation =
+      QueryBooleanProperty<LastMessageDetails>(_entities[4].properties[1]);
+
+  /// see [LastMessageDetails.sentAt]
+  static final sentAt =
+      QueryIntegerProperty<LastMessageDetails>(_entities[4].properties[2]);
+
+  /// see [LastMessageDetails.senderName]
+  static final senderName =
+      QueryStringProperty<LastMessageDetails>(_entities[4].properties[3]);
+
+  /// see [LastMessageDetails.messageType]
+  static final messageType =
+      QueryIntegerProperty<LastMessageDetails>(_entities[4].properties[4]);
+
+  /// see [LastMessageDetails.messageId]
+  static final messageId =
+      QueryStringProperty<LastMessageDetails>(_entities[4].properties[5]);
+
+  /// see [LastMessageDetails.conversationId]
+  static final conversationId =
+      QueryStringProperty<LastMessageDetails>(_entities[4].properties[6]);
+
+  /// see [LastMessageDetails.body]
+  static final body =
+      QueryStringProperty<LastMessageDetails>(_entities[4].properties[7]);
+}
+
+/// [PendingMessageModel] entity fields to define ObjectBox queries.
+class PendingMessageModel_ {
+  /// see [PendingMessageModel.id]
+  static final id =
+      QueryIntegerProperty<PendingMessageModel>(_entities[5].properties[0]);
+
+  /// see [PendingMessageModel.conversationId]
+  static final conversationId =
+      QueryStringProperty<PendingMessageModel>(_entities[5].properties[1]);
+
+  /// see [PendingMessageModel.messages]
+  static final messages =
+      QueryRelationToMany<PendingMessageModel, DBMessageModel>(
+          _entities[5].relations[0]);
+}
+
+/// [DBConversationModel] entity fields to define ObjectBox queries.
+class DBConversationModel_ {
+  /// see [DBConversationModel.id]
+  static final id =
+      QueryIntegerProperty<DBConversationModel>(_entities[6].properties[0]);
+
+  /// see [DBConversationModel.unreadMessagesCount]
+  static final unreadMessagesCount =
+      QueryIntegerProperty<DBConversationModel>(_entities[6].properties[1]);
+
+  /// see [DBConversationModel.opponentDetails]
+  static final opponentDetails =
+      QueryRelationToOne<DBConversationModel, UserDetails>(
+          _entities[6].properties[2]);
+
+  /// see [DBConversationModel.messagingDisabled]
+  static final messagingDisabled =
+      QueryBooleanProperty<DBConversationModel>(_entities[6].properties[3]);
+
+  /// see [DBConversationModel.membersCount]
+  static final membersCount =
+      QueryIntegerProperty<DBConversationModel>(_entities[6].properties[4]);
+
+  /// see [DBConversationModel.lastMessageSentAt]
+  static final lastMessageSentAt =
+      QueryIntegerProperty<DBConversationModel>(_entities[6].properties[5]);
+
+  /// see [DBConversationModel.lastMessageDetails]
+  static final lastMessageDetails =
+      QueryRelationToOne<DBConversationModel, LastMessageDetails>(
+          _entities[6].properties[6]);
+
+  /// see [DBConversationModel.isGroup]
+  static final isGroup =
+      QueryBooleanProperty<DBConversationModel>(_entities[6].properties[7]);
+
+  /// see [DBConversationModel.conversationTitle]
+  static final conversationTitle =
+      QueryStringProperty<DBConversationModel>(_entities[6].properties[8]);
+
+  /// see [DBConversationModel.conversationImageUrl]
+  static final conversationImageUrl =
+      QueryStringProperty<DBConversationModel>(_entities[6].properties[9]);
+
+  /// see [DBConversationModel.conversationId]
+  static final conversationId =
+      QueryStringProperty<DBConversationModel>(_entities[6].properties[10]);
+
+  /// see [DBConversationModel.config]
+  static final config =
+      QueryRelationToOne<DBConversationModel, ConversationConfigModel>(
+          _entities[6].properties[11]);
+}
+
+/// [DBMessageModel] entity fields to define ObjectBox queries.
+class DBMessageModel_ {
+  /// see [DBMessageModel.id]
+  static final id =
+      QueryIntegerProperty<DBMessageModel>(_entities[7].properties[0]);
+
+  /// see [DBMessageModel.body]
+  static final body =
+      QueryStringProperty<DBMessageModel>(_entities[7].properties[1]);
+
+  /// see [DBMessageModel.action]
+  static final action =
+      QueryStringProperty<DBMessageModel>(_entities[7].properties[2]);
+
+  /// see [DBMessageModel.sentAt]
+  static final sentAt =
+      QueryIntegerProperty<DBMessageModel>(_entities[7].properties[3]);
+
+  /// see [DBMessageModel.receiverId]
+  static final receiverId =
+      QueryStringProperty<DBMessageModel>(_entities[7].properties[4]);
+
+  /// see [DBMessageModel.readByAll]
+  static final readByAll =
+      QueryBooleanProperty<DBMessageModel>(_entities[7].properties[5]);
+
+  /// see [DBMessageModel.senderInfo]
+  static final senderInfo = QueryRelationToOne<DBMessageModel, UserDetails>(
+      _entities[7].properties[6]);
+
+  /// see [DBMessageModel.messagingDisabled]
+  static final messagingDisabled =
+      QueryBooleanProperty<DBMessageModel>(_entities[7].properties[7]);
+
+  /// see [DBMessageModel.deliveredToAll]
+  static final deliveredToAll =
+      QueryBooleanProperty<DBMessageModel>(_entities[7].properties[8]);
+
+  /// see [DBMessageModel.conversationId]
+  static final conversationId =
+      QueryStringProperty<DBMessageModel>(_entities[7].properties[9]);
+
+  /// see [DBMessageModel.parentMessageId]
+  static final parentMessageId =
+      QueryStringProperty<DBMessageModel>(_entities[7].properties[10]);
+
+  /// see [DBMessageModel.messageId]
+  static final messageId =
+      QueryStringProperty<DBMessageModel>(_entities[7].properties[11]);
+
+  /// see [DBMessageModel.sentByMe]
+  static final sentByMe =
+      QueryBooleanProperty<DBMessageModel>(_entities[7].properties[12]);
+
+  /// see [DBMessageModel.messageIndex]
+  static final messageIndex =
+      QueryIntegerProperty<DBMessageModel>(_entities[7].properties[13]);
+
+  /// see [DBMessageModel.customMessageIndex]
+  static final customMessageIndex =
+      QueryIntegerProperty<DBMessageModel>(_entities[7].properties[14]);
+
+  /// see [DBMessageModel.attachments]
+  static final attachments =
+      QueryRelationToMany<DBMessageModel, AttachmentModel>(
+          _entities[7].relations[0]);
 }

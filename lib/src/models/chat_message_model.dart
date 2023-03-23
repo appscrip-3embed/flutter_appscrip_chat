@@ -210,7 +210,7 @@ class ChatMessageModel {
     String? parentMessageId,
     String? messageId,
     String? deviceId,
-    ConversationConfig? config,
+    ConversationConfigModel? config,
     int? adminCount,
     MessageType? messageType,
     bool? sentByMe,

@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/src/utilities/utilities.dart';
+import 'package:objectbox/objectbox.dart';
 
+@Entity()
 class AttachmentModel {
   factory AttachmentModel.fromJson(String source) =>
       AttachmentModel.fromMap(json.decode(source) as Map<String, dynamic>);
@@ -11,7 +13,7 @@ class AttachmentModel {
                 (map['thumbnailUrl'] as String).isNotEmpty
             ? ChatUtility.decodePayload(map['thumbnailUrl'] as String)
             : '',
-        size: map['size'] as num,
+        size: map['size'] as double,
         name: map['name'] as String,
         mimeType: map['mimeType'] as String,
         mediaUrl:
@@ -23,7 +25,8 @@ class AttachmentModel {
         attachmentType: AttachmentType.fromMap(map['attachmentType'] as int),
       );
 
-  const AttachmentModel({
+  AttachmentModel({
+    this.id = 0,
     required this.thumbnailUrl,
     required this.size,
     required this.name,
@@ -31,20 +34,36 @@ class AttachmentModel {
     required this.mediaUrl,
     required this.mediaId,
     required this.extension,
-    required this.attachmentType,
+    this.attachmentType,
   });
+  
+  int id;
   final String thumbnailUrl;
-  final num size;
+  final double size;
   final String name;
   final String mimeType;
   final String mediaUrl;
   final String mediaId;
   final String extension;
-  final AttachmentType attachmentType;
+  @Transient()
+  AttachmentType? attachmentType;
+
+
+   int? get attachmentIndex => attachmentType?.index;
+
+  set attachmentIndex(int? value) {
+    if (value == null) {
+      attachmentType = null;
+    }
+    if (value! < 0 || value >= AttachmentType.values.length) {
+      attachmentType = AttachmentType.file;
+    }
+    attachmentType = AttachmentType.values[value];
+  }
 
   AttachmentModel copyWith({
     String? thumbnailUrl,
-    num? size,
+    double? size,
     String? name,
     String? mimeType,
     String? mediaUrl,
@@ -71,7 +90,7 @@ class AttachmentModel {
         'mediaUrl': mediaUrl,
         'mediaId': mediaId,
         'extension': extension,
-        'attachmentType': attachmentType.value,
+        'attachmentType': attachmentType?.value,
       };
 
   String toJson() => json.encode(toMap());
