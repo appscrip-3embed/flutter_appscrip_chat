@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:get/get.dart';
 
@@ -76,14 +74,13 @@ class IsmChatConversationsController extends GetxController {
 
   Future<void> ismMessageDelivery(
       {required String conversationId, required String messageId}) async {
-    await _viewModel.ismMessageDelivery(
+    await _viewModel.updateDeliveredMessage(
         conversationId: conversationId, messageId: messageId);
   }
 
-  Future<void> ismCreateConversation(
-      {required List<String> userId}) async {
-    await _viewModel.ismCreateConversation(
-       typingEvents: true,
+  Future<void> ismCreateConversation({required List<String> userId}) async {
+    await _viewModel.createConversation(
+        typingEvents: true,
         readEvents: true,
         pushNotifications: true,
         members: userId,

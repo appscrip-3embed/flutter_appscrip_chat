@@ -8,6 +8,7 @@ export 'src/app/app.dart';
 export 'src/controllers/controllers.dart';
 export 'src/data/data.dart';
 export 'src/models/models.dart';
+export 'src/repositories/repositories.dart';
 export 'src/res/res.dart';
 export 'src/utilities/utilities.dart';
 export 'src/view_models/view_models.dart';

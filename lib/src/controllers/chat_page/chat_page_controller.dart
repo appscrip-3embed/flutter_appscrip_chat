@@ -103,7 +103,7 @@ class IsmChatPageController extends GetxController {
       String locationName = '',
       int attachmentType = 0,
       bool forwardMultiple = false}) async {
-    await _viewModel.imsPostMessage(
+    await _viewModel.sendMessage(
         showInConversation: true,
         messageType: messageType!,
         encrypted: true,
@@ -115,7 +115,7 @@ class IsmChatPageController extends GetxController {
 
   Future<void> ismMessageRead(
       {required String conversationId, required String messageId}) async {
-    await _viewModel.ismMessageRead(
+    await _viewModel.updateMessageRead(
         conversationId: conversationId, messageId: messageId);
   }
 
@@ -129,15 +129,15 @@ class IsmChatPageController extends GetxController {
       bool? includeMembers,
       int? membersSkip,
       int? membersLimit}) async {
-    await _viewModel.ismGeChatUserDetails(conversationId: conversationId);
+    await _viewModel.getChatUserDetails(conversationId: conversationId);
   }
 
   Future<void> ismPostBlockUser({required String opponentId}) async {
-    await _viewModel.ismPostBlockUser(opponentId: opponentId);
+    await _viewModel.blockUser(opponentId: opponentId);
   }
 
   Future<void> ismPostUnBlockUser({required String opponentId}) async {
-    await _viewModel.ismPostUnBlockUser(opponentId: opponentId);
+    await _viewModel.unblockUser(opponentId: opponentId);
   }
 
   Future<void> ismPostMediaUrl(
@@ -145,7 +145,7 @@ class IsmChatPageController extends GetxController {
       required String nameWithExtension,
       required int mediaType,
       required String mediaId}) async {
-    await _viewModel.ismPostMediaUrl(
+    await _viewModel.postMediaUrl(
         conversationId: conversationId,
         nameWithExtension: nameWithExtension,
         mediaType: mediaType,
@@ -154,13 +154,13 @@ class IsmChatPageController extends GetxController {
 
   Future<void> ismGetMessageRead(
       {required String conversationId, required String messageId}) async {
-    await _viewModel.ismGetMessageRead(
+    await _viewModel.readMessage(
         conversationId: conversationId, messageId: messageId);
   }
 
   Future<void> ismGetMessageDeliver(
       {required String conversationId, required String messageId}) async {
-    await _viewModel.ismGetMessageDeliver(
+    await _viewModel.getMessageDelivered(
         conversationId: conversationId, messageId: messageId);
   }
 
@@ -168,7 +168,7 @@ class IsmChatPageController extends GetxController {
     required String conversationId,
     required String messageIds,
   }) async {
-    await _viewModel.ismMessageDeleteEveryOne(
+    await _viewModel.deleteMessageForEveryone(
         conversationId: conversationId, messageIds: messageIds);
   }
 
@@ -176,27 +176,27 @@ class IsmChatPageController extends GetxController {
     required String conversationId,
     required String messageIds,
   }) async {
-    await _viewModel.ismMessageDeleteSelf(
+    await _viewModel.deleteMessageForMe(
         conversationId: conversationId, messageIds: messageIds);
   }
 
   Future<void> ismDeleteChat({
     required String conversationId,
   }) async {
-    await _viewModel.ismDeleteChat(conversationId: conversationId);
+    await _viewModel.deleteChat(conversationId: conversationId);
   }
 
   Future<void> ismClearChat({
     required String conversationId,
   }) async {
-    await _viewModel.ismClearChat(conversationId: conversationId);
+    await _viewModel.clearChat(conversationId: conversationId);
   }
 
   Future<void> ismReadAllMessages({
     required String conversationId,
     required int timestamp,
   }) async {
-    await _viewModel.ismReadAllMessages(
+    await _viewModel.readAllMessages(
         conversationId: conversationId, timestamp: timestamp);
   }
 }

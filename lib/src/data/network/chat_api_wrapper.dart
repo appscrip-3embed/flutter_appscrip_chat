@@ -6,9 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class IsmChatApiWrapper {
-  const IsmChatApiWrapper._();
-
-  static Future<ResponseModel> get(
+  Future<ResponseModel> get(
     String api, {
     bool showLoader = false,
     required Map<String, String> headers,
@@ -42,7 +40,7 @@ class IsmChatApiWrapper {
     }
   }
 
-  static Future<ResponseModel> post(
+  Future<ResponseModel> post(
     String api, {
     required dynamic payload,
     required Map<String, String> headers,
@@ -81,7 +79,7 @@ class IsmChatApiWrapper {
     }
   }
 
-  static Future<ResponseModel> put(
+  Future<ResponseModel> put(
     String api, {
     required dynamic payload,
     required Map<String, String> headers,
@@ -120,7 +118,7 @@ class IsmChatApiWrapper {
     }
   }
 
-  static Future<ResponseModel> patch(
+  Future<ResponseModel> patch(
     String api, {
     required dynamic payload,
     required Map<String, String> headers,
@@ -159,7 +157,7 @@ class IsmChatApiWrapper {
     }
   }
 
-  static Future<ResponseModel> delete(
+  Future<ResponseModel> delete(
     String api, {
     required dynamic payload,
     required Map<String, String> headers,
@@ -198,7 +196,7 @@ class IsmChatApiWrapper {
     }
   }
 
-  static ResponseModel _processResponse(http.Response response) {
+  ResponseModel _processResponse(http.Response response) {
     if (kDebugMode) {
       ChatLog(
           'Response - ${response.request?.method} ${response.statusCode} ${response.request?.url}\n${response.body}');
