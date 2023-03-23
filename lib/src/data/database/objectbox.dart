@@ -12,7 +12,7 @@ import 'package:path_provider/path_provider.dart';
 class IsmChatObjectBox {
   IsmChatObjectBox._create(this.store) {
     userDetailsBox = Box<UserDetails>(store);
-    chatConversationBox = Box<ChatConversationModel>(store);
+    chatConversationBox = Box<DBConversationModel>(store);
     pendingMessageBox = Box<PendingMessageModel>(store);
     forwardMessageBox = Box<ForwardMessageModel>(store);
   }
@@ -32,7 +32,7 @@ class IsmChatObjectBox {
   late final Box<ForwardMessageModel> forwardMessageBox;
 
   /// A Box of Conversation model
-  late final Box<ChatConversationModel> chatConversationBox;
+  late final Box<DBConversationModel> chatConversationBox;
 
   // static Query<UserMessage> query = noteBox.query(UserMessage_.conversationId.equals())
 

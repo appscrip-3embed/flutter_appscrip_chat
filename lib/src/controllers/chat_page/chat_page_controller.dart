@@ -59,7 +59,7 @@ class IsmChatPageController extends GetxController {
     if (data != null) {
       messages = _viewModel.sortMessages(data);
       await Future.delayed(
-        const Duration(milliseconds: 1),
+        const Duration(milliseconds: 10),
         () async => await messagesScrollController.animateTo(
           messagesScrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 100),

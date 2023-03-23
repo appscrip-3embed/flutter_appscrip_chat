@@ -13,7 +13,7 @@ class AttachmentModel {
                 (map['thumbnailUrl'] as String).isNotEmpty
             ? ChatUtility.decodePayload(map['thumbnailUrl'] as String)
             : '',
-        size: map['size'] as double,
+        size: (map['size'] as num).toDouble(),
         name: map['name'] as String,
         mimeType: map['mimeType'] as String,
         mediaUrl:
@@ -36,7 +36,7 @@ class AttachmentModel {
     required this.extension,
     this.attachmentType,
   });
-  
+
   int id;
   final String thumbnailUrl;
   final double size;
@@ -48,8 +48,7 @@ class AttachmentModel {
   @Transient()
   AttachmentType? attachmentType;
 
-
-   int? get attachmentIndex => attachmentType?.index;
+  int? get attachmentIndex => attachmentType?.index;
 
   set attachmentIndex(int? value) {
     if (value == null) {

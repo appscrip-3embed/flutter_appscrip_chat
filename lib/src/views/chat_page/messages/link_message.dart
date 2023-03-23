@@ -22,7 +22,6 @@ class LinkMessage extends StatelessWidget {
           sentByMe: message.sentByMe,
           link: message.body,
           child: LinkPreviewGenerator(
-
             bodyMaxLines: 3,
             link: message.body.convertToValidUrl,
             linkPreviewStyle: LinkPreviewStyle.small,
@@ -43,9 +42,12 @@ class LinkMessage extends StatelessWidget {
                   ? ChatStyles.w400White12
                   : ChatStyles.w400Black12,
             ),
-            placeholderWidget: Text('Loading preview...',style:  message.sentByMe
+            placeholderWidget: Text(
+              'Loading preview...',
+              style: message.sentByMe
                   ? ChatStyles.w400White12
-                  : ChatStyles.w400Black12,),
+                  : ChatStyles.w400Black12,
+            ),
           ),
         ),
         // child: AnyLinkPreview.builder(
