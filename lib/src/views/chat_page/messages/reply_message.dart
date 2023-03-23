@@ -45,7 +45,7 @@ class _ReplyMessage extends StatelessWidget {
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
         builder: (controller) {
           var parentMessage =
-              controller.getMessageByid(message.parentMessageId);
+              controller.getMessageByid(message.parentMessageId ?? '');
           return ClipRRect(
             borderRadius: BorderRadius.circular(ChatDimens.eight),
             child: Container(

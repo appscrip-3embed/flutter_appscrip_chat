@@ -11,7 +11,7 @@ class AudioMessage extends StatelessWidget {
   Widget build(BuildContext context) => VoiceMessage(
         audioSrc: message.body,
         played: false,
-        me: message.sentByMe,
+        me: message.sentByMe!,
         meBgColor: IsmChatConfig.chatTheme.primaryColor!,
         mePlayIconColor: IsmChatConfig.chatTheme.primaryColor!,
         contactBgColor: IsmChatConfig.chatTheme.backgroundColor!,

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../data/database/objectbox.g.dart';
+
 class IsmChatPageController extends GetxController {
   IsmChatPageController(this._viewModel);
   final ChatPageViewModel _viewModel;
@@ -51,7 +53,7 @@ class IsmChatPageController extends GetxController {
   void getChatMessages() async {
     isMessagesLoading = true;
     var data = await _viewModel.getChatMessages(
-      conversationId: conversation.conversationId,
+      conversationId: conversation.conversationId!,
       lastMessageTimestamp: 0,
     );
     isMessagesLoading = false;
@@ -75,17 +77,58 @@ class IsmChatPageController extends GetxController {
         data: messages,
       );
 
-  void sendMessage() {
+//  /// call function for add Pending Message
+//   void ismAddPendingMessage(DBMessageModel dbMessageModel) async {
+//     if ((ismChatListController.pendingMessage) &&
+//         (ismChatListController.userData.conversationId == conversationId)) {
+//       /// for client Side
+//       await objectbox.addPendingMessage(message, conversationId);
+//       messages.insert(0, message);
+//       update();
+//     }
+//   }
+
+  void sendMessage() async {
     // final query = IsmChatConfig.objectBox.userDetailsBox.query()
-    ismPostMessage(
-      deviceId: _deviceConfig.deviceId!,
+    var ismObjectBox = IsmChatConfig.objectBox;
+    final query = ismObjectBox.chatConversationBox
+        .query(DBConversationModel_.conversationId
+            .equals(conversation.conversationId ?? ''))
+        .build();
+    final chatConversationResponse = query.findUnique();
+    if (chatConversationResponse == null) {
+      // await Get.find<IsmChatConversationsController>().ismCreateConversation(userId: [conversation.opponentDetails?.userId ?? ''] );
+      // await IsmChatConfig.objectBox.createAndUpdateDB(
+      //     dbConversationModel: dbConversationModel,
+      //   );
+    }
+    var sentAt = DateTime.now().millisecondsSinceEpoch;
+
+    var textDbModel = DBMessageModel(
       body: ChatUtility.encodePayload(chatInputController.text.trim()),
-      customType: CustomMessageType.text.name,
-      createdAt: DateTime.now().millisecondsSinceEpoch,
-      conversationId: conversation.conversationId,
-      messageType: MessageType.normal.value,
+      conversationId: conversation.conversationId ?? '',
+      customType: CustomMessageType.text,
+      deliveredToAll: false,
+      messageId: '',
+      messageType: MessageType.normal,
+      messagingDisabled: false,
+      parentMessageId: '',
+      readByAll: false,
+      sentAt: sentAt,
+      sentByMe: true,
     );
+    var textMessage = ChatMessageModel.fromDbMessage(textDbModel);
+    messages.add(textMessage);
     chatInputController.clear();
+    await ismObjectBox.addPendingMessage(textDbModel);
+    await ismPostMessage(
+      deviceId: _deviceConfig.deviceId!,
+      body: textDbModel.body!,
+      customType: textDbModel.customType!.name,
+      createdAt: sentAt,
+      conversationId: textDbModel.conversationId ?? '',
+      messageType: textDbModel.messageType?.value,
+    );
   }
 
   Future<void> ismPostMessage(
@@ -103,14 +146,35 @@ class IsmChatPageController extends GetxController {
       String locationName = '',
       int attachmentType = 0,
       bool forwardMultiple = false}) async {
-    await _viewModel.sendMessage(
+    var isMessageSent = await _viewModel.sendMessage(
         showInConversation: true,
         messageType: messageType!,
         encrypted: true,
         deviceId: deviceId,
+        createdAt: createdAt,
         conversationId: conversationId,
         body: body,
         customType: customType);
+    if (isMessageSent) {
+      await ismLoadAllMessage(conversationId: conversationId);
+    }
+  }
+
+  Future<void> ismLoadAllMessage({String conversationId = ''}) async {
+    var chatConversationBox = IsmChatConfig.objectBox.chatConversationBox;
+    final query = chatConversationBox
+        .query(DBConversationModel_.conversationId.equals(conversationId))
+        .build();
+    final chatConversationMessages = query.findUnique();
+    if (chatConversationMessages != null) {
+      ChatLog.error('fdsfdsfsf ${chatConversationMessages.conversationId}');
+      ChatLog.error('fdsfdsfsf ${chatConversationMessages.messages}');
+      var msgs = chatConversationMessages.messages
+          .map(ChatMessageModel.fromDbMessage)
+          .toList();
+      msgs = _viewModel.sortMessages(msgs);
+      messages = msgs;
+    }
   }
 
   Future<void> ismMessageRead(

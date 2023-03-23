@@ -25,9 +25,9 @@ class IsmChatConversationCard extends StatelessWidget {
           child: ListTile(
             dense: true,
             leading: profileImageBuilder?.call(context,
-                    conversation.opponentDetails.userProfileImageUrl) ??
+                    conversation.opponentDetails?.userProfileImageUrl ?? '') ??
                 IsmChatImage.profile(
-                  conversation.opponentDetails.userProfileImageUrl,
+                  conversation.opponentDetails?.userProfileImageUrl ?? '',
                   name: conversation.chatName,
                 ),
             title: nameBuilder?.call(context, conversation.chatName) ??
@@ -36,9 +36,9 @@ class IsmChatConversationCard extends StatelessWidget {
                   style: ChatStyles.w600Black14,
                 ),
             subtitle: subtitleBuilder?.call(
-                    context, conversation.lastMessageDetails.body) ??
+                    context, conversation.lastMessageDetails?.body ?? '') ??
                 Text(
-                  conversation.lastMessageDetails.body,
+                  conversation.lastMessageDetails?.body ?? '',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: ChatStyles.w400Black12,

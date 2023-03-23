@@ -29,7 +29,7 @@ class ChatPageRepository {
     }
   }
 
-  Future<void> sendMessage({
+  Future<String?> sendMessage({
     required bool showInConversation,
     required int messageType,
     required bool encrypted,
@@ -60,16 +60,16 @@ class ChatPageRepository {
       var response = await _apiWrapper.post(IsmChatAPI.sendMessage,
           payload: payload, headers: ChatUtility.tokenCommonHeader());
       if (response.hasError) {
-        return;
+        return null;
       }
       var data = jsonDecode(response.data);
-      ChatLog.success(data);
-      // return (data['messages'] as List)
-      //     .map((e) => ChatMessageModel.fromMap(e as Map<String, dynamic>))
-      //     .toList();
+      var messageId = data['messageId'] as String;
+       ChatLog.success(data);
+      return messageId;
+    
     } catch (e, st) {
       ChatLog.error('Send Message $e', st);
-      return;
+      return null;
     }
   }
 

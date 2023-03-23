@@ -110,10 +110,16 @@ class ChatMessage extends StatelessWidget {
                   if (message.sentByMe) ...[
                     ChatDimens.boxWidth2,
                     Icon(
-                      message.deliveredToAll
-                          ? Icons.done_all_rounded
-                          : Icons.done_rounded,
-                      color: message.readByAll ? Colors.blue : Colors.grey,
+                      message.messageId!.isEmpty
+                          ? Icons.watch_later_rounded
+                          : message.deliveredToAll!
+                              ? Icons.done_all_rounded
+                              : Icons.done_rounded,
+                      color: message.messageId!.isEmpty
+                          ? Colors.grey
+                          : message.readByAll!
+                              ? Colors.blue
+                              : Colors.grey,
                       size: ChatDimens.forteen,
                     ),
                   ],

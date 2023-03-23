@@ -17,7 +17,6 @@ class DBMessageModel {
     this.messageId,
     this.messageType,
     this.sentByMe,
-    
   });
   int id;
   String? body;
@@ -28,6 +27,7 @@ class DBMessageModel {
   final senderInfo = ToOne<UserDetails>();
   bool? messagingDisabled;
   final attachments = ToMany<AttachmentModel>();
+  final conversation = ToOne<DBConversationModel>();
   bool? deliveredToAll;
   String? conversationId;
   String? parentMessageId;
@@ -61,7 +61,3 @@ class DBMessageModel {
     customType = CustomMessageType.values[value];
   }
 }
-
-
-
-

@@ -19,7 +19,7 @@ class ChatConversationModel {
             UserDetails.fromMap(map['opponentDetails'] as Map<String, dynamic>),
         metaData: ChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
         messagingDisabled: map['messagingDisabled'] as bool? ?? false,
-        // membersCount: map['membersCount'] as int? ?? 0,
+        membersCount: map['membersCount'] as int? ?? 0,
         // lastReadAt: LastReadAt.fromNetworkMap(
         //     map['lastReadAt'] as Map<String, dynamic>? ?? {}),
         lastMessageSentAt: map['lastMessageSentAt'] as int? ?? 0,
@@ -42,56 +42,56 @@ class ChatConversationModel {
       );
 
   ChatConversationModel({
-    required this.updatedAt,
-    required this.unreadMessagesCount,
-    // required this.searchableTags,
-    required this.privateOneToOne,
-    required this.opponentDetails,
-    required this.metaData,
-    required this.messagingDisabled,
-    // required this.membersCount,
-    // required this.lastReadAt,
-    required this.lastMessageSentAt,
-    required this.lastMessageDetails,
-    required this.isGroup,
-    required this.customType,
-    // required this.createdByUserName,
-    // required this.createdByUserImageUrl,
-    // required this.createdBy,
-    // required this.createdAt,
-    required this.conversationType,
+     this.updatedAt,
+     this.unreadMessagesCount,
+    //  this.searchableTags,
+     this.privateOneToOne,
+     this.opponentDetails,
+     this.metaData,
+     this.messagingDisabled,
+     this.membersCount,
+    //  this.lastReadAt,
+     this.lastMessageSentAt,
+     this.lastMessageDetails,
+     this.isGroup,
+     this.customType,
+    //  this.createdByUserName,
+    //  this.createdByUserImageUrl,
+    //  this.createdBy,
+    //  this.createdAt,
+     this.conversationType,
     this.conversationTitle,
     this.conversationImageUrl,
-    required this.conversationId,
-    required this.config,
-    // required this.adminCount,
+     this.conversationId,
+     this.config,
+    //  this.adminCount,
   });
 
-  final int updatedAt;
-  final int unreadMessagesCount;
-  // final List<String> searchableTags;
-  final bool privateOneToOne;
-  final UserDetails opponentDetails;
-  final ChatMetaData metaData;
-  final bool messagingDisabled;
-  // final int membersCount;
-  // final List<LastReadAt> lastReadAt;
-  final int lastMessageSentAt;
-  final LastMessageDetails lastMessageDetails;
-  final bool isGroup;
-  final dynamic customType;
-  // final String createdByUserName;
-  // final String createdByUserImageUrl;
-  // final String createdBy;
-  // final int createdAt;
-  final ConversationType conversationType;
-  final String? conversationTitle;
-  final String? conversationImageUrl;
-  final String conversationId;
-  final ConversationConfigModel config;
-  // final int adminCount;
+   int? updatedAt;
+   int? unreadMessagesCount;
+  //  List<String> searchableTags;
+   bool? privateOneToOne;
+   UserDetails? opponentDetails;
+   ChatMetaData? metaData;
+   bool? messagingDisabled;
+   int? membersCount;
+  //  List<LastReadAt> lastReadAt;
+   int? lastMessageSentAt;
+   LastMessageDetails? lastMessageDetails;
+   bool? isGroup;
+   dynamic customType;
+  //  String createdByUserName;
+  //  String createdByUserImageUrl;
+  //  String createdBy;
+  //  int createdAt;
+   ConversationType? conversationType;
+   String? conversationTitle;
+   String? conversationImageUrl;
+   String? conversationId;
+   ConversationConfigModel? config;
+  //  int adminCount;
 
-  String get chatName => conversationTitle ?? opponentDetails.userName;
+  String get chatName => conversationTitle ?? opponentDetails?.userName ?? '';
 
   ChatConversationModel copyWith({
     int? updatedAt,
@@ -126,7 +126,7 @@ class ChatConversationModel {
         opponentDetails: opponentDetails ?? this.opponentDetails,
         metaData: metaData ?? this.metaData,
         messagingDisabled: messagingDisabled ?? this.messagingDisabled,
-        // membersCount: membersCount ?? this.membersCount,
+        membersCount: membersCount ?? this.membersCount,
         // lastReadAt: lastReadAt ?? this.lastReadAt,
         lastMessageSentAt: lastMessageSentAt ?? this.lastMessageSentAt,
         lastMessageDetails: lastMessageDetails ?? this.lastMessageDetails,
@@ -150,8 +150,8 @@ class ChatConversationModel {
         'unreadMessagesCount': unreadMessagesCount,
         // 'searchableTags': searchableTags,
         'privateOneToOne': privateOneToOne,
-        'opponentDetails': opponentDetails.toMap(),
-        'metaData': metaData.toMap(),
+        'opponentDetails': opponentDetails!.toMap(),
+        'metaData': metaData!.toMap(),
         'messagingDisabled': messagingDisabled,
         // 'membersCount': membersCount,
         // 'lastReadAt': lastReadAt.map((x) => x.toMap()).toList(),
@@ -167,7 +167,7 @@ class ChatConversationModel {
         'conversationTitle': conversationTitle,
         'conversationImageUrl': conversationImageUrl,
         'conversationId': conversationId,
-        'config': config.toMap(),
+        'config': config!.toMap(),
         // 'adminCount': adminCount,
       };
 

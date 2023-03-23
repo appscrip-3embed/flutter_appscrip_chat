@@ -27,15 +27,38 @@ class IsmChatConversationsController extends GetxController {
   ChatConversationModel? currentConversation;
 
   @override
-  onInit() {
+  onInit() async {
     super.onInit();
     var users = IsmChatConfig.objectBox.userDetailsBox.getAll();
     if (users.isNotEmpty) {
       userDetails = users.last;
     } else {
-      getUserData();
+      await getUserData();
     }
-    getChatConversations();
+    await ismLoadConversation();
+    await getChatConversations();
+  }
+
+  Future<void> ismLoadConversation() async {
+    conversations.clear();
+    var conversationList = IsmChatConfig.objectBox.chatConversationBox.getAll();
+    if (conversationList.isNotEmpty) {
+      for (var x in conversationList) {
+        conversations.add(ChatConversationModel(
+          conversationImageUrl: x.conversationImageUrl,
+          conversationTitle: x.conversationTitle,
+          unreadMessagesCount: x.unreadMessagesCount ?? 0,
+          messagingDisabled: x.messagingDisabled ?? false,
+          membersCount: x.membersCount ?? 0,
+          lastMessageSentAt: x.lastMessageSentAt ?? 0,
+          isGroup: x.isGroup ?? false,
+          conversationId: x.conversationId ?? '',
+          lastMessageDetails: x.lastMessageDetails.target,
+          opponentDetails: x.opponentDetails.target,
+          config: x.config.target,
+        ));
+      }
+    }
   }
 
   Future<void> getChatConversations() async {
@@ -43,7 +66,25 @@ class IsmChatConversationsController extends GetxController {
     var data = await _viewModel.getChatConversations();
     isConversationsLoading = false;
     if (data != null && data.isNotEmpty) {
-      conversations = data;
+      // conversations = data;
+      for (var x in data) {
+        var dbConversationModel = DBConversationModel(
+            conversationId: x.conversationId,
+            conversationImageUrl: x.conversationImageUrl,
+            conversationTitle: x.conversationTitle,
+            isGroup: x.isGroup,
+            lastMessageSentAt: x.lastMessageSentAt,
+            messagingDisabled: x.messagingDisabled,
+            membersCount: x.membersCount,
+            unreadMessagesCount: x.unreadMessagesCount);
+        dbConversationModel.opponentDetails.target = x.opponentDetails;
+        dbConversationModel.lastMessageDetails.target = x.lastMessageDetails;
+        dbConversationModel.config.target = x.config;
+        await IsmChatConfig.objectBox.createAndUpdateDB(
+          dbConversationModel: dbConversationModel,
+        );
+      }
+      await ismLoadConversation();
     }
   }
 
@@ -62,7 +103,7 @@ class IsmChatConversationsController extends GetxController {
           .where(
             (e) =>
                 e.chatName.didMatch(query) ||
-                e.lastMessageDetails.body.didMatch(query),
+                e.lastMessageDetails!.body.didMatch(query),
           )
           .toList();
     }
@@ -91,5 +132,6 @@ class IsmChatConversationsController extends GetxController {
         customType: null,
         conversationImageUrl: '',
         conversationTitle: '');
+   
   }
 }

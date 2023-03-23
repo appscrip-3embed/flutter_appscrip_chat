@@ -46,7 +46,84 @@ class IsmChatObjectBox {
   /// delete chat object box
   void deleteChatLocalDb() async {
     userDetailsBox.removeAll();
+    chatConversationBox.removeAll();
+    pendingMessageBox.removeAll();
+    forwardMessageBox.removeAll();
     ChatLog.success('[CLEARED] - All entries are removed from database');
+  }
+
+  /// Create Db with user
+  Future<void> createAndUpdateDB(
+      {DBConversationModel? dbConversationModel}) async {
+    var resposne = chatConversationBox.getAll();
+    if (resposne.isEmpty) {
+      chatConversationBox.put(dbConversationModel ?? DBConversationModel());
+    } else {
+      final query = chatConversationBox
+          .query(DBConversationModel_.conversationId
+              .equals(dbConversationModel!.conversationId!))
+          .build();
+      final chatConversationResponse = query.findUnique();
+
+      if (chatConversationResponse != null) {
+        chatConversationResponse.isGroup = dbConversationModel.isGroup;
+        chatConversationResponse.membersCount =
+            dbConversationModel.membersCount;
+        chatConversationResponse.lastMessageSentAt =
+            dbConversationModel.lastMessageSentAt;
+        chatConversationResponse.messagingDisabled =
+            dbConversationModel.messagingDisabled;
+        chatConversationResponse.unreadMessagesCount =
+            dbConversationModel.unreadMessagesCount;
+        chatConversationResponse.opponentDetails.target =
+            dbConversationModel.opponentDetails.target;
+        chatConversationResponse.lastMessageDetails.target =
+            dbConversationModel.lastMessageDetails.target;
+        chatConversationResponse.config.target =
+            dbConversationModel.config.target;
+        chatConversationBox.put(chatConversationResponse);
+        ChatLog.info('update db');
+      } else {
+        chatConversationBox.put(dbConversationModel);
+        ChatLog.info('add converstaion in db');
+      }
+    }
+  }
+
+  /// Add pending Message
+  Future<void> addPendingMessage(DBMessageModel dbMessageModel) async {
+    final query = pendingMessageBox
+        .query(PendingMessageModel_.conversationId
+            .equals(dbMessageModel.conversationId ?? ''))
+        .build();
+    final chatPendingMessages = query.findUnique(); 
+    if (chatPendingMessages != null) {
+      chatPendingMessages.messages.add(dbMessageModel);
+      pendingMessageBox.put(chatPendingMessages);
+    } else {
+      var pendingMessageModel = PendingMessageModel(
+          conversationId: dbMessageModel.conversationId ?? '');
+      pendingMessageModel.messages.add(dbMessageModel);
+      pendingMessageBox.put(pendingMessageModel);
+    }
+  }
+
+  /// Add forward Message
+  Future<void> addForwardMessage(DBMessageModel dbMessageModel) async {
+    final query = forwardMessageBox
+        .query(ForwardMessageModel_.conversationId
+            .equals(dbMessageModel.conversationId ?? ''))
+        .build();
+    final chatForwardMessages = query.findUnique(); 
+    if (chatForwardMessages != null) {
+      chatForwardMessages.messages.add(dbMessageModel);
+      forwardMessageBox.put(chatForwardMessages);
+    } else {
+      var forwardMessageModel = ForwardMessageModel(
+          conversationId: dbMessageModel.conversationId ?? '');
+      forwardMessageModel.messages.add(dbMessageModel);
+      forwardMessageBox.put(forwardMessageModel);
+    }
   }
 
   /// Create an instance of ObjectBox to use throughout the presenter.

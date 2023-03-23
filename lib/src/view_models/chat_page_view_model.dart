@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
 
 class ChatPageViewModel {
   ChatPageViewModel(this._repository);
@@ -17,28 +18,73 @@ class ChatPageViewModel {
         skip: messageSkip,
       );
 
-  Future<void> sendMessage({
+  Future<bool> sendMessage({
     required bool showInConversation,
     required int messageType,
     required bool encrypted,
     required String deviceId,
     required String conversationId,
     required String body,
+    required int createdAt,
     String? parentMessageId,
     Map<String, dynamic>? metaData,
     List<Map<String, dynamic>>? mentionedUsers,
     Map<String, dynamic>? events,
     String? customType,
     List<Map<String, dynamic>>? attachments,
-  }) async =>
-      await _repository.sendMessage(
-        showInConversation: showInConversation,
-        messageType: messageType,
-        encrypted: encrypted,
-        deviceId: deviceId,
-        conversationId: conversationId,
-        body: body,
-      );
+  }) async {
+    var response = await _repository.sendMessage(
+      showInConversation: showInConversation,
+      messageType: messageType,
+      encrypted: encrypted,
+      deviceId: deviceId,
+      conversationId: conversationId,
+      body: body,
+    );
+    if (response == null || response.isEmpty) {
+      return false;
+    }
+    var pendingMessgeBox = IsmChatConfig.objectBox.pendingMessageBox;
+    var chatConversationBox = IsmChatConfig.objectBox.chatConversationBox;
+    final query = pendingMessgeBox
+        .query(PendingMessageModel_.conversationId.equals(conversationId))
+        .build();
+    final chatPendingMessages = query.findUnique();
+    if (chatPendingMessages != null) {
+      for (var x = 0; x < chatPendingMessages.messages.length; x++) {
+        var pendingMessage = chatPendingMessages.messages[x];
+        if (pendingMessage.messageId!.isEmpty &&
+            pendingMessage.sentAt == createdAt) {
+          pendingMessage.messageId = response;
+          pendingMessage.deliveredToAll = false;
+          chatPendingMessages.messages.removeAt(x);
+          pendingMessgeBox.put(chatPendingMessages);
+          if (chatPendingMessages.messages.isEmpty) {
+            pendingMessgeBox.remove(chatPendingMessages.id);
+          }
+          final query = chatConversationBox
+              .query(DBConversationModel_.conversationId.equals(conversationId))
+              .build();
+          final chatUserMessages = query.findUnique();
+          if (chatUserMessages != null) {
+            chatUserMessages.messages.add(pendingMessage);
+          }
+          ChatLog.error('fdsfdsdfd ${chatUserMessages?.messages.first.body}');
+          chatConversationBox.put(chatUserMessages!);
+          ChatLog.success('Updated Message with MessageId');
+          break;
+        }
+      }
+      final query = chatConversationBox
+          .query(DBConversationModel_.conversationId.equals(conversationId))
+          .build();
+      final chatUserMessages = query.findUnique();
+
+      ChatLog.error('second ${chatUserMessages?.config.target}');
+      return true;
+    }
+    return false;
+  }
 
   List<ChatMessageModel> sortMessages(List<ChatMessageModel> messages) {
     messages.sort((a, b) => a.sentAt.compareTo(b.sentAt));
