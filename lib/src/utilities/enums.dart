@@ -225,3 +225,43 @@ enum AttachmentType {
 
   final int value;
 }
+
+enum ActionEvents {
+  typingEvent,
+  conversationCreated,
+  messageDelivered,
+  messageRead,
+  messagesDeleteForAll,
+  multipleMessagesRead,
+  userBlock,
+  userBlockConversation,
+  userUnblock,
+  userUnblockConversation;
+
+  factory ActionEvents.fromName(String name) {
+    switch (name) {
+      case 'typingEvent':
+        return ActionEvents.typingEvent;
+      case 'conversationCreated':
+        return ActionEvents.conversationCreated;
+      case 'messageDelivered':
+        return ActionEvents.messageDelivered;
+      case 'messageRead':
+        return ActionEvents.messageRead;
+      case 'messagesDeleteForAll':
+        return ActionEvents.messagesDeleteForAll;
+      case 'multipleMessagesRead':
+        return ActionEvents.multipleMessagesRead;
+      case 'userBlock':
+        return ActionEvents.userBlock;
+      case 'userBlockConversation':
+        return ActionEvents.userBlockConversation;
+      case 'userUnblock':
+        return ActionEvents.userUnblock;
+      case 'userUnblockConversation':
+        return ActionEvents.userUnblockConversation;
+      default:
+        return ActionEvents.typingEvent;
+    }
+  }
+}

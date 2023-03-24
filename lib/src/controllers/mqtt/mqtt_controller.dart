@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:get/get.dart';
@@ -122,9 +124,17 @@ class MqttController extends GetxController {
     client.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) async {
       final recMess = c!.first.payload as MqttPublishMessage;
 
-      var payload =
-          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
-      ChatLog.info(payload);
+      var payload = jsonDecode(
+              MqttPublishPayload.bytesToStringAsString(recMess.payload.message))
+          as Map<String, dynamic>;
+      ChatLog(payload);
+      if (payload['action'] != null) {
+        /// Actions are performed, stated in [ActionEvents]
+        var actionModel = MqttActionModel.fromMap(payload);
+        _handleAction(actionModel);
+      } else {
+        ChatLog('Message');
+      }
     });
   }
 
@@ -166,5 +176,9 @@ class MqttController extends GetxController {
 
   void _pong() {
     ChatLog.info('MQTT pong');
+  }
+
+  void _handleAction(MqttActionModel actionModel) {
+    ChatLog.info(actionModel);
   }
 }
