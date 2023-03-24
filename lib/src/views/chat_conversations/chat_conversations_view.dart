@@ -25,7 +25,7 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
   @override
   void initState() {
     super.initState();
-    MqttBinding().dependencies();
+    IsmChatMqttBinding().dependencies();
   }
 
   @override

@@ -6,9 +6,9 @@ import 'package:get/get.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
-class MqttController extends GetxController {
-  MqttController(this._viewModel);
-  final MqttViewModel _viewModel;
+class IsmChatMqttController extends GetxController {
+  IsmChatMqttController(this._viewModel);
+  final IsmChatMqttViewModel _viewModel;
 
   late MqttServerClient client;
 
@@ -22,6 +22,10 @@ class MqttController extends GetxController {
   late ChatCommunicationConfig _communicationConfig;
 
   late ChatConnectionState connectionState;
+
+  final RxList<String> _typingUsersIds = <String>[].obs;
+  List<String> get typingUsersIds => _typingUsersIds;
+  set typingUsersIds(List<String> value) => _typingUsersIds.value = value;
 
   @override
   void onInit() async {
@@ -180,5 +184,47 @@ class MqttController extends GetxController {
 
   void _handleAction(MqttActionModel actionModel) {
     ChatLog.info(actionModel);
+    switch (actionModel.action) {
+      case ActionEvents.typingEvent:
+        _handleTypingEvent(actionModel);
+        break;
+      case ActionEvents.conversationCreated:
+        // TODO: Handle this case.
+        break;
+      case ActionEvents.messageDelivered:
+        // TODO: Handle this case.
+        break;
+      case ActionEvents.messageRead:
+        // TODO: Handle this case.
+        break;
+      case ActionEvents.messagesDeleteForAll:
+        // TODO: Handle this case.
+        break;
+      case ActionEvents.multipleMessagesRead:
+        // TODO: Handle this case.
+        break;
+      case ActionEvents.userBlock:
+        // TODO: Handle this case.
+        break;
+      case ActionEvents.userBlockConversation:
+        // TODO: Handle this case.
+        break;
+      case ActionEvents.userUnblock:
+        // TODO: Handle this case.
+        break;
+      case ActionEvents.userUnblockConversation:
+        // TODO: Handle this case.
+        break;
+    }
+  }
+
+  _handleTypingEvent(MqttActionModel actionModel) {
+    typingUsersIds.add(actionModel.conversationId!);
+    Future.delayed(
+      const Duration(seconds: 3),
+      () {
+        typingUsersIds.remove(actionModel.conversationId);
+      },
+    );
   }
 }

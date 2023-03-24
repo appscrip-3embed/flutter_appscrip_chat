@@ -1,1 +1,1 @@
-class MqttViewModel {}
+class IsmChatMqttViewModel {}

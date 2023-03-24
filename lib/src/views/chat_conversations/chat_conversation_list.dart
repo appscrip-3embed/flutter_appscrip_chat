@@ -63,6 +63,8 @@ class IsmChatConversationList extends StatefulWidget {
 class _IsmChatConversationListState extends State<IsmChatConversationList> {
   late IsmChatConversationsController controller;
 
+  var mqttController = Get.find<IsmChatMqttController>();
+
   @override
   void initState() {
     super.initState();
@@ -103,13 +105,25 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                       );
                     }
                     var conversation = controller.conversations[index];
-                    return IsmChatConversationCard(
-                      conversation,
-                      profileImageBuilder: widget.profileImageBuilder,
-                      onTap: () {
-                        controller.currentConversation = conversation;
-                        widget.onTap(_, conversation);
-                      },
+                    return Obx(
+                      () => IsmChatConversationCard(
+                        conversation,
+                        profileImageBuilder: widget.profileImageBuilder,
+                        subtitleBuilder: (!mqttController.typingUsersIds
+                                .contains(conversation.conversationId))
+                            ? null
+                            : (_, __) => Text(
+                                  ChatStrings.typing,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: ChatStyles.w400Black12
+                                      .copyWith(color: ChatColors.greenColor),
+                                ),
+                        onTap: () {
+                          controller.currentConversation = conversation;
+                          widget.onTap(_, conversation);
+                        },
+                      ),
                     );
                   },
             ),

@@ -18,4 +18,6 @@ class ChatStrings {
   static const String errorLoadingPreview = 'Error loading link preview';
 
   static const String errorLoadingImage = 'Error loading image';
+
+  static const String typing = 'Typing...';
 }
