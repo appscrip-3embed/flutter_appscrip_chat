@@ -7,8 +7,8 @@ class MqttUserModel {
   factory MqttUserModel.fromMap(Map<String, dynamic> map) => MqttUserModel(
         userId: (map['userId']) as String,
         userName: map['userName'] as String,
-        profileImageUrl: map['profileImageUrl'] != null
-            ? map['profileImageUrl'] as String
+        profileImageUrl: map['userProfileImageUrl'] != null
+            ? map['userProfileImageUrl'] as String
             : null,
         userIdentifier: map['userIdentifier'] != null
             ? map['userIdentifier'] as String

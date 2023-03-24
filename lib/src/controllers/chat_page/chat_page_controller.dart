@@ -44,19 +44,36 @@ class IsmChatPageController extends GetxController {
       conversation = _conversationController.currentConversation!;
       getMessagesFromDB(conversation.conversationId!);
       getMessagesFromAPI();
+      readAllMessages(
+        conversationId: conversation.conversationId!,
+        timestamp: conversation.lastMessageSentAt!,
+      );
     }
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
     });
   }
 
+  void _scrollToBottom() async {
+    await Future.delayed(
+      const Duration(milliseconds: 10),
+      () async => await messagesScrollController.animateTo(
+        messagesScrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 100),
+        curve: Curves.easeInOut,
+      ),
+    );
+  }
+
   void getMessagesFromAPI() async {
     if (messages.isEmpty) {
       isMessagesLoading = true;
     }
+    var lastMessageTimestamp = messages.isEmpty ? 0 : messages.last.sentAt;
+    ChatLog(lastMessageTimestamp);
     var data = await _viewModel.getChatMessages(
       conversationId: conversation.conversationId!,
-      lastMessageTimestamp: 0,
+      lastMessageTimestamp: lastMessageTimestamp,
     );
     if (messages.isEmpty) {
       isMessagesLoading = false;
@@ -65,14 +82,7 @@ class IsmChatPageController extends GetxController {
     if (data != null) {
       messages = _viewModel.sortMessages(data);
       await getMessagesFromDB(conversation.conversationId!);
-      await Future.delayed(
-        const Duration(milliseconds: 10),
-        () async => await messagesScrollController.animateTo(
-          messagesScrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 100),
-          curve: Curves.easeInOut,
-        ),
-      );
+      _scrollToBottom();
     }
   }
 
@@ -81,7 +91,7 @@ class IsmChatPageController extends GetxController {
         data: messages,
       );
 
-  void sendMessage() async {
+  void sendTextMessage() async {
     // final query = IsmChatConfig.objectBox.userDetailsBox.query()
     var ismObjectBox = IsmChatConfig.objectBox;
     final query = ismObjectBox.chatConversationBox
@@ -113,7 +123,7 @@ class IsmChatPageController extends GetxController {
     messages.add(textMessage);
     chatInputController.clear();
     await ismObjectBox.addPendingMessage(textMessage);
-    await ismPostMessage(
+    await sendMessage(
       messageModel: textMessage,
       deviceId: _deviceConfig.deviceId!,
       body: textMessage.body,
@@ -124,7 +134,7 @@ class IsmChatPageController extends GetxController {
     );
   }
 
-  Future<void> ismPostMessage(
+  Future<void> sendMessage(
       {required String deviceId,
       required String body,
       required String customType,
@@ -166,6 +176,7 @@ class IsmChatPageController extends GetxController {
           .map(ChatMessageModel.fromJson)
           .toList());
       isMessagesLoading = false;
+      _scrollToBottom();
     }
   }
 
@@ -208,10 +219,22 @@ class IsmChatPageController extends GetxController {
         mediaId: mediaId);
   }
 
-  Future<void> ismGetMessageRead(
-      {required String conversationId, required String messageId}) async {
+  Future<void> readSingleMessage({
+    required String conversationId,
+    required String messageId,
+  }) async {
     await _viewModel.readMessage(
-        conversationId: conversationId, messageId: messageId);
+      conversationId: conversationId,
+      messageId: messageId,
+    );
+  }
+
+  Future<void> readAllMessages({
+    required String conversationId,
+    required int timestamp,
+  }) async {
+    await _viewModel.readAllMessages(
+        conversationId: conversationId, timestamp: timestamp);
   }
 
   Future<void> ismGetMessageDeliver(
@@ -246,13 +269,5 @@ class IsmChatPageController extends GetxController {
     required String conversationId,
   }) async {
     await _viewModel.clearChat(conversationId: conversationId);
-  }
-
-  Future<void> ismReadAllMessages({
-    required String conversationId,
-    required int timestamp,
-  }) async {
-    await _viewModel.readAllMessages(
-        conversationId: conversationId, timestamp: timestamp);
   }
 }

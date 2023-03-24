@@ -197,8 +197,10 @@ class ChatPageRepository {
     required String messageId,
   }) async {
     try {
-      var response = await _apiWrapper.get(
-        '${IsmChatAPI.readStatus}?conversationId=$conversationId&messageId=$messageId',
+      var payload = {'messageId': messageId, 'conversationId': conversationId};
+      var response = await _apiWrapper.put(
+        IsmChatAPI.readIndicator,
+        payload: payload,
         headers: ChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {

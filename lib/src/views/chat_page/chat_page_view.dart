@@ -58,9 +58,11 @@ class ChatMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var isDateType = message.customType! == CustomMessageType.date;
+    var showMessageInCenter = message.customType! == CustomMessageType.date ||
+        message.customType! == CustomMessageType.block ||
+        message.customType! == CustomMessageType.unblock;
     return UnconstrainedBox(
-      alignment: isDateType
+      alignment: showMessageInCenter
           ? Alignment.center
           : message.sentByMe
               ? Alignment.centerRight
@@ -73,13 +75,13 @@ class ChatMessage extends StatelessWidget {
         children: [
           Container(
             padding: ChatDimens.egdeInsets4,
-            constraints: isDateType
+            constraints: showMessageInCenter
                 ? null
                 : BoxConstraints(
                     maxWidth: context.width * .8,
                     minWidth: context.width * .1,
                   ),
-            decoration: isDateType
+            decoration: showMessageInCenter
                 ? null
                 : BoxDecoration(
                     color: message.sentByMe
@@ -98,7 +100,7 @@ class ChatMessage extends StatelessWidget {
                   ),
             child: message.customType!.messageType(message),
           ),
-          if (!isDateType)
+          if (!showMessageInCenter)
             Padding(
               padding: ChatDimens.egdeInsets0_4,
               child: Row(

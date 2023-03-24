@@ -30,6 +30,22 @@ class IsmChatConversationCard extends StatelessWidget {
                   conversation.opponentDetails?.userProfileImageUrl ?? '',
                   name: conversation.chatName,
                 ),
+            trailing: conversation.unreadMessagesCount != null &&
+                    conversation.unreadMessagesCount != 0
+                ? Container(
+                    height: ChatDimens.twenty,
+                    width: ChatDimens.twenty,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: IsmChatConfig.chatTheme.primaryColor,
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      conversation.unreadMessagesCount.toString(),
+                      style: ChatStyles.w700White10,
+                    ),
+                  )
+                : null,
             title: nameBuilder?.call(context, conversation.chatName) ??
                 Text(
                   conversation.chatName,

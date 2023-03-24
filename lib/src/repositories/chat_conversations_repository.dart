@@ -47,7 +47,7 @@ class ChatConversationsRepository {
     }
   }
 
-  Future<void> updateDeliveredMessage({
+  Future<void> pingMessageDelivered({
     required String conversationId,
     required String messageId,
   }) async {

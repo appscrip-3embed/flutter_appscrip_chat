@@ -99,4 +99,10 @@ class ChatStyles {
     fontSize: ChatDimens.twelve,
     fontWeight: FontWeight.w400,
   );
+
+  static TextStyle w700White10 = TextStyle(
+    color: ChatColors.whiteColor,
+    fontSize: ChatDimens.ten,
+    fontWeight: FontWeight.w700,
+  );
 }

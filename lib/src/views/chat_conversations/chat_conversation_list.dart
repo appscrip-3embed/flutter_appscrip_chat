@@ -120,7 +120,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                                       .copyWith(color: ChatColors.greenColor),
                                 ),
                         onTap: () {
-                          controller.currentConversation = conversation;
+                          controller.navigateToMessages(conversation);
                           widget.onTap(_, conversation);
                         },
                       ),

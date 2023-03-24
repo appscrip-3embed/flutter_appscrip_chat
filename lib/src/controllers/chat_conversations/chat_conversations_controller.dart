@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
 import 'package:get/get.dart';
 
 class IsmChatConversationsController extends GetxController {
@@ -35,11 +36,26 @@ class IsmChatConversationsController extends GetxController {
     } else {
       await getUserData();
     }
-    await ismLoadConversation();
+    await getConversationsFromDB();
     await getChatConversations();
   }
 
-  Future<void> ismLoadConversation() async {
+  void navigateToMessages(ChatConversationModel conversation) {
+    currentConversation = conversation;
+    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
+    var dbConversation = conversationBox
+        .query(DBConversationModel_.conversationId
+            .equals(conversation.conversationId!))
+        .build()
+        .findUnique();
+    if (dbConversation != null) {
+      dbConversation.unreadMessagesCount = 0;
+      conversationBox.put(dbConversation);
+      getConversationsFromDB();
+    }
+  }
+
+  Future<void> getConversationsFromDB() async {
     var dbConversations = IsmChatConfig.objectBox.chatConversationBox.getAll();
     if (dbConversations.isNotEmpty) {
       conversations.clear();
@@ -91,7 +107,7 @@ class IsmChatConversationsController extends GetxController {
           dbConversationModel: dbConversationModel,
         );
       }
-      await ismLoadConversation();
+      await getConversationsFromDB();
     }
   }
 
@@ -120,10 +136,15 @@ class IsmChatConversationsController extends GetxController {
     IsmChatConfig.objectBox.deleteChatLocalDb();
   }
 
-  Future<void> ismMessageDelivery(
-      {required String conversationId, required String messageId}) async {
-    await _viewModel.updateDeliveredMessage(
-        conversationId: conversationId, messageId: messageId);
+  /// This will call an API that will notify the sender that the message has been delivered to me using mqtt
+  Future<void> pingMessageDelivered({
+    required String conversationId,
+    required String messageId,
+  }) async {
+    await _viewModel.pingMessageDelivered(
+      conversationId: conversationId,
+      messageId: messageId,
+    );
   }
 
   Future<void> ismCreateConversation({required List<String> userId}) async {

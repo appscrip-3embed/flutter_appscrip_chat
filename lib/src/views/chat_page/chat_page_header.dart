@@ -15,29 +15,49 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
-        builder: (controller) => Theme(
-          data: ThemeData.light(useMaterial3: true).copyWith(
-            appBarTheme: AppBarTheme(
-              backgroundColor: ChatTheme.of(context).primaryColor,
-              iconTheme: const IconThemeData(color: ChatColors.whiteColor),
+        builder: (controller) {
+          var mqttController = Get.find<IsmChatMqttController>();
+          return Theme(
+            data: ThemeData.light(useMaterial3: true).copyWith(
+              appBarTheme: AppBarTheme(
+                backgroundColor: ChatTheme.of(context).primaryColor,
+                iconTheme: const IconThemeData(color: ChatColors.whiteColor),
+              ),
             ),
-          ),
-          child: AppBar(
-            title: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IsmChatImage.profile(
-                  controller.conversation.opponentDetails?.userProfileImageUrl ?? '',
-                  name: controller.conversation.chatName,
-                ),
-                ChatDimens.boxWidth16,
-                Text(
-                  controller.conversation.chatName,
-                  style: ChatStyles.w600White18,
-                ),
-              ],
+            child: AppBar(
+              title: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IsmChatImage.profile(
+                    controller.conversation.opponentDetails
+                            ?.userProfileImageUrl ??
+                        '',
+                    name: controller.conversation.chatName,
+                  ),
+                  ChatDimens.boxWidth8,
+                  Column(
+                    children: [
+                      Text(
+                        controller.conversation.chatName,
+                        style: ChatStyles.w600White18,
+                      ),
+                      Obx(
+                        () => mqttController.typingUsersIds.contains(
+                                controller.conversation.conversationId)
+                            ? Text(
+                                ChatStrings.typing,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: ChatStyles.w400White12,
+                              )
+                            : const SizedBox.shrink(),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       );
 }

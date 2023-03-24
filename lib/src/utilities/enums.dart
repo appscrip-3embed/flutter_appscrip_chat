@@ -143,6 +143,35 @@ enum CustomMessageType {
     return CustomMessageType.text;
   }
 
+  static CustomMessageType? fromAction(String value) {
+    var action = ActionEvents.fromName(value);
+
+    switch (action) {
+      case ActionEvents.typingEvent:
+        return null;
+      case ActionEvents.conversationCreated:
+        return null;
+      case ActionEvents.messageDelivered:
+        return null;
+      case ActionEvents.messageRead:
+        return null;
+      case ActionEvents.messagesDeleteForAll:
+        return null;
+      case ActionEvents.multipleMessagesRead:
+        return null;
+      case ActionEvents.clearConversation:
+        return null;
+      case ActionEvents.userBlock:
+        return CustomMessageType.block;
+      case ActionEvents.userBlockConversation:
+        return CustomMessageType.block;
+      case ActionEvents.userUnblock:
+        return CustomMessageType.unblock;
+      case ActionEvents.userUnblockConversation:
+        return CustomMessageType.unblock;
+    }
+  }
+
   final int value;
 
   @override
@@ -236,7 +265,8 @@ enum ActionEvents {
   userBlock,
   userBlockConversation,
   userUnblock,
-  userUnblockConversation;
+  userUnblockConversation,
+  clearConversation;
 
   factory ActionEvents.fromName(String name) {
     switch (name) {
@@ -260,6 +290,8 @@ enum ActionEvents {
         return ActionEvents.userUnblock;
       case 'userUnblockConversation':
         return ActionEvents.userUnblockConversation;
+      case 'clearConversation':
+        return ActionEvents.clearConversation;
       default:
         return ActionEvents.typingEvent;
     }

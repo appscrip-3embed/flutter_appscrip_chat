@@ -25,7 +25,16 @@ class ChatMessageModel {
       senderInfo: map['senderInfo'] != null &&
               (map['senderInfo'] as Map<String, dynamic>).keys.isNotEmpty
           ? UserDetails.fromMap(map['senderInfo'] as Map<String, dynamic>)
-          : null,
+          : map['senderId'] != null
+              ? UserDetails(
+                  userProfileImageUrl: map['senderProfileImageUrl'] as String,
+                  userName: map['senderName'] as String,
+                  userIdentifier: map['senderIdentifier'] as String,
+                  userId: map['senderId'] as String,
+                  online: false,
+                  lastSeen: 0,
+                )
+              : null,
       metaData: map['metaData'] != null
           ? ChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>)
           : null,
@@ -45,7 +54,9 @@ class ChatMessageModel {
       deliveredToAll: map['deliveredToAll'] as bool? ?? false,
       customType: map['customType'] != null
           ? CustomMessageType.fromMap(map['customType'])
-          : null,
+          : map['action'] != null
+              ? CustomMessageType.fromAction(map['action'] as String)
+              : null,
       createdByUserName: map['createdByUserName'] as String? ?? '',
       createdByUserImageUrl: map['createdByUserImageUrl'] as String? ?? '',
       createdBy: map['createdBy'] as String? ?? '',
@@ -60,6 +71,7 @@ class ChatMessageModel {
       messageType: MessageType.fromValue(map['messageType'] as int? ?? 0),
       sentByMe: true,
       mentionedUsers: map['mentionedUsers'],
+      initiatorId: map['initiatorId'] as String?,
     );
     return model.copyWith(
       customType:
@@ -142,6 +154,7 @@ class ChatMessageModel {
     this.messageType,
     required this.sentByMe,
     this.mentionedUsers,
+    this.initiatorId,
   });
 
   String body;
@@ -170,6 +183,7 @@ class ChatMessageModel {
   String? conversationImageUrl;
   String? conversationId;
   String? parentMessageId;
+  String? initiatorId;
   String? messageId;
   String? deviceId;
   int? adminCount;
@@ -289,6 +303,7 @@ class ChatMessageModel {
         'messageType': messageType?.value,
         'sentByMe': sentByMe,
         'mentionedUsers': mentionedUsers,
+        'initiatorId': initiatorId,
       };
 
   String toJson() => json.encode(toMap());

@@ -12,11 +12,11 @@ class ChatConversationsViewModel {
 
   Future<UserDetails?> getUserData() async => await _repository.getUserData();
 
-  Future<void> updateDeliveredMessage({
+  Future<void> pingMessageDelivered({
     required String conversationId,
     required String messageId,
   }) async =>
-      await _repository.updateDeliveredMessage(
+      await _repository.pingMessageDelivered(
         conversationId: conversationId,
         messageId: messageId,
       );

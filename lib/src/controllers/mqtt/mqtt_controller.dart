@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:get/get.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -131,13 +133,15 @@ class IsmChatMqttController extends GetxController {
       var payload = jsonDecode(
               MqttPublishPayload.bytesToStringAsString(recMess.payload.message))
           as Map<String, dynamic>;
-      ChatLog(payload);
       if (payload['action'] != null) {
-        /// Actions are performed, stated in [ActionEvents]
         var actionModel = MqttActionModel.fromMap(payload);
+        ChatLog.info(actionModel);
         _handleAction(actionModel);
       } else {
-        ChatLog('Message');
+        var message = ChatMessageModel.fromMap(payload);
+        ChatLog.success(message);
+        _handleMessage(message);
+        // ChatLog('Message');
       }
     });
   }
@@ -183,16 +187,15 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleAction(MqttActionModel actionModel) {
-    ChatLog.info(actionModel);
     switch (actionModel.action) {
       case ActionEvents.typingEvent:
         _handleTypingEvent(actionModel);
         break;
       case ActionEvents.conversationCreated:
-        // TODO: Handle this case.
+        _handleCreateConversation(actionModel);
         break;
       case ActionEvents.messageDelivered:
-        // TODO: Handle this case.
+        _handleMessageDelivered(actionModel);
         break;
       case ActionEvents.messageRead:
         // TODO: Handle this case.
@@ -215,16 +218,104 @@ class IsmChatMqttController extends GetxController {
       case ActionEvents.userUnblockConversation:
         // TODO: Handle this case.
         break;
+      case ActionEvents.clearConversation:
+        // TODO: Handle this case.
+        break;
     }
   }
 
-  _handleTypingEvent(MqttActionModel actionModel) {
+  void _handleMessage(ChatMessageModel message) async {
+    var conversationController = Get.find<IsmChatConversationsController>();
+    if (message.senderInfo!.userId ==
+        conversationController.userDetails!.userId) {
+      return;
+    }
+    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
+
+    var conversation = conversationBox
+        .query(
+            DBConversationModel_.conversationId.equals(message.conversationId!))
+        .build()
+        .findUnique();
+
+    if (conversation == null ||
+        conversation.lastMessageDetails.target!.messageId ==
+            message.messageId) {
+      return;
+    }
+    // To handle and show last message & unread count in conversation list
+    conversation.lastMessageDetails.target = LastMessageDetails(
+      showInConversation: true,
+      sentAt: message.sentAt,
+      senderName: message.senderInfo!.userName,
+      messageType: message.messageType?.value ?? 1,
+      messageId: message.messageId!,
+      conversationId: message.conversationId!,
+      body: message.body,
+    );
+    conversation.unreadMessagesCount = conversation.unreadMessagesCount! + 1;
+    conversation.messages.add(message.toJson());
+    conversationBox.put(conversation);
+    unawaited(conversationController.getConversationsFromDB());
+    await conversationController.pingMessageDelivered(
+      conversationId: message.conversationId!,
+      messageId: message.messageId!,
+    );
+
+    // To handle messages in chatList
+    if (!Get.isRegistered<IsmChatPageController>()) {
+      return;
+    }
+    var chatController = Get.find<IsmChatPageController>();
+    if (chatController.conversation.conversationId != message.conversationId) {
+      return;
+    }
+    unawaited(chatController.getMessagesFromDB(message.conversationId!));
+    await Future.delayed(const Duration(milliseconds: 10));
+    await chatController.readSingleMessage(
+      conversationId: message.conversationId!,
+      messageId: message.messageId!,
+    );
+  }
+
+  void _handleTypingEvent(MqttActionModel actionModel) {
     typingUsersIds.add(actionModel.conversationId!);
     Future.delayed(
       const Duration(seconds: 3),
       () {
         typingUsersIds.remove(actionModel.conversationId);
       },
+    );
+  }
+
+  void _handleMessageDelivered(MqttActionModel actionModel) {
+    var conversationController = Get.find<IsmChatConversationsController>();
+    if (actionModel.userDetails!.userId ==
+        conversationController.userDetails!.userId) {
+      return;
+    }
+  }
+
+  void _handleCreateConversation(MqttActionModel actionModel) async {
+    var dbConversationModel = DBConversationModel(
+      conversationId: actionModel.conversationId,
+      conversationImageUrl: actionModel.userDetails!.profileImageUrl,
+      conversationTitle: '',
+      isGroup: false,
+      lastMessageSentAt: 0,
+      messagingDisabled: false,
+      membersCount: 0,
+      unreadMessagesCount: 0,
+      messages: [],
+    );
+
+    dbConversationModel.opponentDetails.target =
+        UserDetails.fromMap(actionModel.opponentDetails!.toMap());
+    dbConversationModel.lastMessageDetails.target = null;
+    dbConversationModel.config.target = null;
+
+    await IsmChatConfig.objectBox.createAndUpdateDB(
+      dbConversationModel: dbConversationModel,
     );
   }
 }

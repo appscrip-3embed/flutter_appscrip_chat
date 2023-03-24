@@ -13,9 +13,9 @@ class UserDetails {
         userName: map['userName'] as String,
         userIdentifier: map['userIdentifier'] as String,
         userId: map['userId'] != null ? map['userId'] as String : '',
-        online: map['online'] as bool,
+        online: map['online'] as bool? ?? false,
         // metaData: ChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
-        lastSeen: map['lastSeen'] as int,
+        lastSeen: map['lastSeen'] as int? ?? 0,
         visibility:
             map['visibility'] != null ? map['visibility'] as bool : true,
         notification:

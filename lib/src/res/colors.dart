@@ -11,6 +11,8 @@ class ChatColors {
 
   static const Color blueColor = Color(0xFF80C3E5);
 
+  static const Color greenColor = Color(0xFF4CBB17);
+
   static const Color whiteColor = Color(0xFFFBFBFB);
 
   static const Color blackColor = Color(0xFF262428);

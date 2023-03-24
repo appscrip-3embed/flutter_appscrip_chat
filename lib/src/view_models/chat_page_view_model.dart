@@ -22,6 +22,9 @@ class ChatPageViewModel {
       return null;
     }
 
+    messages
+        .removeWhere((e) => e.action == ActionEvents.clearConversation.name);
+
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
     var conversation = conversationBox
         .query(
@@ -31,7 +34,7 @@ class ChatPageViewModel {
         .findUnique();
 
     if (conversation != null) {
-      conversation.messages = messages.map((e) => e.toJson()).toList();
+      conversation.messages.addAll(messages.map((e) => e.toJson()).toList());
       conversationBox.put(
         conversation,
       );
