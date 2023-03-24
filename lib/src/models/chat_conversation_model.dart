@@ -36,59 +36,78 @@ class ChatConversationModel {
         conversationTitle: map['conversationTitle'] as String?,
         conversationImageUrl: map['conversationImageUrl'] as String?,
         conversationId: map['conversationId'] as String? ?? '',
-        config:
-            ConversationConfigModel.fromMap(map['config'] as Map<String, dynamic>),
+        config: ConversationConfigModel.fromMap(
+            map['config'] as Map<String, dynamic>),
         // adminCount: map['adminCount'] as int? ?? 0,
       );
 
+  factory ChatConversationModel.fromDB(DBConversationModel dbConversation) =>
+      ChatConversationModel(
+        updatedAt: 0,
+        unreadMessagesCount: dbConversation.unreadMessagesCount,
+        privateOneToOne: false,
+        opponentDetails: dbConversation.opponentDetails.target,
+        messagingDisabled: dbConversation.messagingDisabled,
+        membersCount: dbConversation.membersCount,
+        lastMessageSentAt: dbConversation.lastMessageSentAt,
+        lastMessageDetails: dbConversation.lastMessageDetails.target,
+        isGroup: dbConversation.isGroup,
+        customType: null,
+        conversationType: ConversationType.public,
+        conversationTitle: dbConversation.conversationTitle,
+        conversationImageUrl: dbConversation.conversationImageUrl,
+        conversationId: dbConversation.conversationId,
+        config: dbConversation.config.target,
+      );
+
   ChatConversationModel({
-     this.updatedAt,
-     this.unreadMessagesCount,
+    this.updatedAt,
+    this.unreadMessagesCount,
     //  this.searchableTags,
-     this.privateOneToOne,
-     this.opponentDetails,
-     this.metaData,
-     this.messagingDisabled,
-     this.membersCount,
+    this.privateOneToOne,
+    this.opponentDetails,
+    this.metaData,
+    this.messagingDisabled,
+    this.membersCount,
     //  this.lastReadAt,
-     this.lastMessageSentAt,
-     this.lastMessageDetails,
-     this.isGroup,
-     this.customType,
+    this.lastMessageSentAt,
+    this.lastMessageDetails,
+    this.isGroup,
+    this.customType,
     //  this.createdByUserName,
     //  this.createdByUserImageUrl,
     //  this.createdBy,
     //  this.createdAt,
-     this.conversationType,
+    this.conversationType,
     this.conversationTitle,
     this.conversationImageUrl,
-     this.conversationId,
-     this.config,
+    this.conversationId,
+    this.config,
     //  this.adminCount,
   });
 
-   int? updatedAt;
-   int? unreadMessagesCount;
+  int? updatedAt;
+  int? unreadMessagesCount;
   //  List<String> searchableTags;
-   bool? privateOneToOne;
-   UserDetails? opponentDetails;
-   ChatMetaData? metaData;
-   bool? messagingDisabled;
-   int? membersCount;
+  bool? privateOneToOne;
+  UserDetails? opponentDetails;
+  ChatMetaData? metaData;
+  bool? messagingDisabled;
+  int? membersCount;
   //  List<LastReadAt> lastReadAt;
-   int? lastMessageSentAt;
-   LastMessageDetails? lastMessageDetails;
-   bool? isGroup;
-   dynamic customType;
+  int? lastMessageSentAt;
+  LastMessageDetails? lastMessageDetails;
+  bool? isGroup;
+  dynamic customType;
   //  String createdByUserName;
   //  String createdByUserImageUrl;
   //  String createdBy;
   //  int createdAt;
-   ConversationType? conversationType;
-   String? conversationTitle;
-   String? conversationImageUrl;
-   String? conversationId;
-   ConversationConfigModel? config;
+  ConversationType? conversationType;
+  String? conversationTitle;
+  String? conversationImageUrl;
+  String? conversationId;
+  ConversationConfigModel? config;
   //  int adminCount;
 
   String get chatName => conversationTitle ?? opponentDetails?.userName ?? '';

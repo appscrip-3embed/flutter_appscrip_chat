@@ -10,13 +10,35 @@ class ChatPageViewModel {
   Future<List<ChatMessageModel>?> getChatMessages({
     required String conversationId,
     required int lastMessageTimestamp,
-  }) async =>
-      await _repository.getChatMessages(
-        conversationId: conversationId,
-        lastMessageTimestamp: lastMessageTimestamp,
-        limit: messageLimit,
-        skip: messageSkip,
+  }) async {
+    var messages = await _repository.getChatMessages(
+      conversationId: conversationId,
+      lastMessageTimestamp: lastMessageTimestamp,
+      limit: messageLimit,
+      skip: messageSkip,
+    );
+
+    if (messages == null) {
+      return null;
+    }
+
+    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
+    var conversation = conversationBox
+        .query(
+          DBConversationModel_.conversationId.equals(conversationId),
+        )
+        .build()
+        .findUnique();
+
+    if (conversation != null) {
+      conversation.messages = messages.map((e) => e.toJson()).toList();
+      conversationBox.put(
+        conversation,
       );
+    }
+
+    return messages;
+  }
 
   Future<bool> sendMessage({
     required bool showInConversation,
@@ -26,6 +48,7 @@ class ChatPageViewModel {
     required String conversationId,
     required String body,
     required int createdAt,
+    required ChatMessageModel messageModel,
     String? parentMessageId,
     Map<String, dynamic>? metaData,
     List<Map<String, dynamic>>? mentionedUsers,
@@ -33,57 +56,61 @@ class ChatPageViewModel {
     String? customType,
     List<Map<String, dynamic>>? attachments,
   }) async {
-    var response = await _repository.sendMessage(
-      showInConversation: showInConversation,
-      messageType: messageType,
-      encrypted: encrypted,
-      deviceId: deviceId,
-      conversationId: conversationId,
-      body: body,
-    );
-    if (response == null || response.isEmpty) {
+    try {
+      var messageId = await _repository.sendMessage(
+        showInConversation: showInConversation,
+        messageType: messageType,
+        encrypted: encrypted,
+        deviceId: deviceId,
+        conversationId: conversationId,
+        body: body,
+      );
+      if (messageId == null || messageId.isEmpty) {
+        return false;
+      }
+      var pendingMessgeBox = IsmChatConfig.objectBox.pendingMessageBox;
+      var chatConversationBox = IsmChatConfig.objectBox.chatConversationBox;
+      final pendingQuery = pendingMessgeBox
+          .query(PendingMessageModel_.conversationId.equals(conversationId))
+          .build();
+      final chatPendingMessages = pendingQuery.findUnique();
+      if (chatPendingMessages == null) {
+        return false;
+      }
+
+      for (var x = 0; x < chatPendingMessages.messages.length; x++) {
+        var pendingMessage =
+            ChatMessageModel.fromJson(chatPendingMessages.messages[x]);
+        if (pendingMessage.messageId!.isNotEmpty ||
+            pendingMessage.sentAt != createdAt) {
+          continue;
+        }
+
+        messageModel.messageId = messageId;
+        messageModel.deliveredToAll = false;
+        chatPendingMessages.messages.removeAt(x);
+        pendingMessgeBox.put(chatPendingMessages);
+
+        if (chatPendingMessages.messages.isEmpty) {
+          pendingMessgeBox.remove(chatPendingMessages.id);
+        }
+
+        final query = chatConversationBox
+            .query(DBConversationModel_.conversationId.equals(conversationId))
+            .build();
+        final conversationModel = query.findUnique();
+        if (conversationModel != null) {
+          conversationModel.messages.add(messageModel.toJson());
+        }
+
+        chatConversationBox.put(conversationModel!, mode: PutMode.update);
+        return true;
+      }
+      return false;
+    } catch (e, st) {
+      ChatLog.error(e, st);
       return false;
     }
-    var pendingMessgeBox = IsmChatConfig.objectBox.pendingMessageBox;
-    var chatConversationBox = IsmChatConfig.objectBox.chatConversationBox;
-    final query = pendingMessgeBox
-        .query(PendingMessageModel_.conversationId.equals(conversationId))
-        .build();
-    final chatPendingMessages = query.findUnique();
-    if (chatPendingMessages != null) {
-      for (var x = 0; x < chatPendingMessages.messages.length; x++) {
-        var pendingMessage = chatPendingMessages.messages[x];
-        if (pendingMessage.messageId!.isEmpty &&
-            pendingMessage.sentAt == createdAt) {
-          pendingMessage.messageId = response;
-          pendingMessage.deliveredToAll = false;
-          chatPendingMessages.messages.removeAt(x);
-          pendingMessgeBox.put(chatPendingMessages);
-          if (chatPendingMessages.messages.isEmpty) {
-            pendingMessgeBox.remove(chatPendingMessages.id);
-          }
-          final query = chatConversationBox
-              .query(DBConversationModel_.conversationId.equals(conversationId))
-              .build();
-          final chatUserMessages = query.findUnique();
-          if (chatUserMessages != null) {
-            chatUserMessages.messages.add(pendingMessage);
-          }
-          ChatLog.error('fdsfdsdfd ${chatUserMessages?.messages.first.body}');
-          chatConversationBox.put(chatUserMessages!);
-          ChatLog.success('Updated Message with MessageId');
-          break;
-        }
-      }
-      final query = chatConversationBox
-          .query(DBConversationModel_.conversationId.equals(conversationId))
-          .build();
-      final chatUserMessages = query.findUnique();
-
-      ChatLog.error('second ${chatUserMessages?.config.target}');
-      return true;
-    }
-    return false;
   }
 
   List<ChatMessageModel> sortMessages(List<ChatMessageModel> messages) {

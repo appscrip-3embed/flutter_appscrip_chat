@@ -31,8 +31,10 @@ class ChatMessageModel {
           : null,
       messagingDisabled: map['messagingDisabled'] as bool? ?? false,
       membersCount: map['membersCount'] as int? ?? 0,
-      lastReadAt: LastReadAt.fromNetworkMap(
-          map['lastReadAt'] as Map<String, dynamic>? ?? {}),
+      lastReadAt: map['lastReadAt'].runtimeType == List
+          ? List<LastReadAt>.from(map['lastReadAt'] as List<dynamic>)
+          : LastReadAt.fromNetworkMap(
+              map['lastReadAt'] as Map<String, dynamic>? ?? {}),
       attachments: map['attachments'] != null
           ? (map['attachments'] as List<dynamic>)
               .map((e) => AttachmentModel.fromMap(e as Map<String, dynamic>))
@@ -63,7 +65,7 @@ class ChatMessageModel {
       customType:
           model.customType != null && model.customType != CustomMessageType.text
               ? model.customType
-              : CustomMessageType.withBody(model.body!),
+              : CustomMessageType.withBody(model.body),
       sentByMe: model.senderInfo != null
           ? model.senderInfo!.userId == IsmChatConfig.communicationConfig.userId
           : true,
@@ -106,111 +108,75 @@ class ChatMessageModel {
         mentionedUsers: null,
       );
 
-      factory ChatMessageModel.fromDbMessage(DBMessageModel dbMessageModel) => ChatMessageModel(
-        body: ChatUtility.decodePayload(dbMessageModel.body!)  ,
-        action: '',
-        updatedAt: 0,
-        sentAt: dbMessageModel.sentAt!,
-        unreadMessagesCount: 0,
-        searchableTags: [],
-        privateOneToOne: false,
-        showInConversation: true,
-        readByAll: dbMessageModel.readByAll,
-        senderInfo: dbMessageModel.senderInfo.target,
-        metaData: null,
-        messagingDisabled: dbMessageModel.messagingDisabled,
-        membersCount: 0,
-        lastReadAt: [],
-        attachments: dbMessageModel.attachments,
-        lastMessageSentAt: 0,
-        isGroup: false,
-        deliveredToAll: dbMessageModel.deliveredToAll,
-        customType: dbMessageModel.customType,
-        createdByUserName: '',
-        createdByUserImageUrl: '',
-        createdBy: '',
-        conversationType: 0,
-        conversationTitle: null,
-        conversationImageUrl: null,
-        conversationId: dbMessageModel.conversationId,
-        messageId: dbMessageModel.messageId,
-        deviceId: '',
-        parentMessageId: dbMessageModel.parentMessageId,
-        adminCount: 0,
-        messageType:dbMessageModel.messageType,
-        sentByMe: dbMessageModel.sentByMe!,
-        mentionedUsers: null,
-      );
-
   ChatMessageModel({
-   required  this.body,
+    required this.body,
     this.action,
-   required  this.sentAt,
-     this.updatedAt,
-     this.unreadMessagesCount,
-     this.searchableTags,
-     this.privateOneToOne,
-     this.showInConversation,
-     this.readByAll,
-     this.senderInfo,
-     this.metaData,
-     this.messagingDisabled,
-     this.membersCount,
-     this.lastReadAt,
+    required this.sentAt,
+    this.updatedAt,
+    this.unreadMessagesCount,
+    this.searchableTags,
+    this.privateOneToOne,
+    this.showInConversation,
+    this.readByAll,
+    this.senderInfo,
+    this.metaData,
+    this.messagingDisabled,
+    this.membersCount,
+    this.lastReadAt,
     this.attachments,
-     this.lastMessageSentAt,
-     this.isGroup,
-     this.deliveredToAll,
-  required  this.customType,
-     this.createdByUserName,
-     this.createdByUserImageUrl,
-     this.createdBy,
-     this.conversationType,
+    this.lastMessageSentAt,
+    this.isGroup,
+    this.deliveredToAll,
+    required this.customType,
+    this.createdByUserName,
+    this.createdByUserImageUrl,
+    this.createdBy,
+    this.conversationType,
     this.conversationTitle,
     this.conversationImageUrl,
-     this.conversationId,
-     this.parentMessageId,
-     this.messageId,
-     this.deviceId,
-     this.adminCount,
-     this.messageType,
-   required  this.sentByMe,
+    this.conversationId,
+    this.parentMessageId,
+    this.messageId,
+    this.deviceId,
+    this.adminCount,
+    this.messageType,
+    required this.sentByMe,
     this.mentionedUsers,
   });
 
-   String body;
-   String? action;
-   int sentAt;
-   int? updatedAt;
-   int? unreadMessagesCount;
-   List<String>? searchableTags;
-   bool? privateOneToOne;
-   bool? showInConversation;
-   bool? readByAll;
-   UserDetails? senderInfo;
-   ChatMetaData? metaData;
-   bool? messagingDisabled;
-   int? membersCount;
-   List<LastReadAt>? lastReadAt;
-   List<AttachmentModel>? attachments;
-   int? lastMessageSentAt;
-   bool? isGroup;
-   bool? deliveredToAll;
-   String? createdByUserName;
-   String? createdByUserImageUrl;
-   String? createdBy;
-   int? conversationType;
-   String? conversationTitle;
-   String? conversationImageUrl;
-   String? conversationId;
-   String? parentMessageId;
-   String? messageId;
-   String? deviceId;
-   int? adminCount;
-   MessageType? messageType;
-   dynamic mentionedUsers;
-   CustomMessageType? customType;
-   bool sentByMe;
+  String body;
+  String? action;
+  int sentAt;
+  int? updatedAt;
+  int? unreadMessagesCount;
+  List<String>? searchableTags;
+  bool? privateOneToOne;
+  bool? showInConversation;
+  bool? readByAll;
+  UserDetails? senderInfo;
+  ChatMetaData? metaData;
+  bool? messagingDisabled;
+  int? membersCount;
+  List<LastReadAt>? lastReadAt;
+  List<AttachmentModel>? attachments;
+  int? lastMessageSentAt;
+  bool? isGroup;
+  bool? deliveredToAll;
+  String? createdByUserName;
+  String? createdByUserImageUrl;
+  String? createdBy;
+  int? conversationType;
+  String? conversationTitle;
+  String? conversationImageUrl;
+  String? conversationId;
+  String? parentMessageId;
+  String? messageId;
+  String? deviceId;
+  int? adminCount;
+  MessageType? messageType;
+  dynamic mentionedUsers;
+  CustomMessageType? customType;
+  bool sentByMe;
   //  String initiatorId;
 
   String get chatName => conversationTitle ?? senderInfo?.userName ?? '';
@@ -290,7 +256,7 @@ class ChatMessageModel {
       );
 
   Map<String, dynamic> toMap() => {
-        'body': body,
+        'body': ChatUtility.encodePayload(body),
         'action': action,
         'updatedAt': updatedAt,
         'sentAt': sentAt,
@@ -303,12 +269,12 @@ class ChatMessageModel {
         'metaData': metaData?.toMap(),
         'messagingDisabled': messagingDisabled,
         'membersCount': membersCount,
-        'lastReadAt': lastReadAt!.map((x) => x.toMap()).toList(),
+        'lastReadAt': lastReadAt?.map((x) => x.toMap()).toList(),
         'attachments': attachments?.map((x) => x.toMap()).toList(),
         'lastMessageSentAt': lastMessageSentAt,
         'isGroup': isGroup,
         'deliveredToAll': deliveredToAll,
-        'customType': customType,
+        'customType': customType?.value,
         'createdByUserName': createdByUserName,
         'createdByUserImageUrl': createdByUserImageUrl,
         'createdBy': createdBy,

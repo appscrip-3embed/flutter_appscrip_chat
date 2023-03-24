@@ -54,14 +54,14 @@ class IsmChatObjectBox {
 
   /// Create Db with user
   Future<void> createAndUpdateDB(
-      {DBConversationModel? dbConversationModel}) async {
+      {required DBConversationModel dbConversationModel}) async {
     var resposne = chatConversationBox.getAll();
     if (resposne.isEmpty) {
-      chatConversationBox.put(dbConversationModel ?? DBConversationModel());
+      chatConversationBox.put(dbConversationModel);
     } else {
       final query = chatConversationBox
           .query(DBConversationModel_.conversationId
-              .equals(dbConversationModel!.conversationId!))
+              .equals(dbConversationModel.conversationId!))
           .build();
       final chatConversationResponse = query.findUnique();
 
@@ -82,46 +82,45 @@ class IsmChatObjectBox {
         chatConversationResponse.config.target =
             dbConversationModel.config.target;
         chatConversationBox.put(chatConversationResponse);
-        ChatLog.info('update db');
       } else {
         chatConversationBox.put(dbConversationModel);
-        ChatLog.info('add converstaion in db');
       }
     }
   }
 
   /// Add pending Message
-  Future<void> addPendingMessage(DBMessageModel dbMessageModel) async {
+  Future<void> addPendingMessage(ChatMessageModel messageModel) async {
     final query = pendingMessageBox
         .query(PendingMessageModel_.conversationId
-            .equals(dbMessageModel.conversationId ?? ''))
+            .equals(messageModel.conversationId ?? ''))
         .build();
-    final chatPendingMessages = query.findUnique(); 
+    final chatPendingMessages = query.findUnique();
     if (chatPendingMessages != null) {
-      chatPendingMessages.messages.add(dbMessageModel);
+      chatPendingMessages.messages.add(messageModel.toJson());
       pendingMessageBox.put(chatPendingMessages);
     } else {
       var pendingMessageModel = PendingMessageModel(
-          conversationId: dbMessageModel.conversationId ?? '');
-      pendingMessageModel.messages.add(dbMessageModel);
+        conversationId: messageModel.conversationId ?? '',
+        messages: [messageModel.toJson()],
+      );
       pendingMessageBox.put(pendingMessageModel);
     }
   }
 
   /// Add forward Message
-  Future<void> addForwardMessage(DBMessageModel dbMessageModel) async {
+  Future<void> addForwardMessage(ChatMessageModel messageModel) async {
     final query = forwardMessageBox
         .query(ForwardMessageModel_.conversationId
-            .equals(dbMessageModel.conversationId ?? ''))
+            .equals(messageModel.conversationId ?? ''))
         .build();
-    final chatForwardMessages = query.findUnique(); 
+    final chatForwardMessages = query.findUnique();
     if (chatForwardMessages != null) {
-      chatForwardMessages.messages.add(dbMessageModel);
+      chatForwardMessages.messages.add(messageModel.toJson());
       forwardMessageBox.put(chatForwardMessages);
     } else {
       var forwardMessageModel = ForwardMessageModel(
-          conversationId: dbMessageModel.conversationId ?? '');
-      forwardMessageModel.messages.add(dbMessageModel);
+          conversationId: messageModel.conversationId ?? '',
+          messages: [messageModel.toJson()]);
       forwardMessageBox.put(forwardMessageModel);
     }
   }

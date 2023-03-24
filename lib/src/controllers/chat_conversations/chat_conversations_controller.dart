@@ -31,7 +31,7 @@ class IsmChatConversationsController extends GetxController {
     super.onInit();
     var users = IsmChatConfig.objectBox.userDetailsBox.getAll();
     if (users.isNotEmpty) {
-      userDetails = users.last;
+      userDetails = users.first;
     } else {
       await getUserData();
     }
@@ -40,46 +40,53 @@ class IsmChatConversationsController extends GetxController {
   }
 
   Future<void> ismLoadConversation() async {
-    conversations.clear();
-    var conversationList = IsmChatConfig.objectBox.chatConversationBox.getAll();
-    if (conversationList.isNotEmpty) {
-      for (var x in conversationList) {
-        conversations.add(ChatConversationModel(
-          conversationImageUrl: x.conversationImageUrl,
-          conversationTitle: x.conversationTitle,
-          unreadMessagesCount: x.unreadMessagesCount ?? 0,
-          messagingDisabled: x.messagingDisabled ?? false,
-          membersCount: x.membersCount ?? 0,
-          lastMessageSentAt: x.lastMessageSentAt ?? 0,
-          isGroup: x.isGroup ?? false,
-          conversationId: x.conversationId ?? '',
-          lastMessageDetails: x.lastMessageDetails.target,
-          opponentDetails: x.opponentDetails.target,
-          config: x.config.target,
-        ));
-      }
+    var dbConversations = IsmChatConfig.objectBox.chatConversationBox.getAll();
+    if (dbConversations.isNotEmpty) {
+      conversations.clear();
+      conversations =
+          dbConversations.map(ChatConversationModel.fromDB).toList();
+      isConversationsLoading = false;
     }
   }
 
   Future<void> getChatConversations() async {
-    isConversationsLoading = true;
-    var data = await _viewModel.getChatConversations();
-    isConversationsLoading = false;
-    if (data != null && data.isNotEmpty) {
-      // conversations = data;
-      for (var x in data) {
+    if (conversations.isEmpty) {
+      isConversationsLoading = true;
+    }
+
+    var apiConversations = await _viewModel.getChatConversations();
+    var dbConversations = IsmChatConfig.objectBox.chatConversationBox.getAll();
+
+    if (conversations.isEmpty) {
+      isConversationsLoading = false;
+    }
+
+    if (apiConversations != null && apiConversations.isNotEmpty) {
+      for (var conversation in apiConversations) {
+        DBConversationModel? dbConversation;
+        if (dbConversations.isNotEmpty) {
+          dbConversation = dbConversations.firstWhere(
+              (e) => e.conversationId == conversation.conversationId);
+        }
+
         var dbConversationModel = DBConversationModel(
-            conversationId: x.conversationId,
-            conversationImageUrl: x.conversationImageUrl,
-            conversationTitle: x.conversationTitle,
-            isGroup: x.isGroup,
-            lastMessageSentAt: x.lastMessageSentAt,
-            messagingDisabled: x.messagingDisabled,
-            membersCount: x.membersCount,
-            unreadMessagesCount: x.unreadMessagesCount);
-        dbConversationModel.opponentDetails.target = x.opponentDetails;
-        dbConversationModel.lastMessageDetails.target = x.lastMessageDetails;
-        dbConversationModel.config.target = x.config;
+          conversationId: conversation.conversationId,
+          conversationImageUrl: conversation.conversationImageUrl,
+          conversationTitle: conversation.conversationTitle,
+          isGroup: conversation.isGroup,
+          lastMessageSentAt: conversation.lastMessageSentAt,
+          messagingDisabled: conversation.messagingDisabled,
+          membersCount: conversation.membersCount,
+          unreadMessagesCount: conversation.unreadMessagesCount,
+          messages: dbConversation?.messages ?? [],
+        );
+
+        dbConversationModel.opponentDetails.target =
+            conversation.opponentDetails;
+        dbConversationModel.lastMessageDetails.target =
+            conversation.lastMessageDetails;
+        dbConversationModel.config.target = conversation.config;
+
         await IsmChatConfig.objectBox.createAndUpdateDB(
           dbConversationModel: dbConversationModel,
         );
@@ -132,6 +139,5 @@ class IsmChatConversationsController extends GetxController {
         customType: null,
         conversationImageUrl: '',
         conversationTitle: '');
-   
   }
 }

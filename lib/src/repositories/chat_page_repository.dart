@@ -64,9 +64,7 @@ class ChatPageRepository {
       }
       var data = jsonDecode(response.data);
       var messageId = data['messageId'] as String;
-       ChatLog.success(data);
       return messageId;
-    
     } catch (e, st) {
       ChatLog.error('Send Message $e', st);
       return null;

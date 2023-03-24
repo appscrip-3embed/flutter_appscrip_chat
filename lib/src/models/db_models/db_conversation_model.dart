@@ -24,6 +24,7 @@ class DBConversationModel {
     this.conversationTitle,
     this.conversationImageUrl,
     this.conversationId,
+    required this.messages,
   });
   int id;
   int? unreadMessagesCount;
@@ -33,11 +34,12 @@ class DBConversationModel {
   int? lastMessageSentAt;
   final lastMessageDetails = ToOne<LastMessageDetails>();
   bool? isGroup;
+  List<String> messages;
 
   String? conversationTitle;
   String? conversationImageUrl;
   String? conversationId;
   final config = ToOne<ConversationConfigModel>();
-  @Backlink('conversation')
-  final messages = ToMany<DBMessageModel>();
+  // @Backlink('conversation')
+  // final messages = ToMany<DBMessageModel>();
 }

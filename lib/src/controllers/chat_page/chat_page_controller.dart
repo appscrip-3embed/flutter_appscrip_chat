@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import '../../data/database/objectbox.g.dart';
 
 class IsmChatPageController extends GetxController {
   IsmChatPageController(this._viewModel);
@@ -43,23 +42,29 @@ class IsmChatPageController extends GetxController {
     super.onInit();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
-      getChatMessages();
+      getMessagesFromDB(conversation.conversationId!);
+      getMessagesFromAPI();
     }
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
     });
   }
 
-  void getChatMessages() async {
-    isMessagesLoading = true;
+  void getMessagesFromAPI() async {
+    if (messages.isEmpty) {
+      isMessagesLoading = true;
+    }
     var data = await _viewModel.getChatMessages(
       conversationId: conversation.conversationId!,
       lastMessageTimestamp: 0,
     );
-    isMessagesLoading = false;
+    if (messages.isEmpty) {
+      isMessagesLoading = false;
+    }
 
     if (data != null) {
       messages = _viewModel.sortMessages(data);
+      await getMessagesFromDB(conversation.conversationId!);
       await Future.delayed(
         const Duration(milliseconds: 10),
         () async => await messagesScrollController.animateTo(
@@ -68,7 +73,6 @@ class IsmChatPageController extends GetxController {
           curve: Curves.easeInOut,
         ),
       );
-      // focusNode.requestFocus();
     }
   }
 
@@ -76,17 +80,6 @@ class IsmChatPageController extends GetxController {
         parentId: id,
         data: messages,
       );
-
-//  /// call function for add Pending Message
-//   void ismAddPendingMessage(DBMessageModel dbMessageModel) async {
-//     if ((ismChatListController.pendingMessage) &&
-//         (ismChatListController.userData.conversationId == conversationId)) {
-//       /// for client Side
-//       await objectbox.addPendingMessage(message, conversationId);
-//       messages.insert(0, message);
-//       update();
-//     }
-//   }
 
   void sendMessage() async {
     // final query = IsmChatConfig.objectBox.userDetailsBox.query()
@@ -104,8 +97,8 @@ class IsmChatPageController extends GetxController {
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
 
-    var textDbModel = DBMessageModel(
-      body: ChatUtility.encodePayload(chatInputController.text.trim()),
+    var textMessage = ChatMessageModel(
+      body: chatInputController.text.trim(),
       conversationId: conversation.conversationId ?? '',
       customType: CustomMessageType.text,
       deliveredToAll: false,
@@ -117,17 +110,17 @@ class IsmChatPageController extends GetxController {
       sentAt: sentAt,
       sentByMe: true,
     );
-    var textMessage = ChatMessageModel.fromDbMessage(textDbModel);
     messages.add(textMessage);
     chatInputController.clear();
-    await ismObjectBox.addPendingMessage(textDbModel);
+    await ismObjectBox.addPendingMessage(textMessage);
     await ismPostMessage(
+      messageModel: textMessage,
       deviceId: _deviceConfig.deviceId!,
-      body: textDbModel.body!,
-      customType: textDbModel.customType!.name,
+      body: textMessage.body,
+      customType: textMessage.customType!.name,
       createdAt: sentAt,
-      conversationId: textDbModel.conversationId ?? '',
-      messageType: textDbModel.messageType?.value,
+      conversationId: textMessage.conversationId ?? '',
+      messageType: textMessage.messageType?.value,
     );
   }
 
@@ -137,6 +130,7 @@ class IsmChatPageController extends GetxController {
       required String customType,
       required int createdAt,
       required String conversationId,
+      required ChatMessageModel messageModel,
       int? messageType,
       String? parentMessageId,
       String nameWithExtension = '',
@@ -147,33 +141,31 @@ class IsmChatPageController extends GetxController {
       int attachmentType = 0,
       bool forwardMultiple = false}) async {
     var isMessageSent = await _viewModel.sendMessage(
+        messageModel: messageModel,
         showInConversation: true,
         messageType: messageType!,
         encrypted: true,
         deviceId: deviceId,
         createdAt: createdAt,
         conversationId: conversationId,
-        body: body,
+        body: ChatUtility.encodePayload(body),
         customType: customType);
     if (isMessageSent) {
-      await ismLoadAllMessage(conversationId: conversationId);
+      await getMessagesFromDB(conversationId);
     }
   }
 
-  Future<void> ismLoadAllMessage({String conversationId = ''}) async {
-    var chatConversationBox = IsmChatConfig.objectBox.chatConversationBox;
-    final query = chatConversationBox
+  Future<void> getMessagesFromDB(String conversationId) async {
+    final query = IsmChatConfig.objectBox.chatConversationBox
         .query(DBConversationModel_.conversationId.equals(conversationId))
         .build();
+
     final chatConversationMessages = query.findUnique();
     if (chatConversationMessages != null) {
-      ChatLog.error('fdsfdsfsf ${chatConversationMessages.conversationId}');
-      ChatLog.error('fdsfdsfsf ${chatConversationMessages.messages}');
-      var msgs = chatConversationMessages.messages
-          .map(ChatMessageModel.fromDbMessage)
-          .toList();
-      msgs = _viewModel.sortMessages(msgs);
-      messages = msgs;
+      messages = _viewModel.sortMessages(chatConversationMessages.messages
+          .map(ChatMessageModel.fromJson)
+          .toList());
+      isMessagesLoading = false;
     }
   }
 
