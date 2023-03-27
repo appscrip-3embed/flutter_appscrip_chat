@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/widgets/alert_dailog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -71,6 +72,100 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ],
               ),
+              actions: [
+                PopupMenuButton(
+                  icon: Icon(
+                    Icons.more_vert,
+                    color: ChatColors.whiteColor,
+                    size: ChatDimens.thirtyTwo,
+                  ),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 1,
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.delete,
+                            color: ChatColors.blackColor,
+                          ),
+                          ChatDimens.boxWidth8,
+                          const Text(ChatStrings.clearChat)
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 2,
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.block,
+                            color: ChatColors.redColor,
+                          ),
+                          ChatDimens.boxWidth8,
+                          const Text(
+                            ChatStrings.blockUser,
+                          )
+                          // IsmDimens.boxWidth10,
+                          // chatPageController.blockUser &&
+                          //         chatPageController.isBlockByMe
+                          //     ? Text(
+                          //         'unblockUser'.tr,
+                          //         style: TextStyle(
+                          //             color: Theme.of(context)
+                          //                 .secondaryHeaderColor),
+                          //       )
+                          //     : Text(
+                          //         'blockUser'.tr,
+                          //         style: TextStyle(
+                          //             color: Theme.of(context)
+                          //                 .secondaryHeaderColor),
+                          //       ),
+                        ],
+                      ),
+                    ),
+                  ],
+                  elevation: 2,
+                  // on selected we show the dialog box
+                  onSelected: (value) {
+                    if (value == 1) {
+                      Get.dialog(AlertDialogBox(
+                        actionOneString: ChatStrings.cancel,
+                        actionSecondString: ChatStrings.clearChat,
+                        titile: ChatStrings.deleteAllMessage,
+                        onTapFunction: () {
+                          controller.clearAllMessages(
+                              conversationId:
+                                  controller.conversation.conversationId!);
+                        },
+                      ));
+                    } else {
+                      Get.dialog(AlertDialogBox(
+                        actionOneString: ChatStrings.cancel,
+                        actionSecondString: ChatStrings.block,
+                        titile: ChatStrings.doWantBlckUser,
+                        onTapFunction: () {
+                          controller.postBlockUser(opponentId: controller.conversation.opponentDetails!.userId,lastMessageTimeStamp: controller.conversation.lastMessageDetails!.sentAt);
+                        },
+                      ));
+                    }
+                    // if (value == PopUpDeleteOrBlock.deleteChat.value) {
+                    //   Get.dialog<void>(_alertDailog(controller));
+                    //   controller.update();
+                    // } else if (value ==
+                    //     PopUpDeleteOrBlock.blockUnblock.value) {
+                    //   if (chatPageController.blockUser) {
+                    //     if (chatPageController.isBlockByMe) {
+                    //       Get.dialog<void>(_alertDailogBlock());
+                    //     } else {
+                    //       _alertDailogBlockForBlock();
+                    //     }
+                    //   } else {
+                    //     Get.dialog<void>(_alertDailogBlock());
+                    //   }
+                    // }
+                  },
+                ),
+              ],
             ),
           );
         },

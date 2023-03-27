@@ -131,7 +131,7 @@ class ChatPageRepository {
     }
   }
 
-  Future<void> blockUser({
+  Future<ResponseModel?> blockUser({
     required String opponentId,
   }) async {
     try {
@@ -142,10 +142,12 @@ class ChatPageRepository {
         headers: ChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
-        return;
+        return null;
       }
+      return response;
     } catch (e, st) {
       ChatLog.error('Block user $e', st);
+      return null;
     }
   }
 
@@ -267,7 +269,7 @@ class ChatPageRepository {
     }
   }
 
-  Future<void> clearChat({
+  Future<ResponseModel?> clearAllMessages({
     required String conversationId,
   }) async {
     try {
@@ -277,10 +279,12 @@ class ChatPageRepository {
         headers: ChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
-        return;
+        return response;
       }
+      return response;
     } catch (e, st) {
       ChatLog.error('Clear chat $e', st);
+      return null;
     }
   }
 

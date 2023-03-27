@@ -133,6 +133,7 @@ class IsmChatMqttController extends GetxController {
       var payload = jsonDecode(
               MqttPublishPayload.bytesToStringAsString(recMess.payload.message))
           as Map<String, dynamic>;
+
       if (payload['action'] != null) {
         var actionModel = MqttActionModel.fromMap(payload);
         ChatLog.info(actionModel);
@@ -200,10 +201,10 @@ class IsmChatMqttController extends GetxController {
         _handleMessageRead(actionModel);
         break;
       case ActionEvents.messagesDeleteForAll:
-        // TODO: Handle this case.
+        _handleMessageDelelteForEveryOne(actionModel);
         break;
       case ActionEvents.multipleMessagesRead:
-        // TODO: Handle this case.
+        _handleMultipleMessageRead(actionModel);
         break;
       case ActionEvents.userBlock:
         // TODO: Handle this case.
@@ -245,7 +246,7 @@ class IsmChatMqttController extends GetxController {
     conversation.lastMessageDetails.target = LastMessageDetails(
       showInConversation: true,
       sentAt: message.sentAt,
-      senderName: message.senderInfo!.userName,
+      senderName: message.senderInfo!.userName ?? '',
       messageType: message.messageType?.value ?? 1,
       messageId: message.messageId!,
       conversationId: message.conversationId!,
@@ -327,6 +328,62 @@ class IsmChatMqttController extends GetxController {
         Get.find<IsmChatPageController>()
             .getMessagesFromDB(actionModel.conversationId!);
       }
+    }
+  }
+
+  void _handleMultipleMessageRead(MqttActionModel actionModel) {
+    if (actionModel.userDetails!.userId == _communicationConfig.userId) {
+      return;
+    }
+    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
+    var conversation = conversationBox
+        .query(DBConversationModel_.conversationId
+            .equals(actionModel.conversationId!))
+        .build()
+        .findUnique();
+
+    if (conversation == null) {
+      return;
+    }
+    var allMessages =
+        conversation.messages.map(ChatMessageModel.fromJson).toList();
+
+    var modifiedMessages = <String>[];
+    for (var message in allMessages) {
+      if (message.deliveredToAll! && message.readByAll!) {
+        modifiedMessages.add(message.toJson());
+      } else {
+        var modified = message.copyWith(
+          readByAll: true,
+          deliveredToAll: true,
+        );
+        modifiedMessages.add(modified.toJson());
+      }
+    }
+    conversation.messages = modifiedMessages;
+    conversationBox.put(conversation);
+    if (Get.isRegistered<IsmChatPageController>()) {
+      Get.find<IsmChatPageController>()
+          .getMessagesFromDB(actionModel.conversationId!);
+    }
+  }
+
+  void _handleMessageDelelteForEveryOne(MqttActionModel actionModel) {
+    if (actionModel.userDetails!.userId == _communicationConfig.userId) {
+      return;
+    }
+    var allMessages =
+        IsmChatConfig.objectBox.getMessages(actionModel.conversationId!);
+    if (allMessages == null) {
+      return;
+    }
+    allMessages
+        .removeWhere((e) => e.messageId! == actionModel.messageIds?.first);
+    IsmChatConfig.objectBox
+        .saveMessages(actionModel.conversationId!, allMessages);
+    if (Get.isRegistered<IsmChatPageController>()) {
+      Get.find<IsmChatPageController>()
+          .getMessagesFromDB(actionModel.conversationId!);
     }
   }
 

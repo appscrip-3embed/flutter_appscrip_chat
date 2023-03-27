@@ -24,7 +24,6 @@ class ChatPageViewModel {
 
     messages
         .removeWhere((e) => e.action == ActionEvents.clearConversation.name);
-
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
     var conversation = conversationBox
         .query(
@@ -185,12 +184,22 @@ class ChatPageViewModel {
         conversationId: conversationId,
       );
 
-  Future<void> blockUser({
-    required String opponentId,
-  }) async =>
-      await _repository.blockUser(
-        opponentId: opponentId,
-      );
+  Future<List<ChatMessageModel>?> blockUser(
+      {required String opponentId,
+      required int lastMessageTimeStamp,
+      required String conversationId}) async {
+    var response = await _repository.blockUser(
+      opponentId: opponentId,
+    );
+    if (!response!.hasError) {
+      var responseMessage = await getChatMessages(
+          conversationId: conversationId,
+          lastMessageTimestamp: lastMessageTimeStamp);
+      return responseMessage;
+    }
+    return null;
+    
+  }
 
   Future<void> unblockUser({
     required String opponentId,
@@ -248,12 +257,17 @@ class ChatPageViewModel {
         messageIds: messageIds,
       );
 
-  Future<void> clearChat({
+  Future<void> clearAllMessages({
     required String conversationId,
-  }) async =>
-      await _repository.clearChat(
-        conversationId: conversationId,
-      );
+  }) async {
+    var response = await _repository.clearAllMessages(
+      conversationId: conversationId,
+    );
+    if (!response!.hasError) {
+      await IsmChatConfig.objectBox
+          .clearAllMessage(conversationId: conversationId);
+    }
+  }
 
   Future<void> deleteChat({
     required String conversationId,

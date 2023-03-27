@@ -71,7 +71,7 @@ class IsmChatPageController extends GetxController {
       isMessagesLoading = true;
     }
     var lastMessageTimestamp = messages.isEmpty ? 0 : messages.last.sentAt;
-    ChatLog(lastMessageTimestamp);
+
     var data = await _viewModel.getChatMessages(
       conversationId: conversation.conversationId!,
       lastMessageTimestamp: lastMessageTimestamp,
@@ -81,7 +81,6 @@ class IsmChatPageController extends GetxController {
     }
 
     if (data != null) {
-      messages = _viewModel.sortMessages(data);
       await getMessagesFromDB(conversation.conversationId!);
       _scrollToBottom();
     }
@@ -203,8 +202,17 @@ class IsmChatPageController extends GetxController {
     }
   }
 
-  Future<void> ismPostBlockUser({required String opponentId}) async {
-    await _viewModel.blockUser(opponentId: opponentId);
+  Future<void> postBlockUser(
+      {required String opponentId, required int lastMessageTimeStamp}) async {
+    var data = await _viewModel.blockUser(
+        opponentId: opponentId,
+        lastMessageTimeStamp: lastMessageTimeStamp,
+        conversationId: conversation.conversationId!);
+    if (data != null) {
+      // messages = _viewModel.sortMessages(data);
+      await getMessagesFromDB(conversation.conversationId!);
+      // _scrollToBottom();
+    }
   }
 
   Future<void> ismPostUnBlockUser({required String opponentId}) async {
@@ -269,9 +277,9 @@ class IsmChatPageController extends GetxController {
     await _viewModel.deleteChat(conversationId: conversationId);
   }
 
-  Future<void> ismClearChat({
+  Future<void> clearAllMessages({
     required String conversationId,
   }) async {
-    await _viewModel.clearChat(conversationId: conversationId);
+    await _viewModel.clearAllMessages(conversationId: conversationId);
   }
 }

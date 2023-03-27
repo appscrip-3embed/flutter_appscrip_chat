@@ -11,10 +11,15 @@ class MqttActionModel {
             ? map['conversationId'] as String
             : null,
         messageId: map['messageId'] as String?,
+        messageIds: map['messageIds'] != null
+            ? List<String>.from((map['messageIds'] as List<dynamic>)
+                .map<dynamic>((dynamic x) => x))
+            : [],
         userDetails: map['userId'] != null
             ? MqttUserModel(
                 userId: map['userId'] as String,
-                userName: map['userName'] as String,
+                userName:
+                    map['userName'] != null ? map['userName'] as String : '',
                 userIdentifier: map['userIdentifier'] as String?,
                 profileImageUrl: map['userProfileImageUrl'] as String?,
               )
@@ -45,6 +50,7 @@ class MqttActionModel {
     this.opponentDetails,
     this.initiatorDetails,
     this.messageId,
+    this.messageIds,
     required this.sentAt,
     required this.action,
   });
@@ -54,6 +60,7 @@ class MqttActionModel {
   final MqttUserModel? initiatorDetails;
   final int sentAt;
   final String? messageId;
+  final List<String>? messageIds;
   final ActionEvents action;
 
   MqttActionModel copyWith({

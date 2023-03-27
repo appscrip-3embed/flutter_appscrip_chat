@@ -27,6 +27,8 @@ class ChatDimens {
   static final double appBarElevation = 8.sp;
 
   static final Widget boxHeight4 = SizedBox(height: four);
+  static final Widget boxHeight2 = SizedBox(height: two);
+  
   static final Widget boxHeight8 = SizedBox(height: eight);
   static final Widget boxHeight16 = SizedBox(height: sixteen);
   static final Widget boxHeight32 = SizedBox(height: thirtyTwo);

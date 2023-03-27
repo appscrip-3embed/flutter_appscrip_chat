@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:path_provider/path_provider.dart';
 
 // import 'objectbox.g.dart'; // created by `flutter pub run build_runner build`
@@ -50,6 +52,14 @@ class IsmChatObjectBox {
     pendingMessageBox.removeAll();
     forwardMessageBox.removeAll();
     ChatLog.success('[CLEARED] - All entries are removed from database');
+  }
+
+  ///  clear all messages for perticular user
+  Future<void> clearAllMessage({required String conversationId}) async {
+    saveMessages(conversationId, []);
+    if (Get.isRegistered<IsmChatPageController>()) {
+      await Get.find<IsmChatPageController>().getMessagesFromDB(conversationId);
+    }
   }
 
   /// Create Db with user
@@ -122,6 +132,32 @@ class IsmChatObjectBox {
           conversationId: messageModel.conversationId ?? '',
           messages: [messageModel.toJson()]);
       forwardMessageBox.put(forwardMessageModel);
+    }
+  }
+
+  List<ChatMessageModel>? getMessages(String conversationId) {
+    var conversation = chatConversationBox
+        .query(DBConversationModel_.conversationId.equals(conversationId))
+        .build()
+        .findUnique();
+    if (conversation == null) {
+      return null;
+    }
+    return conversation.messages.map(ChatMessageModel.fromJson).toList();
+  }
+
+  void saveMessages(
+    String conversationId,
+    List<ChatMessageModel> messages,
+  ) {
+    var conversation = chatConversationBox
+        .query(DBConversationModel_.conversationId.equals(conversationId))
+        .build()
+        .findUnique();
+    if (conversation != null) {
+      conversation.messages =
+          messages.isEmpty ? [] : messages.map((e) => e.toJson()).toList();
+      chatConversationBox.put(conversation);
     }
   }
 

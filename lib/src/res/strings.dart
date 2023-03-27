@@ -24,7 +24,14 @@ class ChatStrings {
 
   static const String lastSeen = 'last seen';
   static const String today = 'today';
-  static const yestarday = 'yesterday';
-  static const at = 'at';
-  static const on = 'on';
+  static const String yestarday = 'yesterday';
+  static const String at = 'at';
+  static const String on = 'on';
+  static const String blockUser = 'Block User';
+  static const String unBlockUser = 'Unblock User';
+  static const String clearChat = 'Clear chat';
+  static const String deleteAllMessage = 'Delete All Messages?';
+  static const String cancel = 'Cancel';
+  static const String doWantBlckUser = 'Do you want to Block this User';
+  static const String block = 'Block';
 }
