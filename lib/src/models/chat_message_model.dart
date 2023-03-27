@@ -71,7 +71,7 @@ class ChatMessageModel {
       messageType: MessageType.fromValue(map['messageType'] as int? ?? 0),
       sentByMe: true,
       mentionedUsers: map['mentionedUsers'],
-      initiatorId: map['initiatorId'] as String?,
+      initiatorId: map['initiatorId'] as String? ?? '',
     );
     return model.copyWith(
       customType:
@@ -191,7 +191,6 @@ class ChatMessageModel {
   dynamic mentionedUsers;
   CustomMessageType? customType;
   bool sentByMe;
-  //  String initiatorId;
 
   String get chatName => conversationTitle ?? senderInfo?.userName ?? '';
 
@@ -224,6 +223,7 @@ class ChatMessageModel {
     String? conversationImageUrl,
     String? conversationId,
     String? parentMessageId,
+    String? initiatorId,
     String? messageId,
     String? deviceId,
     ConversationConfigModel? config,
@@ -261,6 +261,7 @@ class ChatMessageModel {
         conversationImageUrl: conversationImageUrl ?? this.conversationImageUrl,
         conversationId: conversationId ?? this.conversationId,
         parentMessageId: parentMessageId ?? this.parentMessageId,
+        initiatorId: initiatorId ?? this.initiatorId,
         messageId: messageId ?? this.messageId,
         deviceId: deviceId ?? this.deviceId,
         adminCount: adminCount ?? this.adminCount,
@@ -310,7 +311,7 @@ class ChatMessageModel {
 
   @override
   String toString() =>
-      'ChatMessageModel(body: $body, action: $action, updatedAt: $updatedAt, sentAt: $sentAt, unreadMessagesCount: $unreadMessagesCount, searchableTags: $searchableTags, privateOneToOne: $privateOneToOne, showInConversation: $showInConversation, readByAll: $readByAll, senderInfo: $senderInfo, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, attachments: $attachments, lastMessageSentAt: $lastMessageSentAt, isGroup: $isGroup, deliveredToAll: $deliveredToAll, customType: $customType, createdByUserName: $createdByUserName, createdByUserImageUrl: $createdByUserImageUrl, createdBy: $createdBy, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, parentMessageId: $parentMessageId, messageId: $messageId, deviceId: $deviceId, adminCount: $adminCount, messageType: $messageType, sentByMe: $sentByMe, mentionedUsers: $mentionedUsers)';
+      'ChatMessageModel(body: $body, action: $action, updatedAt: $updatedAt, sentAt: $sentAt, unreadMessagesCount: $unreadMessagesCount, searchableTags: $searchableTags, privateOneToOne: $privateOneToOne, showInConversation: $showInConversation, readByAll: $readByAll, senderInfo: $senderInfo, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, attachments: $attachments, lastMessageSentAt: $lastMessageSentAt, isGroup: $isGroup, deliveredToAll: $deliveredToAll, customType: $customType, createdByUserName: $createdByUserName, createdByUserImageUrl: $createdByUserImageUrl, createdBy: $createdBy, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, parentMessageId: $parentMessageId, initiatorId : $initiatorId  messageId: $messageId, deviceId: $deviceId, adminCount: $adminCount, messageType: $messageType, sentByMe: $sentByMe, mentionedUsers: $mentionedUsers)';
 
   @override
   bool operator ==(Object other) {
@@ -344,6 +345,7 @@ class ChatMessageModel {
         other.conversationImageUrl == conversationImageUrl &&
         other.conversationId == conversationId &&
         other.parentMessageId == parentMessageId &&
+        other.initiatorId == initiatorId &&
         other.messageId == messageId &&
         other.deviceId == deviceId &&
         other.messageType == messageType &&
@@ -381,6 +383,7 @@ class ChatMessageModel {
       conversationImageUrl.hashCode ^
       conversationId.hashCode ^
       parentMessageId.hashCode ^
+      initiatorId.hashCode ^
       messageId.hashCode ^
       deviceId.hashCode ^
       messageType.hashCode ^

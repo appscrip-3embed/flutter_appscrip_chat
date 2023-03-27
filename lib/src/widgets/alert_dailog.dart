@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AlertDialogBox extends StatelessWidget {
-  const AlertDialogBox({super.key, required this.onTapFunction,required this.actionOneString,required this.actionSecondString, required this.titile});
+  const AlertDialogBox(
+      {super.key,
+      required this.onTapFunction,
+      required this.actionOneString,
+      required this.actionSecondString,
+      required this.titile});
 
   final void Function() onTapFunction;
   final String titile;
@@ -13,12 +18,9 @@ class AlertDialogBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AlertDialog(
         actionsPadding: ChatDimens.egdeInsets16,
-        title:  Text(titile),
+        title: Text(titile),
         backgroundColor: ChatColors.whiteColor,
-        titleTextStyle: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: ChatColors.blackColor,
-            fontSize: ChatDimens.twenty),
+        titleTextStyle: ChatStyles.w600Black14,
         actions: [
           InkWell(
             onTap: () {
@@ -32,8 +34,7 @@ class AlertDialogBox extends StatelessWidget {
                 onTapFunction();
                 Get.back<void>();
               },
-              child:
-                  Text(actionSecondString, style: ChatStyles.w400Black14)),
+              child: Text(actionSecondString, style: ChatStyles.w400Black14)),
         ],
         // content: Text("Saved successfully"),
       );

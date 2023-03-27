@@ -20,7 +20,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
         builder: (controller) => Scaffold(
           resizeToAvoidBottomInset: true,
-          appBar: const IsmChatPageHeader(),
+          appBar: IsmChatPageHeader(),
           body: Column(
             children: [
               Expanded(

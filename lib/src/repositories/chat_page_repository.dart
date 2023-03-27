@@ -151,7 +151,7 @@ class ChatPageRepository {
     }
   }
 
-  Future<void> unblockUser({required String opponentId}) async {
+  Future<ResponseModel?> unblockUser({required String opponentId}) async {
     try {
       final payload = {'opponentId': opponentId};
       var response = await _apiWrapper.post(
@@ -160,11 +160,14 @@ class ChatPageRepository {
         headers: ChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
-        return;
+        return null;
       }
+      return response;
     } catch (e, st) {
       ChatLog.error(' un Block user $e', st);
+       return null;
     }
+   
   }
 
   Future<void> postMediaUrl({

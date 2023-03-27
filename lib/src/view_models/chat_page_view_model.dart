@@ -18,6 +18,9 @@ class ChatPageViewModel {
       skip: messageSkip,
     );
 
+    
+    
+
     if (messages == null) {
       return null;
     }
@@ -198,15 +201,24 @@ class ChatPageViewModel {
       return responseMessage;
     }
     return null;
-    
   }
 
-  Future<void> unblockUser({
+  Future<List<ChatMessageModel>?> unblockUser({
     required String opponentId,
-  }) async =>
-      await _repository.unblockUser(
+      required int lastMessageTimeStamp,
+      required String conversationId
+  }) async {
+    var response = await _repository.unblockUser(
         opponentId: opponentId,
       );
+      if (!response!.hasError) {
+      var responseMessage = await getChatMessages(
+          conversationId: conversationId,
+          lastMessageTimestamp: lastMessageTimeStamp);
+      return responseMessage;
+    }
+    return null;
+  }
 
   Future<void> postMediaUrl({
     required String conversationId,

@@ -32,6 +32,8 @@ class ChatStrings {
   static const String clearChat = 'Clear chat';
   static const String deleteAllMessage = 'Delete All Messages?';
   static const String cancel = 'Cancel';
-  static const String doWantBlckUser = 'Do you want to Block this User';
+  static const String doWantBlckUser = 'Do you want to Block this User?';
+  static const String doWantUnBlckUser = 'Do you want to Unblock this User?';
   static const String block = 'Block';
+  static const String unblock = 'Unblock';
 }

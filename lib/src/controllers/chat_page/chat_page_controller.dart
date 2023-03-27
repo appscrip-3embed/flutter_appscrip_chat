@@ -175,6 +175,7 @@ class IsmChatPageController extends GetxController {
           .map(ChatMessageModel.fromJson)
           .toList());
       isMessagesLoading = false;
+
       _scrollToBottom();
     }
   }
@@ -207,16 +208,21 @@ class IsmChatPageController extends GetxController {
     var data = await _viewModel.blockUser(
         opponentId: opponentId,
         lastMessageTimeStamp: lastMessageTimeStamp,
-        conversationId: conversation.conversationId!);
+        conversationId: conversation.conversationId ?? '');
     if (data != null) {
-      // messages = _viewModel.sortMessages(data);
       await getMessagesFromDB(conversation.conversationId!);
-      // _scrollToBottom();
     }
   }
 
-  Future<void> ismPostUnBlockUser({required String opponentId}) async {
-    await _viewModel.unblockUser(opponentId: opponentId);
+  Future<void> postUnBlockUser(
+      {required String opponentId, required int lastMessageTimeStamp}) async {
+    var data = await _viewModel.unblockUser(
+        opponentId: opponentId,
+        conversationId: conversation.conversationId ?? '',
+        lastMessageTimeStamp: lastMessageTimeStamp);
+    if (data != null) {
+      await getMessagesFromDB(conversation.conversationId!);
+    }
   }
 
   Future<void> ismPostMediaUrl(

@@ -29,11 +29,17 @@ class IsmChatMqttController extends GetxController {
   List<String> get typingUsersIds => _typingUsersIds;
   set typingUsersIds(List<String> value) => _typingUsersIds.value = value;
 
+  final RxString _userId = ''.obs;
+  String get userId => _userId.value;
+  set userId(String value) => _userId.value = value;
+
   @override
   void onInit() async {
     super.onInit();
     await _getDeviceId();
     _communicationConfig = IsmChatConfig.communicationConfig;
+    userId = _communicationConfig.userId;
+  
     messageTopic =
         '/${_communicationConfig.accountId}/${_communicationConfig.projectId}/Message/${_communicationConfig.userId}';
     statusTopic =
@@ -246,7 +252,7 @@ class IsmChatMqttController extends GetxController {
     conversation.lastMessageDetails.target = LastMessageDetails(
       showInConversation: true,
       sentAt: message.sentAt,
-      senderName: message.senderInfo!.userName ?? '',
+      senderName: message.senderInfo!.userName,
       messageType: message.messageType?.value ?? 1,
       messageId: message.messageId!,
       conversationId: message.conversationId!,

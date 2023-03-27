@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
-  const IsmChatPageHeader({
+  IsmChatPageHeader({
     this.height,
     super.key,
   });
@@ -14,10 +14,16 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => Size.fromHeight(height ?? ChatDimens.appBarHeight);
 
+  final issmChatConversationsController =
+      Get.find<IsmChatConversationsController>();
+
   @override
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
         builder: (controller) {
           var mqttController = Get.find<IsmChatMqttController>();
+          var userBlockOrNot =
+              controller.messages.last.initiatorId == mqttController.userId &&
+                  controller.messages.last.messagingDisabled == true;
           return Theme(
             data: ThemeData.light(useMaterial3: true).copyWith(
               appBarTheme: AppBarTheme(
@@ -102,30 +108,18 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                             color: ChatColors.redColor,
                           ),
                           ChatDimens.boxWidth8,
-                          const Text(
-                            ChatStrings.blockUser,
-                          )
-                          // IsmDimens.boxWidth10,
-                          // chatPageController.blockUser &&
-                          //         chatPageController.isBlockByMe
-                          //     ? Text(
-                          //         'unblockUser'.tr,
-                          //         style: TextStyle(
-                          //             color: Theme.of(context)
-                          //                 .secondaryHeaderColor),
-                          //       )
-                          //     : Text(
-                          //         'blockUser'.tr,
-                          //         style: TextStyle(
-                          //             color: Theme.of(context)
-                          //                 .secondaryHeaderColor),
-                          //       ),
+                          userBlockOrNot
+                              ? const Text(
+                                  ChatStrings.unBlockUser,
+                                )
+                              : const Text(
+                                  ChatStrings.blockUser,
+                                )
                         ],
                       ),
                     ),
                   ],
                   elevation: 2,
-                  // on selected we show the dialog box
                   onSelected: (value) {
                     if (value == 1) {
                       Get.dialog(AlertDialogBox(
@@ -141,10 +135,24 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                     } else {
                       Get.dialog(AlertDialogBox(
                         actionOneString: ChatStrings.cancel,
-                        actionSecondString: ChatStrings.block,
-                        titile: ChatStrings.doWantBlckUser,
+                        actionSecondString: userBlockOrNot
+                            ? ChatStrings.unblock
+                            : ChatStrings.block,
+                        titile: userBlockOrNot
+                            ? ChatStrings.doWantUnBlckUser
+                            : ChatStrings.doWantBlckUser,
                         onTapFunction: () {
-                          controller.postBlockUser(opponentId: controller.conversation.opponentDetails!.userId,lastMessageTimeStamp: controller.conversation.lastMessageDetails!.sentAt);
+                          userBlockOrNot
+                              ? controller.postUnBlockUser(
+                                  opponentId: controller
+                                      .conversation.opponentDetails!.userId,
+                                  lastMessageTimeStamp:
+                                      controller.messages.last.sentAt)
+                              : controller.postBlockUser(
+                                  opponentId: controller
+                                      .conversation.opponentDetails!.userId,
+                                  lastMessageTimeStamp:
+                                      controller.messages.last.sentAt);
                         },
                       ));
                     }
