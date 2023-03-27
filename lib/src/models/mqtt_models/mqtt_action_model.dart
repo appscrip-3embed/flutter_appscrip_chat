@@ -10,7 +10,7 @@ class MqttActionModel {
         conversationId: map['conversationId'] != null
             ? map['conversationId'] as String
             : null,
-            messageId: map['messageId'] as String,
+        messageId: map['messageId'] as String?,
         userDetails: map['userId'] != null
             ? MqttUserModel(
                 userId: map['userId'] as String,

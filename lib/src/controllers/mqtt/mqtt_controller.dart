@@ -133,7 +133,6 @@ class IsmChatMqttController extends GetxController {
       var payload = jsonDecode(
               MqttPublishPayload.bytesToStringAsString(recMess.payload.message))
           as Map<String, dynamic>;
-           ChatLog.error('dsffsdfsfdf $payload');
       if (payload['action'] != null) {
         var actionModel = MqttActionModel.fromMap(payload);
         ChatLog.info(actionModel);
@@ -142,7 +141,6 @@ class IsmChatMqttController extends GetxController {
         var message = ChatMessageModel.fromMap(payload);
         ChatLog.success(message);
         _handleMessage(message);
-        // ChatLog('Message');
       }
     });
   }
@@ -279,7 +277,6 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleTypingEvent(MqttActionModel actionModel) {
-   
     typingUsersIds.add(actionModel.conversationId!);
     Future.delayed(
       const Duration(seconds: 3),

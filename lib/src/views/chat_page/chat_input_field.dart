@@ -37,6 +37,7 @@ class IsmChatInputField extends StatelessWidget {
                     ),
                     suffixIcon: const AttachmentIcon(),
                   ),
+                  onChanged: (_) => controller.notifyTyping(),
                 ),
               ),
               ChatDimens.boxWidth8,

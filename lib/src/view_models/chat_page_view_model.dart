@@ -169,8 +169,8 @@ class ChatPageViewModel {
         messageId: messageId,
       );
 
-  Future<void> ismTypingIndicator({required String conversationId}) async =>
-      await _repository.updateTypingIndicator(
+  Future<void> notifyTyping({required String conversationId}) async =>
+      await _repository.notifyTyping(
         conversationId: conversationId,
       );
 

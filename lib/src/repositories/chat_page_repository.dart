@@ -90,12 +90,12 @@ class ChatPageRepository {
     }
   }
 
-  Future<void> updateTypingIndicator({
+  Future<void> notifyTyping({
     required String conversationId,
   }) async {
     try {
       var payload = {'conversationId': conversationId};
-      var response = await _apiWrapper.put(
+      var response = await _apiWrapper.post(
         IsmChatAPI.typingIndicator,
         payload: payload,
         headers: ChatUtility.tokenCommonHeader(),

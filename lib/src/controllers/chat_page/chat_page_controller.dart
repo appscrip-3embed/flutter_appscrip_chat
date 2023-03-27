@@ -93,7 +93,6 @@ class IsmChatPageController extends GetxController {
       );
 
   void sendTextMessage() async {
-  
     // final query = IsmChatConfig.objectBox.userDetailsBox.query()
     var ismObjectBox = IsmChatConfig.objectBox;
     final query = ismObjectBox.chatConversationBox
@@ -187,8 +186,8 @@ class IsmChatPageController extends GetxController {
         conversationId: conversationId, messageId: messageId);
   }
 
-  Future<void> ismTypingIndicator({required String conversationId}) async {
-    await _viewModel.ismTypingIndicator(conversationId: conversationId);
+  Future<void> notifyTyping() async {
+    await _viewModel.notifyTyping(conversationId: conversation.conversationId!);
   }
 
   Future<void> getConverstaionDetails(
