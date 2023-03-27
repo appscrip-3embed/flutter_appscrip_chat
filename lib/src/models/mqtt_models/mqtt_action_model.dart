@@ -10,6 +10,7 @@ class MqttActionModel {
         conversationId: map['conversationId'] != null
             ? map['conversationId'] as String
             : null,
+            messageId: map['messageId'] as String,
         userDetails: map['userId'] != null
             ? MqttUserModel(
                 userId: map['userId'] as String,
@@ -43,6 +44,7 @@ class MqttActionModel {
     this.userDetails,
     this.opponentDetails,
     this.initiatorDetails,
+    this.messageId,
     required this.sentAt,
     required this.action,
   });
@@ -51,6 +53,7 @@ class MqttActionModel {
   final MqttUserModel? opponentDetails;
   final MqttUserModel? initiatorDetails;
   final int sentAt;
+  final String? messageId;
   final ActionEvents action;
 
   MqttActionModel copyWith({

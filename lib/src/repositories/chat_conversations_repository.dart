@@ -36,9 +36,9 @@ class ChatConversationsRepository {
       if (response.hasError) {
         return null;
       }
+     
       var data = jsonDecode(response.data) as Map<String, dynamic>;
       var user = UserDetails.fromMap(data);
-      ChatLog(user);
       IsmChatConfig.objectBox.userDetailsBox.put(user);
       return user;
     } catch (e, st) {

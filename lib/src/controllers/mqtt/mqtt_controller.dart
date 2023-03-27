@@ -133,6 +133,7 @@ class IsmChatMqttController extends GetxController {
       var payload = jsonDecode(
               MqttPublishPayload.bytesToStringAsString(recMess.payload.message))
           as Map<String, dynamic>;
+           ChatLog.error('dsffsdfsfdf $payload');
       if (payload['action'] != null) {
         var actionModel = MqttActionModel.fromMap(payload);
         ChatLog.info(actionModel);
@@ -198,7 +199,7 @@ class IsmChatMqttController extends GetxController {
         _handleMessageDelivered(actionModel);
         break;
       case ActionEvents.messageRead:
-        // TODO: Handle this case.
+        _handleMessageRead(actionModel);
         break;
       case ActionEvents.messagesDeleteForAll:
         // TODO: Handle this case.
@@ -226,8 +227,7 @@ class IsmChatMqttController extends GetxController {
 
   void _handleMessage(ChatMessageModel message) async {
     var conversationController = Get.find<IsmChatConversationsController>();
-    if (message.senderInfo!.userId ==
-        conversationController.userDetails!.userId) {
+    if (message.senderInfo!.userId == _communicationConfig.userId) {
       return;
     }
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
@@ -271,7 +271,7 @@ class IsmChatMqttController extends GetxController {
       return;
     }
     unawaited(chatController.getMessagesFromDB(message.conversationId!));
-    await Future.delayed(const Duration(milliseconds: 10));
+    await Future.delayed(const Duration(milliseconds: 30));
     await chatController.readSingleMessage(
       conversationId: message.conversationId!,
       messageId: message.messageId!,
@@ -279,6 +279,7 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleTypingEvent(MqttActionModel actionModel) {
+   
     typingUsersIds.add(actionModel.conversationId!);
     Future.delayed(
       const Duration(seconds: 3),
@@ -289,10 +290,46 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleMessageDelivered(MqttActionModel actionModel) {
-    var conversationController = Get.find<IsmChatConversationsController>();
-    if (actionModel.userDetails!.userId ==
-        conversationController.userDetails!.userId) {
+    if (actionModel.userDetails!.userId == _communicationConfig.userId) {
       return;
+    }
+    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
+    var conversation = conversationBox
+        .query(DBConversationModel_.conversationId
+            .equals(actionModel.conversationId!))
+        .build()
+        .findUnique();
+    if (conversation != null) {
+      var lastMessage = ChatMessageModel.fromJson(conversation.messages.last);
+      if (lastMessage.messageId == actionModel.messageId) {
+        lastMessage.deliveredToAll = true;
+        conversation.messages.last = lastMessage.toJson();
+        conversationBox.put(conversation);
+        Get.find<IsmChatPageController>()
+            .getMessagesFromDB(actionModel.conversationId!);
+      }
+    }
+  }
+
+  void _handleMessageRead(MqttActionModel actionModel) {
+    if (actionModel.userDetails!.userId == _communicationConfig.userId) {
+      return;
+    }
+    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
+    var conversation = conversationBox
+        .query(DBConversationModel_.conversationId
+            .equals(actionModel.conversationId!))
+        .build()
+        .findUnique();
+    if (conversation != null) {
+      var lastMessage = ChatMessageModel.fromJson(conversation.messages.last);
+      if (lastMessage.messageId == actionModel.messageId) {
+        lastMessage.readByAll = true;
+        conversation.messages.last = lastMessage.toJson();
+        conversationBox.put(conversation);
+        Get.find<IsmChatPageController>()
+            .getMessagesFromDB(actionModel.conversationId!);
+      }
     }
   }
 

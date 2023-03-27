@@ -36,6 +36,8 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                   ),
                   ChatDimens.boxWidth8,
                   Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         controller.conversation.chatName,
@@ -50,7 +52,20 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                 overflow: TextOverflow.ellipsis,
                                 style: ChatStyles.w400White12,
                               )
-                            : const SizedBox.shrink(),
+                            : controller.conversation.opponentDetails?.online ??
+                                    false
+                                ? Text(
+                                    ChatStrings.online,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: ChatStyles.w400White12,
+                                  )
+                                : Text(
+                                    '${controller.conversation.opponentDetails?.lastSeen.toCurrentTimeStirng().capitalizeFirst}',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: ChatStyles.w400White12,
+                                  ),
                       ),
                     ],
                   ),

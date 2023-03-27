@@ -48,6 +48,7 @@ class IsmChatPageController extends GetxController {
         conversationId: conversation.conversationId!,
         timestamp: conversation.lastMessageSentAt!,
       );
+      getConverstaionDetails(conversationId: conversation.conversationId!);
     }
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
@@ -92,6 +93,7 @@ class IsmChatPageController extends GetxController {
       );
 
   void sendTextMessage() async {
+  
     // final query = IsmChatConfig.objectBox.userDetailsBox.query()
     var ismObjectBox = IsmChatConfig.objectBox;
     final query = ismObjectBox.chatConversationBox
@@ -106,7 +108,6 @@ class IsmChatPageController extends GetxController {
       //   );
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
-
     var textMessage = ChatMessageModel(
       body: chatInputController.text.trim(),
       conversationId: conversation.conversationId ?? '',
@@ -190,13 +191,17 @@ class IsmChatPageController extends GetxController {
     await _viewModel.ismTypingIndicator(conversationId: conversationId);
   }
 
-  Future<void> ismGeChatUserDetails(
+  Future<void> getConverstaionDetails(
       {required String conversationId,
       String? ids,
       bool? includeMembers,
       int? membersSkip,
       int? membersLimit}) async {
-    await _viewModel.getChatUserDetails(conversationId: conversationId);
+    var data =
+        await _viewModel.getConverstaionDetails(conversationId: conversationId);
+    if (data != null) {
+      conversation = data;
+    }
   }
 
   Future<void> ismPostBlockUser({required String opponentId}) async {

@@ -1,6 +1,7 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -16,6 +17,53 @@ extension DateConvertor on int {
 
   String toTimeString() =>
       DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(this));
+
+  String toCurrentTimeStirng() {
+    final timeStamp = DateTime.fromMillisecondsSinceEpoch(this);
+    final currentTime = DateTime.now();
+    final currentDay = int.parse(DateFormat('d').format(currentTime));
+    final currentDayFromStamp = int.parse(DateFormat('d').format(timeStamp));
+    var timeFormate = '';
+    if (currentDay == currentDayFromStamp) {
+      timeFormate =
+          '${ChatStrings.lastSeen} ${ChatStrings.today} ${ChatStrings.at} ${DateFormat.jm().format(timeStamp)}';
+    } else if (((currentDay - currentDayFromStamp) == 1) ||
+        (currentDayFromStamp == 31)) {
+      timeFormate =
+          '${ChatStrings.lastSeen} ${ChatStrings.yestarday} ${ChatStrings.at} ${DateFormat.jm().format(timeStamp)}';
+    } else if (((currentDay - currentDayFromStamp) > 1 &&
+            (currentDay - currentDayFromStamp) < 7) ||
+        (currentDayFromStamp > currentDay)) {
+      timeFormate =
+          '${ChatStrings.lastSeen} ${ChatStrings.at} ${DateFormat('E h:mm a').format(timeStamp)}';
+    } else if (((currentDay - currentDayFromStamp) > 7) ||
+        (currentDayFromStamp > currentDay)) {
+      timeFormate = '${ChatStrings.lastSeen} ${ChatStrings.on} ${DateFormat('MMM d, yyyy h:mm a').format(timeStamp)}';
+    }
+    return timeFormate;
+  }
+
+  String toLastMessageTimeString() {
+    final timeStamp = DateTime.fromMillisecondsSinceEpoch(this);
+    final currentTime = DateTime.now();
+    final currentDay = int.parse(DateFormat('d').format(currentTime));
+    final currentDayFromStamp = int.parse(DateFormat('d').format(timeStamp));
+    var timeFormate = '';
+    if (currentDay == currentDayFromStamp) {
+      timeFormate =DateFormat.jm().format(timeStamp);
+    
+    } else if (((currentDay - currentDayFromStamp) == 1) ||
+        (currentDayFromStamp == 31)) {
+      timeFormate = ChatStrings.yestarday.capitalizeFirst!;
+  
+    } else if (((currentDay - currentDayFromStamp) > 1) ||
+        (currentDayFromStamp > currentDay)) {
+      timeFormate = DateFormat('dd/MM/yyyy').format(timeStamp);
+    
+    }
+    return timeFormate;
+
+  }
 
   String get weekDayString {
     if (this > 7 || this < 1) {

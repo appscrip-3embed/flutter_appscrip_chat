@@ -174,14 +174,14 @@ class ChatPageViewModel {
         conversationId: conversationId,
       );
 
-  Future<void> getChatUserDetails({
+  Future<ChatConversationModel?> getConverstaionDetails({
     required String conversationId,
     String? ids,
     bool? includeMembers,
     int? membersSkip,
     int? membersLimit,
   }) async =>
-      await _repository.getChatUserDetails(
+      await _repository.getConverstaionDetails(
         conversationId: conversationId,
       );
 

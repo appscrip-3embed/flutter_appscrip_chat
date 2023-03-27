@@ -20,4 +20,11 @@ class ChatStrings {
   static const String errorLoadingImage = 'Error loading image';
 
   static const String typing = 'Typing...';
+  static const String online = 'Online';
+
+  static const String lastSeen = 'last seen';
+  static const String today = 'today';
+  static const yestarday = 'yesterday';
+  static const at = 'at';
+  static const on = 'on';
 }

@@ -108,7 +108,7 @@ class ChatPageRepository {
     }
   }
 
-  Future<void> getChatUserDetails({
+  Future<ChatConversationModel?> getConverstaionDetails({
     required String conversationId,
     String? ids,
     bool? includeMembers,
@@ -121,10 +121,13 @@ class ChatPageRepository {
         headers: ChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
-        return;
+        return null;
       }
+      var data = jsonDecode(response.data);
+      return ChatConversationModel.fromMap(data as Map<String, dynamic>);
     } catch (e, st) {
       ChatLog.error('Chat user Details $e', st);
+      return null;
     }
   }
 
