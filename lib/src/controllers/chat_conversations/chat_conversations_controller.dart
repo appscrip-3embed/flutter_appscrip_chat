@@ -1,6 +1,7 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
 import 'package:get/get.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class IsmChatConversationsController extends GetxController {
   IsmChatConversationsController(this._viewModel);
@@ -26,6 +27,12 @@ class IsmChatConversationsController extends GetxController {
   set userDetails(UserDetails? value) => _userDetails.value = value;
 
   ChatConversationModel? currentConversation;
+
+  /// Refresh Controller
+  final refreshController = RefreshController(
+    initialRefresh: false,
+    initialLoadStatus: LoadStatus.idle,
+  );
 
   @override
   onInit() async {
@@ -107,6 +114,7 @@ class IsmChatConversationsController extends GetxController {
           dbConversationModel: dbConversationModel,
         );
       }
+      refreshController.refreshCompleted();
       await getConversationsFromDB();
     }
   }
@@ -115,7 +123,6 @@ class IsmChatConversationsController extends GetxController {
     var user = await _viewModel.getUserData();
     if (user != null) {
       userDetails = user;
-    
     }
   }
 

@@ -1,6 +1,7 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 /// `ChatConversationList` can be used to show the list of all the conversations user has done.
 ///
@@ -90,42 +91,48 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
           }
           return SizedBox(
             height: widget.height ?? MediaQuery.of(context).size.height,
-            child: ListView.separated(
-              padding: ChatDimens.egdeInsets0_10,
-              shrinkWrap: true,
-              itemCount: controller.conversations.length,
-              separatorBuilder: (_, __) => ChatDimens.boxHeight8,
-              itemBuilder: widget.itemBuilder ??
-                  (_, index) {
-                    if (widget.childBuilder != null) {
-                      return widget.childBuilder!(
-                        _,
-                        index,
-                        controller.conversations[index],
+            child: SmartRefresher(
+              controller: controller.refreshController,
+              // enablePullDown: true,
+              enablePullUp: true,
+              onRefresh: controller.getChatConversations,
+              child: ListView.separated(
+                padding: ChatDimens.egdeInsets0_10,
+                shrinkWrap: true,
+                itemCount: controller.conversations.length,
+                separatorBuilder: (_, __) => ChatDimens.boxHeight8,
+                itemBuilder: widget.itemBuilder ??
+                    (_, index) {
+                      if (widget.childBuilder != null) {
+                        return widget.childBuilder!(
+                          _,
+                          index,
+                          controller.conversations[index],
+                        );
+                      }
+                      var conversation = controller.conversations[index];
+                      return Obx(
+                        () => IsmChatConversationCard(
+                          conversation,
+                          profileImageBuilder: widget.profileImageBuilder,
+                          subtitleBuilder: (!mqttController.typingUsersIds
+                                  .contains(conversation.conversationId))
+                              ? null
+                              : (_, __) => Text(
+                                    ChatStrings.typing,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: ChatStyles.w400Black12
+                                        .copyWith(color: ChatColors.greenColor),
+                                  ),
+                          onTap: () {
+                            controller.navigateToMessages(conversation);
+                            widget.onTap(_, conversation);
+                          },
+                        ),
                       );
-                    }
-                    var conversation = controller.conversations[index];
-                    return Obx(
-                      () => IsmChatConversationCard(
-                        conversation,
-                        profileImageBuilder: widget.profileImageBuilder,
-                        subtitleBuilder: (!mqttController.typingUsersIds
-                                .contains(conversation.conversationId))
-                            ? null
-                            : (_, __) => Text(
-                                  ChatStrings.typing,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: ChatStyles.w400Black12
-                                      .copyWith(color: ChatColors.greenColor),
-                                ),
-                        onTap: () {
-                          controller.navigateToMessages(conversation);
-                          widget.onTap(_, conversation);
-                        },
-                      ),
-                    );
-                  },
+                    },
+              ),
             ),
           );
         },

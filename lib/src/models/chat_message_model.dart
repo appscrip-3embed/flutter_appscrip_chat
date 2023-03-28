@@ -33,6 +33,7 @@ class ChatMessageModel {
                   userId: map['senderId'] as String,
                   online: false,
                   lastSeen: 0,
+                  
                 )
               : null,
       metaData: map['metaData'] != null

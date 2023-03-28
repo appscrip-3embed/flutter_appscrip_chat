@@ -16,6 +16,7 @@ class UserDetails {
         online: map['online'] as bool? ?? false,
         // metaData: ChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
         lastSeen: map['lastSeen'] as int? ?? 0,
+        timestamp: map['timestamp'] as int? ?? 0,
         visibility:
             map['visibility'] != null ? map['visibility'] as bool : true,
         notification:
@@ -23,19 +24,19 @@ class UserDetails {
         language: map['language'] != null ? map['language'] as String : null,
       );
 
-  UserDetails({
-    this.id = 0,
-    required this.userProfileImageUrl,
-    required this.userName,
-    required this.userIdentifier,
-    required this.userId,
-    required this.online,
-    // required this.metaData,
-    required this.lastSeen,
-    this.visibility,
-    this.notification,
-    this.language,
-  });
+  UserDetails(
+      {this.id = 0,
+      required this.userProfileImageUrl,
+      required this.userName,
+      required this.userIdentifier,
+      required this.userId,
+      required this.online,
+      // required this.metaData,
+      required this.lastSeen,
+      this.visibility,
+      this.notification,
+      this.language,
+      this.timestamp});
 
   @Id()
   int id;
@@ -50,6 +51,7 @@ class UserDetails {
   final bool? visibility;
   final bool? notification;
   final String? language;
+  final int? timestamp;
 
   UserDetails copyWith({
     String? userProfileImageUrl,

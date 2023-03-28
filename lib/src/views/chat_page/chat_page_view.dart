@@ -1,5 +1,10 @@
+import 'dart:async';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:focused_menu/focused_menu.dart';
+import 'package:focused_menu/modals.dart';
 import 'package:get/get.dart';
 
 class IsmChatPageView extends StatefulWidget {
@@ -21,6 +26,10 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
         builder: (controller) => Scaffold(
           resizeToAvoidBottomInset: true,
           appBar: IsmChatPageHeader(),
+
+          /// IsmChatPageAction(),
+
+          /// IsmChatPageHeader(),
           body: Column(
             children: [
               Expanded(
@@ -39,22 +48,24 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                       itemCount: controller.messages.length,
                       separatorBuilder: (_, __) => ChatDimens.boxHeight4,
                       itemBuilder: (_, index) =>
-                          ChatMessage(controller.messages[index]),
+                          ChatMessage(controller.messages[index], controller),
                     ),
                   ),
                 ),
               ),
-              const IsmChatInputField(),
             ],
           ),
+          bottomSheet: const IsmChatInputField(),
         ),
       );
 }
 
 class ChatMessage extends StatelessWidget {
-  const ChatMessage(this.message, {super.key});
+  const ChatMessage(this.message, this.ismChatPageController, {super.key});
 
   final ChatMessageModel message;
+
+  final IsmChatPageController ismChatPageController;
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +109,111 @@ class ChatMessage extends StatelessWidget {
                           : Radius.circular(ChatDimens.twelve),
                     ),
                   ),
-            child: message.customType!.messageType(message),
+            child: showMessageInCenter
+                ? message.customType!.messageType(message)
+                : FocusedMenuHolder(
+                    // openWithTap: true,
+                    menuWidth: 150,
+                    menuOffset: ChatDimens.twenty,
+                    blurSize: 3,
+                    animateMenuItems: false,
+                    blurBackgroundColor: Colors.grey,
+                    onPressed: () {},
+                    menuItems: [
+                      if (message.sentByMe)
+                        FocusedMenuItem(
+                          backgroundColor: Colors.white,
+                          title: const Text(
+                            'Info',
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          onPressed: () async {
+                            await ismChatPageController
+                                .getMessageInformation(message);
+                          },
+                          trailingIcon: Icon(
+                            Icons.info_outline,
+                            color: Colors.black,
+                            size: ChatDimens.twenty,
+                          ),
+                        ),
+                      FocusedMenuItem(
+                        backgroundColor: Colors.white,
+                        title: const Text(
+                          'Reply',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                        onPressed: () {
+                          ismChatPageController.isreplying = true;
+                          ismChatPageController.chatMessageModel = message;
+                        },
+                        trailingIcon: Icon(
+                          Icons.reply_outlined,
+                          color: Colors.black,
+                          size: ChatDimens.twenty,
+                        ),
+                      ),
+                      FocusedMenuItem(
+                        backgroundColor: Colors.white,
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: const [
+                            Text(
+                              'Forward',
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                        onPressed: () {},
+                        trailingIcon: Icon(
+                          Icons.forward_5,
+                          color: Colors.black,
+                          size: ChatDimens.twenty,
+                        ),
+                      ),
+                      FocusedMenuItem(
+                        backgroundColor: Colors.white,
+                        title: const Text(
+                          'Copy',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: message.body));
+                        },
+                        trailingIcon: Icon(
+                          Icons.copy,
+                          color: Colors.black,
+                          size: ChatDimens.twenty,
+                        ),
+                      ),
+                      FocusedMenuItem(
+                        backgroundColor: Colors.white,
+                        title: const Text(
+                          'Delete',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                        onPressed: () {
+                          ismChatPageController
+                              .showDialogForMessageDelete(message);
+                        },
+                        trailingIcon: Icon(
+                          Icons.delete_outline_rounded,
+                          color: Colors.red,
+                          size: ChatDimens.twenty,
+                        ),
+                      ),
+                    ],
+                    child: message.customType!.messageType(message)),
           ),
           if (!showMessageInCenter)
             Padding(

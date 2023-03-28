@@ -1,5 +1,7 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class ChatPageViewModel {
   ChatPageViewModel(this._repository);
@@ -17,9 +19,6 @@ class ChatPageViewModel {
       limit: messageLimit,
       skip: messageSkip,
     );
-
-    
-    
 
     if (messages == null) {
       return null;
@@ -203,15 +202,14 @@ class ChatPageViewModel {
     return null;
   }
 
-  Future<List<ChatMessageModel>?> unblockUser({
-    required String opponentId,
+  Future<List<ChatMessageModel>?> unblockUser(
+      {required String opponentId,
       required int lastMessageTimeStamp,
-      required String conversationId
-  }) async {
+      required String conversationId}) async {
     var response = await _repository.unblockUser(
-        opponentId: opponentId,
-      );
-      if (!response!.hasError) {
+      opponentId: opponentId,
+    );
+    if (!response!.hasError) {
       var responseMessage = await getChatMessages(
           conversationId: conversationId,
           lastMessageTimestamp: lastMessageTimeStamp);
@@ -233,16 +231,16 @@ class ChatPageViewModel {
         mediaId: mediaId,
       );
 
-  Future<void> readMessage({
+  Future<void> readSingleMessage({
     required String conversationId,
     required String messageId,
   }) async =>
-      await _repository.readMessage(
+      await _repository.readSingleMessage(
         conversationId: conversationId,
         messageId: messageId,
       );
 
-  Future<void> getMessageDelivered({
+  Future<List<UserDetails>?> getMessageDelivered({
     required String conversationId,
     required String messageId,
   }) async =>
@@ -251,23 +249,58 @@ class ChatPageViewModel {
         messageId: messageId,
       );
 
+  Future<List<UserDetails>?> getMessageRead({
+    required String conversationId,
+    required String messageId,
+  }) async =>
+      await _repository.getMessageRead(
+        conversationId: conversationId,
+        messageId: messageId,
+      );
+
   Future<void> deleteMessageForMe({
     required String conversationId,
     required String messageIds,
-  }) async =>
-      await _repository.deleteMessageForMe(
-        conversationId: conversationId,
-        messageIds: messageIds,
-      );
+  }) async {
+    var response = await _repository.deleteMessageForMe(
+      conversationId: conversationId,
+      messageIds: messageIds,
+    );
+    if (!response!.hasError) {
+      var allMessages = IsmChatConfig.objectBox.getMessages(conversationId);
+      if (allMessages == null) {
+        return;
+      }
+      allMessages.removeWhere((e) => e.messageId! == messageIds);
+      IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
+      if (Get.isRegistered<IsmChatPageController>()) {
+        await Get.find<IsmChatPageController>()
+            .getMessagesFromDB(conversationId);
+      }
+    }
+  }
 
   Future<void> deleteMessageForEveryone({
     required String conversationId,
     required String messageIds,
-  }) async =>
-      await _repository.deleteMessageForEveryone(
-        conversationId: conversationId,
-        messageIds: messageIds,
-      );
+  }) async {
+    var response = await _repository.deleteMessageForEveryone(
+      conversationId: conversationId,
+      messageIds: messageIds,
+    );
+    if (!response!.hasError) {
+      var allMessages = IsmChatConfig.objectBox.getMessages(conversationId);
+      if (allMessages == null) {
+        return;
+      }
+      allMessages.removeWhere((e) => e.messageId! == messageIds);
+      IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
+      if (Get.isRegistered<IsmChatPageController>()) {
+        await Get.find<IsmChatPageController>()
+            .getMessagesFromDB(conversationId);
+      }
+    }
+  }
 
   Future<void> clearAllMessages({
     required String conversationId,

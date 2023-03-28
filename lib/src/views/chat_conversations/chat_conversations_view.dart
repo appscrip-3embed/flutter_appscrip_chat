@@ -34,7 +34,7 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
             ? IsmChatListHeader(onSignOut: widget.onSignOut!)
             : null,
         body: SafeArea(
-          child: IsmChatConversationList(
+          child:  IsmChatConversationList(
             onTap: widget.onChatTap,
           ),
         ),

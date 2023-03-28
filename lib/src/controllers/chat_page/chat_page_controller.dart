@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
+import 'package:appscrip_chat_component/src/widgets/alert_dailog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 
 class IsmChatPageController extends GetxController {
   IsmChatPageController(this._viewModel);
@@ -33,6 +35,23 @@ class IsmChatPageController extends GetxController {
   final RxBool _showSendButton = false.obs;
   bool get showSendButton => _showSendButton.value;
   set showSendButton(bool value) => _showSendButton.value = value;
+
+  final RxBool _isreplying = false.obs;
+  bool get isreplying => _isreplying.value;
+  set isreplying(bool value) => _isreplying.value = value;
+
+  final Rx<ChatMessageModel?> _chatMessageModel = Rx<ChatMessageModel?>(null);
+  ChatMessageModel? get chatMessageModel => _chatMessageModel.value;
+  set chatMessageModel(ChatMessageModel? value) =>
+      _chatMessageModel.value = value;
+
+  final RxString _deliveredTime = ''.obs;
+  String get deliveredTime => _deliveredTime.value;
+  set deliveredTime(String value) => _deliveredTime.value = value;
+
+  final RxString _readTime = ''.obs;
+  String get readTime => _readTime.value;
+  set readTime(String value) => _readTime.value = value;
 
   final Completer<GoogleMapController> googleMapCompleter =
       Completer<GoogleMapController>();
@@ -90,6 +109,46 @@ class IsmChatPageController extends GetxController {
         parentId: id,
         data: messages,
       );
+
+  void showDialogForBlockUnBlock() async {
+    await Get.dialog(AlertDialogBox(
+        onTapFunction: () {
+          postUnBlockUser(
+              opponentId: conversation.opponentDetails?.userId ?? '',
+              lastMessageTimeStamp: messages.last.sentAt);
+        },
+        subTitleOne: ChatStrings.cancel,
+        subTitleTwo: ChatStrings.unblock,
+        titile: ChatStrings.youBlockUser));
+  }
+
+  void showDialogForMessageDelete(ChatMessageModel chatMessageModel) async {
+    if (chatMessageModel.sentByMe) {
+      await Get.dialog(AlertDialogBox(
+          onTapFunction: () {
+            ismMessageDeleteEveryOne(
+                conversationId: chatMessageModel.conversationId ?? '',
+                messageIds: chatMessageModel.messageId ?? '');
+          },
+          onTapFunctionTwo: () {
+            ismMessageDeleteSelf(
+                conversationId: chatMessageModel.conversationId ?? '',
+                messageIds: chatMessageModel.messageId ?? '');
+          },
+          subTitleOne: ChatStrings.deleteForEvery,
+          subTitleTwo: ChatStrings.deleteForMe,
+          subTitleThree: ChatStrings.cancel,
+          threeAction: false,
+          titile: ChatStrings.deleteMessgae));
+    } else {
+      await Get.dialog(AlertDialogBox(
+          onTapFunction: () {},
+          subTitleOne: ChatStrings.cancel,
+          subTitleTwo: ChatStrings.deleteForMe.toUpperCase(),
+          titile:
+              '${ChatStrings.deleteFromUser} ${conversation.opponentDetails?.userName}'));
+    }
+  }
 
   void sendTextMessage() async {
     // final query = IsmChatConfig.objectBox.userDetailsBox.query()
@@ -190,6 +249,24 @@ class IsmChatPageController extends GetxController {
     await _viewModel.notifyTyping(conversationId: conversation.conversationId!);
   }
 
+  Future<void> getMessageInformation(ChatMessageModel chatMessageModel) async {
+    readTime = '';
+    deliveredTime = '';
+    unawaited(
+      Future.wait([
+        ismGetMessageRead(
+          conversationId: chatMessageModel.conversationId ?? '',
+          messageId: chatMessageModel.messageId ?? '',
+        ),
+        ismGetMessageDeliver(
+          conversationId: chatMessageModel.conversationId ?? '',
+          messageId: chatMessageModel.messageId ?? '',
+        ),
+      ]),
+    );
+    await Get.to<void>(IsmMessageInfo(message: chatMessageModel));
+  }
+
   Future<void> getConverstaionDetails(
       {required String conversationId,
       String? ids,
@@ -241,7 +318,7 @@ class IsmChatPageController extends GetxController {
     required String conversationId,
     required String messageId,
   }) async {
-    await _viewModel.readMessage(
+    await _viewModel.readSingleMessage(
       conversationId: conversationId,
       messageId: messageId,
     );
@@ -257,8 +334,27 @@ class IsmChatPageController extends GetxController {
 
   Future<void> ismGetMessageDeliver(
       {required String conversationId, required String messageId}) async {
-    await _viewModel.getMessageDelivered(
+    var respones = await _viewModel.getMessageDelivered(
         conversationId: conversationId, messageId: messageId);
+    if (respones?.isNotEmpty ?? false) {
+      var date =
+          DateTime.fromMillisecondsSinceEpoch(respones?.first.timestamp ?? 0);
+      deliveredTime =
+          '${DateFormat.E().format(date)}, ${DateFormat.jm().format(date)}';
+    }
+  }
+
+  Future<void> ismGetMessageRead(
+      {required String conversationId, required String messageId}) async {
+    var respones = await _viewModel.getMessageRead(
+        conversationId: conversationId, messageId: messageId);
+
+    if (respones?.isNotEmpty ?? false) {
+      var date =
+          DateTime.fromMillisecondsSinceEpoch(respones?.first.timestamp ?? 0);
+      readTime =
+          '${DateFormat.E().format(date)}, ${DateFormat.jm().format(date)}';
+    }
   }
 
   Future<void> ismMessageDeleteEveryOne({

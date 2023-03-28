@@ -15,9 +15,11 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_screenutil: ^5.7.0
+  flutter_slidable: ^2.0.0
   flutter_svg: ^2.0.4
   flutter_web_plugins:
     sdk: flutter
+  focused_menu: ^1.0.5
   geocoding: ^2.1.0
   get: ^4.6.5
   google_maps_flutter: ^2.2.5
@@ -33,6 +35,7 @@ dependencies:
   path_provider: ^2.0.13
   permission_handler: ^10.2.0
   plugin_platform_interface: ^2.0.2
+  pull_to_refresh: ^2.0.0
   scroll_to_index: ^3.0.1
   syncfusion_flutter_pdfviewer: ^20.4.54
   url_launcher: ^6.1.10

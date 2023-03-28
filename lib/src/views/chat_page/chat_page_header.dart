@@ -32,6 +32,11 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
             child: AppBar(
+              // leading: IsmTapHandler(
+              //   onTap: Get.back,
+              //   child: const Icon(Icons.arrow_back_rounded),
+              // ),
+              titleSpacing: ChatDimens.four,
               title: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -123,8 +128,8 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                   onSelected: (value) {
                     if (value == 1) {
                       Get.dialog(AlertDialogBox(
-                        actionOneString: ChatStrings.cancel,
-                        actionSecondString: ChatStrings.clearChat,
+                        subTitleOne: ChatStrings.cancel,
+                        subTitleTwo: ChatStrings.clearChat,
                         titile: ChatStrings.deleteAllMessage,
                         onTapFunction: () {
                           controller.clearAllMessages(
@@ -134,8 +139,8 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                       ));
                     } else {
                       Get.dialog(AlertDialogBox(
-                        actionOneString: ChatStrings.cancel,
-                        actionSecondString: userBlockOrNot
+                        subTitleOne: ChatStrings.cancel,
+                        subTitleTwo: userBlockOrNot
                             ? ChatStrings.unblock
                             : ChatStrings.block,
                         titile: userBlockOrNot

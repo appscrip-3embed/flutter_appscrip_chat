@@ -165,9 +165,8 @@ class ChatPageRepository {
       return response;
     } catch (e, st) {
       ChatLog.error(' un Block user $e', st);
-       return null;
+      return null;
     }
-   
   }
 
   Future<void> postMediaUrl({
@@ -200,7 +199,7 @@ class ChatPageRepository {
     }
   }
 
-  Future<void> readMessage({
+  Future<void> readSingleMessage({
     required String conversationId,
     required String messageId,
   }) async {
@@ -219,7 +218,7 @@ class ChatPageRepository {
     }
   }
 
-  Future<void> getMessageDelivered({
+  Future<List<UserDetails>?> getMessageDelivered({
     required String conversationId,
     required String messageId,
   }) async {
@@ -229,14 +228,43 @@ class ChatPageRepository {
         headers: ChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
-        return;
+        return null;
       }
+      var data = jsonDecode(response.data);
+
+      return (data['users'] as List<dynamic>)
+          .map((e) => UserDetails.fromMap(e as Map<String, dynamic>))
+          .toList();
     } catch (e, st) {
       ChatLog.error('Deliver message $e', st);
+      return null;
     }
   }
 
-  Future<void> deleteMessageForMe({
+  Future<List<UserDetails>?> getMessageRead({
+    required String conversationId,
+    required String messageId,
+  }) async {
+    try {
+      var response = await _apiWrapper.get(
+        '${IsmChatAPI.readStatus}?conversationId=$conversationId&messageId=$messageId',
+        headers: ChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return null;
+      }
+      var data = jsonDecode(response.data);
+
+      return (data['users'] as List<dynamic>)
+          .map((e) => UserDetails.fromMap(e as Map<String, dynamic>))
+          .toList();
+    } catch (e, st) {
+      ChatLog.error('Read message $e', st);
+      return null;
+    }
+  }
+
+  Future<ResponseModel?> deleteMessageForMe({
     required String conversationId,
     required String messageIds,
   }) async {
@@ -247,14 +275,16 @@ class ChatPageRepository {
         headers: ChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
-        return;
+        return null;
       }
+      return response;
     } catch (e, st) {
       ChatLog.error('Delete message $e', st);
+      return null;
     }
   }
 
-  Future<void> deleteMessageForEveryone({
+  Future<ResponseModel?> deleteMessageForEveryone({
     required String conversationId,
     required String messageIds,
   }) async {
@@ -265,10 +295,13 @@ class ChatPageRepository {
         headers: ChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
-        return;
+        return null;
       }
+
+      return response;
     } catch (e, st) {
       ChatLog.error('Delete everyone message $e', st);
+      return null;
     }
   }
 

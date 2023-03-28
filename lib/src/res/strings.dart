@@ -34,6 +34,11 @@ class ChatStrings {
   static const String cancel = 'Cancel';
   static const String doWantBlckUser = 'Do you want to Block this User?';
   static const String doWantUnBlckUser = 'Do you want to Unblock this User?';
+  static const String youBlockUser = 'You blocked this user.';
   static const String block = 'Block';
   static const String unblock = 'Unblock';
+  static const String deleteMessgae = 'Delete message?';
+  static const String deleteForEvery = 'Delete for eveyone';
+  static const String deleteForMe = 'Delete for me';
+  static const String deleteFromUser = 'Delete message from';
 }

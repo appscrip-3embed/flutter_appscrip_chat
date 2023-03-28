@@ -6,36 +6,83 @@ class AlertDialogBox extends StatelessWidget {
   const AlertDialogBox(
       {super.key,
       required this.onTapFunction,
-      required this.actionOneString,
-      required this.actionSecondString,
-      required this.titile});
+      required this.subTitleOne,
+      required this.subTitleTwo,
+      required this.titile,
+      this.subTitleThree,
+      this.onTapFunctionTwo,
+      this.threeAction = true});
 
   final void Function() onTapFunction;
+  final void Function()? onTapFunctionTwo;
   final String titile;
-  final String actionOneString;
-  final String actionSecondString;
+  final String subTitleOne;
+  final String subTitleTwo;
+  final String? subTitleThree;
+  final bool threeAction;
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
-        actionsPadding: ChatDimens.egdeInsets16,
-        title: Text(titile),
-        backgroundColor: ChatColors.whiteColor,
-        titleTextStyle: ChatStyles.w600Black14,
-        actions: [
-          InkWell(
-            onTap: () {
-              Get.back<void>();
-            },
-            child: Text(actionOneString, style: ChatStyles.w400Black14),
-          ),
-          ChatDimens.boxWidth8,
-          InkWell(
+  Widget build(BuildContext context) => threeAction
+      ? AlertDialog(
+          actionsPadding: ChatDimens.egdeInsets16,
+          title: Text(titile),
+          backgroundColor: ChatColors.whiteColor,
+          titleTextStyle: ChatStyles.w600Black14,
+          actions: [
+            IsmTapHandler(
               onTap: () {
-                onTapFunction();
                 Get.back<void>();
               },
-              child: Text(actionSecondString, style: ChatStyles.w400Black14)),
-        ],
-        // content: Text("Saved successfully"),
-      );
+              child: Text(subTitleOne, style: ChatStyles.w400Black14),
+            ),
+            ChatDimens.boxWidth8,
+            IsmTapHandler(
+                onTap: () {
+                  Get.back<void>();
+                  onTapFunction.call();
+                },
+                child: Text(subTitleTwo, style: ChatStyles.w400Black14)),
+          ],
+          // content: Text("Saved successfully"),
+        )
+      : SimpleDialog(
+          title: Text(
+            titile,
+            style: ChatStyles.w600Black14,
+          ),
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                SimpleDialogOption(
+                  child: IsmTapHandler(
+                    onTap: () {
+                      Get.back<void>();
+                      onTapFunction.call();
+                    },
+                    child: Text(subTitleOne),
+                  ),
+                ),
+                SimpleDialogOption(
+                  child: IsmTapHandler(
+                    onTap: () {
+                      Get.back<void>();
+
+                      onTapFunctionTwo?.call();
+                    },
+                    child: Text(subTitleTwo),
+                  ),
+                ),
+                SimpleDialogOption(
+                  child: IsmTapHandler(
+                    onTap: () {
+                      Get.back<void>();
+                    },
+                    child: Text(subTitleThree ?? ''),
+                  ),
+                ),
+              ],
+            )
+          ],
+        );
 }

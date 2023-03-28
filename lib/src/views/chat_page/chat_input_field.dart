@@ -9,48 +9,127 @@ class IsmChatInputField extends StatelessWidget {
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
         builder: (controller) {
           var mqttController = Get.find<IsmChatMqttController>();
+          var ismChatConversationController =
+              Get.find<IsmChatConversationsController>();
           var userBlockOrNot =
               controller.messages.last.initiatorId == mqttController.userId &&
                   controller.messages.last.messagingDisabled == true;
-          return Container(
-            height: ChatDimens.inputFieldHeight,
-            width: Get.width,
-            margin: ChatDimens.egdeInsets8.copyWith(top: ChatDimens.four),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    focusNode: controller.focusNode,
-                    controller: controller.chatInputController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: ChatTheme.of(context).backgroundColor,
-                      // prefixIcon: IconButton(
-                      //   color: IsmChatConfig.chatTheme.primaryColor,
-                      //   icon: const Icon(Icons.emoji_emotions_rounded),
-                      //   onPressed: () {},
-                      // ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(ChatDimens.forty),
-                        borderSide: const BorderSide(color: Colors.transparent),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(ChatDimens.forty),
-                        borderSide: BorderSide(
-                          color: ChatTheme.of(context).primaryColor!,
+
+          return Row(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width * 0.77,
+                margin: ChatDimens.egdeInsets8.copyWith(top: ChatDimens.four),
+                decoration: BoxDecoration(
+                  border:
+                      Border.all(color: ChatTheme.of(context).primaryColor!),
+                  borderRadius: BorderRadius.circular(ChatDimens.twenty),
+                  color: Colors.transparent,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (controller.isreplying)
+                      Container(
+                        margin: ChatDimens.egdeInsets4,
+                        padding: ChatDimens.egdeInsets10,
+                        height: ChatDimens.sixty,
+                        width: Get.width,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(ChatDimens.sixteen),
+                          color: ChatColors.primaryColorDark,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  controller.chatMessageModel?.sentByMe ?? false
+                                      ? ismChatConversationController
+                                              .userDetails?.userName ??
+                                          ''
+                                      : controller.conversation.opponentDetails
+                                              ?.userName ??
+                                          '',
+                                  style: ChatStyles.w600White14,
+                                ),
+                                Text(controller.chatMessageModel?.body ?? '')
+                              ],
+                            ),
+                            IsmTapHandler(
+                                onTap: () {
+                                  controller.isreplying = false;
+                                },
+                                child: Icon(
+                                  Icons.close_rounded,
+                                  size: ChatDimens.sixteen,
+                                ))
+                          ],
                         ),
                       ),
-                      suffixIcon: const AttachmentIcon(),
+                    Row(
+                      // mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            maxLines: 4,
+                            minLines: 1,
+                            focusNode: controller.focusNode,
+                            controller: controller.chatInputController,
+                            decoration: InputDecoration(
+                              isDense: true,
+                              // isCollapsed: true,
+                              filled: true,
+                              fillColor: ChatTheme.of(context).backgroundColor,
+                              // prefixIcon: IconButton(
+                              //   color: IsmChatConfig.chatTheme.primaryColor,
+                              //   icon: const Icon(Icons.emoji_emotions_rounded),
+                              //   onPressed: () {},
+                              // ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.circular(ChatDimens.forty),
+                                borderSide:
+                                    const BorderSide(color: Colors.transparent),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.circular(ChatDimens.forty),
+                                borderSide: const BorderSide(
+                                  color: Colors.transparent,
+                                ),
+                              ),
+                              // suffix: const ,
+                            ),
+                            onChanged: (_) => controller.notifyTyping(),
+                          ),
+                        ),
+                        const AttachmentIcon()
+                      ],
                     ),
-                    onChanged: (_) => controller.notifyTyping(),
-                  ),
+                  ],
                 ),
-                ChatDimens.boxWidth8,
-                AspectRatio(
+              ),
+              ChatDimens.boxWidth8,
+              Container(
+                margin: ChatDimens.edgeInsetsBottom10,
+                height: ChatDimens.inputFieldHeight,
+                child: AspectRatio(
                   aspectRatio: 1,
                   child: ElevatedButton(
                     onPressed: controller.showSendButton
-                        ? controller.sendTextMessage
+                        ? userBlockOrNot
+                            ? controller.showDialogForBlockUnBlock
+                            : controller.sendTextMessage
                         : () {},
                     style: ElevatedButton.styleFrom(
                       fixedSize: Size.square(ChatDimens.inputFieldHeight),
@@ -77,8 +156,8 @@ class IsmChatInputField extends StatelessWidget {
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           );
         },
       );
