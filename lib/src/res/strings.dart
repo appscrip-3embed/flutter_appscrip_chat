@@ -41,4 +41,7 @@ class ChatStrings {
   static const String deleteForEvery = 'Delete for eveyone';
   static const String deleteForMe = 'Delete for me';
   static const String deleteFromUser = 'Delete message from';
+  static const String delete = 'Delete';
+  static const String archive = 'Archive';
+  static const String deleteChat = 'Delete chat';
 }

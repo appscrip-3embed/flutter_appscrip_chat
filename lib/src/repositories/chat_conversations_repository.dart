@@ -36,13 +36,51 @@ class ChatConversationsRepository {
       if (response.hasError) {
         return null;
       }
-     
+
       var data = jsonDecode(response.data) as Map<String, dynamic>;
       var user = UserDetails.fromMap(data);
       IsmChatConfig.objectBox.userDetailsBox.put(user);
       return user;
     } catch (e, st) {
       ChatLog.error('GetChatConversations $e', st);
+      return null;
+    }
+  }
+
+  Future<ResponseModel?> deleteChat({
+    required String conversationId,
+  }) async {
+    try {
+      var response = await _apiWrapper.delete(
+        '${IsmChatAPI.chatConversationDelete}?conversationId=$conversationId',
+        payload: null,
+        headers: ChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return null;
+      }
+      return response;
+    } catch (e, st) {
+      ChatLog.error('Delete chat $e', st);
+      return null;
+    }
+  }
+
+  Future<ResponseModel?> clearAllMessages({
+    required String conversationId,
+  }) async {
+    try {
+      var response = await _apiWrapper.delete(
+        '${IsmChatAPI.chatConversationClear}?conversationId=$conversationId',
+        payload: null,
+        headers: ChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return response;
+      }
+      return response;
+    } catch (e, st) {
+      ChatLog.error('Clear chat $e', st);
       return null;
     }
   }

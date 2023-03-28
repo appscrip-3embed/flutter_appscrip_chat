@@ -53,9 +53,10 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                   ),
                 ),
               ),
+              const IsmChatInputField()
             ],
           ),
-          bottomSheet: const IsmChatInputField(),
+          // bottomSheet: const ,
         ),
       );
 }

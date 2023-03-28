@@ -54,6 +54,8 @@ class ChatDimens {
   static final EdgeInsets egdeInsets10_5_10_10 = EdgeInsets.only(left:ten,top: five,bottom: ten ,right: ten);
   static final EdgeInsets egdeInsetsTop20 = EdgeInsets.only(top: twenty);
   static final EdgeInsets egdeInsets16 = EdgeInsets.all(sixteen);
+  static final EdgeInsets egdeInsets20 = EdgeInsets.all(twenty);
+
   static final EdgeInsets egdeInsets0_10 = EdgeInsets.symmetric(vertical: ten);
   static final EdgeInsets egdeInsets10_0 =
       EdgeInsets.symmetric(horizontal: ten);

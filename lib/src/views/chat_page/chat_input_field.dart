@@ -26,7 +26,7 @@ class IsmChatInputField extends StatelessWidget {
                   border:
                       Border.all(color: ChatTheme.of(context).primaryColor!),
                   borderRadius: BorderRadius.circular(ChatDimens.twenty),
-                  color: Colors.transparent,
+                  color: ChatTheme.of(context).backgroundColor,
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -128,7 +128,7 @@ class IsmChatInputField extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: controller.showSendButton
                         ? userBlockOrNot
-                            ? controller.showDialogForBlockUnBlock
+                            ? controller.showDialogCheckBlockUnBlock
                             : controller.sendTextMessage
                         : () {},
                     style: ElevatedButton.styleFrom(

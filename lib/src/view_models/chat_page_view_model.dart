@@ -272,7 +272,7 @@ class ChatPageViewModel {
         return;
       }
       allMessages.removeWhere((e) => e.messageId! == messageIds);
-      IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
+     await IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
       if (Get.isRegistered<IsmChatPageController>()) {
         await Get.find<IsmChatPageController>()
             .getMessagesFromDB(conversationId);
@@ -294,7 +294,7 @@ class ChatPageViewModel {
         return;
       }
       allMessages.removeWhere((e) => e.messageId! == messageIds);
-      IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
+    await  IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
       if (Get.isRegistered<IsmChatPageController>()) {
         await Get.find<IsmChatPageController>()
             .getMessagesFromDB(conversationId);
@@ -314,12 +314,7 @@ class ChatPageViewModel {
     }
   }
 
-  Future<void> deleteChat({
-    required String conversationId,
-  }) async =>
-      await _repository.deleteChat(
-        conversationId: conversationId,
-      );
+  
 
   Future<void> readAllMessages({
     required String conversationId,

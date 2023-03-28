@@ -1,5 +1,6 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -103,38 +104,72 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                 separatorBuilder: (_, __) => ChatDimens.boxHeight8,
                 itemBuilder: widget.itemBuilder ??
                     (_, index) {
-                      if (widget.childBuilder != null) {
-                        return widget.childBuilder!(
-                          _,
-                          index,
-                          controller.conversations[index],
-                        );
-                      }
                       var conversation = controller.conversations[index];
-                      return Obx(
-                        () => IsmChatConversationCard(
-                          conversation,
-                          profileImageBuilder: widget.profileImageBuilder,
-                          subtitleBuilder: (!mqttController.typingUsersIds
-                                  .contains(conversation.conversationId))
-                              ? null
-                              : (_, __) => Text(
-                                    ChatStrings.typing,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: ChatStyles.w400Black12
-                                        .copyWith(color: ChatColors.greenColor),
-                                  ),
-                          onTap: () {
-                            controller.navigateToMessages(conversation);
-                            widget.onTap(_, conversation);
-                          },
+                      return Slidable(
+                        closeOnScroll: true,
+                        startActionPane: ActionPane(
+                          extentRatio: 0.3,
+                          motion: const ScrollMotion(),
+                          children: [
+                            SlidableAction(
+                              onPressed: (_) async {},
+                              flex: 1,
+                              backgroundColor: Colors.purple,
+                              foregroundColor: Colors.white,
+                              icon: Icons.archive_rounded,
+                              label: ChatStrings.archive,
+                            ),
+                          ],
+                        ),
+                        endActionPane: ActionPane(
+                          extentRatio: 0.3,
+                          motion: const ScrollMotion(),
+                          children: [
+                            SlidableAction(
+                              onPressed: (_) async {
+                                 controller.deleteConversationAndClearChat(controller.conversations[index]);
+                              },
+                              flex: 1,
+                              backgroundColor: Colors.red,
+                              foregroundColor: Colors.white,
+                              icon: Icons.delete_rounded,
+                              label: ChatStrings.delete,
+                            ),
+                          ],
+                        ),
+                        child: Obx(
+                          () => IsmChatConversationCard(
+                            conversation,
+                            profileImageBuilder: widget.profileImageBuilder,
+                            subtitleBuilder: (!mqttController.typingUsersIds
+                                    .contains(conversation.conversationId))
+                                ? null
+                                : (_, __) => Text(
+                                      ChatStrings.typing,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: ChatStyles.w400Black12.copyWith(
+                                          color: ChatColors.greenColor),
+                                    ),
+                            onTap: () {
+                              controller.navigateToMessages(conversation);
+                              widget.onTap(_, conversation);
+                            },
+                          ),
                         ),
                       );
                     },
               ),
             ),
           );
+
+          // if (widget.childBuilder != null) {
+          //   return widget.childBuilder!(
+          //     _,
+          //     index,
+          //     controller.conversations[index],
+          //   );
+          // }
         },
       );
 }

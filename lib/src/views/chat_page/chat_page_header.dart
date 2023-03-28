@@ -127,55 +127,11 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                   elevation: 2,
                   onSelected: (value) {
                     if (value == 1) {
-                      Get.dialog(AlertDialogBox(
-                        subTitleOne: ChatStrings.cancel,
-                        subTitleTwo: ChatStrings.clearChat,
-                        titile: ChatStrings.deleteAllMessage,
-                        onTapFunction: () {
-                          controller.clearAllMessages(
-                              conversationId:
-                                  controller.conversation.conversationId!);
-                        },
-                      ));
+                      controller.showDialogForClearChat();
                     } else {
-                      Get.dialog(AlertDialogBox(
-                        subTitleOne: ChatStrings.cancel,
-                        subTitleTwo: userBlockOrNot
-                            ? ChatStrings.unblock
-                            : ChatStrings.block,
-                        titile: userBlockOrNot
-                            ? ChatStrings.doWantUnBlckUser
-                            : ChatStrings.doWantBlckUser,
-                        onTapFunction: () {
-                          userBlockOrNot
-                              ? controller.postUnBlockUser(
-                                  opponentId: controller
-                                      .conversation.opponentDetails!.userId,
-                                  lastMessageTimeStamp:
-                                      controller.messages.last.sentAt)
-                              : controller.postBlockUser(
-                                  opponentId: controller
-                                      .conversation.opponentDetails!.userId,
-                                  lastMessageTimeStamp:
-                                      controller.messages.last.sentAt);
-                        },
-                      ));
+                      controller.showDialogForBlockUnBlockUser(
+                          userBlockOrNot, controller.messages.last.sentAt);
                     }
-                    // if (value == PopUpDeleteOrBlock.deleteChat.value) {
-                    //   Get.dialog<void>(_alertDailog(controller));
-                    //   controller.update();
-                    // } else if (value ==
-                    //     PopUpDeleteOrBlock.blockUnblock.value) {
-                    //   if (chatPageController.blockUser) {
-                    //     if (chatPageController.isBlockByMe) {
-                    //       Get.dialog<void>(_alertDailogBlock());
-                    //     } else {
-                    //       _alertDailogBlockForBlock();
-                    //     }
-                    //   } else {
-                    //     Get.dialog<void>(_alertDailogBlock());
-                    //   }
-                    // }
                   },
                 ),
               ],

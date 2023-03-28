@@ -12,6 +12,24 @@ class ChatConversationsViewModel {
 
   Future<UserDetails?> getUserData() async => await _repository.getUserData();
 
+  Future<ResponseModel?> deleteChat({
+    required String conversationId,
+  }) async => await _repository.deleteChat(
+      conversationId: conversationId,
+    );
+
+  Future<void> clearAllMessages({
+    required String conversationId,
+  }) async {
+    var response = await _repository.clearAllMessages(
+      conversationId: conversationId,
+    );
+    if (!response!.hasError) {
+      await IsmChatConfig.objectBox
+          .clearAllMessage(conversationId: conversationId);
+    }
+  }
+
   Future<void> pingMessageDelivered({
     required String conversationId,
     required String messageId,

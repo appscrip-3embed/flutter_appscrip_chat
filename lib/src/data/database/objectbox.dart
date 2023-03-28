@@ -56,7 +56,7 @@ class IsmChatObjectBox {
 
   ///  clear all messages for perticular user
   Future<void> clearAllMessage({required String conversationId}) async {
-    saveMessages(conversationId, []);
+   await saveMessages(conversationId, []);
     if (Get.isRegistered<IsmChatPageController>()) {
       await Get.find<IsmChatPageController>().getMessagesFromDB(conversationId);
     }
@@ -146,10 +146,10 @@ class IsmChatObjectBox {
     return conversation.messages.map(ChatMessageModel.fromJson).toList();
   }
 
-  void saveMessages(
+  Future<void> saveMessages(
     String conversationId,
     List<ChatMessageModel> messages,
-  ) {
+  )async {
     var conversation = chatConversationBox
         .query(DBConversationModel_.conversationId.equals(conversationId))
         .build()
@@ -159,6 +159,17 @@ class IsmChatObjectBox {
           messages.isEmpty ? [] : messages.map((e) => e.toJson()).toList();
       chatConversationBox.put(conversation);
     }
+  }
+
+  Future<void> removeUser(String conversationId) async{
+    var conversation = chatConversationBox
+        .query(DBConversationModel_.conversationId.equals(conversationId))
+        .build()
+        .findUnique();
+    if (conversation != null) {
+      chatConversationBox.remove(conversation.id);
+    }
+    
   }
 
   /// Create an instance of ObjectBox to use throughout the presenter.

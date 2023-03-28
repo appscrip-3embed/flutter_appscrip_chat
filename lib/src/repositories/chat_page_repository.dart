@@ -324,22 +324,7 @@ class ChatPageRepository {
     }
   }
 
-  Future<void> deleteChat({
-    required String conversationId,
-  }) async {
-    try {
-      var response = await _apiWrapper.delete(
-        '${IsmChatAPI.chatConversationDelete}?conversationId=$conversationId',
-        payload: null,
-        headers: ChatUtility.tokenCommonHeader(),
-      );
-      if (response.hasError) {
-        return;
-      }
-    } catch (e, st) {
-      ChatLog.error('Delete chat $e', st);
-    }
-  }
+  
 
   Future<void> readAllMessages({
     required String conversationId,

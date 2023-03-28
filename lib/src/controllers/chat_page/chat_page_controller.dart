@@ -110,7 +110,38 @@ class IsmChatPageController extends GetxController {
         data: messages,
       );
 
-  void showDialogForBlockUnBlock() async {
+  void showDialogForClearChat() async {
+    await Get.dialog(AlertDialogBox(
+      subTitleOne: ChatStrings.cancel,
+      subTitleTwo: ChatStrings.clearChat,
+      titile: ChatStrings.deleteAllMessage,
+      onTapFunction: () {
+        clearAllMessages(conversationId: conversation.conversationId!);
+      },
+    ));
+  }
+
+  void showDialogForBlockUnBlockUser(
+      bool userBlockOrNot, int lastMessageTimsStamp) async {
+    await Get.dialog(AlertDialogBox(
+      subTitleOne: ChatStrings.cancel,
+      subTitleTwo: userBlockOrNot ? ChatStrings.unblock : ChatStrings.block,
+      titile: userBlockOrNot
+          ? ChatStrings.doWantUnBlckUser
+          : ChatStrings.doWantBlckUser,
+      onTapFunction: () {
+        userBlockOrNot
+            ? postUnBlockUser(
+                opponentId: conversation.opponentDetails!.userId,
+                lastMessageTimeStamp: lastMessageTimsStamp)
+            : postBlockUser(
+                opponentId: conversation.opponentDetails!.userId,
+                lastMessageTimeStamp: lastMessageTimsStamp);
+      },
+    ));
+  }
+
+  void showDialogCheckBlockUnBlock() async {
     await Get.dialog(AlertDialogBox(
         onTapFunction: () {
           postUnBlockUser(
@@ -373,11 +404,7 @@ class IsmChatPageController extends GetxController {
         conversationId: conversationId, messageIds: messageIds);
   }
 
-  Future<void> ismDeleteChat({
-    required String conversationId,
-  }) async {
-    await _viewModel.deleteChat(conversationId: conversationId);
-  }
+  
 
   Future<void> clearAllMessages({
     required String conversationId,

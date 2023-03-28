@@ -1,7 +1,12 @@
+import 'dart:ffi';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import '../../widgets/alert_dailog.dart';
 
 class IsmChatConversationsController extends GetxController {
   IsmChatConversationsController(this._viewModel);
@@ -47,6 +52,46 @@ class IsmChatConversationsController extends GetxController {
     await getChatConversations();
   }
 
+  void deleteConversationAndClearChat(
+      ChatConversationModel chatConversationModel) async {
+    await Get.bottomSheet(
+        BottomSheetOption(
+          tapFristTitle: () async {
+            showDialogForClearChat(chatConversationModel);
+          },
+          tapSecondTitle: () async {
+            showDialogForDeletChat(chatConversationModel);
+          },
+        ),
+        elevation: 0,
+        backgroundColor: Colors.transparent);
+  }
+
+  void showDialogForClearChat(
+      ChatConversationModel chatConversationModel) async {
+    await Get.dialog(AlertDialogBox(
+      subTitleOne: ChatStrings.cancel,
+      subTitleTwo: ChatStrings.clearChat,
+      titile: ChatStrings.deleteAllMessage,
+      onTapFunction: () {
+        clearAllMessages(
+            conversationId: chatConversationModel.conversationId ?? '');
+      },
+    ));
+  }
+
+  void showDialogForDeletChat(
+      ChatConversationModel chatConversationModel) async {
+    await Get.dialog(AlertDialogBox(
+        onTapFunction: () {
+          deleteChat(
+              conversationId: chatConversationModel.conversationId ?? '');
+        },
+        subTitleOne: ChatStrings.cancel,
+        subTitleTwo: ChatStrings.deleteChat,
+        titile: '${ChatStrings.deleteChat}?'));
+  }
+
   void navigateToMessages(ChatConversationModel conversation) {
     currentConversation = conversation;
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
@@ -60,6 +105,22 @@ class IsmChatConversationsController extends GetxController {
       conversationBox.put(dbConversation);
       getConversationsFromDB();
     }
+  }
+
+  Future<void> deleteChat({
+    required String conversationId,
+  }) async {
+    var response = await _viewModel.deleteChat(conversationId: conversationId);
+    if (!response!.hasError) {
+      await IsmChatConfig.objectBox.removeUser(conversationId);
+      await getChatConversations();
+    }
+  }
+
+  Future<void> clearAllMessages({
+    required String conversationId,
+  }) async {
+    await _viewModel.clearAllMessages(conversationId: conversationId);
   }
 
   Future<void> getConversationsFromDB() async {
