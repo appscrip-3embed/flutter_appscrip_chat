@@ -7,10 +7,10 @@ import 'package:get/get.dart';
 
 // / The view part of the [IsmChatPageView], which will be used to
 /// show the Message Information view page
-class IsmMessageInfo extends StatelessWidget {
-  const IsmMessageInfo({Key? key, required this.message}) : super(key: key);
+class IsmChatMessageInfo extends StatelessWidget {
+  const IsmChatMessageInfo({Key? key, required this.message}) : super(key: key);
 
-  final ChatMessageModel message;
+  final IsmChatChatMessageModel message;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
@@ -19,19 +19,20 @@ class IsmMessageInfo extends StatelessWidget {
             FocusManager.instance.primaryFocus?.unfocus();
           },
           child: Scaffold(
-            backgroundColor: ChatColors.whiteColor,
+            backgroundColor: IsmChatColors.whiteColor,
             appBar: AppBar(
               elevation: 1,
-              backgroundColor: ChatTheme.of(context).primaryColor,
+              backgroundColor: IsmChatTheme.of(context).primaryColor,
               titleSpacing: 1,
               title: Padding(
                   padding: const EdgeInsets.only(right: 55.0),
                   child: Center(
-                    child: Text('Message Info', style: ChatStyles.w600White18),
+                    child:
+                        Text('Message Info', style: IsmChatStyles.w600White18),
                   )),
             ),
             body: Container(
-              margin: ChatDimens.egdeInsets16,
+              margin: IsmChatDimens.egdeInsets16,
               height: Get.height,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -41,18 +42,19 @@ class IsmMessageInfo extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         color: IsmChatConfig.chatTheme.backgroundColor,
-                        borderRadius: BorderRadius.circular(ChatDimens.eight),
+                        borderRadius:
+                            BorderRadius.circular(IsmChatDimens.eight),
                       ),
-                      padding: ChatDimens.egdeInsets8_4,
+                      padding: IsmChatDimens.egdeInsets8_4,
                       child: Text(
                         message.sentAt.toMessageDateString(),
-                        style: ChatStyles.w500Black12.copyWith(
+                        style: IsmChatStyles.w500Black12.copyWith(
                           color: IsmChatConfig.chatTheme.primaryColor,
                         ),
                       ),
                     ),
                   ),
-                  ChatDimens.boxHeight16,
+                  IsmChatDimens.boxHeight16,
                   UnconstrainedBox(
                       alignment: message.sentByMe
                           ? Alignment.centerRight
@@ -64,7 +66,7 @@ class IsmMessageInfo extends StatelessWidget {
                               : CrossAxisAlignment.start,
                           children: [
                             Container(
-                                padding: ChatDimens.egdeInsets4,
+                                padding: IsmChatDimens.egdeInsets4,
                                 constraints: BoxConstraints(
                                   maxWidth: context.width * .8,
                                   minWidth: context.width * .1,
@@ -75,29 +77,29 @@ class IsmMessageInfo extends StatelessWidget {
                                       : IsmChatConfig.chatTheme.backgroundColor,
                                   borderRadius: BorderRadius.only(
                                     topRight:
-                                        Radius.circular(ChatDimens.twelve),
+                                        Radius.circular(IsmChatDimens.twelve),
                                     topLeft: message.sentByMe
-                                        ? Radius.circular(ChatDimens.twelve)
-                                        : Radius.circular(ChatDimens.four),
+                                        ? Radius.circular(IsmChatDimens.twelve)
+                                        : Radius.circular(IsmChatDimens.four),
                                     bottomLeft:
-                                        Radius.circular(ChatDimens.twelve),
+                                        Radius.circular(IsmChatDimens.twelve),
                                     bottomRight: message.sentByMe
-                                        ? Radius.circular(ChatDimens.four)
-                                        : Radius.circular(ChatDimens.twelve),
+                                        ? Radius.circular(IsmChatDimens.four)
+                                        : Radius.circular(IsmChatDimens.twelve),
                                   ),
                                 ),
                                 child:
                                     message.customType!.messageType(message)),
                             Padding(
-                              padding: ChatDimens.egdeInsets0_4,
+                              padding: IsmChatDimens.egdeInsets0_4,
                               child: Row(
                                 children: [
                                   Text(
                                     message.sentAt.toTimeString(),
-                                    style: ChatStyles.w400Grey10,
+                                    style: IsmChatStyles.w400Grey10,
                                   ),
                                   if (message.sentByMe) ...[
-                                    ChatDimens.boxWidth2,
+                                    IsmChatDimens.boxWidth2,
                                     Icon(
                                       message.messageId!.isEmpty
                                           ? Icons.watch_later_rounded
@@ -109,18 +111,18 @@ class IsmMessageInfo extends StatelessWidget {
                                           : message.readByAll!
                                               ? Colors.blue
                                               : Colors.grey,
-                                      size: ChatDimens.forteen,
+                                      size: IsmChatDimens.forteen,
                                     ),
                                   ]
                                 ],
                               ),
                             ),
                           ])),
-                  ChatDimens.boxHeight16,
+                  IsmChatDimens.boxHeight16,
                   Card(
                       elevation: 1,
                       child: Padding(
-                          padding: ChatDimens.egdeInsets10,
+                          padding: IsmChatDimens.egdeInsets10,
                           child: Column(children: [
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -132,27 +134,28 @@ class IsmMessageInfo extends StatelessWidget {
                                     Icon(
                                       Icons.done_all,
                                       color: Colors.blue,
-                                      size: ChatDimens.twenty,
+                                      size: IsmChatDimens.twenty,
                                     ),
-                                    ChatDimens.boxWidth14,
-                                    Text('Read', style: ChatStyles.w400Black12)
+                                    IsmChatDimens.boxWidth14,
+                                    Text('Read',
+                                        style: IsmChatStyles.w400Black12)
                                   ],
                                 ),
                                 chatController.readTime.isEmpty
                                     ? Icon(
                                         Icons.remove,
-                                        size: ChatDimens.twenty,
+                                        size: IsmChatDimens.twenty,
                                       )
                                     : Text(chatController.readTime,
-                                        style: ChatStyles.w400Black12)
+                                        style: IsmChatStyles.w400Black12)
                               ],
                             ),
-                            ChatDimens.boxHeight8,
+                            IsmChatDimens.boxHeight8,
                             const Divider(
                               thickness: 0.1,
                               color: Colors.grey,
                             ),
-                            ChatDimens.boxHeight8,
+                            IsmChatDimens.boxHeight8,
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -163,21 +166,21 @@ class IsmMessageInfo extends StatelessWidget {
                                     Icon(
                                       Icons.done_all,
                                       color: Colors.grey,
-                                      size: ChatDimens.twenty,
+                                      size: IsmChatDimens.twenty,
                                     ),
-                                    ChatDimens.boxWidth8,
+                                    IsmChatDimens.boxWidth8,
                                     Text('Delivered',
-                                        style: ChatStyles.w400Black12),
+                                        style: IsmChatStyles.w400Black12),
                                   ],
                                 ),
                                 chatController.deliveredTime.isEmpty
                                     ? Icon(
                                         Icons.remove,
-                                        size: ChatDimens.twenty,
+                                        size: IsmChatDimens.twenty,
                                       )
                                     : Text(
                                         chatController.readTime,
-                                        style: ChatStyles.w400Black12,
+                                        style: IsmChatStyles.w400Black12,
                                       )
                               ],
                             ),

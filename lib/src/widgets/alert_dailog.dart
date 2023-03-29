@@ -2,8 +2,8 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class AlertDialogBox extends StatelessWidget {
-  const AlertDialogBox(
+class IsmChatAlertDialogBox extends StatelessWidget {
+  const IsmChatAlertDialogBox(
       {super.key,
       required this.onTapFunction,
       required this.subTitleOne,
@@ -24,38 +24,38 @@ class AlertDialogBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) => threeAction
       ? AlertDialog(
-          actionsPadding: ChatDimens.egdeInsets16,
+          actionsPadding: IsmChatDimens.egdeInsets16,
           title: Text(titile),
-          backgroundColor: ChatColors.whiteColor,
-          titleTextStyle: ChatStyles.w600Black14,
+          backgroundColor: IsmChatColors.whiteColor,
+          titleTextStyle: IsmChatStyles.w600Black14,
           actions: [
-            IsmTapHandler(
+            IsmChatTapHandler(
               onTap: () {
                 Get.back<void>();
               },
-              child: Text(subTitleOne, style: ChatStyles.w400Black14),
+              child: Text(subTitleOne, style: IsmChatStyles.w400Black14),
             ),
-            ChatDimens.boxWidth8,
-            IsmTapHandler(
+            IsmChatDimens.boxWidth8,
+            IsmChatTapHandler(
                 onTap: () {
                   Get.back<void>();
                   onTapFunction.call();
                 },
-                child: Text(subTitleTwo, style: ChatStyles.w400Black14)),
+                child: Text(subTitleTwo, style: IsmChatStyles.w400Black14)),
           ],
           // content: Text("Saved successfully"),
         )
       : SimpleDialog(
           title: Text(
             titile,
-            style: ChatStyles.w600Black14,
+            style: IsmChatStyles.w600Black14,
           ),
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 SimpleDialogOption(
-                  child: IsmTapHandler(
+                  child: IsmChatTapHandler(
                     onTap: () {
                       Get.back<void>();
                       onTapFunction.call();
@@ -64,7 +64,7 @@ class AlertDialogBox extends StatelessWidget {
                   ),
                 ),
                 SimpleDialogOption(
-                  child: IsmTapHandler(
+                  child: IsmChatTapHandler(
                     onTap: () {
                       Get.back<void>();
 
@@ -74,7 +74,7 @@ class AlertDialogBox extends StatelessWidget {
                   ),
                 ),
                 SimpleDialogOption(
-                  child: IsmTapHandler(
+                  child: IsmChatTapHandler(
                     onTap: () {
                       Get.back<void>();
                     },

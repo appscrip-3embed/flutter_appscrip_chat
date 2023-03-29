@@ -2,10 +2,10 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:voice_message_package/voice_message_package.dart';
 
-class AudioMessage extends StatelessWidget {
-  const AudioMessage(this.message, {super.key});
+class IsmChatAudioMessage extends StatelessWidget {
+  const IsmChatAudioMessage(this.message, {super.key});
 
-  final ChatMessageModel message;
+  final IsmChatChatMessageModel message;
 
   @override
   Widget build(BuildContext context) => VoiceMessage(

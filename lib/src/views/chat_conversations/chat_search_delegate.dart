@@ -29,8 +29,8 @@ class IsmChatSearchDelegate extends SearchDelegate<void> {
         () => _controller.suggestions.isEmpty
             ? Center(
                 child: Text(
-                  ChatStrings.noMatch,
-                  style: ChatStyles.w600Black20,
+                  IsmChatStrings.noMatch,
+                  style: IsmChatStyles.w600Black20,
                 ),
               )
             : ListView.builder(
@@ -47,8 +47,8 @@ class IsmChatSearchDelegate extends SearchDelegate<void> {
       () => _controller.suggestions.isEmpty
           ? Center(
               child: Text(
-                ChatStrings.noMatch,
-                style: ChatStyles.w600Black20,
+                IsmChatStrings.noMatch,
+                style: IsmChatStyles.w600Black20,
               ),
             )
           : ListView.builder(
@@ -67,12 +67,12 @@ class IsmChatSearchDelegate extends SearchDelegate<void> {
                   return RichText(
                     text: TextSpan(
                       text: before,
-                      style: ChatStyles.w600Black14,
+                      style: IsmChatStyles.w600Black14,
                       children: [
                         TextSpan(
                           text: match,
                           style: TextStyle(
-                              color: ChatTheme.of(context).primaryColor),
+                              color: IsmChatTheme.of(context).primaryColor),
                         ),
                         TextSpan(
                           text: after,
@@ -93,12 +93,12 @@ class IsmChatSearchDelegate extends SearchDelegate<void> {
                   return RichText(
                     text: TextSpan(
                       text: before,
-                      style: ChatStyles.w400Black12,
+                      style: IsmChatStyles.w400Black12,
                       children: [
                         TextSpan(
                           text: match,
                           style: TextStyle(
-                            color: ChatTheme.of(context).primaryColor,
+                            color: IsmChatTheme.of(context).primaryColor,
                             fontWeight: FontWeight.w600,
                           ),
                         ),

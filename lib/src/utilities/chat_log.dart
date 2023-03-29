@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:appscrip_chat_component/src/res/strings.dart';
 
-class ChatLog {
+class IsmChatLog {
   ///This Constructor of `ChatLog` take 2 parameters
   ///```dart
   ///final dynamic message //This will be displayed in console
@@ -17,9 +17,9 @@ class ChatLog {
   ///- `ChatLog()` - for basic log
   ///- `ChatLog.info()` - for info log
   ///- `ChatLog.success()` - for success log
-  ChatLog.error(this.message, [this.stackTrace]) {
+  IsmChatLog.error(this.message, [this.stackTrace]) {
     log(
-      '\x1B[31m[${ChatStrings.name}] - $message\x1B[0m',
+      '\x1B[31m[${IsmChatStrings.name}] - $message\x1B[0m',
       stackTrace: stackTrace,
       name: 'Error',
       level: 1200,
@@ -40,9 +40,9 @@ class ChatLog {
   ///- `ChatLog()` - for basic log
   ///- `ChatLog.info()` - for info log
   ///- `ChatLog.error()` - for error log
-  ChatLog.success(this.message, [this.stackTrace]) {
+  IsmChatLog.success(this.message, [this.stackTrace]) {
     log(
-      '\x1B[32m[${ChatStrings.name}] - $message\x1B[0m',
+      '\x1B[32m[${IsmChatStrings.name}] - $message\x1B[0m',
       stackTrace: stackTrace,
       name: 'Success',
       level: 800,
@@ -63,9 +63,9 @@ class ChatLog {
   ///- `ChatLog()` - for basic log
   ///- `ChatLog.success()` - for success log
   ///- `ChatLog.error()` - for error log
-  ChatLog.info(this.message, [this.stackTrace]) {
+  IsmChatLog.info(this.message, [this.stackTrace]) {
     log(
-      '\x1B[33m[${ChatStrings.name}] - $message\x1B[0m',
+      '\x1B[33m[${IsmChatStrings.name}] - $message\x1B[0m',
       stackTrace: stackTrace,
       name: 'Info',
       level: 900,
@@ -86,9 +86,9 @@ class ChatLog {
   ///- `ChatLog.info()` - for information log
   ///- `ChatLog.success()` - for success log
   ///- `ChatLog.error()` - for error log
-  ChatLog(this.message, [this.stackTrace]) {
+  IsmChatLog(this.message, [this.stackTrace]) {
     log(
-      '\x1B[37m[${ChatStrings.name}] - $message\x1B[0m',
+      '\x1B[37m[${IsmChatStrings.name}] - $message\x1B[0m',
       // '[${ChatStrings.name}] - $message',
       stackTrace: stackTrace,
       level: 700,

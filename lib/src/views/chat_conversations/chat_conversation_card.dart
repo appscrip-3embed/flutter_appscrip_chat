@@ -11,7 +11,7 @@ class IsmChatConversationCard extends StatelessWidget {
     super.key,
   });
 
-  final ChatConversationModel conversation;
+  final IsmChatChatConversationModel conversation;
   final VoidCallback? onTap;
 
   final Widget? Function(BuildContext, String)? profileImageBuilder;
@@ -19,7 +19,7 @@ class IsmChatConversationCard extends StatelessWidget {
   final Widget? Function(BuildContext, String)? subtitleBuilder;
 
   @override
-  Widget build(BuildContext context) => IsmTapHandler(
+  Widget build(BuildContext context) => IsmChatTapHandler(
         onTap: onTap,
         child: SizedBox(
           child: ListTile(
@@ -33,8 +33,8 @@ class IsmChatConversationCard extends StatelessWidget {
             trailing: conversation.unreadMessagesCount != null &&
                     conversation.unreadMessagesCount != 0
                 ? Container(
-                    height: ChatDimens.twenty,
-                    width: ChatDimens.twenty,
+                    height: IsmChatDimens.twenty,
+                    width: IsmChatDimens.twenty,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: IsmChatConfig.chatTheme.primaryColor,
@@ -42,14 +42,14 @@ class IsmChatConversationCard extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Text(
                       conversation.unreadMessagesCount.toString(),
-                      style: ChatStyles.w700White10,
+                      style: IsmChatStyles.w700White10,
                     ),
                   )
                 : null,
             title: nameBuilder?.call(context, conversation.chatName) ??
                 Text(
                   conversation.chatName,
-                  style: ChatStyles.w600Black14,
+                  style: IsmChatStyles.w600Black14,
                 ),
             subtitle: subtitleBuilder?.call(
                     context, conversation.lastMessageDetails?.body ?? '') ??
@@ -57,7 +57,7 @@ class IsmChatConversationCard extends StatelessWidget {
                   conversation.lastMessageDetails?.body ?? '',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: ChatStyles.w400Black12,
+                  style: IsmChatStyles.w400Black12,
                 ),
           ),
         ),

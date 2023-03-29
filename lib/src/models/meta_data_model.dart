@@ -1,23 +1,23 @@
 import 'dart:convert';
 
-class ChatMetaData {
-  factory ChatMetaData.fromJson(String source) =>
-      ChatMetaData.fromMap(json.decode(source) as Map<String, dynamic>);
+class IsmChatMetaData {
+  factory IsmChatMetaData.fromJson(String source) =>
+      IsmChatMetaData.fromMap(json.decode(source) as Map<String, dynamic>);
 
-  factory ChatMetaData.fromMap(Map<String, dynamic> map) => ChatMetaData(
+  factory IsmChatMetaData.fromMap(Map<String, dynamic> map) => IsmChatMetaData(
         country: map['country'] != null ? map['country'] as String : null,
       );
 
-  ChatMetaData({
+  IsmChatMetaData({
     this.country,
   });
 
   final String? country;
 
-  ChatMetaData copyWith({
+  IsmChatMetaData copyWith({
     String? country,
   }) =>
-      ChatMetaData(
+      IsmChatMetaData(
         country: country ?? this.country,
       );
 
@@ -31,7 +31,7 @@ class ChatMetaData {
   String toString() => 'MetaData(country: $country)';
 
   @override
-  bool operator ==(covariant ChatMetaData other) {
+  bool operator ==(covariant IsmChatMetaData other) {
     if (identical(this, other)) return true;
 
     return other.country == country;

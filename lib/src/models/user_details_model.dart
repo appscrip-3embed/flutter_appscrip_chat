@@ -59,7 +59,7 @@ class UserDetails {
     String? userIdentifier,
     String? userId,
     bool? online,
-    ChatMetaData? metaData,
+    IsmChatMetaData? metaData,
     int? lastSeen,
     bool? visibility,
     bool? notification,

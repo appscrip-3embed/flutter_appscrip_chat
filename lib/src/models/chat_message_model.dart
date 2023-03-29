@@ -3,14 +3,15 @@ import 'dart:convert';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/foundation.dart';
 
-class ChatMessageModel {
-  factory ChatMessageModel.fromJson(String source) =>
-      ChatMessageModel.fromMap(json.decode(source) as Map<String, dynamic>);
+class IsmChatChatMessageModel {
+  factory IsmChatChatMessageModel.fromJson(String source) =>
+      IsmChatChatMessageModel.fromMap(
+          json.decode(source) as Map<String, dynamic>);
 
-  factory ChatMessageModel.fromMap(Map<String, dynamic> map) {
-    var model = ChatMessageModel(
+  factory IsmChatChatMessageModel.fromMap(Map<String, dynamic> map) {
+    var model = IsmChatChatMessageModel(
       body: map['body'] != null && (map['body'] as String).isNotEmpty
-          ? ChatUtility.decodePayload(map['body'] as String)
+          ? IsmChatUtility.decodePayload(map['body'] as String)
           : '',
       action: map['action'] as String?,
       updatedAt: map['updatedAt'] as int? ?? 0,
@@ -33,17 +34,16 @@ class ChatMessageModel {
                   userId: map['senderId'] as String,
                   online: false,
                   lastSeen: 0,
-                  
                 )
               : null,
       metaData: map['metaData'] != null
-          ? ChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>)
+          ? IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>)
           : null,
       messagingDisabled: map['messagingDisabled'] as bool? ?? false,
       membersCount: map['membersCount'] as int? ?? 0,
       lastReadAt: map['lastReadAt'].runtimeType == List
-          ? List<LastReadAt>.from(map['lastReadAt'] as List<dynamic>)
-          : LastReadAt.fromNetworkMap(
+          ? List<IsmChatLastReadAt>.from(map['lastReadAt'] as List<dynamic>)
+          : IsmChatLastReadAt.fromNetworkMap(
               map['lastReadAt'] as Map<String, dynamic>? ?? {}),
       attachments: map['attachments'] != null
           ? (map['attachments'] as List<dynamic>)
@@ -54,9 +54,9 @@ class ChatMessageModel {
       isGroup: map['isGroup'] as bool? ?? false,
       deliveredToAll: map['deliveredToAll'] as bool? ?? false,
       customType: map['customType'] != null
-          ? CustomMessageType.fromMap(map['customType'])
+          ? IsmChatCustomMessageType.fromMap(map['customType'])
           : map['action'] != null
-              ? CustomMessageType.fromAction(map['action'] as String)
+              ? IsmChatCustomMessageType.fromAction(map['action'] as String)
               : null,
       createdByUserName: map['createdByUserName'] as String? ?? '',
       createdByUserImageUrl: map['createdByUserImageUrl'] as String? ?? '',
@@ -69,23 +69,25 @@ class ChatMessageModel {
       deviceId: map['deviceId'] as String? ?? '',
       parentMessageId: map['parentMessageId'] as String? ?? '',
       adminCount: map['adminCount'] as int? ?? 0,
-      messageType: MessageType.fromValue(map['messageType'] as int? ?? 0),
+      messageType:
+          IsmChatMessageType.fromValue(map['messageType'] as int? ?? 0),
       sentByMe: true,
       mentionedUsers: map['mentionedUsers'],
       initiatorId: map['initiatorId'] as String? ?? '',
     );
     return model.copyWith(
-      customType:
-          model.customType != null && model.customType != CustomMessageType.text
-              ? model.customType
-              : CustomMessageType.withBody(model.body),
+      customType: model.customType != null &&
+              model.customType != IsmChatCustomMessageType.text
+          ? model.customType
+          : IsmChatCustomMessageType.withBody(model.body),
       sentByMe: model.senderInfo != null
           ? model.senderInfo!.userId == IsmChatConfig.communicationConfig.userId
           : true,
     );
   }
 
-  factory ChatMessageModel.fromDate(int sentAt) => ChatMessageModel(
+  factory IsmChatChatMessageModel.fromDate(int sentAt) =>
+      IsmChatChatMessageModel(
         body: sentAt.toMessageDateString(),
         action: '',
         updatedAt: 0,
@@ -104,7 +106,7 @@ class ChatMessageModel {
         lastMessageSentAt: 0,
         isGroup: false,
         deliveredToAll: false,
-        customType: CustomMessageType.date,
+        customType: IsmChatCustomMessageType.date,
         createdByUserName: '',
         createdByUserImageUrl: '',
         createdBy: '',
@@ -116,12 +118,12 @@ class ChatMessageModel {
         deviceId: '',
         parentMessageId: '',
         adminCount: 0,
-        messageType: MessageType.normal,
+        messageType: IsmChatMessageType.normal,
         sentByMe: true,
         mentionedUsers: null,
       );
 
-  ChatMessageModel({
+  IsmChatChatMessageModel({
     required this.body,
     this.action,
     required this.sentAt,
@@ -168,10 +170,10 @@ class ChatMessageModel {
   bool? showInConversation;
   bool? readByAll;
   UserDetails? senderInfo;
-  ChatMetaData? metaData;
+  IsmChatMetaData? metaData;
   bool? messagingDisabled;
   int? membersCount;
-  List<LastReadAt>? lastReadAt;
+  List<IsmChatLastReadAt>? lastReadAt;
   List<AttachmentModel>? attachments;
   int? lastMessageSentAt;
   bool? isGroup;
@@ -188,14 +190,14 @@ class ChatMessageModel {
   String? messageId;
   String? deviceId;
   int? adminCount;
-  MessageType? messageType;
+  IsmChatMessageType? messageType;
   dynamic mentionedUsers;
-  CustomMessageType? customType;
+  IsmChatCustomMessageType? customType;
   bool sentByMe;
 
   String get chatName => conversationTitle ?? senderInfo?.userName ?? '';
 
-  ChatMessageModel copyWith({
+  IsmChatChatMessageModel copyWith({
     String? body,
     String? action,
     int? sentAt,
@@ -206,16 +208,16 @@ class ChatMessageModel {
     bool? showInConversation,
     bool? readByAll,
     UserDetails? senderInfo,
-    ChatMetaData? metaData,
+    IsmChatMetaData? metaData,
     bool? messagingDisabled,
     int? membersCount,
-    List<LastReadAt>? lastReadAt,
+    List<IsmChatLastReadAt>? lastReadAt,
     List<AttachmentModel>? attachments,
     LastMessageDetails? lastMessageDetails,
     int? lastMessageSentAt,
     bool? isGroup,
     bool? deliveredToAll,
-    CustomMessageType? customType,
+    IsmChatCustomMessageType? customType,
     String? createdByUserName,
     String? createdByUserImageUrl,
     String? createdBy,
@@ -229,11 +231,11 @@ class ChatMessageModel {
     String? deviceId,
     ConversationConfigModel? config,
     int? adminCount,
-    MessageType? messageType,
+    IsmChatMessageType? messageType,
     bool? sentByMe,
     dynamic mentionedUsers,
   }) =>
-      ChatMessageModel(
+      IsmChatChatMessageModel(
         body: body ?? this.body,
         action: action ?? this.action,
         updatedAt: updatedAt ?? this.updatedAt,
@@ -272,7 +274,7 @@ class ChatMessageModel {
       );
 
   Map<String, dynamic> toMap() => {
-        'body': ChatUtility.encodePayload(body),
+        'body': IsmChatUtility.encodePayload(body),
         'action': action,
         'updatedAt': updatedAt,
         'sentAt': sentAt,
@@ -318,7 +320,7 @@ class ChatMessageModel {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is ChatMessageModel &&
+    return other is IsmChatChatMessageModel &&
         other.body == body &&
         other.action == action &&
         other.updatedAt == updatedAt &&

@@ -11,18 +11,19 @@ class AttachmentModel {
   factory AttachmentModel.fromMap(Map<String, dynamic> map) => AttachmentModel(
         thumbnailUrl: map['thumbnailUrl'] != null &&
                 (map['thumbnailUrl'] as String).isNotEmpty
-            ? ChatUtility.decodePayload(map['thumbnailUrl'] as String)
+            ? IsmChatUtility.decodePayload(map['thumbnailUrl'] as String)
             : '',
         size: (map['size'] as num).toDouble(),
         name: map['name'] as String,
         mimeType: map['mimeType'] as String,
         mediaUrl:
             map['mediaUrl'] != null && (map['mediaUrl'] as String).isNotEmpty
-                ? ChatUtility.decodePayload(map['mediaUrl'] as String)
+                ? IsmChatUtility.decodePayload(map['mediaUrl'] as String)
                 : '',
         mediaId: map['mediaId'] as String,
         extension: map['extension'] as String,
-        attachmentType: AttachmentType.fromMap(map['attachmentType'] as int),
+        attachmentType:
+            IsmChatAttachmentType.fromMap(map['attachmentType'] as int),
       );
 
   AttachmentModel({
@@ -46,7 +47,7 @@ class AttachmentModel {
   final String mediaId;
   final String extension;
   @Transient()
-  AttachmentType? attachmentType;
+  IsmChatAttachmentType? attachmentType;
 
   int? get attachmentIndex => attachmentType?.index;
 
@@ -54,10 +55,10 @@ class AttachmentModel {
     if (value == null) {
       attachmentType = null;
     }
-    if (value! < 0 || value >= AttachmentType.values.length) {
-      attachmentType = AttachmentType.file;
+    if (value! < 0 || value >= IsmChatAttachmentType.values.length) {
+      attachmentType = IsmChatAttachmentType.file;
     }
-    attachmentType = AttachmentType.values[value];
+    attachmentType = IsmChatAttachmentType.values[value];
   }
 
   AttachmentModel copyWith({
@@ -68,7 +69,7 @@ class AttachmentModel {
     String? mediaUrl,
     String? mediaId,
     String? extension,
-    AttachmentType? attachmentType,
+    IsmChatAttachmentType? attachmentType,
   }) =>
       AttachmentModel(
         thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,

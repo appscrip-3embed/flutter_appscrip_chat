@@ -21,26 +21,27 @@ class IsmChatInputField extends StatelessWidget {
             children: [
               Container(
                 width: MediaQuery.of(context).size.width * 0.77,
-                margin: ChatDimens.egdeInsets8.copyWith(top: ChatDimens.four),
+                margin:
+                    IsmChatDimens.egdeInsets8.copyWith(top: IsmChatDimens.four),
                 decoration: BoxDecoration(
                   border:
-                      Border.all(color: ChatTheme.of(context).primaryColor!),
-                  borderRadius: BorderRadius.circular(ChatDimens.twenty),
-                  color: ChatTheme.of(context).backgroundColor,
+                      Border.all(color: IsmChatTheme.of(context).primaryColor!),
+                  borderRadius: BorderRadius.circular(IsmChatDimens.twenty),
+                  color: IsmChatTheme.of(context).backgroundColor,
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     if (controller.isreplying)
                       Container(
-                        margin: ChatDimens.egdeInsets4,
-                        padding: ChatDimens.egdeInsets10,
-                        height: ChatDimens.sixty,
+                        margin: IsmChatDimens.egdeInsets4,
+                        padding: IsmChatDimens.egdeInsets10,
+                        height: IsmChatDimens.sixty,
                         width: Get.width,
                         decoration: BoxDecoration(
                           borderRadius:
-                              BorderRadius.circular(ChatDimens.sixteen),
-                          color: ChatColors.primaryColorDark,
+                              BorderRadius.circular(IsmChatDimens.sixteen),
+                          color: IsmChatColors.primaryColorDark,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -58,18 +59,18 @@ class IsmChatInputField extends StatelessWidget {
                                       : controller.conversation.opponentDetails
                                               ?.userName ??
                                           '',
-                                  style: ChatStyles.w600White14,
+                                  style: IsmChatStyles.w600White14,
                                 ),
                                 Text(controller.chatMessageModel?.body ?? '')
                               ],
                             ),
-                            IsmTapHandler(
+                            IsmChatTapHandler(
                                 onTap: () {
                                   controller.isreplying = false;
                                 },
                                 child: Icon(
                                   Icons.close_rounded,
-                                  size: ChatDimens.sixteen,
+                                  size: IsmChatDimens.sixteen,
                                 ))
                           ],
                         ),
@@ -89,7 +90,8 @@ class IsmChatInputField extends StatelessWidget {
                               isDense: true,
                               // isCollapsed: true,
                               filled: true,
-                              fillColor: ChatTheme.of(context).backgroundColor,
+                              fillColor:
+                                  IsmChatTheme.of(context).backgroundColor,
                               // prefixIcon: IconButton(
                               //   color: IsmChatConfig.chatTheme.primaryColor,
                               //   icon: const Icon(Icons.emoji_emotions_rounded),
@@ -97,13 +99,13 @@ class IsmChatInputField extends StatelessWidget {
                               // ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius:
-                                    BorderRadius.circular(ChatDimens.forty),
+                                    BorderRadius.circular(IsmChatDimens.forty),
                                 borderSide:
                                     const BorderSide(color: Colors.transparent),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius:
-                                    BorderRadius.circular(ChatDimens.forty),
+                                    BorderRadius.circular(IsmChatDimens.forty),
                                 borderSide: const BorderSide(
                                   color: Colors.transparent,
                                 ),
@@ -113,16 +115,16 @@ class IsmChatInputField extends StatelessWidget {
                             onChanged: (_) => controller.notifyTyping(),
                           ),
                         ),
-                        const AttachmentIcon()
+                        const IsmChatAttachmentIcon()
                       ],
                     ),
                   ],
                 ),
               ),
-              ChatDimens.boxWidth8,
+              IsmChatDimens.boxWidth8,
               Container(
-                margin: ChatDimens.edgeInsetsBottom10,
-                height: ChatDimens.inputFieldHeight,
+                margin: IsmChatDimens.edgeInsetsBottom10,
+                height: IsmChatDimens.inputFieldHeight,
                 child: AspectRatio(
                   aspectRatio: 1,
                   child: ElevatedButton(
@@ -132,11 +134,11 @@ class IsmChatInputField extends StatelessWidget {
                             : controller.sendTextMessage
                         : () {},
                     style: ElevatedButton.styleFrom(
-                      fixedSize: Size.square(ChatDimens.inputFieldHeight),
+                      fixedSize: Size.square(IsmChatDimens.inputFieldHeight),
                       alignment: Alignment.center,
                       padding: EdgeInsets.zero,
-                      backgroundColor: ChatTheme.of(context).primaryColor,
-                      foregroundColor: ChatColors.whiteColor,
+                      backgroundColor: IsmChatTheme.of(context).primaryColor,
+                      foregroundColor: IsmChatColors.whiteColor,
                     ),
                     child: AnimatedSwitcher(
                       duration: IsmChatConfig.animationDuration,
@@ -163,13 +165,13 @@ class IsmChatInputField extends StatelessWidget {
       );
 }
 
-class AttachmentIcon extends GetView<IsmChatPageController> {
-  const AttachmentIcon({super.key});
+class IsmChatAttachmentIcon extends GetView<IsmChatPageController> {
+  const IsmChatAttachmentIcon({super.key});
 
   @override
   Widget build(BuildContext context) => IconButton(
         onPressed: () async {
-          await Get.bottomSheet(const AttachmentCard());
+          await Get.bottomSheet(const IsmChatAttachmentCard());
         },
         color: IsmChatConfig.chatTheme.primaryColor,
         icon: const Icon(Icons.attach_file_rounded),

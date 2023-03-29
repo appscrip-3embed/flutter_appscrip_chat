@@ -1,10 +1,11 @@
 import 'dart:convert';
 
-class MqttUserModel {
-  factory MqttUserModel.fromJson(String source) =>
-      MqttUserModel.fromMap(json.decode(source) as Map<String, dynamic>);
+class IsmChatMqttUserModel {
+  factory IsmChatMqttUserModel.fromJson(String source) =>
+      IsmChatMqttUserModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
-  factory MqttUserModel.fromMap(Map<String, dynamic> map) => MqttUserModel(
+  factory IsmChatMqttUserModel.fromMap(Map<String, dynamic> map) =>
+      IsmChatMqttUserModel(
         userId: (map['userId']) as String,
         userName: map['userName'] as String,
         profileImageUrl: map['userProfileImageUrl'] != null
@@ -15,7 +16,7 @@ class MqttUserModel {
             : null,
       );
 
-  const MqttUserModel({
+  const IsmChatMqttUserModel({
     required this.userId,
     required this.userName,
     this.profileImageUrl,
@@ -26,13 +27,13 @@ class MqttUserModel {
   final String? profileImageUrl;
   final String? userIdentifier;
 
-  MqttUserModel copyWith({
+  IsmChatMqttUserModel copyWith({
     String? userId,
     String? userName,
     String? profileImageUrl,
     String? userIdentifier,
   }) =>
-      MqttUserModel(
+      IsmChatMqttUserModel(
         userId: userId ?? this.userId,
         userName: userName ?? this.userName,
         profileImageUrl: profileImageUrl ?? this.profileImageUrl,
@@ -53,7 +54,7 @@ class MqttUserModel {
       'MqttUserModel(id: $userId, name: $userName, profileImageUrl: $profileImageUrl, identifier: $userIdentifier)';
 
   @override
-  bool operator ==(covariant MqttUserModel other) {
+  bool operator ==(covariant IsmChatMqttUserModel other) {
     if (identical(this, other)) return true;
 
     return other.userId == userId &&

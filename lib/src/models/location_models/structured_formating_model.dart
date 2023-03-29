@@ -4,22 +4,22 @@ import 'dart:convert';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/foundation.dart';
 
-class StructuredFormatting {
+class IsmChatStructuredFormatting {
   String? mainText;
-  List<MatchedSubstring>? matchedString;
+  List<IsmChatMatchedSubstring>? matchedString;
   String? secondaryText;
-  StructuredFormatting({
+  IsmChatStructuredFormatting({
     this.mainText,
     this.matchedString,
     this.secondaryText,
   });
 
-  StructuredFormatting copyWith({
+  IsmChatStructuredFormatting copyWith({
     String? mainText,
-    List<MatchedSubstring>? matchedString,
+    List<IsmChatMatchedSubstring>? matchedString,
     String? secondaryText,
   }) =>
-      StructuredFormatting(
+      IsmChatStructuredFormatting(
         mainText: mainText ?? this.mainText,
         matchedString: matchedString ?? this.matchedString,
         secondaryText: secondaryText ?? this.secondaryText,
@@ -31,13 +31,15 @@ class StructuredFormatting {
         'secondaryText': secondaryText,
       };
 
-  factory StructuredFormatting.fromMap(Map<String, dynamic> map) =>
-      StructuredFormatting(
+  factory IsmChatStructuredFormatting.fromMap(Map<String, dynamic> map) =>
+      IsmChatStructuredFormatting(
         mainText: map['mainText'] != null ? map['mainText'] as String : null,
         matchedString: map['matchedString'] != null
-            ? List<MatchedSubstring>.from(
-                (map['matchedString'] as List<int>).map<MatchedSubstring?>(
-                  (x) => MatchedSubstring.fromMap(x as Map<String, dynamic>),
+            ? List<IsmChatMatchedSubstring>.from(
+                (map['matchedString'] as List<int>)
+                    .map<IsmChatMatchedSubstring?>(
+                  (x) => IsmChatMatchedSubstring.fromMap(
+                      x as Map<String, dynamic>),
                 ),
               )
             : null,
@@ -48,15 +50,16 @@ class StructuredFormatting {
 
   String toJson() => json.encode(toMap());
 
-  factory StructuredFormatting.fromJson(String source) =>
-      StructuredFormatting.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory IsmChatStructuredFormatting.fromJson(String source) =>
+      IsmChatStructuredFormatting.fromMap(
+          json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() =>
       'StructuredFormatting(mainText: $mainText, matchedString: $matchedString, secondaryText: $secondaryText)';
 
   @override
-  bool operator ==(covariant StructuredFormatting other) {
+  bool operator ==(covariant IsmChatStructuredFormatting other) {
     if (identical(this, other)) return true;
 
     return other.mainText == mainText &&

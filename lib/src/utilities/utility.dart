@@ -1,12 +1,11 @@
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/utilities/config/chat_config.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class ChatUtility {
-  const ChatUtility._();
+class IsmChatUtility {
+  const IsmChatUtility._();
 
   static bool isLoaderOpen = Get.isDialogOpen ?? false;
 
@@ -14,7 +13,7 @@ class ChatUtility {
   static void showLoader() async {
     if (!isLoaderOpen) {
       await Get.dialog<void>(
-        (IsmChatConfig.loadingDialog) ?? const IsmLoadingDialog(),
+        (IsmChatConfig.loadingDialog) ?? const IsmChatLoadingDialog(),
         barrierDismissible: false,
       );
     }
@@ -53,16 +52,13 @@ class ChatUtility {
     try {
       return utf8.fuse(base64).decode(value);
     } catch (e) {
-      ChatLog.error('Decode Error - $value');
+      IsmChatLog.error('Decode Error - $value');
       return value;
     }
   }
 
   /// this is for change decode string to encode string
   static String encodePayload(String value) => utf8.fuse(base64).encode(value);
-
-
-  
 
   /// Change timeStamp to time formate
   static List<dynamic> timeStampToString({int timeStampValue = 0}) {

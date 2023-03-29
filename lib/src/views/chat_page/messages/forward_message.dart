@@ -1,14 +1,14 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
-class ForwardMessage extends StatelessWidget {
-  const ForwardMessage(this.message, {super.key});
+class IsmChatForwardMessage extends StatelessWidget {
+  const IsmChatForwardMessage(this.message, {super.key});
 
-  final ChatMessageModel message;
+  final IsmChatChatMessageModel message;
 
   @override
   Widget build(BuildContext context) => Text(
         message.body,
-        style: ChatStyles.w400Black12,
+        style: IsmChatStyles.w400Black12,
       );
 }

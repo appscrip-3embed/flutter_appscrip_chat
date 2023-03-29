@@ -2,8 +2,8 @@ import 'package:appscrip_chat_component/src/res/res.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class ChatThemeData with Diagnosticable {
-  const ChatThemeData({
+class IsmChatThemeData with Diagnosticable {
+  const IsmChatThemeData({
     this.chatListTheme,
     this.primaryColor,
     this.backgroundColor,
@@ -11,31 +11,31 @@ class ChatThemeData with Diagnosticable {
     this.iconTheme,
   });
 
-  factory ChatThemeData.fallback() => ChatThemeData.light();
+  factory IsmChatThemeData.fallback() => IsmChatThemeData.light();
 
-  factory ChatThemeData.light() => const ChatThemeData(
-        chatListTheme: ChatListThemeData.light(),
-        primaryColor: ChatColors.primaryColorLight,
-        backgroundColor: ChatColors.backgroundColorLight,
+  factory IsmChatThemeData.light() => const IsmChatThemeData(
+        chatListTheme: IsmChatListThemeData.light(),
+        primaryColor: IsmChatColors.primaryColorLight,
+        backgroundColor: IsmChatColors.backgroundColorLight,
         floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor: ChatColors.primaryColorLight,
-          foregroundColor: ChatColors.whiteColor,
+          backgroundColor: IsmChatColors.primaryColorLight,
+          foregroundColor: IsmChatColors.whiteColor,
         ),
         iconTheme: IconThemeData(
-          color: ChatColors.primaryColorLight,
+          color: IsmChatColors.primaryColorLight,
         ),
       );
 
-  factory ChatThemeData.dark() => const ChatThemeData(
-        chatListTheme: ChatListThemeData.dark(),
-        primaryColor: ChatColors.primaryColorDark,
-        backgroundColor: ChatColors.backgroundColorDark,
+  factory IsmChatThemeData.dark() => const IsmChatThemeData(
+        chatListTheme: IsmChatListThemeData.dark(),
+        primaryColor: IsmChatColors.primaryColorDark,
+        backgroundColor: IsmChatColors.backgroundColorDark,
         floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor: ChatColors.primaryColorDark,
-          foregroundColor: ChatColors.whiteColor,
+          backgroundColor: IsmChatColors.primaryColorDark,
+          foregroundColor: IsmChatColors.whiteColor,
         ),
         iconTheme: IconThemeData(
-          color: ChatColors.primaryColorDark,
+          color: IsmChatColors.primaryColorDark,
         ),
       );
 
@@ -43,7 +43,7 @@ class ChatThemeData with Diagnosticable {
 
   final Color? backgroundColor;
 
-  final ChatListThemeData? chatListTheme;
+  final IsmChatListThemeData? chatListTheme;
 
   final FloatingActionButtonThemeData? floatingActionButtonTheme;
 

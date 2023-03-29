@@ -3,50 +3,52 @@ import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 
-
-
-class Geometry {
- 
-  final LatLongModel? location;
-  final ViewportModel? viewport;
-  Geometry({
+class IsmChatGeometry {
+  final IsmChatLatLongModel? location;
+  final IsmChatViewportModel? viewport;
+  IsmChatGeometry({
     this.location,
     this.viewport,
   });
-  
 
-  Geometry copyWith({
-    LatLongModel? location,
-    ViewportModel? viewport,
-  }) => Geometry(
-      location: location ?? this.location,
-      viewport: viewport ?? this.viewport,
-    );
+  IsmChatGeometry copyWith({
+    IsmChatLatLongModel? location,
+    IsmChatViewportModel? viewport,
+  }) =>
+      IsmChatGeometry(
+        location: location ?? this.location,
+        viewport: viewport ?? this.viewport,
+      );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
-      'location': location?.toMap(),
-      'viewport': viewport?.toMap(),
-    };
+        'location': location?.toMap(),
+        'viewport': viewport?.toMap(),
+      };
 
-  factory Geometry.fromMap(Map<String, dynamic> map) => Geometry(
-      location: map['location'] != null ? LatLongModel.fromMap(map['location'] as Map<String,dynamic>) : null,
-      viewport: map['viewport'] != null ? ViewportModel.fromMap(map['viewport'] as Map<String,dynamic>) : null,
-    );
+  factory IsmChatGeometry.fromMap(Map<String, dynamic> map) => IsmChatGeometry(
+        location: map['location'] != null
+            ? IsmChatLatLongModel.fromMap(
+                map['location'] as Map<String, dynamic>)
+            : null,
+        viewport: map['viewport'] != null
+            ? IsmChatViewportModel.fromMap(
+                map['viewport'] as Map<String, dynamic>)
+            : null,
+      );
 
   String toJson() => json.encode(toMap());
 
-  factory Geometry.fromJson(String source) => Geometry.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory IsmChatGeometry.fromJson(String source) =>
+      IsmChatGeometry.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() => 'Geometry(location: $location, viewport: $viewport)';
 
   @override
-  bool operator ==(covariant Geometry other) {
+  bool operator ==(covariant IsmChatGeometry other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.location == location &&
-      other.viewport == viewport;
+
+    return other.location == location && other.viewport == viewport;
   }
 
   @override

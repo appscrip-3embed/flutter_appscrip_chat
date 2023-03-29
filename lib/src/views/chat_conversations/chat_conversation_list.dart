@@ -27,7 +27,7 @@ class IsmChatConversationList extends StatefulWidget {
     this.height,
   });
 
-  final void Function(BuildContext, ChatConversationModel) onTap;
+  final void Function(BuildContext, IsmChatChatConversationModel) onTap;
 
   /// `itemBuilder` will handle how child items are rendered on the screen.
   ///
@@ -39,10 +39,10 @@ class IsmChatConversationList extends StatefulWidget {
   /// final int index;
   /// final ChatConversationModel conversation;
   /// ```
-  /// `conversation` of type [ChatConversationModel] will provide you with data of single chat item
+  /// `conversation` of type [IsmChatChatConversationModel] will provide you with data of single chat item
   ///
   /// You can playaround with index parameter for your logics.
-  final Widget? Function(BuildContext, int, ChatConversationModel)?
+  final Widget? Function(BuildContext, int, IsmChatChatConversationModel)?
       childBuilder;
 
   /// The `itemBuilder` callback can be provided if you want to change how the chat items are rendered on the screen.
@@ -77,14 +77,14 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
         builder: (controller) {
           if (controller.isConversationsLoading) {
-            return const IsmLoadingDialog();
+            return const IsmChatLoadingDialog();
           }
           if (controller.conversations.isEmpty) {
             return Center(
               child: Text(
-                ChatStrings.noConversation,
-                style: ChatStyles.w600Black20.copyWith(
-                  color: ChatTheme.of(context).primaryColor,
+                IsmChatStrings.noConversation,
+                style: IsmChatStyles.w600Black20.copyWith(
+                  color: IsmChatTheme.of(context).primaryColor,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -98,10 +98,10 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
               enablePullUp: true,
               onRefresh: controller.getChatConversations,
               child: ListView.separated(
-                padding: ChatDimens.egdeInsets0_10,
+                padding: IsmChatDimens.egdeInsets0_10,
                 shrinkWrap: true,
                 itemCount: controller.conversations.length,
-                separatorBuilder: (_, __) => ChatDimens.boxHeight8,
+                separatorBuilder: (_, __) => IsmChatDimens.boxHeight8,
                 itemBuilder: widget.itemBuilder ??
                     (_, index) {
                       var conversation = controller.conversations[index];
@@ -117,7 +117,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                               backgroundColor: Colors.purple,
                               foregroundColor: Colors.white,
                               icon: Icons.archive_rounded,
-                              label: ChatStrings.archive,
+                              label: IsmChatStrings.archive,
                             ),
                           ],
                         ),
@@ -127,13 +127,14 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                           children: [
                             SlidableAction(
                               onPressed: (_) async {
-                                 controller.deleteConversationAndClearChat(controller.conversations[index]);
+                                controller.deleteConversationAndClearChat(
+                                    controller.conversations[index]);
                               },
                               flex: 1,
                               backgroundColor: Colors.red,
                               foregroundColor: Colors.white,
                               icon: Icons.delete_rounded,
-                              label: ChatStrings.delete,
+                              label: IsmChatStrings.delete,
                             ),
                           ],
                         ),
@@ -145,11 +146,11 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                                     .contains(conversation.conversationId))
                                 ? null
                                 : (_, __) => Text(
-                                      ChatStrings.typing,
+                                      IsmChatStrings.typing,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: ChatStyles.w400Black12.copyWith(
-                                          color: ChatColors.greenColor),
+                                      style: IsmChatStyles.w400Black12.copyWith(
+                                          color: IsmChatColors.greenColor),
                                     ),
                             onTap: () {
                               controller.navigateToMessages(conversation);

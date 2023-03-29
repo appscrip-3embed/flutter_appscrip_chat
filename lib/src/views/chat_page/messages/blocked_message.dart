@@ -2,17 +2,17 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class BlockedMessage extends StatelessWidget {
-  const BlockedMessage(this.message, {super.key});
+class IsmChatBlockedMessage extends StatelessWidget {
+  const IsmChatBlockedMessage(this.message, {super.key});
 
-  final ChatMessageModel message;
+  final IsmChatChatMessageModel message;
 
   @override
   Widget build(BuildContext context) =>
       GetBuilder<IsmChatConversationsController>(
         builder: (controller) {
           var ismMqttController = Get.find<IsmChatMqttController>();
-          var status = message.customType == CustomMessageType.block
+          var status = message.customType == IsmChatCustomMessageType.block
               ? 'blocked'
               : 'unblocked';
           var text = ismMqttController.userId == message.initiatorId
@@ -21,12 +21,12 @@ class BlockedMessage extends StatelessWidget {
           return Container(
             decoration: BoxDecoration(
               color: IsmChatConfig.chatTheme.backgroundColor,
-              borderRadius: BorderRadius.circular(ChatDimens.eight),
+              borderRadius: BorderRadius.circular(IsmChatDimens.eight),
             ),
-            padding: ChatDimens.egdeInsets8_4,
+            padding: IsmChatDimens.egdeInsets8_4,
             child: Text(
               text,
-              style: ChatStyles.w500Black12.copyWith(
+              style: IsmChatStyles.w500Black12.copyWith(
                 color: IsmChatConfig.chatTheme.primaryColor,
               ),
             ),

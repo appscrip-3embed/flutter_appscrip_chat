@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ChatDimens {
-  const ChatDimens._();
+class IsmChatDimens {
+  const IsmChatDimens._();
 
   static final double zero = 0.sp;
   static final double two = 2.sp;
@@ -53,7 +53,8 @@ class ChatDimens {
       EdgeInsets.symmetric(horizontal: eight, vertical: four);
   static final EdgeInsets egdeInsets8 = EdgeInsets.all(eight);
   static final EdgeInsets egdeInsets10 = EdgeInsets.all(ten);
-  static final EdgeInsets egdeInsets10_5_10_10 = EdgeInsets.only(left:ten,top: five,bottom: ten ,right: ten);
+  static final EdgeInsets egdeInsets10_5_10_10 =
+      EdgeInsets.only(left: ten, top: five, bottom: ten, right: ten);
   static final EdgeInsets egdeInsetsTop20 = EdgeInsets.only(top: twenty);
   static final EdgeInsets egdeInsets16 = EdgeInsets.all(sixteen);
   static final EdgeInsets egdeInsets20 = EdgeInsets.all(twenty);

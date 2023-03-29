@@ -35,7 +35,7 @@ class IsmChatImage extends StatelessWidget {
         child: ClipRRect(
           borderRadius: _isProfileImage
               ? BorderRadius.circular(dimensions! / 2)
-              : BorderRadius.circular(ChatDimens.eight),
+              : BorderRadius.circular(IsmChatDimens.eight),
           child: CachedNetworkImage(
             imageUrl: imageUrl,
             fit: BoxFit.cover,
@@ -51,7 +51,7 @@ class IsmChatImage extends StatelessWidget {
             placeholder: (context, url) => Container(
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: ChatTheme.of(context).primaryColor!.withOpacity(0.2),
+                color: IsmChatTheme.of(context).primaryColor!.withOpacity(0.2),
                 shape: _isProfileImage ? BoxShape.circle : BoxShape.rectangle,
               ),
               child: _isProfileImage
@@ -60,7 +60,7 @@ class IsmChatImage extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 24,
-                        color: ChatTheme.of(context).primaryColor,
+                        color: IsmChatTheme.of(context).primaryColor,
                       ),
                     )
                   : const Center(
@@ -68,11 +68,12 @@ class IsmChatImage extends StatelessWidget {
                     ),
             ),
             errorWidget: (context, url, error) {
-              ChatLog.error('ImageError - $url\n$error');
+              IsmChatLog.error('ImageError - $url\n$error');
               return Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: ChatTheme.of(context).primaryColor!.withOpacity(0.2),
+                  color:
+                      IsmChatTheme.of(context).primaryColor!.withOpacity(0.2),
                   shape: _isProfileImage ? BoxShape.circle : BoxShape.rectangle,
                 ),
                 child: _isProfileImage
@@ -81,17 +82,18 @@ class IsmChatImage extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 24,
-                          color: ChatTheme.of(context).primaryColor,
+                          color: IsmChatTheme.of(context).primaryColor,
                         ),
                       )
                     : Container(
                         decoration: BoxDecoration(
-                          color: ChatColors.greyColor.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(ChatDimens.eight),
+                          color: IsmChatColors.greyColor.withOpacity(0.2),
+                          borderRadius:
+                              BorderRadius.circular(IsmChatDimens.eight),
                         ),
                         alignment: Alignment.center,
                         child: const Text(
-                          ChatStrings.errorLoadingImage,
+                          IsmChatStrings.errorLoadingImage,
                         ),
                       ),
               );

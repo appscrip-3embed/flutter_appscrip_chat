@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:path_provider/path_provider.dart';
 
 // import 'objectbox.g.dart'; // created by `flutter pub run build_runner build`
@@ -41,7 +40,7 @@ class IsmChatObjectBox {
   static Future<IsmChatObjectBox> _openStore() async {
     // Future<Store> openStore() {...} is defined in the generated objectbox.g.dart.
     final store = await openStore(directory: _dbPath);
-    ChatLog.success('[CREATED] - Objectbox databse at $_dbPath');
+    IsmChatLog.success('[CREATED] - Objectbox databse at $_dbPath');
     return IsmChatObjectBox._create(store);
   }
 
@@ -51,12 +50,12 @@ class IsmChatObjectBox {
     chatConversationBox.removeAll();
     pendingMessageBox.removeAll();
     forwardMessageBox.removeAll();
-    ChatLog.success('[CLEARED] - All entries are removed from database');
+    IsmChatLog.success('[CLEARED] - All entries are removed from database');
   }
 
   ///  clear all messages for perticular user
   Future<void> clearAllMessage({required String conversationId}) async {
-   await saveMessages(conversationId, []);
+    await saveMessages(conversationId, []);
     if (Get.isRegistered<IsmChatPageController>()) {
       await Get.find<IsmChatPageController>().getMessagesFromDB(conversationId);
     }
@@ -99,7 +98,7 @@ class IsmChatObjectBox {
   }
 
   /// Add pending Message
-  Future<void> addPendingMessage(ChatMessageModel messageModel) async {
+  Future<void> addPendingMessage(IsmChatChatMessageModel messageModel) async {
     final query = pendingMessageBox
         .query(PendingMessageModel_.conversationId
             .equals(messageModel.conversationId ?? ''))
@@ -118,7 +117,7 @@ class IsmChatObjectBox {
   }
 
   /// Add forward Message
-  Future<void> addForwardMessage(ChatMessageModel messageModel) async {
+  Future<void> addForwardMessage(IsmChatChatMessageModel messageModel) async {
     final query = forwardMessageBox
         .query(ForwardMessageModel_.conversationId
             .equals(messageModel.conversationId ?? ''))
@@ -135,7 +134,7 @@ class IsmChatObjectBox {
     }
   }
 
-  List<ChatMessageModel>? getMessages(String conversationId) {
+  List<IsmChatChatMessageModel>? getMessages(String conversationId) {
     var conversation = chatConversationBox
         .query(DBConversationModel_.conversationId.equals(conversationId))
         .build()
@@ -143,13 +142,13 @@ class IsmChatObjectBox {
     if (conversation == null) {
       return null;
     }
-    return conversation.messages.map(ChatMessageModel.fromJson).toList();
+    return conversation.messages.map(IsmChatChatMessageModel.fromJson).toList();
   }
 
   Future<void> saveMessages(
     String conversationId,
-    List<ChatMessageModel> messages,
-  )async {
+    List<IsmChatChatMessageModel> messages,
+  ) async {
     var conversation = chatConversationBox
         .query(DBConversationModel_.conversationId.equals(conversationId))
         .build()
@@ -161,7 +160,7 @@ class IsmChatObjectBox {
     }
   }
 
-  Future<void> removeUser(String conversationId) async{
+  Future<void> removeUser(String conversationId) async {
     var conversation = chatConversationBox
         .query(DBConversationModel_.conversationId.equals(conversationId))
         .build()
@@ -169,7 +168,6 @@ class IsmChatObjectBox {
     if (conversation != null) {
       chatConversationBox.remove(conversation.id);
     }
-    
   }
 
   /// Create an instance of ObjectBox to use throughout the presenter.
@@ -181,10 +179,10 @@ class IsmChatObjectBox {
       _dbPath = '${docDir.path}/$dbName';
       return await _openStore();
     } on ObjectBoxException catch (e) {
-      ChatLog.error('[ERROR] - ObjectBox create : $e');
+      IsmChatLog.error('[ERROR] - ObjectBox create : $e');
       var directory = Directory(_dbPath);
       await directory.delete(recursive: true);
-      ChatLog.info('[DELETED] - Database');
+      IsmChatLog.info('[DELETED] - Database');
       return await _openStore();
     }
   }

@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:appscrip_chat_component/src/models/models.dart';
 import 'package:appscrip_chat_component/src/utilities/utilities.dart';
 
-class ChatConversationModel {
-  factory ChatConversationModel.fromJson(String source) =>
-      ChatConversationModel.fromMap(
+class IsmChatChatConversationModel {
+  factory IsmChatChatConversationModel.fromJson(String source) =>
+      IsmChatChatConversationModel.fromMap(
           json.decode(source) as Map<String, dynamic>);
 
-  factory ChatConversationModel.fromMap(Map<String, dynamic> map) =>
-      ChatConversationModel(
+  factory IsmChatChatConversationModel.fromMap(Map<String, dynamic> map) =>
+      IsmChatChatConversationModel(
         updatedAt: map['updatedAt'] as int? ?? 0,
         unreadMessagesCount: map['unreadMessagesCount'] as int? ?? 0,
         // searchableTags:
@@ -17,7 +17,8 @@ class ChatConversationModel {
         privateOneToOne: map['privateOneToOne'] as bool? ?? false,
         opponentDetails:
             UserDetails.fromMap(map['opponentDetails'] as Map<String, dynamic>),
-        metaData: ChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
+        metaData:
+            IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
         messagingDisabled: map['messagingDisabled'] as bool? ?? false,
         membersCount: map['membersCount'] as int? ?? 0,
         // lastReadAt: LastReadAt.fromNetworkMap(
@@ -31,8 +32,8 @@ class ChatConversationModel {
         // createdByUserImageUrl: map['createdByUserImageUrl'] as String? ?? '',
         // createdBy: map['createdBy'] as String? ?? '',
         // createdAt: map['createdAt'] as int? ?? 0,
-        conversationType:
-            ConversationType.fromValue(map['conversationType'] as int? ?? 1),
+        conversationType: IsmChatConversationType.fromValue(
+            map['conversationType'] as int? ?? 1),
         conversationTitle: map['conversationTitle'] as String?,
         conversationImageUrl: map['conversationImageUrl'] as String?,
         conversationId: map['conversationId'] as String? ?? '',
@@ -41,8 +42,9 @@ class ChatConversationModel {
         // adminCount: map['adminCount'] as int? ?? 0,
       );
 
-  factory ChatConversationModel.fromDB(DBConversationModel dbConversation) =>
-      ChatConversationModel(
+  factory IsmChatChatConversationModel.fromDB(
+          DBConversationModel dbConversation) =>
+      IsmChatChatConversationModel(
         updatedAt: 0,
         unreadMessagesCount: dbConversation.unreadMessagesCount,
         privateOneToOne: false,
@@ -53,14 +55,14 @@ class ChatConversationModel {
         lastMessageDetails: dbConversation.lastMessageDetails.target,
         isGroup: dbConversation.isGroup,
         customType: null,
-        conversationType: ConversationType.public,
+        conversationType: IsmChatConversationType.public,
         conversationTitle: dbConversation.conversationTitle,
         conversationImageUrl: dbConversation.conversationImageUrl,
         conversationId: dbConversation.conversationId,
         config: dbConversation.config.target,
       );
 
-  ChatConversationModel({
+  IsmChatChatConversationModel({
     this.updatedAt,
     this.unreadMessagesCount,
     //  this.searchableTags,
@@ -91,7 +93,7 @@ class ChatConversationModel {
   //  List<String> searchableTags;
   bool? privateOneToOne;
   UserDetails? opponentDetails;
-  ChatMetaData? metaData;
+  IsmChatMetaData? metaData;
   bool? messagingDisabled;
   int? membersCount;
   //  List<LastReadAt> lastReadAt;
@@ -103,7 +105,7 @@ class ChatConversationModel {
   //  String createdByUserImageUrl;
   //  String createdBy;
   //  int createdAt;
-  ConversationType? conversationType;
+  IsmChatConversationType? conversationType;
   String? conversationTitle;
   String? conversationImageUrl;
   String? conversationId;
@@ -112,16 +114,16 @@ class ChatConversationModel {
 
   String get chatName => conversationTitle ?? opponentDetails?.userName ?? '';
 
-  ChatConversationModel copyWith({
+  IsmChatChatConversationModel copyWith({
     int? updatedAt,
     int? unreadMessagesCount,
     List<String>? searchableTags,
     bool? privateOneToOne,
     UserDetails? opponentDetails,
-    ChatMetaData? metaData,
+    IsmChatMetaData? metaData,
     bool? messagingDisabled,
     int? membersCount,
-    List<LastReadAt>? lastReadAt,
+    List<IsmChatLastReadAt>? lastReadAt,
     LastMessageDetails? lastMessageDetails,
     int? lastMessageSentAt,
     bool? isGroup,
@@ -130,14 +132,14 @@ class ChatConversationModel {
     String? createdByUserImageUrl,
     String? createdBy,
     int? createdAt,
-    ConversationType? conversationType,
+    IsmChatConversationType? conversationType,
     String? conversationTitle,
     String? conversationImageUrl,
     String? conversationId,
     ConversationConfigModel? config,
     int? adminCount,
   }) =>
-      ChatConversationModel(
+      IsmChatChatConversationModel(
         updatedAt: updatedAt ?? this.updatedAt,
         unreadMessagesCount: unreadMessagesCount ?? this.unreadMessagesCount,
         // searchableTags: searchableTags ?? this.searchableTags,
@@ -200,7 +202,7 @@ class ChatConversationModel {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is ChatConversationModel &&
+    return other is IsmChatChatConversationModel &&
         other.updatedAt == updatedAt &&
         other.unreadMessagesCount == unreadMessagesCount &&
         // listEquals(other.searchableTags, searchableTags) &&

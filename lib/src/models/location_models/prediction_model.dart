@@ -5,15 +5,15 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class Prediction {
+class IsmChatPrediction {
   final String? description;
-  final List<MatchedSubstring>? matchedSubstrings;
+  final List<IsmChatMatchedSubstring>? matchedSubstrings;
   final String? placeId;
   final String? reference;
-  final StructuredFormatting? structuredFormatting;
-  final List<Term>? terms;
+  final IsmChatStructuredFormatting? structuredFormatting;
+  final List<IsmChatTerm>? terms;
   final List<String>? types;
-  final Geometry? geometry;
+  final IsmChatGeometry? geometry;
   final double? distance;
   final String? businessStatus;
   final String? icon;
@@ -24,7 +24,7 @@ class Prediction {
   final String? scope;
   final int? userRatingsTotal;
   final String? vicinity;
-  Prediction({
+  IsmChatPrediction({
     this.description,
     this.matchedSubstrings,
     this.placeId,
@@ -45,15 +45,15 @@ class Prediction {
     this.vicinity,
   });
 
-  Prediction copyWith({
+  IsmChatPrediction copyWith({
     String? description,
-    List<MatchedSubstring>? matchedSubstrings,
+    List<IsmChatMatchedSubstring>? matchedSubstrings,
     String? placeId,
     String? reference,
-    StructuredFormatting? structuredFormatting,
-    List<Term>? terms,
+    IsmChatStructuredFormatting? structuredFormatting,
+    List<IsmChatTerm>? terms,
     List<String>? types,
-    Geometry? geometry,
+    IsmChatGeometry? geometry,
     double? distance,
     String? businessStatus,
     String? icon,
@@ -65,7 +65,7 @@ class Prediction {
     int? userRatingsTotal,
     String? vicinity,
   }) =>
-      Prediction(
+      IsmChatPrediction(
         description: description ?? this.description,
         matchedSubstrings: matchedSubstrings ?? this.matchedSubstrings,
         placeId: placeId ?? this.placeId,
@@ -107,34 +107,37 @@ class Prediction {
         'vicinity': vicinity,
       };
 
-  factory Prediction.fromMap(Map<String, dynamic> map, {LatLng? latlng}) {
-    var predictaion = Prediction(
+  factory IsmChatPrediction.fromMap(Map<String, dynamic> map,
+      {LatLng? latlng}) {
+    var predictaion = IsmChatPrediction(
       description:
           map['description'] != null ? map['description'] as String : null,
       matchedSubstrings: map['matchedSubstrings'] != null
-          ? List<MatchedSubstring>.from(
-              (map['matchedSubstrings'] as List<int>).map<MatchedSubstring?>(
-                (x) => MatchedSubstring.fromMap(x as Map<String, dynamic>),
+          ? List<IsmChatMatchedSubstring>.from(
+              (map['matchedSubstrings'] as List<int>)
+                  .map<IsmChatMatchedSubstring?>(
+                (x) =>
+                    IsmChatMatchedSubstring.fromMap(x as Map<String, dynamic>),
               ),
             )
           : null,
       placeId: map['placeId'] != null ? map['placeId'] as String : null,
       reference: map['reference'] != null ? map['reference'] as String : null,
       structuredFormatting: map['structuredFormatting'] != null
-          ? StructuredFormatting.fromMap(
+          ? IsmChatStructuredFormatting.fromMap(
               map['structuredFormatting'] as Map<String, dynamic>)
           : null,
       terms: map['terms'] != null
-          ? List<Term>.from(
-              (map['terms'] as List<int>).map<Term?>(
-                (x) => Term.fromMap(x as Map<String, dynamic>),
+          ? List<IsmChatTerm>.from(
+              (map['terms'] as List<int>).map<IsmChatTerm?>(
+                (x) => IsmChatTerm.fromMap(x as Map<String, dynamic>),
               ),
             )
           : null,
       types:
           map['types'] != null ? List<String>.from(map['types'] as List) : null,
       geometry: map['geometry'] != null
-          ? Geometry.fromMap(map['geometry'] as Map<String, dynamic>)
+          ? IsmChatGeometry.fromMap(map['geometry'] as Map<String, dynamic>)
           : null,
       distance: map['distance'] != null ? map['distance'] as double : null,
       businessStatus: map['businessStatus'] != null
@@ -164,15 +167,15 @@ class Prediction {
 
   String toJson() => json.encode(toMap());
 
-  factory Prediction.fromJson(String source) =>
-      Prediction.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory IsmChatPrediction.fromJson(String source) =>
+      IsmChatPrediction.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() =>
       'Prediction(description: $description, matchedSubstrings: $matchedSubstrings, placeId: $placeId, reference: $reference, structuredFormatting: $structuredFormatting, terms: $terms, types: $types, geometry: $geometry, distance: $distance, businessStatus: $businessStatus, icon: $icon, iconBackgroundColor: $iconBackgroundColor, iconMaskBaseUri: $iconMaskBaseUri, name: $name, rating: $rating, scope: $scope, userRatingsTotal: $userRatingsTotal, vicinity: $vicinity)';
 
   @override
-  bool operator ==(covariant Prediction other) {
+  bool operator ==(covariant IsmChatPrediction other) {
     if (identical(this, other)) return true;
 
     return other.description == description &&

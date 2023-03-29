@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:appscrip_chat_component/src/models/user_details_model.dart';
 import 'package:flutter/foundation.dart';
 
-class IsmUserListModel {
-  factory IsmUserListModel.fromJson(String source) =>
-      IsmUserListModel.fromMap(json.decode(source) as Map<String, dynamic>);
+class IsmChatUserListModel {
+  factory IsmChatUserListModel.fromJson(String source) =>
+      IsmChatUserListModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
-  factory IsmUserListModel.fromMap(Map<String, dynamic> map) =>
-      IsmUserListModel(
+  factory IsmChatUserListModel.fromMap(Map<String, dynamic> map) =>
+      IsmChatUserListModel(
         users: List<UserDetails>.from(
           (map['users'] as List<dynamic>).map<UserDetails>(
             (x) => UserDetails.fromMap(x as Map<String, dynamic>),
@@ -17,18 +17,18 @@ class IsmUserListModel {
         pageToken: map['pageToken'] as String,
       );
 
-  const IsmUserListModel({
+  const IsmChatUserListModel({
     required this.users,
     required this.pageToken,
   });
   final List<UserDetails> users;
   final String pageToken;
 
-  IsmUserListModel copyWith({
+  IsmChatUserListModel copyWith({
     List<UserDetails>? users,
     String? pageToken,
   }) =>
-      IsmUserListModel(
+      IsmChatUserListModel(
         users: users ?? this.users,
         pageToken: pageToken ?? this.pageToken,
       );
@@ -44,7 +44,7 @@ class IsmUserListModel {
   String toString() => 'IsmUserListModel(users: $users, pageToken: $pageToken)';
 
   @override
-  bool operator ==(covariant IsmUserListModel other) {
+  bool operator ==(covariant IsmChatUserListModel other) {
     if (identical(this, other)) return true;
 
     return listEquals(other.users, users) && other.pageToken == pageToken;

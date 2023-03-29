@@ -6,8 +6,8 @@ class IsmChatConversationsBinding extends Bindings {
   void dependencies() {
     Get.lazyPut(
       () => IsmChatConversationsController(
-        ChatConversationsViewModel(
-          ChatConversationsRepository(),
+        IsmChatConversationsViewModel(
+          IsmChatConversationsRepository(),
         ),
       ),
     );

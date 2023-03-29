@@ -1,5 +1,5 @@
-class IsmAssets {
-  const IsmAssets._();
+class IsmChatAssets {
+  const IsmChatAssets._();
 
   static const String _base = 'packages/appscrip_chat_component/assets';
 

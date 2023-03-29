@@ -2,17 +2,17 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class AttachmentCard extends StatelessWidget {
-  const AttachmentCard({super.key});
+class IsmChatAttachmentCard extends StatelessWidget {
+  const IsmChatAttachmentCard({super.key});
 
   @override
   Widget build(BuildContext context) => Container(
         decoration: BoxDecoration(
-            color: ChatColors.whiteColor,
+            color: IsmChatColors.whiteColor,
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(ChatDimens.ten),
-                topRight: Radius.circular(ChatDimens.ten))),
-        padding: ChatDimens.egdeInsets20,
+                topLeft: Radius.circular(IsmChatDimens.ten),
+                topRight: Radius.circular(IsmChatDimens.ten))),
+        padding: IsmChatDimens.egdeInsets20,
         height: 300,
         alignment: Alignment.center,
         child: Column(
@@ -27,20 +27,20 @@ class AttachmentCard extends StatelessWidget {
                   leading: Container(
                     // padding: IsmDimens.edgeInsets8,
                     decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(ChatDimens.fifty)),
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(IsmChatDimens.fifty)),
                         color: Colors.blueAccent),
-                    width: ChatDimens.fifty,
-                    height: ChatDimens.fifty,
+                    width: IsmChatDimens.fifty,
+                    height: IsmChatDimens.fifty,
                     child: const Icon(
                       Icons.camera_alt,
-                      color: ChatColors.whiteColor,
+                      color: IsmChatColors.whiteColor,
                       size: 25,
                     ),
                   ),
                   title: Text(
                     'Camera',
-                    style: ChatStyles.w600Black18,
+                    style: IsmChatStyles.w600Black18,
                   ),
                 )),
             InkWell(
@@ -52,20 +52,20 @@ class AttachmentCard extends StatelessWidget {
                   leading: Container(
                     // padding: IsmDimens.edgeInsets8,
                     decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(ChatDimens.fifty)),
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(IsmChatDimens.fifty)),
                         color: Colors.purpleAccent),
-                    width: ChatDimens.fifty,
-                    height: ChatDimens.fifty,
+                    width: IsmChatDimens.fifty,
+                    height: IsmChatDimens.fifty,
                     child: const Icon(
                       Icons.photo,
-                      color: ChatColors.whiteColor,
+                      color: IsmChatColors.whiteColor,
                       size: 25,
                     ),
                   ),
                   title: Text(
                     'Photo Video Library',
-                    style: ChatStyles.w600Black18,
+                    style: IsmChatStyles.w600Black18,
                   ),
                 )),
             InkWell(
@@ -77,45 +77,45 @@ class AttachmentCard extends StatelessWidget {
                   leading: Container(
                     // padding: IsmDimens.edgeInsets8,
                     decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(ChatDimens.fifty)),
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(IsmChatDimens.fifty)),
                         color: Colors.pinkAccent),
-                    width: ChatDimens.fifty,
-                    height: ChatDimens.fifty,
+                    width: IsmChatDimens.fifty,
+                    height: IsmChatDimens.fifty,
                     child: const Icon(
                       Icons.file_copy,
-                      color: ChatColors.whiteColor,
+                      color: IsmChatColors.whiteColor,
                       size: 25,
                     ),
                   ),
                   title: Text(
                     'Document',
-                    style: ChatStyles.w600Black18,
+                    style: IsmChatStyles.w600Black18,
                   ),
                 )),
             InkWell(
                 onTap: () async {
                   Get.back<void>();
-                  await Get.to<void>(const IsmLocationWidget());
+                  await Get.to<void>(const IsmChatLocationWidget());
                 },
                 child: ListTile(
                   leading: Container(
                     // padding: IsmDimens.edgeInsets8,
                     decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(ChatDimens.fifty)),
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(IsmChatDimens.fifty)),
                         color: Colors.greenAccent),
-                    width: ChatDimens.fifty,
-                    height: ChatDimens.fifty,
+                    width: IsmChatDimens.fifty,
+                    height: IsmChatDimens.fifty,
                     child: const Icon(
                       Icons.location_on,
-                      color: ChatColors.whiteColor,
+                      color: IsmChatColors.whiteColor,
                       size: 25,
                     ),
                   ),
                   title: Text(
                     'Location',
-                    style: ChatStyles.w600Black18,
+                    style: IsmChatStyles.w600Black18,
                   ),
                 )),
           ],

@@ -11,7 +11,8 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
   final double? height;
 
   @override
-  Size get preferredSize => Size.fromHeight(height ?? ChatDimens.appBarHeight);
+  Size get preferredSize =>
+      Size.fromHeight(height ?? IsmChatDimens.appBarHeight);
 
   final issmChatConversationsController =
       Get.find<IsmChatConversationsController>();
@@ -25,8 +26,8 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
           return Theme(
             data: ThemeData.light(useMaterial3: true).copyWith(
               appBarTheme: AppBarTheme(
-                backgroundColor: ChatTheme.of(context).primaryColor,
-                iconTheme: const IconThemeData(color: ChatColors.whiteColor),
+                backgroundColor: IsmChatTheme.of(context).primaryColor,
+                iconTheme: const IconThemeData(color: IsmChatColors.whiteColor),
               ),
             ),
             child: AppBar(
@@ -34,7 +35,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
               //   onTap: Get.back,
               //   child: const Icon(Icons.arrow_back_rounded),
               // ),
-              titleSpacing: ChatDimens.four,
+              titleSpacing: IsmChatDimens.four,
               title: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -44,37 +45,37 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                         '',
                     name: controller.conversation.chatName,
                   ),
-                  ChatDimens.boxWidth8,
+                  IsmChatDimens.boxWidth8,
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         controller.conversation.chatName,
-                        style: ChatStyles.w600White18,
+                        style: IsmChatStyles.w600White18,
                       ),
                       Obx(
                         () => mqttController.typingUsersIds.contains(
                                 controller.conversation.conversationId)
                             ? Text(
-                                ChatStrings.typing,
+                                IsmChatStrings.typing,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: ChatStyles.w400White12,
+                                style: IsmChatStyles.w400White12,
                               )
                             : controller.conversation.opponentDetails?.online ??
                                     false
                                 ? Text(
-                                    ChatStrings.online,
+                                    IsmChatStrings.online,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: ChatStyles.w400White12,
+                                    style: IsmChatStyles.w400White12,
                                   )
                                 : Text(
                                     '${controller.conversation.opponentDetails?.lastSeen.toCurrentTimeStirng().capitalizeFirst}',
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: ChatStyles.w400White12,
+                                    style: IsmChatStyles.w400White12,
                                   ),
                       ),
                     ],
@@ -85,8 +86,8 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                 PopupMenuButton(
                   icon: Icon(
                     Icons.more_vert,
-                    color: ChatColors.whiteColor,
-                    size: ChatDimens.thirtyTwo,
+                    color: IsmChatColors.whiteColor,
+                    size: IsmChatDimens.thirtyTwo,
                   ),
                   itemBuilder: (context) => [
                     PopupMenuItem(
@@ -95,10 +96,10 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                         children: [
                           const Icon(
                             Icons.delete,
-                            color: ChatColors.blackColor,
+                            color: IsmChatColors.blackColor,
                           ),
-                          ChatDimens.boxWidth8,
-                          const Text(ChatStrings.clearChat)
+                          IsmChatDimens.boxWidth8,
+                          const Text(IsmChatStrings.clearChat)
                         ],
                       ),
                     ),
@@ -108,15 +109,15 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                         children: [
                           const Icon(
                             Icons.block,
-                            color: ChatColors.redColor,
+                            color: IsmChatColors.redColor,
                           ),
-                          ChatDimens.boxWidth8,
+                          IsmChatDimens.boxWidth8,
                           userBlockOrNot
                               ? const Text(
-                                  ChatStrings.unBlockUser,
+                                  IsmChatStrings.unBlockUser,
                                 )
                               : const Text(
-                                  ChatStrings.blockUser,
+                                  IsmChatStrings.blockUser,
                                 )
                         ],
                       ),

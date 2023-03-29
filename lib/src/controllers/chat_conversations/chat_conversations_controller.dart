@@ -7,16 +7,16 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class IsmChatConversationsController extends GetxController {
   IsmChatConversationsController(this._viewModel);
-  final ChatConversationsViewModel _viewModel;
+  final IsmChatConversationsViewModel _viewModel;
 
-  final _conversations = <ChatConversationModel>[].obs;
-  List<ChatConversationModel> get conversations => _conversations;
-  set conversations(List<ChatConversationModel> value) =>
+  final _conversations = <IsmChatChatConversationModel>[].obs;
+  List<IsmChatChatConversationModel> get conversations => _conversations;
+  set conversations(List<IsmChatChatConversationModel> value) =>
       _conversations.value = value;
 
-  final _suggestions = <ChatConversationModel>[].obs;
-  List<ChatConversationModel> get suggestions => _suggestions;
-  set suggestions(List<ChatConversationModel> value) =>
+  final _suggestions = <IsmChatChatConversationModel>[].obs;
+  List<IsmChatChatConversationModel> get suggestions => _suggestions;
+  set suggestions(List<IsmChatChatConversationModel> value) =>
       _suggestions.value = value;
 
   final RxBool _isConversationsLoading = true.obs;
@@ -28,7 +28,7 @@ class IsmChatConversationsController extends GetxController {
   UserDetails? get userDetails => _userDetails.value;
   set userDetails(UserDetails? value) => _userDetails.value = value;
 
-  ChatConversationModel? currentConversation;
+  IsmChatChatConversationModel? currentConversation;
 
   /// Refresh Controller
   final refreshController = RefreshController(
@@ -36,7 +36,7 @@ class IsmChatConversationsController extends GetxController {
     initialLoadStatus: LoadStatus.idle,
   );
 
-    final _userList = <UserDetails>[].obs;
+  final _userList = <UserDetails>[].obs;
   List<UserDetails> get userList => _userList;
   set userList(List<UserDetails> value) => _userList.value = value;
 
@@ -49,8 +49,8 @@ class IsmChatConversationsController extends GetxController {
   Future<void> getUserList({
     int count = 20,
   }) async {
-    var response = await _viewModel.getUserList(
-        count: count, pageToken: listPageination);
+    var response =
+        await _viewModel.getUserList(count: count, pageToken: listPageination);
     if (response == null) {
       return;
     }
@@ -73,9 +73,9 @@ class IsmChatConversationsController extends GetxController {
   }
 
   void deleteConversationAndClearChat(
-      ChatConversationModel chatConversationModel) async {
+      IsmChatChatConversationModel chatConversationModel) async {
     await Get.bottomSheet(
-        BottomSheetOption(
+        IsmChatBottomSheetOption(
           tapFristTitle: () async {
             showDialogForClearChat(chatConversationModel);
           },
@@ -88,11 +88,11 @@ class IsmChatConversationsController extends GetxController {
   }
 
   void showDialogForClearChat(
-      ChatConversationModel chatConversationModel) async {
-    await Get.dialog(AlertDialogBox(
-      subTitleOne: ChatStrings.cancel,
-      subTitleTwo: ChatStrings.clearChat,
-      titile: ChatStrings.deleteAllMessage,
+      IsmChatChatConversationModel chatConversationModel) async {
+    await Get.dialog(IsmChatAlertDialogBox(
+      subTitleOne: IsmChatStrings.cancel,
+      subTitleTwo: IsmChatStrings.clearChat,
+      titile: IsmChatStrings.deleteAllMessage,
       onTapFunction: () {
         clearAllMessages(
             conversationId: chatConversationModel.conversationId ?? '');
@@ -101,18 +101,18 @@ class IsmChatConversationsController extends GetxController {
   }
 
   void showDialogForDeletChat(
-      ChatConversationModel chatConversationModel) async {
-    await Get.dialog(AlertDialogBox(
+      IsmChatChatConversationModel chatConversationModel) async {
+    await Get.dialog(IsmChatAlertDialogBox(
         onTapFunction: () {
           deleteChat(
               conversationId: chatConversationModel.conversationId ?? '');
         },
-        subTitleOne: ChatStrings.cancel,
-        subTitleTwo: ChatStrings.deleteChat,
-        titile: '${ChatStrings.deleteChat}?'));
+        subTitleOne: IsmChatStrings.cancel,
+        subTitleTwo: IsmChatStrings.deleteChat,
+        titile: '${IsmChatStrings.deleteChat}?'));
   }
 
-  void navigateToMessages(ChatConversationModel conversation) {
+  void navigateToMessages(IsmChatChatConversationModel conversation) {
     currentConversation = conversation;
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
     var dbConversation = conversationBox
@@ -148,7 +148,7 @@ class IsmChatConversationsController extends GetxController {
     if (dbConversations.isNotEmpty) {
       conversations.clear();
       conversations =
-          dbConversations.map(ChatConversationModel.fromDB).toList();
+          dbConversations.map(IsmChatChatConversationModel.fromDB).toList();
       isConversationsLoading = false;
     }
   }

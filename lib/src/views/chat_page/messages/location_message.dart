@@ -5,10 +5,10 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class LocationMessage extends StatelessWidget {
-  const LocationMessage(this.message, {super.key});
+class IsmChatLocationMessage extends StatelessWidget {
+  const IsmChatLocationMessage(this.message, {super.key});
 
-  final ChatMessageModel message;
+  final IsmChatChatMessageModel message;
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +35,10 @@ class LocationMessage extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(
-            height: ChatDimens.oneHundredFifty,
+            height: IsmChatDimens.oneHundredFifty,
             width: context.width * 0.8,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(ChatDimens.ten),
+              borderRadius: BorderRadius.circular(IsmChatDimens.ten),
               child: IgnorePointer(
                 child: GetBuilder<IsmChatPageController>(
                   builder: (controller) => GoogleMap(
@@ -62,7 +62,7 @@ class LocationMessage extends StatelessWidget {
               ),
             ),
           ),
-          ChatDimens.boxHeight4,
+          IsmChatDimens.boxHeight4,
           FutureBuilder<List<Placemark>>(
             future: GeocodingPlatform.instance.placemarkFromCoordinates(
               position.latitude,
@@ -84,19 +84,19 @@ class LocationMessage extends StatelessWidget {
               }
               var addressDetails = snapshot.data!.first;
               return Padding(
-                padding: ChatDimens.egdeInsets4_0,
+                padding: IsmChatDimens.egdeInsets4_0,
                 child: Text(
                   addressDetails.toAddress(),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                   style: message.sentByMe
-                      ? ChatStyles.w400White12
-                      : ChatStyles.w400Black12,
+                      ? IsmChatStyles.w400White12
+                      : IsmChatStyles.w400Black12,
                 ),
               );
             },
           ),
-          ChatDimens.boxHeight4,
+          IsmChatDimens.boxHeight4,
         ],
       ),
     );

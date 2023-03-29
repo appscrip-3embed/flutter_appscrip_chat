@@ -4,13 +4,13 @@ import 'package:get/get.dart';
 import 'package:link_preview_generator/link_preview_generator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class LinkMessage extends StatelessWidget {
-  const LinkMessage(
+class IsmChatLinkMessage extends StatelessWidget {
+  const IsmChatLinkMessage(
     this.message, {
     super.key,
   });
 
-  final ChatMessageModel message;
+  final IsmChatChatMessageModel message;
 
   @override
   Widget build(BuildContext context) => ConstrainedBox(
@@ -29,24 +29,24 @@ class LinkMessage extends StatelessWidget {
             backgroundColor: Colors.transparent,
             removeElevation: true,
             bodyStyle: message.sentByMe
-                ? ChatStyles.w400White12
-                : ChatStyles.w400Black12,
+                ? IsmChatStyles.w400White12
+                : IsmChatStyles.w400Black12,
             titleStyle: message.sentByMe
-                ? ChatStyles.w500White14
-                : ChatStyles.w500Black14,
+                ? IsmChatStyles.w500White14
+                : IsmChatStyles.w500Black14,
             bodyTextOverflow: TextOverflow.ellipsis,
             cacheDuration: const Duration(minutes: 5),
             errorWidget: Text(
-              ChatStrings.errorLoadingPreview,
+              IsmChatStrings.errorLoadingPreview,
               style: message.sentByMe
-                  ? ChatStyles.w400White12
-                  : ChatStyles.w400Black12,
+                  ? IsmChatStyles.w400White12
+                  : IsmChatStyles.w400Black12,
             ),
             placeholderWidget: Text(
               'Loading preview...',
               style: message.sentByMe
-                  ? ChatStyles.w400White12
-                  : ChatStyles.w400Black12,
+                  ? IsmChatStyles.w400White12
+                  : IsmChatStyles.w400Black12,
             ),
           ),
         ),
@@ -109,7 +109,7 @@ class _LinkPreview extends StatelessWidget {
   final String link;
 
   @override
-  Widget build(BuildContext context) => IsmTapHandler(
+  Widget build(BuildContext context) => IsmChatTapHandler(
         onTap: () => launchUrl(Uri.parse(link.convertToValidUrl)),
         child: Column(
           crossAxisAlignment:
@@ -118,24 +118,28 @@ class _LinkPreview extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: (sentByMe ? ChatColors.whiteColor : ChatColors.greyColor)
+                color: (sentByMe
+                        ? IsmChatColors.whiteColor
+                        : IsmChatColors.greyColor)
                     .withOpacity(0.2),
-                borderRadius: BorderRadius.circular(ChatDimens.eight),
+                borderRadius: BorderRadius.circular(IsmChatDimens.eight),
               ),
-              padding: ChatDimens.egdeInsets8_10,
+              padding: IsmChatDimens.egdeInsets8_10,
               child: child,
             ),
-            ChatDimens.boxHeight4,
+            IsmChatDimens.boxHeight4,
             Padding(
-              padding: ChatDimens.egdeInsets4_0,
+              padding: IsmChatDimens.egdeInsets4_0,
               child: Text(
                 link,
-                style:
-                    (sentByMe ? ChatStyles.w500White14 : ChatStyles.w500Black14)
-                        .copyWith(
+                style: (sentByMe
+                        ? IsmChatStyles.w500White14
+                        : IsmChatStyles.w500Black14)
+                    .copyWith(
                   decoration: TextDecoration.underline,
-                  decorationColor:
-                      sentByMe ? ChatColors.whiteColor : ChatColors.greyColor,
+                  decorationColor: sentByMe
+                      ? IsmChatColors.whiteColor
+                      : IsmChatColors.greyColor,
                 ),
                 softWrap: true,
                 maxLines: null,

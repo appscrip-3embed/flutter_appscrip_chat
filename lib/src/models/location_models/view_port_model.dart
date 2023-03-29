@@ -3,19 +3,19 @@ import 'dart:convert';
 
 import 'package:appscrip_chat_component/src/models/models.dart';
 
-class ViewportModel {
-  final LatLongModel northeast;
-  final LatLongModel southwest;
-  ViewportModel({
+class IsmChatViewportModel {
+  final IsmChatLatLongModel northeast;
+  final IsmChatLatLongModel southwest;
+  IsmChatViewportModel({
     required this.northeast,
     required this.southwest,
   });
 
-  ViewportModel copyWith({
-    LatLongModel? northeast,
-    LatLongModel? southwest,
+  IsmChatViewportModel copyWith({
+    IsmChatLatLongModel? northeast,
+    IsmChatLatLongModel? southwest,
   }) =>
-      ViewportModel(
+      IsmChatViewportModel(
         northeast: northeast ?? this.northeast,
         southwest: southwest ?? this.southwest,
       );
@@ -25,24 +25,25 @@ class ViewportModel {
         'southwest': southwest.toMap(),
       };
 
-  factory ViewportModel.fromMap(Map<String, dynamic> map) => ViewportModel(
-        northeast:
-            LatLongModel.fromMap(map['northeast'] as Map<String, dynamic>),
-        southwest:
-            LatLongModel.fromMap(map['southwest'] as Map<String, dynamic>),
+  factory IsmChatViewportModel.fromMap(Map<String, dynamic> map) =>
+      IsmChatViewportModel(
+        northeast: IsmChatLatLongModel.fromMap(
+            map['northeast'] as Map<String, dynamic>),
+        southwest: IsmChatLatLongModel.fromMap(
+            map['southwest'] as Map<String, dynamic>),
       );
 
   String toJson() => json.encode(toMap());
 
-  factory ViewportModel.fromJson(String source) =>
-      ViewportModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory IsmChatViewportModel.fromJson(String source) =>
+      IsmChatViewportModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() =>
       'ViewportModle(northeast: $northeast, southwest: $southwest)';
 
   @override
-  bool operator ==(covariant ViewportModel other) {
+  bool operator ==(covariant IsmChatViewportModel other) {
     if (identical(this, other)) return true;
 
     return other.northeast == northeast && other.southwest == southwest;

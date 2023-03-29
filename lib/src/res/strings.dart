@@ -1,5 +1,5 @@
-class ChatStrings {
-  const ChatStrings._();
+class IsmChatStrings {
+  const IsmChatStrings._();
 
   static const String name = 'Appscrip Chat Component';
   static const String dbname = 'appscrip_chat_component';

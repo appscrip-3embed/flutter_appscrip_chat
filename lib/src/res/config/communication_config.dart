@@ -1,6 +1,6 @@
-///[ChatCommunicationConfig] class will be used to store all the configurations required to setup the communication connection
-class ChatCommunicationConfig {
-  const ChatCommunicationConfig({
+///[IsmChatCommunicationConfig] class will be used to store all the configurations required to setup the communication connection
+class IsmChatCommunicationConfig {
+  const IsmChatCommunicationConfig({
     required this.accountId,
     required this.userToken,
     required this.userId,

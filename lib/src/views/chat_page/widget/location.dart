@@ -9,14 +9,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 /// show the Forward Message View
-class IsmLocationWidget extends StatefulWidget {
-  const IsmLocationWidget({Key? key}) : super(key: key);
+class IsmChatLocationWidget extends StatefulWidget {
+  const IsmChatLocationWidget({Key? key}) : super(key: key);
 
   @override
-  State<IsmLocationWidget> createState() => _IsmLocationWidgetViewState();
+  State<IsmChatLocationWidget> createState() => _IsmLocationWidgetViewState();
 }
 
-class _IsmLocationWidgetViewState extends State<IsmLocationWidget> {
+class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
   final Completer<GoogleMapController> mapController = Completer();
   final ismChatPageController = Get.find<IsmChatPageController>();
   var uuid = const Uuid();
@@ -81,11 +81,11 @@ class _IsmLocationWidgetViewState extends State<IsmLocationWidget> {
                 icon: controller.isSearchSelect
                     ? const Icon(
                         Icons.close,
-                        color: ChatColors.whiteColor,
+                        color: IsmChatColors.whiteColor,
                       )
                     : const Icon(
                         Icons.search,
-                        color: ChatColors.whiteColor,
+                        color: IsmChatColors.whiteColor,
                       ),
                 onPressed: () {
                   controller.isSearchSelect = !controller.isSearchSelect;
@@ -94,7 +94,7 @@ class _IsmLocationWidgetViewState extends State<IsmLocationWidget> {
               IconButton(
                 icon: const Icon(
                   Icons.refresh,
-                  color: ChatColors.whiteColor,
+                  color: IsmChatColors.whiteColor,
                 ),
                 onPressed: () async {
                   await ismChatPageController.getLocation(
@@ -106,7 +106,7 @@ class _IsmLocationWidgetViewState extends State<IsmLocationWidget> {
             centerTitle: false,
             title: Row(
               children: [
-                ChatDimens.boxWidth16,
+                IsmChatDimens.boxWidth16,
                 controller.isSearchSelect
                     ? Flexible(
                         child: TextField(
@@ -120,10 +120,10 @@ class _IsmLocationWidgetViewState extends State<IsmLocationWidget> {
                           controller: controller.textEditingController,
                           textInputAction: TextInputAction.search,
                           autofocus: true,
-                          style: ChatStyles.w400Grey10,
+                          style: IsmChatStyles.w400Grey10,
                           decoration: InputDecoration(
                             hintText: 'Search',
-                            hintStyle: ChatStyles.w600Black16,
+                            hintStyle: IsmChatStyles.w600Black16,
                             border: InputBorder.none,
                           ),
                         ),
@@ -131,8 +131,8 @@ class _IsmLocationWidgetViewState extends State<IsmLocationWidget> {
                     : Text(
                         'Send location',
                         style: controller.isSearchSelect
-                            ? ChatStyles.w600Black16
-                            : ChatStyles.w600White16,
+                            ? IsmChatStyles.w600Black16
+                            : IsmChatStyles.w600White16,
                       ),
               ],
             ),
@@ -145,11 +145,11 @@ class _IsmLocationWidgetViewState extends State<IsmLocationWidget> {
               child: controller.isSearchSelect
                   ? Icon(
                       Icons.adaptive.arrow_back,
-                      color: ChatColors.whiteColor,
+                      color: IsmChatColors.whiteColor,
                     )
                   : Icon(
                       Icons.adaptive.arrow_back,
-                      color: ChatColors.whiteColor,
+                      color: IsmChatColors.whiteColor,
                     ),
             ),
             automaticallyImplyLeading: false,
@@ -205,15 +205,15 @@ class _IsmLocationWidgetViewState extends State<IsmLocationWidget> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ChatDimens.boxHeight16,
+                      IsmChatDimens.boxHeight16,
                       Padding(
                         padding: const EdgeInsets.only(left: 10),
                         child: Text(
                           'Nearby Places',
-                          style: ChatStyles.w400Grey10,
+                          style: IsmChatStyles.w400Grey10,
                         ),
                       ),
-                      ChatDimens.boxHeight16,
+                      IsmChatDimens.boxHeight16,
                       Padding(
                         padding: const EdgeInsets.only(left: 10),
                         child: Row(
@@ -222,7 +222,7 @@ class _IsmLocationWidgetViewState extends State<IsmLocationWidget> {
                               Icons.my_location,
                               color: Colors.teal,
                             ),
-                            ChatDimens.boxWidth8,
+                            IsmChatDimens.boxWidth8,
                             InkWell(
                               onTap: () async {
                                 var position =
@@ -251,7 +251,7 @@ class _IsmLocationWidgetViewState extends State<IsmLocationWidget> {
                                   ),
                                   Text(
                                     'Accurate to 12 meters',
-                                    style: ChatStyles.w400Grey10,
+                                    style: IsmChatStyles.w400Grey10,
                                   )
                                 ],
                               ),
@@ -263,7 +263,7 @@ class _IsmLocationWidgetViewState extends State<IsmLocationWidget> {
                         const SizedBox(
                           height: 100,
                         ),
-                        const IsmLoadingDialog(),
+                        const IsmChatLoadingDialog(),
                         // const Spacer()
                       ] else ...[
                         ListView.builder(

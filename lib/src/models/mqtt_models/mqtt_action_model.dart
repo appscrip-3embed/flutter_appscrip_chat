@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 
-class MqttActionModel {
-  factory MqttActionModel.fromJson(String source) =>
-      MqttActionModel.fromMap(json.decode(source) as Map<String, dynamic>);
+class IsmChatMqttActionModel {
+  factory IsmChatMqttActionModel.fromJson(String source) =>
+      IsmChatMqttActionModel.fromMap(
+          json.decode(source) as Map<String, dynamic>);
 
-  factory MqttActionModel.fromMap(Map<String, dynamic> map) => MqttActionModel(
+  factory IsmChatMqttActionModel.fromMap(Map<String, dynamic> map) =>
+      IsmChatMqttActionModel(
         conversationId: map['conversationId'] != null
             ? map['conversationId'] as String
             : null,
@@ -16,7 +18,7 @@ class MqttActionModel {
                 .map<dynamic>((dynamic x) => x))
             : [],
         userDetails: map['userId'] != null
-            ? MqttUserModel(
+            ? IsmChatMqttUserModel(
                 userId: map['userId'] as String,
                 userName:
                     map['userName'] != null ? map['userName'] as String : '',
@@ -25,7 +27,7 @@ class MqttActionModel {
               )
             : null,
         opponentDetails: map['opponentId'] != null
-            ? MqttUserModel(
+            ? IsmChatMqttUserModel(
                 userId: map['opponentId'] as String,
                 userName: map['opponentName'] as String,
                 userIdentifier: map['opponentIdentifier'] as String?,
@@ -33,7 +35,7 @@ class MqttActionModel {
               )
             : null,
         initiatorDetails: map['initiatorId'] != null
-            ? MqttUserModel(
+            ? IsmChatMqttUserModel(
                 userId: map['initiatorId'] as String,
                 userName: map['initiatorName'] as String,
                 userIdentifier: map['initiatorIdentifier'] as String?,
@@ -41,10 +43,10 @@ class MqttActionModel {
               )
             : null,
         sentAt: map['sentAt'] as int,
-        action: ActionEvents.fromName(map['action'] as String),
+        action: IsmChatActionEvents.fromName(map['action'] as String),
       );
 
-  const MqttActionModel({
+  const IsmChatMqttActionModel({
     this.conversationId,
     this.userDetails,
     this.opponentDetails,
@@ -55,23 +57,23 @@ class MqttActionModel {
     required this.action,
   });
   final String? conversationId;
-  final MqttUserModel? userDetails;
-  final MqttUserModel? opponentDetails;
-  final MqttUserModel? initiatorDetails;
+  final IsmChatMqttUserModel? userDetails;
+  final IsmChatMqttUserModel? opponentDetails;
+  final IsmChatMqttUserModel? initiatorDetails;
   final int sentAt;
   final String? messageId;
   final List<String>? messageIds;
-  final ActionEvents action;
+  final IsmChatActionEvents action;
 
-  MqttActionModel copyWith({
+  IsmChatMqttActionModel copyWith({
     String? conversationId,
-    MqttUserModel? userDetails,
-    MqttUserModel? opponentDetails,
-    MqttUserModel? initiatorDetails,
+    IsmChatMqttUserModel? userDetails,
+    IsmChatMqttUserModel? opponentDetails,
+    IsmChatMqttUserModel? initiatorDetails,
     int? sentAt,
-    ActionEvents? action,
+    IsmChatActionEvents? action,
   }) =>
-      MqttActionModel(
+      IsmChatMqttActionModel(
         conversationId: conversationId ?? this.conversationId,
         userDetails: userDetails ?? this.userDetails,
         opponentDetails: opponentDetails ?? this.opponentDetails,
@@ -96,7 +98,7 @@ class MqttActionModel {
       'MqttActionModel(conversationId: $conversationId, userDetails: $userDetails, opponentDetails: $opponentDetails, initiatorDetails: $initiatorDetails, sentAt: $sentAt, action: $action)';
 
   @override
-  bool operator ==(covariant MqttActionModel other) {
+  bool operator ==(covariant IsmChatMqttActionModel other) {
     if (identical(this, other)) return true;
 
     return other.conversationId == conversationId &&

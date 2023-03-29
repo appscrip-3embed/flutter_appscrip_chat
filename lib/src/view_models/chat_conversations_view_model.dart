@@ -1,29 +1,29 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 
-class ChatConversationsViewModel {
-  ChatConversationsViewModel(this._repository);
+class IsmChatConversationsViewModel {
+  IsmChatConversationsViewModel(this._repository);
 
-  final ChatConversationsRepository _repository;
+  final IsmChatConversationsRepository _repository;
 
   var chatSkip = 0;
   var chatLimit = 20;
-  Future<List<ChatConversationModel>?> getChatConversations() async =>
+  Future<List<IsmChatChatConversationModel>?> getChatConversations() async =>
       await _repository.getChatConversations(skip: chatSkip, limit: chatLimit);
 
   Future<UserDetails?> getUserData() async => await _repository.getUserData();
 
-
-  Future<IsmUserListModel?> getUserList({
+  Future<IsmChatUserListModel?> getUserList({
     String? pageToken,
     int? count,
   }) async =>
-      _repository.getUserList(count: count,pageToken: pageToken);
+      _repository.getUserList(count: count, pageToken: pageToken);
 
-  Future<ResponseModel?> deleteChat({
+  Future<IsmChatResponseModel?> deleteChat({
     required String conversationId,
-  }) async => await _repository.deleteChat(
-      conversationId: conversationId,
-    );
+  }) async =>
+      await _repository.deleteChat(
+        conversationId: conversationId,
+      );
 
   Future<void> clearAllMessages({
     required String conversationId,

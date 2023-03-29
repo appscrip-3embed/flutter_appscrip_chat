@@ -2,51 +2,50 @@ import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 
-class ChatConversationsRepository {
+class IsmChatConversationsRepository {
   final _apiWrapper = IsmChatApiWrapper();
 
-
-
-  Future<IsmUserListModel?> getUserList({
-      String? pageToken,
-     int? count,
+  Future<IsmChatUserListModel?> getUserList({
+    String? pageToken,
+    int? count,
   }) async {
     try {
       var response = await _apiWrapper.get(
         IsmChatAPI.userDetails,
-        headers: ChatUtility.tokenCommonHeader(),
+        headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
         return null;
       }
 
       var data = jsonDecode(response.data) as Map<String, dynamic>;
-      var user = IsmUserListModel.fromMap(data);
+      var user = IsmChatUserListModel.fromMap(data);
       return user;
     } catch (e, st) {
-      ChatLog.error('GetChatConversations $e', st);
+      IsmChatLog.error('GetChatConversations $e', st);
       return null;
     }
   }
 
-  Future<List<ChatConversationModel>?> getChatConversations({
+  Future<List<IsmChatChatConversationModel>?> getChatConversations({
     required int skip,
     required int limit,
   }) async {
     try {
       var response = await _apiWrapper.get(
         '${IsmChatAPI.getChatConversations}?skip=$skip&limit=$limit',
-        headers: ChatUtility.tokenCommonHeader(),
+        headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
         return null;
       }
       var data = jsonDecode(response.data);
       return (data['conversations'] as List)
-          .map((e) => ChatConversationModel.fromMap(e as Map<String, dynamic>))
+          .map((e) =>
+              IsmChatChatConversationModel.fromMap(e as Map<String, dynamic>))
           .toList();
     } catch (e, st) {
-      ChatLog.error('GetChatConversations $e', st);
+      IsmChatLog.error('GetChatConversations $e', st);
       return null;
     }
   }
@@ -55,7 +54,7 @@ class ChatConversationsRepository {
     try {
       var response = await _apiWrapper.get(
         IsmChatAPI.userDetails,
-        headers: ChatUtility.tokenCommonHeader(),
+        headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
         return null;
@@ -66,45 +65,45 @@ class ChatConversationsRepository {
       IsmChatConfig.objectBox.userDetailsBox.put(user);
       return user;
     } catch (e, st) {
-      ChatLog.error('GetChatConversations $e', st);
+      IsmChatLog.error('GetChatConversations $e', st);
       return null;
     }
   }
 
-  Future<ResponseModel?> deleteChat({
+  Future<IsmChatResponseModel?> deleteChat({
     required String conversationId,
   }) async {
     try {
       var response = await _apiWrapper.delete(
         '${IsmChatAPI.chatConversationDelete}?conversationId=$conversationId',
         payload: null,
-        headers: ChatUtility.tokenCommonHeader(),
+        headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
         return null;
       }
       return response;
     } catch (e, st) {
-      ChatLog.error('Delete chat $e', st);
+      IsmChatLog.error('Delete chat $e', st);
       return null;
     }
   }
 
-  Future<ResponseModel?> clearAllMessages({
+  Future<IsmChatResponseModel?> clearAllMessages({
     required String conversationId,
   }) async {
     try {
       var response = await _apiWrapper.delete(
         '${IsmChatAPI.chatConversationClear}?conversationId=$conversationId',
         payload: null,
-        headers: ChatUtility.tokenCommonHeader(),
+        headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
         return response;
       }
       return response;
     } catch (e, st) {
-      ChatLog.error('Clear chat $e', st);
+      IsmChatLog.error('Clear chat $e', st);
       return null;
     }
   }
@@ -118,13 +117,13 @@ class ChatConversationsRepository {
       var response = await _apiWrapper.put(
         IsmChatAPI.deliveredIndicator,
         payload: payload,
-        headers: ChatUtility.tokenCommonHeader(),
+        headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
         return;
       }
     } catch (e, st) {
-      ChatLog.error('Delivery Message $e', st);
+      IsmChatLog.error('Delivery Message $e', st);
     }
   }
 
@@ -157,13 +156,13 @@ class ChatConversationsRepository {
       var response = await _apiWrapper.post(
         IsmChatAPI.chatConversation,
         payload: payload,
-        headers: ChatUtility.tokenCommonHeader(),
+        headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
         return;
       }
     } catch (e, st) {
-      ChatLog.error('Create converstaion $e', st);
+      IsmChatLog.error('Create converstaion $e', st);
     }
   }
 }

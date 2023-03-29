@@ -13,12 +13,12 @@ class IsmChatMaterialApp extends StatelessWidget {
   }) {
     assert(IsmChatConfig.isInitialized,
         'ChatObjectBox is not initialized\nYou are getting this error because the ChatObjectBox class is not initialized, to initialize ChatObjectBox class call AppscripChatComponent.initialize() before your runApp()');
-    IsmChatConfig.dbName = databaseName ?? ChatStrings.dbname;
+    IsmChatConfig.dbName = databaseName ?? IsmChatStrings.dbname;
     IsmChatConfig.loadingDialog = loadingDialog;
     IsmChatConfig.communicationConfig = communicationConfig;
-    IsmChatConfig.chatTheme = chatTheme ?? ChatThemeData.fallback();
+    IsmChatConfig.chatTheme = chatTheme ?? IsmChatThemeData.fallback();
     IsmChatConfig.chatDarkTheme =
-        chatDarkTheme ?? chatTheme ?? ChatThemeData.fallback();
+        chatDarkTheme ?? chatTheme ?? IsmChatThemeData.fallback();
   }
 
   final Widget child;
@@ -27,12 +27,12 @@ class IsmChatMaterialApp extends StatelessWidget {
   ///
   /// This class takes sevaral parameters which are necessary to establish connection between `host` & `application`
   ///
-  /// For details see:- [ChatCommunicationConfig]
-  final ChatCommunicationConfig communicationConfig;
+  /// For details see:- [IsmChatCommunicationConfig]
+  final IsmChatCommunicationConfig communicationConfig;
 
-  final ChatThemeData? chatTheme;
+  final IsmChatThemeData? chatTheme;
 
-  final ChatThemeData? chatDarkTheme;
+  final IsmChatThemeData? chatDarkTheme;
 
   /// Opitonal field
   ///

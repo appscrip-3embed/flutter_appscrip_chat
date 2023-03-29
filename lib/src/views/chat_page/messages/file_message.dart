@@ -4,16 +4,16 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
-class FileMessage extends StatelessWidget {
-  const FileMessage(this.message, {super.key});
+class IsmChatFileMessage extends StatelessWidget {
+  const IsmChatFileMessage(this.message, {super.key});
 
-  final ChatMessageModel message;
+  final IsmChatChatMessageModel message;
 
   @override
   Widget build(BuildContext context) => Container(
         width: context.width * 0.6,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(ChatDimens.ten),
+          borderRadius: BorderRadius.circular(IsmChatDimens.ten),
         ),
         clipBehavior: Clip.antiAlias,
         child: AspectRatio(
@@ -43,10 +43,10 @@ class FileMessage extends StatelessWidget {
                     : IsmChatConfig.chatTheme.backgroundColor)!,
                 child: Container(
                   color: (message.sentByMe
-                          ? ChatColors.whiteColor
-                          : ChatColors.greyColor)
+                          ? IsmChatColors.whiteColor
+                          : IsmChatColors.greyColor)
                       .withOpacity(0.2),
-                  padding: ChatDimens.egdeInsets4,
+                  padding: IsmChatDimens.egdeInsets4,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -55,17 +55,17 @@ class FileMessage extends StatelessWidget {
                       //   color: Colors.red,
                       // ),
                       SvgPicture.asset(
-                        IsmAssets.pdfSvg,
-                        height: ChatDimens.thirtyTwo,
-                        width: ChatDimens.thirtyTwo,
+                        IsmChatAssets.pdfSvg,
+                        height: IsmChatDimens.thirtyTwo,
+                        width: IsmChatDimens.thirtyTwo,
                       ),
-                      ChatDimens.boxWidth4,
+                      IsmChatDimens.boxWidth4,
                       Flexible(
                         child: Text(
                           message.attachments?.first.name ?? '',
                           style: message.sentByMe
-                              ? ChatStyles.w400White12
-                              : ChatStyles.w400Black12,
+                              ? IsmChatStyles.w400White12
+                              : IsmChatStyles.w400Black12,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),

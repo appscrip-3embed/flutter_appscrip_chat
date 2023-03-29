@@ -3,19 +3,19 @@ import 'dart:convert';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class LatLongModel {
+class IsmChatLatLongModel {
   final double lat;
   final double lng;
-  LatLongModel({
+  IsmChatLatLongModel({
     required this.lat,
     required this.lng,
   });
 
-  LatLongModel copyWith({
+  IsmChatLatLongModel copyWith({
     double? lat,
     double? lng,
   }) =>
-      LatLongModel(
+      IsmChatLatLongModel(
         lat: lat ?? this.lat,
         lng: lng ?? this.lng,
       );
@@ -25,7 +25,8 @@ class LatLongModel {
         'lng': lng,
       };
 
-  factory LatLongModel.fromMap(Map<String, dynamic> map) => LatLongModel(
+  factory IsmChatLatLongModel.fromMap(Map<String, dynamic> map) =>
+      IsmChatLatLongModel(
         lat: map['lat'] as double,
         lng: map['lng'] as double,
       );
@@ -33,14 +34,14 @@ class LatLongModel {
 
   String toJson() => json.encode(toMap());
 
-  factory LatLongModel.fromJson(String source) =>
-      LatLongModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory IsmChatLatLongModel.fromJson(String source) =>
+      IsmChatLatLongModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() => 'LatLongModel(lat: $lat, lng: $lng)';
 
   @override
-  bool operator ==(covariant LatLongModel other) {
+  bool operator ==(covariant IsmChatLatLongModel other) {
     if (identical(this, other)) return true;
 
     return other.lat == lat && other.lng == lng;

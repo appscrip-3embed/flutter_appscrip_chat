@@ -9,8 +9,7 @@ import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
 class IsmChatMqttController extends GetxController {
-  IsmChatMqttController(this._viewModel);
-  final IsmChatMqttViewModel _viewModel;
+  
 
   late MqttServerClient client;
 
@@ -21,9 +20,9 @@ class IsmChatMqttController extends GetxController {
 
   late String statusTopic;
 
-  late ChatCommunicationConfig _communicationConfig;
+  late IsmChatCommunicationConfig _communicationConfig;
 
-  late ChatConnectionState connectionState;
+  late IsmChatConnectionState connectionState;
 
   final RxList<String> _typingUsersIds = <String>[].obs;
   List<String> get typingUsersIds => _typingUsersIds;
@@ -64,13 +63,13 @@ class IsmChatMqttController extends GetxController {
         _communicationConfig.username,
         _communicationConfig.password,
       );
-      ChatLog.info('MQTT Response ${res!.state}');
+      IsmChatLog.info('MQTT Response ${res!.state}');
       if (res.state == MqttConnectionState.connected) {
-        connectionState = ChatConnectionState.connected;
+        connectionState = IsmChatConnectionState.connected;
         await subscribeTo();
       }
     } on Exception catch (e, st) {
-      ChatLog.error('MQTT Connection Error - $e', st);
+      IsmChatLog.error('MQTT Connection Error - $e', st);
       await unSubscribe();
       await disconnect();
     }
@@ -111,7 +110,7 @@ class IsmChatMqttController extends GetxController {
         client.subscribe(statusTopic, MqttQos.atMostOnce);
       }
     } catch (e) {
-      ChatLog.error('Subscribe Error - $e');
+      IsmChatLog.error('Subscribe Error - $e');
     }
   }
 
@@ -127,7 +126,7 @@ class IsmChatMqttController extends GetxController {
         client.unsubscribe(statusTopic);
       }
     } catch (e) {
-      ChatLog.error('Unsubscribe Error - $e');
+      IsmChatLog.error('Unsubscribe Error - $e');
     }
   }
 
@@ -141,12 +140,12 @@ class IsmChatMqttController extends GetxController {
           as Map<String, dynamic>;
 
       if (payload['action'] != null) {
-        var actionModel = MqttActionModel.fromMap(payload);
-        ChatLog.info(actionModel);
+        var actionModel = IsmChatMqttActionModel.fromMap(payload);
+        IsmChatLog.info(actionModel);
         _handleAction(actionModel);
       } else {
-        var message = ChatMessageModel.fromMap(payload);
-        ChatLog.success(message);
+        var message = IsmChatChatMessageModel.fromMap(payload);
+        IsmChatLog.success(message);
         _handleMessage(message);
       }
     });
@@ -154,79 +153,79 @@ class IsmChatMqttController extends GetxController {
 
   /// onDisconnected callback, it will be called when connection is breaked
   void _onDisconnected() {
-    connectionState = ChatConnectionState.disconnected;
+    connectionState = IsmChatConnectionState.disconnected;
     if (client.connectionStatus!.returnCode ==
         MqttConnectReturnCode.noneSpecified) {
-      ChatLog.success('MQTT Disconnected');
+      IsmChatLog.success('MQTT Disconnected');
     } else {
-      ChatLog.error('MQTT Disconnected');
+      IsmChatLog.error('MQTT Disconnected');
     }
   }
 
   /// function call for disconnect host
   Future<void> disconnect() async {
-    ChatLog.success('Disconnected');
+    IsmChatLog.success('Disconnected');
     client.autoReconnect = false;
     client.disconnect();
   }
 
   /// onSubscribed callback, it will be called when connection successfully subscribes to certain topic
   void _onSubscribed(String topic) {
-    connectionState = ChatConnectionState.subscribed;
-    ChatLog.success('MQTT Subscribed - $topic');
+    connectionState = IsmChatConnectionState.subscribed;
+    IsmChatLog.success('MQTT Subscribed - $topic');
   }
 
   /// onUnsubscribed callback, it will be called when connection successfully unsubscribes to certain topic
   void _onUnSubscribed(String? topic) {
-    connectionState = ChatConnectionState.unsubscribed;
-    ChatLog.success('MQTT Unsubscribed - $topic');
+    connectionState = IsmChatConnectionState.unsubscribed;
+    IsmChatLog.success('MQTT Unsubscribed - $topic');
   }
 
   /// onSubscribeFailed callback, it will be called when connection fails to subscribe to certain topic
   void _onSubscribeFailed(String topic) {
-    connectionState = ChatConnectionState.unsubscribed;
-    ChatLog.error('MQTT Subscription failed - $topic');
+    connectionState = IsmChatConnectionState.unsubscribed;
+    IsmChatLog.error('MQTT Subscription failed - $topic');
   }
 
   void _pong() {
-    ChatLog.info('MQTT pong');
+    IsmChatLog.info('MQTT pong');
   }
 
-  void _handleAction(MqttActionModel actionModel) {
+  void _handleAction(IsmChatMqttActionModel actionModel) {
     switch (actionModel.action) {
-      case ActionEvents.typingEvent:
+      case IsmChatActionEvents.typingEvent:
         _handleTypingEvent(actionModel);
         break;
-      case ActionEvents.conversationCreated:
+      case IsmChatActionEvents.conversationCreated:
         _handleCreateConversation(actionModel);
         break;
-      case ActionEvents.messageDelivered:
+      case IsmChatActionEvents.messageDelivered:
         _handleMessageDelivered(actionModel);
         break;
-      case ActionEvents.messageRead:
+      case IsmChatActionEvents.messageRead:
         _handleMessageRead(actionModel);
         break;
-      case ActionEvents.messagesDeleteForAll:
+      case IsmChatActionEvents.messagesDeleteForAll:
         _handleMessageDelelteForEveryOne(actionModel);
         break;
-      case ActionEvents.multipleMessagesRead:
+      case IsmChatActionEvents.multipleMessagesRead:
         _handleMultipleMessageRead(actionModel);
         break;
-      case ActionEvents.userBlock:
-      case ActionEvents.userUnblock:
+      case IsmChatActionEvents.userBlock:
+      case IsmChatActionEvents.userUnblock:
         _handleBlockUserOrUnBlock(actionModel);
         break;
-      case ActionEvents.userBlockConversation:
-      case ActionEvents.userUnblockConversation:
+      case IsmChatActionEvents.userBlockConversation:
+      case IsmChatActionEvents.userUnblockConversation:
         // TODO: Handle this case.
         break;
-      case ActionEvents.clearConversation:
+      case IsmChatActionEvents.clearConversation:
         // TODO: Handle this case.
         break;
     }
   }
 
-  void _handleMessage(ChatMessageModel message) async {
+  void _handleMessage(IsmChatChatMessageModel message) async {
     var conversationController = Get.find<IsmChatConversationsController>();
     if (message.senderInfo!.userId == _communicationConfig.userId) {
       return;
@@ -279,7 +278,7 @@ class IsmChatMqttController extends GetxController {
     );
   }
 
-  void _handleTypingEvent(MqttActionModel actionModel) {
+  void _handleTypingEvent(IsmChatMqttActionModel actionModel) {
     typingUsersIds.add(actionModel.conversationId!);
     Future.delayed(
       const Duration(seconds: 3),
@@ -289,7 +288,7 @@ class IsmChatMqttController extends GetxController {
     );
   }
 
-  void _handleMessageDelivered(MqttActionModel actionModel) {
+  void _handleMessageDelivered(IsmChatMqttActionModel actionModel) {
     if (actionModel.userDetails!.userId == _communicationConfig.userId) {
       return;
     }
@@ -300,7 +299,8 @@ class IsmChatMqttController extends GetxController {
         .build()
         .findUnique();
     if (conversation != null) {
-      var lastMessage = ChatMessageModel.fromJson(conversation.messages.last);
+      var lastMessage =
+          IsmChatChatMessageModel.fromJson(conversation.messages.last);
       if (lastMessage.messageId == actionModel.messageId) {
         lastMessage.deliveredToAll = true;
         conversation.messages.last = lastMessage.toJson();
@@ -311,7 +311,7 @@ class IsmChatMqttController extends GetxController {
     }
   }
 
-  void _handleMessageRead(MqttActionModel actionModel) {
+  void _handleMessageRead(IsmChatMqttActionModel actionModel) {
     if (actionModel.userDetails!.userId == _communicationConfig.userId) {
       return;
     }
@@ -322,7 +322,8 @@ class IsmChatMqttController extends GetxController {
         .build()
         .findUnique();
     if (conversation != null) {
-      var lastMessage = ChatMessageModel.fromJson(conversation.messages.last);
+      var lastMessage =
+          IsmChatChatMessageModel.fromJson(conversation.messages.last);
       if (lastMessage.messageId == actionModel.messageId) {
         lastMessage.readByAll = true;
         conversation.messages.last = lastMessage.toJson();
@@ -333,7 +334,7 @@ class IsmChatMqttController extends GetxController {
     }
   }
 
-  void _handleMultipleMessageRead(MqttActionModel actionModel) {
+  void _handleMultipleMessageRead(IsmChatMqttActionModel actionModel) {
     if (actionModel.userDetails!.userId == _communicationConfig.userId) {
       return;
     }
@@ -348,7 +349,7 @@ class IsmChatMqttController extends GetxController {
       return;
     }
     var allMessages =
-        conversation.messages.map(ChatMessageModel.fromJson).toList();
+        conversation.messages.map(IsmChatChatMessageModel.fromJson).toList();
 
     var modifiedMessages = <String>[];
     for (var message in allMessages) {
@@ -370,7 +371,7 @@ class IsmChatMqttController extends GetxController {
     }
   }
 
-  void _handleMessageDelelteForEveryOne(MqttActionModel actionModel) {
+  void _handleMessageDelelteForEveryOne(IsmChatMqttActionModel actionModel) {
     if (actionModel.userDetails!.userId == _communicationConfig.userId) {
       return;
     }
@@ -389,7 +390,7 @@ class IsmChatMqttController extends GetxController {
     }
   }
 
-  void _handleBlockUserOrUnBlock(MqttActionModel actionModel) {
+  void _handleBlockUserOrUnBlock(IsmChatMqttActionModel actionModel) {
     if (actionModel.initiatorDetails!.userId == _communicationConfig.userId) {
       return;
     }
@@ -401,7 +402,7 @@ class IsmChatMqttController extends GetxController {
     }
   }
 
-  void _handleCreateConversation(MqttActionModel actionModel) async {
+  void _handleCreateConversation(IsmChatMqttActionModel actionModel) async {
     var dbConversationModel = DBConversationModel(
       conversationId: actionModel.conversationId,
       conversationImageUrl: actionModel.userDetails!.profileImageUrl,

@@ -18,7 +18,7 @@ class IsmChatConversations extends StatefulWidget {
 
   final VoidCallback? floatingButtonTap;
 
-  final void Function(BuildContext, ChatConversationModel) onChatTap;
+  final void Function(BuildContext, IsmChatChatConversationModel) onChatTap;
 
   @override
   State<IsmChatConversations> createState() => _IsmChatConversationsState();
@@ -41,6 +41,6 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
             onTap: widget.onChatTap,
           ),
         ),
-        floatingActionButton: const StartChatFAB(),
+        floatingActionButton: const IsmChatStartChatFAB(),
       );
 }

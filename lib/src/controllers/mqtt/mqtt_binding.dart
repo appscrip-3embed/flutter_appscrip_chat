@@ -5,9 +5,7 @@ class IsmChatMqttBinding extends Bindings {
   @override
   void dependencies() {
     Get.put(
-      IsmChatMqttController(
-        IsmChatMqttViewModel(),
-      ),
+      IsmChatMqttController(),
     );
   }
 }

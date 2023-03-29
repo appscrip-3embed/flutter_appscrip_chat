@@ -1,5 +1,5 @@
-class InvalidMapUrlException implements Exception {
-  const InvalidMapUrlException(this.message);
+class IsmChatInvalidMapUrlException implements Exception {
+  const IsmChatInvalidMapUrlException(this.message);
 
   final String message;
 
@@ -10,8 +10,8 @@ class InvalidMapUrlException implements Exception {
   }
 }
 
-class InvalidWeekdayNumber implements Exception {
-  const InvalidWeekdayNumber(this.message);
+class IsmChatInvalidWeekdayNumber implements Exception {
+  const IsmChatInvalidWeekdayNumber(this.message);
 
   final String message;
 

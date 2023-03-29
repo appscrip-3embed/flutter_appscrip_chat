@@ -14,7 +14,7 @@ class ChatList extends GetView<ChatListController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: IsmChatMaterialApp(
-        communicationConfig: ChatCommunicationConfig(
+        communicationConfig: IsmChatCommunicationConfig(
           accountId: Constants.accountId,
           userToken: controller.userDetails.userToken!,
           userId: controller.userDetails.userId!,

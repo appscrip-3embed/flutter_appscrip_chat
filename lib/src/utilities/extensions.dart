@@ -14,7 +14,6 @@ extension MatchString on String {
       'https://${replaceAll('http://', '').replaceAll('https://', '')}';
 }
 
-
 extension DistanceLatLng on LatLng {
   double getDistance(LatLng other) {
     var lat1 = latitude,
@@ -44,19 +43,20 @@ extension DateConvertor on int {
     var timeFormate = '';
     if (currentDay == currentDayFromStamp) {
       timeFormate =
-          '${ChatStrings.lastSeen} ${ChatStrings.today} ${ChatStrings.at} ${DateFormat.jm().format(timeStamp)}';
+          '${IsmChatStrings.lastSeen} ${IsmChatStrings.today} ${IsmChatStrings.at} ${DateFormat.jm().format(timeStamp)}';
     } else if (((currentDay - currentDayFromStamp) == 1) ||
         (currentDayFromStamp == 31)) {
       timeFormate =
-          '${ChatStrings.lastSeen} ${ChatStrings.yestarday} ${ChatStrings.at} ${DateFormat.jm().format(timeStamp)}';
+          '${IsmChatStrings.lastSeen} ${IsmChatStrings.yestarday} ${IsmChatStrings.at} ${DateFormat.jm().format(timeStamp)}';
     } else if (((currentDay - currentDayFromStamp) > 1 &&
             (currentDay - currentDayFromStamp) < 7) ||
         (currentDayFromStamp > currentDay)) {
       timeFormate =
-          '${ChatStrings.lastSeen} ${ChatStrings.at} ${DateFormat('E h:mm a').format(timeStamp)}';
+          '${IsmChatStrings.lastSeen} ${IsmChatStrings.at} ${DateFormat('E h:mm a').format(timeStamp)}';
     } else if (((currentDay - currentDayFromStamp) > 7) ||
         (currentDayFromStamp > currentDay)) {
-      timeFormate = '${ChatStrings.lastSeen} ${ChatStrings.on} ${DateFormat('MMM d, yyyy h:mm a').format(timeStamp)}';
+      timeFormate =
+          '${IsmChatStrings.lastSeen} ${IsmChatStrings.on} ${DateFormat('MMM d, yyyy h:mm a').format(timeStamp)}';
     }
     return timeFormate;
   }
@@ -68,24 +68,20 @@ extension DateConvertor on int {
     final currentDayFromStamp = int.parse(DateFormat('d').format(timeStamp));
     var timeFormate = '';
     if (currentDay == currentDayFromStamp) {
-      timeFormate =DateFormat.jm().format(timeStamp);
-    
+      timeFormate = DateFormat.jm().format(timeStamp);
     } else if (((currentDay - currentDayFromStamp) == 1) ||
         (currentDayFromStamp == 31)) {
-      timeFormate = ChatStrings.yestarday.capitalizeFirst!;
-  
+      timeFormate = IsmChatStrings.yestarday.capitalizeFirst!;
     } else if (((currentDay - currentDayFromStamp) > 1) ||
         (currentDayFromStamp > currentDay)) {
       timeFormate = DateFormat('dd/MM/yyyy').format(timeStamp);
-    
     }
     return timeFormate;
-
   }
 
   String get weekDayString {
     if (this > 7 || this < 1) {
-      throw const InvalidWeekdayNumber('Value should be between 1 & 7');
+      throw const IsmChatInvalidWeekdayNumber('Value should be between 1 & 7');
     }
     var weekDays = {
       1: 'Monday',
@@ -129,50 +125,50 @@ extension DateFormats on DateTime {
   String toDateString() => DateFormat('dd MMM yyyy').format(this);
 }
 
-extension ChildWidget on CustomMessageType {
-  Widget messageType(ChatMessageModel message) {
+extension ChildWidget on IsmChatCustomMessageType {
+  Widget messageType(IsmChatChatMessageModel message) {
     switch (this) {
-      case CustomMessageType.text:
-        return TextMessage(message);
+      case IsmChatCustomMessageType.text:
+        return IsmChatTextMessage(message);
 
-      case CustomMessageType.reply:
-        return ReplyMessage(message);
+      case IsmChatCustomMessageType.reply:
+        return IsmChatReplyMessage(message);
 
-      case CustomMessageType.forward:
-        return ForwardMessage(message);
+      case IsmChatCustomMessageType.forward:
+        return IsmChatForwardMessage(message);
 
-      case CustomMessageType.image:
-        return ImageMessage(message);
+      case IsmChatCustomMessageType.image:
+        return IsmChatImageMessage(message);
 
-      case CustomMessageType.video:
-        return VideoMessage(message);
+      case IsmChatCustomMessageType.video:
+        return IsmChatVideoMessage(message);
 
-      case CustomMessageType.audio:
-        return AudioMessage(message);
+      case IsmChatCustomMessageType.audio:
+        return IsmChatAudioMessage(message);
 
-      case CustomMessageType.file:
-        return FileMessage(message);
+      case IsmChatCustomMessageType.file:
+        return IsmChatFileMessage(message);
 
-      case CustomMessageType.location:
-        return LocationMessage(message);
+      case IsmChatCustomMessageType.location:
+        return IsmChatLocationMessage(message);
 
-      case CustomMessageType.block:
-        return BlockedMessage(message);
+      case IsmChatCustomMessageType.block:
+        return IsmChatBlockedMessage(message);
 
-      case CustomMessageType.unblock:
-        return BlockedMessage(message);
+      case IsmChatCustomMessageType.unblock:
+        return IsmChatBlockedMessage(message);
 
-      case CustomMessageType.deletedForMe:
-        return DeletedMessage(message);
+      case IsmChatCustomMessageType.deletedForMe:
+        return IsmChatDeletedMessage(message);
 
-      case CustomMessageType.deletedForEveryone:
-        return DeletedMessage(message);
+      case IsmChatCustomMessageType.deletedForEveryone:
+        return IsmChatDeletedMessage(message);
 
-      case CustomMessageType.link:
-        return LinkMessage(message);
+      case IsmChatCustomMessageType.link:
+        return IsmChatLinkMessage(message);
 
-      case CustomMessageType.date:
-        return DateMessage(message);
+      case IsmChatCustomMessageType.date:
+        return IsmChatDateMessage(message);
     }
   }
 }
@@ -182,7 +178,7 @@ extension GetLink on String {
   /// <BaseUrl>?<Params>&query=`Lat`%2C`Lng`&<Rest Params>
   LatLng get position {
     if (!contains('map')) {
-      throw const InvalidMapUrlException(
+      throw const IsmChatInvalidMapUrlException(
           "Invalid url, link doesn't contains map link to extract position coordinates");
     }
     var position = split('query=')

@@ -9,6 +9,6 @@ class UserListPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const IsmUserPageView();
+    return const IsmChatUserPageView();
   }
 }

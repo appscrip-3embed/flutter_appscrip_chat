@@ -10,13 +10,13 @@ import 'package:intl/intl.dart';
 
 class IsmChatPageController extends GetxController {
   IsmChatPageController(this._viewModel);
-  final ChatPageViewModel _viewModel;
+  final IsmChatPageViewModel _viewModel;
 
   final _conversationController = Get.find<IsmChatConversationsController>();
 
-  final _deviceConfig = Get.find<DeviceConfig>();
+  final _deviceConfig = Get.find<IsmChatDeviceConfig>();
 
-  late ChatConversationModel conversation;
+  late IsmChatChatConversationModel conversation;
 
   var focusNode = FocusNode();
 
@@ -30,13 +30,14 @@ class IsmChatPageController extends GetxController {
   bool get isMessagesLoading => _isMessagesLoading.value;
   set isMessagesLoading(bool value) => _isMessagesLoading.value = value;
 
-  final _messages = <ChatMessageModel>[].obs;
-  List<ChatMessageModel> get messages => _messages;
-  set messages(List<ChatMessageModel> value) => _messages.value = value;
+  final _messages = <IsmChatChatMessageModel>[].obs;
+  List<IsmChatChatMessageModel> get messages => _messages;
+  set messages(List<IsmChatChatMessageModel> value) => _messages.value = value;
 
-  final _predictionList = <Prediction>[].obs;
-  List<Prediction> get predictionList => _predictionList;
-  set predictionList(List<Prediction> value) => _predictionList.value = value;
+  final _predictionList = <IsmChatPrediction>[].obs;
+  List<IsmChatPrediction> get predictionList => _predictionList;
+  set predictionList(List<IsmChatPrediction> value) =>
+      _predictionList.value = value;
 
   final RxBool _showSendButton = false.obs;
   bool get showSendButton => _showSendButton.value;
@@ -46,9 +47,10 @@ class IsmChatPageController extends GetxController {
   bool get isreplying => _isreplying.value;
   set isreplying(bool value) => _isreplying.value = value;
 
-  final Rx<ChatMessageModel?> _chatMessageModel = Rx<ChatMessageModel?>(null);
-  ChatMessageModel? get chatMessageModel => _chatMessageModel.value;
-  set chatMessageModel(ChatMessageModel? value) =>
+  final Rx<IsmChatChatMessageModel?> _chatMessageModel =
+      Rx<IsmChatChatMessageModel?>(null);
+  IsmChatChatMessageModel? get chatMessageModel => _chatMessageModel.value;
+  set chatMessageModel(IsmChatChatMessageModel? value) =>
       _chatMessageModel.value = value;
 
   final RxString _deliveredTime = ''.obs;
@@ -102,7 +104,7 @@ class IsmChatPageController extends GetxController {
     if (messages.isEmpty) {
       isMessagesLoading = true;
     }
-    ChatLog.error(lastMessageTimestampFromFunction);
+    IsmChatLog.error(lastMessageTimestampFromFunction);
     var lastMessageTimestamp = messages.isEmpty ? 0 : messages.last.sentAt;
 
     var data = await _viewModel.getChatMessages(
@@ -123,16 +125,17 @@ class IsmChatPageController extends GetxController {
     }
   }
 
-  ChatMessageModel getMessageByid(String id) => _viewModel.getMessageByid(
+  IsmChatChatMessageModel getMessageByid(String id) =>
+      _viewModel.getMessageByid(
         parentId: id,
         data: messages,
       );
 
   void showDialogForClearChat() async {
-    await Get.dialog(AlertDialogBox(
-      subTitleOne: ChatStrings.cancel,
-      subTitleTwo: ChatStrings.clearChat,
-      titile: ChatStrings.deleteAllMessage,
+    await Get.dialog(IsmChatAlertDialogBox(
+      subTitleOne: IsmChatStrings.cancel,
+      subTitleTwo: IsmChatStrings.clearChat,
+      titile: IsmChatStrings.deleteAllMessage,
       onTapFunction: () {
         clearAllMessages(conversationId: conversation.conversationId!);
       },
@@ -141,12 +144,13 @@ class IsmChatPageController extends GetxController {
 
   void showDialogForBlockUnBlockUser(
       bool userBlockOrNot, int lastMessageTimsStamp) async {
-    await Get.dialog(AlertDialogBox(
-      subTitleOne: ChatStrings.cancel,
-      subTitleTwo: userBlockOrNot ? ChatStrings.unblock : ChatStrings.block,
+    await Get.dialog(IsmChatAlertDialogBox(
+      subTitleOne: IsmChatStrings.cancel,
+      subTitleTwo:
+          userBlockOrNot ? IsmChatStrings.unblock : IsmChatStrings.block,
       titile: userBlockOrNot
-          ? ChatStrings.doWantUnBlckUser
-          : ChatStrings.doWantBlckUser,
+          ? IsmChatStrings.doWantUnBlckUser
+          : IsmChatStrings.doWantBlckUser,
       onTapFunction: () {
         userBlockOrNot
             ? postUnBlockUser(
@@ -160,20 +164,21 @@ class IsmChatPageController extends GetxController {
   }
 
   void showDialogCheckBlockUnBlock() async {
-    await Get.dialog(AlertDialogBox(
+    await Get.dialog(IsmChatAlertDialogBox(
         onTapFunction: () {
           postUnBlockUser(
               opponentId: conversation.opponentDetails?.userId ?? '',
               lastMessageTimeStamp: messages.last.sentAt);
         },
-        subTitleOne: ChatStrings.cancel,
-        subTitleTwo: ChatStrings.unblock,
-        titile: ChatStrings.youBlockUser));
+        subTitleOne: IsmChatStrings.cancel,
+        subTitleTwo: IsmChatStrings.unblock,
+        titile: IsmChatStrings.youBlockUser));
   }
 
-  void showDialogForMessageDelete(ChatMessageModel chatMessageModel) async {
+  void showDialogForMessageDelete(
+      IsmChatChatMessageModel chatMessageModel) async {
     if (chatMessageModel.sentByMe) {
-      await Get.dialog(AlertDialogBox(
+      await Get.dialog(IsmChatAlertDialogBox(
           onTapFunction: () {
             ismMessageDeleteEveryOne(
                 conversationId: chatMessageModel.conversationId ?? '',
@@ -184,18 +189,18 @@ class IsmChatPageController extends GetxController {
                 conversationId: chatMessageModel.conversationId ?? '',
                 messageIds: chatMessageModel.messageId ?? '');
           },
-          subTitleOne: ChatStrings.deleteForEvery,
-          subTitleTwo: ChatStrings.deleteForMe,
-          subTitleThree: ChatStrings.cancel,
+          subTitleOne: IsmChatStrings.deleteForEvery,
+          subTitleTwo: IsmChatStrings.deleteForMe,
+          subTitleThree: IsmChatStrings.cancel,
           threeAction: false,
-          titile: ChatStrings.deleteMessgae));
+          titile: IsmChatStrings.deleteMessgae));
     } else {
-      await Get.dialog(AlertDialogBox(
+      await Get.dialog(IsmChatAlertDialogBox(
           onTapFunction: () {},
-          subTitleOne: ChatStrings.cancel,
-          subTitleTwo: ChatStrings.deleteForMe.toUpperCase(),
+          subTitleOne: IsmChatStrings.cancel,
+          subTitleTwo: IsmChatStrings.deleteForMe.toUpperCase(),
           titile:
-              '${ChatStrings.deleteFromUser} ${conversation.opponentDetails?.userName}'));
+              '${IsmChatStrings.deleteFromUser} ${conversation.opponentDetails?.userName}'));
     }
   }
 
@@ -214,13 +219,13 @@ class IsmChatPageController extends GetxController {
       //   );
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
-    var textMessage = ChatMessageModel(
+    var textMessage = IsmChatChatMessageModel(
       body: chatInputController.text.trim(),
       conversationId: conversation.conversationId ?? '',
-      customType: CustomMessageType.text,
+      customType: IsmChatCustomMessageType.text,
       deliveredToAll: false,
       messageId: '',
-      messageType: MessageType.normal,
+      messageType: IsmChatMessageType.normal,
       messagingDisabled: false,
       parentMessageId: '',
       readByAll: false,
@@ -247,7 +252,7 @@ class IsmChatPageController extends GetxController {
       required String customType,
       required int createdAt,
       required String conversationId,
-      required ChatMessageModel messageModel,
+      required IsmChatChatMessageModel messageModel,
       int? messageType,
       String? parentMessageId,
       String nameWithExtension = '',
@@ -265,7 +270,7 @@ class IsmChatPageController extends GetxController {
         deviceId: deviceId,
         createdAt: createdAt,
         conversationId: conversationId,
-        body: ChatUtility.encodePayload(body),
+        body: IsmChatUtility.encodePayload(body),
         customType: customType);
     if (isMessageSent) {
       await getMessagesFromDB(conversationId);
@@ -280,7 +285,7 @@ class IsmChatPageController extends GetxController {
     final chatConversationMessages = query.findUnique();
     if (chatConversationMessages != null) {
       messages = _viewModel.sortMessages(chatConversationMessages.messages
-          .map(ChatMessageModel.fromJson)
+          .map(IsmChatChatMessageModel.fromJson)
           .toList());
       isMessagesLoading = false;
 
@@ -298,7 +303,8 @@ class IsmChatPageController extends GetxController {
     await _viewModel.notifyTyping(conversationId: conversation.conversationId!);
   }
 
-  Future<void> getMessageInformation(ChatMessageModel chatMessageModel) async {
+  Future<void> getMessageInformation(
+      IsmChatChatMessageModel chatMessageModel) async {
     readTime = '';
     deliveredTime = '';
     unawaited(
@@ -313,7 +319,7 @@ class IsmChatPageController extends GetxController {
         ),
       ]),
     );
-    await Get.to<void>(IsmMessageInfo(message: chatMessageModel));
+    await Get.to<void>(IsmChatMessageInfo(message: chatMessageModel));
   }
 
   Future<void> getConverstaionDetails(

@@ -4,20 +4,20 @@ import 'package:appscrip_chat_component/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class IsmLogutBottomSheet extends StatelessWidget {
-  const IsmLogutBottomSheet({required this.signOutTap, super.key});
+class IsmChatLogutBottomSheet extends StatelessWidget {
+  const IsmChatLogutBottomSheet({required this.signOutTap, super.key});
 
   final VoidCallback signOutTap;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
       builder: (controller) => Container(
-          padding: ChatDimens.egdeInsets10,
-          height: ChatDimens.hundred,
+          padding: IsmChatDimens.egdeInsets10,
+          height: IsmChatDimens.hundred,
           child: ListTile(
             title: Text(
               controller.userDetails?.userName ?? '',
-              style: ChatStyles.w600Black16,
+              style: IsmChatStyles.w600Black16,
             ),
             subtitle: Text(controller.userDetails?.userIdentifier ?? ''),
             leading: IsmChatImage.profile(
@@ -27,11 +27,11 @@ class IsmLogutBottomSheet extends StatelessWidget {
               child: Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(ChatDimens.ten),
-                    color: ChatTheme.of(context).primaryColor),
-                width: ChatDimens.eighty,
-                height: ChatDimens.forty,
-                child: Text('Sign out', style: ChatStyles.w400White14),
+                    borderRadius: BorderRadius.circular(IsmChatDimens.ten),
+                    color: IsmChatTheme.of(context).primaryColor),
+                width: IsmChatDimens.eighty,
+                height: IsmChatDimens.forty,
+                child: Text('Sign out', style: IsmChatStyles.w400White14),
               ),
             ),
           )));

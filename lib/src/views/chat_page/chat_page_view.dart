@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,18 +33,18 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
               Expanded(
                 child: Visibility(
                   visible: !controller.isMessagesLoading,
-                  replacement: const IsmLoadingDialog(),
+                  replacement: const IsmChatLoadingDialog(),
                   child: Visibility(
                     visible: controller.messages.isNotEmpty &&
                         controller.messages.length != 1,
-                    replacement: const IsmNoMessage(),
+                    replacement: const IsmChatNoMessage(),
                     child: ListView.separated(
                       controller: controller.messagesScrollController,
                       keyboardDismissBehavior:
                           ScrollViewKeyboardDismissBehavior.onDrag,
-                      padding: ChatDimens.egdeInsets8,
+                      padding: IsmChatDimens.egdeInsets8,
                       itemCount: controller.messages.length,
-                      separatorBuilder: (_, __) => ChatDimens.boxHeight4,
+                      separatorBuilder: (_, __) => IsmChatDimens.boxHeight4,
                       itemBuilder: (_, index) =>
                           ChatMessage(controller.messages[index], controller),
                     ),
@@ -64,15 +62,16 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
 class ChatMessage extends StatelessWidget {
   const ChatMessage(this.message, this.ismChatPageController, {super.key});
 
-  final ChatMessageModel message;
+  final IsmChatChatMessageModel message;
 
   final IsmChatPageController ismChatPageController;
 
   @override
   Widget build(BuildContext context) {
-    var showMessageInCenter = message.customType! == CustomMessageType.date ||
-        message.customType! == CustomMessageType.block ||
-        message.customType! == CustomMessageType.unblock;
+    var showMessageInCenter =
+        message.customType! == IsmChatCustomMessageType.date ||
+            message.customType! == IsmChatCustomMessageType.block ||
+            message.customType! == IsmChatCustomMessageType.unblock;
     return UnconstrainedBox(
       alignment: showMessageInCenter
           ? Alignment.center
@@ -86,7 +85,7 @@ class ChatMessage extends StatelessWidget {
             : CrossAxisAlignment.start,
         children: [
           Container(
-            padding: ChatDimens.egdeInsets4,
+            padding: IsmChatDimens.egdeInsets4,
             constraints: showMessageInCenter
                 ? null
                 : BoxConstraints(
@@ -100,14 +99,14 @@ class ChatMessage extends StatelessWidget {
                         ? IsmChatConfig.chatTheme.primaryColor
                         : IsmChatConfig.chatTheme.backgroundColor,
                     borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(ChatDimens.twelve),
+                      topRight: Radius.circular(IsmChatDimens.twelve),
                       topLeft: message.sentByMe
-                          ? Radius.circular(ChatDimens.twelve)
-                          : Radius.circular(ChatDimens.four),
-                      bottomLeft: Radius.circular(ChatDimens.twelve),
+                          ? Radius.circular(IsmChatDimens.twelve)
+                          : Radius.circular(IsmChatDimens.four),
+                      bottomLeft: Radius.circular(IsmChatDimens.twelve),
                       bottomRight: message.sentByMe
-                          ? Radius.circular(ChatDimens.four)
-                          : Radius.circular(ChatDimens.twelve),
+                          ? Radius.circular(IsmChatDimens.four)
+                          : Radius.circular(IsmChatDimens.twelve),
                     ),
                   ),
             child: showMessageInCenter
@@ -115,7 +114,7 @@ class ChatMessage extends StatelessWidget {
                 : FocusedMenuHolder(
                     // openWithTap: true,
                     menuWidth: 150,
-                    menuOffset: ChatDimens.twenty,
+                    menuOffset: IsmChatDimens.twenty,
                     blurSize: 3,
                     animateMenuItems: false,
                     blurBackgroundColor: Colors.grey,
@@ -137,7 +136,7 @@ class ChatMessage extends StatelessWidget {
                           trailingIcon: Icon(
                             Icons.info_outline,
                             color: Colors.black,
-                            size: ChatDimens.twenty,
+                            size: IsmChatDimens.twenty,
                           ),
                         ),
                       FocusedMenuItem(
@@ -155,7 +154,7 @@ class ChatMessage extends StatelessWidget {
                         trailingIcon: Icon(
                           Icons.reply_outlined,
                           color: Colors.black,
-                          size: ChatDimens.twenty,
+                          size: IsmChatDimens.twenty,
                         ),
                       ),
                       FocusedMenuItem(
@@ -175,7 +174,7 @@ class ChatMessage extends StatelessWidget {
                         trailingIcon: Icon(
                           Icons.forward_5,
                           color: Colors.black,
-                          size: ChatDimens.twenty,
+                          size: IsmChatDimens.twenty,
                         ),
                       ),
                       FocusedMenuItem(
@@ -192,7 +191,7 @@ class ChatMessage extends StatelessWidget {
                         trailingIcon: Icon(
                           Icons.copy,
                           color: Colors.black,
-                          size: ChatDimens.twenty,
+                          size: IsmChatDimens.twenty,
                         ),
                       ),
                       FocusedMenuItem(
@@ -210,7 +209,7 @@ class ChatMessage extends StatelessWidget {
                         trailingIcon: Icon(
                           Icons.delete_outline_rounded,
                           color: Colors.red,
-                          size: ChatDimens.twenty,
+                          size: IsmChatDimens.twenty,
                         ),
                       ),
                     ],
@@ -218,15 +217,15 @@ class ChatMessage extends StatelessWidget {
           ),
           if (!showMessageInCenter)
             Padding(
-              padding: ChatDimens.egdeInsets0_4,
+              padding: IsmChatDimens.egdeInsets0_4,
               child: Row(
                 children: [
                   Text(
                     message.sentAt.toTimeString(),
-                    style: ChatStyles.w400Grey10,
+                    style: IsmChatStyles.w400Grey10,
                   ),
                   if (message.sentByMe) ...[
-                    ChatDimens.boxWidth2,
+                    IsmChatDimens.boxWidth2,
                     Icon(
                       message.messageId!.isEmpty
                           ? Icons.watch_later_rounded
@@ -238,7 +237,7 @@ class ChatMessage extends StatelessWidget {
                           : message.readByAll!
                               ? Colors.blue
                               : Colors.grey,
-                      size: ChatDimens.forteen,
+                      size: IsmChatDimens.forteen,
                     ),
                   ],
                 ],

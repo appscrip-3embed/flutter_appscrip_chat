@@ -30,25 +30,26 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
   final double? height;
 
   @override
-  Size get preferredSize => Size.fromHeight(height ?? ChatDimens.appBarHeight);
+  Size get preferredSize =>
+      Size.fromHeight(height ?? IsmChatDimens.appBarHeight);
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
         builder: (controller) => AppBar(
           automaticallyImplyLeading: false,
-          elevation: ChatDimens.appBarElevation,
-          title: IsmTapHandler(
+          elevation: IsmChatDimens.appBarElevation,
+          title: IsmChatTapHandler(
             onTap: () => Get.bottomSheet(
-              IsmLogutBottomSheet(signOutTap: () {
+              IsmChatLogutBottomSheet(signOutTap: () {
                 onSignOut!();
                 controller.signOut();
               }),
-              elevation: ChatDimens.twenty,
+              elevation: IsmChatDimens.twenty,
               enableDrag: true,
-              backgroundColor: ChatColors.whiteColor,
+              backgroundColor: IsmChatColors.whiteColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(ChatDimens.twenty),
+                  top: Radius.circular(IsmChatDimens.twenty),
                 ),
               ),
             ),
@@ -61,14 +62,15 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
                   IsmChatImage.profile(
                     controller.userDetails?.userProfileImageUrl ?? '',
                     name: controller.userDetails?.userName,
-                    dimensions: ChatDimens.appBarHeight * 0.8,
+                    dimensions: IsmChatDimens.appBarHeight * 0.8,
                   ),
-                ChatDimens.boxWidth8,
+                IsmChatDimens.boxWidth8,
                 Text(
-                  title ?? ChatStrings.chats,
+                  title ?? IsmChatStrings.chats,
                   style: titleStyle ??
-                      ChatStyles.w600Black20.copyWith(
-                        color: titleColor ?? ChatTheme.of(context).primaryColor,
+                      IsmChatStyles.w600Black20.copyWith(
+                        color:
+                            titleColor ?? IsmChatTheme.of(context).primaryColor,
                       ),
                 ),
               ],
@@ -87,7 +89,7 @@ class _MoreIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => IconButton(
-        color: ChatTheme.of(context).primaryColor,
+        color: IsmChatTheme.of(context).primaryColor,
         onPressed: () {},
         icon: const Icon(Icons.more_vert_rounded),
       );
@@ -100,7 +102,7 @@ class _SearchAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => IconButton(
-        color: ChatTheme.of(context).primaryColor,
+        color: IsmChatTheme.of(context).primaryColor,
         onPressed: onTap ??
             () {
               showSearch<void>(

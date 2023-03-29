@@ -2,10 +2,10 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ReplyMessage extends StatelessWidget {
-  const ReplyMessage(this.message, {super.key});
+class IsmChatReplyMessage extends StatelessWidget {
+  const IsmChatReplyMessage(this.message, {super.key});
 
-  final ChatMessageModel message;
+  final IsmChatChatMessageModel message;
 
   @override
   Widget build(BuildContext context) => IntrinsicWidth(
@@ -21,12 +21,12 @@ class ReplyMessage extends StatelessWidget {
               constraints: const BoxConstraints(
                 minHeight: 36,
               ),
-              padding: ChatDimens.egdeInsets4_0,
+              padding: IsmChatDimens.egdeInsets4_0,
               child: Text(
                 message.body,
                 style: message.sentByMe
-                    ? ChatStyles.w500White14
-                    : ChatStyles.w500Black14,
+                    ? IsmChatStyles.w500White14
+                    : IsmChatStyles.w500Black14,
                 softWrap: true,
                 maxLines: null,
               ),
@@ -39,7 +39,7 @@ class ReplyMessage extends StatelessWidget {
 class _ReplyMessage extends StatelessWidget {
   const _ReplyMessage(this.message);
 
-  final ChatMessageModel message;
+  final IsmChatChatMessageModel message;
 
   @override
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
@@ -47,54 +47,55 @@ class _ReplyMessage extends StatelessWidget {
           var parentMessage =
               controller.getMessageByid(message.parentMessageId ?? '');
           return ClipRRect(
-            borderRadius: BorderRadius.circular(ChatDimens.eight),
+            borderRadius: BorderRadius.circular(IsmChatDimens.eight),
             child: Container(
               constraints: BoxConstraints(
-                minHeight: ChatDimens.thirtyTwo,
+                minHeight: IsmChatDimens.thirtyTwo,
               ),
               decoration: BoxDecoration(
                 color: (message.sentByMe
-                        ? ChatColors.whiteColor
-                        : ChatColors.greyColor)
+                        ? IsmChatColors.whiteColor
+                        : IsmChatColors.greyColor)
                     .withOpacity(0.2),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   SizedBox(
-                    width: ChatDimens.four,
-                    height: ChatDimens.forty,
+                    width: IsmChatDimens.four,
+                    height: IsmChatDimens.forty,
                     child: ColoredBox(
                       color: parentMessage.sentByMe
-                          ? ChatColors.yellowColor
-                          : ChatColors.blueColor,
+                          ? IsmChatColors.yellowColor
+                          : IsmChatColors.blueColor,
                     ),
                   ),
                   Padding(
-                    padding: ChatDimens.egdeInsets4,
+                    padding: IsmChatDimens.egdeInsets4,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
                           parentMessage.sentByMe
-                              ? ChatStrings.you
+                              ? IsmChatStrings.you
                               : parentMessage.senderInfo?.userName ?? '',
-                          style: ChatStyles.w500Black14.copyWith(
+                          style: IsmChatStyles.w500Black14.copyWith(
                             color: parentMessage.sentByMe
-                                ? ChatColors.yellowColor
-                                : ChatColors.blueColor,
+                                ? IsmChatColors.yellowColor
+                                : IsmChatColors.blueColor,
                           ),
                         ),
                         Text(
-                          parentMessage.customType == CustomMessageType.text
+                          parentMessage.customType ==
+                                  IsmChatCustomMessageType.text
                               ? parentMessage.body
                               : parentMessage.customType.toString(),
                         ),
                       ],
                     ),
                   ),
-                  ChatDimens.boxWidth8,
+                  IsmChatDimens.boxWidth8,
                 ],
               ),
             ),

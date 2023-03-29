@@ -1,15 +1,14 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
-class ChatPageViewModel {
-  ChatPageViewModel(this._repository);
+class IsmChatPageViewModel {
+  IsmChatPageViewModel(this._repository);
 
-  final ChatPageRepository _repository;
+  final IsmChatPageRepository _repository;
   var messageSkip = 0;
   var messageLimit = 20;
-  Future<List<ChatMessageModel>?> getChatMessages({
+  Future<List<IsmChatChatMessageModel>?> getChatMessages({
     required String conversationId,
     required int lastMessageTimestamp,
   }) async {
@@ -24,8 +23,8 @@ class ChatPageViewModel {
       return null;
     }
 
-    messages
-        .removeWhere((e) => e.action == ActionEvents.clearConversation.name);
+    messages.removeWhere(
+        (e) => e.action == IsmChatActionEvents.clearConversation.name);
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
     var conversation = conversationBox
         .query(
@@ -52,7 +51,7 @@ class ChatPageViewModel {
     required String conversationId,
     required String body,
     required int createdAt,
-    required ChatMessageModel messageModel,
+    required IsmChatChatMessageModel messageModel,
     String? parentMessageId,
     Map<String, dynamic>? metaData,
     List<Map<String, dynamic>>? mentionedUsers,
@@ -84,7 +83,7 @@ class ChatPageViewModel {
 
       for (var x = 0; x < chatPendingMessages.messages.length; x++) {
         var pendingMessage =
-            ChatMessageModel.fromJson(chatPendingMessages.messages[x]);
+            IsmChatChatMessageModel.fromJson(chatPendingMessages.messages[x]);
         if (pendingMessage.messageId!.isNotEmpty ||
             pendingMessage.sentAt != createdAt) {
           continue;
@@ -112,22 +111,23 @@ class ChatPageViewModel {
       }
       return false;
     } catch (e, st) {
-      ChatLog.error(e, st);
+      IsmChatLog.error(e, st);
       return false;
     }
   }
 
-  List<ChatMessageModel> sortMessages(List<ChatMessageModel> messages) {
+  List<IsmChatChatMessageModel> sortMessages(
+      List<IsmChatChatMessageModel> messages) {
     messages.sort((a, b) => a.sentAt.compareTo(b.sentAt));
     return _parseMessagesWithDate(messages);
   }
 
-  List<ChatMessageModel> _parseMessagesWithDate(
-    List<ChatMessageModel> messages,
+  List<IsmChatChatMessageModel> _parseMessagesWithDate(
+    List<IsmChatChatMessageModel> messages,
   ) {
-    var result = <List<ChatMessageModel>>[];
-    var list1 = <ChatMessageModel>[];
-    var allMessages = <ChatMessageModel>[];
+    var result = <List<IsmChatChatMessageModel>>[];
+    var list1 = <IsmChatChatMessageModel>[];
+    var allMessages = <IsmChatChatMessageModel>[];
     for (var x = 0; x < messages.length; x++) {
       if (x == 0) {
         list1.add(messages[x]);
@@ -146,7 +146,7 @@ class ChatPageViewModel {
 
     for (var messages in result) {
       allMessages.add(
-        ChatMessageModel.fromDate(
+        IsmChatChatMessageModel.fromDate(
           messages.first.sentAt,
         ),
       );
@@ -155,9 +155,9 @@ class ChatPageViewModel {
     return allMessages;
   }
 
-  ChatMessageModel getMessageByid({
+  IsmChatChatMessageModel getMessageByid({
     required String parentId,
-    required List<ChatMessageModel> data,
+    required List<IsmChatChatMessageModel> data,
   }) =>
       data.firstWhere((e) => e.messageId == parentId);
 
@@ -175,7 +175,7 @@ class ChatPageViewModel {
         conversationId: conversationId,
       );
 
-  Future<ChatConversationModel?> getConverstaionDetails({
+  Future<IsmChatChatConversationModel?> getConverstaionDetails({
     required String conversationId,
     String? ids,
     bool? includeMembers,
@@ -186,7 +186,7 @@ class ChatPageViewModel {
         conversationId: conversationId,
       );
 
-  Future<List<ChatMessageModel>?> blockUser(
+  Future<List<IsmChatChatMessageModel>?> blockUser(
       {required String opponentId,
       required int lastMessageTimeStamp,
       required String conversationId}) async {
@@ -202,7 +202,7 @@ class ChatPageViewModel {
     return null;
   }
 
-  Future<List<ChatMessageModel>?> unblockUser(
+  Future<List<IsmChatChatMessageModel>?> unblockUser(
       {required String opponentId,
       required int lastMessageTimeStamp,
       required String conversationId}) async {
@@ -272,7 +272,7 @@ class ChatPageViewModel {
         return;
       }
       allMessages.removeWhere((e) => e.messageId! == messageIds);
-     await IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
+      await IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
       if (Get.isRegistered<IsmChatPageController>()) {
         await Get.find<IsmChatPageController>()
             .getMessagesFromDB(conversationId);
@@ -294,7 +294,7 @@ class ChatPageViewModel {
         return;
       }
       allMessages.removeWhere((e) => e.messageId! == messageIds);
-    await  IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
+      await IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
       if (Get.isRegistered<IsmChatPageController>()) {
         await Get.find<IsmChatPageController>()
             .getMessagesFromDB(conversationId);
@@ -314,8 +314,6 @@ class ChatPageViewModel {
     }
   }
 
-  
-
   Future<void> readAllMessages({
     required String conversationId,
     required int timestamp,
@@ -325,7 +323,7 @@ class ChatPageViewModel {
         timestamp: timestamp,
       );
 
-  Future<List<Prediction>?> getLocation({
+  Future<List<IsmChatPrediction>?> getLocation({
     required String latitude,
     required String longitude,
     required String searchKeyword,
