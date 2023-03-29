@@ -325,12 +325,12 @@ class ChatPageViewModel {
         timestamp: timestamp,
       );
 
-  Future<void> googleApi({
+  Future<List<Prediction>?> getLocation({
     required String latitude,
     required String longitude,
     required String searchKeyword,
   }) async =>
-      await _repository.googleApi(
+      await _repository.getLocation(
         latitude: latitude,
         longitude: longitude,
         searchKeyword: searchKeyword,

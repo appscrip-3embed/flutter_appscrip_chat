@@ -168,15 +168,10 @@ class AttachmentIcon extends GetView<IsmChatPageController> {
 
   @override
   Widget build(BuildContext context) => IconButton(
-        onPressed: () {},
+        onPressed: () async {
+          await Get.bottomSheet(const AttachmentCard());
+        },
         color: IsmChatConfig.chatTheme.primaryColor,
         icon: const Icon(Icons.attach_file_rounded),
       );
-}
-
-class AttachmentCard extends StatelessWidget {
-  const AttachmentCard({super.key});
-
-  @override
-  Widget build(BuildContext context) => const Placeholder();
 }

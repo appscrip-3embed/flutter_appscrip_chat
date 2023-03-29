@@ -24,6 +24,8 @@ class IsmChatPageController extends GetxController {
 
   var messagesScrollController = ScrollController();
 
+  final textEditingController = TextEditingController();
+
   final RxBool _isMessagesLoading = true.obs;
   bool get isMessagesLoading => _isMessagesLoading.value;
   set isMessagesLoading(bool value) => _isMessagesLoading.value = value;
@@ -31,6 +33,10 @@ class IsmChatPageController extends GetxController {
   final _messages = <ChatMessageModel>[].obs;
   List<ChatMessageModel> get messages => _messages;
   set messages(List<ChatMessageModel> value) => _messages.value = value;
+
+  final _predictionList = <Prediction>[].obs;
+  List<Prediction> get predictionList => _predictionList;
+  set predictionList(List<Prediction> value) => _predictionList.value = value;
 
   final RxBool _showSendButton = false.obs;
   bool get showSendButton => _showSendButton.value;
@@ -52,6 +58,10 @@ class IsmChatPageController extends GetxController {
   final RxString _readTime = ''.obs;
   String get readTime => _readTime.value;
   set readTime(String value) => _readTime.value = value;
+
+  final RxBool _isSearchSelect = false.obs;
+  bool get isSearchSelect => _isSearchSelect.value;
+  set isSearchSelect(bool value) => _isSearchSelect.value = value;
 
   final Completer<GoogleMapController> googleMapCompleter =
       Completer<GoogleMapController>();
@@ -416,5 +426,20 @@ class IsmChatPageController extends GetxController {
     required String conversationId,
   }) async {
     await _viewModel.clearAllMessages(conversationId: conversationId);
+  }
+
+  Future<void> getLocation(
+      {required String latitude,
+      required String longitude,
+      String searchKeyword = ''}) async {
+    predictionList.clear();
+    var response = await _viewModel.getLocation(
+        latitude: latitude, longitude: longitude, searchKeyword: searchKeyword);
+    if (response == null) {
+      return;
+    }
+    if (response.isNotEmpty) {
+      predictionList = response;
+    }
   }
 }

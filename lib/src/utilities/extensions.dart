@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -10,6 +12,22 @@ extension MatchString on String {
 
   String get convertToValidUrl =>
       'https://${replaceAll('http://', '').replaceAll('https://', '')}';
+}
+
+
+extension DistanceLatLng on LatLng {
+  double getDistance(LatLng other) {
+    var lat1 = latitude,
+        lon1 = longitude,
+        lat2 = other.latitude,
+        lon2 = other.longitude;
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+    return 12742 * asin(sqrt(a));
+  }
 }
 
 extension DateConvertor on int {

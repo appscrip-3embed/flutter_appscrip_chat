@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ChatPageRepository {
   final _apiWrapper = IsmChatApiWrapper();
@@ -324,8 +325,6 @@ class ChatPageRepository {
     }
   }
 
-  
-
   Future<void> readAllMessages({
     required String conversationId,
     required int timestamp,
@@ -348,24 +347,34 @@ class ChatPageRepository {
     }
   }
 
-  Future<void> googleApi({
+  Future<List<Prediction>?> getLocation({
     required String latitude,
     required String longitude,
     required String searchKeyword,
   }) async {
-    // try {
-
-    //   var response = await IsmChatApiWrapper.put(
-    //      searchKeyword.isNotEmpty
-    //         ? 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&name=$searchKeyword&radius=1000000&key=AIzaSyC2YXqs5H8QSfN1NVsZKsP11XLZhfGVGPI'
-    //         : 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=500&key=AIzaSyC2YXqs5H8QSfN1NVsZKsP11XLZhfGVGPI',
-
-    //   );
-    //   if (response.hasError) {
-    //     return;
-    //   }
-    // } catch (e, st) {
-    //   ChatLog.error('Read all message $e', st);
-    // }
+    try {
+      var response = await _apiWrapper.get(
+        searchKeyword.isNotEmpty
+            ? 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&name=$searchKeyword&radius=1000000&key=AIzaSyC2YXqs5H8QSfN1NVsZKsP11XLZhfGVGPI'
+            : 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=500&key=AIzaSyC2YXqs5H8QSfN1NVsZKsP11XLZhfGVGPI',
+        headers: {},
+      );
+      if (response.hasError) {
+        return null;
+      }
+      var data = jsonDecode(response.data);
+      var latlgn = LatLng(double.parse(latitude), double.parse(longitude));
+      var predictionList = (data['results'] as List)
+          .map((e) => Prediction.fromMap(
+                e as Map<String, dynamic>,
+                latlng: latlgn,
+              ))
+          .toList();
+      predictionList.sort((a, b) => a.distance!.compareTo(b.distance!));
+      return predictionList;
+    } catch (e, st) {
+      ChatLog.error('Location $e', st);
+      return null;
+    }
   }
 }
