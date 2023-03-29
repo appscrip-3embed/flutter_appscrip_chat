@@ -39,7 +39,7 @@ class IsmChatMqttController extends GetxController {
     await _getDeviceId();
     _communicationConfig = IsmChatConfig.communicationConfig;
     userId = _communicationConfig.userId;
-  
+
     messageTopic =
         '/${_communicationConfig.accountId}/${_communicationConfig.projectId}/Message/${_communicationConfig.userId}';
     statusTopic =
@@ -213,14 +213,10 @@ class IsmChatMqttController extends GetxController {
         _handleMultipleMessageRead(actionModel);
         break;
       case ActionEvents.userBlock:
-        // TODO: Handle this case.
+      case ActionEvents.userUnblock:
+        _handleBlockUserOrUnBlock(actionModel);
         break;
       case ActionEvents.userBlockConversation:
-        // TODO: Handle this case.
-        break;
-      case ActionEvents.userUnblock:
-        // TODO: Handle this case.
-        break;
       case ActionEvents.userUnblockConversation:
         // TODO: Handle this case.
         break;
@@ -390,6 +386,18 @@ class IsmChatMqttController extends GetxController {
     if (Get.isRegistered<IsmChatPageController>()) {
       Get.find<IsmChatPageController>()
           .getMessagesFromDB(actionModel.conversationId!);
+    }
+  }
+
+  void _handleBlockUserOrUnBlock(MqttActionModel actionModel) {
+    if (actionModel.initiatorDetails!.userId == _communicationConfig.userId) {
+      return;
+    }
+    if (Get.isRegistered<IsmChatPageController>()) {
+      var controller = Get.find<IsmChatPageController>();
+      controller.getMessagesFromAPI(
+          conversationId: actionModel.conversationId ?? '',
+          lastMessageTimestampFromFunction: controller.messages.last.sentAt);
     }
   }
 

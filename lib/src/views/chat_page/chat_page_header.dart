@@ -21,8 +21,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
         builder: (controller) {
           var mqttController = Get.find<IsmChatMqttController>();
           var userBlockOrNot =
-              controller.messages.last.initiatorId == mqttController.userId &&
-                  controller.messages.last.messagingDisabled == true;
+              controller.messages.last.messagingDisabled == true;
           return Theme(
             data: ThemeData.light(useMaterial3: true).copyWith(
               appBarTheme: AppBarTheme(

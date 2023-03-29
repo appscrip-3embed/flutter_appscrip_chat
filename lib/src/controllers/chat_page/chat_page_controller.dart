@@ -85,15 +85,23 @@ class IsmChatPageController extends GetxController {
     );
   }
 
-  void getMessagesFromAPI() async {
+  void getMessagesFromAPI({
+    String conversationId = '',
+    int lastMessageTimestampFromFunction = 0,
+  }) async {
     if (messages.isEmpty) {
       isMessagesLoading = true;
     }
+    ChatLog.error(lastMessageTimestampFromFunction);
     var lastMessageTimestamp = messages.isEmpty ? 0 : messages.last.sentAt;
 
     var data = await _viewModel.getChatMessages(
-      conversationId: conversation.conversationId!,
-      lastMessageTimestamp: lastMessageTimestamp,
+      conversationId: conversationId.isNotEmpty
+          ? conversationId
+          : conversation.conversationId!,
+      lastMessageTimestamp: lastMessageTimestampFromFunction != 0
+          ? lastMessageTimestampFromFunction
+          : lastMessageTimestamp,
     );
     if (messages.isEmpty) {
       isMessagesLoading = false;
@@ -403,8 +411,6 @@ class IsmChatPageController extends GetxController {
     await _viewModel.deleteMessageForMe(
         conversationId: conversationId, messageIds: messageIds);
   }
-
-  
 
   Future<void> clearAllMessages({
     required String conversationId,
