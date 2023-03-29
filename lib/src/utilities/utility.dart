@@ -29,9 +29,9 @@ class IsmChatUtility {
   static Map<String, String> commonHeader() {
     var header = <String, String>{
       'Content-Type': 'application/json',
-      'licenseKey': IsmChatConfig.communicationConfig.licenseKey,
-      'appSecret': IsmChatConfig.communicationConfig.appSecret,
-      'userSecret': IsmChatConfig.communicationConfig.userSecret,
+      'licenseKey': IsmChatConfig.communicationConfig.projectConfig.licenseKey,
+      'appSecret': IsmChatConfig.communicationConfig.projectConfig.appSecret,
+      'userSecret': IsmChatConfig.communicationConfig.projectConfig.userSecret,
     };
     return header;
   }
@@ -40,9 +40,9 @@ class IsmChatUtility {
   static Map<String, String> tokenCommonHeader() {
     var header = <String, String>{
       'Content-Type': 'application/json',
-      'licenseKey': IsmChatConfig.communicationConfig.licenseKey,
-      'appSecret': IsmChatConfig.communicationConfig.appSecret,
-      'userToken': IsmChatConfig.communicationConfig.userToken,
+      'licenseKey': IsmChatConfig.communicationConfig.projectConfig.licenseKey,
+      'appSecret': IsmChatConfig.communicationConfig.projectConfig.appSecret,
+      'userToken': IsmChatConfig.communicationConfig.userConfig.userToken,
     };
     return header;
   }

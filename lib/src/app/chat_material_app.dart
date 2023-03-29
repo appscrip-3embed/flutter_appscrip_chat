@@ -1,8 +1,8 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
-class IsmChatMaterialApp extends StatelessWidget {
-  IsmChatMaterialApp({
+class IsmChatApp extends StatelessWidget {
+  IsmChatApp({
     super.key,
     required this.communicationConfig,
     required this.child,

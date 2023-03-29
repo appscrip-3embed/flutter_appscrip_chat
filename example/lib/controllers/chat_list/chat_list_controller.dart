@@ -13,8 +13,8 @@ class ChatListController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    var _userDetails = objectBox.userDetailsBox.getAll().last;
-    userDetails = _userDetails;
+    var userDetails = objectBox.userDetailsBox.getAll().last;
+    userDetails = userDetails;
   }
 
   void onSignOut() {

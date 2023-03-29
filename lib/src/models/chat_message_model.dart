@@ -81,7 +81,7 @@ class IsmChatChatMessageModel {
           ? model.customType
           : IsmChatCustomMessageType.withBody(model.body),
       sentByMe: model.senderInfo != null
-          ? model.senderInfo!.userId == IsmChatConfig.communicationConfig.userId
+          ? model.senderInfo!.userId == IsmChatConfig.communicationConfig.userConfig.userId
           : true,
     );
   }

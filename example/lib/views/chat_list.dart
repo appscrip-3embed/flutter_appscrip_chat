@@ -13,18 +13,24 @@ class ChatList extends GetView<ChatListController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IsmChatMaterialApp(
+      body: IsmChatApp(
         communicationConfig: IsmChatCommunicationConfig(
-          accountId: Constants.accountId,
-          userToken: controller.userDetails.userToken!,
-          userId: controller.userDetails.userId!,
-          appSecret: Constants.appSecret,
-          userSecret: Constants.userSecret,
-          keySetId: Constants.keysetId,
-          licenseKey: Constants.licenseKey,
-          projectId: Constants.projectId,
-          mqttHostName: Constants.hostname,
-          mqttPort: Constants.port,
+          userConfig: IsmChatUserConfig(
+            userToken: controller.userDetails.userToken!,
+            userId: controller.userDetails.userId!,
+          ),
+          mqttConfig: const IsmChatMqttConfig(
+            hostName: Constants.hostname,
+            port: Constants.port,
+          ),
+          projectConfig: const IsmChatProjectConfig(
+            accountId: Constants.accountId,
+            appSecret: Constants.appSecret,
+            userSecret: Constants.userSecret,
+            keySetId: Constants.keysetId,
+            licenseKey: Constants.licenseKey,
+            projectId: Constants.projectId,
+          ),
         ),
         child: IsmChatConversations(
           showAppBar: true,

@@ -37,12 +37,12 @@ class IsmChatMqttController extends GetxController {
     super.onInit();
     await _getDeviceId();
     _communicationConfig = IsmChatConfig.communicationConfig;
-    userId = _communicationConfig.userId;
+    userId = _communicationConfig.userConfig.userId;
 
     messageTopic =
-        '/${_communicationConfig.accountId}/${_communicationConfig.projectId}/Message/${_communicationConfig.userId}';
+        '/${_communicationConfig.projectConfig.accountId}/${_communicationConfig.projectConfig.projectId}/Message/${_communicationConfig.userConfig.userId}';
     statusTopic =
-        '/${_communicationConfig.accountId}/${_communicationConfig.projectId}/Status/${_communicationConfig.userId}';
+        '/${_communicationConfig.projectConfig.accountId}/${_communicationConfig.projectConfig.projectId}/Status/${_communicationConfig.userConfig.userId}';
     initializeMqttClient();
     connectClient();
   }
@@ -78,7 +78,7 @@ class IsmChatMqttController extends GetxController {
   void initializeMqttClient() {
     client = MqttServerClient(
       'connections.isometrik.io',
-      '${_communicationConfig.userId}$deviceId',
+      '${_communicationConfig.userConfig.userId}$deviceId',
     );
     client.port = 2052;
     client.keepAlivePeriod = 60;
@@ -227,7 +227,7 @@ class IsmChatMqttController extends GetxController {
 
   void _handleMessage(IsmChatChatMessageModel message) async {
     var conversationController = Get.find<IsmChatConversationsController>();
-    if (message.senderInfo!.userId == _communicationConfig.userId) {
+    if (message.senderInfo!.userId == _communicationConfig.userConfig.userId) {
       return;
     }
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
@@ -289,7 +289,7 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleMessageDelivered(IsmChatMqttActionModel actionModel) {
-    if (actionModel.userDetails!.userId == _communicationConfig.userId) {
+    if (actionModel.userDetails!.userId == _communicationConfig.userConfig.userId) {
       return;
     }
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
@@ -312,7 +312,7 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleMessageRead(IsmChatMqttActionModel actionModel) {
-    if (actionModel.userDetails!.userId == _communicationConfig.userId) {
+    if (actionModel.userDetails!.userId == _communicationConfig.userConfig.userId) {
       return;
     }
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
@@ -335,7 +335,7 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleMultipleMessageRead(IsmChatMqttActionModel actionModel) {
-    if (actionModel.userDetails!.userId == _communicationConfig.userId) {
+    if (actionModel.userDetails!.userId == _communicationConfig.userConfig.userId) {
       return;
     }
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
@@ -372,7 +372,7 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleMessageDelelteForEveryOne(IsmChatMqttActionModel actionModel) {
-    if (actionModel.userDetails!.userId == _communicationConfig.userId) {
+    if (actionModel.userDetails!.userId == _communicationConfig.userConfig.userId) {
       return;
     }
     var allMessages =
@@ -391,7 +391,7 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleBlockUserOrUnBlock(IsmChatMqttActionModel actionModel) {
-    if (actionModel.initiatorDetails!.userId == _communicationConfig.userId) {
+    if (actionModel.initiatorDetails!.userId == _communicationConfig.userConfig.userId) {
       return;
     }
     if (Get.isRegistered<IsmChatPageController>()) {

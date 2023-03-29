@@ -60,7 +60,7 @@ class IsmChatPrediction {
     String? iconBackgroundColor,
     String? iconMaskBaseUri,
     String? name,
-    dynamic? rating,
+    dynamic rating,
     String? scope,
     int? userRatingsTotal,
     String? vicinity,
