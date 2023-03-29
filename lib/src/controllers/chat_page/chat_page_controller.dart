@@ -133,74 +133,83 @@ class IsmChatPageController extends GetxController {
 
   void showDialogForClearChat() async {
     await Get.dialog(IsmChatAlertDialogBox(
-      subTitleOne: IsmChatStrings.cancel,
-      subTitleTwo: IsmChatStrings.clearChat,
       titile: IsmChatStrings.deleteAllMessage,
-      onTapFunction: () {
-        clearAllMessages(conversationId: conversation.conversationId!);
-      },
+      actionLabels: const [IsmChatStrings.clearChat],
+      callbackActions: [
+        () => clearAllMessages(conversationId: conversation.conversationId!),
+      ],
     ));
   }
 
   void showDialogForBlockUnBlockUser(
       bool userBlockOrNot, int lastMessageTimsStamp) async {
     await Get.dialog(IsmChatAlertDialogBox(
-      subTitleOne: IsmChatStrings.cancel,
-      subTitleTwo:
-          userBlockOrNot ? IsmChatStrings.unblock : IsmChatStrings.block,
       titile: userBlockOrNot
           ? IsmChatStrings.doWantUnBlckUser
           : IsmChatStrings.doWantBlckUser,
-      onTapFunction: () {
-        userBlockOrNot
-            ? postUnBlockUser(
-                opponentId: conversation.opponentDetails!.userId,
-                lastMessageTimeStamp: lastMessageTimsStamp)
-            : postBlockUser(
-                opponentId: conversation.opponentDetails!.userId,
-                lastMessageTimeStamp: lastMessageTimsStamp);
-      },
+      actionLabels: [
+        userBlockOrNot ? IsmChatStrings.unblock : IsmChatStrings.block,
+      ],
+      callbackActions: [
+        () {
+          userBlockOrNot
+              ? postUnBlockUser(
+                  opponentId: conversation.opponentDetails!.userId,
+                  lastMessageTimeStamp: lastMessageTimsStamp)
+              : postBlockUser(
+                  opponentId: conversation.opponentDetails!.userId,
+                  lastMessageTimeStamp: lastMessageTimsStamp);
+        },
+      ],
     ));
   }
 
   void showDialogCheckBlockUnBlock() async {
-    await Get.dialog(IsmChatAlertDialogBox(
-        onTapFunction: () {
-          postUnBlockUser(
+    await Get.dialog(
+      IsmChatAlertDialogBox(
+        titile: IsmChatStrings.youBlockUser,
+        actionLabels: const [IsmChatStrings.unblock],
+        callbackActions: [
+          () => postUnBlockUser(
               opponentId: conversation.opponentDetails?.userId ?? '',
-              lastMessageTimeStamp: messages.last.sentAt);
-        },
-        subTitleOne: IsmChatStrings.cancel,
-        subTitleTwo: IsmChatStrings.unblock,
-        titile: IsmChatStrings.youBlockUser));
+              lastMessageTimeStamp: messages.last.sentAt),
+        ],
+      ),
+    );
   }
 
   void showDialogForMessageDelete(
       IsmChatChatMessageModel chatMessageModel) async {
     if (chatMessageModel.sentByMe) {
-      await Get.dialog(IsmChatAlertDialogBox(
-          onTapFunction: () {
-            ismMessageDeleteEveryOne(
+      await Get.dialog(
+        IsmChatAlertDialogBox(
+          titile: IsmChatStrings.deleteMessgae,
+          actionLabels: const [
+            IsmChatStrings.deleteForEvery,
+            IsmChatStrings.deleteForMe,
+          ],
+          callbackActions: [
+            () => ismMessageDeleteEveryOne(
                 conversationId: chatMessageModel.conversationId ?? '',
-                messageIds: chatMessageModel.messageId ?? '');
-          },
-          onTapFunctionTwo: () {
-            ismMessageDeleteSelf(
+                messageIds: chatMessageModel.messageId ?? ''),
+            () => ismMessageDeleteSelf(
                 conversationId: chatMessageModel.conversationId ?? '',
-                messageIds: chatMessageModel.messageId ?? '');
-          },
-          subTitleOne: IsmChatStrings.deleteForEvery,
-          subTitleTwo: IsmChatStrings.deleteForMe,
-          subTitleThree: IsmChatStrings.cancel,
-          threeAction: false,
-          titile: IsmChatStrings.deleteMessgae));
+                messageIds: chatMessageModel.messageId ?? ''),
+          ],
+        ),
+      );
     } else {
-      await Get.dialog(IsmChatAlertDialogBox(
-          onTapFunction: () {},
-          subTitleOne: IsmChatStrings.cancel,
-          subTitleTwo: IsmChatStrings.deleteForMe.toUpperCase(),
+      await Get.dialog(
+        IsmChatAlertDialogBox(
           titile:
-              '${IsmChatStrings.deleteFromUser} ${conversation.opponentDetails?.userName}'));
+              '${IsmChatStrings.deleteFromUser} ${conversation.opponentDetails?.userName}',
+          actionLabels: const [IsmChatStrings.deleteForMe],
+          callbackActions: [
+            // TODO: Delete from local db
+            () {},
+          ],
+        ),
+      );
     }
   }
 

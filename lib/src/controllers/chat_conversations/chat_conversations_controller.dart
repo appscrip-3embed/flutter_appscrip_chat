@@ -40,24 +40,7 @@ class IsmChatConversationsController extends GetxController {
   List<UserDetails> get userList => _userList;
   set userList(List<UserDetails> value) => _userList.value = value;
 
-  final RxString _listPagination = ''.obs;
-  String get listPageination => _listPagination.value;
-  set listPageination(String value) {
-    _listPagination.value = value;
-  }
-
-  Future<void> getUserList({
-    int count = 20,
-  }) async {
-    var response =
-        await _viewModel.getUserList(count: count, pageToken: listPageination);
-    if (response == null) {
-      return;
-    }
-    userList.addAll(response.users);
-    userList.sort((a, b) => a.userName.compareTo(b.userName));
-    listPageination = response.pageToken;
-  }
+  String usersPageToken = '';
 
   @override
   onInit() async {
@@ -72,44 +55,67 @@ class IsmChatConversationsController extends GetxController {
     await getChatConversations();
   }
 
+  /// This will be used to fetch all the users associated with the current user
+  ///
+  /// Will be used for Create chat and/or Forward message
+  Future<void> getUserList({
+    int count = 20,
+  }) async {
+    var response = await _viewModel.getUserList(
+      count: count,
+      pageToken: usersPageToken,
+    );
+    if (response == null) {
+      return;
+    }
+    userList.addAll(response.users);
+    userList.sort((a, b) => a.userName.compareTo(b.userName));
+    usersPageToken = response.pageToken;
+  }
+
   void deleteConversationAndClearChat(
-      IsmChatChatConversationModel chatConversationModel) async {
+    IsmChatChatConversationModel chatConversationModel,
+  ) async {
     await Get.bottomSheet(
-        IsmChatBottomSheetOption(
-          tapFristTitle: () async {
-            showDialogForClearChat(chatConversationModel);
-          },
-          tapSecondTitle: () async {
-            showDialogForDeletChat(chatConversationModel);
-          },
-        ),
-        elevation: 0,
-        backgroundColor: Colors.transparent);
+      IsmChatBottomSheet(
+        onClearTap: () {
+          showDialogForClearChat(chatConversationModel);
+        },
+        onDeleteTap: () async {
+          showDialogForDeletChat(chatConversationModel);
+        },
+      ),
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+    );
   }
 
   void showDialogForClearChat(
-      IsmChatChatConversationModel chatConversationModel) async {
+    IsmChatChatConversationModel chatConversationModel,
+  ) async {
     await Get.dialog(IsmChatAlertDialogBox(
-      subTitleOne: IsmChatStrings.cancel,
-      subTitleTwo: IsmChatStrings.clearChat,
       titile: IsmChatStrings.deleteAllMessage,
-      onTapFunction: () {
-        clearAllMessages(
-            conversationId: chatConversationModel.conversationId ?? '');
-      },
+      actionLabels: const [IsmChatStrings.clearChat],
+      callbackActions: [
+        () => clearAllMessages(
+            conversationId: chatConversationModel.conversationId ?? ''),
+      ],
     ));
   }
 
   void showDialogForDeletChat(
       IsmChatChatConversationModel chatConversationModel) async {
-    await Get.dialog(IsmChatAlertDialogBox(
-        onTapFunction: () {
-          deleteChat(
-              conversationId: chatConversationModel.conversationId ?? '');
-        },
-        subTitleOne: IsmChatStrings.cancel,
-        subTitleTwo: IsmChatStrings.deleteChat,
-        titile: '${IsmChatStrings.deleteChat}?'));
+    await Get.dialog(
+      IsmChatAlertDialogBox(
+        titile: '${IsmChatStrings.deleteChat}?',
+        actionLabels: const [IsmChatStrings.deleteChat],
+        callbackActions: [
+          () => deleteChat(
+                conversationId: chatConversationModel.conversationId ?? '',
+              ),
+        ],
+      ),
+    );
   }
 
   void navigateToMessages(IsmChatChatConversationModel conversation) {
