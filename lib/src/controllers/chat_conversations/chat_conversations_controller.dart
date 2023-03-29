@@ -1,12 +1,9 @@
-import 'dart:ffi';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
+import 'package:appscrip_chat_component/src/widgets/alert_dailog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
-import '../../widgets/alert_dailog.dart';
 
 class IsmChatConversationsController extends GetxController {
   IsmChatConversationsController(this._viewModel);
@@ -38,6 +35,29 @@ class IsmChatConversationsController extends GetxController {
     initialRefresh: false,
     initialLoadStatus: LoadStatus.idle,
   );
+
+    final _userList = <UserDetails>[].obs;
+  List<UserDetails> get userList => _userList;
+  set userList(List<UserDetails> value) => _userList.value = value;
+
+  final RxString _listPagination = ''.obs;
+  String get listPageination => _listPagination.value;
+  set listPageination(String value) {
+    _listPagination.value = value;
+  }
+
+  Future<void> getUserList({
+    int count = 20,
+  }) async {
+    var response = await _viewModel.getUserList(
+        count: count, pageToken: listPageination);
+    if (response == null) {
+      return;
+    }
+    userList.addAll(response.users);
+    userList.sort((a, b) => a.userName.compareTo(b.userName));
+    listPageination = response.pageToken;
+  }
 
   @override
   onInit() async {

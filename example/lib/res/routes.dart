@@ -8,4 +8,5 @@ class AppRoutes {
   static const String chatList = '/chatList';
   static const String chatView = '/chatView';
   static const String messageInfo = '/messageInfo';
+  static const String userListPage = '/userListPage';
 }

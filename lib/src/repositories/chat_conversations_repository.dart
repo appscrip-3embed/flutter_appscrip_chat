@@ -5,6 +5,30 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 class ChatConversationsRepository {
   final _apiWrapper = IsmChatApiWrapper();
 
+
+
+  Future<IsmUserListModel?> getUserList({
+      String? pageToken,
+     int? count,
+  }) async {
+    try {
+      var response = await _apiWrapper.get(
+        IsmChatAPI.userDetails,
+        headers: ChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return null;
+      }
+
+      var data = jsonDecode(response.data) as Map<String, dynamic>;
+      var user = IsmUserListModel.fromMap(data);
+      return user;
+    } catch (e, st) {
+      ChatLog.error('GetChatConversations $e', st);
+      return null;
+    }
+  }
+
   Future<List<ChatConversationModel>?> getChatConversations({
     required int skip,
     required int limit,

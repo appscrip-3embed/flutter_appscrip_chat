@@ -6,6 +6,7 @@ class IsmChatConversations extends StatefulWidget {
     required this.onChatTap,
     this.onSignOut,
     this.showAppBar = false,
+    this.floatingButtonTap,
     super.key,
   }) : assert(
             (showAppBar && onSignOut != null) ||
@@ -14,6 +15,8 @@ class IsmChatConversations extends StatefulWidget {
 
   final bool showAppBar;
   final VoidCallback? onSignOut;
+
+  final VoidCallback? floatingButtonTap;
 
   final void Function(BuildContext, ChatConversationModel) onChatTap;
 
@@ -34,7 +37,7 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
             ? IsmChatListHeader(onSignOut: widget.onSignOut!)
             : null,
         body: SafeArea(
-          child:  IsmChatConversationList(
+          child: IsmChatConversationList(
             onTap: widget.onChatTap,
           ),
         ),

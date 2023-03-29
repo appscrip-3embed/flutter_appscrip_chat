@@ -12,6 +12,13 @@ class ChatConversationsViewModel {
 
   Future<UserDetails?> getUserData() async => await _repository.getUserData();
 
+
+  Future<IsmUserListModel?> getUserList({
+    String? pageToken,
+    int? count,
+  }) async =>
+      _repository.getUserList(count: count,pageToken: pageToken);
+
   Future<ResponseModel?> deleteChat({
     required String conversationId,
   }) async => await _repository.deleteChat(

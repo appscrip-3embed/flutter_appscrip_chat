@@ -30,6 +30,7 @@ class ChatList extends GetView<ChatListController> {
           showAppBar: true,
           onSignOut: controller.onSignOut,
           onChatTap: (_, __) => RouteManagement.goToChatMessages(),
+          floatingButtonTap: () => RouteManagement.goToUserList(),
         ),
       ),
     );

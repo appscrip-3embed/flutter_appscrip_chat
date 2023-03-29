@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
   const IsmChatListHeader({
     super.key,
-    required this.onSignOut,
+    this.onSignOut,
     this.height,
     this.profileImage,
     this.title,
@@ -24,7 +24,7 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
   final bool showSearch;
   final VoidCallback? onSearchTap;
   final List<Widget>? actions;
-  final VoidCallback onSignOut;
+  final VoidCallback? onSignOut;
 
   /// Defines the height of the [IsmChatListHeader]
   final double? height;
@@ -40,7 +40,7 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
           title: IsmTapHandler(
             onTap: () => Get.bottomSheet(
               IsmLogutBottomSheet(signOutTap: () {
-                onSignOut();
+                onSignOut!();
                 controller.signOut();
               }),
               elevation: ChatDimens.twenty,

@@ -10,3 +10,4 @@ export 'meta_data_model.dart';
 export 'mqtt_models/mqtt_models.dart';
 export 'response_model.dart';
 export 'user_details_model.dart';
+export 'user_list_model.dart';
