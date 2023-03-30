@@ -12,7 +12,7 @@ class IsmChatAttachmentCard extends StatelessWidget {
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(IsmChatDimens.ten),
                 topRight: Radius.circular(IsmChatDimens.ten))),
-        padding: IsmChatDimens.egdeInsets20,
+        padding: IsmChatDimens.edgeInsets20,
         height: 300,
         alignment: Alignment.center,
         child: Column(

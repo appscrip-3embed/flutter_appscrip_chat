@@ -4,6 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class IsmChatDimens {
   const IsmChatDimens._();
 
+  /// Get the height with the percent value of the screen height.
+  static double percentHeight(double percentValue) => percentValue.sh;
+
+  /// Get the width with the percent value of the screen width.
+  static double percentWidth(double percentValue) => percentValue.sw;
+
   static final double zero = 0.sp;
   static final double two = 2.sp;
   static final double four = 4.sp;
@@ -34,6 +40,7 @@ class IsmChatDimens {
   static final Widget boxHeight2 = SizedBox(height: two);
 
   static final Widget boxHeight8 = SizedBox(height: eight);
+  static final Widget boxHeight10 = SizedBox(height: eight);
   static final Widget boxHeight16 = SizedBox(height: sixteen);
   static final Widget boxHeight32 = SizedBox(height: thirtyTwo);
   static final Widget boxWidth2 = SizedBox(width: two);
@@ -45,37 +52,24 @@ class IsmChatDimens {
 
   static final Widget boxWidth32 = SizedBox(width: thirtyTwo);
 
-
-   /// Get the height with the percent value of the screen height.
-  static double percentHeight(double percentValue) => percentValue.sh;
-
-  /// Get the width with the percent value of the screen width.
-  static double percentWidth(double percentValue) => percentValue.sw;
-
-
-   static EdgeInsets edgeInsets10_50_0_0 = EdgeInsets.only(
-      top: fifty,
-      left: ten
-  );
-
-  static final EdgeInsets egdeInsets4 = EdgeInsets.all(four);
-  static final EdgeInsets egdeInsets4_0 =
+  static final EdgeInsets edgeInsets4 = EdgeInsets.all(four);
+  static final EdgeInsets edgeInsets4_0 =
       EdgeInsets.symmetric(horizontal: four);
-  static final EdgeInsets egdeInsets0_4 = EdgeInsets.symmetric(vertical: four);
-  static final EdgeInsets egdeInsets8_4 =
+  static final EdgeInsets edgeInsets0_4 = EdgeInsets.symmetric(vertical: four);
+  static final EdgeInsets edgeInsets8_4 =
       EdgeInsets.symmetric(horizontal: eight, vertical: four);
-  static final EdgeInsets egdeInsets8 = EdgeInsets.all(eight);
-  static final EdgeInsets egdeInsets10 = EdgeInsets.all(ten);
-  static final EdgeInsets egdeInsets10_5_10_10 =
+  static final EdgeInsets edgeInsets8 = EdgeInsets.all(eight);
+  static final EdgeInsets edgeInsets10 = EdgeInsets.all(ten);
+  static final EdgeInsets edgeInsets10_5_10_10 =
       EdgeInsets.only(left: ten, top: five, bottom: ten, right: ten);
-  static final EdgeInsets egdeInsetsTop20 = EdgeInsets.only(top: twenty);
-  static final EdgeInsets egdeInsets16 = EdgeInsets.all(sixteen);
-  static final EdgeInsets egdeInsets20 = EdgeInsets.all(twenty);
+  static final EdgeInsets edgeInsetsTop20 = EdgeInsets.only(top: twenty);
+  static final EdgeInsets edgeInsets16 = EdgeInsets.all(sixteen);
+  static final EdgeInsets edgeInsets20 = EdgeInsets.all(twenty);
 
-  static final EdgeInsets egdeInsets0_10 = EdgeInsets.symmetric(vertical: ten);
-  static final EdgeInsets egdeInsets10_0 =
+  static final EdgeInsets edgeInsets0_10 = EdgeInsets.symmetric(vertical: ten);
+  static final EdgeInsets edgeInsets10_0 =
       EdgeInsets.symmetric(horizontal: ten);
-  static final EdgeInsets egdeInsets8_10 =
+  static final EdgeInsets edgeInsets8_10 =
       EdgeInsets.symmetric(horizontal: eight, vertical: 10);
   static final EdgeInsets edgeInsetsBottom10 = EdgeInsets.only(bottom: ten);
 }

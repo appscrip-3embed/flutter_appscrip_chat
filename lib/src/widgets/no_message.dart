@@ -8,7 +8,7 @@ class IsmChatNoMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Center(
         child: Padding(
-          padding: IsmChatDimens.egdeInsets16,
+          padding: IsmChatDimens.edgeInsets16,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

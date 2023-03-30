@@ -132,6 +132,8 @@ class IsmChatPageController extends GetxController {
         data: messages,
       );
 
+  void takePhoto() {}
+
   void showDialogForClearChat() async {
     await Get.dialog(IsmChatAlertDialogBox(
       titile: IsmChatStrings.deleteAllMessage,

@@ -29,6 +29,20 @@ extension DistanceLatLng on LatLng {
   }
 }
 
+extension DuratoinFormat on Duration {
+  String formatDuration() {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    var twoDigitMinutes = twoDigits(inMinutes.remainder(60));
+    var twoDigitSeconds = twoDigits(inSeconds.remainder(60));
+    var hour = num.parse(twoDigits(inHours));
+    if (hour > 0) {
+      return '${twoDigits(inHours)}:$twoDigitMinutes:$twoDigitSeconds';
+    } else {
+      return '$twoDigitMinutes:$twoDigitSeconds';
+    }
+  }
+}
+
 extension DateConvertor on int {
   DateTime toDate() => DateTime.fromMillisecondsSinceEpoch(this);
 

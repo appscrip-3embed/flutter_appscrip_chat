@@ -21,7 +21,7 @@ class LoginView extends GetView<AuthController> {
       body: Form(
         key: controller.loginFormKey,
         child: Padding(
-          padding: Dimens.egdeInsets16,
+          padding: Dimens.edgeInsets16,
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,

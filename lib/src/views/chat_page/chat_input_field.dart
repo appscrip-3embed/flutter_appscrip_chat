@@ -26,7 +26,7 @@ class IsmChatInputField extends StatelessWidget {
               Container(
                 width: MediaQuery.of(context).size.width * 0.77,
                 margin:
-                    IsmChatDimens.egdeInsets8.copyWith(top: IsmChatDimens.four),
+                    IsmChatDimens.edgeInsets8.copyWith(top: IsmChatDimens.four),
                 decoration: BoxDecoration(
                   border:
                       Border.all(color: IsmChatTheme.of(context).primaryColor!),
@@ -38,8 +38,8 @@ class IsmChatInputField extends StatelessWidget {
                   children: [
                     if (controller.isreplying)
                       Container(
-                        margin: IsmChatDimens.egdeInsets4,
-                        padding: IsmChatDimens.egdeInsets10,
+                        margin: IsmChatDimens.edgeInsets4,
+                        padding: IsmChatDimens.edgeInsets10,
                         height: IsmChatDimens.sixty,
                         width: Get.width,
                         decoration: BoxDecoration(

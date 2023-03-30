@@ -32,7 +32,7 @@ class IsmChatMessageInfo extends StatelessWidget {
                   )),
             ),
             body: Container(
-              margin: IsmChatDimens.egdeInsets16,
+              margin: IsmChatDimens.edgeInsets16,
               height: Get.height,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -45,7 +45,7 @@ class IsmChatMessageInfo extends StatelessWidget {
                         borderRadius:
                             BorderRadius.circular(IsmChatDimens.eight),
                       ),
-                      padding: IsmChatDimens.egdeInsets8_4,
+                      padding: IsmChatDimens.edgeInsets8_4,
                       child: Text(
                         message.sentAt.toMessageDateString(),
                         style: IsmChatStyles.w500Black12.copyWith(
@@ -66,7 +66,7 @@ class IsmChatMessageInfo extends StatelessWidget {
                               : CrossAxisAlignment.start,
                           children: [
                             Container(
-                                padding: IsmChatDimens.egdeInsets4,
+                                padding: IsmChatDimens.edgeInsets4,
                                 constraints: BoxConstraints(
                                   maxWidth: context.width * .8,
                                   minWidth: context.width * .1,
@@ -91,7 +91,7 @@ class IsmChatMessageInfo extends StatelessWidget {
                                 child:
                                     message.customType!.messageType(message)),
                             Padding(
-                              padding: IsmChatDimens.egdeInsets0_4,
+                              padding: IsmChatDimens.edgeInsets0_4,
                               child: Row(
                                 children: [
                                   Text(
@@ -122,7 +122,7 @@ class IsmChatMessageInfo extends StatelessWidget {
                   Card(
                       elevation: 1,
                       child: Padding(
-                          padding: IsmChatDimens.egdeInsets10,
+                          padding: IsmChatDimens.edgeInsets10,
                           child: Column(children: [
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.end,

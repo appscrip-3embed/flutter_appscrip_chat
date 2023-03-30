@@ -42,7 +42,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                       controller: controller.messagesScrollController,
                       keyboardDismissBehavior:
                           ScrollViewKeyboardDismissBehavior.onDrag,
-                      padding: IsmChatDimens.egdeInsets8,
+                      padding: IsmChatDimens.edgeInsets8,
                       itemCount: controller.messages.length,
                       separatorBuilder: (_, __) => IsmChatDimens.boxHeight4,
                       itemBuilder: (_, index) =>
@@ -85,7 +85,7 @@ class ChatMessage extends StatelessWidget {
             : CrossAxisAlignment.start,
         children: [
           Container(
-            padding: IsmChatDimens.egdeInsets4,
+            padding: IsmChatDimens.edgeInsets4,
             constraints: showMessageInCenter
                 ? null
                 : BoxConstraints(
@@ -226,7 +226,7 @@ class ChatMessage extends StatelessWidget {
           ),
           if (!showMessageInCenter)
             Padding(
-              padding: IsmChatDimens.egdeInsets0_4,
+              padding: IsmChatDimens.edgeInsets0_4,
               child: Row(
                 children: [
                   Text(

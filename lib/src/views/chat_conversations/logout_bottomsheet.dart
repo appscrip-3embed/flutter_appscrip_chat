@@ -12,7 +12,7 @@ class IsmChatLogutBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
       builder: (controller) => Container(
-          padding: IsmChatDimens.egdeInsets10,
+          padding: IsmChatDimens.edgeInsets10,
           height: IsmChatDimens.hundred,
           child: ListTile(
             title: Text(

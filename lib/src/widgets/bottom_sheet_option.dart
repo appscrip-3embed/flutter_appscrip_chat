@@ -17,7 +17,7 @@ class IsmChatBottomSheet extends StatelessWidget {
         padding: IsmChatDimens.edgeInsetsBottom10,
         child: Container(
           height: 160,
-          margin: IsmChatDimens.egdeInsets10,
+          margin: IsmChatDimens.edgeInsets10,
           child: Column(
             children: [
               Container(
@@ -25,7 +25,7 @@ class IsmChatBottomSheet extends StatelessWidget {
                   color: IsmChatColors.whiteColor,
                   borderRadius: BorderRadius.circular(IsmChatDimens.twenty),
                 ),
-                padding: IsmChatDimens.egdeInsets20,
+                padding: IsmChatDimens.edgeInsets20,
                 width: Get.width,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -61,7 +61,7 @@ class IsmChatBottomSheet extends StatelessWidget {
               InkWell(
                 onTap: Get.back,
                 child: Container(
-                  padding: IsmChatDimens.egdeInsets10,
+                  padding: IsmChatDimens.edgeInsets10,
                   decoration: BoxDecoration(
                     color: IsmChatColors.whiteColor,
                     borderRadius: BorderRadius.circular(IsmChatDimens.twenty),

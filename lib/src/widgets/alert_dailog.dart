@@ -25,7 +25,7 @@ class IsmChatAlertDialogBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) => actionLabels.length <= 1
       ? AlertDialog(
-          actionsPadding: IsmChatDimens.egdeInsets16,
+          actionsPadding: IsmChatDimens.edgeInsets16,
           title: Text(titile),
           backgroundColor: IsmChatColors.whiteColor,
           titleTextStyle: IsmChatStyles.w600Black14,

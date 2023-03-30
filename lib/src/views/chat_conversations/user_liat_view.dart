@@ -17,7 +17,7 @@ class IsmChatUserPageView extends StatelessWidget {
           body: controller.userList.isEmpty
               ? const IsmChatLoadingDialog()
               : ListView.separated(
-                  padding: IsmChatDimens.egdeInsets0_10,
+                  padding: IsmChatDimens.edgeInsets0_10,
                   shrinkWrap: true,
                   itemCount: controller.userList.length,
                   separatorBuilder: (_, __) => IsmChatDimens.boxHeight8,
