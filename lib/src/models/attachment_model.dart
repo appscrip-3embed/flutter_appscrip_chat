@@ -22,30 +22,31 @@ class AttachmentModel {
                 : '',
         mediaId: map['mediaId'] as String,
         extension: map['extension'] as String,
-        attachmentType:
-            IsmChatAttachmentType.fromMap(map['attachmentType'] as int),
+        attachmentType: map['attachmentType'] == null
+            ? IsmChatAttachmentType.image
+            : IsmChatAttachmentType.fromMap(map['attachmentType'] as int),
       );
 
   AttachmentModel({
     this.id = 0,
-    required this.thumbnailUrl,
-    required this.size,
-    required this.name,
-    required this.mimeType,
-    required this.mediaUrl,
-    required this.mediaId,
-    required this.extension,
+    this.thumbnailUrl,
+    this.size,
+    this.name,
+    this.mimeType,
+    this.mediaUrl,
+    this.mediaId,
+    this.extension,
     this.attachmentType,
   });
 
   int id;
-  final String thumbnailUrl;
-  final double size;
-  final String name;
-  final String mimeType;
-  final String mediaUrl;
-  final String mediaId;
-  final String extension;
+  String? thumbnailUrl;
+  double? size;
+  String? name;
+  String? mimeType;
+  String? mediaUrl;
+  String? mediaId;
+  String? extension;
   @Transient()
   IsmChatAttachmentType? attachmentType;
 

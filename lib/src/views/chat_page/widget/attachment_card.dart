@@ -72,7 +72,7 @@ class IsmChatAttachmentCard extends StatelessWidget {
                     InkWell(
                         onTap: () {
                           Get.back<void>();
-                          // _chatUserController.ismHandleFileSelection();
+                          controller.sendDocument();
                         },
                         child: ListTile(
                           leading: Container(

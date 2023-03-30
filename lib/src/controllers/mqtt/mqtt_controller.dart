@@ -9,8 +9,6 @@ import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
 class IsmChatMqttController extends GetxController {
-  
-
   late MqttServerClient client;
 
   final deviceInfo = DeviceInfoPlugin();
@@ -267,7 +265,7 @@ class IsmChatMqttController extends GetxController {
       return;
     }
     var chatController = Get.find<IsmChatPageController>();
-    if (chatController.conversation.conversationId != message.conversationId) {
+    if (chatController.conversation?.conversationId != message.conversationId) {
       return;
     }
     unawaited(chatController.getMessagesFromDB(message.conversationId!));
@@ -289,7 +287,8 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleMessageDelivered(IsmChatMqttActionModel actionModel) {
-    if (actionModel.userDetails!.userId == _communicationConfig.userConfig.userId) {
+    if (actionModel.userDetails!.userId ==
+        _communicationConfig.userConfig.userId) {
       return;
     }
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
@@ -312,7 +311,8 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleMessageRead(IsmChatMqttActionModel actionModel) {
-    if (actionModel.userDetails!.userId == _communicationConfig.userConfig.userId) {
+    if (actionModel.userDetails!.userId ==
+        _communicationConfig.userConfig.userId) {
       return;
     }
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
@@ -335,7 +335,8 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleMultipleMessageRead(IsmChatMqttActionModel actionModel) {
-    if (actionModel.userDetails!.userId == _communicationConfig.userConfig.userId) {
+    if (actionModel.userDetails!.userId ==
+        _communicationConfig.userConfig.userId) {
       return;
     }
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
@@ -371,27 +372,30 @@ class IsmChatMqttController extends GetxController {
     }
   }
 
-  void _handleMessageDelelteForEveryOne(IsmChatMqttActionModel actionModel)async {
-    if (actionModel.userDetails!.userId == _communicationConfig.userConfig.userId) {
+  void _handleMessageDelelteForEveryOne(
+      IsmChatMqttActionModel actionModel) async {
+    if (actionModel.userDetails!.userId ==
+        _communicationConfig.userConfig.userId) {
       return;
     }
     var allMessages =
-      await  IsmChatConfig.objectBox.getMessages(actionModel.conversationId!);
+        await IsmChatConfig.objectBox.getMessages(actionModel.conversationId!);
     if (allMessages == null) {
       return;
     }
     allMessages
         .removeWhere((e) => e.messageId! == actionModel.messageIds?.first);
-   await IsmChatConfig.objectBox
+    await IsmChatConfig.objectBox
         .saveMessages(actionModel.conversationId!, allMessages);
     if (Get.isRegistered<IsmChatPageController>()) {
-     await Get.find<IsmChatPageController>()
+      await Get.find<IsmChatPageController>()
           .getMessagesFromDB(actionModel.conversationId!);
     }
   }
 
   void _handleBlockUserOrUnBlock(IsmChatMqttActionModel actionModel) {
-    if (actionModel.initiatorDetails!.userId == _communicationConfig.userConfig.userId) {
+    if (actionModel.initiatorDetails!.userId ==
+        _communicationConfig.userConfig.userId) {
       return;
     }
     if (Get.isRegistered<IsmChatPageController>()) {

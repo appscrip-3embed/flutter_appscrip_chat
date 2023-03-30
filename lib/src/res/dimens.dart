@@ -53,6 +53,8 @@ class IsmChatDimens {
   static final Widget boxWidth32 = SizedBox(width: thirtyTwo);
 
   static final EdgeInsets edgeInsets4 = EdgeInsets.all(four);
+  static final EdgeInsets edgeInsets0 = EdgeInsets.all(zero);
+
   static final EdgeInsets edgeInsets4_0 =
       EdgeInsets.symmetric(horizontal: four);
   static final EdgeInsets edgeInsets0_4 = EdgeInsets.symmetric(vertical: four);
@@ -60,9 +62,16 @@ class IsmChatDimens {
       EdgeInsets.symmetric(horizontal: eight, vertical: four);
   static final EdgeInsets edgeInsets8 = EdgeInsets.all(eight);
   static final EdgeInsets edgeInsets10 = EdgeInsets.all(ten);
+  static EdgeInsets edgeInsetsHorizontal10 = EdgeInsets.symmetric(
+    vertical: zero,
+    horizontal: ten
+  );
+
   static final EdgeInsets edgeInsets10_5_10_10 =
       EdgeInsets.only(left: ten, top: five, bottom: ten, right: ten);
   static final EdgeInsets edgeInsetsTop20 = EdgeInsets.only(top: twenty);
+  static final EdgeInsets edgeInsets16_0_19_8 = EdgeInsets.only(left: sixteen,right: ten,bottom: eight);
+
   static final EdgeInsets edgeInsets16 = EdgeInsets.all(sixteen);
   static final EdgeInsets edgeInsets0_16_0_0 =
       EdgeInsets.fromLTRB(zero, sixteen, zero, zero);
@@ -74,4 +83,6 @@ class IsmChatDimens {
   static final EdgeInsets edgeInsets8_10 =
       EdgeInsets.symmetric(horizontal: eight, vertical: 10);
   static final EdgeInsets edgeInsetsBottom10 = EdgeInsets.only(bottom: ten);
+  static final EdgeInsets edgeInsetsBottom50 = EdgeInsets.only(bottom: fifty);
+
 }

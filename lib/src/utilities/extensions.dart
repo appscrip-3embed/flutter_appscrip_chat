@@ -13,6 +13,9 @@ extension MatchString on String {
 
   String get convertToValidUrl =>
       'https://${replaceAll('http://', '').replaceAll('https://', '')}';
+
+  bool get isValidUrl =>
+      toLowerCase().contains('https') || toLowerCase().contains('www');
 }
 
 extension DistanceLatLng on LatLng {
@@ -41,6 +44,19 @@ extension DurationExtensions on Duration {
     } else {
       return '$twoDigitMinutes:$twoDigitSeconds';
     }
+  }
+}
+
+extension IntToTimeLeft on int {
+  String getTimerRecord(int value) {
+    int h, m, s;
+    h = value ~/ 3600;
+    m = (value - h * 3600) ~/ 60;
+    s = value - (h * 3600) - (m * 60);
+    var minuteLeft = m.toString().length < 2 ? '0$m' : m.toString();
+    var secondsLeft = s.toString().length < 2 ? '0$s' : s.toString();
+    var result = '$minuteLeft:$secondsLeft';
+    return result;
   }
 }
 

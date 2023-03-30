@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class IsmChatPageRepository {
@@ -27,6 +28,22 @@ class IsmChatPageRepository {
           .toList();
     } catch (e, st) {
       IsmChatLog.error('GetChatMessages $e', st);
+      return null;
+    }
+  }
+
+  Future<IsmChatResponseModel?> updatePresignedUrl(
+      {String? presignedUrl, Uint8List? bytes}) async {
+    try {
+      var response =
+          await _apiWrapper.put(presignedUrl!, payload: bytes, headers: {});
+      if (response.hasError) {
+        return null;
+      }
+
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Send Message $e', st);
       return null;
     }
   }
@@ -59,7 +76,9 @@ class IsmChatPageRepository {
         'metaData': metaData,
         'events': events,
         'customType': customType,
-        'attachments': attachments
+        'attachments': attachments,
+        'notificationBody': notificationBody,
+        'notificationTitle': notificationTitle
       };
       var response = await _apiWrapper.post(IsmChatAPI.sendMessage,
           payload: payload, headers: IsmChatUtility.tokenCommonHeader());
@@ -175,7 +194,7 @@ class IsmChatPageRepository {
     }
   }
 
-  Future<void> postMediaUrl({
+  Future<List<PresignedUrlModel>?> postMediaUrl({
     required String conversationId,
     required String nameWithExtension,
     required int mediaType,
@@ -198,10 +217,17 @@ class IsmChatPageRepository {
         headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
-        return;
+        return null;
       }
+
+      var data = jsonDecode(response.data);
+
+      return (data['presignedUrls'] as List)
+          .map((e) => PresignedUrlModel.fromMap(e as Map<String, dynamic>))
+          .toList();
     } catch (e, st) {
       IsmChatLog.error('Media url $e', st);
+      return null;
     }
   }
 

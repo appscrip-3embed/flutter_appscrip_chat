@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:camera/camera.dart';
@@ -13,23 +13,6 @@ class IsmChatCameraView extends StatefulWidget {
 }
 
 class _CameraScreenViewState extends State<IsmChatCameraView> {
-  Timer? _timer;
-  Duration myDuration = const Duration();
-
-  @override
-  void initState() {
-    super.initState();
-    // Get.find<IsmChatPageController>().initializeCamera();
-  }
-
-  void startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      var seconds = myDuration.inSeconds + 1;
-      myDuration = Duration(seconds: seconds);
-      setState(() {});
-    });
-  }
-
   @override
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: IsmChatColors.blackColor,
@@ -49,7 +32,7 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                         borderRadius: BorderRadius.circular(IsmChatDimens.five),
                       ),
                       child: Text(
-                        myDuration.formatDuration(),
+                        controller.myDuration.formatDuration(),
                         style: const TextStyle(color: IsmChatColors.whiteColor),
                       ),
                     ),
@@ -94,7 +77,7 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                             onLongPressStart: (_) async {
                               await controller.cameraController
                                   .startVideoRecording();
-                              startTimer();
+                              controller.startTimer();
                               controller.isRecording = true;
                             },
                             onLongPressEnd: (_) async {
@@ -102,8 +85,8 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                                   .stopVideoRecording();
                               setState(() {
                                 controller.isRecording = false;
-                                _timer?.cancel();
-                                myDuration = const Duration();
+                                controller.timer?.cancel();
+                                controller.myDuration = const Duration();
                                 if (controller.flashMode != FlashMode.off) {
                                   controller.toggleFlash(FlashMode.off);
                                 }
@@ -112,10 +95,9 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                                   controller.toggleCamera();
                                 }
                               });
-                              // TODO: take video to edit
-                              // await Get.to<void>(IsmVideoSendForEdit(
-                              //   file: File(file.path),
-                              // ));
+                              await Get.to<void>(IsmChatVideoView(
+                                file: File(file.path),
+                              ));
                             },
                             onTap: controller.isRecording
                                 ? null

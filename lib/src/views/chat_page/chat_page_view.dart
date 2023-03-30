@@ -68,6 +68,7 @@ class ChatMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    IsmChatLog.success('dsffdsffdfdsfd ${message.attachments?.first.mediaUrl}');
     var showMessageInCenter =
         message.customType! == IsmChatCustomMessageType.date ||
             message.customType! == IsmChatCustomMessageType.block ||

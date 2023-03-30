@@ -15,7 +15,7 @@ class IsmChatConversationModel {
         // searchableTags:
         //     List<String>.from(map['searchableTags'] as List<dynamic>),
         privateOneToOne: map['privateOneToOne'] as bool? ?? false,
-        opponentDetails:
+        opponentDetails: 
             UserDetails.fromMap(map['opponentDetails'] as Map<String, dynamic>),
         metaData:
             IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),

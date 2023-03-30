@@ -99,6 +99,7 @@ class IsmChatObjectBox {
 
   /// Add pending Message
   Future<void> addPendingMessage(IsmChatChatMessageModel messageModel) async {
+  
     final query = pendingMessageBox
         .query(PendingMessageModel_.conversationId
             .equals(messageModel.conversationId ?? ''))
@@ -134,7 +135,8 @@ class IsmChatObjectBox {
     }
   }
 
-  Future<List<IsmChatChatMessageModel>?> getMessages(String conversationId)async {
+  Future<List<IsmChatChatMessageModel>?> getMessages(
+      String conversationId) async {
     var conversation = chatConversationBox
         .query(DBConversationModel_.conversationId.equals(conversationId))
         .build()

@@ -40,10 +40,10 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IsmChatImage.profile(
-                    controller.conversation.opponentDetails
+                    controller.conversation?.opponentDetails
                             ?.userProfileImageUrl ??
                         '',
-                    name: controller.conversation.chatName,
+                    name: controller.conversation?.chatName,
                   ),
                   IsmChatDimens.boxWidth8,
                   Column(
@@ -51,19 +51,20 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        controller.conversation.chatName,
+                        controller.conversation?.chatName ?? '',
                         style: IsmChatStyles.w600White18,
                       ),
                       Obx(
                         () => mqttController.typingUsersIds.contains(
-                                controller.conversation.conversationId)
+                                controller.conversation?.conversationId)
                             ? Text(
                                 IsmChatStrings.typing,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: IsmChatStyles.w400White12,
                               )
-                            : controller.conversation.opponentDetails?.online ??
+                            : controller.conversation?.opponentDetails
+                                        ?.online ??
                                     false
                                 ? Text(
                                     IsmChatStrings.online,
@@ -72,7 +73,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                     style: IsmChatStyles.w400White12,
                                   )
                                 : Text(
-                                    '${controller.conversation.opponentDetails?.lastSeen.toCurrentTimeStirng().capitalizeFirst}',
+                                    '${controller.conversation?.opponentDetails?.lastSeen.toCurrentTimeStirng().capitalizeFirst}',
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: IsmChatStyles.w400White12,

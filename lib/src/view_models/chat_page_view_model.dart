@@ -1,5 +1,6 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class IsmChatPageViewModel {
@@ -43,6 +44,16 @@ class IsmChatPageViewModel {
     return messages;
   }
 
+  Future<int?> updatePresignedUrl(
+      {String? presignedUrl, Uint8List? bytes}) async {
+    var respone = await _repository.updatePresignedUrl(
+        presignedUrl: presignedUrl, bytes: bytes);
+    if (!respone!.hasError) {
+      return respone.errorCode;
+    }
+    return null;
+  }
+
   Future<bool> sendMessage({
     required bool showInConversation,
     required int messageType,
@@ -64,6 +75,10 @@ class IsmChatPageViewModel {
     try {
       var messageId = await _repository.sendMessage(
         showInConversation: showInConversation,
+        attachments: attachments,
+        events: events,
+        mentionedUsers: mentionedUsers,
+        metaData: metaData,
         messageType: messageType,
         customType: customType,
         parentMessageId: parentMessageId,
@@ -71,7 +86,7 @@ class IsmChatPageViewModel {
         deviceId: deviceId,
         conversationId: conversationId,
         notificationBody: notificationBody,
-        notificationTitle: notificationBody,
+        notificationTitle: notificationTitle,
         body: body,
       );
       if (messageId == null || messageId.isEmpty) {
@@ -224,7 +239,7 @@ class IsmChatPageViewModel {
     return null;
   }
 
-  Future<void> postMediaUrl({
+  Future<List<PresignedUrlModel>?> postMediaUrl({
     required String conversationId,
     required String nameWithExtension,
     required int mediaType,
@@ -273,7 +288,8 @@ class IsmChatPageViewModel {
       messageIds: messageIds,
     );
     if (!response!.hasError) {
-      var allMessages = await IsmChatConfig.objectBox.getMessages(conversationId);
+      var allMessages =
+          await IsmChatConfig.objectBox.getMessages(conversationId);
       if (allMessages == null) {
         return;
       }
@@ -295,7 +311,8 @@ class IsmChatPageViewModel {
       messageIds: messageIds,
     );
     if (!response!.hasError) {
-      var allMessages =  await IsmChatConfig.objectBox.getMessages(conversationId);
+      var allMessages =
+          await IsmChatConfig.objectBox.getMessages(conversationId);
       if (allMessages == null) {
         return;
       }
@@ -340,8 +357,7 @@ class IsmChatPageViewModel {
         searchKeyword: searchKeyword,
       );
 
-
-      Future<IsmChatResponseModel?> createConversation({
+  Future<IsmChatResponseModel?> createConversation({
     required bool typingEvents,
     required bool readEvents,
     required bool pushNotifications,

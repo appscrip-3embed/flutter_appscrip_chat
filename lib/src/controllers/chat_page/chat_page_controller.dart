@@ -1,14 +1,22 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:core';
+import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
 import 'package:appscrip_chat_component/src/widgets/alert_dailog.dart';
 import 'package:camera/camera.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
+import 'package:record/record.dart';
+import 'package:video_compress/video_compress.dart';
 
 class IsmChatPageController extends GetxController {
   IsmChatPageController(this._viewModel);
@@ -18,7 +26,7 @@ class IsmChatPageController extends GetxController {
 
   final _deviceConfig = Get.find<IsmChatDeviceConfig>();
 
-  late IsmChatConversationModel conversation;
+  IsmChatConversationModel? conversation;
 
   var focusNode = FocusNode();
 
@@ -82,7 +90,7 @@ class IsmChatPageController extends GetxController {
   bool get areCamerasInitialized => _areCamerasInitialized.value;
   set areCamerasInitialized(bool value) => _areCamerasInitialized.value = value;
 
-  final RxBool _isFrontCameraSelected = false.obs;
+  final RxBool _isFrontCameraSelected = true.obs;
   bool get isFrontCameraSelected => _isFrontCameraSelected.value;
   set isFrontCameraSelected(bool value) => _isFrontCameraSelected.value = value;
 
@@ -94,20 +102,48 @@ class IsmChatPageController extends GetxController {
   FlashMode get flashMode => _flashMode.value;
   set flashMode(FlashMode value) => _flashMode.value = value;
 
-  Future<void>? cameraInitialize;
+  final Rx<File?> _imagePath = Rx<File?>(null);
+  File? get imagePath => _imagePath.value;
+  set imagePath(File? value) {
+    _imagePath.value = value;
+  }
+
+  Timer? timer;
+
+  final RxBool _isEnableRecordingAudio = false.obs;
+  bool get isEnableRecordingAudio => _isEnableRecordingAudio.value;
+  set isEnableRecordingAudio(bool value) {
+    _isEnableRecordingAudio.value = value;
+  }
+
+  final recordAudio = Record();
+
+  final RxInt _seconds = 0.obs;
+  int get seconds => _seconds.value;
+  set seconds(int value) {
+    _seconds.value = value;
+  }
+
+  final Rx<Duration> _myDuration = const Duration().obs;
+  Duration get myDuration => _myDuration.value;
+  set myDuration(Duration value) {
+    _myDuration.value = value;
+  }
 
   @override
   void onInit() {
     super.onInit();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
-      getMessagesFromDB(conversation.conversationId!);
+      IsmChatLog.success('dffdfdfdsfsdfdsfds ${conversation?.conversationId}');
+      getMessagesFromDB(conversation?.conversationId ?? '');
       getMessagesFromAPI();
       readAllMessages(
-        conversationId: conversation.conversationId!,
-        timestamp: conversation.lastMessageSentAt!,
+        conversationId: conversation?.conversationId ?? '',
+        timestamp: conversation?.lastMessageSentAt ?? 0,
       );
-      getConverstaionDetails(conversationId: conversation.conversationId!);
+      getConverstaionDetails(
+          conversationId: conversation?.conversationId ?? '');
     }
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
@@ -121,6 +157,13 @@ class IsmChatPageController extends GetxController {
       _backCameraController.dispose();
     }
     super.onClose();
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      var seconds = myDuration.inSeconds + 1;
+      myDuration = Duration(seconds: seconds);
+    });
   }
 
   Future<void> initializeCamera() async {
@@ -190,7 +233,7 @@ class IsmChatPageController extends GetxController {
     var data = await _viewModel.getChatMessages(
       conversationId: conversationId.isNotEmpty
           ? conversationId
-          : conversation.conversationId!,
+          : conversation?.conversationId ?? '',
       lastMessageTimestamp: lastMessageTimestampFromFunction != 0
           ? lastMessageTimestampFromFunction
           : lastMessageTimestamp,
@@ -200,7 +243,7 @@ class IsmChatPageController extends GetxController {
     }
 
     if (data != null) {
-      await getMessagesFromDB(conversation.conversationId!);
+      await getMessagesFromDB(conversation?.conversationId ?? '');
       _scrollToBottom();
     }
   }
@@ -211,34 +254,33 @@ class IsmChatPageController extends GetxController {
         data: messages,
       );
 
+  Future<void> ismCropImage(File file) async {
+    final croppedFile = await ImageCropper().cropImage(
+      sourcePath: file.path,
+      compressFormat: ImageCompressFormat.jpg,
+      compressQuality: 100,
+      uiSettings: [
+        AndroidUiSettings(
+            toolbarTitle: 'Cropper',
+            toolbarColor: Colors.black,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        IOSUiSettings(
+          title: 'Cropper',
+        ),
+      ],
+    );
+    if (croppedFile != null) {
+      imagePath = File(croppedFile.path);
+
+      IsmChatLog.success('Image cropped ${imagePath?.path}');
+    }
+  }
+
   void takePhoto() async {
-    // _cameraController = CameraController(
-    //   cameras![0],
-    //   ResolutionPreset.high,
-    //   // enableAudio: true,
-    //   // imageFormatGroup: ImageFormatGroup.jpeg
-    // );
-    // var file = await _cameraController!.takePicture();
-    // setState(() {
-    //   if (flash) {
-    //     _cameraController!.setFlashMode(FlashMode.off);
-    //     flash = !flash;
-    //   }
-    //   if (!isCameraFront) {
-    //     _cameraController = CameraController(
-    //       cameras![0],
-    //       ResolutionPreset.low,
-    //     );
-    //     cameraValue = _cameraController!.initialize();
-    //     isCameraFront = !isCameraFront;
-    //   }
-    // });
-    // final chatPageController = Get.find<IsmChatPageController>();
-    // chatPageController.listOfAssetsPath.add(
-    //     AttachmentSend(path: file.path, mediaType: Media.image.toString()));
-    // if (chatPageController.listOfAssetsPath.isNotEmpty) {
-    //   await Get.to<void>(IsmCameraEditImageWidget());
-    // }
+    var file = await cameraController.takePicture();
+    await Get.to(IsmChatImageEditView(file: File(file.path)));
   }
 
   void showDialogForClearChat() async {
@@ -246,7 +288,8 @@ class IsmChatPageController extends GetxController {
       titile: IsmChatStrings.deleteAllMessage,
       actionLabels: const [IsmChatStrings.clearChat],
       callbackActions: [
-        () => clearAllMessages(conversationId: conversation.conversationId!),
+        () => clearAllMessages(
+            conversationId: conversation?.conversationId ?? ''),
       ],
     ));
   }
@@ -264,10 +307,10 @@ class IsmChatPageController extends GetxController {
         () {
           userBlockOrNot
               ? postUnBlockUser(
-                  opponentId: conversation.opponentDetails!.userId,
+                  opponentId: conversation?.opponentDetails!.userId ?? '',
                   lastMessageTimeStamp: lastMessageTimsStamp)
               : postBlockUser(
-                  opponentId: conversation.opponentDetails!.userId,
+                  opponentId: conversation?.opponentDetails!.userId ?? '',
                   lastMessageTimeStamp: lastMessageTimsStamp);
         },
       ],
@@ -281,7 +324,7 @@ class IsmChatPageController extends GetxController {
         actionLabels: const [IsmChatStrings.unblock],
         callbackActions: [
           () => postUnBlockUser(
-              opponentId: conversation.opponentDetails?.userId ?? '',
+              opponentId: conversation?.opponentDetails?.userId ?? '',
               lastMessageTimeStamp: messages.last.sentAt),
         ],
       ),
@@ -312,7 +355,7 @@ class IsmChatPageController extends GetxController {
       await Get.dialog(
         IsmChatAlertDialogBox(
           titile:
-              '${IsmChatStrings.deleteFromUser} ${conversation.opponentDetails?.userName}',
+              '${IsmChatStrings.deleteFromUser} ${conversation?.opponentDetails?.userName}',
           actionLabels: const [IsmChatStrings.deleteForMe],
           callbackActions: [
             // TODO: Delete from local db
@@ -323,6 +366,247 @@ class IsmChatPageController extends GetxController {
     }
   }
 
+  void sendAudio(String? file) async {
+    if (file != null) {
+      var ismChatObjectBox = IsmChatConfig.objectBox;
+      final chatConversationResponse = await ismChatObjectBox.getDBConversation(
+          conversationId: conversation?.conversationId ?? '');
+      if (chatConversationResponse == null) {
+        await createConversation(
+            userId: [conversation?.opponentDetails?.userId ?? '']);
+      }
+      final bytes = File(file).readAsBytesSync();
+      final nameWithExtension = file.split('/').last;
+      final extension = nameWithExtension.split('.').last;
+      final mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
+      var sentAt = DateTime.now().millisecondsSinceEpoch;
+      var audioMessage = IsmChatChatMessageModel(
+        body: 'Documet',
+        conversationId: conversation?.conversationId ?? '',
+        customType: IsmChatCustomMessageType.audio,
+        attachments: [
+          AttachmentModel(
+              attachmentType: IsmChatAttachmentType.audio,
+              thumbnailUrl: file,
+              size: double.parse(bytes.length.toString()),
+              name: nameWithExtension,
+              mimeType: extension,
+              mediaUrl: file,
+              mediaId: mediaId,
+              extension: extension)
+        ],
+        deliveredToAll: false,
+        messageId: '',
+        deviceId: _deviceConfig.deviceId!,
+        messageType: IsmChatMessageType.normal,
+        messagingDisabled: false,
+        parentMessageId: '',
+        readByAll: false,
+        sentAt: sentAt,
+        sentByMe: true,
+      );
+      messages.add(audioMessage);
+      await ismChatObjectBox.addPendingMessage(audioMessage);
+      await ismPostMediaUrl(
+        imageAndFile: true,
+        bytes: bytes,
+        createdAt: sentAt,
+        ismChatChatMessageModel: audioMessage,
+        mediaId: sentAt.toString(),
+        mediaType: IsmChatAttachmentType.audio.value,
+        nameWithExtension: nameWithExtension,
+        notificationBody: 'Send you an Audio',
+        notificationTitle: conversation?.opponentDetails?.userName ?? 'User',
+      );
+    }
+  }
+
+  void sendDocument() async {
+    final result = await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        type: FileType.any,
+        allowCompression: true,
+        withData: true);
+    if (result!.files.isNotEmpty) {
+      var ismChatObjectBox = IsmChatConfig.objectBox;
+      final chatConversationResponse = await ismChatObjectBox.getDBConversation(
+          conversationId: conversation?.conversationId ?? '');
+      if (chatConversationResponse == null) {
+        await createConversation(
+            userId: [conversation?.opponentDetails?.userId ?? '']);
+      }
+      for (var x in result.files) {
+        final bytes = x.bytes;
+        final nameWithExtension = x.path!.split('/').last;
+        final extension = nameWithExtension.split('.').last;
+        var sentAt = DateTime.now().millisecondsSinceEpoch;
+        var videoMessage = IsmChatChatMessageModel(
+          body: 'Documet',
+          conversationId: conversation?.conversationId ?? '',
+          customType: IsmChatCustomMessageType.file,
+          attachments: [
+            AttachmentModel(
+                attachmentType: IsmChatAttachmentType.file,
+                thumbnailUrl: x.path,
+                size: double.parse(x.bytes!.length.toString()),
+                name: nameWithExtension,
+                mimeType: extension,
+                mediaUrl: x.path,
+                mediaId: sentAt.toString(),
+                extension: extension)
+          ],
+          deliveredToAll: false,
+          messageId: '',
+          deviceId: _deviceConfig.deviceId!,
+          messageType: IsmChatMessageType.normal,
+          messagingDisabled: false,
+          parentMessageId: '',
+          readByAll: false,
+          sentAt: sentAt,
+          sentByMe: true,
+        );
+        messages.add(videoMessage);
+        await ismChatObjectBox.addPendingMessage(videoMessage);
+        await ismPostMediaUrl(
+          imageAndFile: true,
+          bytes: bytes,
+          createdAt: sentAt,
+          ismChatChatMessageModel: videoMessage,
+          mediaId: sentAt.toString(),
+          mediaType: IsmChatAttachmentType.file.value,
+          nameWithExtension: nameWithExtension,
+          notificationBody: 'Send you an Document',
+          notificationTitle: conversation?.opponentDetails?.userName ?? 'User',
+        );
+      }
+    }
+  }
+
+  void sendVideo({File? file}) async {
+    var ismChatObjectBox = IsmChatConfig.objectBox;
+    final chatConversationResponse = await ismChatObjectBox.getDBConversation(
+        conversationId: conversation?.conversationId ?? '');
+    if (chatConversationResponse == null) {
+      await createConversation(
+          userId: [conversation?.opponentDetails?.userId ?? '']);
+    }
+    final videoCopress = await VideoCompress.compressVideo(file!.path,
+        quality: VideoQuality.LowQuality, includeAudio: true);
+    final thumbnailFile = await VideoCompress.getFileThumbnail(file.path,
+        quality: 50, // default(100)
+        position: -1 // default(-1)
+        );
+    if (videoCopress != null) {
+      final bytes = videoCopress.file!.readAsBytesSync();
+      final thumbnailBytes = thumbnailFile.readAsBytesSync();
+      final thumbnailNameWithExtension = thumbnailFile.path.split('/').last;
+      final thumbnailMediaId =
+          thumbnailNameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
+      final nameWithExtension = file.path.split('/').last;
+      final mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
+      final extension = nameWithExtension.split('.').last;
+      var sentAt = DateTime.now().millisecondsSinceEpoch;
+      var videoMessage = IsmChatChatMessageModel(
+        body: 'Video',
+        conversationId: conversation?.conversationId ?? '',
+        customType: IsmChatCustomMessageType.image,
+        attachments: [
+          AttachmentModel(
+              attachmentType: IsmChatAttachmentType.video,
+              thumbnailUrl: thumbnailFile.path,
+              size: double.parse(bytes.length.toString()),
+              name: nameWithExtension,
+              mimeType: extension,
+              mediaUrl: videoCopress.file!.path,
+              mediaId: mediaId,
+              extension: extension)
+        ],
+        deliveredToAll: false,
+        messageId: '',
+        deviceId: _deviceConfig.deviceId!,
+        messageType: IsmChatMessageType.normal,
+        messagingDisabled: false,
+        parentMessageId: '',
+        readByAll: false,
+        sentAt: sentAt,
+        sentByMe: true,
+      );
+      messages.add(videoMessage);
+      await ismChatObjectBox.addPendingMessage(videoMessage);
+      await ismPostMediaUrl(
+        imageAndFile: false,
+        bytes: bytes,
+        createdAt: sentAt,
+        ismChatChatMessageModel: videoMessage,
+        mediaId: mediaId,
+        mediaType: IsmChatAttachmentType.video.value,
+        nameWithExtension: nameWithExtension,
+        notificationBody: 'Send you an Video',
+        thumbnailNameWithExtension: thumbnailNameWithExtension,
+        thumbnailMediaId: thumbnailMediaId,
+        thumbnailBytes: thumbnailBytes,
+        thumbanilMediaType: IsmChatAttachmentType.image.value,
+        notificationTitle: conversation?.opponentDetails?.userName ?? 'User',
+      );
+    }
+  }
+
+  void sendImage() async {
+    var ismChatObjectBox = IsmChatConfig.objectBox;
+    final chatConversationResponse = await ismChatObjectBox.getDBConversation(
+        conversationId: conversation?.conversationId ?? '');
+    if (chatConversationResponse == null) {
+      await createConversation(
+          userId: [conversation?.opponentDetails?.userId ?? '']);
+    }
+    var compressedFile = await FlutterNativeImage.compressImage(imagePath!.path,
+        quality: 60, percentage: 70);
+    final bytes = compressedFile.readAsBytesSync();
+    // final image = await decodeImageFromList(bytes);
+    final nameWithExtension = compressedFile.path.split('/').last;
+    final mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
+    final extension = nameWithExtension.split('.').last;
+    var sentAt = DateTime.now().millisecondsSinceEpoch;
+    var imageMessage = IsmChatChatMessageModel(
+      body: 'Image',
+      conversationId: conversation?.conversationId ?? '',
+      customType: IsmChatCustomMessageType.image,
+      attachments: [
+        AttachmentModel(
+            attachmentType: IsmChatAttachmentType.image,
+            thumbnailUrl: compressedFile.path,
+            size: double.parse(bytes.length.toString()),
+            name: nameWithExtension,
+            mimeType: 'image/jpeg',
+            mediaUrl: compressedFile.path,
+            mediaId: mediaId,
+            extension: extension)
+      ],
+      deliveredToAll: false,
+      messageId: '',
+      deviceId: _deviceConfig.deviceId!,
+      messageType: IsmChatMessageType.normal,
+      messagingDisabled: false,
+      parentMessageId: '',
+      readByAll: false,
+      sentAt: sentAt,
+      sentByMe: true,
+    );
+    messages.add(imageMessage);
+    await ismChatObjectBox.addPendingMessage(imageMessage);
+    await ismPostMediaUrl(
+      bytes: bytes,
+      createdAt: sentAt,
+      ismChatChatMessageModel: imageMessage,
+      mediaId: mediaId,
+      mediaType: IsmChatAttachmentType.image.value,
+      nameWithExtension: nameWithExtension,
+      notificationBody: 'Send you an Image',
+      imageAndFile: true,
+      notificationTitle: conversation?.opponentDetails?.userName ?? 'User',
+    );
+  }
+
   void sendLocation(
       {required double latitude,
       required double longitude,
@@ -330,16 +614,16 @@ class IsmChatPageController extends GetxController {
       required String locationName}) async {
     var ismChatObjectBox = IsmChatConfig.objectBox;
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
-        conversationId: conversation.conversationId ?? '');
+        conversationId: conversation?.conversationId ?? '');
     if (chatConversationResponse == null) {
       await createConversation(
-          userId: [conversation.opponentDetails?.userId ?? '']);
+          userId: [conversation?.opponentDetails?.userId ?? '']);
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatChatMessageModel(
       body:
           'https://www.google.com/maps/search/?api=1&map_action=map&query=$latitude%2C$longitude&query_place_id=$placeId',
-      conversationId: conversation.conversationId ?? '',
+      conversationId: conversation?.conversationId ?? '',
       customType: IsmChatCustomMessageType.location,
       deliveredToAll: false,
       messageId: '',
@@ -360,24 +644,23 @@ class IsmChatPageController extends GetxController {
         customType: textMessage.customType!.name,
         createdAt: sentAt,
         conversationId: textMessage.conversationId ?? '',
-        messageType: textMessage.messageType?.value,
+        messageType: textMessage.messageType?.value ?? 0,
         notificationBody: 'Sent you a location',
-        notificationTitle: conversation.opponentDetails?.userName ?? '');
+        notificationTitle: conversation?.opponentDetails?.userName ?? '');
   }
 
   void sendTextMessage() async {
-    IsmChatLog.error('fdsfsdffdsf ${chatMessageModel?.messageId}');
     var ismChatObjectBox = IsmChatConfig.objectBox;
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
-        conversationId: conversation.conversationId ?? '');
+        conversationId: conversation?.conversationId ?? '');
     if (chatConversationResponse == null) {
       await createConversation(
-          userId: [conversation.opponentDetails?.userId ?? '']);
+          userId: [conversation?.opponentDetails?.userId ?? '']);
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatChatMessageModel(
       body: chatInputController.text.trim(),
-      conversationId: conversation.conversationId ?? '',
+      conversationId: conversation?.conversationId ?? '',
       customType: isreplying
           ? IsmChatCustomMessageType.reply
           : IsmChatCustomMessageType.text,
@@ -392,8 +675,8 @@ class IsmChatPageController extends GetxController {
       sentByMe: true,
     );
     messages.add(textMessage);
-    chatInputController.clear();
     isreplying = false;
+    chatInputController.clear();
     await ismChatObjectBox.addPendingMessage(textMessage);
     await sendMessage(
         messageModel: textMessage,
@@ -403,42 +686,132 @@ class IsmChatPageController extends GetxController {
         createdAt: sentAt,
         parentMessageId: textMessage.parentMessageId,
         conversationId: textMessage.conversationId ?? '',
-        messageType: textMessage.messageType?.value,
-        notificationBody: chatInputController.text.trim(),
-        notificationTitle: conversation.opponentDetails?.userName ?? '');
+        messageType: textMessage.messageType?.value ?? 0,
+        notificationBody: textMessage.body,
+        notificationTitle: conversation?.opponentDetails?.userName ?? 'User');
   }
 
-  Future<void> sendMessage(
-      {required String deviceId,
-      required String body,
-      required String customType,
-      required int createdAt,
-      required String conversationId,
-      required IsmChatChatMessageModel messageModel,
+  Future<void> ismPostMediaUrl(
+      {required IsmChatChatMessageModel ismChatChatMessageModel,
       required String notificationBody,
       required String notificationTitle,
-      int? messageType,
-      String? parentMessageId,
-      String nameWithExtension = '',
-      int size = 0,
-      String extension = '',
-      String mediaId = '',
-      String locationName = '',
-      int attachmentType = 0,
-      bool forwardMultiple = false}) async {
-    var isMessageSent = await _viewModel.sendMessage(
-        messageModel: messageModel,
-        showInConversation: true,
-        messageType: messageType!,
-        encrypted: true,
-        deviceId: deviceId,
-        parentMessageId: parentMessageId,
+      required String nameWithExtension,
+      required int createdAt,
+      required int mediaType,
+      required Uint8List? bytes,
+      required bool? imageAndFile,
+      required String mediaId,
+      String? thumbnailNameWithExtension,
+      String? thumbnailMediaId,
+      int? thumbanilMediaType,
+      Uint8List? thumbnailBytes}) async {
+    var respone = await _viewModel.postMediaUrl(
+      conversationId: ismChatChatMessageModel.conversationId ?? '',
+      nameWithExtension: nameWithExtension,
+      mediaType: mediaType,
+      mediaId: mediaId,
+    );
+    var mediaUrlPath = '';
+    var thumbnailUrlPath = '';
+    if (respone?.isNotEmpty ?? false) {
+      var mediaUrl = await updatePresignedUrl(
+          presignedUrl: respone?.first.mediaPresignedUrl, bytes: bytes);
+      if (mediaUrl == 200) {
+        mediaUrlPath = respone?.first.mediaUrl ?? '';
+        mediaId = respone?.first.mediaId ?? '';
+      }
+    }
+    if (!imageAndFile!) {
+      var respone = await _viewModel.postMediaUrl(
+        conversationId: ismChatChatMessageModel.conversationId ?? '',
+        nameWithExtension: thumbnailNameWithExtension ?? '',
+        mediaType: thumbanilMediaType ?? 0,
+        mediaId: thumbnailMediaId ?? '',
+      );
+
+      if (respone?.isNotEmpty ?? false) {
+        var mediaUrl = await updatePresignedUrl(
+            presignedUrl: respone?.first.thumbnailPresignedUrl,
+            bytes: thumbnailBytes);
+        if (mediaUrl == 200) {
+          thumbnailUrlPath = respone?.first.thumbnailUrl ?? '';
+        }
+      }
+    }
+    if (mediaUrlPath.isNotEmpty) {
+      var attachment = [
+        {
+          'thumbnailUrl': !imageAndFile
+              ? thumbnailUrlPath
+              : ismChatChatMessageModel.attachments?.first.thumbnailUrl =
+                  mediaUrlPath,
+          'size': ismChatChatMessageModel.attachments?.first.size?.toInt(),
+          'name': ismChatChatMessageModel.attachments?.first.name,
+          'mimeType': ismChatChatMessageModel.attachments?.first.mimeType,
+          'mediaUrl': ismChatChatMessageModel.attachments?.first.mediaUrl =
+              mediaUrlPath,
+          'mediaId': ismChatChatMessageModel.attachments?.first.mediaId =
+              mediaId,
+          'extension': ismChatChatMessageModel.attachments?.first.extension,
+          'attachmentType':
+              ismChatChatMessageModel.attachments?.first.attachmentIndex,
+        }
+      ];
+      await sendMessage(
+        body: ismChatChatMessageModel.body,
+        conversationId: ismChatChatMessageModel.conversationId!,
+        createdAt: createdAt,
+        deviceId: ismChatChatMessageModel.deviceId ?? '',
+        messageModel: ismChatChatMessageModel,
+        messageType: ismChatChatMessageModel.messageType?.value ?? 0,
         notificationBody: notificationBody,
         notificationTitle: notificationTitle,
-        createdAt: createdAt,
-        conversationId: conversationId,
-        body: IsmChatUtility.encodePayload(body),
-        customType: customType);
+        attachments: attachment,
+        customType: ismChatChatMessageModel.customType!.name,
+      );
+    }
+  }
+
+  Future<int?> updatePresignedUrl(
+          {String? presignedUrl, Uint8List? bytes}) async =>
+      _viewModel.updatePresignedUrl(bytes: bytes, presignedUrl: presignedUrl);
+
+  Future<void> sendMessage({
+    required int messageType,
+    required String deviceId,
+    required String conversationId,
+    required String body,
+    required int createdAt,
+    required IsmChatChatMessageModel messageModel,
+    required String notificationBody,
+    required String notificationTitle,
+    bool encrypted = true,
+    bool showInConversation = true,
+    String? parentMessageId,
+    Map<String, dynamic>? metaData,
+    List<Map<String, dynamic>>? mentionedUsers,
+    Map<String, dynamic>? events,
+    String? customType,
+    List<Map<String, dynamic>>? attachments,
+  }) async {
+    var isMessageSent = await _viewModel.sendMessage(
+      showInConversation: showInConversation,
+      attachments: attachments,
+      events: events,
+      mentionedUsers: mentionedUsers,
+      metaData: metaData,
+      messageType: messageType,
+      customType: customType,
+      parentMessageId: parentMessageId,
+      encrypted: encrypted,
+      deviceId: deviceId,
+      conversationId: conversationId,
+      notificationBody: notificationBody,
+      notificationTitle: notificationTitle,
+      body: IsmChatUtility.encodePayload(body),
+      messageModel: messageModel,
+      createdAt: createdAt,
+    );
     if (isMessageSent) {
       await getMessagesFromDB(conversationId);
     }
@@ -467,7 +840,8 @@ class IsmChatPageController extends GetxController {
   }
 
   Future<void> notifyTyping() async {
-    await _viewModel.notifyTyping(conversationId: conversation.conversationId!);
+    await _viewModel.notifyTyping(
+        conversationId: conversation?.conversationId ?? '');
   }
 
   Future<void> getMessageInformation(
@@ -498,7 +872,7 @@ class IsmChatPageController extends GetxController {
     var data =
         await _viewModel.getConverstaionDetails(conversationId: conversationId);
     if (data != null) {
-      conversation = data;
+      // conversation = data;
     }
   }
 
@@ -507,9 +881,9 @@ class IsmChatPageController extends GetxController {
     var data = await _viewModel.blockUser(
         opponentId: opponentId,
         lastMessageTimeStamp: lastMessageTimeStamp,
-        conversationId: conversation.conversationId ?? '');
+        conversationId: conversation?.conversationId ?? '');
     if (data != null) {
-      await getMessagesFromDB(conversation.conversationId!);
+      await getMessagesFromDB(conversation?.conversationId ?? '');
     }
   }
 
@@ -517,23 +891,11 @@ class IsmChatPageController extends GetxController {
       {required String opponentId, required int lastMessageTimeStamp}) async {
     var data = await _viewModel.unblockUser(
         opponentId: opponentId,
-        conversationId: conversation.conversationId ?? '',
+        conversationId: conversation?.conversationId ?? '',
         lastMessageTimeStamp: lastMessageTimeStamp);
     if (data != null) {
-      await getMessagesFromDB(conversation.conversationId!);
+      await getMessagesFromDB(conversation?.conversationId ?? '');
     }
-  }
-
-  Future<void> ismPostMediaUrl(
-      {required String conversationId,
-      required String nameWithExtension,
-      required int mediaType,
-      required String mediaId}) async {
-    await _viewModel.postMediaUrl(
-        conversationId: conversationId,
-        nameWithExtension: nameWithExtension,
-        mediaType: mediaType,
-        mediaId: mediaId);
   }
 
   Future<void> readSingleMessage({
