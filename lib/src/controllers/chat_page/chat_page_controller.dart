@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
@@ -213,25 +214,24 @@ class IsmChatPageController extends GetxController {
     }
   }
 
-  void sendTextMessage() async {
-    // final query = IsmChatConfig.objectBox.userDetailsBox.query()
-    var ismObjectBox = IsmChatConfig.objectBox;
-    final query = ismObjectBox.chatConversationBox
-        .query(DBConversationModel_.conversationId
-            .equals(conversation.conversationId ?? ''))
-        .build();
-    final chatConversationResponse = query.findUnique();
+  void sendLocation(
+      {required double latitude,
+      required double longitude,
+      required String placeId,
+      required String locationName}) async {
+    var ismChatObjectBox = IsmChatConfig.objectBox;
+    final chatConversationResponse = await ismChatObjectBox.getDBConversation(
+        conversationId: conversation.conversationId ?? '');
     if (chatConversationResponse == null) {
-      // await Get.find<IsmChatConversationsController>().ismCreateConversation(userId: [conversation.opponentDetails?.userId ?? ''] );
-      // await IsmChatConfig.objectBox.createAndUpdateDB(
-      //     dbConversationModel: dbConversationModel,
-      //   );
+      await createConversation(
+          userId: [conversation.opponentDetails?.userId ?? '']);
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatChatMessageModel(
-      body: chatInputController.text.trim(),
+      body:
+          'https://www.google.com/maps/search/?api=1&map_action=map&query=$latitude%2C$longitude&query_place_id=$placeId',
       conversationId: conversation.conversationId ?? '',
-      customType: IsmChatCustomMessageType.text,
+      customType: IsmChatCustomMessageType.location,
       deliveredToAll: false,
       messageId: '',
       messageType: IsmChatMessageType.normal,
@@ -243,16 +243,60 @@ class IsmChatPageController extends GetxController {
     );
     messages.add(textMessage);
     chatInputController.clear();
-    await ismObjectBox.addPendingMessage(textMessage);
+    await ismChatObjectBox.addPendingMessage(textMessage);
     await sendMessage(
-      messageModel: textMessage,
-      deviceId: _deviceConfig.deviceId!,
-      body: textMessage.body,
-      customType: textMessage.customType!.name,
-      createdAt: sentAt,
-      conversationId: textMessage.conversationId ?? '',
-      messageType: textMessage.messageType?.value,
+        messageModel: textMessage,
+        deviceId: _deviceConfig.deviceId!,
+        body: textMessage.body,
+        customType: textMessage.customType!.name,
+        createdAt: sentAt,
+        conversationId: textMessage.conversationId ?? '',
+        messageType: textMessage.messageType?.value,
+        notificationBody: 'Sent you a location',
+        notificationTitle: conversation.opponentDetails?.userName ?? '');
+  }
+
+  void sendTextMessage() async {
+    IsmChatLog.error('fdsfsdffdsf ${chatMessageModel?.messageId}');
+    var ismChatObjectBox = IsmChatConfig.objectBox;
+    final chatConversationResponse = await ismChatObjectBox.getDBConversation(
+        conversationId: conversation.conversationId ?? '');
+    if (chatConversationResponse == null) {
+      await createConversation(
+          userId: [conversation.opponentDetails?.userId ?? '']);
+    }
+    var sentAt = DateTime.now().millisecondsSinceEpoch;
+    var textMessage = IsmChatChatMessageModel(
+      body: chatInputController.text.trim(),
+      conversationId: conversation.conversationId ?? '',
+      customType: isreplying
+          ? IsmChatCustomMessageType.reply
+          : IsmChatCustomMessageType.text,
+      deliveredToAll: false,
+      messageId: '',
+      messageType:
+          isreplying ? IsmChatMessageType.reply : IsmChatMessageType.normal,
+      messagingDisabled: false,
+      parentMessageId: isreplying ? chatMessageModel?.messageId : '',
+      readByAll: false,
+      sentAt: sentAt,
+      sentByMe: true,
     );
+    messages.add(textMessage);
+    chatInputController.clear();
+    isreplying = false;
+    await ismChatObjectBox.addPendingMessage(textMessage);
+    await sendMessage(
+        messageModel: textMessage,
+        deviceId: _deviceConfig.deviceId!,
+        body: textMessage.body,
+        customType: textMessage.customType!.name,
+        createdAt: sentAt,
+        parentMessageId: textMessage.parentMessageId,
+        conversationId: textMessage.conversationId ?? '',
+        messageType: textMessage.messageType?.value,
+        notificationBody: chatInputController.text.trim(),
+        notificationTitle: conversation.opponentDetails?.userName ?? '');
   }
 
   Future<void> sendMessage(
@@ -262,6 +306,8 @@ class IsmChatPageController extends GetxController {
       required int createdAt,
       required String conversationId,
       required IsmChatChatMessageModel messageModel,
+      required String notificationBody,
+      required String notificationTitle,
       int? messageType,
       String? parentMessageId,
       String nameWithExtension = '',
@@ -277,6 +323,9 @@ class IsmChatPageController extends GetxController {
         messageType: messageType!,
         encrypted: true,
         deviceId: deviceId,
+        parentMessageId: parentMessageId,
+        notificationBody: notificationBody,
+        notificationTitle: notificationTitle,
         createdAt: createdAt,
         conversationId: conversationId,
         body: IsmChatUtility.encodePayload(body),
@@ -455,6 +504,36 @@ class IsmChatPageController extends GetxController {
     }
     if (response.isNotEmpty) {
       predictionList = response;
+    }
+  }
+
+  Future<void> createConversation({required List<String> userId}) async {
+    var response = await _viewModel.createConversation(
+      typingEvents: true,
+      readEvents: true,
+      pushNotifications: true,
+      members: userId,
+      isGroup: false,
+      conversationType: 0,
+      searchableTags: [' '],
+      metaData: <String, dynamic>{},
+      customType: null,
+      conversationImageUrl: '',
+      conversationTitle: '',
+    );
+
+    if (response != null) {
+      var data = jsonDecode(response.data);
+      var conversationId = data['conversationId'];
+      await IsmChatConfig.objectBox.createAndUpdateDB(
+        dbConversationModel: DBConversationModel(
+            messages: [],
+            conversationId: conversationId.toString(),
+            isGroup: false,
+            membersCount: 0,
+            messagingDisabled: false,
+            unreadMessagesCount: 0),
+      );
     }
   }
 }

@@ -52,6 +52,8 @@ class IsmChatPageViewModel {
     required String body,
     required int createdAt,
     required IsmChatChatMessageModel messageModel,
+    required String notificationBody,
+    required String notificationTitle,
     String? parentMessageId,
     Map<String, dynamic>? metaData,
     List<Map<String, dynamic>>? mentionedUsers,
@@ -63,9 +65,13 @@ class IsmChatPageViewModel {
       var messageId = await _repository.sendMessage(
         showInConversation: showInConversation,
         messageType: messageType,
+        customType: customType,
+        parentMessageId: parentMessageId,
         encrypted: encrypted,
         deviceId: deviceId,
         conversationId: conversationId,
+        notificationBody: notificationBody,
+        notificationTitle: notificationBody,
         body: body,
       );
       if (messageId == null || messageId.isEmpty) {
@@ -267,7 +273,7 @@ class IsmChatPageViewModel {
       messageIds: messageIds,
     );
     if (!response!.hasError) {
-      var allMessages = IsmChatConfig.objectBox.getMessages(conversationId);
+      var allMessages = await IsmChatConfig.objectBox.getMessages(conversationId);
       if (allMessages == null) {
         return;
       }
@@ -289,7 +295,7 @@ class IsmChatPageViewModel {
       messageIds: messageIds,
     );
     if (!response!.hasError) {
-      var allMessages = IsmChatConfig.objectBox.getMessages(conversationId);
+      var allMessages =  await IsmChatConfig.objectBox.getMessages(conversationId);
       if (allMessages == null) {
         return;
       }
@@ -332,5 +338,28 @@ class IsmChatPageViewModel {
         latitude: latitude,
         longitude: longitude,
         searchKeyword: searchKeyword,
+      );
+
+
+      Future<IsmChatResponseModel?> createConversation({
+    required bool typingEvents,
+    required bool readEvents,
+    required bool pushNotifications,
+    required List<String> members,
+    required bool isGroup,
+    required int conversationType,
+    List<String>? searchableTags,
+    Map<String, dynamic>? metaData,
+    String? customType,
+    String? conversationTitle,
+    String? conversationImageUrl,
+  }) async =>
+      await _repository.createConversation(
+        typingEvents: typingEvents,
+        readEvents: readEvents,
+        pushNotifications: pushNotifications,
+        members: members,
+        isGroup: isGroup,
+        conversationType: conversationType,
       );
 }

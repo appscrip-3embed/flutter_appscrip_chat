@@ -35,7 +35,6 @@ class DBConversationModel {
   final lastMessageDetails = ToOne<LastMessageDetails>();
   bool? isGroup;
   List<String> messages;
-
   String? conversationTitle;
   String? conversationImageUrl;
   String? conversationId;

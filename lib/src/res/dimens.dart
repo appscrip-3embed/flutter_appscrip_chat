@@ -45,6 +45,19 @@ class IsmChatDimens {
 
   static final Widget boxWidth32 = SizedBox(width: thirtyTwo);
 
+
+   /// Get the height with the percent value of the screen height.
+  static double percentHeight(double percentValue) => percentValue.sh;
+
+  /// Get the width with the percent value of the screen width.
+  static double percentWidth(double percentValue) => percentValue.sw;
+
+
+   static EdgeInsets edgeInsets10_50_0_0 = EdgeInsets.only(
+      top: fifty,
+      left: ten
+  );
+
   static final EdgeInsets egdeInsets4 = EdgeInsets.all(four);
   static final EdgeInsets egdeInsets4_0 =
       EdgeInsets.symmetric(horizontal: four);

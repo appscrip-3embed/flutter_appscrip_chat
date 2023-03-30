@@ -134,7 +134,7 @@ class IsmChatObjectBox {
     }
   }
 
-  List<IsmChatChatMessageModel>? getMessages(String conversationId) {
+  Future<List<IsmChatChatMessageModel>?> getMessages(String conversationId)async {
     var conversation = chatConversationBox
         .query(DBConversationModel_.conversationId.equals(conversationId))
         .build()
@@ -143,6 +143,18 @@ class IsmChatObjectBox {
       return null;
     }
     return conversation.messages.map(IsmChatChatMessageModel.fromJson).toList();
+  }
+
+  Future<DBConversationModel?> getDBConversation(
+      {required String conversationId}) async {
+    var conversation = chatConversationBox
+        .query(DBConversationModel_.conversationId.equals(conversationId))
+        .build()
+        .findUnique();
+    if (conversation == null) {
+      return null;
+    }
+    return conversation;
   }
 
   Future<void> saveMessages(

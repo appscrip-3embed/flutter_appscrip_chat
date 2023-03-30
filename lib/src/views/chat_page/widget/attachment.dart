@@ -25,13 +25,12 @@ class IsmChatAttachmentCard extends StatelessWidget {
                 },
                 child: ListTile(
                   leading: Container(
-                    // padding: IsmDimens.edgeInsets8,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(
                             Radius.circular(IsmChatDimens.fifty)),
                         color: Colors.blueAccent),
-                    width: IsmChatDimens.fifty,
-                    height: IsmChatDimens.fifty,
+                    width: IsmChatDimens.forty,
+                    height: IsmChatDimens.forty,
                     child: const Icon(
                       Icons.camera_alt,
                       color: IsmChatColors.whiteColor,
@@ -55,8 +54,8 @@ class IsmChatAttachmentCard extends StatelessWidget {
                         borderRadius: BorderRadius.all(
                             Radius.circular(IsmChatDimens.fifty)),
                         color: Colors.purpleAccent),
-                    width: IsmChatDimens.fifty,
-                    height: IsmChatDimens.fifty,
+                    width: IsmChatDimens.forty,
+                    height: IsmChatDimens.forty,
                     child: const Icon(
                       Icons.photo,
                       color: IsmChatColors.whiteColor,
@@ -80,8 +79,8 @@ class IsmChatAttachmentCard extends StatelessWidget {
                         borderRadius: BorderRadius.all(
                             Radius.circular(IsmChatDimens.fifty)),
                         color: Colors.pinkAccent),
-                    width: IsmChatDimens.fifty,
-                    height: IsmChatDimens.fifty,
+                    width: IsmChatDimens.forty,
+                    height: IsmChatDimens.forty,
                     child: const Icon(
                       Icons.file_copy,
                       color: IsmChatColors.whiteColor,
@@ -105,8 +104,8 @@ class IsmChatAttachmentCard extends StatelessWidget {
                         borderRadius: BorderRadius.all(
                             Radius.circular(IsmChatDimens.fifty)),
                         color: Colors.greenAccent),
-                    width: IsmChatDimens.fifty,
-                    height: IsmChatDimens.fifty,
+                    width: IsmChatDimens.forty,
+                    height: IsmChatDimens.forty,
                     child: const Icon(
                       Icons.location_on,
                       color: IsmChatColors.whiteColor,

@@ -173,12 +173,14 @@ class IsmChatConversationsController extends GetxController {
 
     if (apiConversations != null && apiConversations.isNotEmpty) {
       for (var conversation in apiConversations) {
+        IsmChatLog.error('dsfdsffd ${conversation.conversationId}');
+        IsmChatLog.error('dsfdsffd ${conversation.chatName}');
+
         DBConversationModel? dbConversation;
         if (dbConversations.isNotEmpty) {
           dbConversation = dbConversations.firstWhere(
               (e) => e.conversationId == conversation.conversationId);
         }
-
         var dbConversationModel = DBConversationModel(
           conversationId: conversation.conversationId,
           conversationImageUrl: conversation.conversationImageUrl,
@@ -240,20 +242,5 @@ class IsmChatConversationsController extends GetxController {
       conversationId: conversationId,
       messageId: messageId,
     );
-  }
-
-  Future<void> ismCreateConversation({required List<String> userId}) async {
-    await _viewModel.createConversation(
-        typingEvents: true,
-        readEvents: true,
-        pushNotifications: true,
-        members: userId,
-        isGroup: false,
-        conversationType: 0,
-        searchableTags: [' '],
-        metaData: <String, dynamic>{},
-        customType: null,
-        conversationImageUrl: '',
-        conversationTitle: '');
   }
 }

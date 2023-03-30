@@ -81,7 +81,8 @@ class IsmChatChatMessageModel {
           ? model.customType
           : IsmChatCustomMessageType.withBody(model.body),
       sentByMe: model.senderInfo != null
-          ? model.senderInfo!.userId == IsmChatConfig.communicationConfig.userConfig.userId
+          ? model.senderInfo!.userId ==
+              IsmChatConfig.communicationConfig.userConfig.userId
           : true,
     );
   }
@@ -189,7 +190,9 @@ class IsmChatChatMessageModel {
   String? initiatorId;
   String? messageId;
   String? deviceId;
+  
   int? adminCount;
+
   IsmChatMessageType? messageType;
   dynamic mentionedUsers;
   IsmChatCustomMessageType? customType;

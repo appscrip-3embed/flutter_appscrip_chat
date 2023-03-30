@@ -46,25 +46,5 @@ class IsmChatConversationsViewModel {
         messageId: messageId,
       );
 
-  Future<void> createConversation({
-    required bool typingEvents,
-    required bool readEvents,
-    required bool pushNotifications,
-    required List<String> members,
-    required bool isGroup,
-    required int conversationType,
-    List<String>? searchableTags,
-    Map<String, dynamic>? metaData,
-    String? customType,
-    String? conversationTitle,
-    String? conversationImageUrl,
-  }) async =>
-      await _repository.createConversation(
-        typingEvents: typingEvents,
-        readEvents: readEvents,
-        pushNotifications: pushNotifications,
-        members: members,
-        isGroup: isGroup,
-        conversationType: conversationType,
-      );
+  
 }

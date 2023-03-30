@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:geocode/geocode.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -115,7 +116,6 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                 searchKeyword: input,
                                 latitude: latLng!.latitude.toString(),
                                 longitude: latLng!.longitude.toString());
-                            // setState(() {});
                           },
                           controller: controller.textEditingController,
                           textInputAction: TextInputAction.search,
@@ -228,20 +228,16 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                 var position =
                                     await Geolocator.getCurrentPosition(
                                         desiredAccuracy: LocationAccuracy.high);
-                                // Get.find<IsmChatPageController>()
-                                //     .ismHandleSendLocationPressed(
-                                //         position.latitude,
-                                //         position.longitude,
-                                //         ismChatPageController
-                                //             .predictions.first.placeId
-                                //             .toString(),
-                                //         ismChatPageController
-                                //                 .predictions
-                                //                 .first
-                                //                 .structuredFormatting
-                                //                 ?.mainText ??
-                                //             '');
-                                // Get.back<void>();
+                                controller.sendLocation(
+                                    latitude: position.latitude,
+                                    longitude: position.longitude,
+                                    placeId: controller
+                                            .predictionList.first.placeId ??
+                                        '',
+                                    locationName:
+                                        controller.predictionList.first.name ??
+                                            '');
+                                Get.back<void>();
                               },
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -274,32 +270,22 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                             var prediction = controller.predictionList[index];
                             return InkWell(
                               onTap: () async {
-                                // var locations =
-                                //     await locationFromAddress(
-                                //         ismChatPageController
-                                //             .predictions[
-                                //                 index]
-                                //             .description
-                                //             .toString());
-                                // Get.find<
-                                //         IsmChatPageController>()
-                                //     .ismHandleSendLocationPressed(
-                                //         locations
-                                //             .first.latitude,
-                                //         locations
-                                //             .first.longitude,
-                                //         ismChatPageController
-                                //             .predictions[
-                                //                 index]
-                                //             .placeId
-                                //             .toString(),
-                                //         ismChatPageController
-                                //                 .predictions[
-                                //                     index]
-                                //                 .structuredFormatting
-                                //                 ?.mainText ??
-                                //             '');
-                                // Get.back<void>();
+                                var locations = await locationFromAddress(
+                                    ismChatPageController
+                                        .predictionList[index].vicinity
+                                        .toString());
+
+                                controller.sendLocation(
+                                    latitude: locations.first.latitude,
+                                    longitude: locations.first.longitude,
+                                    placeId: controller
+                                            .predictionList[index].placeId ??
+                                        '',
+                                    locationName:
+                                        controller.predictionList[index].name ??
+                                            '');
+
+                                Get.back<void>();
                               },
                               child: ListTile(
                                 minLeadingWidth: 0,
@@ -309,13 +295,13 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                 title: SizedBox(
                                   width: Get.width - 100,
                                   child: Text(
-                                    prediction.vicinity ?? '',
+                                    prediction.name ?? '',
                                     maxLines: 3,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                                 subtitle: Text(
-                                  prediction.name ?? '',
+                                  prediction.vicinity ?? '',
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),

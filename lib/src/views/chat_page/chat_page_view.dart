@@ -213,7 +213,16 @@ class ChatMessage extends StatelessWidget {
                         ),
                       ),
                     ],
-                    child: message.customType!.messageType(message)),
+                    child:
+                        //  SwipeTo(
+                        //   child:
+                        message.customType!.messageType(message),
+                    //   onRightSwipe: () {
+                    //     ismChatPageController.isreplying = true;
+                    //     ismChatPageController.chatMessageModel = message;
+                    //   },
+                    // )
+                  ),
           ),
           if (!showMessageInCenter)
             Padding(

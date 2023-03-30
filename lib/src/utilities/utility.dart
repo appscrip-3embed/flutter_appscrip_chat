@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 class IsmChatUtility {
   const IsmChatUtility._();
@@ -60,25 +59,40 @@ class IsmChatUtility {
   /// this is for change decode string to encode string
   static String encodePayload(String value) => utf8.fuse(base64).encode(value);
 
-  /// Change timeStamp to time formate
-  static List<dynamic> timeStampToString({int timeStampValue = 0}) {
-    final timeStamp = DateTime.fromMillisecondsSinceEpoch(timeStampValue);
-    final currentTime = DateTime.now();
-    final currentDay = int.parse(DateFormat('d').format(currentTime));
-    final currentDayFromStamp = int.parse(DateFormat('d').format(timeStamp));
-    var timeFormate = <dynamic>[];
-    if (currentDay == currentDayFromStamp) {
-      timeFormate.add(DateFormat.jm().format(timeStamp));
-      timeFormate.add(timeStampValue);
-    } else if (((currentDay - currentDayFromStamp) == 1) ||
-        (currentDayFromStamp == 31)) {
-      timeFormate.add('Yesterday');
-      timeFormate.add(timeStampValue);
-    } else if (((currentDay - currentDayFromStamp) > 1) ||
-        (currentDayFromStamp > currentDay)) {
-      timeFormate.add(DateFormat('dd/MM/yyyy').format(timeStamp));
-      timeFormate.add(timeStampValue);
+
+
+    /// Method For Convert Duration To String
+  static String durationToString({required Duration duration}) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    var twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    var twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    var hour = num.parse(twoDigits(duration.inHours));
+    if (hour > 0) {
+      return '${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds';
+    } else {
+      return '$twoDigitMinutes:$twoDigitSeconds';
     }
-    return timeFormate;
   }
+
+  // /// Change timeStamp to time formate
+  // static List<dynamic> timeStampToString({int timeStampValue = 0}) {
+  //   final timeStamp = DateTime.fromMillisecondsSinceEpoch(timeStampValue);
+  //   final currentTime = DateTime.now();
+  //   final currentDay = int.parse(DateFormat('d').format(currentTime));
+  //   final currentDayFromStamp = int.parse(DateFormat('d').format(timeStamp));
+  //   var timeFormate = <dynamic>[];
+  //   if (currentDay == currentDayFromStamp) {
+  //     timeFormate.add(DateFormat.jm().format(timeStamp));
+  //     timeFormate.add(timeStampValue);
+  //   } else if (((currentDay - currentDayFromStamp) == 1) ||
+  //       (currentDayFromStamp == 31)) {
+  //     timeFormate.add('Yesterday');
+  //     timeFormate.add(timeStampValue);
+  //   } else if (((currentDay - currentDayFromStamp) > 1) ||
+  //       (currentDayFromStamp > currentDay)) {
+  //     timeFormate.add(DateFormat('dd/MM/yyyy').format(timeStamp));
+  //     timeFormate.add(timeStampValue);
+  //   }
+  //   return timeFormate;
+  // }
 }

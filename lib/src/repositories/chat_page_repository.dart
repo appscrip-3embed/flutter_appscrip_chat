@@ -38,6 +38,8 @@ class IsmChatPageRepository {
     required String deviceId,
     required String conversationId,
     required String body,
+    required String notificationBody,
+    required String notificationTitle,
     String? parentMessageId,
     Map<String, dynamic>? metaData,
     List<Map<String, dynamic>>? mentionedUsers,
@@ -376,6 +378,47 @@ class IsmChatPageRepository {
       return predictionList;
     } catch (e, st) {
       IsmChatLog.error('Location $e', st);
+      return null;
+    }
+  }
+
+  Future<IsmChatResponseModel?> createConversation(
+      {required bool typingEvents,
+      required bool readEvents,
+      required bool pushNotifications,
+      required List<String> members,
+      required bool isGroup,
+      required int conversationType,
+      List<String>? searchableTags,
+      Map<String, dynamic>? metaData,
+      String? customType,
+      String? conversationTitle,
+      String? conversationImageUrl}) async {
+    try {
+      var payload = {
+        'typingEvents': typingEvents,
+        'readEvents': readEvents,
+        'pushNotifications': pushNotifications,
+        'members': members,
+        'isGroup': isGroup,
+        'conversationType': conversationType,
+        'searchableTags': searchableTags,
+        'metaData': metaData,
+        'customType': customType,
+        'conversationTitle': conversationTitle,
+        'conversationImageUrl': conversationImageUrl
+      };
+      var response = await _apiWrapper.post(
+        IsmChatAPI.chatConversation,
+        payload: payload,
+        headers: IsmChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return null;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Create converstaion $e', st);
       return null;
     }
   }

@@ -371,21 +371,21 @@ class IsmChatMqttController extends GetxController {
     }
   }
 
-  void _handleMessageDelelteForEveryOne(IsmChatMqttActionModel actionModel) {
+  void _handleMessageDelelteForEveryOne(IsmChatMqttActionModel actionModel)async {
     if (actionModel.userDetails!.userId == _communicationConfig.userConfig.userId) {
       return;
     }
     var allMessages =
-        IsmChatConfig.objectBox.getMessages(actionModel.conversationId!);
+      await  IsmChatConfig.objectBox.getMessages(actionModel.conversationId!);
     if (allMessages == null) {
       return;
     }
     allMessages
         .removeWhere((e) => e.messageId! == actionModel.messageIds?.first);
-    IsmChatConfig.objectBox
+   await IsmChatConfig.objectBox
         .saveMessages(actionModel.conversationId!, allMessages);
     if (Get.isRegistered<IsmChatPageController>()) {
-      Get.find<IsmChatPageController>()
+     await Get.find<IsmChatPageController>()
           .getMessagesFromDB(actionModel.conversationId!);
     }
   }

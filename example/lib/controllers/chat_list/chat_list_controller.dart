@@ -8,13 +8,12 @@ class ChatListController extends GetxController {
   final ChatListViewModel _viewModel;
   ChatListController(this._viewModel);
 
-  late UserDetailsModel userDetails;
+  UserDetailsModel? userDetails;
 
   @override
   void onInit() {
     super.onInit();
-    var userDetails = objectBox.userDetailsBox.getAll().last;
-    userDetails = userDetails;
+    userDetails = objectBox.userDetailsBox.getAll().last;
   }
 
   void onSignOut() {

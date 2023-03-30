@@ -14,6 +14,10 @@ class IsmChatInputField extends StatelessWidget {
           var userBlockOrNot =
               controller.messages.last.initiatorId == mqttController.userId &&
                   controller.messages.last.messagingDisabled == true;
+          var messageBody = controller.chatMessageModel?.customType ==
+                  IsmChatCustomMessageType.location
+              ? 'Location'
+              : controller.chatMessageModel?.body ?? '';
 
           return Row(
             mainAxisSize: MainAxisSize.max,
@@ -61,7 +65,7 @@ class IsmChatInputField extends StatelessWidget {
                                           '',
                                   style: IsmChatStyles.w600White14,
                                 ),
-                                Text(controller.chatMessageModel?.body ?? '')
+                                Text(messageBody)
                               ],
                             ),
                             IsmChatTapHandler(
