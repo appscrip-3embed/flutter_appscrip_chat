@@ -29,7 +29,7 @@ extension DistanceLatLng on LatLng {
   }
 }
 
-extension DuratoinFormat on Duration {
+extension DurationExtensions on Duration {
   String formatDuration() {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     var twoDigitMinutes = twoDigits(inMinutes.remainder(60));

@@ -132,7 +132,35 @@ class IsmChatPageController extends GetxController {
         data: messages,
       );
 
-  void takePhoto() {}
+  void takePhoto() async {
+    // _cameraController = CameraController(
+    //   cameras![0],
+    //   ResolutionPreset.high,
+    //   // enableAudio: true,
+    //   // imageFormatGroup: ImageFormatGroup.jpeg
+    // );
+    // var file = await _cameraController!.takePicture();
+    // setState(() {
+    //   if (flash) {
+    //     _cameraController!.setFlashMode(FlashMode.off);
+    //     flash = !flash;
+    //   }
+    //   if (!isCameraFront) {
+    //     _cameraController = CameraController(
+    //       cameras![0],
+    //       ResolutionPreset.low,
+    //     );
+    //     cameraValue = _cameraController!.initialize();
+    //     isCameraFront = !isCameraFront;
+    //   }
+    // });
+    // final chatPageController = Get.find<IsmChatPageController>();
+    // chatPageController.listOfAssetsPath.add(
+    //     AttachmentSend(path: file.path, mediaType: Media.image.toString()));
+    // if (chatPageController.listOfAssetsPath.isNotEmpty) {
+    //   await Get.to<void>(IsmCameraEditImageWidget());
+    // }
+  }
 
   void showDialogForClearChat() async {
     await Get.dialog(IsmChatAlertDialogBox(

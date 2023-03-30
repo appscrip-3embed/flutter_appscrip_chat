@@ -40,7 +40,7 @@ class IsmChatDimens {
   static final Widget boxHeight2 = SizedBox(height: two);
 
   static final Widget boxHeight8 = SizedBox(height: eight);
-  static final Widget boxHeight10 = SizedBox(height: eight);
+  static final Widget boxHeight10 = SizedBox(height: ten);
   static final Widget boxHeight16 = SizedBox(height: sixteen);
   static final Widget boxHeight32 = SizedBox(height: thirtyTwo);
   static final Widget boxWidth2 = SizedBox(width: two);

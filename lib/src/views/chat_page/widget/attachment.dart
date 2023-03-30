@@ -93,30 +93,31 @@ class IsmChatAttachmentCard extends StatelessWidget {
                   ),
                 )),
             InkWell(
-                onTap: () async {
-                  Get.back<void>();
-                  await Get.to<void>(const IsmChatLocationWidget());
-                },
-                child: ListTile(
-                  leading: Container(
-                    // padding: IsmDimens.edgeInsets8,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(IsmChatDimens.fifty)),
-                        color: Colors.greenAccent),
-                    width: IsmChatDimens.forty,
-                    height: IsmChatDimens.forty,
-                    child: const Icon(
-                      Icons.location_on,
-                      color: IsmChatColors.whiteColor,
-                      size: 25,
-                    ),
+              onTap: () async {
+                Get.back<void>();
+                await Get.to<void>(const IsmChatLocationWidget());
+              },
+              child: ListTile(
+                leading: Container(
+                  // padding: IsmDimens.edgeInsets8,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(IsmChatDimens.fifty)),
+                      color: Colors.greenAccent),
+                  width: IsmChatDimens.fifty,
+                  height: IsmChatDimens.fifty,
+                  child: const Icon(
+                    Icons.location_on,
+                    color: IsmChatColors.whiteColor,
+                    size: 25,
                   ),
-                  title: Text(
-                    'Location',
-                    style: IsmChatStyles.w600Black18,
-                  ),
-                )),
+                ),
+                title: Text(
+                  'Location',
+                  style: IsmChatStyles.w600Black18,
+                ),
+              ),
+            ),
           ],
         ),
       );
