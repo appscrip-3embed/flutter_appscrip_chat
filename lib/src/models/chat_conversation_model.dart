@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:appscrip_chat_component/src/models/models.dart';
 import 'package:appscrip_chat_component/src/utilities/utilities.dart';
 
-class IsmChatChatConversationModel {
-  factory IsmChatChatConversationModel.fromJson(String source) =>
-      IsmChatChatConversationModel.fromMap(
+class IsmChatConversationModel {
+  factory IsmChatConversationModel.fromJson(String source) =>
+      IsmChatConversationModel.fromMap(
           json.decode(source) as Map<String, dynamic>);
 
-  factory IsmChatChatConversationModel.fromMap(Map<String, dynamic> map) =>
-      IsmChatChatConversationModel(
+  factory IsmChatConversationModel.fromMap(Map<String, dynamic> map) =>
+      IsmChatConversationModel(
         updatedAt: map['updatedAt'] as int? ?? 0,
         unreadMessagesCount: map['unreadMessagesCount'] as int? ?? 0,
         // searchableTags:
@@ -42,9 +42,8 @@ class IsmChatChatConversationModel {
         // adminCount: map['adminCount'] as int? ?? 0,
       );
 
-  factory IsmChatChatConversationModel.fromDB(
-          DBConversationModel dbConversation) =>
-      IsmChatChatConversationModel(
+  factory IsmChatConversationModel.fromDB(DBConversationModel dbConversation) =>
+      IsmChatConversationModel(
         updatedAt: 0,
         unreadMessagesCount: dbConversation.unreadMessagesCount,
         privateOneToOne: false,
@@ -62,7 +61,7 @@ class IsmChatChatConversationModel {
         config: dbConversation.config.target,
       );
 
-  IsmChatChatConversationModel({
+  IsmChatConversationModel({
     this.updatedAt,
     this.unreadMessagesCount,
     //  this.searchableTags,
@@ -114,7 +113,7 @@ class IsmChatChatConversationModel {
 
   String get chatName => conversationTitle ?? opponentDetails?.userName ?? '';
 
-  IsmChatChatConversationModel copyWith({
+  IsmChatConversationModel copyWith({
     int? updatedAt,
     int? unreadMessagesCount,
     List<String>? searchableTags,
@@ -139,7 +138,7 @@ class IsmChatChatConversationModel {
     ConversationConfigModel? config,
     int? adminCount,
   }) =>
-      IsmChatChatConversationModel(
+      IsmChatConversationModel(
         updatedAt: updatedAt ?? this.updatedAt,
         unreadMessagesCount: unreadMessagesCount ?? this.unreadMessagesCount,
         // searchableTags: searchableTags ?? this.searchableTags,
@@ -202,7 +201,7 @@ class IsmChatChatConversationModel {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is IsmChatChatConversationModel &&
+    return other is IsmChatConversationModel &&
         other.updatedAt == updatedAt &&
         other.unreadMessagesCount == unreadMessagesCount &&
         // listEquals(other.searchableTags, searchableTags) &&

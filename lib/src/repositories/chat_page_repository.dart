@@ -110,7 +110,7 @@ class IsmChatPageRepository {
     }
   }
 
-  Future<IsmChatChatConversationModel?> getConverstaionDetails({
+  Future<IsmChatConversationModel?> getConverstaionDetails({
     required String conversationId,
     String? ids,
     bool? includeMembers,
@@ -126,7 +126,7 @@ class IsmChatPageRepository {
         return null;
       }
       var data = jsonDecode(response.data);
-      return IsmChatChatConversationModel.fromMap(data as Map<String, dynamic>);
+      return IsmChatConversationModel.fromMap(data as Map<String, dynamic>);
     } catch (e, st) {
       IsmChatLog.error('Chat user Details $e', st);
       return null;

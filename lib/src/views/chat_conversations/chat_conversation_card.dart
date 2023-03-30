@@ -11,7 +11,7 @@ class IsmChatConversationCard extends StatelessWidget {
     super.key,
   });
 
-  final IsmChatChatConversationModel conversation;
+  final IsmChatConversationModel conversation;
   final VoidCallback? onTap;
 
   final Widget? Function(BuildContext, String)? profileImageBuilder;

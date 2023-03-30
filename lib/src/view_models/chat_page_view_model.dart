@@ -175,7 +175,7 @@ class IsmChatPageViewModel {
         conversationId: conversationId,
       );
 
-  Future<IsmChatChatConversationModel?> getConverstaionDetails({
+  Future<IsmChatConversationModel?> getConverstaionDetails({
     required String conversationId,
     String? ids,
     bool? includeMembers,

@@ -20,14 +20,14 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 class IsmChatConversationList extends StatefulWidget {
   const IsmChatConversationList({
     super.key,
-    required this.onTap,
+    required this.onChatTap,
     this.childBuilder,
     this.itemBuilder,
     this.profileImageBuilder,
     this.height,
   });
 
-  final void Function(BuildContext, IsmChatChatConversationModel) onTap;
+  final void Function(BuildContext, IsmChatConversationModel) onChatTap;
 
   /// `itemBuilder` will handle how child items are rendered on the screen.
   ///
@@ -39,10 +39,10 @@ class IsmChatConversationList extends StatefulWidget {
   /// final int index;
   /// final ChatConversationModel conversation;
   /// ```
-  /// `conversation` of type [IsmChatChatConversationModel] will provide you with data of single chat item
+  /// `conversation` of type [IsmChatConversationModel] will provide you with data of single chat item
   ///
   /// You can playaround with index parameter for your logics.
-  final Widget? Function(BuildContext, int, IsmChatChatConversationModel)?
+  final Widget? Function(BuildContext, int, IsmChatConversationModel)?
       childBuilder;
 
   /// The `itemBuilder` callback can be provided if you want to change how the chat items are rendered on the screen.
@@ -91,7 +91,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
             );
           }
           return SizedBox(
-            height: widget.height ?? MediaQuery.of(context).size.height,
+            height: widget.height ?? Get.height,
             child: SmartRefresher(
               controller: controller.refreshController,
               // enablePullDown: true,
@@ -154,7 +154,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                                     ),
                             onTap: () {
                               controller.navigateToMessages(conversation);
-                              widget.onTap(_, conversation);
+                              widget.onChatTap(_, conversation);
                             },
                           ),
                         ),

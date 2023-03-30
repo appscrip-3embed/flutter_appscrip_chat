@@ -9,14 +9,14 @@ class IsmChatConversationsController extends GetxController {
   IsmChatConversationsController(this._viewModel);
   final IsmChatConversationsViewModel _viewModel;
 
-  final _conversations = <IsmChatChatConversationModel>[].obs;
-  List<IsmChatChatConversationModel> get conversations => _conversations;
-  set conversations(List<IsmChatChatConversationModel> value) =>
+  final _conversations = <IsmChatConversationModel>[].obs;
+  List<IsmChatConversationModel> get conversations => _conversations;
+  set conversations(List<IsmChatConversationModel> value) =>
       _conversations.value = value;
 
-  final _suggestions = <IsmChatChatConversationModel>[].obs;
-  List<IsmChatChatConversationModel> get suggestions => _suggestions;
-  set suggestions(List<IsmChatChatConversationModel> value) =>
+  final _suggestions = <IsmChatConversationModel>[].obs;
+  List<IsmChatConversationModel> get suggestions => _suggestions;
+  set suggestions(List<IsmChatConversationModel> value) =>
       _suggestions.value = value;
 
   final RxBool _isConversationsLoading = true.obs;
@@ -28,7 +28,7 @@ class IsmChatConversationsController extends GetxController {
   UserDetails? get userDetails => _userDetails.value;
   set userDetails(UserDetails? value) => _userDetails.value = value;
 
-  IsmChatChatConversationModel? currentConversation;
+  IsmChatConversationModel? currentConversation;
 
   /// Refresh Controller
   final refreshController = RefreshController(
@@ -74,7 +74,7 @@ class IsmChatConversationsController extends GetxController {
   }
 
   void deleteConversationAndClearChat(
-    IsmChatChatConversationModel chatConversationModel,
+    IsmChatConversationModel chatConversationModel,
   ) async {
     await Get.bottomSheet(
       IsmChatBottomSheet(
@@ -91,7 +91,7 @@ class IsmChatConversationsController extends GetxController {
   }
 
   void showDialogForClearChat(
-    IsmChatChatConversationModel chatConversationModel,
+    IsmChatConversationModel chatConversationModel,
   ) async {
     await Get.dialog(IsmChatAlertDialogBox(
       titile: IsmChatStrings.deleteAllMessage,
@@ -104,7 +104,7 @@ class IsmChatConversationsController extends GetxController {
   }
 
   void showDialogForDeletChat(
-      IsmChatChatConversationModel chatConversationModel) async {
+      IsmChatConversationModel chatConversationModel) async {
     await Get.dialog(
       IsmChatAlertDialogBox(
         titile: '${IsmChatStrings.deleteChat}?',
@@ -118,7 +118,7 @@ class IsmChatConversationsController extends GetxController {
     );
   }
 
-  void navigateToMessages(IsmChatChatConversationModel conversation) {
+  void navigateToMessages(IsmChatConversationModel conversation) {
     currentConversation = conversation;
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
     var dbConversation = conversationBox
@@ -154,7 +154,7 @@ class IsmChatConversationsController extends GetxController {
     if (dbConversations.isNotEmpty) {
       conversations.clear();
       conversations =
-          dbConversations.map(IsmChatChatConversationModel.fromDB).toList();
+          dbConversations.map(IsmChatConversationModel.fromDB).toList();
       isConversationsLoading = false;
     }
   }

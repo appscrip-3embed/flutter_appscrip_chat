@@ -27,7 +27,7 @@ class IsmChatConversationsRepository {
     }
   }
 
-  Future<List<IsmChatChatConversationModel>?> getChatConversations({
+  Future<List<IsmChatConversationModel>?> getChatConversations({
     required int skip,
     required int limit,
   }) async {
@@ -42,7 +42,7 @@ class IsmChatConversationsRepository {
       var data = jsonDecode(response.data);
       return (data['conversations'] as List)
           .map((e) =>
-              IsmChatChatConversationModel.fromMap(e as Map<String, dynamic>))
+              IsmChatConversationModel.fromMap(e as Map<String, dynamic>))
           .toList();
     } catch (e, st) {
       IsmChatLog.error('GetChatConversations $e', st);

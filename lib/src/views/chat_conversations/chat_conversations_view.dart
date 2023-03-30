@@ -6,19 +6,18 @@ class IsmChatConversations extends StatefulWidget {
     required this.onChatTap,
     this.onSignOut,
     this.showAppBar = false,
-    this.floatingButtonTap,
+    this.showCreateChatIcon = false,
+    this.onCreateChatTap,
     super.key,
-  }) : assert(
-            (showAppBar && onSignOut != null) ||
-                (!showAppBar && onSignOut == null),
-            'A non-null onSignOut callback must be passed if showAppBar is true');
+  });
 
   final bool showAppBar;
   final VoidCallback? onSignOut;
 
-  final VoidCallback? floatingButtonTap;
+  final void Function(BuildContext, IsmChatConversationModel) onChatTap;
 
-  final void Function(BuildContext, IsmChatChatConversationModel) onChatTap;
+  final VoidCallback? onCreateChatTap;
+  final bool showCreateChatIcon;
 
   @override
   State<IsmChatConversations> createState() => _IsmChatConversationsState();
@@ -38,9 +37,13 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
             : null,
         body: SafeArea(
           child: IsmChatConversationList(
-            onTap: widget.onChatTap,
+            onChatTap: widget.onChatTap,
           ),
         ),
-        floatingActionButton: const IsmChatStartChatFAB(),
+        floatingActionButton: widget.showCreateChatIcon
+            ? IsmChatStartChatFAB(
+                onTap: widget.onCreateChatTap!,
+              )
+            : null,
       );
 }

@@ -16,7 +16,7 @@ class IsmChatPageController extends GetxController {
 
   final _deviceConfig = Get.find<IsmChatDeviceConfig>();
 
-  late IsmChatChatConversationModel conversation;
+  late IsmChatConversationModel conversation;
 
   var focusNode = FocusNode();
 

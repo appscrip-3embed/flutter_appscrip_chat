@@ -7,7 +7,7 @@ class IsmChatConversationsViewModel {
 
   var chatSkip = 0;
   var chatLimit = 20;
-  Future<List<IsmChatChatConversationModel>?> getChatConversations() async =>
+  Future<List<IsmChatConversationModel>?> getChatConversations() async =>
       await _repository.getChatConversations(skip: chatSkip, limit: chatLimit);
 
   Future<UserDetails?> getUserData() async => await _repository.getUserData();

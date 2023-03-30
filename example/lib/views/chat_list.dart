@@ -32,12 +32,11 @@ class ChatList extends GetView<ChatListController> {
             projectId: Constants.projectId,
           ),
         ),
-        child: IsmChatConversations(
-          showAppBar: true,
-          onSignOut: controller.onSignOut,
-          onChatTap: (_, __) => RouteManagement.goToChatMessages(),
-          floatingButtonTap: () => RouteManagement.goToUserList(),
-        ),
+        showAppBar: true,
+        onSignOut: controller.onSignOut,
+        onChatTap: (_, __) => RouteManagement.goToChatMessages(),
+        showCreateChatIcon: true,
+        onCreateChatTap: RouteManagement.goToUserList,
       ),
     );
   }
