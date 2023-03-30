@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
 import 'package:appscrip_chat_component/src/widgets/alert_dailog.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -69,6 +70,32 @@ class IsmChatPageController extends GetxController {
   final Completer<GoogleMapController> googleMapCompleter =
       Completer<GoogleMapController>();
 
+  var _cameras = <CameraDescription>[];
+
+  late CameraController _frontCameraController;
+  late CameraController _backCameraController;
+
+  CameraController get cameraController =>
+      isFrontCameraSelected ? _frontCameraController : _backCameraController;
+
+  final RxBool _areCamerasInitialized = false.obs;
+  bool get areCamerasInitialized => _areCamerasInitialized.value;
+  set areCamerasInitialized(bool value) => _areCamerasInitialized.value = value;
+
+  final RxBool _isFrontCameraSelected = false.obs;
+  bool get isFrontCameraSelected => _isFrontCameraSelected.value;
+  set isFrontCameraSelected(bool value) => _isFrontCameraSelected.value = value;
+
+  final RxBool _isRecording = false.obs;
+  bool get isRecording => _isRecording.value;
+  set isRecording(bool value) => _isRecording.value = value;
+
+  final Rx<FlashMode> _flashMode = Rx<FlashMode>(FlashMode.auto);
+  FlashMode get flashMode => _flashMode.value;
+  set flashMode(FlashMode value) => _flashMode.value = value;
+
+  Future<void>? cameraInitialize;
+
   @override
   void onInit() {
     super.onInit();
@@ -85,6 +112,58 @@ class IsmChatPageController extends GetxController {
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
     });
+  }
+
+  @override
+  void onClose() {
+    if (areCamerasInitialized) {
+      _frontCameraController.dispose();
+      _backCameraController.dispose();
+    }
+    super.onClose();
+  }
+
+  Future<void> initializeCamera() async {
+    if (areCamerasInitialized) {
+      return;
+    }
+    _cameras = await availableCameras();
+    toggleCamera();
+  }
+
+  void toggleCamera() async {
+    areCamerasInitialized = false;
+    isFrontCameraSelected = !isFrontCameraSelected;
+    if (isFrontCameraSelected) {
+      _frontCameraController = CameraController(
+        _cameras[1],
+        ResolutionPreset.high,
+        imageFormatGroup: ImageFormatGroup.jpeg,
+      );
+    } else {
+      _backCameraController = CameraController(
+        _cameras[0],
+        ResolutionPreset.high,
+        imageFormatGroup: ImageFormatGroup.jpeg,
+      );
+    }
+    await cameraController.initialize();
+    areCamerasInitialized = true;
+  }
+
+  void toggleFlash([FlashMode? mode]) {
+    if (mode != null) {
+      flashMode = mode;
+    } else {
+      if (flashMode == FlashMode.off) {
+        flashMode = FlashMode.always;
+      } else if (flashMode == FlashMode.always) {
+        flashMode = FlashMode.always;
+      } else if (flashMode == FlashMode.auto) {
+        flashMode = FlashMode.off;
+      }
+    }
+    cameraController.setFlashMode(flashMode);
   }
 
   void _scrollToBottom() async {

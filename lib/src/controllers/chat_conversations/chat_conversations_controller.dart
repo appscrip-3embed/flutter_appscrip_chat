@@ -173,9 +173,6 @@ class IsmChatConversationsController extends GetxController {
 
     if (apiConversations != null && apiConversations.isNotEmpty) {
       for (var conversation in apiConversations) {
-        IsmChatLog.error('dsfdsffd ${conversation.conversationId}');
-        IsmChatLog.error('dsfdsffd ${conversation.chatName}');
-
         DBConversationModel? dbConversation;
         if (dbConversations.isNotEmpty) {
           dbConversation = dbConversations.firstWhere(

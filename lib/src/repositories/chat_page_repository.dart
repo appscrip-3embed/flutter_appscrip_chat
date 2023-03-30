@@ -127,8 +127,9 @@ class IsmChatPageRepository {
       if (response.hasError) {
         return null;
       }
-      var data = jsonDecode(response.data);
-      return IsmChatConversationModel.fromMap(data as Map<String, dynamic>);
+      var data = jsonDecode(response.data) as Map<String, dynamic>;
+      return IsmChatConversationModel.fromMap(
+          data['conversationDetails'] as Map<String, dynamic>);
     } catch (e, st) {
       IsmChatLog.error('Chat user Details $e', st);
       return null;

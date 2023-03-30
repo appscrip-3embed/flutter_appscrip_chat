@@ -24,8 +24,10 @@ class IsmChatConversationModel {
         // lastReadAt: LastReadAt.fromNetworkMap(
         //     map['lastReadAt'] as Map<String, dynamic>? ?? {}),
         lastMessageSentAt: map['lastMessageSentAt'] as int? ?? 0,
-        lastMessageDetails: LastMessageDetails.fromMap(
-            map['lastMessageDetails'] as Map<String, dynamic>? ?? {}),
+        lastMessageDetails: map['lastMessageDetails'] != null
+            ? LastMessageDetails.fromMap(
+                map['lastMessageDetails'] as Map<String, dynamic>)
+            : null,
         isGroup: map['isGroup'] as bool? ?? false,
         customType: map['customType'],
         // createdByUserName: map['createdByUserName'] as String? ?? '',

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
@@ -39,6 +40,20 @@ extension DurationExtensions on Duration {
       return '${twoDigits(inHours)}:$twoDigitMinutes:$twoDigitSeconds';
     } else {
       return '$twoDigitMinutes:$twoDigitSeconds';
+    }
+  }
+}
+
+extension FlashIcon on FlashMode {
+  IconData get icon {
+    switch (this) {
+      case FlashMode.off:
+        return Icons.flash_off_rounded;
+      case FlashMode.auto:
+        return Icons.flash_auto_rounded;
+      case FlashMode.always:
+      case FlashMode.torch:
+        return Icons.flash_on_rounded;
     }
   }
 }
