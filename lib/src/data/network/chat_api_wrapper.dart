@@ -84,6 +84,7 @@ class IsmChatApiWrapper {
     required dynamic payload,
     required Map<String, String> headers,
     bool showLoader = false,
+    bool forAwsUpload = false,
   }) async {
     if (kDebugMode) {
       IsmChatLog('Request - PUT $api $payload');
@@ -96,7 +97,7 @@ class IsmChatApiWrapper {
       final response = await http
           .put(
             uri,
-            body: jsonEncode(payload),
+            body: forAwsUpload ? payload : jsonEncode(payload),
             headers: headers,
           )
           .timeout(const Duration(seconds: 60));

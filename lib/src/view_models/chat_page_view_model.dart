@@ -62,7 +62,6 @@ class IsmChatPageViewModel {
     required String conversationId,
     required String body,
     required int createdAt,
-    required IsmChatChatMessageModel messageModel,
     required String notificationBody,
     required String notificationTitle,
     String? parentMessageId,
@@ -110,8 +109,8 @@ class IsmChatPageViewModel {
           continue;
         }
 
-        messageModel.messageId = messageId;
-        messageModel.deliveredToAll = false;
+        pendingMessage.messageId = messageId;
+        pendingMessage.deliveredToAll = false;
         chatPendingMessages.messages.removeAt(x);
         pendingMessgeBox.put(chatPendingMessages);
 
@@ -124,7 +123,7 @@ class IsmChatPageViewModel {
             .build();
         final conversationModel = query.findUnique();
         if (conversationModel != null) {
-          conversationModel.messages.add(messageModel.toJson());
+          conversationModel.messages.add(pendingMessage.toJson());
         }
 
         chatConversationBox.put(conversationModel!, mode: PutMode.update);
@@ -173,6 +172,7 @@ class IsmChatPageViewModel {
       );
       allMessages.addAll(messages);
     }
+
     return allMessages;
   }
 

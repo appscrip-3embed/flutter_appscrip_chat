@@ -10,12 +10,15 @@ class IsmChatInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
         builder: (controller) {
-          var mqttController = Get.find<IsmChatMqttController>();
+          // var mqttController = Get.find<IsmChatMqttController>();
           var ismChatConversationController =
               Get.find<IsmChatConversationsController>();
-          var userBlockOrNot =
-              controller.messages.last.initiatorId == mqttController.userId &&
-                  controller.messages.last.messagingDisabled == true;
+          // if (controller.messages.isNotEmpty) {
+          //   var userBlockOrNot =
+          //       controller.messages.last.initiatorId == mqttController.userId &&
+          //           controller.messages.last.messagingDisabled == true;
+          // }
+
           var messageBody = controller.chatMessageModel?.customType ==
                   IsmChatCustomMessageType.location
               ? 'Location'
@@ -163,26 +166,30 @@ class IsmChatInputField extends StatelessWidget {
                   aspectRatio: 1,
                   child: GestureDetector(
                     onLongPressStart: (val) async {
-                      controller.isEnableRecordingAudio = true;
-                      controller.timer =
-                          Timer.periodic(const Duration(seconds: 1), (_) {
-                        controller.seconds++;
-                      });
-                      // Check and request permission
-                      if (await controller.recordAudio.hasPermission()) {
-                        // Start recording
-                        await controller.recordAudio.start();
+                      if (controller.conversation?.messagingDisabled == true) {
+                        controller.showDialogCheckBlockUnBlock();
+                      } else {
+                        controller.isEnableRecordingAudio = true;
+                        controller.forVideoRecordTimer =
+                            Timer.periodic(const Duration(seconds: 1), (_) {
+                          controller.seconds++;
+                        });
+                        // Check and request permission
+                        if (await controller.recordAudio.hasPermission()) {
+                          // Start recording
+                          await controller.recordAudio.start();
+                        }
                       }
                     },
                     onLongPressEnd: (val) async {
                       controller.isEnableRecordingAudio = false;
-                      controller.timer?.cancel();
+                      controller.forVideoRecordTimer?.cancel();
                       controller.seconds = 0;
                       var path = await controller.recordAudio.stop();
                       controller.sendAudio(path);
                     },
                     onTap: controller.showSendButton
-                        ? userBlockOrNot
+                        ? controller.conversation?.messagingDisabled == true
                             ? controller.showDialogCheckBlockUnBlock
                             : controller.sendTextMessage
                         : () {},

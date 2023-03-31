@@ -35,8 +35,8 @@ class IsmChatPageRepository {
   Future<IsmChatResponseModel?> updatePresignedUrl(
       {String? presignedUrl, Uint8List? bytes}) async {
     try {
-      var response =
-          await _apiWrapper.put(presignedUrl!, payload: bytes, headers: {});
+      var response = await _apiWrapper.put(presignedUrl!,
+          payload: bytes, headers: {}, forAwsUpload: true);
       if (response.hasError) {
         return null;
       }
@@ -65,6 +65,7 @@ class IsmChatPageRepository {
     List<Map<String, dynamic>>? attachments,
   }) async {
     try {
+      IsmChatLog.success('dsfdsfdsfsfd $customType');
       final payload = {
         'showInConversation': showInConversation,
         'messageType': messageType,

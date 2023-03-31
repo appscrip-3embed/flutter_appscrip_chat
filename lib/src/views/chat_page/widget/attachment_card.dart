@@ -47,7 +47,8 @@ class IsmChatAttachmentCard extends StatelessWidget {
                     InkWell(
                         onTap: () async {
                           Get.back<void>();
-                          await Get.to<void>(const IsmChatCameraView());
+                          controller.listOfAssetsPath.clear();
+                          await Get.to<void>(const IsmChatMediaiAssetsPage());
                         },
                         child: ListTile(
                           leading: Container(

@@ -108,7 +108,21 @@ class IsmChatPageController extends GetxController {
     _imagePath.value = value;
   }
 
-  Timer? timer;
+  final RxList<AttachmentModel> _listOfAssetsPath = <AttachmentModel>[].obs;
+  List<AttachmentModel> get listOfAssetsPath => _listOfAssetsPath;
+  set listOfAssetsPath(List<AttachmentModel> value) {
+    _listOfAssetsPath.value = value;
+  }
+
+  final RxInt _assetsIndex = 0.obs;
+  int get assetsIndex => _assetsIndex.value;
+  set assetsIndex(int value) {
+    _assetsIndex.value = value;
+  }
+
+  Timer? conversationDetailsApTimer;
+
+  Timer? forVideoRecordTimer;
 
   final RxBool _isEnableRecordingAudio = false.obs;
   bool get isEnableRecordingAudio => _isEnableRecordingAudio.value;
@@ -135,7 +149,7 @@ class IsmChatPageController extends GetxController {
     super.onInit();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
-      IsmChatLog.success('dffdfdfdsfsdfdsfds ${conversation?.conversationId}');
+
       getMessagesFromDB(conversation?.conversationId ?? '');
       getMessagesFromAPI();
       readAllMessages(
@@ -144,6 +158,7 @@ class IsmChatPageController extends GetxController {
       );
       getConverstaionDetails(
           conversationId: conversation?.conversationId ?? '');
+      getConversationDetailEveryOneMinutes();
     }
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
@@ -156,11 +171,12 @@ class IsmChatPageController extends GetxController {
       _frontCameraController.dispose();
       _backCameraController.dispose();
     }
+    conversationDetailsApTimer?.cancel();
     super.onClose();
   }
 
   void startTimer() {
-    timer = Timer.periodic(const Duration(seconds: 1), (_) {
+    forVideoRecordTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       var seconds = myDuration.inSeconds + 1;
       myDuration = Duration(seconds: seconds);
     });
@@ -366,6 +382,23 @@ class IsmChatPageController extends GetxController {
     }
   }
 
+  void sendPhotoAndVideo() async {
+    if (listOfAssetsPath.isNotEmpty) {
+      for (var media in listOfAssetsPath) {
+        if (media.attachmentType == IsmChatAttachmentType.image) {
+          imagePath = File(media.mediaUrl!);
+          await sendImage();
+        } else {
+          await sendVideo(
+              file: File(media.mediaUrl!),
+              isThumbnail: true,
+              thumbnailFiles: File(media.thumbnailUrl!));
+        }
+      }
+      listOfAssetsPath.clear();
+    }
+  }
+
   void sendAudio(String? file) async {
     if (file != null) {
       var ismChatObjectBox = IsmChatConfig.objectBox;
@@ -381,7 +414,7 @@ class IsmChatPageController extends GetxController {
       final mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
       var sentAt = DateTime.now().millisecondsSinceEpoch;
       var audioMessage = IsmChatChatMessageModel(
-        body: 'Documet',
+        body: 'Audio',
         conversationId: conversation?.conversationId ?? '',
         customType: IsmChatCustomMessageType.audio,
         attachments: [
@@ -424,7 +457,8 @@ class IsmChatPageController extends GetxController {
   void sendDocument() async {
     final result = await FilePicker.platform.pickFiles(
         allowMultiple: true,
-        type: FileType.any,
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
         allowCompression: true,
         withData: true);
     if (result!.files.isNotEmpty) {
@@ -482,7 +516,8 @@ class IsmChatPageController extends GetxController {
     }
   }
 
-  void sendVideo({File? file}) async {
+  Future<void> sendVideo(
+      {File? file, bool isThumbnail = false, File? thumbnailFiles}) async {
     var ismChatObjectBox = IsmChatConfig.objectBox;
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversation?.conversationId ?? '');
@@ -492,10 +527,12 @@ class IsmChatPageController extends GetxController {
     }
     final videoCopress = await VideoCompress.compressVideo(file!.path,
         quality: VideoQuality.LowQuality, includeAudio: true);
-    final thumbnailFile = await VideoCompress.getFileThumbnail(file.path,
-        quality: 50, // default(100)
-        position: -1 // default(-1)
-        );
+    final thumbnailFile = isThumbnail
+        ? thumbnailFiles!
+        : await VideoCompress.getFileThumbnail(file.path,
+            quality: 50, // default(100)
+            position: -1 // default(-1)
+            );
     if (videoCopress != null) {
       final bytes = videoCopress.file!.readAsBytesSync();
       final thumbnailBytes = thumbnailFile.readAsBytesSync();
@@ -509,7 +546,7 @@ class IsmChatPageController extends GetxController {
       var videoMessage = IsmChatChatMessageModel(
         body: 'Video',
         conversationId: conversation?.conversationId ?? '',
-        customType: IsmChatCustomMessageType.image,
+        customType: IsmChatCustomMessageType.video,
         attachments: [
           AttachmentModel(
               attachmentType: IsmChatAttachmentType.video,
@@ -551,7 +588,7 @@ class IsmChatPageController extends GetxController {
     }
   }
 
-  void sendImage() async {
+  Future<void> sendImage() async {
     var ismChatObjectBox = IsmChatConfig.objectBox;
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversation?.conversationId ?? '');
@@ -638,7 +675,6 @@ class IsmChatPageController extends GetxController {
     chatInputController.clear();
     await ismChatObjectBox.addPendingMessage(textMessage);
     await sendMessage(
-        messageModel: textMessage,
         deviceId: _deviceConfig.deviceId!,
         body: textMessage.body,
         customType: textMessage.customType!.name,
@@ -679,7 +715,6 @@ class IsmChatPageController extends GetxController {
     chatInputController.clear();
     await ismChatObjectBox.addPendingMessage(textMessage);
     await sendMessage(
-        messageModel: textMessage,
         deviceId: _deviceConfig.deviceId!,
         body: textMessage.body,
         customType: textMessage.customType!.name,
@@ -754,7 +789,7 @@ class IsmChatPageController extends GetxController {
               mediaId,
           'extension': ismChatChatMessageModel.attachments?.first.extension,
           'attachmentType':
-              ismChatChatMessageModel.attachments?.first.attachmentIndex,
+              ismChatChatMessageModel.attachments?.first.attachmentType?.value,
         }
       ];
       await sendMessage(
@@ -762,7 +797,6 @@ class IsmChatPageController extends GetxController {
         conversationId: ismChatChatMessageModel.conversationId!,
         createdAt: createdAt,
         deviceId: ismChatChatMessageModel.deviceId ?? '',
-        messageModel: ismChatChatMessageModel,
         messageType: ismChatChatMessageModel.messageType?.value ?? 0,
         notificationBody: notificationBody,
         notificationTitle: notificationTitle,
@@ -782,7 +816,6 @@ class IsmChatPageController extends GetxController {
     required String conversationId,
     required String body,
     required int createdAt,
-    required IsmChatChatMessageModel messageModel,
     required String notificationBody,
     required String notificationTitle,
     bool encrypted = true,
@@ -809,7 +842,7 @@ class IsmChatPageController extends GetxController {
       notificationBody: notificationBody,
       notificationTitle: notificationTitle,
       body: IsmChatUtility.encodePayload(body),
-      messageModel: messageModel,
+      // messageModel: messageModel,
       createdAt: createdAt,
     );
     if (isMessageSent) {
@@ -863,6 +896,14 @@ class IsmChatPageController extends GetxController {
     await Get.to<void>(IsmChatMessageInfo(message: chatMessageModel));
   }
 
+  /// Call function for Get Chat Conversation Details
+  void getConversationDetailEveryOneMinutes() {
+    conversationDetailsApTimer = Timer.periodic(
+        const Duration(minutes: 1),
+        (Timer t) => getConverstaionDetails(
+            conversationId: conversation?.conversationId ?? ''));
+  }
+
   Future<void> getConverstaionDetails(
       {required String conversationId,
       String? ids,
@@ -872,7 +913,9 @@ class IsmChatPageController extends GetxController {
     var data =
         await _viewModel.getConverstaionDetails(conversationId: conversationId);
     if (data != null) {
-      // conversation = data;
+      var conversationId = conversation?.conversationId;
+      conversation = data;
+      conversation?.conversationId = conversationId;
     }
   }
 
@@ -883,6 +926,8 @@ class IsmChatPageController extends GetxController {
         lastMessageTimeStamp: lastMessageTimeStamp,
         conversationId: conversation?.conversationId ?? '');
     if (data != null) {
+      await getConverstaionDetails(
+          conversationId: conversation?.conversationId ?? '');
       await getMessagesFromDB(conversation?.conversationId ?? '');
     }
   }
@@ -894,6 +939,8 @@ class IsmChatPageController extends GetxController {
         conversationId: conversation?.conversationId ?? '',
         lastMessageTimeStamp: lastMessageTimeStamp);
     if (data != null) {
+      await getConverstaionDetails(
+          conversationId: conversation?.conversationId ?? '');
       await getMessagesFromDB(conversation?.conversationId ?? '');
     }
   }

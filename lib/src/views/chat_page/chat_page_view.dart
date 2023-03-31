@@ -24,10 +24,6 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
         builder: (controller) => Scaffold(
           resizeToAvoidBottomInset: true,
           appBar: IsmChatPageHeader(),
-
-          /// IsmChatPageAction(),
-
-          /// IsmChatPageHeader(),
           body: Column(
             children: [
               Expanded(
@@ -68,7 +64,7 @@ class ChatMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    IsmChatLog.success('dsffdsffdfdsfd ${message.attachments?.first.mediaUrl}');
+  
     var showMessageInCenter =
         message.customType! == IsmChatCustomMessageType.date ||
             message.customType! == IsmChatCustomMessageType.block ||

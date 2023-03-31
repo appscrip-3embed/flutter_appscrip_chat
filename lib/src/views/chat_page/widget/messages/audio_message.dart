@@ -9,7 +9,7 @@ class IsmChatAudioMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => VoiceMessage(
-        audioSrc: message.body,
+        audioSrc: message.attachments!.first.mediaUrl,
         played: false,
         me: message.sentByMe,
         meBgColor: IsmChatConfig.chatTheme.primaryColor!,

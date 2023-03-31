@@ -50,6 +50,7 @@ dependencies:
   video_compress: ^3.1.2
   video_player: ^2.6.0
   voice_message_package: ^1.0.41
+  wechat_assets_picker: ^8.4.1
 
 dev_dependencies:
   build_runner: ^2.3.3

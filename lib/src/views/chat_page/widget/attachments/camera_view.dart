@@ -85,7 +85,7 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                                   .stopVideoRecording();
                               setState(() {
                                 controller.isRecording = false;
-                                controller.timer?.cancel();
+                                controller.forVideoRecordTimer?.cancel();
                                 controller.myDuration = const Duration();
                                 if (controller.flashMode != FlashMode.off) {
                                   controller.toggleFlash(FlashMode.off);

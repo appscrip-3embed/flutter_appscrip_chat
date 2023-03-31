@@ -23,7 +23,7 @@ class IsmChatFileMessage extends StatelessWidget {
             children: [
               AbsorbPointer(
                 child: SfPdfViewer.network(
-                  message.body,
+                  message.attachments?.first.mediaUrl ?? '',
                   enableDoubleTapZooming: false,
                   canShowHyperlinkDialog: false,
                   canShowPaginationDialog: false,

@@ -21,8 +21,8 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
         builder: (controller) {
           var mqttController = Get.find<IsmChatMqttController>();
-          var userBlockOrNot =
-              controller.messages.last.messagingDisabled == true;
+          // var userBlockOrNot =
+          //     controller.messages.last.messagingDisabled == true;
           return Theme(
             data: ThemeData.light(useMaterial3: true).copyWith(
               appBarTheme: AppBarTheme(
@@ -36,6 +36,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
               //   child: const Icon(Icons.arrow_back_rounded),
               // ),
               titleSpacing: IsmChatDimens.four,
+
               title: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -54,31 +55,33 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                         controller.conversation?.chatName ?? '',
                         style: IsmChatStyles.w600White18,
                       ),
-                      Obx(
-                        () => mqttController.typingUsersIds.contains(
-                                controller.conversation?.conversationId)
-                            ? Text(
-                                IsmChatStrings.typing,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: IsmChatStyles.w400White12,
-                              )
-                            : controller.conversation?.opponentDetails
-                                        ?.online ??
-                                    false
-                                ? Text(
-                                    IsmChatStrings.online,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: IsmChatStyles.w400White12,
-                                  )
-                                : Text(
-                                    '${controller.conversation?.opponentDetails?.lastSeen.toCurrentTimeStirng().capitalizeFirst}',
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: IsmChatStyles.w400White12,
-                                  ),
-                      ),
+                      controller.conversation?.messagingDisabled == true
+                          ? const SizedBox.shrink()
+                          : Obx(
+                              () => mqttController.typingUsersIds.contains(
+                                      controller.conversation?.conversationId)
+                                  ? Text(
+                                      IsmChatStrings.typing,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: IsmChatStyles.w400White12,
+                                    )
+                                  : controller.conversation?.opponentDetails
+                                              ?.online ??
+                                          false
+                                      ? Text(
+                                          IsmChatStrings.online,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: IsmChatStyles.w400White12,
+                                        )
+                                      : Text(
+                                          '${controller.conversation?.opponentDetails?.lastSeen.toCurrentTimeStirng().capitalizeFirst}',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: IsmChatStyles.w400White12,
+                                        ),
+                            ),
                     ],
                   ),
                 ],
@@ -113,7 +116,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                             color: IsmChatColors.redColor,
                           ),
                           IsmChatDimens.boxWidth8,
-                          userBlockOrNot
+                          controller.conversation?.messagingDisabled == true
                               ? const Text(
                                   IsmChatStrings.unBlockUser,
                                 )
@@ -130,7 +133,10 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                       controller.showDialogForClearChat();
                     } else {
                       controller.showDialogForBlockUnBlockUser(
-                          userBlockOrNot, controller.messages.last.sentAt);
+                          controller.conversation?.messagingDisabled == true,
+                          controller.messages.isEmpty
+                              ? DateTime.now().millisecondsSinceEpoch
+                              : controller.messages.last.sentAt);
                     }
                   },
                 ),

@@ -144,6 +144,7 @@ class IsmChatMqttController extends GetxController {
       } else {
         var message = IsmChatChatMessageModel.fromMap(payload);
         IsmChatLog.success(message);
+
         _handleMessage(message);
       }
     });
@@ -398,8 +399,11 @@ class IsmChatMqttController extends GetxController {
         _communicationConfig.userConfig.userId) {
       return;
     }
+
     if (Get.isRegistered<IsmChatPageController>()) {
       var controller = Get.find<IsmChatPageController>();
+      controller.getConverstaionDetails(
+          conversationId: actionModel.conversationId ?? '');
       controller.getMessagesFromAPI(
           conversationId: actionModel.conversationId ?? '',
           lastMessageTimestampFromFunction: controller.messages.last.sentAt);

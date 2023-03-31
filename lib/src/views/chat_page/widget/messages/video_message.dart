@@ -7,9 +7,24 @@ class IsmChatVideoMessage extends StatelessWidget {
   final IsmChatChatMessageModel message;
 
   @override
-  Widget build(BuildContext context) => Text(
-        message.body,
-        style: IsmChatStyles.w400Black12,
+  Widget build(BuildContext context) => Stack(
+        alignment: Alignment.center,
+        children: [
+          IsmChatImage(
+            message.attachments?.first.thumbnailUrl ?? '',
+            isNetworkImage: message.attachments!.first.mediaUrl!.isValidUrl,
+          ),
+          Icon(
+            Icons.play_circle,
+            size: IsmChatDimens.sixty,
+            color: IsmChatColors.whiteColor,
+          )
+        ],
       );
+
+  //  Text(
+  //       message.attachments?.first.mediaUrl ?? '',
+  //       style: IsmChatStyles.w400Black12,
+  //     );
   // IsmChatImage(message.attachments!.first.mediaUrl);
 }
