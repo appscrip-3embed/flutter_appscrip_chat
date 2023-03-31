@@ -10,14 +10,8 @@ class IsmChatInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
         builder: (controller) {
-          // var mqttController = Get.find<IsmChatMqttController>();
           var ismChatConversationController =
               Get.find<IsmChatConversationsController>();
-          // if (controller.messages.isNotEmpty) {
-          //   var userBlockOrNot =
-          //       controller.messages.last.initiatorId == mqttController.userId &&
-          //           controller.messages.last.messagingDisabled == true;
-          // }
 
           var messageBody = controller.chatMessageModel?.customType ==
                   IsmChatCustomMessageType.location
@@ -239,7 +233,11 @@ class IsmChatAttachmentIcon extends GetView<IsmChatPageController> {
   @override
   Widget build(BuildContext context) => IconButton(
         onPressed: () async {
-          await Get.bottomSheet(const IsmChatAttachmentCard());
+          if (controller.conversation?.messagingDisabled == true) {
+            controller.showDialogCheckBlockUnBlock();
+          } else {
+            await Get.bottomSheet(const IsmChatAttachmentCard());
+          }
         },
         color: IsmChatConfig.chatTheme.primaryColor,
         icon: const Icon(Icons.attach_file_rounded),

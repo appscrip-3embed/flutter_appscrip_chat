@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/widgets/alert_dailog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -21,8 +22,6 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
         builder: (controller) {
           var mqttController = Get.find<IsmChatMqttController>();
-          // var userBlockOrNot =
-          //     controller.messages.last.messagingDisabled == true;
           return Theme(
             data: ThemeData.light(useMaterial3: true).copyWith(
               appBarTheme: AppBarTheme(
@@ -117,9 +116,18 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                           ),
                           IsmChatDimens.boxWidth8,
                           controller.conversation?.messagingDisabled == true
-                              ? const Text(
-                                  IsmChatStrings.unBlockUser,
-                                )
+                              ? controller.messages.isEmpty
+                                  ? const Text(
+                                      IsmChatStrings.unBlockUser,
+                                    )
+                                  : controller.messages.last.initiatorId ==
+                                          mqttController.userId
+                                      ? const Text(
+                                          IsmChatStrings.unBlockUser,
+                                        )
+                                      : const Text(
+                                          IsmChatStrings.blockUser,
+                                        )
                               : const Text(
                                   IsmChatStrings.blockUser,
                                 )
@@ -128,15 +136,29 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ],
                   elevation: 2,
-                  onSelected: (value) {
+                  onSelected: (value) async {
                     if (value == 1) {
                       controller.showDialogForClearChat();
                     } else {
-                      controller.showDialogForBlockUnBlockUser(
-                          controller.conversation?.messagingDisabled == true,
-                          controller.messages.isEmpty
-                              ? DateTime.now().millisecondsSinceEpoch
-                              : controller.messages.last.sentAt);
+                      if (controller.messages.isNotEmpty) {
+                        if (controller.messages.last.initiatorId !=
+                            mqttController.userId) {
+                          await Get.dialog(
+                            IsmChatAlertDialogBox(
+                              titile: IsmChatStrings.doNotBlock,
+                              actionLabels: const ['Say for Unblock'],
+                              callbackActions: [() => Get.back],
+                            ),
+                          );
+                        } else {
+                          controller.showDialogForBlockUnBlockUser(
+                              controller.conversation?.messagingDisabled ==
+                                  true,
+                              controller.messages.isEmpty
+                                  ? DateTime.now().millisecondsSinceEpoch
+                                  : controller.messages.last.sentAt);
+                        }
+                      } else {}
                     }
                   },
                 ),

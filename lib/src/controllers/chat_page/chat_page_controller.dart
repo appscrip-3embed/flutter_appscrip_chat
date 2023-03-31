@@ -311,7 +311,7 @@ class IsmChatPageController extends GetxController {
   }
 
   void showDialogForBlockUnBlockUser(
-      bool userBlockOrNot, int lastMessageTimsStamp) async {
+      bool userBlockOrNot, int lastMessageTimsStamp) async { 
     await Get.dialog(IsmChatAlertDialogBox(
       titile: userBlockOrNot
           ? IsmChatStrings.doWantUnBlckUser
@@ -334,17 +334,33 @@ class IsmChatPageController extends GetxController {
   }
 
   void showDialogCheckBlockUnBlock() async {
-    await Get.dialog(
-      IsmChatAlertDialogBox(
-        titile: IsmChatStrings.youBlockUser,
-        actionLabels: const [IsmChatStrings.unblock],
-        callbackActions: [
-          () => postUnBlockUser(
-              opponentId: conversation?.opponentDetails?.userId ?? '',
-              lastMessageTimeStamp: messages.last.sentAt),
-        ],
-      ),
-    );
+    var mqttController = Get.find<IsmChatMqttController>();
+    if (messages.last.initiatorId == mqttController.userId) {
+      await Get.dialog(
+        IsmChatAlertDialogBox(
+          titile: IsmChatStrings.youBlockUser,
+          actionLabels: const [IsmChatStrings.unblock],
+          callbackActions: [
+            () => postUnBlockUser(
+                opponentId: conversation?.opponentDetails?.userId ?? '',
+                lastMessageTimeStamp: messages.last.sentAt),
+          ],
+        ),
+      );
+    } else {
+      await Get.dialog(
+        IsmChatAlertDialogBox(
+          titile: IsmChatStrings.youareBlocked,
+          actionLabels: const ['Say for Unblock'],
+          callbackActions: [
+            () => Get.back
+            // () => postUnBlockUser(
+            //     opponentId: conversation?.opponentDetails?.userId ?? '',
+            //     lastMessageTimeStamp: messages.last.sentAt),
+          ],
+        ),
+      );
+    }
   }
 
   void showDialogForMessageDelete(

@@ -35,6 +35,9 @@ class IsmChatStrings {
   static const String doWantBlckUser = 'Do you want to Block this User?';
   static const String doWantUnBlckUser = 'Do you want to Unblock this User?';
   static const String youBlockUser = 'You blocked this user.';
+  static const String youareBlocked = 'You are blocked.';
+  static const String doNotBlock =
+      'You are alerday blocked, You can not block this user';
   static const String block = 'Block';
   static const String unblock = 'Unblock';
   static const String deleteMessgae = 'Delete message?';
