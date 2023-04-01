@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
+import 'package:appscrip_chat_component/src/views/chat_page/widget/media_preview.dart';
 import 'package:appscrip_chat_component/src/widgets/alert_dailog.dart';
 import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
@@ -13,8 +14,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:record/record.dart';
 import 'package:video_compress/video_compress.dart';
 
@@ -190,6 +194,49 @@ class IsmChatPageController extends GetxController {
     toggleCamera();
   }
 
+  void tapForMediaPreview(
+      IsmChatChatMessageModel ismChatChatMessageModel) async {
+    if (ismChatChatMessageModel.customType == IsmChatCustomMessageType.image ||
+        ismChatChatMessageModel.customType == IsmChatCustomMessageType.video) {
+      var mediaList = messages
+          .where((item) =>
+              item.customType == IsmChatCustomMessageType.image ||
+              item.customType == IsmChatCustomMessageType.video)
+          .toList();
+      var selectedMediaIndex = mediaList.indexOf(ismChatChatMessageModel);
+      await Get.to<void>(IsmMediaPreview(
+        mediaIndex: selectedMediaIndex,
+        messageData: mediaList,
+        mediaUserName: ismChatChatMessageModel.chatName,
+        initiated: ismChatChatMessageModel.sentByMe,
+        mediaTime: ismChatChatMessageModel.sentAt,
+      ));
+    } else if (ismChatChatMessageModel.customType ==
+        IsmChatCustomMessageType.file) {
+      var localPath = ismChatChatMessageModel.attachments?.first.mediaUrl;
+      if (localPath!.startsWith('http')) {
+        try {
+          final client = http.Client();
+          final request = await client.get(Uri.parse(localPath));
+          final bytes = request.bodyBytes;
+          final documentsDir =
+              (await path_provider.getApplicationDocumentsDirectory()).path;
+          localPath =
+              '$documentsDir/${ismChatChatMessageModel.attachments?.first.name}';
+          if (!File(localPath).existsSync()) {
+            final file = File(localPath);
+            await file.writeAsBytes(bytes);
+          }
+        } catch (e) {
+          // await Get.dialog(IsmChatAlertDialogBox());
+          IsmChatLog.error(e);
+        }
+      } else {
+        await OpenFilex.open(localPath);
+      }
+    }
+  }
+
   void toggleCamera() async {
     areCamerasInitialized = false;
     isFrontCameraSelected = !isFrontCameraSelected;
@@ -311,7 +358,7 @@ class IsmChatPageController extends GetxController {
   }
 
   void showDialogForBlockUnBlockUser(
-      bool userBlockOrNot, int lastMessageTimsStamp) async { 
+      bool userBlockOrNot, int lastMessageTimsStamp) async {
     await Get.dialog(IsmChatAlertDialogBox(
       titile: userBlockOrNot
           ? IsmChatStrings.doWantUnBlckUser
@@ -477,7 +524,7 @@ class IsmChatPageController extends GetxController {
         allowedExtensions: ['pdf'],
         allowCompression: true,
         withData: true);
-    if (result!.files.isNotEmpty) {
+    if (result?.files.isNotEmpty ?? false) {
       var ismChatObjectBox = IsmChatConfig.objectBox;
       final chatConversationResponse = await ismChatObjectBox.getDBConversation(
           conversationId: conversation?.conversationId ?? '');
@@ -485,7 +532,7 @@ class IsmChatPageController extends GetxController {
         await createConversation(
             userId: [conversation?.opponentDetails?.userId ?? '']);
       }
-      for (var x in result.files) {
+      for (var x in result!.files) {
         final bytes = x.bytes;
         final nameWithExtension = x.path!.split('/').last;
         final extension = nameWithExtension.split('.').last;

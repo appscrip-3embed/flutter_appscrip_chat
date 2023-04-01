@@ -11,6 +11,7 @@ dependencies:
   any_link_preview: ^3.0.0
   cached_network_image: ^3.2.3
   camera: ^0.10.3+2
+  carousel_slider: ^4.2.1
   device_info_plus: ^8.1.0
   dio: ^5.0.1
   file_picker: ^5.2.6
@@ -37,6 +38,7 @@ dependencies:
   mqtt_client: ^9.8.0
   objectbox: ^1.7.2
   objectbox_flutter_libs: any
+  open_filex: ^4.3.2
   path_provider: ^2.0.13
   permission_handler: ^10.2.0
   plugin_platform_interface: ^2.0.2

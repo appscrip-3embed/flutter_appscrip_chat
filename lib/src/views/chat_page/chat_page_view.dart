@@ -64,7 +64,6 @@ class ChatMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  
     var showMessageInCenter =
         message.customType! == IsmChatCustomMessageType.date ||
             message.customType! == IsmChatCustomMessageType.block ||
@@ -210,10 +209,14 @@ class ChatMessage extends StatelessWidget {
                         ),
                       ),
                     ],
-                    child:
-                        //  SwipeTo(
-                        //   child:
-                        message.customType!.messageType(message),
+                    child: IsmChatTapHandler(
+                        child: message.customType!.messageType(message),
+                        onTap: () async {
+                          ismChatPageController.tapForMediaPreview(message);
+                        })
+                    //  SwipeTo(
+                    //   child:
+                    ,
                     //   onRightSwipe: () {
                     //     ismChatPageController.isreplying = true;
                     //     ismChatPageController.chatMessageModel = message;
