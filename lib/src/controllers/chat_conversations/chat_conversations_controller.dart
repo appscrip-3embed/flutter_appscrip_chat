@@ -166,7 +166,6 @@ class IsmChatConversationsController extends GetxController {
 
     var apiConversations = await _viewModel.getChatConversations();
     var dbConversations = IsmChatConfig.objectBox.chatConversationBox.getAll();
-
     if (conversations.isEmpty) {
       isConversationsLoading = false;
     }

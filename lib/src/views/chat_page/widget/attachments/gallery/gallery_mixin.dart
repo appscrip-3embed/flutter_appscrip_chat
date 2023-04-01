@@ -229,35 +229,33 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                               alignment: Alignment.center,
                               children: [
                                 Container(
-                                    height: IsmChatDimens.sixty,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(
-                                                IsmChatDimens.five)),
-                                        border: controller.assetsIndex == index
-                                            ? Border.all(
-                                                color: Get
-                                                    .theme.secondaryHeaderColor,
-                                                width: IsmChatDimens.two)
-                                            : null),
-                                    width: IsmChatDimens.sixty,
-                                    child: Image.file(
-                                      File(controller.listOfAssetsPath[index]
-                                              .thumbnailUrl
-                                              .toString()
-                                              .isNotEmpty
-                                          ? controller.listOfAssetsPath[index]
-                                              .thumbnailUrl
-                                              .toString()
-                                          : controller
-                                              .listOfAssetsPath[index].mediaUrl
-                                              .toString()),
-                                      fit: BoxFit.cover,
-                                    )),
-                                if (controller
-                                    .listOfAssetsPath[index].thumbnailUrl
-                                    .toString()
-                                    .isNotEmpty)
+                                  height: IsmChatDimens.sixty,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(IsmChatDimens.ten)),
+                                      border: controller.assetsIndex == index
+                                          ? Border.all(
+                                              color: Get
+                                                  .theme.secondaryHeaderColor,
+                                              width: IsmChatDimens.two)
+                                          : null),
+                                  width: IsmChatDimens.sixty,
+                                  child: IsmChatImage(
+                                    controller.listOfAssetsPath[index]
+                                                .attachmentType ==
+                                            IsmChatAttachmentType.video
+                                        ? controller.listOfAssetsPath[index]
+                                            .thumbnailUrl
+                                            .toString()
+                                        : controller
+                                            .listOfAssetsPath[index].mediaUrl
+                                            .toString(),
+                                    isNetworkImage: false,
+                                  ),
+                                ),
+                                if (controller.listOfAssetsPath[index]
+                                        .attachmentType ==
+                                    IsmChatAttachmentType.video)
                                   Container(
                                     alignment: Alignment.center,
                                     width: IsmChatDimens.thirtyTwo,

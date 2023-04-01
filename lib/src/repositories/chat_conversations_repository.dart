@@ -40,10 +40,12 @@ class IsmChatConversationsRepository {
         return null;
       }
       var data = jsonDecode(response.data);
-      return (data['conversations'] as List)
+      var listData = (data['conversations'] as List)
           .map((e) =>
               IsmChatConversationModel.fromMap(e as Map<String, dynamic>))
           .toList();
+
+      return listData;
     } catch (e, st) {
       IsmChatLog.error('GetChatConversations $e', st);
       return null;
@@ -126,6 +128,4 @@ class IsmChatConversationsRepository {
       IsmChatLog.error('Delivery Message $e', st);
     }
   }
-
-  
 }

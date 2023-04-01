@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -91,23 +89,15 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
                 widget.messageData[index].customType ==
                         IsmChatCustomMessageType.image
                     ? FittedBox(
-                        fit: BoxFit.fitHeight,
+                        fit: BoxFit.cover,
                         child: InteractiveViewer(
-                          child:
-                              widget.messageData[index].body.startsWith('https')
-                                  ? Image.network(
-                                      widget.messageData[index].attachments
-                                              ?.first.mediaUrl ??
-                                          '',
-                                      fit: BoxFit.fitWidth,
-                                    )
-                                  : Image.file(
-                                      File(widget.messageData[index].attachments
-                                              ?.first.mediaUrl ??
-                                          ''),
-                                      fit: BoxFit.fitWidth,
-                                    ),
-                        ),
+                            child: IsmChatImage(
+                          widget.messageData[index].attachments?.first
+                                  .mediaUrl ??
+                              '',
+                          isNetworkImage: widget.messageData[index].attachments!
+                              .first.mediaUrl!.isValidUrl,
+                        )),
                       )
                     : VideoViewPage(
                         path: widget.messageData[index].attachments?.first

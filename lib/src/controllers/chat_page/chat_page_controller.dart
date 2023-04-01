@@ -153,7 +153,6 @@ class IsmChatPageController extends GetxController {
     super.onInit();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
-
       getMessagesFromDB(conversation?.conversationId ?? '');
       getMessagesFromAPI();
       readAllMessages(
@@ -214,7 +213,7 @@ class IsmChatPageController extends GetxController {
     } else if (ismChatChatMessageModel.customType ==
         IsmChatCustomMessageType.file) {
       var localPath = ismChatChatMessageModel.attachments?.first.mediaUrl;
-      if (localPath!.startsWith('http')) {
+      if (localPath!.isValidUrl) {
         try {
           final client = http.Client();
           final request = await client.get(Uri.parse(localPath));
@@ -231,9 +230,9 @@ class IsmChatPageController extends GetxController {
           // await Get.dialog(IsmChatAlertDialogBox());
           IsmChatLog.error(e);
         }
-      } else {
-        await OpenFilex.open(localPath);
       }
+
+      await OpenFilex.open(localPath);
     }
   }
 
@@ -290,9 +289,10 @@ class IsmChatPageController extends GetxController {
     if (messages.isEmpty) {
       isMessagesLoading = true;
     }
-    IsmChatLog.error(lastMessageTimestampFromFunction);
-    var lastMessageTimestamp = messages.isEmpty ? 0 : messages.last.sentAt;
 
+    var lastMessageTimestamp =
+        messages.isEmpty ? 0 : messages.last.sentAt + 2000;
+  
     var data = await _viewModel.getChatMessages(
       conversationId: conversationId.isNotEmpty
           ? conversationId
@@ -774,6 +774,7 @@ class IsmChatPageController extends GetxController {
       sentByMe: true,
     );
     messages.add(textMessage);
+    IsmChatLog.error('Last Mesage timeStampone ${textMessage.sentAt}');
     isreplying = false;
     chatInputController.clear();
     await ismChatObjectBox.addPendingMessage(textMessage);
