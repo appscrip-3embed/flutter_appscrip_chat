@@ -296,4 +296,14 @@ enum IsmChatActionEvents {
         return IsmChatActionEvents.typingEvent;
     }
   }
+
+
+  
+}
+
+
+enum GetChatConversationApiCall {
+  fromOnInit,
+  fromRefresh,
+  fromPullDown,
 }

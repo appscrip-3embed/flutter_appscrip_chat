@@ -12,12 +12,13 @@ class IsmChatPageViewModel {
   Future<List<IsmChatChatMessageModel>?> getChatMessages({
     required String conversationId,
     required int lastMessageTimestamp,
+    int? pagination,
   }) async {
     var messages = await _repository.getChatMessages(
       conversationId: conversationId,
       lastMessageTimestamp: lastMessageTimestamp,
       limit: messageLimit,
-      skip: messageSkip,
+      skip: pagination ?? messageSkip,
     );
 
     if (messages == null) {

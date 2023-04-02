@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
 import 'package:appscrip_chat_component/src/widgets/alert_dailog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -40,6 +39,16 @@ class IsmChatConversationsController extends GetxController {
   List<UserDetails> get userList => _userList;
   set userList(List<UserDetails> value) => _userList.value = value;
 
+  var userListScrollController = ScrollController();
+
+  var conversationScrollController = ScrollController();
+
+  final RxInt _conversationPage = 0.obs;
+  int get conversationPage => _conversationPage.value;
+  set conversationPage(int value) {
+    _conversationPage.value = value;
+  }
+
   String usersPageToken = '';
 
   @override
@@ -53,6 +62,27 @@ class IsmChatConversationsController extends GetxController {
     }
     await getConversationsFromDB();
     await getChatConversations();
+    userListScrollListener();
+  }
+
+  @override
+  void onClose() {
+    userListScrollController.dispose();
+    conversationScrollController.dispose();
+    super.onClose();
+  }
+
+  void userListScrollListener() {
+    userListScrollController.addListener(
+      () {
+        if (userListScrollController.offset >=
+            userListScrollController.position.maxScrollExtent) {
+          if (usersPageToken.isNotEmpty) {
+            getUserList();
+          }
+        }
+      },
+    );
   }
 
   /// This will be used to fetch all the users associated with the current user
@@ -120,17 +150,17 @@ class IsmChatConversationsController extends GetxController {
 
   void navigateToMessages(IsmChatConversationModel conversation) {
     currentConversation = conversation;
-    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
-    var dbConversation = conversationBox
-        .query(DBConversationModel_.conversationId
-            .equals(conversation.conversationId!))
-        .build()
-        .findUnique();
-    if (dbConversation != null) {
-      dbConversation.unreadMessagesCount = 0;
-      conversationBox.put(dbConversation);
-      getConversationsFromDB();
-    }
+    // var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
+    // var dbConversation = conversationBox
+    //     .query(DBConversationModel_.conversationId
+    //         .equals(conversation.conversationId!))
+    //     .build()
+    //     .findUnique();
+    // if (dbConversation != null) {
+    //   dbConversation.unreadMessagesCount = 0;
+    //   conversationBox.put(dbConversation);
+    //   getConversationsFromDB();
+    // }
   }
 
   Future<void> deleteChat({
@@ -155,22 +185,29 @@ class IsmChatConversationsController extends GetxController {
       conversations.clear();
       conversations =
           dbConversations.map(IsmChatConversationModel.fromDB).toList();
+      conversations.sort((a, b) => a.lastMessageDetails!.sentAt
+        ..compareTo(b.lastMessageDetails!.sentAt));
       isConversationsLoading = false;
     }
   }
 
-  Future<void> getChatConversations() async {
+  Future<void> getChatConversations(
+      {int noOfConvesation = 0,
+      GetChatConversationApiCall getChatConversationApiCall =
+          GetChatConversationApiCall.fromOnInit}) async {
     if (conversations.isEmpty) {
       isConversationsLoading = true;
     }
 
-    var apiConversations = await _viewModel.getChatConversations();
+    var apiConversations =
+        await _viewModel.getChatConversations(noOfConvesation);
     var dbConversations = IsmChatConfig.objectBox.chatConversationBox.getAll();
     if (conversations.isEmpty) {
       isConversationsLoading = false;
     }
 
     if (apiConversations != null && apiConversations.isNotEmpty) {
+      conversationPage = conversationPage + 20;
       for (var conversation in apiConversations) {
         DBConversationModel? dbConversation;
         if (dbConversations.isNotEmpty) {
@@ -199,8 +236,16 @@ class IsmChatConversationsController extends GetxController {
           dbConversationModel: dbConversationModel,
         );
       }
-      refreshController.refreshCompleted();
+
       await getConversationsFromDB();
+    }
+    if (getChatConversationApiCall == GetChatConversationApiCall.fromRefresh) {
+      refreshController.refreshCompleted(
+        resetFooterState: true,
+      );
+    } else if (getChatConversationApiCall ==
+        GetChatConversationApiCall.fromPullDown) {
+      refreshController.loadComplete();
     }
   }
 

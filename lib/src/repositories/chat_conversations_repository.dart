@@ -10,14 +10,19 @@ class IsmChatConversationsRepository {
     int? count,
   }) async {
     try {
+      String? url;
+      if (pageToken?.isNotEmpty ?? false) {
+        url = '${IsmChatAPI.allUsers}?pageToken=$pageToken&count=$count';
+      } else {
+        url = IsmChatAPI.allUsers;
+      }
       var response = await _apiWrapper.get(
-        IsmChatAPI.userDetails,
-        headers: IsmChatUtility.tokenCommonHeader(),
+        url,
+        headers: IsmChatUtility.commonHeader(),
       );
       if (response.hasError) {
         return null;
       }
-
       var data = jsonDecode(response.data) as Map<String, dynamic>;
       var user = IsmChatUserListModel.fromMap(data);
       return user;
@@ -44,7 +49,10 @@ class IsmChatConversationsRepository {
           .map((e) =>
               IsmChatConversationModel.fromMap(e as Map<String, dynamic>))
           .toList();
-
+      listData.sort(
+        (a, b) => a.lastMessageDetails!.sentAt
+            .compareTo(b.lastMessageDetails!.sentAt),
+      );
       return listData;
     } catch (e, st) {
       IsmChatLog.error('GetChatConversations $e', st);

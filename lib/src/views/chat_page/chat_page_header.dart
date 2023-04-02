@@ -30,12 +30,15 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
             child: AppBar(
-              // leading: IsmTapHandler(
-              //   onTap: Get.back,
-              //   child: const Icon(Icons.arrow_back_rounded),
-              // ),
+              leading: IsmChatTapHandler(
+                onTap: () async{
+                  Get.back<void>();
+                 await controller.updateLastMessage();
+                
+                },
+                child: const Icon(Icons.arrow_back_rounded),
+              ),
               titleSpacing: IsmChatDimens.four,
-
               title: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [

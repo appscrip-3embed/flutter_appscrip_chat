@@ -247,7 +247,7 @@ class IsmChatMqttController extends GetxController {
       showInConversation: true,
       sentAt: message.sentAt,
       senderName: message.senderInfo!.userName,
-      messageType: message.messageType?.value ?? 1,
+      messageType: message.messageType?.value ?? 0,
       messageId: message.messageId!,
       conversationId: message.conversationId!,
       body: message.body,
@@ -278,6 +278,10 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleTypingEvent(IsmChatMqttActionModel actionModel) {
+    if (actionModel.userDetails!.userId ==
+        _communicationConfig.userConfig.userId) {
+      return;
+    }
     typingUsersIds.add(actionModel.conversationId!);
     Future.delayed(
       const Duration(seconds: 3),
@@ -402,6 +406,9 @@ class IsmChatMqttController extends GetxController {
 
     if (Get.isRegistered<IsmChatPageController>()) {
       var controller = Get.find<IsmChatPageController>();
+      // if (controller.messages.last.messageId == actionModel.messageId) {
+      //   return;
+      // }
       controller.getConverstaionDetails(
           conversationId: actionModel.conversationId ?? '');
       controller.getMessagesFromAPI(

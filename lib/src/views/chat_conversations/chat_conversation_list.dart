@@ -94,13 +94,25 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
             height: widget.height ?? Get.height,
             child: SmartRefresher(
               controller: controller.refreshController,
-              // enablePullDown: true,
+              enablePullDown: true,
               enablePullUp: true,
-              onRefresh: controller.getChatConversations,
+              onRefresh: () {
+                controller.conversationPage = 0;
+                controller.getChatConversations(
+                    getChatConversationApiCall:
+                        GetChatConversationApiCall.fromRefresh);
+              },
+              onLoading: () {
+                controller.getChatConversations(
+                    noOfConvesation: controller.conversationPage,
+                    getChatConversationApiCall:
+                        GetChatConversationApiCall.fromPullDown);
+              },
               child: ListView.separated(
                 padding: IsmChatDimens.edgeInsets0_10,
                 shrinkWrap: true,
                 itemCount: controller.conversations.length,
+                controller: controller.conversationScrollController,
                 separatorBuilder: (_, __) => IsmChatDimens.boxHeight8,
                 itemBuilder: widget.itemBuilder ??
                     (_, index) {

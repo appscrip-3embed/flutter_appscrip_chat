@@ -1,5 +1,6 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class IsmChatStartChatFAB extends StatelessWidget {
   const IsmChatStartChatFAB({required this.onTap, super.key});
@@ -16,7 +17,10 @@ class IsmChatStartChatFAB extends StatelessWidget {
                   ),
         ),
         child: FloatingActionButton(
-          onPressed: onTap,
+          onPressed: () {
+            Get.to(const IsmChatUserPageView());
+            onTap();
+          },
           child: const Icon(
             Icons.chat_rounded,
             color: IsmChatColors.whiteColor,

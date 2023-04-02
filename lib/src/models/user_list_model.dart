@@ -14,7 +14,7 @@ class IsmChatUserListModel {
             (x) => UserDetails.fromMap(x as Map<String, dynamic>),
           ),
         ),
-        pageToken: map['pageToken'] as String,
+        pageToken: map['pageToken'] == null ? '' : map['pageToken'] as String,
       );
 
   const IsmChatUserListModel({

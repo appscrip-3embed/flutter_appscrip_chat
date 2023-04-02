@@ -5,10 +5,11 @@ class IsmChatConversationsViewModel {
 
   final IsmChatConversationsRepository _repository;
 
-  var chatSkip = 0;
   var chatLimit = 20;
-  Future<List<IsmChatConversationModel>?> getChatConversations() async =>
-      await _repository.getChatConversations(skip: chatSkip, limit: chatLimit);
+  Future<List<IsmChatConversationModel>?> getChatConversations(
+          int conversationPage) async =>
+      await _repository.getChatConversations(
+          skip: conversationPage, limit: chatLimit);
 
   Future<UserDetails?> getUserData() async => await _repository.getUserData();
 
@@ -45,6 +46,4 @@ class IsmChatConversationsViewModel {
         conversationId: conversationId,
         messageId: messageId,
       );
-
-  
 }

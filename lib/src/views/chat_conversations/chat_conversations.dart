@@ -4,4 +4,4 @@ export 'chat_conversation_list.dart';
 export 'chat_conversations_view.dart';
 export 'chat_search_delegate.dart';
 export 'start_chat_fab.dart';
-export 'user_liat_view.dart';
+export 'widget/user_liat_view.dart';

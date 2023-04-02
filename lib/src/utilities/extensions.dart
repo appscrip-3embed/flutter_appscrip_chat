@@ -18,6 +18,21 @@ extension MatchString on String {
       toLowerCase().contains('https') || toLowerCase().contains('www');
 }
 
+ 
+extension MessagePagination on int {
+ int pagination({int startValue = 0, int endValue = 20}) {
+    if(startValue == 0){
+      return startValue;
+    }
+  if (startValue <= endValue) {
+    return endValue;
+  }
+  endValue = endValue + 20;
+  return pagination(startValue: startValue, endValue: endValue);
+}
+}
+ 
+
 extension DistanceLatLng on LatLng {
   double getDistance(LatLng other) {
     var lat1 = latitude,
@@ -169,6 +184,9 @@ extension DateFormats on DateTime {
 
   String toDateString() => DateFormat('dd MMM yyyy').format(this);
 }
+
+
+
 
 extension ChildWidget on IsmChatCustomMessageType {
   Widget messageType(IsmChatChatMessageModel message) {

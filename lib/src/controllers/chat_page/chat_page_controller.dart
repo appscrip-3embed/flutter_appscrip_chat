@@ -163,6 +163,7 @@ class IsmChatPageController extends GetxController {
           conversationId: conversation?.conversationId ?? '');
       getConversationDetailEveryOneMinutes();
     }
+    scrollListener();
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
     });
@@ -175,7 +176,19 @@ class IsmChatPageController extends GetxController {
       _backCameraController.dispose();
     }
     conversationDetailsApTimer?.cancel();
+    messagesScrollController.dispose();
+
     super.onClose();
+  }
+
+  void scrollListener() {
+    messagesScrollController.addListener(() {
+      if (messagesScrollController.offset * 0.7 ==
+          messagesScrollController.position.minScrollExtent) {
+        getMessagesFromAPI(
+            forPagination: true, lastMessageTimestampFromFunction: 0);
+      }
+    });
   }
 
   void startTimer() {
@@ -271,6 +284,24 @@ class IsmChatPageController extends GetxController {
     cameraController.setFlashMode(flashMode);
   }
 
+  Future<void> updateLastMessage() async {
+    var chatConversation = await IsmChatConfig.objectBox
+        .getDBConversation(conversationId: conversation?.conversationId ?? '');
+    if (chatConversation != null) {
+      chatConversation.lastMessageDetails.target = LastMessageDetails(
+          showInConversation: true,
+          sentAt: messages.last.sentAt,
+          senderName: messages.last.chatName,
+          messageType: messages.last.messageType?.value ?? 0,
+          messageId: messages.last.messageId ?? '',
+          conversationId: messages.last.conversationId ?? '',
+          body: messages.last.body);
+      chatConversation.unreadMessagesCount = 0;
+      IsmChatConfig.objectBox.chatConversationBox.put(chatConversation);
+      await Get.find<IsmChatConversationsController>().getConversationsFromDB();
+    }
+  }
+
   void _scrollToBottom() async {
     await Future.delayed(
       const Duration(milliseconds: 10),
@@ -284,7 +315,8 @@ class IsmChatPageController extends GetxController {
 
   void getMessagesFromAPI({
     String conversationId = '',
-    int lastMessageTimestampFromFunction = 0,
+    bool forPagination = false,
+    int? lastMessageTimestampFromFunction,
   }) async {
     if (messages.isEmpty) {
       isMessagesLoading = true;
@@ -292,14 +324,18 @@ class IsmChatPageController extends GetxController {
 
     var lastMessageTimestamp =
         messages.isEmpty ? 0 : messages.last.sentAt + 2000;
-  
+    var messagesList = messages;
+    messagesList.removeWhere(
+        (element) => element.customType == IsmChatCustomMessageType.date);
     var data = await _viewModel.getChatMessages(
+      pagination: forPagination
+          ? messagesList.length.pagination(startValue: messages.length)
+          : 0,
       conversationId: conversationId.isNotEmpty
           ? conversationId
           : conversation?.conversationId ?? '',
-      lastMessageTimestamp: lastMessageTimestampFromFunction != 0
-          ? lastMessageTimestampFromFunction
-          : lastMessageTimestamp,
+      lastMessageTimestamp:
+          lastMessageTimestampFromFunction ?? lastMessageTimestamp,
     );
     if (messages.isEmpty) {
       isMessagesLoading = false;
