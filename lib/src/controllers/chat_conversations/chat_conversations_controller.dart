@@ -49,6 +49,19 @@ class IsmChatConversationsController extends GetxController {
     _conversationPage.value = value;
   }
 
+  final _forwardedList = <SelectedForwardUser>[].obs;
+  List<SelectedForwardUser> get forwardedList => _forwardedList;
+  set forwardedList(List<SelectedForwardUser> value) {
+    _forwardedList.value = value;
+  }
+
+  final _forwardSeletedUserList = <SelectedForwardUser>[].obs;
+  List<SelectedForwardUser> get forwardSeletedUserList =>
+      _forwardSeletedUserList;
+  set forwardSeletedUserList(List<SelectedForwardUser> value) {
+    _forwardSeletedUserList.value = value;
+  }
+
   String usersPageToken = '';
 
   @override
@@ -72,6 +85,17 @@ class IsmChatConversationsController extends GetxController {
     super.onClose();
   }
 
+  void removeAndAddForwardList(UserDetails userDetails, int index) {
+    forwardedList[index].selectedUser = !forwardedList[index].selectedUser;
+    if (forwardedList[index].selectedUser == true) {
+      forwardSeletedUserList.add(
+          SelectedForwardUser(userDetails: userDetails, selectedUser: true));
+    } else {
+      forwardSeletedUserList
+          .removeWhere((e) => e.userDetails.userId == userDetails.userId);
+    }
+  }
+
   void userListScrollListener() {
     userListScrollController.addListener(
       () {
@@ -89,6 +113,7 @@ class IsmChatConversationsController extends GetxController {
   ///
   /// Will be used for Create chat and/or Forward message
   Future<void> getUserList({
+    isForward = false,
     int count = 20,
   }) async {
     var response = await _viewModel.getUserList(
@@ -98,8 +123,15 @@ class IsmChatConversationsController extends GetxController {
     if (response == null) {
       return;
     }
+
     userList.addAll(response.users);
     userList.sort((a, b) => a.userName.compareTo(b.userName));
+    if (isForward == true) {
+      forwardedList = List.from(userList)
+          .map((e) => SelectedForwardUser(
+              selectedUser: false, userDetails: e as UserDetails))
+          .toList();
+    }
     usersPageToken = response.pageToken;
   }
 

@@ -67,28 +67,32 @@ class IsmChatUserPageView extends StatelessWidget {
                         (onChatTap ?? IsmChatConfig.onChatTap)
                             .call(_, ismChatConversation);
                       },
-                      child: SizedBox(
-                        child: ListTile(
-                          dense: true,
-                          leading: IsmChatImage.profile(
-                            conversation.userProfileImageUrl,
-                            // name: conversation.userName,
-                          ),
-                          trailing: Text(conversation.lastSeen == -1
-                              ? ''
-                              : conversation.lastSeen.toMessageDateString()),
-                          title: Text(
-                            conversation.userName,
-                            style: IsmChatStyles.w600Black14,
-                          ),
-                          subtitle: Text(
-                            conversation.userIdentifier,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: IsmChatStyles.w400Black12,
-                          ),
-                        ),
-                      ),
+                      child: conversation.userId !=
+                              Get.find<IsmChatMqttController>().userId
+                          ? SizedBox(
+                              child: ListTile(
+                                dense: true,
+                                leading: IsmChatImage.profile(
+                                  conversation.userProfileImageUrl,
+                                  // name: conversation.userName,
+                                ),
+                                trailing: Text(conversation.lastSeen == -1
+                                    ? ''
+                                    : conversation.lastSeen
+                                        .toMessageDateString()),
+                                title: Text(
+                                  conversation.userName,
+                                  style: IsmChatStyles.w600Black14,
+                                ),
+                                subtitle: Text(
+                                  conversation.userIdentifier,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: IsmChatStyles.w400Black12,
+                                ),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
                     );
                   },
                 ),

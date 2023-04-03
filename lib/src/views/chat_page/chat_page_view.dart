@@ -166,7 +166,9 @@ class ChatMessage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        onPressed: () {},
+                        onPressed: () async {
+                          await Get.to<void>(const IsmChatForwardListView());
+                        },
                         trailingIcon: Icon(
                           Icons.forward_5,
                           color: Colors.black,
