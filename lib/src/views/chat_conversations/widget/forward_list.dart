@@ -14,6 +14,7 @@ class IsmChatForwardListView extends StatelessWidget {
               Get.find<IsmChatConversationsController>();
           chatConversationController.userList.clear();
           chatConversationController.forwardedList.clear();
+          chatConversationController.forwardSeletedUserList.clear();
           chatConversationController.getUserList(isForward: true);
         },
         builder: (controller) => Scaffold(
