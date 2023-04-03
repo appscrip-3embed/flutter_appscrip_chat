@@ -42,7 +42,12 @@ class IsmChatMqttActionModel {
                 profileImageUrl: map['initiatorProfileImageUrl'] as String?,
               )
             : null,
+        conversationDetails: map['conversationDetails'] != null
+            ? IsmChatConversationModel.fromMap(
+                map['conversationDetails'] as Map<String, dynamic>)
+            : null,
         sentAt: map['sentAt'] as int,
+        lastMessageSentAt: map['lastMessageSentAt'] as int?,
         action: IsmChatActionEvents.fromName(map['action'] as String),
       );
 
@@ -51,8 +56,10 @@ class IsmChatMqttActionModel {
     this.userDetails,
     this.opponentDetails,
     this.initiatorDetails,
+    this.conversationDetails,
     this.messageId,
     this.messageIds,
+    this.lastMessageSentAt,
     required this.sentAt,
     required this.action,
   });
@@ -60,7 +67,9 @@ class IsmChatMqttActionModel {
   final IsmChatMqttUserModel? userDetails;
   final IsmChatMqttUserModel? opponentDetails;
   final IsmChatMqttUserModel? initiatorDetails;
+  final IsmChatConversationModel? conversationDetails;
   final int sentAt;
+  final int? lastMessageSentAt;
   final String? messageId;
   final List<String>? messageIds;
   final IsmChatActionEvents action;

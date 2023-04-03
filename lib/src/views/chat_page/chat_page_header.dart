@@ -31,10 +31,9 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
             ),
             child: AppBar(
               leading: IsmChatTapHandler(
-                onTap: () async{
+                onTap: () async {
                   Get.back<void>();
-                 await controller.updateLastMessage();
-                
+                  await controller.updateLastMessage();
                 },
                 child: const Icon(Icons.arrow_back_rounded),
               ),
@@ -46,7 +45,10 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                     controller.conversation?.opponentDetails
                             ?.userProfileImageUrl ??
                         '',
-                    name: controller.conversation?.chatName,
+                    name: controller.conversation!.chatName.isNotEmpty
+                        ? controller.conversation?.chatName
+                        : controller.conversation?.opponentDetails?.userName ??
+                            '',
                   ),
                   IsmChatDimens.boxWidth8,
                   Column(
@@ -54,7 +56,11 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        controller.conversation?.chatName ?? '',
+                        controller.conversation!.chatName.isNotEmpty
+                            ? controller.conversation!.chatName
+                            : controller
+                                    .conversation?.opponentDetails?.userName ??
+                                '',
                         style: IsmChatStyles.w600White18,
                       ),
                       controller.conversation?.messagingDisabled == true

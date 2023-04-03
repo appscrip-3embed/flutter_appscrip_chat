@@ -153,15 +153,19 @@ class IsmChatPageController extends GetxController {
     super.onInit();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
-      getMessagesFromDB(conversation?.conversationId ?? '');
-      getMessagesFromAPI();
-      readAllMessages(
-        conversationId: conversation?.conversationId ?? '',
-        timestamp: conversation?.lastMessageSentAt ?? 0,
-      );
-      getConverstaionDetails(
-          conversationId: conversation?.conversationId ?? '');
-      getConversationDetailEveryOneMinutes();
+      if (conversation!.conversationId?.isNotEmpty ?? false) {
+        getMessagesFromDB(conversation?.conversationId ?? '');
+        getMessagesFromAPI();
+        readAllMessages(
+          conversationId: conversation?.conversationId ?? '',
+          timestamp: conversation?.lastMessageSentAt ?? 0,
+        );
+        getConverstaionDetails(
+            conversationId: conversation?.conversationId ?? '');
+        getConversationDetailEveryOneMinutes();
+      } else {
+        isMessagesLoading = false;
+      }
     }
     scrollListener();
     chatInputController.addListener(() {
@@ -302,6 +306,8 @@ class IsmChatPageController extends GetxController {
     }
   }
 
+ 
+
   void _scrollToBottom() async {
     await Future.delayed(
       const Duration(milliseconds: 10),
@@ -324,7 +330,7 @@ class IsmChatPageController extends GetxController {
 
     var lastMessageTimestamp =
         messages.isEmpty ? 0 : messages.last.sentAt + 2000;
-    var messagesList = messages;
+    var messagesList = List.from(messages);
     messagesList.removeWhere(
         (element) => element.customType == IsmChatCustomMessageType.date);
     var data = await _viewModel.getChatMessages(
@@ -792,6 +798,7 @@ class IsmChatPageController extends GetxController {
       await createConversation(
           userId: [conversation?.opponentDetails?.userId ?? '']);
     }
+
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatChatMessageModel(
       body: chatInputController.text.trim(),
@@ -810,7 +817,7 @@ class IsmChatPageController extends GetxController {
       sentByMe: true,
     );
     messages.add(textMessage);
-    IsmChatLog.error('Last Mesage timeStampone ${textMessage.sentAt}');
+
     isreplying = false;
     chatInputController.clear();
     await ismChatObjectBox.addPendingMessage(textMessage);
@@ -1143,15 +1150,26 @@ class IsmChatPageController extends GetxController {
     if (response != null) {
       var data = jsonDecode(response.data);
       var conversationId = data['conversationId'];
-      await IsmChatConfig.objectBox.createAndUpdateDB(
-        dbConversationModel: DBConversationModel(
-            messages: [],
-            conversationId: conversationId.toString(),
-            isGroup: false,
-            membersCount: 0,
-            messagingDisabled: false,
-            unreadMessagesCount: 0),
+      conversation?.conversationId = conversationId.toString();
+      var dbConversationModel = DBConversationModel(
+        conversationId: conversationId.toString(),
+        conversationImageUrl: '',
+        conversationTitle: '',
+        isGroup: false,
+        lastMessageSentAt: conversation?.lastMessageSentAt ?? 0,
+        messagingDisabled: conversation?.messagingDisabled,
+        membersCount: conversation?.membersCount,
+        unreadMessagesCount: conversation?.unreadMessagesCount,
+        messages: [],
       );
+      dbConversationModel.opponentDetails.target =
+          conversation?.opponentDetails;
+      dbConversationModel.lastMessageDetails.target =
+          conversation?.lastMessageDetails;
+      dbConversationModel.config.target = conversation?.config;
+
+      await IsmChatConfig.objectBox
+          .createAndUpdateDB(dbConversationModel: dbConversationModel);
     }
   }
 }

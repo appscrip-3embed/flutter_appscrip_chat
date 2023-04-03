@@ -143,7 +143,13 @@ class IsmChatInputField extends StatelessWidget {
                                     ),
                                     // suffix: const ,
                                   ),
-                                  onChanged: (_) => controller.notifyTyping(),
+                                  onChanged: (_) {
+                                    if (controller.conversation?.conversationId
+                                            ?.isNotEmpty ??
+                                        false) {
+                                      controller.notifyTyping();
+                                    }
+                                  },
                                 ),
                               ),
                               const IsmChatAttachmentIcon()

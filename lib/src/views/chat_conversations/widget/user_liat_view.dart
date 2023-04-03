@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatUserPageView extends StatelessWidget {
-  const IsmChatUserPageView({super.key});
-
+  const IsmChatUserPageView({super.key, this.onChatTap});
+  final void Function(BuildContext, IsmChatConversationModel)? onChatTap;
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
         initState: (_) {
@@ -46,8 +46,27 @@ class IsmChatUserPageView extends StatelessWidget {
                   separatorBuilder: (_, __) => IsmChatDimens.boxHeight8,
                   itemBuilder: (_, index) {
                     var conversation = controller.userList[index];
+                    var ismChatConversation = IsmChatConversationModel(
+                      messagingDisabled: false,
+                      conversationImageUrl: conversation.userProfileImageUrl,
+                      isGroup: false,
+                      opponentDetails: conversation,
+                      unreadMessagesCount: 0,
+                      lastMessageDetails: null,
+                      lastMessageSentAt: 0,
+                      membersCount: 0,
+                    );
                     return IsmChatTapHandler(
-                      onTap: () {},
+                      onTap: () async {
+                        ismChatConversation.conversationId = controller
+                            .getConversationid(conversation)
+                            .toString();
+                        Get.back<void>();
+
+                        controller.navigateToMessages(ismChatConversation);
+                        (onChatTap ?? IsmChatConfig.onChatTap)
+                            .call(_, ismChatConversation);
+                      },
                       child: SizedBox(
                         child: ListTile(
                           dense: true,

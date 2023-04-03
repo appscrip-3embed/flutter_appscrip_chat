@@ -117,6 +117,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                 itemBuilder: widget.itemBuilder ??
                     (_, index) {
                       var conversation = controller.conversations[index];
+                    
                       return Slidable(
                         closeOnScroll: true,
                         startActionPane: ActionPane(

@@ -12,4 +12,6 @@ class IsmChatConfig {
   static String dbName = IsmChatStrings.dbname;
   static bool isInitialized = false;
   static Duration animationDuration = const Duration(milliseconds: 300);
+  static late  void Function(BuildContext, IsmChatConversationModel) onChatTap;
+  
 }

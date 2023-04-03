@@ -17,7 +17,7 @@ class IsmChatConversationModel {
         privateOneToOne: map['privateOneToOne'] as bool? ?? false,
         opponentDetails: 
             UserDetails.fromMap(map['opponentDetails'] as Map<String, dynamic>),
-        metaData:
+        metaData: map['metaData'] == null ? IsmChatMetaData() :
             IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
         messagingDisabled: map['messagingDisabled'] as bool? ?? false,
         membersCount: map['membersCount'] as int? ?? 0,

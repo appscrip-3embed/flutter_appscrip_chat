@@ -143,8 +143,6 @@ class IsmChatMqttController extends GetxController {
         _handleAction(actionModel);
       } else {
         var message = IsmChatChatMessageModel.fromMap(payload);
-        IsmChatLog.success(message);
-
         _handleMessage(message);
       }
     });
@@ -418,25 +416,49 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleCreateConversation(IsmChatMqttActionModel actionModel) async {
-    var dbConversationModel = DBConversationModel(
-      conversationId: actionModel.conversationId,
-      conversationImageUrl: actionModel.userDetails!.profileImageUrl,
-      conversationTitle: '',
-      isGroup: false,
-      lastMessageSentAt: 0,
-      messagingDisabled: false,
-      membersCount: 0,
-      unreadMessagesCount: 0,
-      messages: [],
-    );
+  
+    var ismChatConversationController =
+        Get.find<IsmChatConversationsController>();
+    await ismChatConversationController.getChatConversations();
+    // if (Get.isRegistered<IsmChatPageController>()) {
+    //   var ismChatPageController = Get.find<IsmChatPageController>();
+    //   var currentUserId =
+    //       ismChatPageController.conversation?.opponentDetails?.userId;
+    //   var currentConversation = ismChatConversationController.conversations
+    //       .where((element) => element.opponentDetails?.userId == currentUserId)
+    //       .toList();
+    //   if (actionModel.conversationId ==
+    //       currentConversation.first.conversationId) {
+    //     ismChatPageController.conversation = currentConversation.first;
+    //     isConversationCreated = true;
+    //   }
+    // }
 
-    dbConversationModel.opponentDetails.target =
-        UserDetails.fromMap(actionModel.opponentDetails!.toMap());
-    dbConversationModel.lastMessageDetails.target = null;
-    dbConversationModel.config.target = null;
-
-    await IsmChatConfig.objectBox.createAndUpdateDB(
-      dbConversationModel: dbConversationModel,
-    );
+    // var dbConversationModel = DBConversationModel(
+    //   conversationId: actionModel.conversationId,
+    //   conversationImageUrl: actionModel.userDetails!.profileImageUrl,
+    //   conversationTitle: '',
+    //   isGroup: false,
+    //   lastMessageSentAt: actionModel.lastMessageSentAt,
+    //   messagingDisabled: false,
+    //   membersCount: 0,
+    //   unreadMessagesCount: 0,
+    //   messages: [],
+    // );
+    // dbConversationModel.opponentDetails.target =
+    //     actionModel.conversationDetails?.opponentDetails;
+    // dbConversationModel.lastMessageDetails.target = LastMessageDetails(
+    //     showInConversation: true,
+    //     sentAt: actionModel.sentAt,
+    //     senderName: '',
+    //     messageType: 0,
+    //     messageId: '',
+    //     conversationId: actionModel.conversationId!,
+    //     body: '');
+    // dbConversationModel.config.target = null;
+    // await IsmChatConfig.objectBox.createAndUpdateDB(
+    //   dbConversationModel: dbConversationModel,
+    // );
+    // await Get.find<IsmChatConversationsController>().getConversationsFromDB();
   }
 }

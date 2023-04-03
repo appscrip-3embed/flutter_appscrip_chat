@@ -73,7 +73,6 @@ class IsmChatObjectBox {
               .equals(dbConversationModel.conversationId!))
           .build();
       final chatConversationResponse = query.findUnique();
-
       if (chatConversationResponse != null) {
         chatConversationResponse.isGroup = dbConversationModel.isGroup;
         chatConversationResponse.membersCount =
@@ -92,6 +91,7 @@ class IsmChatObjectBox {
             dbConversationModel.config.target;
         chatConversationBox.put(chatConversationResponse);
       } else {
+        // IsmChatLog.success('dsfdsfsfdsdfs ${dbConversationModel.opponentDetails.target.}')
         chatConversationBox.put(dbConversationModel);
       }
     }

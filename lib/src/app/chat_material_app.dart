@@ -31,6 +31,7 @@ class IsmChatApp extends StatelessWidget {
     IsmChatConfig.chatTheme = chatTheme ?? IsmChatThemeData.fallback();
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.fallback();
+    IsmChatConfig.onChatTap = onChatTap;
   }
 
   /// Required field

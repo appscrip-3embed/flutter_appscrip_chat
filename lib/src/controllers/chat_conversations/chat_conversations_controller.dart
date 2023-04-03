@@ -185,10 +185,21 @@ class IsmChatConversationsController extends GetxController {
       conversations.clear();
       conversations =
           dbConversations.map(IsmChatConversationModel.fromDB).toList();
+
       conversations.sort((a, b) => a.lastMessageDetails!.sentAt
         ..compareTo(b.lastMessageDetails!.sentAt));
+
       isConversationsLoading = false;
     }
+  }
+
+  String getConversationid(UserDetails userDetails) {
+    var conversationId = conversations.where(
+        (element) => element.opponentDetails?.userId == userDetails.userId);
+    if (conversationId.isNotEmpty) {
+      return conversationId.first.conversationId ?? '';
+    }
+    return '';
   }
 
   Future<void> getChatConversations(
@@ -211,8 +222,12 @@ class IsmChatConversationsController extends GetxController {
       for (var conversation in apiConversations) {
         DBConversationModel? dbConversation;
         if (dbConversations.isNotEmpty) {
-          dbConversation = dbConversations.firstWhere(
-              (e) => e.conversationId == conversation.conversationId);
+          try {
+            dbConversation = dbConversations.firstWhere(
+                (e) => e.conversationId == conversation.conversationId);
+          } catch (e) {
+            IsmChatLog.error('No element');
+          }
         }
         var dbConversationModel = DBConversationModel(
           conversationId: conversation.conversationId,
@@ -231,7 +246,6 @@ class IsmChatConversationsController extends GetxController {
         dbConversationModel.lastMessageDetails.target =
             conversation.lastMessageDetails;
         dbConversationModel.config.target = conversation.config;
-
         await IsmChatConfig.objectBox.createAndUpdateDB(
           dbConversationModel: dbConversationModel,
         );

@@ -65,7 +65,7 @@ class IsmChatPageRepository {
     List<Map<String, dynamic>>? attachments,
   }) async {
     try {
-      IsmChatLog.success('dsfdsfdsfsfd $customType');
+    
       final payload = {
         'showInConversation': showInConversation,
         'messageType': messageType,

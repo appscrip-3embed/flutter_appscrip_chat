@@ -43,6 +43,7 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
         floatingActionButton: widget.showCreateChatIcon
             ? IsmChatStartChatFAB(
                 onTap: widget.onCreateChatTap!,
+                onCreateChat: widget.onChatTap,
               )
             : null,
       );

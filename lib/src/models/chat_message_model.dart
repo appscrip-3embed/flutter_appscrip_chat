@@ -23,6 +23,7 @@ class IsmChatChatMessageModel {
       privateOneToOne: map['privateOneToOne'] as bool? ?? false,
       showInConversation: map['showInConversation'] as bool? ?? true,
       readByAll: map['readByAll'] as bool? ?? false,
+      
       senderInfo: map['senderInfo'] != null &&
               (map['senderInfo'] as Map<String, dynamic>).keys.isNotEmpty
           ? UserDetails.fromMap(map['senderInfo'] as Map<String, dynamic>)
