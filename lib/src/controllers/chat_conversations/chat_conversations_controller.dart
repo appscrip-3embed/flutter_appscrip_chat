@@ -113,7 +113,7 @@ class IsmChatConversationsController extends GetxController {
   ///
   /// Will be used for Create chat and/or Forward message
   Future<void> getUserList({
-    isForward = false,
+  
     int count = 20,
   }) async {
     var response = await _viewModel.getUserList(
@@ -126,14 +126,14 @@ class IsmChatConversationsController extends GetxController {
 
     userList.addAll(response.users);
     userList.sort((a, b) => a.userName.compareTo(b.userName));
-    if (isForward == true) {
+
       forwardedList = List.from(userList)
           .map((e) => SelectedForwardUser(
                 selectedUser: false,
                 userDetails: e as UserDetails,
               ))
           .toList();
-    }
+    
     usersPageToken = response.pageToken;
   }
 

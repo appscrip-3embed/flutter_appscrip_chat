@@ -506,6 +506,7 @@ class IsmChatPageController extends GetxController {
   void sendAudio(
       {String? file,
       SendMessageType sendMessageType = SendMessageType.pendingMessage,
+      bool forwardMessgeForMulitpleUser = false,
       IsmChatChatMessageModel? ismChatChatMessageModel}) async {
     var ismChatObjectBox = IsmChatConfig.objectBox;
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
@@ -572,14 +573,17 @@ class IsmChatPageController extends GetxController {
         );
       }
     }
-    messages.add(audioMessage!);
 
+    if (!forwardMessgeForMulitpleUser) {
+      messages.add(audioMessage!);
+    }
     if (sendMessageType == SendMessageType.pendingMessage) {
-      await ismChatObjectBox.addPendingMessage(audioMessage);
+      await ismChatObjectBox.addPendingMessage(audioMessage!);
     } else {
-      await ismChatObjectBox.addForwardMessage(audioMessage);
+      await ismChatObjectBox.addForwardMessage(audioMessage!);
     }
     await ismPostMediaUrl(
+      forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
       isNetWorkUrl: isNetWorkUrl ?? false,
       imageAndFile: true,
       bytes: bytes,
@@ -593,10 +597,10 @@ class IsmChatPageController extends GetxController {
     );
   }
 
-  void sendDocument({
-    SendMessageType sendMessageType = SendMessageType.pendingMessage,
-    IsmChatChatMessageModel? ismChatChatMessageModel,
-  }) async {
+  void sendDocument(
+      {SendMessageType sendMessageType = SendMessageType.pendingMessage,
+      IsmChatChatMessageModel? ismChatChatMessageModel,
+      bool forwardMessgeForMulitpleUser = false}) async {
     var ismChatObjectBox = IsmChatConfig.objectBox;
     IsmChatChatMessageModel? documentMessage;
     String? nameWithExtension;
@@ -669,13 +673,17 @@ class IsmChatPageController extends GetxController {
         }
       }
     }
-    messages.add(documentMessage!);
+    if (!forwardMessgeForMulitpleUser) {
+      messages.add(documentMessage!);
+    }
+
     if (sendMessageType == SendMessageType.pendingMessage) {
-      await ismChatObjectBox.addPendingMessage(documentMessage);
+      await ismChatObjectBox.addPendingMessage(documentMessage!);
     } else {
-      await ismChatObjectBox.addForwardMessage(documentMessage);
+      await ismChatObjectBox.addForwardMessage(documentMessage!);
     }
     await ismPostMediaUrl(
+      forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
       isNetWorkUrl: isNetWorkUrl ?? false,
       imageAndFile: true,
       bytes: bytes,
@@ -689,13 +697,13 @@ class IsmChatPageController extends GetxController {
     );
   }
 
-  Future<void> sendVideo({
-    File? file,
-    bool isThumbnail = false,
-    File? thumbnailFiles,
-    SendMessageType sendMessageType = SendMessageType.pendingMessage,
-    IsmChatChatMessageModel? ismChatChatMessageModel,
-  }) async {
+  Future<void> sendVideo(
+      {File? file,
+      bool isThumbnail = false,
+      File? thumbnailFiles,
+      SendMessageType sendMessageType = SendMessageType.pendingMessage,
+      IsmChatChatMessageModel? ismChatChatMessageModel,
+      bool forwardMessgeForMulitpleUser = false}) async {
     var ismChatObjectBox = IsmChatConfig.objectBox;
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversation?.conversationId ?? '');
@@ -784,14 +792,18 @@ class IsmChatPageController extends GetxController {
         );
       }
     }
-    messages.add(videoMessage!);
-    await ismChatObjectBox.addPendingMessage(videoMessage);
+    if (!forwardMessgeForMulitpleUser) {
+      messages.add(videoMessage!);
+    }
+
+    await ismChatObjectBox.addPendingMessage(videoMessage!);
     if (sendMessageType == SendMessageType.pendingMessage) {
       await ismChatObjectBox.addPendingMessage(videoMessage);
     } else {
       await ismChatObjectBox.addForwardMessage(videoMessage);
     }
     await ismPostMediaUrl(
+      forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
       isNetWorkUrl: isNetWorkUrl ?? false,
       imageAndFile: false,
       bytes: bytes,
@@ -811,7 +823,8 @@ class IsmChatPageController extends GetxController {
 
   Future<void> sendImage(
       {SendMessageType sendMessageType = SendMessageType.pendingMessage,
-      IsmChatChatMessageModel? ismChatChatMessageModel}) async {
+      IsmChatChatMessageModel? ismChatChatMessageModel,
+      bool forwardMessgeForMulitpleUser = false}) async {
     var ismChatObjectBox = IsmChatConfig.objectBox;
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversation?.conversationId ?? '');
@@ -880,14 +893,17 @@ class IsmChatPageController extends GetxController {
         sentByMe: true,
       );
     }
+    if (!forwardMessgeForMulitpleUser) {
+      messages.add(imageMessage);
+    }
 
-    messages.add(imageMessage);
     if (sendMessageType == SendMessageType.pendingMessage) {
       await ismChatObjectBox.addPendingMessage(imageMessage);
     } else {
       await ismChatObjectBox.addForwardMessage(imageMessage);
     }
     await ismPostMediaUrl(
+      forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
       isNetWorkUrl: isNetWorkUrl ?? false,
       sendMessageType: sendMessageType,
       bytes: bytes,
@@ -906,7 +922,9 @@ class IsmChatPageController extends GetxController {
       {required double latitude,
       required double longitude,
       required String placeId,
-      required String locationName,SendMessageType sendMessageType = SendMessageType.pendingMessage,
+      required String locationName,
+      SendMessageType sendMessageType = SendMessageType.pendingMessage,
+      bool forwardMessgeForMulitpleUser = false,
       String? messageBody}) async {
     var ismChatObjectBox = IsmChatConfig.objectBox;
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
@@ -917,21 +935,26 @@ class IsmChatPageController extends GetxController {
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatChatMessageModel(
-      body: sendMessageType == SendMessageType.pendingMessage ?
-          'https://www.google.com/maps/search/?api=1&map_action=map&query=$latitude%2C$longitude&query_place_id=$placeId' : messageBody ?? '',
+      body: sendMessageType == SendMessageType.pendingMessage
+          ? 'https://www.google.com/maps/search/?api=1&map_action=map&query=$latitude%2C$longitude&query_place_id=$placeId'
+          : messageBody ?? '',
       conversationId: conversation?.conversationId ?? '',
       customType: IsmChatCustomMessageType.location,
       deliveredToAll: false,
       messageId: '',
-      messageType: sendMessageType == SendMessageType.pendingMessage ? IsmChatMessageType.normal : IsmChatMessageType.forward,
+      messageType: sendMessageType == SendMessageType.pendingMessage
+          ? IsmChatMessageType.normal
+          : IsmChatMessageType.forward,
       messagingDisabled: false,
       parentMessageId: '',
       readByAll: false,
       sentAt: sentAt,
       sentByMe: true,
     );
-    messages.add(textMessage);
-    chatInputController.clear();
+    if (!forwardMessgeForMulitpleUser) {
+      messages.add(textMessage);
+      chatInputController.clear();
+    }
     await ismChatObjectBox.addPendingMessage(textMessage);
     if (sendMessageType == SendMessageType.pendingMessage) {
       await ismChatObjectBox.addPendingMessage(textMessage);
@@ -939,6 +962,7 @@ class IsmChatPageController extends GetxController {
       await ismChatObjectBox.addForwardMessage(textMessage);
     }
     sendMessage(
+        forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
         deviceId: _deviceConfig.deviceId!,
         body: textMessage.body,
         customType: textMessage.customType!.name,
@@ -951,6 +975,7 @@ class IsmChatPageController extends GetxController {
 
   void sendTextMessage(
       {SendMessageType sendMessageType = SendMessageType.pendingMessage,
+      bool forwardMessgeForMulitpleUser = false,
       String? messageBody}) async {
     var ismChatObjectBox = IsmChatConfig.objectBox;
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
@@ -982,15 +1007,18 @@ class IsmChatPageController extends GetxController {
       sentByMe: true,
     );
 
-    messages.add(textMessage);
-    isreplying = false;
-    chatInputController.clear();
+    if (!forwardMessgeForMulitpleUser) {
+      messages.add(textMessage);
+      isreplying = false;
+      chatInputController.clear();
+    }
     if (sendMessageType == SendMessageType.pendingMessage) {
       await ismChatObjectBox.addPendingMessage(textMessage);
     } else {
       await ismChatObjectBox.addForwardMessage(textMessage);
     }
     sendMessage(
+        forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
         sendMessageType: sendMessageType,
         deviceId: _deviceConfig.deviceId!,
         body: textMessage.body,
@@ -1014,6 +1042,7 @@ class IsmChatPageController extends GetxController {
       required bool? imageAndFile,
       required String mediaId,
       SendMessageType sendMessageType = SendMessageType.pendingMessage,
+      bool forwardMessgeForMulitpleUser = false,
       bool isNetWorkUrl = false,
       String? thumbnailNameWithExtension,
       String? thumbnailMediaId,
@@ -1071,6 +1100,7 @@ class IsmChatPageController extends GetxController {
           }
         ];
         sendMessage(
+          forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
           sendMessageType: sendMessageType,
           body: ismChatChatMessageModel.body,
           conversationId: ismChatChatMessageModel.conversationId!,
@@ -1143,6 +1173,7 @@ class IsmChatPageController extends GetxController {
         ];
       }
       sendMessage(
+        forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
         sendMessageType: sendMessageType,
         body: ismChatChatMessageModel.body,
         conversationId: ismChatChatMessageModel.conversationId!,
@@ -1171,6 +1202,7 @@ class IsmChatPageController extends GetxController {
     required String notificationTitle,
     bool encrypted = true,
     SendMessageType sendMessageType = SendMessageType.pendingMessage,
+    bool forwardMessgeForMulitpleUser = false,
     bool showInConversation = true,
     String? parentMessageId,
     Map<String, dynamic>? metaData,
@@ -1198,7 +1230,7 @@ class IsmChatPageController extends GetxController {
       // messageModel: messageModel,
       createdAt: createdAt,
     );
-    if (isMessageSent) {
+    if (isMessageSent && !forwardMessgeForMulitpleUser) {
       await getMessagesFromDB(conversationId);
     }
   }

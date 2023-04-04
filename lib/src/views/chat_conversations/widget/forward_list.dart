@@ -4,9 +4,13 @@ import 'package:get/get.dart';
 
 class IsmChatForwardListView extends StatelessWidget {
   const IsmChatForwardListView(
-      {super.key, this.onChatTap, required this.ismChatChatMessageModel});
+      {super.key,
+      this.onChatTap,
+      required this.ismChatChatMessageModel,
+      required this.ismChatConversationModel});
 
   final IsmChatChatMessageModel ismChatChatMessageModel;
+  final IsmChatConversationModel ismChatConversationModel;
   final void Function(BuildContext, IsmChatConversationModel)? onChatTap;
 
   @override
@@ -14,7 +18,7 @@ class IsmChatForwardListView extends StatelessWidget {
         initState: (_) {
           var chatConversationController =
               Get.find<IsmChatConversationsController>();
-          chatConversationController.getUserList(isForward: true);
+          chatConversationController.getUserList();
         },
         builder: (controller) => Scaffold(
           appBar: AppBar(
@@ -236,6 +240,88 @@ class IsmChatForwardListView extends StatelessWidget {
                                         sendMessageType:
                                             SendMessageType.forwardMessage,
                                       );
+                                    }
+                                  }
+                                } else {
+                                  Get.back<void>();
+                                  controller.navigateToMessages(
+                                      ismChatConversationModel);
+                                  (onChatTap ?? IsmChatConfig.onChatTap)
+                                      .call(context, ismChatConversationModel);
+                                  await Future.delayed(
+                                      const Duration(milliseconds: 1000));
+                                  if (Get.isRegistered<
+                                      IsmChatPageController>()) {
+                                    var ismChatPageController =
+                                        Get.find<IsmChatPageController>();
+                                    for (var x
+                                        in controller.forwardSeletedUserList) {
+                                      IsmChatLog.success(
+                                          'Forward Message sent to ${x.userDetails.userName}');
+                                      await Future.delayed(
+                                          const Duration(milliseconds: 1000));
+                                      if (ismChatChatMessageModel.customType ==
+                                          IsmChatCustomMessageType.text) {
+                                        ismChatPageController.sendTextMessage(
+                                            sendMessageType:
+                                                SendMessageType.forwardMessage,
+                                            forwardMessgeForMulitpleUser: true,
+                                            messageBody:
+                                                ismChatChatMessageModel.body);
+                                      } else if (ismChatChatMessageModel
+                                              .customType ==
+                                          IsmChatCustomMessageType.location) {
+                                        ismChatPageController.sendLocation(
+                                            latitude: 0,
+                                            longitude: 0,
+                                            placeId: '',
+                                            locationName: '',
+                                            sendMessageType:
+                                                SendMessageType.forwardMessage,
+                                            forwardMessgeForMulitpleUser: true,
+                                            messageBody:
+                                                ismChatChatMessageModel.body);
+                                      } else if (ismChatChatMessageModel
+                                              .customType ==
+                                          IsmChatCustomMessageType.image) {
+                                        await ismChatPageController.sendImage(
+                                          ismChatChatMessageModel:
+                                              ismChatChatMessageModel,
+                                          forwardMessgeForMulitpleUser: true,
+                                          sendMessageType:
+                                              SendMessageType.forwardMessage,
+                                        );
+                                      } else if (ismChatChatMessageModel
+                                              .customType ==
+                                          IsmChatCustomMessageType.video) {
+                                        await ismChatPageController.sendVideo(
+                                          ismChatChatMessageModel:
+                                              ismChatChatMessageModel,
+                                          forwardMessgeForMulitpleUser: true,
+                                          sendMessageType:
+                                              SendMessageType.forwardMessage,
+                                        );
+                                      } else if (ismChatChatMessageModel
+                                              .customType ==
+                                          IsmChatCustomMessageType.file) {
+                                        ismChatPageController.sendDocument(
+                                          ismChatChatMessageModel:
+                                              ismChatChatMessageModel,
+                                          forwardMessgeForMulitpleUser: true,
+                                          sendMessageType:
+                                              SendMessageType.forwardMessage,
+                                        );
+                                      } else if (ismChatChatMessageModel
+                                              .customType ==
+                                          IsmChatCustomMessageType.audio) {
+                                        ismChatPageController.sendAudio(
+                                          ismChatChatMessageModel:
+                                              ismChatChatMessageModel,
+                                          forwardMessgeForMulitpleUser: true,
+                                          sendMessageType:
+                                              SendMessageType.forwardMessage,
+                                        );
+                                      }
                                     }
                                   }
                                 }
