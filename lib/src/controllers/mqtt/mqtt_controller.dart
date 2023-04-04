@@ -416,7 +416,6 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleCreateConversation(IsmChatMqttActionModel actionModel) async {
-  
     var ismChatConversationController =
         Get.find<IsmChatConversationsController>();
     await ismChatConversationController.getChatConversations();

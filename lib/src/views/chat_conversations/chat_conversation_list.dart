@@ -81,7 +81,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
           }
           if (controller.conversations.isEmpty) {
             return Center(
-              child: Text(
+              child:  Text(
                 IsmChatStrings.noConversation,
                 style: IsmChatStyles.w600Black20.copyWith(
                   color: IsmChatTheme.of(context).primaryColor,

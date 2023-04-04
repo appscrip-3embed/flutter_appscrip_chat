@@ -167,7 +167,16 @@ class ChatMessage extends StatelessWidget {
                           ],
                         ),
                         onPressed: () async {
-                          await Get.to<void>(const IsmChatForwardListView());
+                          Get.back<void>();
+                          var chatConversationController =
+                              Get.find<IsmChatConversationsController>();
+                          chatConversationController.userList.clear();
+                          chatConversationController.forwardedList.clear();
+                          chatConversationController.forwardSeletedUserList
+                              .clear();
+                          await Get.to<void>(IsmChatForwardListView(
+                            ismChatChatMessageModel: message,
+                          ));
                         },
                         trailingIcon: Icon(
                           Icons.forward_5,

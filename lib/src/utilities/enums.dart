@@ -302,6 +302,12 @@ enum IsmChatActionEvents {
 }
 
 
+enum SendMessageType {
+  pendingMessage,
+  forwardMessage,
+}
+
+
 enum GetChatConversationApiCall {
   fromOnInit,
   fromRefresh,

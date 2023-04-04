@@ -154,6 +154,7 @@ class IsmChatPageController extends GetxController {
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
       if (conversation!.conversationId?.isNotEmpty ?? false) {
+        IsmChatLog.error('dsfdsfsddf ${conversation?.conversationId ?? ''}');
         getMessagesFromDB(conversation?.conversationId ?? '');
         getMessagesFromAPI();
         readAllMessages(
@@ -305,8 +306,6 @@ class IsmChatPageController extends GetxController {
       await Get.find<IsmChatConversationsController>().getConversationsFromDB();
     }
   }
-
- 
 
   void _scrollToBottom() async {
     await Future.delayed(
@@ -504,94 +503,61 @@ class IsmChatPageController extends GetxController {
     }
   }
 
-  void sendAudio(String? file) async {
-    if (file != null) {
-      var ismChatObjectBox = IsmChatConfig.objectBox;
-      final chatConversationResponse = await ismChatObjectBox.getDBConversation(
-          conversationId: conversation?.conversationId ?? '');
-      if (chatConversationResponse == null) {
-        await createConversation(
-            userId: [conversation?.opponentDetails?.userId ?? '']);
-      }
-      final bytes = File(file).readAsBytesSync();
-      final nameWithExtension = file.split('/').last;
-      final extension = nameWithExtension.split('.').last;
-      final mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
-      var sentAt = DateTime.now().millisecondsSinceEpoch;
-      var audioMessage = IsmChatChatMessageModel(
-        body: 'Audio',
-        conversationId: conversation?.conversationId ?? '',
-        customType: IsmChatCustomMessageType.audio,
-        attachments: [
-          AttachmentModel(
-              attachmentType: IsmChatAttachmentType.audio,
-              thumbnailUrl: file,
-              size: double.parse(bytes.length.toString()),
-              name: nameWithExtension,
-              mimeType: extension,
-              mediaUrl: file,
-              mediaId: mediaId,
-              extension: extension)
-        ],
-        deliveredToAll: false,
-        messageId: '',
-        deviceId: _deviceConfig.deviceId!,
-        messageType: IsmChatMessageType.normal,
-        messagingDisabled: false,
-        parentMessageId: '',
-        readByAll: false,
-        sentAt: sentAt,
-        sentByMe: true,
-      );
-      messages.add(audioMessage);
-      await ismChatObjectBox.addPendingMessage(audioMessage);
-      await ismPostMediaUrl(
-        imageAndFile: true,
-        bytes: bytes,
-        createdAt: sentAt,
-        ismChatChatMessageModel: audioMessage,
-        mediaId: sentAt.toString(),
-        mediaType: IsmChatAttachmentType.audio.value,
-        nameWithExtension: nameWithExtension,
-        notificationBody: 'Send you an Audio',
-        notificationTitle: conversation?.opponentDetails?.userName ?? 'User',
-      );
+  void sendAudio(
+      {String? file,
+      SendMessageType sendMessageType = SendMessageType.pendingMessage,
+      IsmChatChatMessageModel? ismChatChatMessageModel}) async {
+    var ismChatObjectBox = IsmChatConfig.objectBox;
+    final chatConversationResponse = await ismChatObjectBox.getDBConversation(
+        conversationId: conversation?.conversationId ?? '');
+    if (chatConversationResponse == null) {
+      await createConversation(
+          userId: [conversation?.opponentDetails?.userId ?? '']);
     }
-  }
-
-  void sendDocument() async {
-    final result = await FilePicker.platform.pickFiles(
-        allowMultiple: true,
-        type: FileType.custom,
-        allowedExtensions: ['pdf'],
-        allowCompression: true,
-        withData: true);
-    if (result?.files.isNotEmpty ?? false) {
-      var ismChatObjectBox = IsmChatConfig.objectBox;
-      final chatConversationResponse = await ismChatObjectBox.getDBConversation(
-          conversationId: conversation?.conversationId ?? '');
-      if (chatConversationResponse == null) {
-        await createConversation(
-            userId: [conversation?.opponentDetails?.userId ?? '']);
+    IsmChatChatMessageModel? audioMessage;
+    String? nameWithExtension;
+    Uint8List? bytes;
+    String? mediaId;
+    bool? isNetWorkUrl;
+    var sentAt = DateTime.now().millisecondsSinceEpoch;
+    if (sendMessageType == SendMessageType.forwardMessage) {
+      ismChatChatMessageModel!.conversationId =
+          conversation?.conversationId ?? '';
+      ismChatChatMessageModel.deliveredToAll = false;
+      ismChatChatMessageModel.readByAll = false;
+      ismChatChatMessageModel.messageType = IsmChatMessageType.forward;
+      ismChatChatMessageModel.sentByMe = true;
+      ismChatChatMessageModel.sentAt = sentAt;
+      ismChatChatMessageModel.messageId = '';
+      if (ismChatChatMessageModel.attachments!.first.mediaUrl!.isValidUrl) {
+        isNetWorkUrl = true;
+      } else {
+        isNetWorkUrl = false;
+        var file =
+            File(ismChatChatMessageModel.attachments!.first.mediaUrl ?? '');
+        bytes = file.readAsBytesSync();
+        mediaId = DateTime.now().millisecondsSinceEpoch.toString();
       }
-      for (var x in result!.files) {
-        final bytes = x.bytes;
-        final nameWithExtension = x.path!.split('/').last;
+      audioMessage = ismChatChatMessageModel;
+    } else {
+      if (file != null) {
+        bytes = File(file).readAsBytesSync();
+        nameWithExtension = file.split('/').last;
         final extension = nameWithExtension.split('.').last;
-        var sentAt = DateTime.now().millisecondsSinceEpoch;
-        var videoMessage = IsmChatChatMessageModel(
-          body: 'Documet',
+        mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
+        audioMessage = IsmChatChatMessageModel(
+          body: 'Audio',
           conversationId: conversation?.conversationId ?? '',
-          customType: IsmChatCustomMessageType.file,
+          customType: IsmChatCustomMessageType.audio,
           attachments: [
             AttachmentModel(
-                attachmentType: IsmChatAttachmentType.file,
-                thumbnailUrl: x.path,
-                size: double.parse(x.bytes!.length.toString()),
+                attachmentType: IsmChatAttachmentType.audio,
+                thumbnailUrl: file,
+                size: double.parse(bytes.length.toString()),
                 name: nameWithExtension,
                 mimeType: extension,
-                mediaUrl: x.path,
-                mediaId: sentAt.toString(),
+                mediaUrl: file,
+                mediaId: mediaId,
                 extension: extension)
           ],
           deliveredToAll: false,
@@ -604,25 +570,132 @@ class IsmChatPageController extends GetxController {
           sentAt: sentAt,
           sentByMe: true,
         );
-        messages.add(videoMessage);
-        await ismChatObjectBox.addPendingMessage(videoMessage);
-        await ismPostMediaUrl(
-          imageAndFile: true,
-          bytes: bytes,
-          createdAt: sentAt,
-          ismChatChatMessageModel: videoMessage,
-          mediaId: sentAt.toString(),
-          mediaType: IsmChatAttachmentType.file.value,
-          nameWithExtension: nameWithExtension,
-          notificationBody: 'Send you an Document',
-          notificationTitle: conversation?.opponentDetails?.userName ?? 'User',
-        );
       }
     }
+    messages.add(audioMessage!);
+
+    if (sendMessageType == SendMessageType.pendingMessage) {
+      await ismChatObjectBox.addPendingMessage(audioMessage);
+    } else {
+      await ismChatObjectBox.addForwardMessage(audioMessage);
+    }
+    await ismPostMediaUrl(
+      isNetWorkUrl: isNetWorkUrl ?? false,
+      imageAndFile: true,
+      bytes: bytes,
+      createdAt: sentAt,
+      ismChatChatMessageModel: audioMessage,
+      mediaId: sentAt.toString(),
+      mediaType: IsmChatAttachmentType.audio.value,
+      nameWithExtension: nameWithExtension ?? '',
+      notificationBody: 'Send you an Audio',
+      notificationTitle: conversation?.opponentDetails?.userName ?? 'User',
+    );
   }
 
-  Future<void> sendVideo(
-      {File? file, bool isThumbnail = false, File? thumbnailFiles}) async {
+  void sendDocument({
+    SendMessageType sendMessageType = SendMessageType.pendingMessage,
+    IsmChatChatMessageModel? ismChatChatMessageModel,
+  }) async {
+    var ismChatObjectBox = IsmChatConfig.objectBox;
+    IsmChatChatMessageModel? documentMessage;
+    String? nameWithExtension;
+    Uint8List? bytes;
+    bool? isNetWorkUrl;
+    var sentAt = DateTime.now().millisecondsSinceEpoch;
+    if (sendMessageType == SendMessageType.forwardMessage) {
+      ismChatChatMessageModel!.conversationId =
+          conversation?.conversationId ?? '';
+      ismChatChatMessageModel.deliveredToAll = false;
+      ismChatChatMessageModel.readByAll = false;
+      ismChatChatMessageModel.messageType = IsmChatMessageType.forward;
+      ismChatChatMessageModel.sentByMe = true;
+      ismChatChatMessageModel.sentAt = sentAt;
+      ismChatChatMessageModel.messageId = '';
+      if (ismChatChatMessageModel.attachments!.first.mediaUrl!.isValidUrl) {
+        isNetWorkUrl = true;
+      } else {
+        isNetWorkUrl = false;
+        var file =
+            File(ismChatChatMessageModel.attachments!.first.mediaUrl ?? '');
+        bytes = file.readAsBytesSync();
+      }
+      documentMessage = ismChatChatMessageModel;
+    } else {
+      final result = await FilePicker.platform.pickFiles(
+          allowMultiple: true,
+          type: FileType.custom,
+          allowedExtensions: ['pdf'],
+          allowCompression: true,
+          withData: true);
+      if (result?.files.isNotEmpty ?? false) {
+        var ismChatObjectBox = IsmChatConfig.objectBox;
+        final chatConversationResponse =
+            await ismChatObjectBox.getDBConversation(
+                conversationId: conversation?.conversationId ?? '');
+        if (chatConversationResponse == null) {
+          await createConversation(
+              userId: [conversation?.opponentDetails?.userId ?? '']);
+        }
+        for (var x in result!.files) {
+          bytes = x.bytes;
+          nameWithExtension = x.path!.split('/').last;
+          final extension = nameWithExtension.split('.').last;
+          documentMessage = IsmChatChatMessageModel(
+            body: 'Documet',
+            conversationId: conversation?.conversationId ?? '',
+            customType: IsmChatCustomMessageType.file,
+            attachments: [
+              AttachmentModel(
+                  attachmentType: IsmChatAttachmentType.file,
+                  thumbnailUrl: x.path,
+                  size: double.parse(x.bytes!.length.toString()),
+                  name: nameWithExtension,
+                  mimeType: extension,
+                  mediaUrl: x.path,
+                  mediaId: sentAt.toString(),
+                  extension: extension)
+            ],
+            deliveredToAll: false,
+            messageId: '',
+            deviceId: _deviceConfig.deviceId!,
+            messageType: IsmChatMessageType.normal,
+            messagingDisabled: false,
+            parentMessageId: '',
+            readByAll: false,
+            sentAt: sentAt,
+            sentByMe: true,
+          );
+        }
+      }
+    }
+    messages.add(documentMessage!);
+    if (sendMessageType == SendMessageType.pendingMessage) {
+      await ismChatObjectBox.addPendingMessage(documentMessage);
+    } else {
+      await ismChatObjectBox.addForwardMessage(documentMessage);
+    }
+    await ismPostMediaUrl(
+      isNetWorkUrl: isNetWorkUrl ?? false,
+      imageAndFile: true,
+      bytes: bytes,
+      createdAt: sentAt,
+      ismChatChatMessageModel: documentMessage,
+      mediaId: sentAt.toString(),
+      mediaType: IsmChatAttachmentType.file.value,
+      nameWithExtension: nameWithExtension ?? '',
+      notificationBody: 'Send you an Document',
+      notificationTitle: conversation?.opponentDetails?.userName ?? 'User',
+    );
+  }
+
+  Future<void> sendVideo({
+    File? file,
+    bool isThumbnail = false,
+    File? thumbnailFiles,
+    SendMessageType sendMessageType = SendMessageType.pendingMessage,
+    IsmChatChatMessageModel? ismChatChatMessageModel,
+  }) async {
     var ismChatObjectBox = IsmChatConfig.objectBox;
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversation?.conversationId ?? '');
@@ -693,7 +766,9 @@ class IsmChatPageController extends GetxController {
     }
   }
 
-  Future<void> sendImage() async {
+  Future<void> sendImage(
+      {SendMessageType sendMessageType = SendMessageType.pendingMessage,
+      IsmChatChatMessageModel? ismChatChatMessageModel}) async {
     var ismChatObjectBox = IsmChatConfig.objectBox;
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversation?.conversationId ?? '');
@@ -701,48 +776,83 @@ class IsmChatPageController extends GetxController {
       await createConversation(
           userId: [conversation?.opponentDetails?.userId ?? '']);
     }
-    var compressedFile = await FlutterNativeImage.compressImage(imagePath!.path,
-        quality: 60, percentage: 70);
-    final bytes = compressedFile.readAsBytesSync();
-    // final image = await decodeImageFromList(bytes);
-    final nameWithExtension = compressedFile.path.split('/').last;
-    final mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
-    final extension = nameWithExtension.split('.').last;
+    IsmChatChatMessageModel? imageMessage;
+    String? nameWithExtension;
+    Uint8List? bytes;
+    String? mediaId;
+    bool? isNetWorkUrl;
     var sentAt = DateTime.now().millisecondsSinceEpoch;
-    var imageMessage = IsmChatChatMessageModel(
-      body: 'Image',
-      conversationId: conversation?.conversationId ?? '',
-      customType: IsmChatCustomMessageType.image,
-      attachments: [
-        AttachmentModel(
-            attachmentType: IsmChatAttachmentType.image,
-            thumbnailUrl: compressedFile.path,
-            size: double.parse(bytes.length.toString()),
-            name: nameWithExtension,
-            mimeType: 'image/jpeg',
-            mediaUrl: compressedFile.path,
-            mediaId: mediaId,
-            extension: extension)
-      ],
-      deliveredToAll: false,
-      messageId: '',
-      deviceId: _deviceConfig.deviceId!,
-      messageType: IsmChatMessageType.normal,
-      messagingDisabled: false,
-      parentMessageId: '',
-      readByAll: false,
-      sentAt: sentAt,
-      sentByMe: true,
-    );
+    if (sendMessageType == SendMessageType.forwardMessage) {
+      ismChatChatMessageModel!.conversationId =
+          conversation?.conversationId ?? '';
+      ismChatChatMessageModel.deliveredToAll = false;
+      ismChatChatMessageModel.readByAll = false;
+      ismChatChatMessageModel.messageType = IsmChatMessageType.forward;
+      ismChatChatMessageModel.sentByMe = true;
+      ismChatChatMessageModel.sentAt = sentAt;
+      ismChatChatMessageModel.messageId = '';
+      if (ismChatChatMessageModel.attachments!.first.mediaUrl!.isValidUrl) {
+        isNetWorkUrl = true;
+      } else {
+        isNetWorkUrl = false;
+        var file =
+            File(ismChatChatMessageModel.attachments!.first.mediaUrl ?? '');
+        bytes = file.readAsBytesSync();
+        mediaId = DateTime.now().millisecondsSinceEpoch.toString();
+      }
+      imageMessage = ismChatChatMessageModel;
+    } else {
+      var compressedFile = await FlutterNativeImage.compressImage(
+          imagePath!.path,
+          quality: 60,
+          percentage: 70);
+      bytes = compressedFile.readAsBytesSync();
+      // final image = await decodeImageFromList(bytes);
+      nameWithExtension = compressedFile.path.split('/').last;
+      mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
+      final extension = nameWithExtension.split('.').last;
+      imageMessage = IsmChatChatMessageModel(
+        body: 'Image',
+        conversationId: conversation?.conversationId ?? '',
+        customType: IsmChatCustomMessageType.image,
+        attachments: [
+          AttachmentModel(
+              attachmentType: IsmChatAttachmentType.image,
+              thumbnailUrl: compressedFile.path,
+              size: double.parse(bytes.length.toString()),
+              name: nameWithExtension,
+              mimeType: 'image/jpeg',
+              mediaUrl: compressedFile.path,
+              mediaId: mediaId,
+              extension: extension)
+        ],
+        deliveredToAll: false,
+        messageId: '',
+        deviceId: _deviceConfig.deviceId!,
+        messageType: IsmChatMessageType.normal,
+        messagingDisabled: false,
+        parentMessageId: '',
+        readByAll: false,
+        sentAt: sentAt,
+        sentByMe: true,
+      );
+    }
+
     messages.add(imageMessage);
-    await ismChatObjectBox.addPendingMessage(imageMessage);
+    if (sendMessageType == SendMessageType.pendingMessage) {
+      await ismChatObjectBox.addPendingMessage(imageMessage);
+    } else {
+      await ismChatObjectBox.addForwardMessage(imageMessage);
+    }
     await ismPostMediaUrl(
+      isNetWorkUrl: isNetWorkUrl ?? false,
+      sendMessageType: sendMessageType,
       bytes: bytes,
       createdAt: sentAt,
       ismChatChatMessageModel: imageMessage,
-      mediaId: mediaId,
+      mediaId: mediaId ?? '',
       mediaType: IsmChatAttachmentType.image.value,
-      nameWithExtension: nameWithExtension,
+      nameWithExtension: nameWithExtension ?? '',
       notificationBody: 'Send you an Image',
       imageAndFile: true,
       notificationTitle: conversation?.opponentDetails?.userName ?? 'User',
@@ -779,7 +889,7 @@ class IsmChatPageController extends GetxController {
     messages.add(textMessage);
     chatInputController.clear();
     await ismChatObjectBox.addPendingMessage(textMessage);
-    await sendMessage(
+    sendMessage(
         deviceId: _deviceConfig.deviceId!,
         body: textMessage.body,
         customType: textMessage.customType!.name,
@@ -790,7 +900,9 @@ class IsmChatPageController extends GetxController {
         notificationTitle: conversation?.opponentDetails?.userName ?? '');
   }
 
-  void sendTextMessage() async {
+  void sendTextMessage(
+      {SendMessageType sendMessageType = SendMessageType.pendingMessage,
+      String? messageBody}) async {
     var ismChatObjectBox = IsmChatConfig.objectBox;
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversation?.conversationId ?? '');
@@ -798,30 +910,39 @@ class IsmChatPageController extends GetxController {
       await createConversation(
           userId: [conversation?.opponentDetails?.userId ?? '']);
     }
-
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatChatMessageModel(
-      body: chatInputController.text.trim(),
+      body: sendMessageType == SendMessageType.pendingMessage
+          ? chatInputController.text.trim()
+          : messageBody ?? '',
       conversationId: conversation?.conversationId ?? '',
       customType: isreplying
           ? IsmChatCustomMessageType.reply
           : IsmChatCustomMessageType.text,
       deliveredToAll: false,
       messageId: '',
-      messageType:
-          isreplying ? IsmChatMessageType.reply : IsmChatMessageType.normal,
+      messageType: sendMessageType == SendMessageType.pendingMessage
+          ? isreplying
+              ? IsmChatMessageType.reply
+              : IsmChatMessageType.normal
+          : IsmChatMessageType.forward,
       messagingDisabled: false,
       parentMessageId: isreplying ? chatMessageModel?.messageId : '',
       readByAll: false,
       sentAt: sentAt,
       sentByMe: true,
     );
-    messages.add(textMessage);
 
+    messages.add(textMessage);
     isreplying = false;
     chatInputController.clear();
-    await ismChatObjectBox.addPendingMessage(textMessage);
-    await sendMessage(
+    if (sendMessageType == SendMessageType.pendingMessage) {
+      await ismChatObjectBox.addPendingMessage(textMessage);
+    } else {
+      await ismChatObjectBox.addForwardMessage(textMessage);
+    }
+    sendMessage(
+        sendMessageType: sendMessageType,
         deviceId: _deviceConfig.deviceId!,
         body: textMessage.body,
         customType: textMessage.customType!.name,
@@ -843,63 +964,144 @@ class IsmChatPageController extends GetxController {
       required Uint8List? bytes,
       required bool? imageAndFile,
       required String mediaId,
+      SendMessageType sendMessageType = SendMessageType.pendingMessage,
+      bool isNetWorkUrl = false,
       String? thumbnailNameWithExtension,
       String? thumbnailMediaId,
       int? thumbanilMediaType,
       Uint8List? thumbnailBytes}) async {
-    var respone = await _viewModel.postMediaUrl(
-      conversationId: ismChatChatMessageModel.conversationId ?? '',
-      nameWithExtension: nameWithExtension,
-      mediaType: mediaType,
-      mediaId: mediaId,
-    );
+    List<Map<String, dynamic>>? attachment;
     var mediaUrlPath = '';
     var thumbnailUrlPath = '';
-    if (respone?.isNotEmpty ?? false) {
-      var mediaUrl = await updatePresignedUrl(
-          presignedUrl: respone?.first.mediaPresignedUrl, bytes: bytes);
-      if (mediaUrl == 200) {
-        mediaUrlPath = respone?.first.mediaUrl ?? '';
-        mediaId = respone?.first.mediaId ?? '';
-      }
-    }
-    if (!imageAndFile!) {
+    if (sendMessageType == SendMessageType.pendingMessage) {
       var respone = await _viewModel.postMediaUrl(
         conversationId: ismChatChatMessageModel.conversationId ?? '',
-        nameWithExtension: thumbnailNameWithExtension ?? '',
-        mediaType: thumbanilMediaType ?? 0,
-        mediaId: thumbnailMediaId ?? '',
+        nameWithExtension: nameWithExtension,
+        mediaType: mediaType,
+        mediaId: mediaId,
       );
-
+      var mediaUrlPath = '';
+      var thumbnailUrlPath = '';
       if (respone?.isNotEmpty ?? false) {
         var mediaUrl = await updatePresignedUrl(
-            presignedUrl: respone?.first.thumbnailPresignedUrl,
-            bytes: thumbnailBytes);
+            presignedUrl: respone?.first.mediaPresignedUrl, bytes: bytes);
         if (mediaUrl == 200) {
-          thumbnailUrlPath = respone?.first.thumbnailUrl ?? '';
+          mediaUrlPath = respone?.first.mediaUrl ?? '';
+          mediaId = respone?.first.mediaId ?? '';
         }
       }
-    }
-    if (mediaUrlPath.isNotEmpty) {
-      var attachment = [
-        {
-          'thumbnailUrl': !imageAndFile
-              ? thumbnailUrlPath
-              : ismChatChatMessageModel.attachments?.first.thumbnailUrl =
-                  mediaUrlPath,
-          'size': ismChatChatMessageModel.attachments?.first.size?.toInt(),
-          'name': ismChatChatMessageModel.attachments?.first.name,
-          'mimeType': ismChatChatMessageModel.attachments?.first.mimeType,
-          'mediaUrl': ismChatChatMessageModel.attachments?.first.mediaUrl =
-              mediaUrlPath,
-          'mediaId': ismChatChatMessageModel.attachments?.first.mediaId =
-              mediaId,
-          'extension': ismChatChatMessageModel.attachments?.first.extension,
-          'attachmentType':
-              ismChatChatMessageModel.attachments?.first.attachmentType?.value,
+      if (!imageAndFile!) {
+        var respone = await _viewModel.postMediaUrl(
+          conversationId: ismChatChatMessageModel.conversationId ?? '',
+          nameWithExtension: thumbnailNameWithExtension ?? '',
+          mediaType: thumbanilMediaType ?? 0,
+          mediaId: thumbnailMediaId ?? '',
+        );
+
+        if (respone?.isNotEmpty ?? false) {
+          var mediaUrl = await updatePresignedUrl(
+              presignedUrl: respone?.first.thumbnailPresignedUrl,
+              bytes: thumbnailBytes);
+          if (mediaUrl == 200) {
+            thumbnailUrlPath = respone?.first.thumbnailUrl ?? '';
+          }
         }
-      ];
-      await sendMessage(
+      }
+      if (mediaUrlPath.isNotEmpty) {
+        var attachment = [
+          {
+            'thumbnailUrl': !imageAndFile
+                ? thumbnailUrlPath
+                : ismChatChatMessageModel.attachments?.first.thumbnailUrl =
+                    mediaUrlPath,
+            'size': ismChatChatMessageModel.attachments?.first.size?.toInt(),
+            'name': ismChatChatMessageModel.attachments?.first.name,
+            'mimeType': ismChatChatMessageModel.attachments?.first.mimeType,
+            'mediaUrl': ismChatChatMessageModel.attachments?.first.mediaUrl =
+                mediaUrlPath,
+            'mediaId': ismChatChatMessageModel.attachments?.first.mediaId =
+                mediaId,
+            'extension': ismChatChatMessageModel.attachments?.first.extension,
+            'attachmentType': ismChatChatMessageModel
+                .attachments?.first.attachmentType?.value,
+          }
+        ];
+        sendMessage(
+          sendMessageType: sendMessageType,
+          body: ismChatChatMessageModel.body,
+          conversationId: ismChatChatMessageModel.conversationId!,
+          createdAt: createdAt,
+          deviceId: ismChatChatMessageModel.deviceId ?? '',
+          messageType: ismChatChatMessageModel.messageType?.value ?? 0,
+          notificationBody: notificationBody,
+          notificationTitle: notificationTitle,
+          attachments: attachment,
+          customType: ismChatChatMessageModel.customType!.name,
+        );
+      }
+    } else {
+      if (isNetWorkUrl == false) {
+        var respone = await _viewModel.postMediaUrl(
+          conversationId: ismChatChatMessageModel.conversationId ?? '',
+          nameWithExtension:
+              ismChatChatMessageModel.attachments?.first.name ?? '',
+          mediaType: mediaType,
+          mediaId: mediaId,
+        );
+
+        if (respone?.isNotEmpty ?? false) {
+          var mediaUrl = await updatePresignedUrl(
+              presignedUrl: respone?.first.mediaPresignedUrl, bytes: bytes);
+          if (mediaUrl == 200) {
+            mediaUrlPath = respone?.first.mediaUrl ?? '';
+            mediaId = respone?.first.mediaId ?? '';
+          }
+        }
+        if (!imageAndFile!) {
+          var respone = await _viewModel.postMediaUrl(
+            conversationId: ismChatChatMessageModel.conversationId ?? '',
+            nameWithExtension:
+                ismChatChatMessageModel.attachments?.first.name ?? '',
+            mediaType: thumbanilMediaType ?? 0,
+            mediaId: thumbnailMediaId ?? '',
+          );
+
+          if (respone?.isNotEmpty ?? false) {
+            var mediaUrl = await updatePresignedUrl(
+                presignedUrl: respone?.first.thumbnailPresignedUrl,
+                bytes: thumbnailBytes);
+            if (mediaUrl == 200) {
+              thumbnailUrlPath = respone?.first.thumbnailUrl ?? '';
+            }
+          }
+        }
+      }
+      if (mediaUrlPath.isNotEmpty) {
+        attachment = [
+          {
+            'thumbnailUrl': isNetWorkUrl
+                ? ismChatChatMessageModel.attachments?.first.thumbnailUrl
+                : !imageAndFile!
+                    ? thumbnailUrlPath
+                    : ismChatChatMessageModel.attachments?.first.thumbnailUrl =
+                        mediaUrlPath,
+            'size': ismChatChatMessageModel.attachments?.first.size?.toInt(),
+            'name': ismChatChatMessageModel.attachments?.first.name,
+            'mimeType': ismChatChatMessageModel.attachments?.first.mimeType,
+            'mediaUrl': isNetWorkUrl
+                ? ismChatChatMessageModel.attachments?.first.mediaUrl
+                : ismChatChatMessageModel.attachments?.first.mediaUrl =
+                    mediaUrlPath,
+            'mediaId': ismChatChatMessageModel.attachments?.first.mediaId =
+                mediaId,
+            'extension': ismChatChatMessageModel.attachments?.first.extension,
+            'attachmentType': ismChatChatMessageModel
+                .attachments?.first.attachmentType?.value,
+          }
+        ];
+      }
+      sendMessage(
+        sendMessageType: sendMessageType,
         body: ismChatChatMessageModel.body,
         conversationId: ismChatChatMessageModel.conversationId!,
         createdAt: createdAt,
@@ -917,7 +1119,7 @@ class IsmChatPageController extends GetxController {
           {String? presignedUrl, Uint8List? bytes}) async =>
       _viewModel.updatePresignedUrl(bytes: bytes, presignedUrl: presignedUrl);
 
-  Future<void> sendMessage({
+  void sendMessage({
     required int messageType,
     required String deviceId,
     required String conversationId,
@@ -926,6 +1128,7 @@ class IsmChatPageController extends GetxController {
     required String notificationBody,
     required String notificationTitle,
     bool encrypted = true,
+    SendMessageType sendMessageType = SendMessageType.pendingMessage,
     bool showInConversation = true,
     String? parentMessageId,
     Map<String, dynamic>? metaData,
@@ -935,6 +1138,7 @@ class IsmChatPageController extends GetxController {
     List<Map<String, dynamic>>? attachments,
   }) async {
     var isMessageSent = await _viewModel.sendMessage(
+      sendMessageType: sendMessageType,
       showInConversation: showInConversation,
       attachments: attachments,
       events: events,
@@ -958,6 +1162,7 @@ class IsmChatPageController extends GetxController {
   }
 
   Future<void> getMessagesFromDB(String conversationId) async {
+    messages.clear();
     final query = IsmChatConfig.objectBox.chatConversationBox
         .query(DBConversationModel_.conversationId.equals(conversationId))
         .build();
@@ -968,7 +1173,6 @@ class IsmChatPageController extends GetxController {
           .map(IsmChatChatMessageModel.fromJson)
           .toList());
       isMessagesLoading = false;
-
       _scrollToBottom();
     }
   }

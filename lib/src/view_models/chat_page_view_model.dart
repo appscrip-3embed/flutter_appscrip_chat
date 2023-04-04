@@ -65,6 +65,7 @@ class IsmChatPageViewModel {
     required int createdAt,
     required String notificationBody,
     required String notificationTitle,
+    SendMessageType sendMessageType = SendMessageType.pendingMessage,
     String? parentMessageId,
     Map<String, dynamic>? metaData,
     List<Map<String, dynamic>>? mentionedUsers,
@@ -92,44 +93,83 @@ class IsmChatPageViewModel {
       if (messageId == null || messageId.isEmpty) {
         return false;
       }
-      var pendingMessgeBox = IsmChatConfig.objectBox.pendingMessageBox;
-      var chatConversationBox = IsmChatConfig.objectBox.chatConversationBox;
-      final pendingQuery = pendingMessgeBox
-          .query(PendingMessageModel_.conversationId.equals(conversationId))
-          .build();
-      final chatPendingMessages = pendingQuery.findUnique();
-      if (chatPendingMessages == null) {
-        return false;
-      }
-
-      for (var x = 0; x < chatPendingMessages.messages.length; x++) {
-        var pendingMessage =
-            IsmChatChatMessageModel.fromJson(chatPendingMessages.messages[x]);
-        if (pendingMessage.messageId!.isNotEmpty ||
-            pendingMessage.sentAt != createdAt) {
-          continue;
-        }
-
-        pendingMessage.messageId = messageId;
-        pendingMessage.deliveredToAll = false;
-        chatPendingMessages.messages.removeAt(x);
-        pendingMessgeBox.put(chatPendingMessages);
-
-        if (chatPendingMessages.messages.isEmpty) {
-          pendingMessgeBox.remove(chatPendingMessages.id);
-        }
-
-        final query = chatConversationBox
-            .query(DBConversationModel_.conversationId.equals(conversationId))
+      if (sendMessageType == SendMessageType.pendingMessage) {
+      
+        var pendingMessgeBox = IsmChatConfig.objectBox.pendingMessageBox;
+        var chatConversationBox = IsmChatConfig.objectBox.chatConversationBox;
+        final pendingQuery = pendingMessgeBox
+            .query(PendingMessageModel_.conversationId.equals(conversationId))
             .build();
-        final conversationModel = query.findUnique();
-        if (conversationModel != null) {
-          conversationModel.messages.add(pendingMessage.toJson());
+        final chatPendingMessages = pendingQuery.findUnique();
+        if (chatPendingMessages == null) {
+          return false;
         }
+        for (var x = 0; x < chatPendingMessages.messages.length; x++) {
+          var pendingMessage =
+              IsmChatChatMessageModel.fromJson(chatPendingMessages.messages[x]);
+          if (pendingMessage.messageId!.isNotEmpty ||
+              pendingMessage.sentAt != createdAt) {
+            continue;
+          }
+          pendingMessage.messageId = messageId;
+          pendingMessage.deliveredToAll = false;
+          chatPendingMessages.messages.removeAt(x);
+          pendingMessgeBox.put(chatPendingMessages);
 
-        chatConversationBox.put(conversationModel!, mode: PutMode.update);
-        return true;
+          if (chatPendingMessages.messages.isEmpty) {
+            pendingMessgeBox.remove(chatPendingMessages.id);
+          }
+
+          final query = chatConversationBox
+              .query(DBConversationModel_.conversationId.equals(conversationId))
+              .build();
+          final conversationModel = query.findUnique();
+          if (conversationModel != null) {
+            conversationModel.messages.add(pendingMessage.toJson());
+          }
+          chatConversationBox.put(conversationModel!, mode: PutMode.update);
+          return true;
+        }
+      } else {
+       
+        var forwardMessgeBox = IsmChatConfig.objectBox.forwardMessageBox;
+        var chatConversationBox = IsmChatConfig.objectBox.chatConversationBox;
+        final chatForwardMessages = forwardMessgeBox
+            .query(ForwardMessageModel_.conversationId.equals(conversationId))
+            .build()
+            .findUnique();
+
+        if (chatForwardMessages == null) {
+          return false;
+        }
+        for (var x = 0; x < chatForwardMessages.messages.length; x++) {
+          var pendingMessage =
+              IsmChatChatMessageModel.fromJson(chatForwardMessages.messages[x]);
+          if (pendingMessage.messageId!.isNotEmpty ||
+              pendingMessage.sentAt != createdAt) {
+            continue;
+          }
+          pendingMessage.messageId = messageId;
+          pendingMessage.deliveredToAll = false;
+          chatForwardMessages.messages.removeAt(x);
+          forwardMessgeBox.put(chatForwardMessages);
+
+          if (chatForwardMessages.messages.isEmpty) {
+            forwardMessgeBox.remove(chatForwardMessages.id);
+          }
+
+          final query = chatConversationBox
+              .query(DBConversationModel_.conversationId.equals(conversationId))
+              .build();
+          final conversationModel = query.findUnique();
+          if (conversationModel != null) {
+            conversationModel.messages.add(pendingMessage.toJson());
+          }
+          chatConversationBox.put(conversationModel!, mode: PutMode.update);
+          return true;
+        }
       }
+
       return false;
     } catch (e, st) {
       IsmChatLog.error(e, st);

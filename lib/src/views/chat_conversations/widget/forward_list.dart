@@ -3,18 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatForwardListView extends StatelessWidget {
-  const IsmChatForwardListView({super.key});
+  const IsmChatForwardListView(
+      {super.key, this.onChatTap, required this.ismChatChatMessageModel});
 
-  // final void Function(BuildContext, IsmChatConversationModel)? onChatTap;
+  final IsmChatChatMessageModel ismChatChatMessageModel;
+  final void Function(BuildContext, IsmChatConversationModel)? onChatTap;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
         initState: (_) {
           var chatConversationController =
               Get.find<IsmChatConversationsController>();
-          chatConversationController.userList.clear();
-          chatConversationController.forwardedList.clear();
-          chatConversationController.forwardSeletedUserList.clear();
           chatConversationController.getUserList(isForward: true);
         },
         builder: (controller) => Scaffold(
@@ -143,7 +142,92 @@ class IsmChatForwardListView extends StatelessWidget {
                                       controller.forwardSeletedUserList.length),
                             ),
                             InkWell(
-                              onTap: () async {},
+                              onTap: () async {
+                                if (controller.forwardSeletedUserList.length ==
+                                    1) {
+                                  var ismChatConversation =
+                                      IsmChatConversationModel(
+                                    messagingDisabled: false,
+                                    conversationImageUrl: controller
+                                        .forwardSeletedUserList
+                                        .first
+                                        .userDetails
+                                        .userProfileImageUrl,
+                                    isGroup: false,
+                                    opponentDetails: controller
+                                        .forwardSeletedUserList
+                                        .first
+                                        .userDetails,
+                                    unreadMessagesCount: 0,
+                                    lastMessageDetails: null,
+                                    lastMessageSentAt: 0,
+                                    membersCount: 0,
+                                  );
+                                  ismChatConversation.conversationId =
+                                      controller
+                                          .getConversationid(controller
+                                              .forwardSeletedUserList
+                                              .first
+                                              .userDetails)
+                                          .toString();
+                                  Get.back<void>();
+                                  controller
+                                      .navigateToMessages(ismChatConversation);
+                                  (onChatTap ?? IsmChatConfig.onChatTap)
+                                      .call(context, ismChatConversation);
+                                  await Future.delayed(
+                                      const Duration(milliseconds: 1000));
+                                  if (Get.isRegistered<
+                                      IsmChatPageController>()) {
+                                    var ismChatPageController =
+                                        Get.find<IsmChatPageController>();
+                                    if (ismChatChatMessageModel.customType ==
+                                        IsmChatCustomMessageType.text) {
+                                      ismChatPageController.sendTextMessage(
+                                          sendMessageType:
+                                              SendMessageType.forwardMessage,
+                                          messageBody:
+                                              ismChatChatMessageModel.body);
+                                    } else if (ismChatChatMessageModel
+                                            .customType ==
+                                        IsmChatCustomMessageType.image) {
+                                      await ismChatPageController.sendImage(
+                                        ismChatChatMessageModel:
+                                            ismChatChatMessageModel,
+                                        sendMessageType:
+                                            SendMessageType.forwardMessage,
+                                      );
+                                    } else if (ismChatChatMessageModel
+                                            .customType ==
+                                        IsmChatCustomMessageType.video) {
+                                      await ismChatPageController.sendVideo(
+                                        ismChatChatMessageModel:
+                                            ismChatChatMessageModel,
+                                        sendMessageType:
+                                            SendMessageType.forwardMessage,
+                                      );
+                                    } else if (ismChatChatMessageModel
+                                            .customType ==
+                                        IsmChatCustomMessageType.file) {
+                                      ismChatPageController.sendDocument(
+                                        ismChatChatMessageModel:
+                                            ismChatChatMessageModel,
+                                        sendMessageType:
+                                            SendMessageType.forwardMessage,
+                                      );
+                                    } else if(ismChatChatMessageModel
+                                            .customType ==
+                                        IsmChatCustomMessageType.audio){
+                                          ismChatPageController.sendAudio(
+                                        ismChatChatMessageModel:
+                                            ismChatChatMessageModel,
+                                        sendMessageType:
+                                            SendMessageType.forwardMessage,
+                                      );
+                                        }
+                                  }
+                                }
+                              },
                               child: CircleAvatar(
                                 backgroundColor:
                                     IsmChatConfig.chatTheme.primaryColor,

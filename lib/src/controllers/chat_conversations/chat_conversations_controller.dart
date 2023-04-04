@@ -129,7 +129,9 @@ class IsmChatConversationsController extends GetxController {
     if (isForward == true) {
       forwardedList = List.from(userList)
           .map((e) => SelectedForwardUser(
-              selectedUser: false, userDetails: e as UserDetails))
+                selectedUser: false,
+                userDetails: e as UserDetails,
+              ))
           .toList();
     }
     usersPageToken = response.pageToken;
@@ -180,7 +182,7 @@ class IsmChatConversationsController extends GetxController {
     );
   }
 
-  void navigateToMessages(IsmChatConversationModel conversation) {
+  void navigateToMessages(IsmChatConversationModel conversation) async{
     currentConversation = conversation;
     // var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
     // var dbConversation = conversationBox

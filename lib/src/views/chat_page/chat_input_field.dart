@@ -186,7 +186,7 @@ class IsmChatInputField extends StatelessWidget {
                       controller.forVideoRecordTimer?.cancel();
                       controller.seconds = 0;
                       var path = await controller.recordAudio.stop();
-                      controller.sendAudio(path);
+                      controller.sendAudio(file: path);
                     },
                     onTap: controller.showSendButton
                         ? controller.conversation?.messagingDisabled == true

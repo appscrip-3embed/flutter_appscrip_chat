@@ -62,7 +62,6 @@ class IsmChatUserPageView extends StatelessWidget {
                             .getConversationid(conversation)
                             .toString();
                         Get.back<void>();
-
                         controller.navigateToMessages(ismChatConversation);
                         (onChatTap ?? IsmChatConfig.onChatTap)
                             .call(_, ismChatConversation);
