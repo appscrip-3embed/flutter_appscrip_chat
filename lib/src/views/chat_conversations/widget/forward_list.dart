@@ -190,6 +190,18 @@ class IsmChatForwardListView extends StatelessWidget {
                                               ismChatChatMessageModel.body);
                                     } else if (ismChatChatMessageModel
                                             .customType ==
+                                        IsmChatCustomMessageType.location) {
+                                      ismChatPageController.sendLocation(
+                                          latitude: 0,
+                                          longitude: 0,
+                                          placeId: '',
+                                          locationName: '',
+                                          sendMessageType:
+                                              SendMessageType.forwardMessage,
+                                          messageBody:
+                                              ismChatChatMessageModel.body);
+                                    } else if (ismChatChatMessageModel
+                                            .customType ==
                                         IsmChatCustomMessageType.image) {
                                       await ismChatPageController.sendImage(
                                         ismChatChatMessageModel:
@@ -215,16 +227,16 @@ class IsmChatForwardListView extends StatelessWidget {
                                         sendMessageType:
                                             SendMessageType.forwardMessage,
                                       );
-                                    } else if(ismChatChatMessageModel
+                                    } else if (ismChatChatMessageModel
                                             .customType ==
-                                        IsmChatCustomMessageType.audio){
-                                          ismChatPageController.sendAudio(
+                                        IsmChatCustomMessageType.audio) {
+                                      ismChatPageController.sendAudio(
                                         ismChatChatMessageModel:
                                             ismChatChatMessageModel,
                                         sendMessageType:
                                             SendMessageType.forwardMessage,
                                       );
-                                        }
+                                    }
                                   }
                                 }
                               },
