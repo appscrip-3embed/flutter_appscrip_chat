@@ -186,12 +186,26 @@ class IsmChatInputField extends StatelessWidget {
                       controller.forVideoRecordTimer?.cancel();
                       controller.seconds = 0;
                       var path = await controller.recordAudio.stop();
-                      controller.sendAudio(file: path);
+                      controller.sendAudio(
+                          file: path,
+                          conversationId:
+                              controller.conversation?.conversationId ?? '',
+                          userId: controller
+                                  .conversation?.opponentDetails?.userId ??
+                              '');
                     },
                     onTap: controller.showSendButton
                         ? controller.conversation?.messagingDisabled == true
                             ? controller.showDialogCheckBlockUnBlock
-                            : controller.sendTextMessage
+                            : () {
+                                controller.sendTextMessage(
+                                    conversationId: controller
+                                            .conversation?.conversationId ??
+                                        '',
+                                    userId: controller.conversation
+                                            ?.opponentDetails?.userId ??
+                                        '');
+                              }
                         : () {},
                     // style: ElevatedButton.styleFrom(
                     //   fixedSize: Size.square(IsmChatDimens.inputFieldHeight),

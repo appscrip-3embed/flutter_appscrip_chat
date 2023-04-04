@@ -229,6 +229,12 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                     await Geolocator.getCurrentPosition(
                                         desiredAccuracy: LocationAccuracy.high);
                                 controller.sendLocation(
+                                    conversationId: controller
+                                            .conversation?.conversationId ??
+                                        '',
+                                    userId: controller.conversation
+                                            ?.opponentDetails?.userId ??
+                                        '',
                                     latitude: position.latitude,
                                     longitude: position.longitude,
                                     placeId: controller
@@ -276,6 +282,12 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                         .toString());
 
                                 controller.sendLocation(
+                                    conversationId: controller
+                                            .conversation?.conversationId ??
+                                        '',
+                                    userId: controller.conversation
+                                            ?.opponentDetails?.userId ??
+                                        '',
                                     latitude: locations.first.latitude,
                                     longitude: locations.first.longitude,
                                     placeId: controller

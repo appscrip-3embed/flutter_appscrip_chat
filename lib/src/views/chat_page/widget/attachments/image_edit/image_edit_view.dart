@@ -79,7 +79,11 @@ class IsmChatImageEditView extends StatelessWidget {
             floatingActionButton: FloatingActionButton(
               backgroundColor: IsmChatConfig.chatTheme.primaryColor,
               onPressed: () {
-                controller.sendImage();
+                controller.sendImage(
+                    conversationId:
+                        controller.conversation?.conversationId ?? '',
+                    userId:
+                        controller.conversation?.opponentDetails?.userId ?? '');
                 Get.back<void>();
                 Get.back<void>();
               },

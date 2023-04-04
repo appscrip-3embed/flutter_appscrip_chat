@@ -20,6 +20,7 @@ import 'package:intl/intl.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:record/record.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:video_compress/video_compress.dart';
 
 class IsmChatPageController extends GetxController {
@@ -36,7 +37,7 @@ class IsmChatPageController extends GetxController {
 
   var chatInputController = TextEditingController();
 
-  var messagesScrollController = ScrollController();
+  var messagesScrollController = AutoScrollController();
 
   final textEditingController = TextEditingController();
 
@@ -148,6 +149,19 @@ class IsmChatPageController extends GetxController {
     _myDuration.value = value;
   }
 
+  final RxBool _showDownSideButton = true.obs;
+  bool get showDownSideButton => _showDownSideButton.value;
+  set showDownSideButton(bool value) {
+    _showDownSideButton.value = value;
+  }
+
+  /// Keep track of all the auto scroll indices by their respective message's id to allow animating to them.
+  final _autoScrollIndexById = <String, int>{}.obs;
+  Map<String, int> get autoScrollIndexById => _autoScrollIndexById;
+  set autoScrollIndexById(Map<String, int> value) {
+    _autoScrollIndexById.value = value;
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -193,7 +207,21 @@ class IsmChatPageController extends GetxController {
         getMessagesFromAPI(
             forPagination: true, lastMessageTimestampFromFunction: 0);
       }
+      if (messagesScrollController.position.maxScrollExtent ==
+          messagesScrollController.offset) {
+        showDownSideButton = true;
+      } else {
+        showDownSideButton = false;
+      }
     });
+  }
+
+  void scrollDown() {
+    messagesScrollController.animateTo(
+      messagesScrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 100),
+      curve: Curves.fastOutSlowIn,
+    );
   }
 
   void startTimer() {
@@ -209,6 +237,27 @@ class IsmChatPageController extends GetxController {
     }
     _cameras = await availableCameras();
     toggleCamera();
+  }
+
+  /// Updates the [] mapping with the latest messages.
+  void _refreshAutoScrollMapping() {
+    autoScrollIndexById.clear();
+    var i = 0;
+    for (var x in messages) {
+      if (x.customType != IsmChatCustomMessageType.date ||
+          x.customType != IsmChatCustomMessageType.block ||
+          x.customType != IsmChatCustomMessageType.unblock) {
+        autoScrollIndexById[x.messageId.toString()] = i;
+      }
+      i++;
+    }
+  }
+
+  /// Scroll to the message with the specified id.
+  void scrollToMessage(String messageId, {Duration? duration}) {
+    messagesScrollController.scrollToIndex(autoScrollIndexById[messageId]!,
+        duration: duration ?? scrollAnimationDuration,
+        preferPosition: AutoScrollPosition.middle);
   }
 
   void tapForMediaPreview(
@@ -491,29 +540,35 @@ class IsmChatPageController extends GetxController {
       for (var media in listOfAssetsPath) {
         if (media.attachmentType == IsmChatAttachmentType.image) {
           imagePath = File(media.mediaUrl!);
-          await sendImage();
+          await sendImage(
+              conversationId: conversation?.conversationId ?? '',
+              userId: conversation?.opponentDetails?.userId ?? '');
         } else {
           await sendVideo(
               file: File(media.mediaUrl!),
               isThumbnail: true,
-              thumbnailFiles: File(media.thumbnailUrl!));
+              thumbnailFiles: File(media.thumbnailUrl!),
+              conversationId: conversation?.conversationId ?? '',
+              userId: conversation?.opponentDetails?.userId ?? '');
         }
       }
       listOfAssetsPath.clear();
     }
   }
 
-  void sendAudio(
-      {String? file,
-      SendMessageType sendMessageType = SendMessageType.pendingMessage,
-      bool forwardMessgeForMulitpleUser = false,
-      IsmChatChatMessageModel? ismChatChatMessageModel}) async {
+  void sendAudio({
+    String? file,
+    SendMessageType sendMessageType = SendMessageType.pendingMessage,
+    bool forwardMessgeForMulitpleUser = false,
+    IsmChatChatMessageModel? ismChatChatMessageModel,
+    required String conversationId,
+    required String userId,
+  }) async {
     var ismChatObjectBox = IsmChatConfig.objectBox;
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
-        conversationId: conversation?.conversationId ?? '');
+        conversationId: conversationId);
     if (chatConversationResponse == null) {
-      await createConversation(
-          userId: [conversation?.opponentDetails?.userId ?? '']);
+      await createConversation(userId: [userId]);
     }
     IsmChatChatMessageModel? audioMessage;
     String? nameWithExtension;
@@ -522,8 +577,7 @@ class IsmChatPageController extends GetxController {
     bool? isNetWorkUrl;
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     if (sendMessageType == SendMessageType.forwardMessage) {
-      ismChatChatMessageModel!.conversationId =
-          conversation?.conversationId ?? '';
+      ismChatChatMessageModel!.conversationId = conversationId;
       ismChatChatMessageModel.deliveredToAll = false;
       ismChatChatMessageModel.readByAll = false;
       ismChatChatMessageModel.messageType = IsmChatMessageType.forward;
@@ -548,7 +602,7 @@ class IsmChatPageController extends GetxController {
         mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
         audioMessage = IsmChatChatMessageModel(
           body: 'Audio',
-          conversationId: conversation?.conversationId ?? '',
+          conversationId: conversationId,
           customType: IsmChatCustomMessageType.audio,
           attachments: [
             AttachmentModel(
@@ -597,10 +651,13 @@ class IsmChatPageController extends GetxController {
     );
   }
 
-  void sendDocument(
-      {SendMessageType sendMessageType = SendMessageType.pendingMessage,
-      IsmChatChatMessageModel? ismChatChatMessageModel,
-      bool forwardMessgeForMulitpleUser = false}) async {
+  void sendDocument({
+    SendMessageType sendMessageType = SendMessageType.pendingMessage,
+    IsmChatChatMessageModel? ismChatChatMessageModel,
+    bool forwardMessgeForMulitpleUser = false,
+    required String conversationId,
+    required String userId,
+  }) async {
     var ismChatObjectBox = IsmChatConfig.objectBox;
     IsmChatChatMessageModel? documentMessage;
     String? nameWithExtension;
@@ -608,8 +665,7 @@ class IsmChatPageController extends GetxController {
     bool? isNetWorkUrl;
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     if (sendMessageType == SendMessageType.forwardMessage) {
-      ismChatChatMessageModel!.conversationId =
-          conversation?.conversationId ?? '';
+      ismChatChatMessageModel!.conversationId = conversationId;
       ismChatChatMessageModel.deliveredToAll = false;
       ismChatChatMessageModel.readByAll = false;
       ismChatChatMessageModel.messageType = IsmChatMessageType.forward;
@@ -634,12 +690,10 @@ class IsmChatPageController extends GetxController {
           withData: true);
       if (result?.files.isNotEmpty ?? false) {
         var ismChatObjectBox = IsmChatConfig.objectBox;
-        final chatConversationResponse =
-            await ismChatObjectBox.getDBConversation(
-                conversationId: conversation?.conversationId ?? '');
+        final chatConversationResponse = await ismChatObjectBox
+            .getDBConversation(conversationId: conversationId);
         if (chatConversationResponse == null) {
-          await createConversation(
-              userId: [conversation?.opponentDetails?.userId ?? '']);
+          await createConversation(userId: [userId]);
         }
         for (var x in result!.files) {
           bytes = x.bytes;
@@ -647,7 +701,7 @@ class IsmChatPageController extends GetxController {
           final extension = nameWithExtension.split('.').last;
           documentMessage = IsmChatChatMessageModel(
             body: 'Documet',
-            conversationId: conversation?.conversationId ?? '',
+            conversationId: conversationId,
             customType: IsmChatCustomMessageType.file,
             attachments: [
               AttachmentModel(
@@ -697,19 +751,21 @@ class IsmChatPageController extends GetxController {
     );
   }
 
-  Future<void> sendVideo(
-      {File? file,
-      bool isThumbnail = false,
-      File? thumbnailFiles,
-      SendMessageType sendMessageType = SendMessageType.pendingMessage,
-      IsmChatChatMessageModel? ismChatChatMessageModel,
-      bool forwardMessgeForMulitpleUser = false}) async {
+  Future<void> sendVideo({
+    File? file,
+    bool isThumbnail = false,
+    File? thumbnailFiles,
+    SendMessageType sendMessageType = SendMessageType.pendingMessage,
+    IsmChatChatMessageModel? ismChatChatMessageModel,
+    bool forwardMessgeForMulitpleUser = false,
+    required String conversationId,
+    required String userId,
+  }) async {
     var ismChatObjectBox = IsmChatConfig.objectBox;
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
-        conversationId: conversation?.conversationId ?? '');
+        conversationId: conversationId);
     if (chatConversationResponse == null) {
-      await createConversation(
-          userId: [conversation?.opponentDetails?.userId ?? '']);
+      await createConversation(userId: [userId]);
     }
     IsmChatChatMessageModel? videoMessage;
     String? nameWithExtension;
@@ -721,8 +777,7 @@ class IsmChatPageController extends GetxController {
     bool? isNetWorkUrl;
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     if (sendMessageType == SendMessageType.forwardMessage) {
-      ismChatChatMessageModel!.conversationId =
-          conversation?.conversationId ?? '';
+      ismChatChatMessageModel!.conversationId = conversationId;
       ismChatChatMessageModel.deliveredToAll = false;
       ismChatChatMessageModel.readByAll = false;
       ismChatChatMessageModel.messageType = IsmChatMessageType.forward;
@@ -767,7 +822,7 @@ class IsmChatPageController extends GetxController {
 
         videoMessage = IsmChatChatMessageModel(
           body: 'Video',
-          conversationId: conversation?.conversationId ?? '',
+          conversationId: conversationId,
           customType: IsmChatCustomMessageType.video,
           attachments: [
             AttachmentModel(
@@ -821,16 +876,18 @@ class IsmChatPageController extends GetxController {
     );
   }
 
-  Future<void> sendImage(
-      {SendMessageType sendMessageType = SendMessageType.pendingMessage,
-      IsmChatChatMessageModel? ismChatChatMessageModel,
-      bool forwardMessgeForMulitpleUser = false}) async {
+  Future<void> sendImage({
+    SendMessageType sendMessageType = SendMessageType.pendingMessage,
+    IsmChatChatMessageModel? ismChatChatMessageModel,
+    bool forwardMessgeForMulitpleUser = false,
+    required String conversationId,
+    required String userId,
+  }) async {
     var ismChatObjectBox = IsmChatConfig.objectBox;
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
-        conversationId: conversation?.conversationId ?? '');
+        conversationId: conversationId);
     if (chatConversationResponse == null) {
-      await createConversation(
-          userId: [conversation?.opponentDetails?.userId ?? '']);
+      await createConversation(userId: [userId]);
     }
     IsmChatChatMessageModel? imageMessage;
     String? nameWithExtension;
@@ -839,8 +896,7 @@ class IsmChatPageController extends GetxController {
     bool? isNetWorkUrl;
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     if (sendMessageType == SendMessageType.forwardMessage) {
-      ismChatChatMessageModel!.conversationId =
-          conversation?.conversationId ?? '';
+      ismChatChatMessageModel!.conversationId = conversationId;
       ismChatChatMessageModel.deliveredToAll = false;
       ismChatChatMessageModel.readByAll = false;
       ismChatChatMessageModel.messageType = IsmChatMessageType.forward;
@@ -869,7 +925,7 @@ class IsmChatPageController extends GetxController {
       final extension = nameWithExtension.split('.').last;
       imageMessage = IsmChatChatMessageModel(
         body: 'Image',
-        conversationId: conversation?.conversationId ?? '',
+        conversationId: conversationId,
         customType: IsmChatCustomMessageType.image,
         attachments: [
           AttachmentModel(
@@ -918,27 +974,29 @@ class IsmChatPageController extends GetxController {
     );
   }
 
-  void sendLocation(
-      {required double latitude,
-      required double longitude,
-      required String placeId,
-      required String locationName,
-      SendMessageType sendMessageType = SendMessageType.pendingMessage,
-      bool forwardMessgeForMulitpleUser = false,
-      String? messageBody}) async {
+  void sendLocation({
+    required double latitude,
+    required double longitude,
+    required String placeId,
+    required String locationName,
+    SendMessageType sendMessageType = SendMessageType.pendingMessage,
+    bool forwardMessgeForMulitpleUser = false,
+    String? messageBody,
+    required String conversationId,
+    required String userId,
+  }) async {
     var ismChatObjectBox = IsmChatConfig.objectBox;
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
-        conversationId: conversation?.conversationId ?? '');
+        conversationId: conversationId);
     if (chatConversationResponse == null) {
-      await createConversation(
-          userId: [conversation?.opponentDetails?.userId ?? '']);
+      await createConversation(userId: [userId]);
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatChatMessageModel(
       body: sendMessageType == SendMessageType.pendingMessage
           ? 'https://www.google.com/maps/search/?api=1&map_action=map&query=$latitude%2C$longitude&query_place_id=$placeId'
           : messageBody ?? '',
-      conversationId: conversation?.conversationId ?? '',
+      conversationId: conversationId,
       customType: IsmChatCustomMessageType.location,
       deliveredToAll: false,
       messageId: '',
@@ -973,23 +1031,25 @@ class IsmChatPageController extends GetxController {
         notificationTitle: conversation?.opponentDetails?.userName ?? '');
   }
 
-  void sendTextMessage(
-      {SendMessageType sendMessageType = SendMessageType.pendingMessage,
-      bool forwardMessgeForMulitpleUser = false,
-      String? messageBody}) async {
+  void sendTextMessage({
+    SendMessageType sendMessageType = SendMessageType.pendingMessage,
+    bool forwardMessgeForMulitpleUser = false,
+    String? messageBody,
+    required String conversationId,
+    required String userId,
+  }) async {
     var ismChatObjectBox = IsmChatConfig.objectBox;
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
-        conversationId: conversation?.conversationId ?? '');
+        conversationId: conversationId);
     if (chatConversationResponse == null) {
-      await createConversation(
-          userId: [conversation?.opponentDetails?.userId ?? '']);
+      await createConversation(userId: [userId]);
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatChatMessageModel(
       body: sendMessageType == SendMessageType.pendingMessage
           ? chatInputController.text.trim()
           : messageBody ?? '',
-      conversationId: conversation?.conversationId ?? '',
+      conversationId: conversationId,
       customType: isreplying
           ? IsmChatCustomMessageType.reply
           : IsmChatCustomMessageType.text,
@@ -1248,6 +1308,7 @@ class IsmChatPageController extends GetxController {
           .toList());
       isMessagesLoading = false;
       _scrollToBottom();
+      _refreshAutoScrollMapping();
     }
   }
 
@@ -1410,7 +1471,7 @@ class IsmChatPageController extends GetxController {
     }
   }
 
-  Future<void> createConversation({required List<String> userId}) async {
+  Future<String> createConversation({required List<String> userId}) async {
     var response = await _viewModel.createConversation(
       typingEvents: true,
       readEvents: true,
@@ -1445,9 +1506,11 @@ class IsmChatPageController extends GetxController {
       dbConversationModel.lastMessageDetails.target =
           conversation?.lastMessageDetails;
       dbConversationModel.config.target = conversation?.config;
-
       await IsmChatConfig.objectBox
           .createAndUpdateDB(dbConversationModel: dbConversationModel);
+      return conversationId.toString();
     }
+
+    return '';
   }
 }

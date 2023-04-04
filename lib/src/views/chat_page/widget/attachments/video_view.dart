@@ -46,7 +46,13 @@ class IsmChatVideoView extends StatelessWidget {
           child: FloatingActionButton(
             backgroundColor: IsmChatConfig.chatTheme.primaryColor,
             onPressed: () {
-              chatPageController.sendVideo(file: file);
+              chatPageController.sendVideo(
+                  file: file,
+                  conversationId:
+                      chatPageController.conversation?.conversationId ?? '',
+                  userId: chatPageController
+                          .conversation?.opponentDetails?.userId ??
+                      '');
               Get.back<void>();
               Get.back<void>();
               // final bytes = file.readAsBytesSync();
