@@ -18,20 +18,18 @@ extension MatchString on String {
       toLowerCase().contains('https') || toLowerCase().contains('www');
 }
 
- 
 extension MessagePagination on int {
- int pagination({int startValue = 0, int endValue = 20}) {
-    if(startValue == 0){
-      return startValue;
+  int pagination({int endValue = 20}) {
+    if (this == 0) {
+      return this;
     }
-  if (startValue <= endValue) {
-    return endValue;
+    if (this <= endValue) {
+      return endValue;
+    }
+    endValue = endValue + 20;
+    return pagination(endValue: endValue);
   }
-  endValue = endValue + 20;
-  return pagination(startValue: startValue, endValue: endValue);
 }
-}
- 
 
 extension DistanceLatLng on LatLng {
   double getDistance(LatLng other) {
@@ -185,9 +183,6 @@ extension DateFormats on DateTime {
   String toDateString() => DateFormat('dd MMM yyyy').format(this);
 }
 
-
-
-
 extension ChildWidget on IsmChatCustomMessageType {
   Widget messageType(IsmChatChatMessageModel message) {
     switch (this) {
@@ -268,4 +263,17 @@ extension AddressString on Placemark {
         country,
         postalCode
       ].join(', ');
+}
+
+extension BlockStatus on IsmChatConversationModel {
+  bool get isChattingAllowed => !(messagingDisabled ?? false);
+
+  bool get isBlockedByMe {
+    if (isChattingAllowed) {
+      return false;
+    }
+    var controller = Get.find<IsmChatConversationsController>();
+    var blockedList = controller.blockUsers.map((e) => e.userId);
+    return blockedList.contains(opponentDetails!.userId);
+  }
 }

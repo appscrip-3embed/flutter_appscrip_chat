@@ -18,7 +18,10 @@ class IsmChatForwardListView extends StatelessWidget {
         initState: (_) {
           var chatConversationController =
               Get.find<IsmChatConversationsController>();
-          chatConversationController.getUserList();
+          chatConversationController.forwardedList.clear();
+          chatConversationController.usersPageToken = '';
+          chatConversationController.getUserList(
+              opponentId: ismChatConversationModel.opponentDetails?.userId);
         },
         builder: (controller) => Scaffold(
           appBar: AppBar(
@@ -58,50 +61,34 @@ class IsmChatForwardListView extends StatelessWidget {
                           itemBuilder: (_, index) {
                             var conversation =
                                 controller.forwardedList[index].userDetails;
-
-                            // var ismChatConversation = IsmChatConversationModel(
-                            //   messagingDisabled: false,
-                            //   conversationImageUrl:
-                            //       conversation.userProfileImageUrl,
-                            //   isGroup: false,
-                            //   opponentDetails: conversation,
-                            //   unreadMessagesCount: 0,
-                            //   lastMessageDetails: null,
-                            //   lastMessageSentAt: 0,
-                            //   membersCount: 0,
-                            // );
                             return IsmChatTapHandler(
                               onTap: () async {
                                 controller.removeAndAddForwardList(
                                     conversation, index);
                               },
-                              child: conversation.userId !=
-                                      Get.find<IsmChatMqttController>().userId
-                                  ? Container(
-                                      color: controller
-                                              .forwardedList[index].selectedUser
-                                          ? IsmChatConfig
-                                              .chatTheme.primaryColor!
-                                              .withOpacity(.2)
-                                          : null,
-                                      child: ListTile(
-                                        dense: true,
-                                        leading: IsmChatImage.profile(
-                                          conversation.userProfileImageUrl,
-                                        ),
-                                        title: Text(
-                                          conversation.userName,
-                                          style: IsmChatStyles.w600Black14,
-                                        ),
-                                        subtitle: Text(
-                                          conversation.userIdentifier,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: IsmChatStyles.w400Black12,
-                                        ),
-                                      ),
-                                    )
-                                  : const SizedBox.shrink(),
+                              child: Container(
+                                color:
+                                    controller.forwardedList[index].selectedUser
+                                        ? IsmChatConfig.chatTheme.primaryColor!
+                                            .withOpacity(.2)
+                                        : null,
+                                child: ListTile(
+                                  dense: true,
+                                  leading: IsmChatImage.profile(
+                                    conversation.userProfileImageUrl,
+                                  ),
+                                  title: Text(
+                                    conversation.userName,
+                                    style: IsmChatStyles.w600Black14,
+                                  ),
+                                  subtitle: Text(
+                                    conversation.userIdentifier,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: IsmChatStyles.w400Black12,
+                                  ),
+                                ),
+                              ),
                             );
                           },
                         ),

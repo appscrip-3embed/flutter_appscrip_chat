@@ -16,8 +16,23 @@ class IsmChatConversationsViewModel {
   Future<IsmChatUserListModel?> getUserList({
     String? pageToken,
     int? count,
-  }) async =>
-      _repository.getUserList(count: count, pageToken: pageToken);
+    String? opponentId,
+  }) async {
+    var response =
+        await _repository.getUserList(count: count, pageToken: pageToken);
+
+    if (response == null) {
+      return null;
+    }
+    var data = [...response.users];
+    data.removeWhere(
+        (e) => e.userId == IsmChatConfig.communicationConfig.userConfig.userId);
+
+    if (opponentId != null) {
+      data.removeWhere((e) => e.userId == opponentId);
+    }
+    return IsmChatUserListModel(users: data, pageToken: response.pageToken);
+  }
 
   Future<IsmChatResponseModel?> deleteChat({
     required String conversationId,
@@ -46,4 +61,8 @@ class IsmChatConversationsViewModel {
         conversationId: conversationId,
         messageId: messageId,
       );
+
+  Future<IsmChatUserListModel?> getBlockUser(
+          {required int? skip, required int limit}) async =>
+      await _repository.getBlockUser(skip: skip, limit: limit);
 }

@@ -136,4 +136,25 @@ class IsmChatConversationsRepository {
       IsmChatLog.error('Delivery Message $e', st);
     }
   }
+
+  Future<IsmChatUserListModel?> getBlockUser(
+      {required int? skip, required int limit}) async {
+    try {
+    
+      var response = await _apiWrapper.get(
+        '${IsmChatAPI.blockUser}?skip=$skip&limit=$limit',
+        headers: IsmChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return null;
+      }
+      var data = jsonDecode(response.data) as Map<String, dynamic>;
+      var user = IsmChatUserListModel.fromMap(data);
+      return user;
+    } catch (e, st) {
+      IsmChatLog.error('GetChat Block users $e', st);
+      return null;
+    }
+  }
+
 }

@@ -168,7 +168,6 @@ class IsmChatPageController extends GetxController {
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
       if (conversation!.conversationId?.isNotEmpty ?? false) {
-        IsmChatLog.error('dsfdsfsddf ${conversation?.conversationId ?? ''}');
         getMessagesFromDB(conversation?.conversationId ?? '');
         getMessagesFromAPI();
         readAllMessages(
@@ -349,7 +348,8 @@ class IsmChatPageController extends GetxController {
           messageType: messages.last.messageType?.value ?? 0,
           messageId: messages.last.messageId ?? '',
           conversationId: messages.last.conversationId ?? '',
-          body: messages.last.body);
+          body: messages.last
+              .body); // Todo: check for last message for display in converstiaon list
       chatConversation.unreadMessagesCount = 0;
       IsmChatConfig.objectBox.chatConversationBox.put(chatConversation);
       await Get.find<IsmChatConversationsController>().getConversationsFromDB();
@@ -382,9 +382,7 @@ class IsmChatPageController extends GetxController {
     messagesList.removeWhere(
         (element) => element.customType == IsmChatCustomMessageType.date);
     var data = await _viewModel.getChatMessages(
-      pagination: forPagination
-          ? messagesList.length.pagination(startValue: messages.length)
-          : 0,
+      pagination: forPagination ? messages.length.pagination() : 0,
       conversationId: conversationId.isNotEmpty
           ? conversationId
           : conversation?.conversationId ?? '',
@@ -471,8 +469,7 @@ class IsmChatPageController extends GetxController {
   }
 
   void showDialogCheckBlockUnBlock() async {
-    var mqttController = Get.find<IsmChatMqttController>();
-    if (messages.last.initiatorId == mqttController.userId) {
+    if (conversation?.isBlockedByMe ?? false) {
       await Get.dialog(
         IsmChatAlertDialogBox(
           titile: IsmChatStrings.youBlockUser,
@@ -486,15 +483,9 @@ class IsmChatPageController extends GetxController {
       );
     } else {
       await Get.dialog(
-        IsmChatAlertDialogBox(
-          titile: IsmChatStrings.youareBlocked,
-          actionLabels: const ['Say for Unblock'],
-          callbackActions: [
-            () => Get.back
-            // () => postUnBlockUser(
-            //     opponentId: conversation?.opponentDetails?.userId ?? '',
-            //     lastMessageTimeStamp: messages.last.sentAt),
-          ],
+        const IsmChatAlertDialogBox(
+          titile: IsmChatStrings.doNotBlock,
+          cancelLabel: 'Okay',
         ),
       );
     }
@@ -568,7 +559,7 @@ class IsmChatPageController extends GetxController {
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversationId);
     if (chatConversationResponse == null) {
-      await createConversation(userId: [userId]);
+    conversationId =   await createConversation(userId: [userId]);
     }
     IsmChatChatMessageModel? audioMessage;
     String? nameWithExtension;
@@ -693,7 +684,7 @@ class IsmChatPageController extends GetxController {
         final chatConversationResponse = await ismChatObjectBox
             .getDBConversation(conversationId: conversationId);
         if (chatConversationResponse == null) {
-          await createConversation(userId: [userId]);
+         conversationId =  await createConversation(userId: [userId]);
         }
         for (var x in result!.files) {
           bytes = x.bytes;
@@ -765,7 +756,7 @@ class IsmChatPageController extends GetxController {
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversationId);
     if (chatConversationResponse == null) {
-      await createConversation(userId: [userId]);
+     conversationId =  await createConversation(userId: [userId]);
     }
     IsmChatChatMessageModel? videoMessage;
     String? nameWithExtension;
@@ -887,7 +878,7 @@ class IsmChatPageController extends GetxController {
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversationId);
     if (chatConversationResponse == null) {
-      await createConversation(userId: [userId]);
+     conversationId =  await createConversation(userId: [userId]);
     }
     IsmChatChatMessageModel? imageMessage;
     String? nameWithExtension;
@@ -989,7 +980,7 @@ class IsmChatPageController extends GetxController {
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversationId);
     if (chatConversationResponse == null) {
-      await createConversation(userId: [userId]);
+     conversationId =  await createConversation(userId: [userId]);
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatChatMessageModel(
@@ -1042,7 +1033,7 @@ class IsmChatPageController extends GetxController {
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversationId);
     if (chatConversationResponse == null) {
-      await createConversation(userId: [userId]);
+      conversationId = await createConversation(userId: [userId]);
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatChatMessageModel(
@@ -1350,6 +1341,7 @@ class IsmChatPageController extends GetxController {
             conversationId: conversation?.conversationId ?? ''));
   }
 
+  ///
   Future<void> getConverstaionDetails(
       {required String conversationId,
       String? ids,
@@ -1359,9 +1351,7 @@ class IsmChatPageController extends GetxController {
     var data =
         await _viewModel.getConverstaionDetails(conversationId: conversationId);
     if (data != null) {
-      var conversationId = conversation?.conversationId;
-      conversation = data;
-      conversation?.conversationId = conversationId;
+      conversation = data.copyWith(conversationId: conversationId);
     }
   }
 
@@ -1372,6 +1362,7 @@ class IsmChatPageController extends GetxController {
         lastMessageTimeStamp: lastMessageTimeStamp,
         conversationId: conversation?.conversationId ?? '');
     if (data != null) {
+      await Get.find<IsmChatConversationsController>().getBlockUser();
       await getConverstaionDetails(
           conversationId: conversation?.conversationId ?? '');
       await getMessagesFromDB(conversation?.conversationId ?? '');
@@ -1385,6 +1376,7 @@ class IsmChatPageController extends GetxController {
         conversationId: conversation?.conversationId ?? '',
         lastMessageTimeStamp: lastMessageTimeStamp);
     if (data != null) {
+      await Get.find<IsmChatConversationsController>().getBlockUser();
       await getConverstaionDetails(
           conversationId: conversation?.conversationId ?? '');
       await getMessagesFromDB(conversation?.conversationId ?? '');

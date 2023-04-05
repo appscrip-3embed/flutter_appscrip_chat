@@ -11,6 +11,7 @@ class IsmChatUserPageView extends StatelessWidget {
           var chatConversationController =
               Get.find<IsmChatConversationsController>();
           chatConversationController.userList.clear();
+          chatConversationController.usersPageToken = '';
           chatConversationController.getUserList();
         },
         builder: (controller) => Scaffold(

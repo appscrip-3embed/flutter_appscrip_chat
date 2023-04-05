@@ -25,8 +25,9 @@ class IsmChatPageViewModel {
       return null;
     }
 
-    messages.removeWhere(
-        (e) => e.action == IsmChatActionEvents.clearConversation.name);
+    messages.removeWhere((e) =>
+        e.action == IsmChatActionEvents.clearConversation.name ||
+        e.action == IsmChatActionEvents.conversationCreated.name);
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
     var conversation = conversationBox
         .query(
@@ -94,7 +95,6 @@ class IsmChatPageViewModel {
         return false;
       }
       if (sendMessageType == SendMessageType.pendingMessage) {
-      
         var pendingMessgeBox = IsmChatConfig.objectBox.pendingMessageBox;
         var chatConversationBox = IsmChatConfig.objectBox.chatConversationBox;
         final pendingQuery = pendingMessgeBox
@@ -131,7 +131,6 @@ class IsmChatPageViewModel {
           return true;
         }
       } else {
-       
         var forwardMessgeBox = IsmChatConfig.objectBox.forwardMessageBox;
         var chatConversationBox = IsmChatConfig.objectBox.chatConversationBox;
         final chatForwardMessages = forwardMessgeBox

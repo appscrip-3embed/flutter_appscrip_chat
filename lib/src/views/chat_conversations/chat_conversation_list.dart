@@ -81,7 +81,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
           }
           if (controller.conversations.isEmpty) {
             return Center(
-              child:  Text(
+              child: Text(
                 IsmChatStrings.noConversation,
                 style: IsmChatStyles.w600Black20.copyWith(
                   color: IsmChatTheme.of(context).primaryColor,
@@ -117,7 +117,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                 itemBuilder: widget.itemBuilder ??
                     (_, index) {
                       var conversation = controller.conversations[index];
-                    
+                     
                       return Slidable(
                         closeOnScroll: true,
                         startActionPane: ActionPane(

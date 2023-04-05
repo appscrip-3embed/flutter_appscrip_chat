@@ -396,7 +396,7 @@ class IsmChatMqttController extends GetxController {
     }
   }
 
-  void _handleBlockUserOrUnBlock(IsmChatMqttActionModel actionModel) {
+  void _handleBlockUserOrUnBlock(IsmChatMqttActionModel actionModel) async {
     if (actionModel.initiatorDetails!.userId ==
         _communicationConfig.userConfig.userId) {
       return;
@@ -404,60 +404,25 @@ class IsmChatMqttController extends GetxController {
 
     if (Get.isRegistered<IsmChatPageController>()) {
       var controller = Get.find<IsmChatPageController>();
-      // if (controller.messages.last.messageId == actionModel.messageId) {
-      //   return;
-      // }
-      controller.getConverstaionDetails(
-          conversationId: actionModel.conversationId ?? '');
-      controller.getMessagesFromAPI(
-          conversationId: actionModel.conversationId ?? '',
-          lastMessageTimestampFromFunction: controller.messages.last.sentAt);
+      if (controller.conversation!.conversationId ==
+          actionModel.conversationId) {
+        await Get.find<IsmChatConversationsController>().getBlockUser();
+        await controller.getConverstaionDetails(
+            conversationId: actionModel.conversationId ?? '');
+        controller.getMessagesFromAPI(
+            conversationId: actionModel.conversationId ?? '',
+            lastMessageTimestampFromFunction: controller.messages.last.sentAt);
+      }
     }
   }
 
   void _handleCreateConversation(IsmChatMqttActionModel actionModel) async {
+    if (actionModel.opponentDetails?.userId ==
+        _communicationConfig.userConfig.userId) {
+      return;
+    }
     var ismChatConversationController =
         Get.find<IsmChatConversationsController>();
     await ismChatConversationController.getChatConversations();
-    // if (Get.isRegistered<IsmChatPageController>()) {
-    //   var ismChatPageController = Get.find<IsmChatPageController>();
-    //   var currentUserId =
-    //       ismChatPageController.conversation?.opponentDetails?.userId;
-    //   var currentConversation = ismChatConversationController.conversations
-    //       .where((element) => element.opponentDetails?.userId == currentUserId)
-    //       .toList();
-    //   if (actionModel.conversationId ==
-    //       currentConversation.first.conversationId) {
-    //     ismChatPageController.conversation = currentConversation.first;
-    //     isConversationCreated = true;
-    //   }
-    // }
-
-    // var dbConversationModel = DBConversationModel(
-    //   conversationId: actionModel.conversationId,
-    //   conversationImageUrl: actionModel.userDetails!.profileImageUrl,
-    //   conversationTitle: '',
-    //   isGroup: false,
-    //   lastMessageSentAt: actionModel.lastMessageSentAt,
-    //   messagingDisabled: false,
-    //   membersCount: 0,
-    //   unreadMessagesCount: 0,
-    //   messages: [],
-    // );
-    // dbConversationModel.opponentDetails.target =
-    //     actionModel.conversationDetails?.opponentDetails;
-    // dbConversationModel.lastMessageDetails.target = LastMessageDetails(
-    //     showInConversation: true,
-    //     sentAt: actionModel.sentAt,
-    //     senderName: '',
-    //     messageType: 0,
-    //     messageId: '',
-    //     conversationId: actionModel.conversationId!,
-    //     body: '');
-    // dbConversationModel.config.target = null;
-    // await IsmChatConfig.objectBox.createAndUpdateDB(
-    //   dbConversationModel: dbConversationModel,
-    // );
-    // await Get.find<IsmChatConversationsController>().getConversationsFromDB();
   }
 }

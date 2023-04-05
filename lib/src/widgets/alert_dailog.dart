@@ -6,24 +6,26 @@ class IsmChatAlertDialogBox extends StatelessWidget {
   const IsmChatAlertDialogBox({
     super.key,
     this.titile = 'Are you sure?',
-    required this.actionLabels,
-    required this.callbackActions,
+    this.actionLabels,
+    this.callbackActions,
     this.cancelLabel = IsmChatStrings.cancel,
     this.onCancel,
   }) : assert(
-          actionLabels.length == callbackActions.length &&
-              actionLabels.length != 0,
-          'Atleast one callback action and action label must be passed\n And number of actionLabels must be equal to number of callbackActions',
+          (actionLabels == null && callbackActions == null) ||
+              (actionLabels != null &&
+                  callbackActions != null &&
+                  actionLabels.length == callbackActions.length),
+          'Equal number of actionLabels & callbackActions must be passed',
         );
 
   final String titile;
-  final List<String> actionLabels;
-  final List<VoidCallback> callbackActions;
+  final List<String>? actionLabels;
+  final List<VoidCallback>? callbackActions;
   final String cancelLabel;
   final VoidCallback? onCancel;
 
   @override
-  Widget build(BuildContext context) => actionLabels.length <= 1
+  Widget build(BuildContext context) => (actionLabels?.length ?? 0) <= 1
       ? AlertDialog(
           actionsPadding: IsmChatDimens.edgeInsets16,
           title: Text(titile),
@@ -39,17 +41,19 @@ class IsmChatAlertDialogBox extends StatelessWidget {
                 style: IsmChatStyles.w400Black14,
               ),
             ),
-            IsmChatDimens.boxWidth8,
-            IsmChatTapHandler(
-              onTap: () {
-                Get.back<void>();
-                callbackActions.first.call();
-              },
-              child: Text(
-                actionLabels.first,
-                style: IsmChatStyles.w400Black14,
+            if (actionLabels != null) ...[
+              IsmChatDimens.boxWidth8,
+              IsmChatTapHandler(
+                onTap: () {
+                  Get.back<void>();
+                  callbackActions!.first.call();
+                },
+                child: Text(
+                  actionLabels!.first,
+                  style: IsmChatStyles.w400Black14,
+                ),
               ),
-            ),
+            ],
           ],
         )
       : SimpleDialog(
@@ -61,8 +65,8 @@ class IsmChatAlertDialogBox extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                ...actionLabels.map<Widget>((label) {
-                  var action = callbackActions[actionLabels.indexOf(label)];
+                ...actionLabels!.map<Widget>((label) {
+                  var action = callbackActions![actionLabels!.indexOf(label)];
                   return SimpleDialogOption(
                     child: IsmChatTapHandler(
                       onTap: () {

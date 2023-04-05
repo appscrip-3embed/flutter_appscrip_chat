@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/widgets/alert_dailog.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +64,10 @@ class IsmChatConversationsController extends GetxController {
     _forwardSeletedUserList.value = value;
   }
 
+  final _blockUsers = <UserDetails>[].obs;
+  List<UserDetails> get blockUsers => _blockUsers;
+  set blockUsers(List<UserDetails> value) => _blockUsers.value = value;
+
   String usersPageToken = '';
 
   @override
@@ -113,12 +119,13 @@ class IsmChatConversationsController extends GetxController {
   ///
   /// Will be used for Create chat and/or Forward message
   Future<void> getUserList({
-  
+    String? opponentId,
     int count = 20,
   }) async {
     var response = await _viewModel.getUserList(
       count: count,
       pageToken: usersPageToken,
+      opponentId: opponentId,
     );
     if (response == null) {
       return;
@@ -127,13 +134,12 @@ class IsmChatConversationsController extends GetxController {
     userList.addAll(response.users);
     userList.sort((a, b) => a.userName.compareTo(b.userName));
 
-      forwardedList = List.from(userList)
-          .map((e) => SelectedForwardUser(
-                selectedUser: false,
-                userDetails: e as UserDetails,
-              ))
-          .toList();
-    
+    forwardedList = List.from(userList)
+        .map((e) => SelectedForwardUser(
+              selectedUser: false,
+              userDetails: e as UserDetails,
+            ))
+        .toList();
     usersPageToken = response.pageToken;
   }
 
@@ -182,7 +188,7 @@ class IsmChatConversationsController extends GetxController {
     );
   }
 
-  void navigateToMessages(IsmChatConversationModel conversation) async{
+  void navigateToMessages(IsmChatConversationModel conversation) async {
     currentConversation = conversation;
     // var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
     // var dbConversation = conversationBox
@@ -220,9 +226,8 @@ class IsmChatConversationsController extends GetxController {
       conversations =
           dbConversations.map(IsmChatConversationModel.fromDB).toList();
 
-      conversations.sort((a, b) => a.lastMessageDetails!.sentAt
-        ..compareTo(b.lastMessageDetails!.sentAt));
-
+      conversations.sort((a, b) =>
+          b.lastMessageDetails!.sentAt.compareTo(a.lastMessageDetails!.sentAt));
       isConversationsLoading = false;
     }
   }
@@ -236,10 +241,11 @@ class IsmChatConversationsController extends GetxController {
     return '';
   }
 
-  Future<void> getChatConversations(
-      {int noOfConvesation = 0,
-      GetChatConversationApiCall getChatConversationApiCall =
-          GetChatConversationApiCall.fromOnInit}) async {
+  Future<void> getChatConversations({
+    int noOfConvesation = 0,
+    GetChatConversationApiCall getChatConversationApiCall =
+        GetChatConversationApiCall.fromOnInit,
+  }) async {
     if (conversations.isEmpty) {
       isConversationsLoading = true;
     }
@@ -252,6 +258,7 @@ class IsmChatConversationsController extends GetxController {
     }
 
     if (apiConversations != null && apiConversations.isNotEmpty) {
+      unawaited(getBlockUser());
       conversationPage = conversationPage + 20;
       for (var conversation in apiConversations) {
         DBConversationModel? dbConversation;
@@ -294,6 +301,13 @@ class IsmChatConversationsController extends GetxController {
     } else if (getChatConversationApiCall ==
         GetChatConversationApiCall.fromPullDown) {
       refreshController.loadComplete();
+    }
+  }
+
+  Future<void> getBlockUser() async {
+    var users = await _viewModel.getBlockUser(skip: 0, limit: 20);
+    if (users != null) {
+      blockUsers = users.users;
     }
   }
 

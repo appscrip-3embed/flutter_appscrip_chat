@@ -32,9 +32,16 @@ class IsmChatConversationCard extends StatelessWidget {
                       ? conversation.chatName
                       : conversation.opponentDetails?.userName,
                 ),
-            trailing: conversation.unreadMessagesCount != null &&
-                    conversation.unreadMessagesCount != 0
-                ? Container(
+            trailing: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(conversation.lastMessageDetails!.sentAt
+                    .toLastMessageTimeString()),
+                // IsmChatDimens.boxHeight10,
+                if (conversation.unreadMessagesCount != null &&
+                    conversation.unreadMessagesCount != 0)
+                  Container(
                     height: IsmChatDimens.twenty,
                     width: IsmChatDimens.twenty,
                     decoration: BoxDecoration(
@@ -47,7 +54,8 @@ class IsmChatConversationCard extends StatelessWidget {
                       style: IsmChatStyles.w700White10,
                     ),
                   )
-                : null,
+              ],
+            ),
             title: nameBuilder?.call(context, conversation.chatName) ??
                 Text(
                   conversation.chatName.isNotEmpty

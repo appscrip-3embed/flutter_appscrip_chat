@@ -63,7 +63,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                 '',
                         style: IsmChatStyles.w600White18,
                       ),
-                      controller.conversation?.messagingDisabled == true
+                      (!controller.conversation!.isChattingAllowed)
                           ? const SizedBox.shrink()
                           : Obx(
                               () => mqttController.typingUsersIds.contains(
@@ -124,19 +124,10 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                             color: IsmChatColors.redColor,
                           ),
                           IsmChatDimens.boxWidth8,
-                          controller.conversation?.messagingDisabled == true
-                              ? controller.messages.isEmpty
-                                  ? const Text(
-                                      IsmChatStrings.unBlockUser,
-                                    )
-                                  : controller.messages.last.initiatorId ==
-                                          mqttController.userId
-                                      ? const Text(
-                                          IsmChatStrings.unBlockUser,
-                                        )
-                                      : const Text(
-                                          IsmChatStrings.blockUser,
-                                        )
+                          controller.conversation!.isBlockedByMe
+                              ? const Text(
+                                  IsmChatStrings.unBlockUser,
+                                )
                               : const Text(
                                   IsmChatStrings.blockUser,
                                 )
@@ -149,25 +140,32 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                     if (value == 1) {
                       controller.showDialogForClearChat();
                     } else {
-                      if (controller.messages.isNotEmpty) {
-                        if (controller.messages.last.initiatorId !=
-                            mqttController.userId) {
-                          await Get.dialog(
-                            IsmChatAlertDialogBox(
-                              titile: IsmChatStrings.doNotBlock,
-                              actionLabels: const ['Say for Unblock'],
-                              callbackActions: [() => Get.back],
-                            ),
-                          );
-                        } else {
-                          controller.showDialogForBlockUnBlockUser(
-                              controller.conversation?.messagingDisabled ==
-                                  true,
-                              controller.messages.isEmpty
-                                  ? DateTime.now().millisecondsSinceEpoch
-                                  : controller.messages.last.sentAt);
-                        }
-                      } else {}
+                      if (controller.conversation!.isBlockedByMe) {
+                        // This means chatting is not allowed and user has blocked the opponent
+                        controller.showDialogForBlockUnBlockUser(
+                            true,
+                            controller.messages.isEmpty
+                                ? DateTime.now().millisecondsSinceEpoch
+                                : controller.messages.last.sentAt);
+                        return;
+                      }
+                      if (controller.conversation!.isChattingAllowed) {
+                        // This means chatting is allowed i.e. no one is blocked
+                        controller.showDialogForBlockUnBlockUser(
+                            false,
+                            controller.messages.isEmpty
+                                ? DateTime.now().millisecondsSinceEpoch
+                                : controller.messages.last.sentAt);
+                        return;
+                      }
+
+                      // This means chatting is not allowed and opponent has blocked the user
+                      await Get.dialog(
+                        const IsmChatAlertDialogBox(
+                          titile: IsmChatStrings.doNotBlock,
+                          cancelLabel: 'Okay',
+                        ),
+                      );
                     }
                   },
                 ),

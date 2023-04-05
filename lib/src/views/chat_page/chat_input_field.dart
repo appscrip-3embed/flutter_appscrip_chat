@@ -166,7 +166,7 @@ class IsmChatInputField extends StatelessWidget {
                   aspectRatio: 1,
                   child: GestureDetector(
                     onLongPressStart: (val) async {
-                      if (controller.conversation?.messagingDisabled == true) {
+                      if (!controller.conversation!.isChattingAllowed) {
                         controller.showDialogCheckBlockUnBlock();
                       } else {
                         controller.isEnableRecordingAudio = true;
@@ -195,7 +195,7 @@ class IsmChatInputField extends StatelessWidget {
                               '');
                     },
                     onTap: controller.showSendButton
-                        ? controller.conversation?.messagingDisabled == true
+                        ? !controller.conversation!.isChattingAllowed
                             ? controller.showDialogCheckBlockUnBlock
                             : () {
                                 controller.sendTextMessage(
@@ -253,7 +253,7 @@ class IsmChatAttachmentIcon extends GetView<IsmChatPageController> {
   @override
   Widget build(BuildContext context) => IconButton(
         onPressed: () async {
-          if (controller.conversation?.messagingDisabled == true) {
+          if (!controller.conversation!.isChattingAllowed) {
             controller.showDialogCheckBlockUnBlock();
           } else {
             await Get.bottomSheet(const IsmChatAttachmentCard());
