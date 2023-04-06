@@ -7,14 +7,24 @@ class InputField extends StatelessWidget {
   const InputField({
     super.key,
     required this.controller,
+    this.onchange,
     String? Function(String?)? validator,
     TextInputType? textInputType,
   })  : _validator = validator,
         _textInputType = textInputType ?? TextInputType.text;
 
+  const InputField.userName({
+    super.key,
+    required this.controller,
+    this.onchange,
+    String? Function(String?)? validator,
+  })  : _textInputType = TextInputType.name,
+        _validator = validator ?? AppValidator.userName;
+
   const InputField.email({
     super.key,
     required this.controller,
+    this.onchange,
     String? Function(String?)? validator,
   })  : _textInputType = TextInputType.emailAddress,
         _validator = validator ?? AppValidator.emailValidator;
@@ -22,6 +32,15 @@ class InputField extends StatelessWidget {
   const InputField.password({
     super.key,
     required this.controller,
+    this.onchange,
+    String? Function(String?)? validator,
+  })  : _textInputType = TextInputType.visiblePassword,
+        _validator = validator ?? AppValidator.passwordValidator;
+
+  const InputField.confirmPassword({
+    super.key,
+    required this.controller,
+    this.onchange,
     String? Function(String?)? validator,
   })  : _textInputType = TextInputType.visiblePassword,
         _validator = validator ?? AppValidator.passwordValidator;
@@ -30,6 +49,7 @@ class InputField extends StatelessWidget {
 
   final String? Function(String?)? _validator;
   final TextInputType _textInputType;
+  final Function(String value)? onchange;
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +89,7 @@ class InputField extends StatelessWidget {
       validator: _validator,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       keyboardType: _textInputType,
+      onChanged: onchange,
     );
   }
 }

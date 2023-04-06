@@ -4,3 +4,4 @@ export 'pages.dart';
 export 'routes.dart';
 export 'strings.dart';
 export 'translations.dart';
+export 'appConstant.dart';

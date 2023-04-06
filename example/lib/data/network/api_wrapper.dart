@@ -87,6 +87,7 @@ class ApiWrapper {
     required dynamic payload,
     required Map<String, String> headers,
     bool showLoader = false,
+    bool forAwsApi = false,
   }) async {
     if (kDebugMode) {
       AppLog('Request - PUT $api $payload');
@@ -99,7 +100,7 @@ class ApiWrapper {
       final response = await http
           .put(
             uri,
-            body: jsonEncode(payload),
+            body: forAwsApi ? payload : jsonEncode(payload),
             headers: headers,
           )
           .timeout(const Duration(seconds: 60));

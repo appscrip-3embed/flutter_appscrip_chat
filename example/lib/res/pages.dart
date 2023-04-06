@@ -1,4 +1,5 @@
 import 'package:chat_component_example/controllers/controllers.dart';
+import 'package:chat_component_example/views/signup_view.dart';
 import 'package:chat_component_example/views/views.dart';
 import 'package:get/get.dart';
 
@@ -7,6 +8,11 @@ class AppPages {
     GetPage(
       name: LoginView.route,
       page: LoginView.new,
+      binding: AuthBinding(),
+    ),
+    GetPage(
+      name: SignupView.route,
+      page: SignupView.new,
       binding: AuthBinding(),
     ),
     GetPage(

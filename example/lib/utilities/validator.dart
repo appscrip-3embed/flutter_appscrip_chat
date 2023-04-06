@@ -1,4 +1,5 @@
 import 'package:chat_component_example/res/strings.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:get/get.dart';
 
 class AppValidator {
@@ -10,6 +11,13 @@ class AppValidator {
     }
     if (!GetUtils.isEmail(value)) {
       return '${Strings.invalid} ${Strings.email}';
+    }
+    return null;
+  }
+
+  static String? userName(String? value) {
+    if (value == null || value.isEmpty) {
+      return Strings.required;
     }
     return null;
   }
@@ -36,4 +44,6 @@ class AppValidator {
     }
     return null;
   }
+
+
 }

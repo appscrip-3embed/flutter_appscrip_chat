@@ -1,6 +1,7 @@
 import 'package:chat_component_example/views/chat_list.dart';
 import 'package:chat_component_example/views/chat_message_view.dart';
 import 'package:chat_component_example/views/login_view.dart';
+import 'package:chat_component_example/views/signup_view.dart';
 import 'package:get/get.dart';
 
 import '../views/user_list_page_view.dart';
@@ -10,6 +11,10 @@ class RouteManagement {
 
   static void offToLogin() {
     Get.offAllNamed(LoginView.route);
+  }
+
+  static void goToSignPage() {
+    Get.toNamed(SignupView.route);
   }
 
   static void goToChatList([bool shouldReplace = true]) {

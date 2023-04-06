@@ -5,6 +5,8 @@ import 'package:chat_component_example/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../utilities/route_management.dart';
+
 class LoginView extends GetView<AuthController> {
   const LoginView({super.key});
 
@@ -15,7 +17,11 @@ class LoginView extends GetView<AuthController> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text(Strings.login),
+        title: Text(
+          Strings.login,
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: AppColors.primaryColorLight,
         centerTitle: true,
       ),
       body: Form(
@@ -35,6 +41,18 @@ class LoginView extends GetView<AuthController> {
               InputField.password(controller: controller.passwordController),
               Dimens.boxHeight32,
               Button(onTap: controller.validateLogin, label: Strings.login),
+              const SizedBox(
+                height: 20,
+              ),
+              Center(
+                child: InkWell(
+                  onTap: RouteManagement.goToSignPage,
+                  child: Text(
+                    Strings.signUp,
+                    style: const TextStyle(color: AppColors.primaryColorLight),
+                  ),
+                ),
+              )
             ],
           ),
         ),
