@@ -1,6 +1,6 @@
 name: appscrip_chat_component
 description: A new Flutter plugin project.
-version: 0.0.1
+version: 1.0.0
 homepage: https://github.com/appscrip-3embed/flutter_appscrip_chat.git
 
 environment:
@@ -20,7 +20,7 @@ dependencies:
   flutter_native_image: ^0.0.6+1  
   flutter_screenutil: ^5.7.0
   flutter_slidable: ^2.0.0
-  flutter_svg: ^2.0.4
+  flutter_svg: 0.23.0+1
   flutter_web_plugins:
     sdk: flutter
   focused_menu: ^1.0.5
