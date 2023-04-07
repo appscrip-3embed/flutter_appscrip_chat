@@ -23,7 +23,6 @@ class IsmChatChatMessageModel {
       privateOneToOne: map['privateOneToOne'] as bool? ?? false,
       showInConversation: map['showInConversation'] as bool? ?? true,
       readByAll: map['readByAll'] as bool? ?? false,
-      
       senderInfo: map['senderInfo'] != null &&
               (map['senderInfo'] as Map<String, dynamic>).keys.isNotEmpty
           ? UserDetails.fromMap(map['senderInfo'] as Map<String, dynamic>)
@@ -81,10 +80,15 @@ class IsmChatChatMessageModel {
               model.customType != IsmChatCustomMessageType.text
           ? model.customType
           : IsmChatCustomMessageType.withBody(model.body),
-      sentByMe: model.senderInfo != null
-          ? model.senderInfo!.userId ==
-              IsmChatConfig.communicationConfig.userConfig.userId
-          : true,
+      sentByMe: model.senderInfo!.userIdentifier.contains('.c')
+          ? model.senderInfo != null
+              ? model.senderInfo!.userId ==
+                  IsmChatConfig.communicationConfig.userConfig.userId
+              : true
+          : model.senderInfo != null
+              ? model.senderInfo!.userIdentifier ==
+                  IsmChatConfig.communicationConfig.userConfig.userId
+              : true,
     );
   }
 
@@ -191,7 +195,7 @@ class IsmChatChatMessageModel {
   String? initiatorId;
   String? messageId;
   String? deviceId;
-  
+
   int? adminCount;
 
   IsmChatMessageType? messageType;
