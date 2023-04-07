@@ -225,9 +225,10 @@ class IsmChatConversationsController extends GetxController {
       conversations.clear();
       conversations =
           dbConversations.map(IsmChatConversationModel.fromDB).toList();
-
-      conversations.sort((a, b) =>
-          b.lastMessageDetails!.sentAt.compareTo(a.lastMessageDetails!.sentAt));
+      if (conversations.length != 1) {
+        conversations.sort((a, b) => b.lastMessageDetails!.sentAt
+            .compareTo(a.lastMessageDetails!.sentAt));
+      }
       isConversationsLoading = false;
     }
   }
