@@ -80,15 +80,13 @@ class IsmChatChatMessageModel {
               model.customType != IsmChatCustomMessageType.text
           ? model.customType
           : IsmChatCustomMessageType.withBody(model.body),
-      sentByMe: model.senderInfo!.userIdentifier.contains('.c')
-          ? model.senderInfo != null
+      sentByMe: model.senderInfo != null
+          ? model.senderInfo!.userIdentifier.contains('.')
               ? model.senderInfo!.userId ==
                   IsmChatConfig.communicationConfig.userConfig.userId
-              : true
-          : model.senderInfo != null
-              ? model.senderInfo!.userIdentifier ==
+              : model.senderInfo!.userIdentifier ==
                   IsmChatConfig.communicationConfig.userConfig.userId
-              : true,
+          : true,
     );
   }
 
