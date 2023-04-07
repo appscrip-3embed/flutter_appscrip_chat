@@ -90,7 +90,7 @@ class _NetworkImage extends StatelessWidget {
         placeholder: (context, url) => Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: IsmChatTheme.of(context).primaryColor!.withOpacity(0.2),
+            color: IsmChatConfig.chatTheme.primaryColor!.withOpacity(0.2),
             shape: _isProfileImage ? BoxShape.circle : BoxShape.rectangle,
           ),
           child: _isProfileImage
@@ -99,7 +99,7 @@ class _NetworkImage extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
-                    color: IsmChatTheme.of(context).primaryColor,
+                    color: IsmChatConfig.chatTheme.primaryColor,
                   ),
                 )
               : const Center(
@@ -111,7 +111,7 @@ class _NetworkImage extends StatelessWidget {
           return Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: IsmChatTheme.of(context).primaryColor!.withOpacity(0.2),
+              color: IsmChatConfig.chatTheme.primaryColor!.withOpacity(0.2),
               shape: _isProfileImage ? BoxShape.circle : BoxShape.rectangle,
             ),
             child: _isProfileImage
@@ -120,7 +120,7 @@ class _NetworkImage extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 24,
-                      color: IsmChatTheme.of(context).primaryColor,
+                      color: IsmChatConfig.chatTheme.primaryColor,
                     ),
                   )
                 : Container(

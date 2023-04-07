@@ -28,7 +28,7 @@ class IsmChatApp extends StatelessWidget {
     IsmChatConfig.dbName = databaseName ?? IsmChatStrings.dbname;
     IsmChatConfig.loadingDialog = loadingDialog;
     IsmChatConfig.communicationConfig = communicationConfig;
-    IsmChatConfig.chatTheme = chatTheme ?? IsmChatThemeData.fallback();
+    IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.fallback();
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.fallback();
     IsmChatConfig.onChatTap = onChatTap;

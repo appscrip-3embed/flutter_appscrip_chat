@@ -3,38 +3,44 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class IsmChatThemeData with Diagnosticable {
-  const IsmChatThemeData({
-    this.chatListTheme,
-    this.primaryColor,
-    this.backgroundColor,
-    this.floatingActionButtonTheme,
-    this.iconTheme,
-  });
+  IsmChatThemeData({
+    IsmChatListThemeData? chatListTheme,
+    Color? primaryColor,
+    Color? backgroundColor,
+    FloatingActionButtonThemeData? floatingActionButtonTheme,
+    IconThemeData? iconTheme,
+  })  : primaryColor = primaryColor ?? IsmChatThemeData.light().primaryColor,
+        backgroundColor =
+            backgroundColor ?? IsmChatThemeData.light().backgroundColor,
+        floatingActionButtonTheme = floatingActionButtonTheme ??
+            IsmChatThemeData.light().floatingActionButtonTheme,
+        iconTheme = iconTheme ?? IsmChatThemeData.light().iconTheme,
+        chatListTheme = chatListTheme ?? IsmChatThemeData.light().chatListTheme;
 
   factory IsmChatThemeData.fallback() => IsmChatThemeData.light();
 
-  factory IsmChatThemeData.light() => const IsmChatThemeData(
-        chatListTheme: IsmChatListThemeData.light(),
+  factory IsmChatThemeData.light() => IsmChatThemeData(
+        chatListTheme: const IsmChatListThemeData.light(),
         primaryColor: IsmChatColors.primaryColorLight,
         backgroundColor: IsmChatColors.backgroundColorLight,
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: IsmChatColors.primaryColorLight,
           foregroundColor: IsmChatColors.whiteColor,
         ),
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: IsmChatColors.primaryColorLight,
         ),
       );
 
-  factory IsmChatThemeData.dark() => const IsmChatThemeData(
-        chatListTheme: IsmChatListThemeData.dark(),
+  factory IsmChatThemeData.dark() => IsmChatThemeData(
+        chatListTheme: const IsmChatListThemeData.dark(),
         primaryColor: IsmChatColors.primaryColorDark,
         backgroundColor: IsmChatColors.backgroundColorDark,
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: IsmChatColors.primaryColorDark,
           foregroundColor: IsmChatColors.whiteColor,
         ),
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: IsmChatColors.primaryColorDark,
         ),
       );

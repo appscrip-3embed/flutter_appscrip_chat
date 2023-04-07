@@ -70,7 +70,7 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
                   style: titleStyle ??
                       IsmChatStyles.w600Black20.copyWith(
                         color:
-                            titleColor ?? IsmChatTheme.of(context).primaryColor,
+                            titleColor ?? IsmChatConfig.chatTheme.primaryColor,
                       ),
                 ),
               ],
@@ -89,7 +89,7 @@ class _MoreIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => IconButton(
-        color: IsmChatTheme.of(context).primaryColor,
+        color: IsmChatConfig.chatTheme.primaryColor,
         onPressed: () {},
         icon: const Icon(Icons.more_vert_rounded),
       );
@@ -102,7 +102,7 @@ class _SearchAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => IconButton(
-        color: IsmChatTheme.of(context).primaryColor,
+        color: IsmChatConfig.chatTheme.primaryColor,
         onPressed: onTap ??
             () {
               showSearch<void>(

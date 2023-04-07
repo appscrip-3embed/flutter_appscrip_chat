@@ -25,7 +25,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
           return Theme(
             data: ThemeData.light(useMaterial3: true).copyWith(
               appBarTheme: AppBarTheme(
-                backgroundColor: IsmChatTheme.of(context).primaryColor,
+                backgroundColor: IsmChatConfig.chatTheme.primaryColor,
                 iconTheme: const IconThemeData(color: IsmChatColors.whiteColor),
               ),
             ),

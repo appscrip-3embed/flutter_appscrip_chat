@@ -200,23 +200,27 @@ class ChatMessage extends StatelessWidget {
                       size: IsmChatDimens.twenty,
                     ),
                   ),
-                if(message.customType == IsmChatCustomMessageType.text || message.customType == IsmChatCustomMessageType.link || message.customType == IsmChatCustomMessageType.location || message.customType == IsmChatCustomMessageType.reply)  FocusedMenuItem(
-                    backgroundColor: Colors.white,
-                    title: const Text(
-                      'Copy',
-                      style: TextStyle(
+                  if (message.customType == IsmChatCustomMessageType.text ||
+                      message.customType == IsmChatCustomMessageType.link ||
+                      message.customType == IsmChatCustomMessageType.location ||
+                      message.customType == IsmChatCustomMessageType.reply)
+                    FocusedMenuItem(
+                      backgroundColor: Colors.white,
+                      title: const Text(
+                        'Copy',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                      onPressed: () {
+                        Clipboard.setData(ClipboardData(text: message.body));
+                      },
+                      trailingIcon: Icon(
+                        Icons.copy,
                         color: Colors.black,
+                        size: IsmChatDimens.twenty,
                       ),
                     ),
-                    onPressed: () {
-                      Clipboard.setData(ClipboardData(text: message.body));
-                    },
-                    trailingIcon: Icon(
-                      Icons.copy,
-                      color: Colors.black,
-                      size: IsmChatDimens.twenty,
-                    ),
-                  ),
                   FocusedMenuItem(
                     backgroundColor: Colors.white,
                     title: const Text(

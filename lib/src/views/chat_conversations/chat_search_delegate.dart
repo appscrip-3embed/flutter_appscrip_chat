@@ -72,7 +72,7 @@ class IsmChatSearchDelegate extends SearchDelegate<void> {
                         TextSpan(
                           text: match,
                           style: TextStyle(
-                              color: IsmChatTheme.of(context).primaryColor),
+                              color: IsmChatConfig.chatTheme.primaryColor),
                         ),
                         TextSpan(
                           text: after,
@@ -98,7 +98,7 @@ class IsmChatSearchDelegate extends SearchDelegate<void> {
                         TextSpan(
                           text: match,
                           style: TextStyle(
-                            color: IsmChatTheme.of(context).primaryColor,
+                            color: IsmChatConfig.chatTheme.primaryColor,
                             fontWeight: FontWeight.w600,
                           ),
                         ),

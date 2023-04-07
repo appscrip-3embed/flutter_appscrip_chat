@@ -11,11 +11,9 @@ class IsmChatStartChatFAB extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Theme(
         data: ThemeData.light(useMaterial3: true).copyWith(
-          floatingActionButtonTheme:
-              IsmChatTheme.of(context).floatingActionButtonTheme ??
-                  FloatingActionButtonThemeData(
-                    backgroundColor: IsmChatTheme.of(context).primaryColor,
-                  ),
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: IsmChatConfig.chatTheme.primaryColor,
+          ),
         ),
         child: FloatingActionButton(
           onPressed: onTap,

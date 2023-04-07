@@ -50,7 +50,7 @@ class IsmChatInputField extends StatelessWidget {
                           .copyWith(top: IsmChatDimens.four),
                       decoration: BoxDecoration(
                         border: Border.all(
-                            color: IsmChatTheme.of(context).primaryColor!),
+                            color: IsmChatConfig.chatTheme.primaryColor!),
                         borderRadius:
                             BorderRadius.circular(IsmChatDimens.twenty),
                         color: IsmChatTheme.of(context).backgroundColor,
@@ -211,7 +211,7 @@ class IsmChatInputField extends StatelessWidget {
                     //   fixedSize: Size.square(IsmChatDimens.inputFieldHeight),
                     //   alignment: Alignment.center,
                     //   padding: EdgeInsets.zero,
-                    //   backgroundColor: IsmChatTheme.of(context).primaryColor,
+                    //   backgroundColor: IsmChatConfig.chatTheme.primaryColor,
                     //   foregroundColor: IsmChatColors.whiteColor,
                     // ),
                     child: Container(

@@ -84,7 +84,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
               child: Text(
                 IsmChatStrings.noConversation,
                 style: IsmChatStyles.w600Black20.copyWith(
-                  color: IsmChatTheme.of(context).primaryColor,
+                  color: IsmChatConfig.chatTheme.primaryColor,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -117,7 +117,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                 itemBuilder: widget.itemBuilder ??
                     (_, index) {
                       var conversation = controller.conversations[index];
-                     
+
                       return Slidable(
                         closeOnScroll: true,
                         startActionPane: ActionPane(

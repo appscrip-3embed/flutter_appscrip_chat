@@ -1,4 +1,4 @@
-import 'package:appscrip_chat_component/src/res/res.dart';
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
 class IsmChatLoadingDialog extends StatelessWidget {
@@ -14,7 +14,7 @@ class IsmChatLoadingDialog extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: CircularProgressIndicator(
-                color: IsmChatTheme.of(context).primaryColor,
+                color: IsmChatConfig.chatTheme.primaryColor,
               ),
             ),
           ),

@@ -1,17 +1,25 @@
+// ignore_for_file: avoid_setters_without_getters
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class IsmChatConfig {
   const IsmChatConfig._();
 
   static late IsmChatCommunicationConfig communicationConfig;
-  static late IsmChatThemeData chatTheme;
-  static late IsmChatThemeData chatDarkTheme;
+  static late IsmChatThemeData _chatLightTheme;
+  static late IsmChatThemeData _chatDarkTheme;
   static late Widget? loadingDialog;
   static late IsmChatObjectBox objectBox;
   static String dbName = IsmChatStrings.dbname;
   static bool isInitialized = false;
   static Duration animationDuration = const Duration(milliseconds: 300);
-  static late  void Function(BuildContext, IsmChatConversationModel) onChatTap;
-  
+  static late void Function(BuildContext, IsmChatConversationModel) onChatTap;
+
+  static IsmChatThemeData get chatTheme => Get.isDarkMode ? _chatDarkTheme : _chatLightTheme;
+
+  static set chatLightTheme(IsmChatThemeData data) => _chatLightTheme = data;
+
+  static set chatDarkTheme(IsmChatThemeData data) => _chatDarkTheme = data;
 }

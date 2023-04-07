@@ -22,7 +22,7 @@ class IsmChatMessageInfo extends StatelessWidget {
             backgroundColor: IsmChatColors.whiteColor,
             appBar: AppBar(
               elevation: 1,
-              backgroundColor: IsmChatTheme.of(context).primaryColor,
+              backgroundColor: IsmChatConfig.chatTheme.primaryColor,
               titleSpacing: 1,
               title: Padding(
                   padding: const EdgeInsets.only(right: 55.0),

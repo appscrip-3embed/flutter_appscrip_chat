@@ -1,6 +1,4 @@
-import 'package:appscrip_chat_component/src/controllers/chat_conversations/chat_conversations_controller.dart';
-import 'package:appscrip_chat_component/src/res/res.dart';
-import 'package:appscrip_chat_component/src/widgets/widgets.dart';
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -28,7 +26,7 @@ class IsmChatLogutBottomSheet extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(IsmChatDimens.ten),
-                    color: IsmChatTheme.of(context).primaryColor),
+                    color: IsmChatConfig.chatTheme.primaryColor),
                 width: IsmChatDimens.eighty,
                 height: IsmChatDimens.forty,
                 child: Text('Sign out', style: IsmChatStyles.w400White14),
