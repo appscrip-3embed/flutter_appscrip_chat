@@ -321,7 +321,7 @@ class IsmChatPageViewModel {
 
   Future<void> deleteMessageForMe({
     required String conversationId,
-    required String messageIds,
+    required List<IsmChatChatMessageModel> messageIds,
   }) async {
     var response = await _repository.deleteMessageForMe(
       conversationId: conversationId,
@@ -333,7 +333,10 @@ class IsmChatPageViewModel {
       if (allMessages == null) {
         return;
       }
-      allMessages.removeWhere((e) => e.messageId! == messageIds);
+      for (var x in messageIds) {
+        allMessages.removeWhere((e) => e.messageId == x.messageId);
+      }
+
       await IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
       if (Get.isRegistered<IsmChatPageController>()) {
         await Get.find<IsmChatPageController>()
@@ -344,7 +347,7 @@ class IsmChatPageViewModel {
 
   Future<void> deleteMessageForEveryone({
     required String conversationId,
-    required String messageIds,
+    required List<IsmChatChatMessageModel> messageIds,
   }) async {
     var response = await _repository.deleteMessageForEveryone(
       conversationId: conversationId,
@@ -356,7 +359,10 @@ class IsmChatPageViewModel {
       if (allMessages == null) {
         return;
       }
-      allMessages.removeWhere((e) => e.messageId! == messageIds);
+
+      for (var x in messageIds) {
+        allMessages.removeWhere((e) => e.messageId == x.messageId);
+      }
       await IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
       if (Get.isRegistered<IsmChatPageController>()) {
         await Get.find<IsmChatPageController>()

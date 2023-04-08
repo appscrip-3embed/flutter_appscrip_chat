@@ -65,7 +65,6 @@ class IsmChatPageRepository {
     List<Map<String, dynamic>>? attachments,
   }) async {
     try {
-    
       final payload = {
         'showInConversation': showInConversation,
         'messageType': messageType,
@@ -299,11 +298,13 @@ class IsmChatPageRepository {
 
   Future<IsmChatResponseModel?> deleteMessageForMe({
     required String conversationId,
-    required String messageIds,
+    required List<IsmChatChatMessageModel> messageIds,
   }) async {
     try {
+      var messageIdString =
+          messageIds.map((e) => e.messageId).toList().join(',');
       var response = await _apiWrapper.delete(
-        '${IsmChatAPI.deleteMessagesForMe}?conversationId=$conversationId&messageIds=$messageIds',
+        '${IsmChatAPI.deleteMessagesForMe}?conversationId=$conversationId&messageIds=$messageIdString',
         payload: null,
         headers: IsmChatUtility.tokenCommonHeader(),
       );
@@ -319,11 +320,13 @@ class IsmChatPageRepository {
 
   Future<IsmChatResponseModel?> deleteMessageForEveryone({
     required String conversationId,
-    required String messageIds,
+    required List<IsmChatChatMessageModel> messageIds,
   }) async {
     try {
+      var messageIdString =
+          messageIds.map((e) => e.messageId).toList().join(',');
       var response = await _apiWrapper.delete(
-        '${IsmChatAPI.deleteMessages}?conversationId=$conversationId&messageIds=$messageIds',
+        '${IsmChatAPI.deleteMessages}?conversationId=$conversationId&messageIds=$messageIdString',
         payload: null,
         headers: IsmChatUtility.tokenCommonHeader(),
       );

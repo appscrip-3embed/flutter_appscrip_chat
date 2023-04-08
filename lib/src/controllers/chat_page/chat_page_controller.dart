@@ -162,6 +162,18 @@ class IsmChatPageController extends GetxController {
     _autoScrollIndexById.value = value;
   }
 
+  final RxBool _isMessageSeleted = false.obs;
+  bool get isMessageSeleted => _isMessageSeleted.value;
+  set isMessageSeleted(bool value) {
+    _isMessageSeleted.value = value;
+  }
+
+  final _selectedMessage = <IsmChatChatMessageModel>[].obs;
+  List<IsmChatChatMessageModel> get selectedMessage => _selectedMessage;
+  set selectedMessage(List<IsmChatChatMessageModel> value) {
+    _selectedMessage.value = value;
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -197,6 +209,21 @@ class IsmChatPageController extends GetxController {
     messagesScrollController.dispose();
 
     super.onClose();
+  }
+
+  void whenMessgeIsSeleted(IsmChatChatMessageModel ismChatChatMessageModel) {
+    if (isMessageSeleted) {
+      if (selectedMessage.contains(ismChatChatMessageModel)) {
+        selectedMessage.removeWhere(
+            (e) => e.messageId == ismChatChatMessageModel.messageId);
+      } else {
+        selectedMessage.add(ismChatChatMessageModel);
+      }
+      if (selectedMessage.isEmpty) {
+        isMessageSeleted = false;
+      }
+      return;
+    }
   }
 
   void scrollListener() {
@@ -504,10 +531,10 @@ class IsmChatPageController extends GetxController {
           callbackActions: [
             () => ismMessageDeleteEveryOne(
                 conversationId: chatMessageModel.conversationId ?? '',
-                messageIds: chatMessageModel.messageId ?? ''),
+                messageIds: [chatMessageModel]),
             () => ismMessageDeleteSelf(
                 conversationId: chatMessageModel.conversationId ?? '',
-                messageIds: chatMessageModel.messageId ?? ''),
+                messageIds: [chatMessageModel]),
           ],
         ),
       );
@@ -518,12 +545,50 @@ class IsmChatPageController extends GetxController {
               '${IsmChatStrings.deleteFromUser} ${conversation?.opponentDetails?.userName}',
           actionLabels: const [IsmChatStrings.deleteForMe],
           callbackActions: [
-            // TODO: Delete from local db
-            () {},
+            () => messageDeleteForMe(
+                conversationId: chatMessageModel.conversationId ?? '',
+                messageIdsList: [chatMessageModel]),
           ],
         ),
       );
     }
+  }
+
+  void showDialogForDeleteMultipleMessage(
+      bool sentByMe, List<IsmChatChatMessageModel> listOfMessage) async {
+    if (sentByMe) {
+      await Get.dialog(
+        IsmChatAlertDialogBox(
+          titile: IsmChatStrings.deleteMessgae,
+          actionLabels: const [
+            IsmChatStrings.deleteForEvery,
+            IsmChatStrings.deleteForMe,
+          ],
+          callbackActions: [
+            () => ismMessageDeleteEveryOne(
+                conversationId: conversation?.conversationId ?? '',
+                messageIds: listOfMessage),
+            () => ismMessageDeleteSelf(
+                conversationId: conversation?.conversationId ?? '',
+                messageIds: listOfMessage),
+          ],
+        ),
+      );
+    } else {
+      await Get.dialog(
+        IsmChatAlertDialogBox(
+          titile:
+              '${IsmChatStrings.deleteFromUser} ${conversation?.opponentDetails?.userName}',
+          actionLabels: const [IsmChatStrings.deleteForMe],
+          callbackActions: [
+            () => messageDeleteForMe(
+                conversationId: conversation?.conversationId ?? '',
+                messageIdsList: listOfMessage),
+          ],
+        ),
+      );
+    }
+    isMessageSeleted = false;
   }
 
   void sendPhotoAndVideo() async {
@@ -559,7 +624,7 @@ class IsmChatPageController extends GetxController {
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversationId);
     if (chatConversationResponse == null) {
-    conversationId =   await createConversation(userId: [userId]);
+      conversationId = await createConversation(userId: [userId]);
     }
     IsmChatChatMessageModel? audioMessage;
     String? nameWithExtension;
@@ -684,7 +749,7 @@ class IsmChatPageController extends GetxController {
         final chatConversationResponse = await ismChatObjectBox
             .getDBConversation(conversationId: conversationId);
         if (chatConversationResponse == null) {
-         conversationId =  await createConversation(userId: [userId]);
+          conversationId = await createConversation(userId: [userId]);
         }
         for (var x in result!.files) {
           bytes = x.bytes;
@@ -756,7 +821,7 @@ class IsmChatPageController extends GetxController {
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversationId);
     if (chatConversationResponse == null) {
-     conversationId =  await createConversation(userId: [userId]);
+      conversationId = await createConversation(userId: [userId]);
     }
     IsmChatChatMessageModel? videoMessage;
     String? nameWithExtension;
@@ -878,7 +943,7 @@ class IsmChatPageController extends GetxController {
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversationId);
     if (chatConversationResponse == null) {
-     conversationId =  await createConversation(userId: [userId]);
+      conversationId = await createConversation(userId: [userId]);
     }
     IsmChatChatMessageModel? imageMessage;
     String? nameWithExtension;
@@ -980,7 +1045,7 @@ class IsmChatPageController extends GetxController {
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversationId);
     if (chatConversationResponse == null) {
-     conversationId =  await createConversation(userId: [userId]);
+      conversationId = await createConversation(userId: [userId]);
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatChatMessageModel(
@@ -1428,7 +1493,7 @@ class IsmChatPageController extends GetxController {
 
   Future<void> ismMessageDeleteEveryOne({
     required String conversationId,
-    required String messageIds,
+    required List<IsmChatChatMessageModel> messageIds,
   }) async {
     await _viewModel.deleteMessageForEveryone(
         conversationId: conversationId, messageIds: messageIds);
@@ -1436,10 +1501,30 @@ class IsmChatPageController extends GetxController {
 
   Future<void> ismMessageDeleteSelf({
     required String conversationId,
-    required String messageIds,
+    required List<IsmChatChatMessageModel> messageIds,
   }) async {
     await _viewModel.deleteMessageForMe(
         conversationId: conversationId, messageIds: messageIds);
+  }
+
+  Future<void> messageDeleteForMe({
+    required String conversationId,
+    required List<IsmChatChatMessageModel> messageIdsList,
+  }) async {
+    var allMessages = await IsmChatConfig.objectBox.getMessages(conversationId);
+    if (allMessages == null) {
+      return;
+    }
+    for (var x in messageIdsList) {
+      allMessages.removeWhere((e) => e.messageId == x.messageId);
+    }
+    await IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
+    await getMessagesFromDB(conversationId);
+  }
+
+  Future<bool> checkMessageSenderSideOrNot() async {
+    var message = selectedMessage.any((e) => e.sentByMe == true);
+    return !message;
   }
 
   Future<void> clearAllMessages({
