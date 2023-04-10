@@ -67,7 +67,8 @@ class IsmChatInputField extends StatelessWidget {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(
                                     IsmChatDimens.sixteen),
-                                color: IsmChatColors.primaryColorDark,
+                                color: IsmChatConfig.chatTheme.primaryColor!
+                                    .withOpacity(.7),
                               ),
                               child: Row(
                                 mainAxisAlignment:

@@ -47,7 +47,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                       onPressed: () async {
                         var messageSenderSide =
                             await controller.checkMessageSenderSideOrNot();
-                        print('dfdfsfsfd  ${messageSenderSide}');
+
                         controller.showDialogForDeleteMultipleMessage(
                             messageSenderSide, controller.selectedMessage);
                       },
@@ -137,7 +137,9 @@ class ChatMessage extends StatelessWidget {
             message.customType! == IsmChatCustomMessageType.unblock;
     return IsmChatTapHandler(
       onTap: () {
-        ismChatPageController.whenMessgeIsSeleted(message);
+        if (!showMessageInCenter) {
+          ismChatPageController.whenMessgeIsSeleted(message);
+        }
       },
       child: Container(
         color: ismChatPageController.selectedMessage.contains(message)
