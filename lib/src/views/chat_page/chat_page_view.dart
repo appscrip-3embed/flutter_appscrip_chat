@@ -47,7 +47,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                       onPressed: () async {
                         var messageSenderSide =
                             await controller.checkMessageSenderSideOrNot();
-
+                        print('dfdfsfsfd  ${messageSenderSide}');
                         controller.showDialogForDeleteMultipleMessage(
                             messageSenderSide, controller.selectedMessage);
                       },
@@ -168,10 +168,10 @@ class ChatMessage extends StatelessWidget {
                   openWithTap: showMessageInCenter ? true : false,
                   menuWidth: 160,
                   menuOffset: IsmChatDimens.twenty,
-                  blurSize: 3,  // IconButton(
-                    //   onPressed: () {},
-                    //   icon: const Icon(Icons.reply_rounded),
-                    // )
+                  blurSize: 3, // IconButton(
+                  //   onPressed: () {},
+                  //   icon: const Icon(Icons.reply_rounded),
+                  // )
                   animateMenuItems: false,
                   blurBackgroundColor: Colors.grey,
                   onPressed: () {},

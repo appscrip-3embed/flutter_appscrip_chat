@@ -589,6 +589,7 @@ class IsmChatPageController extends GetxController {
       );
     }
     isMessageSeleted = false;
+    selectedMessage.clear();
   }
 
   void sendPhotoAndVideo() async {
@@ -1523,8 +1524,8 @@ class IsmChatPageController extends GetxController {
   }
 
   Future<bool> checkMessageSenderSideOrNot() async {
-    var message = selectedMessage.any((e) => e.sentByMe == true);
-    return !message;
+    var message = selectedMessage.every((e) => e.sentByMe == true);
+    return message;
   }
 
   Future<void> clearAllMessages({
