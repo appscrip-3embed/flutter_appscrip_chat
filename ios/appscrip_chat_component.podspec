@@ -6,9 +6,7 @@ Pod::Spec.new do |s|
   s.name             = 'appscrip_chat_component'
   s.version          = '0.0.1'
   s.summary          = 'A new Flutter plugin project.'
-  s.description      = <<-DESC
-A new Flutter plugin project.
-                       DESC
+  s.description      = 'DESC'                    
   s.homepage         = 'http://example.com'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
