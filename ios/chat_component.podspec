@@ -12,7 +12,7 @@ A new Flutter plugin project.
   s.homepage         = 'http://example.com'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
-  s.source           = { :git => '.' }
+  s.source           = { :git => 'git@github.com:appscrip-3embed/flutter_appscrip_chat.git' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
   s.platform = :ios, '9.0'
