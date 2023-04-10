@@ -81,12 +81,16 @@ class IsmChatChatMessageModel {
           ? model.customType
           : IsmChatCustomMessageType.withBody(model.body),
       sentByMe: model.senderInfo != null
-          ? model.senderInfo!.userIdentifier.contains('.')
-              ? model.senderInfo!.userId ==
-                  IsmChatConfig.communicationConfig.userConfig.userId
-              : model.senderInfo!.userIdentifier ==
-                  IsmChatConfig.communicationConfig.userConfig.userId
+          ? model.senderInfo!.userId ==
+              IsmChatConfig.communicationConfig.userConfig.userId
           : true,
+
+      //  ? model.senderInfo!.userIdentifier.contains('.')
+      //     ? model.senderInfo!.userId ==
+      //         IsmChatConfig.communicationConfig.userConfig.userId
+      //     : model.senderInfo!.userIdentifier ==
+      //         IsmChatConfig.communicationConfig.userConfig.userId
+      // : true,
     );
   }
 
