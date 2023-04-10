@@ -57,9 +57,7 @@ class IsmChatMqttController extends GetxController {
 
   void connectClient() async {
     try {
-      IsmChatLog.success('userName  :- ${_communicationConfig.username}');
-      IsmChatLog.success('password  :- ${_communicationConfig.password}');
-
+    
       var res = await client.connect(
         _communicationConfig.username,
         _communicationConfig.password,

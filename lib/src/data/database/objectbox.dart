@@ -50,6 +50,8 @@ class IsmChatObjectBox {
     chatConversationBox.removeAll();
     pendingMessageBox.removeAll();
     forwardMessageBox.removeAll();
+    await Get.find<IsmChatMqttController>().unSubscribe();
+    await Get.find<IsmChatMqttController>().disconnect();
     IsmChatLog.success('[CLEARED] - All entries are removed from database');
   }
 
