@@ -68,7 +68,7 @@ class IsmChatPageViewModel {
     required String notificationTitle,
     SendMessageType sendMessageType = SendMessageType.pendingMessage,
     String? parentMessageId,
-    Map<String, dynamic>? metaData,
+    IsmChatMetaData? metaData,
     List<Map<String, dynamic>>? mentionedUsers,
     Map<String, dynamic>? events,
     String? customType,

@@ -281,6 +281,7 @@ class IsmChatPageController extends GetxController {
 
   /// Scroll to the message with the specified id.
   void scrollToMessage(String messageId, {Duration? duration}) {
+    print('fdfdsfsf ${autoScrollIndexById[messageId]}  === $messageId');
     messagesScrollController.scrollToIndex(autoScrollIndexById[messageId]!,
         duration: duration ?? scrollAnimationDuration,
         preferPosition: AutoScrollPosition.middle);
@@ -409,7 +410,7 @@ class IsmChatPageController extends GetxController {
     messagesList.removeWhere(
         (element) => element.customType == IsmChatCustomMessageType.date);
     var data = await _viewModel.getChatMessages(
-      pagination: forPagination ? messages.length.pagination() : 0,
+      pagination: forPagination ? messagesList.length.pagination() : 0,
       conversationId: conversationId.isNotEmpty
           ? conversationId
           : conversation?.conversationId ?? '',
@@ -1122,6 +1123,8 @@ class IsmChatPageController extends GetxController {
       readByAll: false,
       sentAt: sentAt,
       sentByMe: true,
+      metaData: IsmChatMetaData(
+          parentMessageBody: isreplying ? chatMessageModel?.body : ''),
     );
 
     if (!forwardMessgeForMulitpleUser) {
@@ -1134,7 +1137,9 @@ class IsmChatPageController extends GetxController {
     } else {
       await ismChatObjectBox.addForwardMessage(textMessage);
     }
+
     sendMessage(
+        metaData: textMessage.metaData,
         forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
         sendMessageType: sendMessageType,
         deviceId: _deviceConfig.deviceId!,
@@ -1322,7 +1327,7 @@ class IsmChatPageController extends GetxController {
     bool forwardMessgeForMulitpleUser = false,
     bool showInConversation = true,
     String? parentMessageId,
-    Map<String, dynamic>? metaData,
+    IsmChatMetaData? metaData,
     List<Map<String, dynamic>>? mentionedUsers,
     Map<String, dynamic>? events,
     String? customType,
