@@ -73,7 +73,7 @@ class IsmChatPageRepository {
         'conversationId': conversationId,
         'body': body,
         'parentMessageId': parentMessageId,
-        'metaData': metaData!.toMap(),
+        'metaData': metaData?.toMap(),
         'events': events,
         'customType': customType,
         'attachments': attachments,
@@ -303,6 +303,7 @@ class IsmChatPageRepository {
     try {
       var messageIdString =
           messageIds.map((e) => e.messageId).toList().join(',');
+    
       var response = await _apiWrapper.delete(
         '${IsmChatAPI.deleteMessagesForMe}?conversationId=$conversationId&messageIds=$messageIdString',
         payload: null,

@@ -280,13 +280,14 @@ class IsmChatPageController extends GetxController {
   }
 
   /// Scroll to the message with the specified id.
-  void scrollToMessage(String messageId, {Duration? duration})async {
+  void scrollToMessage(String messageId, {Duration? duration}) async {
     if (autoScrollIndexById[messageId] != null) {
-     await messagesScrollController.scrollToIndex(autoScrollIndexById[messageId]!,
+      await messagesScrollController.scrollToIndex(
+          autoScrollIndexById[messageId]!,
           duration: duration ?? scrollAnimationDuration,
           preferPosition: AutoScrollPosition.middle);
     } else {
-     await getMessagesFromAPI(
+      await getMessagesFromAPI(
           forPagination: true, lastMessageTimestampFromFunction: 0);
     }
   }
@@ -594,7 +595,7 @@ class IsmChatPageController extends GetxController {
       );
     }
     isMessageSeleted = false;
-    selectedMessage.clear();
+  
   }
 
   void sendPhotoAndVideo() async {
@@ -1055,22 +1056,22 @@ class IsmChatPageController extends GetxController {
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatChatMessageModel(
-      body: sendMessageType == SendMessageType.pendingMessage
-          ? 'https://www.google.com/maps/search/?api=1&map_action=map&query=$latitude%2C$longitude&query_place_id=$placeId'
-          : messageBody ?? '',
-      conversationId: conversationId,
-      customType: IsmChatCustomMessageType.location,
-      deliveredToAll: false,
-      messageId: '',
-      messageType: sendMessageType == SendMessageType.pendingMessage
-          ? IsmChatMessageType.normal
-          : IsmChatMessageType.forward,
-      messagingDisabled: false,
-      parentMessageId: '',
-      readByAll: false,
-      sentAt: sentAt,
-      sentByMe: true,
-    );
+        body: sendMessageType == SendMessageType.pendingMessage
+            ? 'https://www.google.com/maps/search/?api=1&map_action=map&query=$latitude%2C$longitude&query_place_id=$placeId'
+            : messageBody ?? '',
+        conversationId: conversationId,
+        customType: IsmChatCustomMessageType.location,
+        deliveredToAll: false,
+        messageId: '',
+        messageType: sendMessageType == SendMessageType.pendingMessage
+            ? IsmChatMessageType.normal
+            : IsmChatMessageType.forward,
+        messagingDisabled: false,
+        parentMessageId: '',
+        readByAll: false,
+        sentAt: sentAt,
+        sentByMe: true,
+        metaData: IsmChatMetaData(locationAddress: locationName));
     if (!forwardMessgeForMulitpleUser) {
       messages.add(textMessage);
       chatInputController.clear();
@@ -1082,6 +1083,7 @@ class IsmChatPageController extends GetxController {
       await ismChatObjectBox.addForwardMessage(textMessage);
     }
     sendMessage(
+        metaData: textMessage.metaData,
         forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
         deviceId: _deviceConfig.deviceId!,
         body: textMessage.body,
@@ -1509,6 +1511,7 @@ class IsmChatPageController extends GetxController {
   }) async {
     await _viewModel.deleteMessageForEveryone(
         conversationId: conversationId, messageIds: messageIds);
+    selectedMessage.clear();    
   }
 
   Future<void> ismMessageDeleteSelf({
@@ -1517,6 +1520,7 @@ class IsmChatPageController extends GetxController {
   }) async {
     await _viewModel.deleteMessageForMe(
         conversationId: conversationId, messageIds: messageIds);
+    selectedMessage.clear();    
   }
 
   Future<void> messageDeleteForMe({
@@ -1532,6 +1536,7 @@ class IsmChatPageController extends GetxController {
     }
     await IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
     await getMessagesFromDB(conversationId);
+     
   }
 
   Future<bool> checkMessageSenderSideOrNot() async {

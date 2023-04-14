@@ -327,12 +327,13 @@ class IsmChatPageViewModel {
       conversationId: conversationId,
       messageIds: messageIds,
     );
-    if (!response!.hasError) {
+      if (!response!.hasError) {
       var allMessages =
           await IsmChatConfig.objectBox.getMessages(conversationId);
       if (allMessages == null) {
         return;
       }
+    
       for (var x in messageIds) {
         allMessages.removeWhere((e) => e.messageId == x.messageId);
       }

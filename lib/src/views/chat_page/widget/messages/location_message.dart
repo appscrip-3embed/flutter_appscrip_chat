@@ -33,6 +33,7 @@ class IsmChatLocationMessage extends StatelessWidget {
         );
       },
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
             height: IsmChatDimens.oneHundredFifty,
@@ -63,6 +64,15 @@ class IsmChatLocationMessage extends StatelessWidget {
             ),
           ),
           IsmChatDimens.boxHeight4,
+          Padding(
+            padding: IsmChatDimens.edgeInsets4_0,
+            child: Text(
+              message.metaData?.locationAddress ?? '',
+              style: message.sentByMe
+                  ? IsmChatStyles.w600White16
+                  : IsmChatStyles.w600Black16,
+            ),
+          ),
           FutureBuilder<List<Placemark>>(
             future: GeocodingPlatform.instance.placemarkFromCoordinates(
               position.latitude,
