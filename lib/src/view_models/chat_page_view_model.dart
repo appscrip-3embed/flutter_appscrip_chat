@@ -216,11 +216,11 @@ class IsmChatPageViewModel {
     return allMessages;
   }
 
-  IsmChatChatMessageModel getMessageByid({
-    required String parentId,
-    required List<IsmChatChatMessageModel> data,
-  }) =>
-      data.firstWhere((e) => e.messageId == parentId);
+  // IsmChatChatMessageModel getMessageByid({
+  //   required String parentId,
+  //   required List<IsmChatChatMessageModel> data,
+  // }) =>
+  //     data.firstWhere((e) => e.messageId == parentId);
 
   Future<void> updateMessageRead({
     required String conversationId,

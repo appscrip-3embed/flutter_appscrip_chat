@@ -4,30 +4,37 @@ import 'dart:convert';
 class IsmChatMetaData {
   final String? country;
   final String? parentMessageBody;
-  final String? locationAdress;
+  final String? locationAddress;
+  final bool? parentMessageInitiator;
   IsmChatMetaData({
     this.country,
     this.parentMessageBody,
-    this.locationAdress,
+    this.locationAddress,
+    this.parentMessageInitiator,
   });
 
   IsmChatMetaData copyWith({
     String? country,
     String? parentMessageBody,
-    String? locationAdress,
+    String? locationAddress,
+    bool? parentMessageInitiator,
   }) =>
       IsmChatMetaData(
         country: country ?? this.country,
         parentMessageBody: parentMessageBody ?? this.parentMessageBody,
-        locationAdress: locationAdress ?? this.locationAdress,
+        locationAddress: locationAddress ?? this.locationAddress,
+        parentMessageInitiator:
+            parentMessageInitiator ?? this.parentMessageInitiator,
       );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
-        if (country?.isNotEmpty == true) 'country': country,
-        if (parentMessageBody?.isNotEmpty == true)
+        if (country != null || country?.isNotEmpty == true) 'country': country,
+        if (parentMessageBody != null || parentMessageBody?.isNotEmpty == true)
           'parentMessageBody': parentMessageBody,
-        if (locationAdress?.isNotEmpty == true)
-          'locationAdress': locationAdress,
+        if (locationAddress != null || locationAddress?.isNotEmpty == true)
+          'locationAddress': locationAddress,
+        if (parentMessageInitiator != null)
+          'parentMessageInitiator': parentMessageInitiator,
       };
 
   factory IsmChatMetaData.fromMap(Map<String, dynamic> map) => IsmChatMetaData(
@@ -35,8 +42,11 @@ class IsmChatMetaData {
         parentMessageBody: map['parentMessageBody'] != null
             ? map['parentMessageBody'] as String
             : null,
-        locationAdress: map['locationAdress'] != null
-            ? map['locationAdress'] as String
+        locationAddress: map['locationAddress'] != null
+            ? map['locationAddress'] as String
+            : null,
+        parentMessageInitiator: map['parentMessageInitiator'] != null
+            ? map['parentMessageInitiator'] as bool
             : null,
       );
 
@@ -47,7 +57,7 @@ class IsmChatMetaData {
 
   @override
   String toString() =>
-      'IsmChatMetaData(country: $country, parentMessageBody: $parentMessageBody, locationAdress: $locationAdress)';
+      'IsmChatMetaData(country: $country, parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, parentMessageInitiator: $parentMessageInitiator)';
 
   @override
   bool operator ==(covariant IsmChatMetaData other) {
@@ -55,10 +65,14 @@ class IsmChatMetaData {
 
     return other.country == country &&
         other.parentMessageBody == parentMessageBody &&
-        other.locationAdress == locationAdress;
+        other.locationAddress == locationAddress &&
+        other.parentMessageInitiator == parentMessageInitiator;
   }
 
   @override
   int get hashCode =>
-      country.hashCode ^ parentMessageBody.hashCode ^ locationAdress.hashCode;
+      country.hashCode ^
+      parentMessageBody.hashCode ^
+      locationAddress.hashCode ^
+      parentMessageInitiator.hashCode;
 }

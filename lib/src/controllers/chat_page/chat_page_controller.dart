@@ -280,11 +280,15 @@ class IsmChatPageController extends GetxController {
   }
 
   /// Scroll to the message with the specified id.
-  void scrollToMessage(String messageId, {Duration? duration}) {
-    print('fdfdsfsf ${autoScrollIndexById[messageId]}  === $messageId');
-    messagesScrollController.scrollToIndex(autoScrollIndexById[messageId]!,
-        duration: duration ?? scrollAnimationDuration,
-        preferPosition: AutoScrollPosition.middle);
+  void scrollToMessage(String messageId, {Duration? duration})async {
+    if (autoScrollIndexById[messageId] != null) {
+     await messagesScrollController.scrollToIndex(autoScrollIndexById[messageId]!,
+          duration: duration ?? scrollAnimationDuration,
+          preferPosition: AutoScrollPosition.middle);
+    } else {
+     await getMessagesFromAPI(
+          forPagination: true, lastMessageTimestampFromFunction: 0);
+    }
   }
 
   void tapForMediaPreview(
@@ -395,7 +399,7 @@ class IsmChatPageController extends GetxController {
     );
   }
 
-  void getMessagesFromAPI({
+  Future<void> getMessagesFromAPI({
     String conversationId = '',
     bool forPagination = false,
     int? lastMessageTimestampFromFunction,
@@ -427,11 +431,11 @@ class IsmChatPageController extends GetxController {
     }
   }
 
-  IsmChatChatMessageModel getMessageByid(String id) =>
-      _viewModel.getMessageByid(
-        parentId: id,
-        data: messages,
-      );
+  // IsmChatChatMessageModel getMessageByid(String id) =>
+  //     _viewModel.getMessageByid(
+  //       parentId: id,
+  //       data: messages,
+  //     );
 
   Future<void> ismCropImage(File file) async {
     final croppedFile = await ImageCropper().cropImage(
@@ -1124,7 +1128,9 @@ class IsmChatPageController extends GetxController {
       sentAt: sentAt,
       sentByMe: true,
       metaData: IsmChatMetaData(
-          parentMessageBody: isreplying ? chatMessageModel?.body : ''),
+          parentMessageBody: isreplying ? chatMessageModel?.body : '',
+          parentMessageInitiator:
+              isreplying ? chatMessageModel?.sentByMe : null),
     );
 
     if (!forwardMessgeForMulitpleUser) {
