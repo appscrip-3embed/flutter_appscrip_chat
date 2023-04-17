@@ -68,7 +68,7 @@ class IsmChatPageViewModel {
     required String notificationTitle,
     SendMessageType sendMessageType = SendMessageType.pendingMessage,
     String? parentMessageId,
-    Map<String, dynamic>? metaData,
+    IsmChatMetaData? metaData,
     List<Map<String, dynamic>>? mentionedUsers,
     Map<String, dynamic>? events,
     String? customType,
@@ -216,11 +216,11 @@ class IsmChatPageViewModel {
     return allMessages;
   }
 
-  IsmChatChatMessageModel getMessageByid({
-    required String parentId,
-    required List<IsmChatChatMessageModel> data,
-  }) =>
-      data.firstWhere((e) => e.messageId == parentId);
+  // IsmChatChatMessageModel getMessageByid({
+  //   required String parentId,
+  //   required List<IsmChatChatMessageModel> data,
+  // }) =>
+  //     data.firstWhere((e) => e.messageId == parentId);
 
   Future<void> updateMessageRead({
     required String conversationId,
@@ -327,12 +327,13 @@ class IsmChatPageViewModel {
       conversationId: conversationId,
       messageIds: messageIds,
     );
-    if (!response!.hasError) {
+      if (!response!.hasError) {
       var allMessages =
           await IsmChatConfig.objectBox.getMessages(conversationId);
       if (allMessages == null) {
         return;
       }
+    
       for (var x in messageIds) {
         allMessages.removeWhere((e) => e.messageId == x.messageId);
       }

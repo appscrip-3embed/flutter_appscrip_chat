@@ -283,10 +283,16 @@ class IsmChatPageController extends GetxController {
   }
 
   /// Scroll to the message with the specified id.
-  void scrollToMessage(String messageId, {Duration? duration}) {
-    messagesScrollController.scrollToIndex(autoScrollIndexById[messageId]!,
-        duration: duration ?? scrollAnimationDuration,
-        preferPosition: AutoScrollPosition.middle);
+  void scrollToMessage(String messageId, {Duration? duration}) async {
+    if (autoScrollIndexById[messageId] != null) {
+      await messagesScrollController.scrollToIndex(
+          autoScrollIndexById[messageId]!,
+          duration: duration ?? scrollAnimationDuration,
+          preferPosition: AutoScrollPosition.middle);
+    } else {
+      await getMessagesFromAPI(
+          forPagination: true, lastMessageTimestampFromFunction: 0);
+    }
   }
 
   void tapForMediaPreview(
@@ -397,7 +403,7 @@ class IsmChatPageController extends GetxController {
     );
   }
 
-  void getMessagesFromAPI({
+  Future<void> getMessagesFromAPI({
     String conversationId = '',
     bool forPagination = false,
     int? lastMessageTimestampFromFunction,
@@ -412,7 +418,7 @@ class IsmChatPageController extends GetxController {
     messagesList.removeWhere(
         (element) => element.customType == IsmChatCustomMessageType.date);
     var data = await _viewModel.getChatMessages(
-      pagination: forPagination ? messages.length.pagination() : 0,
+      pagination: forPagination ? messagesList.length.pagination() : 0,
       conversationId: conversationId.isNotEmpty
           ? conversationId
           : conversation?.conversationId ?? '',
@@ -429,11 +435,11 @@ class IsmChatPageController extends GetxController {
     }
   }
 
-  IsmChatChatMessageModel getMessageByid(String id) =>
-      _viewModel.getMessageByid(
-        parentId: id,
-        data: messages,
-      );
+  // IsmChatChatMessageModel getMessageByid(String id) =>
+  //     _viewModel.getMessageByid(
+  //       parentId: id,
+  //       data: messages,
+  //     );
 
   Future<void> ismCropImage(File file) async {
     final croppedFile = await ImageCropper().cropImage(
@@ -592,7 +598,7 @@ class IsmChatPageController extends GetxController {
       );
     }
     isMessageSeleted = false;
-    selectedMessage.clear();
+  
   }
 
   void sendPhotoAndVideo() async {
@@ -1053,22 +1059,22 @@ class IsmChatPageController extends GetxController {
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatChatMessageModel(
-      body: sendMessageType == SendMessageType.pendingMessage
-          ? 'https://www.google.com/maps/search/?api=1&map_action=map&query=$latitude%2C$longitude&query_place_id=$placeId'
-          : messageBody ?? '',
-      conversationId: conversationId,
-      customType: IsmChatCustomMessageType.location,
-      deliveredToAll: false,
-      messageId: '',
-      messageType: sendMessageType == SendMessageType.pendingMessage
-          ? IsmChatMessageType.normal
-          : IsmChatMessageType.forward,
-      messagingDisabled: false,
-      parentMessageId: '',
-      readByAll: false,
-      sentAt: sentAt,
-      sentByMe: true,
-    );
+        body: sendMessageType == SendMessageType.pendingMessage
+            ? 'https://www.google.com/maps/search/?api=1&map_action=map&query=$latitude%2C$longitude&query_place_id=$placeId'
+            : messageBody ?? '',
+        conversationId: conversationId,
+        customType: IsmChatCustomMessageType.location,
+        deliveredToAll: false,
+        messageId: '',
+        messageType: sendMessageType == SendMessageType.pendingMessage
+            ? IsmChatMessageType.normal
+            : IsmChatMessageType.forward,
+        messagingDisabled: false,
+        parentMessageId: '',
+        readByAll: false,
+        sentAt: sentAt,
+        sentByMe: true,
+        metaData: IsmChatMetaData(locationAddress: locationName));
     if (!forwardMessgeForMulitpleUser) {
       messages.add(textMessage);
       chatInputController.clear();
@@ -1080,6 +1086,7 @@ class IsmChatPageController extends GetxController {
       await ismChatObjectBox.addForwardMessage(textMessage);
     }
     sendMessage(
+        metaData: textMessage.metaData,
         forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
         deviceId: _deviceConfig.deviceId!,
         body: textMessage.body,
@@ -1125,6 +1132,10 @@ class IsmChatPageController extends GetxController {
       readByAll: false,
       sentAt: sentAt,
       sentByMe: true,
+      metaData: IsmChatMetaData(
+          parentMessageBody: isreplying ? chatMessageModel?.body : '',
+          parentMessageInitiator:
+              isreplying ? chatMessageModel?.sentByMe : null),
     );
 
     if (!forwardMessgeForMulitpleUser) {
@@ -1137,7 +1148,9 @@ class IsmChatPageController extends GetxController {
     } else {
       await ismChatObjectBox.addForwardMessage(textMessage);
     }
+
     sendMessage(
+        metaData: textMessage.metaData,
         forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
         sendMessageType: sendMessageType,
         deviceId: _deviceConfig.deviceId!,
@@ -1325,7 +1338,7 @@ class IsmChatPageController extends GetxController {
     bool forwardMessgeForMulitpleUser = false,
     bool showInConversation = true,
     String? parentMessageId,
-    Map<String, dynamic>? metaData,
+    IsmChatMetaData? metaData,
     List<Map<String, dynamic>>? mentionedUsers,
     Map<String, dynamic>? events,
     String? customType,
@@ -1501,6 +1514,7 @@ class IsmChatPageController extends GetxController {
   }) async {
     await _viewModel.deleteMessageForEveryone(
         conversationId: conversationId, messageIds: messageIds);
+    selectedMessage.clear();    
   }
 
   Future<void> ismMessageDeleteSelf({
@@ -1509,6 +1523,7 @@ class IsmChatPageController extends GetxController {
   }) async {
     await _viewModel.deleteMessageForMe(
         conversationId: conversationId, messageIds: messageIds);
+    selectedMessage.clear();    
   }
 
   Future<void> messageDeleteForMe({
@@ -1524,6 +1539,7 @@ class IsmChatPageController extends GetxController {
     }
     await IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
     await getMessagesFromDB(conversationId);
+     
   }
 
   Future<bool> checkMessageSenderSideOrNot() async {
