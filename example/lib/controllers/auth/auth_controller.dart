@@ -54,7 +54,7 @@ class AuthController extends GetxController {
   }
 
   Uint8List? bytes;
-
+  
   void ismUploadImage(ImageSource imageSource) async {
     XFile? result;
     if (imageSource == ImageSource.gallery) {

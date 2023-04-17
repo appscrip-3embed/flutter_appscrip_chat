@@ -27,6 +27,7 @@ class IsmChatStrings {
   static const String yestarday = 'yesterday';
   static const String at = 'at';
   static const String on = 'on';
+  static const String ok = 'Okay';
   static const String blockUser = 'Block User';
   static const String unBlockUser = 'Unblock User';
   static const String clearChat = 'Clear chat';
@@ -47,4 +48,6 @@ class IsmChatStrings {
   static const String delete = 'Delete';
   static const String archive = 'Archive';
   static const String deleteChat = 'Delete chat';
+  static const String createGroupAlert =
+      'Select at least one user, add group name and choose one photo';
 }

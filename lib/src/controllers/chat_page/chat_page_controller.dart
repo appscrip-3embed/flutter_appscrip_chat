@@ -312,10 +312,10 @@ class IsmChatPageController extends GetxController {
     } else if (ismChatChatMessageModel.customType ==
         IsmChatCustomMessageType.file) {
       var localPath = ismChatChatMessageModel.attachments?.first.mediaUrl;
-      if (localPath!.isValidUrl) {
+      if (localPath?.isValidUrl ?? false) {
         try {
           final client = http.Client();
-          final request = await client.get(Uri.parse(localPath));
+          final request = await client.get(Uri.parse(localPath!));
           final bytes = request.bodyBytes;
           final documentsDir =
               (await path_provider.getApplicationDocumentsDirectory()).path;
@@ -595,7 +595,6 @@ class IsmChatPageController extends GetxController {
       );
     }
     isMessageSeleted = false;
-  
   }
 
   void sendPhotoAndVideo() async {
@@ -1511,7 +1510,7 @@ class IsmChatPageController extends GetxController {
   }) async {
     await _viewModel.deleteMessageForEveryone(
         conversationId: conversationId, messageIds: messageIds);
-    selectedMessage.clear();    
+    selectedMessage.clear();
   }
 
   Future<void> ismMessageDeleteSelf({
@@ -1520,7 +1519,7 @@ class IsmChatPageController extends GetxController {
   }) async {
     await _viewModel.deleteMessageForMe(
         conversationId: conversationId, messageIds: messageIds);
-    selectedMessage.clear();    
+    selectedMessage.clear();
   }
 
   Future<void> messageDeleteForMe({
@@ -1536,7 +1535,6 @@ class IsmChatPageController extends GetxController {
     }
     await IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
     await getMessagesFromDB(conversationId);
-     
   }
 
   Future<bool> checkMessageSenderSideOrNot() async {

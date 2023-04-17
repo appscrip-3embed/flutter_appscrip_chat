@@ -24,6 +24,7 @@ class IsmChatApiWrapper {
           .timeout(const Duration(seconds: 60));
 
       if (showLoader) {
+         IsmChatLog.error('fdsdfsfdfd $showLoader');
         IsmChatUtility.closeLoader();
       }
 

@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:flutter/services.dart';
 
 class IsmChatConversationsViewModel {
   IsmChatConversationsViewModel(this._repository);
@@ -65,4 +66,28 @@ class IsmChatConversationsViewModel {
   Future<IsmChatUserListModel?> getBlockUser(
           {required int? skip, required int limit}) async =>
       await _repository.getBlockUser(skip: skip, limit: limit);
+
+  // get Api for Presigned Url.....
+  Future<PresignedUrlModel?> getPresignedUrl({
+    required bool isLoading,
+    required String userIdentifier,
+    required String mediaExtension,
+  }) async =>
+      await _repository.getPresignedUrl(
+        isLoading: isLoading,
+        userIdentifier: userIdentifier,
+        mediaExtension: mediaExtension,
+      );
+
+  // update Api for Presigned Url.....
+  Future<IsmChatResponseModel?> updatePresignedUrl({
+    required bool isLoading,
+    required String presignedUrl,
+    required Uint8List file,
+  }) async =>
+      await _repository.updatePresignedUrl(
+        isLoading: isLoading,
+        presignedUrl: presignedUrl,
+        file: file,
+      );
 }

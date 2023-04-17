@@ -1,5 +1,4 @@
 import 'package:chat_component_example/res/strings.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:get/get.dart';
 
 class AppValidator {
@@ -44,6 +43,4 @@ class AppValidator {
     }
     return null;
   }
-
-
 }

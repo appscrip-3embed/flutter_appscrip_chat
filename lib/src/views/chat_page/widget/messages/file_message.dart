@@ -21,20 +21,21 @@ class IsmChatFileMessage extends StatelessWidget {
           child: Stack(
             alignment: Alignment.bottomCenter,
             children: [
-              AbsorbPointer(
-                child: SfPdfViewer.network(
-                  message.attachments?.first.mediaUrl ?? '',
-                  enableDoubleTapZooming: false,
-                  canShowHyperlinkDialog: false,
-                  canShowPaginationDialog: false,
-                  canShowScrollHead: false,
-                  enableTextSelection: false,
-                  canShowPasswordDialog: false,
-                  canShowScrollStatus: false,
-                  enableDocumentLinkAnnotation: false,
-                  enableHyperlinkNavigation: false,
+              if (message.attachments?.first.mediaUrl?.isNotEmpty == true)
+                AbsorbPointer(
+                  child: SfPdfViewer.network(
+                    message.attachments?.first.mediaUrl ?? '',
+                    enableDoubleTapZooming: false,
+                    canShowHyperlinkDialog: false,
+                    canShowPaginationDialog: false,
+                    canShowScrollHead: false,
+                    enableTextSelection: false,
+                    canShowPasswordDialog: false,
+                    canShowScrollStatus: false,
+                    enableDocumentLinkAnnotation: false,
+                    enableHyperlinkNavigation: false,
+                  ),
                 ),
-              ),
               Container(
                 height: context.width * 0.15,
                 width: double.maxFinite,

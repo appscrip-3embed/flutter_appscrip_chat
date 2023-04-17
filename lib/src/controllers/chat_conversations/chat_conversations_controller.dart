@@ -1,14 +1,20 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/widgets/alert_dailog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class IsmChatConversationsController extends GetxController {
   IsmChatConversationsController(this._viewModel);
   final IsmChatConversationsViewModel _viewModel;
+
+  var addGrouNameController = TextEditingController();
 
   final _conversations = <IsmChatConversationModel>[].obs;
   List<IsmChatConversationModel> get conversations => _conversations;
@@ -70,6 +76,12 @@ class IsmChatConversationsController extends GetxController {
 
   String usersPageToken = '';
 
+  final RxString _profileImage = ''.obs;
+  String get profileImage => _profileImage.value;
+  set profileImage(String value) {
+    _profileImage.value = value;
+  }
+
   @override
   onInit() async {
     super.onInit();
@@ -99,6 +111,75 @@ class IsmChatConversationsController extends GetxController {
     } else {
       forwardSeletedUserList
           .removeWhere((e) => e.userDetails.userId == userDetails.userId);
+    }
+  }
+
+  void removeFromSelectedList(UserDetails userDetails) {
+    forwardSeletedUserList
+        .removeWhere((e) => e.userDetails.userId == userDetails.userId);
+    forwardedList
+        .firstWhere((e) => e.userDetails.userId == userDetails.userId)
+        .selectedUser = false;
+  }
+
+  void ismUploadImage(ImageSource imageSource) async {
+    XFile? result;
+    if (imageSource == ImageSource.gallery) {
+      result = await ImagePicker()
+          .pickImage(imageQuality: 25, source: ImageSource.gallery);
+    } else {
+      result = await ImagePicker().pickImage(
+        imageQuality: 25,
+        source: ImageSource.camera,
+      );
+    }
+    if (result != null) {
+      var croppedFile = await ImageCropper().cropImage(
+        sourcePath: result.path,
+        cropStyle: CropStyle.circle,
+        compressQuality: 100,
+        uiSettings: [
+          AndroidUiSettings(
+            toolbarTitle: 'Cropper'.tr,
+            toolbarColor: Colors.black,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false,
+          ),
+          IOSUiSettings(
+            title: 'Cropper',
+          )
+        ],
+      );
+      var bytes = File(croppedFile!.path).readAsBytesSync();
+      var extension = result.name.split('.').last;
+      await getPresignedUrl(extension, bytes);
+    }
+  }
+
+  // / get Api for presigned Url.....
+  Future<void> getPresignedUrl(String mediaExtension, Uint8List bytes) async {
+    var response = await _viewModel.getPresignedUrl(
+        isLoading: true,
+        userIdentifier: userDetails?.userIdentifier ?? '',
+        mediaExtension: mediaExtension);
+    if (response != null) {
+      var urlResponse =
+          await updatePresignedUrl(response.presignedUrl ?? '', bytes);
+      if (urlResponse == 200) {
+        profileImage = response.mediaUrl!;
+      }
+    }
+  }
+
+  /// put Api for updatePresignedUrl...
+  Future<int?> updatePresignedUrl(String presignedUrl, Uint8List bytes) async {
+    var response = await _viewModel.updatePresignedUrl(
+        isLoading: true, presignedUrl: presignedUrl, file: bytes);
+    if (response!.errorCode == 200) {
+      return response.errorCode;
+    } else {
+      return 404;
     }
   }
 

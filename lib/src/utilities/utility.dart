@@ -6,11 +6,12 @@ import 'package:get/get.dart';
 class IsmChatUtility {
   const IsmChatUtility._();
 
-  static bool isLoaderOpen = Get.isDialogOpen ?? false;
+  // static bool isLoaderOpen = Get.isDialogOpen ?? false;
 
   /// Show loader
   static void showLoader() async {
-    if (!isLoaderOpen) {
+    var isLoaderOpen = Get.isDialogOpen;
+    if (isLoaderOpen != null) {
       await Get.dialog<void>(
         (IsmChatConfig.loadingDialog) ?? const IsmChatLoadingDialog(),
         barrierDismissible: false,
@@ -19,8 +20,9 @@ class IsmChatUtility {
   }
 
   static void closeLoader() {
-    if (isLoaderOpen) {
-      Get.back(closeOverlays: true, canPop: false);
+    var isLoaderOpen = Get.isDialogOpen;
+    if (isLoaderOpen != null) {
+      Get.back(closeOverlays: false, canPop: true);
     }
   }
 
@@ -59,9 +61,7 @@ class IsmChatUtility {
   /// this is for change decode string to encode string
   static String encodePayload(String value) => utf8.fuse(base64).encode(value);
 
-
-
-    /// Method For Convert Duration To String
+  /// Method For Convert Duration To String
   static String durationToString({required Duration duration}) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     var twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
@@ -242,6 +242,4 @@ class IsmChatUtility {
     'sun',
     'tga'
   ];
-
- 
 }

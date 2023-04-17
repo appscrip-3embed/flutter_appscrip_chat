@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/data/database/database.dart';
 import 'package:chat_component_example/res/res.dart';
