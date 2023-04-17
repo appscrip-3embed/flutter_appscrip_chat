@@ -38,6 +38,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                 child: const Icon(Icons.arrow_back_rounded),
               ),
               titleSpacing: IsmChatDimens.four,
+              centerTitle: false,
               title: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [

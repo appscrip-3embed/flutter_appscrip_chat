@@ -262,7 +262,10 @@ class IsmChatPageController extends GetxController {
       return;
     }
     _cameras = await availableCameras();
-    toggleCamera();
+    if(_cameras.isNotEmpty){
+       toggleCamera();
+    }
+     
   }
 
   /// Updates the [] mapping with the latest messages.

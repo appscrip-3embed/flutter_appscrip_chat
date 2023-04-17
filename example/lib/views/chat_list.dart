@@ -14,10 +14,7 @@ class ChatList extends GetView<ChatListController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: IsmChatApp(
-        chatTheme: IsmChatThemeData(
-          primaryColor: Colors.red,
-          // backgroundColor: Colors.red,
-        ),
+       
         communicationConfig: IsmChatCommunicationConfig(
           userConfig: IsmChatUserConfig(
             userToken: controller.userDetails?.userToken ?? '',

@@ -53,7 +53,7 @@ class IsmChatLocationMessage extends StatelessWidget {
                     rotateGesturesEnabled: false,
                     scrollGesturesEnabled: false,
                     buildingsEnabled: true,
-                    liteModeEnabled: true,
+                    // liteModeEnabled: true,
                     mapToolbarEnabled: false,
                     tiltGesturesEnabled: false,
                     zoomControlsEnabled: false,
