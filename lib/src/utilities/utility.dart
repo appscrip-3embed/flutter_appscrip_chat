@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 class IsmChatUtility {
@@ -72,6 +73,18 @@ class IsmChatUtility {
     } else {
       return '$twoDigitMinutes:$twoDigitSeconds';
     }
+  }
+
+  static void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+      backgroundColor: IsmChatConfig.chatTheme.backgroundColor,
+      textColor: IsmChatConfig.chatTheme.primaryColor,
+      fontSize: 16.0,
+    );
   }
 
   /// Video Type List For Every Platform

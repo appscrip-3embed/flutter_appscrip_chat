@@ -97,10 +97,9 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
               ),
               actions: [
                 PopupMenuButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.more_vert,
                     color: IsmChatColors.whiteColor,
-                    size: IsmChatDimens.thirtyTwo,
                   ),
                   itemBuilder: (context) => [
                     PopupMenuItem(

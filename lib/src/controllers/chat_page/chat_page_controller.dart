@@ -149,7 +149,7 @@ class IsmChatPageController extends GetxController {
     _myDuration.value = value;
   }
 
-  final RxBool _showDownSideButton = true.obs;
+  final RxBool _showDownSideButton = false.obs;
   bool get showDownSideButton => _showDownSideButton.value;
   set showDownSideButton(bool value) {
     _showDownSideButton.value = value;
@@ -211,7 +211,49 @@ class IsmChatPageController extends GetxController {
     super.onClose();
   }
 
-  void whenMessgeIsSeleted(IsmChatChatMessageModel ismChatChatMessageModel) {
+  void onMenuItemSelected(
+    IsmChatFocusMenuType menuType,
+    IsmChatChatMessageModel message,
+  ) async {
+    switch (menuType) {
+      case IsmChatFocusMenuType.info:
+        await getMessageInformation(message);
+        break;
+      case IsmChatFocusMenuType.reply:
+        isreplying = true;
+        chatMessageModel = message;
+        break;
+      case IsmChatFocusMenuType.forward:
+        // TODO: check this forward code
+        Get.back<void>();
+        var chatConversationController =
+            Get.find<IsmChatConversationsController>();
+        chatConversationController.userList.clear();
+        chatConversationController.forwardedList.clear();
+        chatConversationController.forwardSeletedUserList.clear();
+        await Get.to<void>(
+          IsmChatForwardListView(
+            ismChatChatMessageModel: message,
+            ismChatConversationModel: conversation!,
+          ),
+        );
+        break;
+      case IsmChatFocusMenuType.copy:
+        await Clipboard.setData(ClipboardData(text: message.body));
+        IsmChatUtility.showToast('Message copied');
+        break;
+      case IsmChatFocusMenuType.delete:
+        showDialogForMessageDelete(message);
+        break;
+      case IsmChatFocusMenuType.selectMessage:
+        selectedMessage.clear();
+        isMessageSeleted = true;
+        selectedMessage.add(message);
+        break;
+    }
+  }
+
+  void onMessageSelect(IsmChatChatMessageModel ismChatChatMessageModel) {
     if (isMessageSeleted) {
       if (selectedMessage.contains(ismChatChatMessageModel)) {
         selectedMessage.removeWhere(
@@ -222,7 +264,6 @@ class IsmChatPageController extends GetxController {
       if (selectedMessage.isEmpty) {
         isMessageSeleted = false;
       }
-      return;
     }
   }
 
@@ -235,17 +276,17 @@ class IsmChatPageController extends GetxController {
       }
       if (messagesScrollController.position.maxScrollExtent ==
           messagesScrollController.offset) {
-        showDownSideButton = true;
-      } else {
         showDownSideButton = false;
+      } else {
+        showDownSideButton = true;
       }
     });
   }
 
-  void scrollDown() {
-    messagesScrollController.animateTo(
+  Future<void> scrollDown() async {
+    await messagesScrollController.animateTo(
       messagesScrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 100),
+      duration: IsmChatConfig.animationDuration,
       curve: Curves.fastOutSlowIn,
     );
   }
@@ -262,10 +303,9 @@ class IsmChatPageController extends GetxController {
       return;
     }
     _cameras = await availableCameras();
-    if(_cameras.isNotEmpty){
-       toggleCamera();
+    if (_cameras.isNotEmpty) {
+      toggleCamera();
     }
-     
   }
 
   /// Updates the [] mapping with the latest messages.
@@ -276,7 +316,7 @@ class IsmChatPageController extends GetxController {
       if (x.customType != IsmChatCustomMessageType.date ||
           x.customType != IsmChatCustomMessageType.block ||
           x.customType != IsmChatCustomMessageType.unblock) {
-        autoScrollIndexById[x.messageId.toString()] = i;
+        autoScrollIndexById[x.messageId!] = i;
       }
       i++;
     }
@@ -286,9 +326,10 @@ class IsmChatPageController extends GetxController {
   void scrollToMessage(String messageId, {Duration? duration}) async {
     if (autoScrollIndexById[messageId] != null) {
       await messagesScrollController.scrollToIndex(
-          autoScrollIndexById[messageId]!,
-          duration: duration ?? scrollAnimationDuration,
-          preferPosition: AutoScrollPosition.middle);
+        autoScrollIndexById[messageId]!,
+        duration: duration ?? IsmChatConfig.animationDuration,
+        preferPosition: AutoScrollPosition.middle,
+      );
     } else {
       await getMessagesFromAPI(
           forPagination: true, lastMessageTimestampFromFunction: 0);
@@ -378,14 +419,15 @@ class IsmChatPageController extends GetxController {
         .getDBConversation(conversationId: conversation?.conversationId ?? '');
     if (chatConversation != null) {
       chatConversation.lastMessageDetails.target = LastMessageDetails(
-          showInConversation: true,
-          sentAt: messages.last.sentAt,
-          senderName: messages.last.chatName,
-          messageType: messages.last.messageType?.value ?? 0,
-          messageId: messages.last.messageId ?? '',
-          conversationId: messages.last.conversationId ?? '',
-          body: messages.last
-              .body); // Todo: check for last message for display in converstiaon list
+        showInConversation: true,
+        sentAt: messages.last.sentAt,
+        senderName: messages.last.chatName,
+        messageType: messages.last.messageType?.value ?? 0,
+        messageId: messages.last.messageId ?? '',
+        conversationId: messages.last.conversationId ?? '',
+        body: messages.last.body,
+      );
+      // Todo: check for last message for display in converstiaon list
       chatConversation.unreadMessagesCount = 0;
       IsmChatConfig.objectBox.chatConversationBox.put(chatConversation);
       await Get.find<IsmChatConversationsController>().getConversationsFromDB();
@@ -395,11 +437,7 @@ class IsmChatPageController extends GetxController {
   void _scrollToBottom() async {
     await Future.delayed(
       const Duration(milliseconds: 10),
-      () async => await messagesScrollController.animateTo(
-        messagesScrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 100),
-        curve: Curves.easeInOut,
-      ),
+      () async => await scrollDown(),
     );
   }
 

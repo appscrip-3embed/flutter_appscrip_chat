@@ -57,7 +57,6 @@ class IsmChatMqttController extends GetxController {
 
   void connectClient() async {
     try {
-    
       var res = await client.connect(
         _communicationConfig.username,
         _communicationConfig.password,
@@ -410,7 +409,7 @@ class IsmChatMqttController extends GetxController {
         await Get.find<IsmChatConversationsController>().getBlockUser();
         await controller.getConverstaionDetails(
             conversationId: actionModel.conversationId ?? '');
-        controller.getMessagesFromAPI(
+        await controller.getMessagesFromAPI(
             conversationId: actionModel.conversationId ?? '',
             lastMessageTimestampFromFunction: controller.messages.last.sentAt);
       }

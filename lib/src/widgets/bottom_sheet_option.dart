@@ -16,9 +16,9 @@ class IsmChatBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
         padding: IsmChatDimens.edgeInsetsBottom10,
         child: Container(
-          height: 160,
           margin: IsmChatDimens.edgeInsets10,
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
                 decoration: BoxDecoration(

@@ -296,20 +296,29 @@ enum IsmChatActionEvents {
         return IsmChatActionEvents.typingEvent;
     }
   }
-
-
-  
 }
-
 
 enum SendMessageType {
   pendingMessage,
   forwardMessage,
 }
 
-
 enum GetChatConversationApiCall {
   fromOnInit,
   fromRefresh,
   fromPullDown,
+}
+
+enum IsmChatFocusMenuType {
+  info,
+  reply,
+  forward,
+  copy,
+  delete,
+  selectMessage;
+
+  @override
+  String toString() => this == IsmChatFocusMenuType.selectMessage
+      ? 'Select Message'
+      : '${name[0].toUpperCase()}${name.substring(1).toLowerCase()}';
 }

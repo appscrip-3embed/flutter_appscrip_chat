@@ -229,6 +229,13 @@ extension ChildWidget on IsmChatCustomMessageType {
         return IsmChatDateMessage(message);
     }
   }
+
+  bool get canCopy => [
+        IsmChatCustomMessageType.text,
+        IsmChatCustomMessageType.link,
+        IsmChatCustomMessageType.location,
+        IsmChatCustomMessageType.reply,
+      ].contains(this);
 }
 
 extension GetLink on String {
@@ -275,5 +282,24 @@ extension BlockStatus on IsmChatConversationModel {
     var controller = Get.find<IsmChatConversationsController>();
     var blockedList = controller.blockUsers.map((e) => e.userId);
     return blockedList.contains(opponentDetails!.userId);
+  }
+}
+
+extension MenuIcon on IsmChatFocusMenuType {
+  IconData get icon {
+    switch (this) {
+      case IsmChatFocusMenuType.info:
+        return Icons.info_outline_rounded;
+      case IsmChatFocusMenuType.reply:
+        return Icons.reply_rounded;
+      case IsmChatFocusMenuType.forward:
+        return Icons.shortcut_rounded;
+      case IsmChatFocusMenuType.copy:
+        return Icons.copy_rounded;
+      case IsmChatFocusMenuType.delete:
+        return Icons.delete_outline_rounded;
+      case IsmChatFocusMenuType.selectMessage:
+        return Icons.select_all_rounded;
+    }
   }
 }

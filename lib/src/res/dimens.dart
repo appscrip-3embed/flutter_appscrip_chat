@@ -40,6 +40,8 @@ class IsmChatDimens {
   static final double appBarHeight = 56.sp;
   static final double appBarElevation = 8.sp;
 
+  static final Widget box0 = SizedBox(height: zero);
+
   static final Widget boxHeight4 = SizedBox(height: four);
   static final Widget boxHeight2 = SizedBox(height: two);
 
@@ -67,21 +69,21 @@ class IsmChatDimens {
       EdgeInsets.symmetric(horizontal: eight, vertical: four);
   static final EdgeInsets edgeInsets8 = EdgeInsets.all(eight);
   static final EdgeInsets edgeInsets10 = EdgeInsets.all(ten);
-  static EdgeInsets edgeInsetsHorizontal10 = EdgeInsets.symmetric(
-    vertical: zero,
-    horizontal: ten
-  );
+  static EdgeInsets edgeInsetsHorizontal10 =
+      EdgeInsets.symmetric(vertical: zero, horizontal: ten);
 
   static final EdgeInsets edgeInsets10_5_10_10 =
       EdgeInsets.only(left: ten, top: five, bottom: ten, right: ten);
   static final EdgeInsets edgeInsetsTop20 = EdgeInsets.only(top: twenty);
-  static final EdgeInsets edgeInsets16_0_19_8 = EdgeInsets.only(left: sixteen,right: ten,bottom: eight);
+  static final EdgeInsets edgeInsets16_0_19_8 =
+      EdgeInsets.only(left: sixteen, right: ten, bottom: eight);
 
   static final EdgeInsets edgeInsets16 = EdgeInsets.all(sixteen);
   static final EdgeInsets edgeInsets0_16_0_0 =
       EdgeInsets.fromLTRB(zero, sixteen, zero, zero);
   static final EdgeInsets edgeInsets20 = EdgeInsets.all(twenty);
 
+  static final EdgeInsets edgeInsets0_8 = EdgeInsets.symmetric(vertical: eight);
   static final EdgeInsets edgeInsets0_10 = EdgeInsets.symmetric(vertical: ten);
   static final EdgeInsets edgeInsets10_0 =
       EdgeInsets.symmetric(horizontal: ten);
@@ -89,5 +91,4 @@ class IsmChatDimens {
       EdgeInsets.symmetric(horizontal: eight, vertical: 10);
   static final EdgeInsets edgeInsetsBottom10 = EdgeInsets.only(bottom: ten);
   static final EdgeInsets edgeInsetsBottom50 = EdgeInsets.only(bottom: fifty);
-
 }

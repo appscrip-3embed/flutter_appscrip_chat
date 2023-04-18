@@ -4,7 +4,9 @@ class IsmChatAssets {
   static const String _base = 'packages/appscrip_chat_component/assets';
 
   static const String _svgBase = '$_base/svg';
-  static const String _imageBase = '$_base/svg';
+  static const String _imageBase = '$_base/images';
+
+  static const String noImage = '$_imageBase/noperson.png';
 
   static const String pdfSvg = '$_svgBase/pdf.svg';
   static const String txtSvg = '$_svgBase/txt.svg';
@@ -13,6 +15,8 @@ class IsmChatAssets {
 
 class IsmChatConstants {
   const IsmChatConstants._();
+
+  static const Duration swipeDuration = Duration(milliseconds: 300);
 
   /// Video Type List For Every Platform
   static List<String> videoExtensions = [

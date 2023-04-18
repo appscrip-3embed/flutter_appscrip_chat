@@ -22,151 +22,166 @@ class IsmChatInputField extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              controller.isEnableRecordingAudio
-                  ? Container(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      padding: const EdgeInsets.all(20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          const Icon(
-                            Icons.radio_button_checked_outlined,
-                            color: Colors.red,
+              if (controller.isEnableRecordingAudio) ...[
+                Expanded(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        const Icon(
+                          Icons.radio_button_checked_outlined,
+                          color: Colors.red,
+                        ),
+                        IsmChatDimens.boxWidth32,
+                        Text(
+                          controller.seconds.getTimerRecord(controller.seconds),
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
                           ),
-                          IsmChatDimens.boxWidth32,
-                          Text(
-                              controller.seconds
-                                  .getTimerRecord(controller.seconds),
-                              style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600)),
-                        ],
-                      ),
-                    )
-                  : Container(
-                      width: MediaQuery.of(context).size.width * 0.77,
-                      margin: IsmChatDimens.edgeInsets8
-                          .copyWith(top: IsmChatDimens.four),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: IsmChatConfig.chatTheme.primaryColor!),
-                        borderRadius:
-                            BorderRadius.circular(IsmChatDimens.twenty),
-                        color: IsmChatTheme.of(context).backgroundColor,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (controller.isreplying)
-                            Container(
-                              margin: IsmChatDimens.edgeInsets4,
-                              padding: IsmChatDimens.edgeInsets10,
-                              height: IsmChatDimens.sixty,
-                              width: Get.width,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                    IsmChatDimens.sixteen),
-                                color: IsmChatConfig.chatTheme.primaryColor!
-                                    .withOpacity(.7),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ] else ...[
+                Expanded(
+                  child: Container(
+                    margin: IsmChatDimens.edgeInsets8
+                        .copyWith(top: IsmChatDimens.four),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: IsmChatConfig.chatTheme.primaryColor!),
+                      borderRadius: BorderRadius.circular(IsmChatDimens.twenty),
+                      color: IsmChatConfig.chatTheme.backgroundColor,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (controller.isreplying)
+                          Container(
+                            margin: IsmChatDimens.edgeInsets4.copyWith(
+                              bottom: IsmChatDimens.zero,
+                            ),
+                            padding: IsmChatDimens.edgeInsets8,
+                            width: Get.width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(
+                                IsmChatDimens.sixteen,
                               ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        controller.chatMessageModel?.sentByMe ??
-                                                false
-                                            ? ismChatConversationController
-                                                    .userDetails?.userName ??
-                                                ''
-                                            : controller
-                                                    .conversation
-                                                    ?.opponentDetails
-                                                    ?.userName ??
-                                                '',
-                                        style: IsmChatStyles.w600White14,
-                                      ),
-                                      Text(messageBody)
-                                    ],
+                              color: IsmChatConfig.chatTheme.primaryColor!
+                                  .withOpacity(.5),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      controller.chatMessageModel?.sentByMe ??
+                                              false
+                                          ? ismChatConversationController
+                                                  .userDetails?.userName ??
+                                              ''
+                                          : controller.conversation
+                                                  ?.opponentDetails?.userName ??
+                                              '',
+                                      style: IsmChatStyles.w600White14,
+                                    ),
+                                    Text(messageBody),
+                                  ],
+                                ),
+                                IsmChatTapHandler(
+                                  onTap: () {
+                                    controller.isreplying = false;
+                                  },
+                                  child: Icon(
+                                    Icons.close_rounded,
+                                    size: IsmChatDimens.sixteen,
                                   ),
-                                  IsmChatTapHandler(
-                                      onTap: () {
-                                        controller.isreplying = false;
-                                      },
-                                      child: Icon(
-                                        Icons.close_rounded,
-                                        size: IsmChatDimens.sixteen,
-                                      ))
-                                ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                maxLines: 4,
+                                minLines: 1,
+                                focusNode: controller.focusNode,
+                                controller: controller.chatInputController,
+                                cursorColor:
+                                    IsmChatConfig.chatTheme.primaryColor,
+                                decoration: InputDecoration(
+                                  isDense: true,
+                                  filled: true,
+                                  fillColor:
+                                      IsmChatConfig.chatTheme.backgroundColor,
+                                  // prefixIcon: IconButton(
+                                  //   color: IsmChatConfig.chatTheme.primaryColor,
+                                  //   icon: const Icon(Icons.emoji_emotions_rounded),
+                                  //   onPressed: () {},
+                                  // ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        IsmChatDimens.twenty),
+                                    borderSide: const BorderSide(
+                                        color: Colors.transparent),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        IsmChatDimens.twenty),
+                                    borderSide: const BorderSide(
+                                      color: Colors.transparent,
+                                    ),
+                                  ),
+                                ),
+                                onChanged: (_) {
+                                  if (controller.conversation?.conversationId
+                                          ?.isNotEmpty ??
+                                      false) {
+                                    controller.notifyTyping();
+                                  }
+                                },
                               ),
                             ),
-                          Row(
-                            // mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  maxLines: 4,
-                                  minLines: 1,
-                                  focusNode: controller.focusNode,
-                                  controller: controller.chatInputController,
-                                  decoration: InputDecoration(
-                                    isDense: true,
-                                    // isCollapsed: true,
-                                    filled: true,
-                                    fillColor: IsmChatTheme.of(context)
-                                        .backgroundColor,
-                                    // prefixIcon: IconButton(
-                                    //   color: IsmChatConfig.chatTheme.primaryColor,
-                                    //   icon: const Icon(Icons.emoji_emotions_rounded),
-                                    //   onPressed: () {},
-                                    // ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          IsmChatDimens.forty),
-                                      borderSide: const BorderSide(
-                                          color: Colors.transparent),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          IsmChatDimens.forty),
-                                      borderSide: const BorderSide(
-                                        color: Colors.transparent,
-                                      ),
-                                    ),
-                                    // suffix: const ,
-                                  ),
-                                  onChanged: (_) {
-                                    if (controller.conversation?.conversationId
-                                            ?.isNotEmpty ??
-                                        false) {
-                                      controller.notifyTyping();
-                                    }
-                                  },
-                                ),
-                              ),
-                              const IsmChatAttachmentIcon()
-                            ],
-                          ),
-                        ],
-                      ),
+                            const _AttachmentIcon()
+                          ],
+                        ),
+                      ],
                     ),
+                  ),
+                ),
+              ],
+              const _MicOrSendButton(),
               IsmChatDimens.boxWidth8,
-              Container(
-                margin: IsmChatDimens.edgeInsetsBottom10,
-                height: IsmChatDimens.inputFieldHeight,
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: GestureDetector(
-                    onLongPressStart: (val) async {
+            ],
+          );
+        },
+      );
+}
+
+class _MicOrSendButton extends StatelessWidget {
+  const _MicOrSendButton();
+
+  @override
+  Widget build(BuildContext context) => Container(
+        margin: IsmChatDimens.edgeInsetsBottom10,
+        height: IsmChatDimens.inputFieldHeight,
+        child: AspectRatio(
+          aspectRatio: 1,
+          child: GetX<IsmChatPageController>(
+            builder: (controller) => GestureDetector(
+              onLongPressStart: controller.showSendButton
+                  ? null
+                  : (val) async {
                       if (!controller.conversation!.isChattingAllowed) {
                         controller.showDialogCheckBlockUnBlock();
                       } else {
@@ -182,7 +197,9 @@ class IsmChatInputField extends StatelessWidget {
                         }
                       }
                     },
-                    onLongPressEnd: (val) async {
+              onLongPressEnd: controller.showSendButton
+                  ? null
+                  : (val) async {
                       controller.isEnableRecordingAudio = false;
                       controller.forVideoRecordTimer?.cancel();
                       controller.seconds = 0;
@@ -195,61 +212,50 @@ class IsmChatInputField extends StatelessWidget {
                                   .conversation?.opponentDetails?.userId ??
                               '');
                     },
-                    onTap: controller.showSendButton
-                        ? !controller.conversation!.isChattingAllowed
-                            ? controller.showDialogCheckBlockUnBlock
-                            : () {
-                                controller.sendTextMessage(
-                                    conversationId: controller
-                                            .conversation?.conversationId ??
-                                        '',
-                                    userId: controller.conversation
-                                            ?.opponentDetails?.userId ??
-                                        '');
-                              }
-                        : () {},
-                    // style: ElevatedButton.styleFrom(
-                    //   fixedSize: Size.square(IsmChatDimens.inputFieldHeight),
-                    //   alignment: Alignment.center,
-                    //   padding: EdgeInsets.zero,
-                    //   backgroundColor: IsmChatConfig.chatTheme.primaryColor,
-                    //   foregroundColor: IsmChatColors.whiteColor,
-                    // ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(IsmChatDimens.fifty),
-                        color: IsmChatConfig.chatTheme.primaryColor,
-                      ),
-                      child: AnimatedSwitcher(
-                        duration: IsmChatConfig.animationDuration,
-                        transitionBuilder: (child, animation) =>
-                            ScaleTransition(
-                          scale: animation,
-                          child: child,
-                        ),
-                        child: controller.showSendButton
-                            ? Icon(
-                                Icons.send_rounded,
-                                key: UniqueKey(),
-                                color: IsmChatColors.whiteColor,
-                              )
-                            : Icon(Icons.mic_rounded,
-                                key: UniqueKey(),
-                                color: IsmChatColors.whiteColor),
-                      ),
-                    ),
+              onTap: controller.showSendButton
+                  ? !controller.conversation!.isChattingAllowed
+                      ? controller.showDialogCheckBlockUnBlock
+                      : () {
+                          controller.sendTextMessage(
+                              conversationId:
+                                  controller.conversation?.conversationId ?? '',
+                              userId: controller
+                                      .conversation?.opponentDetails?.userId ??
+                                  '');
+                        }
+                  : null,
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: IsmChatConfig.chatTheme.primaryColor,
+                ),
+                child: AnimatedSwitcher(
+                  duration: IsmChatConfig.animationDuration,
+                  transitionBuilder: (child, animation) => ScaleTransition(
+                    scale: animation,
+                    child: child,
                   ),
+                  child: controller.showSendButton
+                      ? Icon(
+                          Icons.send_rounded,
+                          key: UniqueKey(),
+                          color: IsmChatColors.whiteColor,
+                        )
+                      : Icon(
+                          Icons.mic_rounded,
+                          key: UniqueKey(),
+                          color: IsmChatColors.whiteColor,
+                        ),
                 ),
               ),
-            ],
-          );
-        },
+            ),
+          ),
+        ),
       );
 }
 
-class IsmChatAttachmentIcon extends GetView<IsmChatPageController> {
-  const IsmChatAttachmentIcon({super.key});
+class _AttachmentIcon extends GetView<IsmChatPageController> {
+  const _AttachmentIcon();
 
   @override
   Widget build(BuildContext context) => IconButton(

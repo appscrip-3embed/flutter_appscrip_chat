@@ -1,6 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
 import 'package:get/get.dart';
@@ -36,7 +35,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                   ),
                   titleSpacing: IsmChatDimens.four,
                   title: Text(
-                    '${controller.selectedMessage.isEmpty ? '' : controller.selectedMessage.length}   Messages...',
+                    '${controller.selectedMessage.length} Messages',
                     style: IsmChatStyles.w600White18,
                   ),
                   backgroundColor: IsmChatConfig.chatTheme.primaryColor,
@@ -51,12 +50,8 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                         controller.showDialogForDeleteMultipleMessage(
                             messageSenderSide, controller.selectedMessage);
                       },
-                      icon: const Icon(Icons.delete_forever_rounded),
+                      icon: const Icon(Icons.delete_rounded),
                     ),
-                    // IconButton(
-                    //   onPressed: () {},
-                    //   icon: const Icon(Icons.reply_rounded),
-                    // )
                   ],
                 )
               : IsmChatPageHeader(),
@@ -73,15 +68,13 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                         visible: controller.messages.isNotEmpty &&
                             controller.messages.length != 1,
                         replacement: const IsmChatNoMessage(),
-                        child: ListView.separated(
+                        child: ListView.builder(
                           controller: controller.messagesScrollController,
                           keyboardDismissBehavior:
                               ScrollViewKeyboardDismissBehavior.onDrag,
-                          padding: IsmChatDimens.edgeInsets8,
+                          padding: IsmChatDimens.edgeInsets0_8,
                           itemCount: controller.messages.length,
-                          separatorBuilder: (_, __) => IsmChatDimens.boxHeight4,
-                          itemBuilder: (_, index) => ChatMessage(
-                              controller.messages[index], controller, index),
+                          itemBuilder: (_, index) => ChatMessage(index),
                         ),
                       ),
                     ),
@@ -89,45 +82,47 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                   const IsmChatInputField()
                 ],
               ),
-              if (!controller.showDownSideButton)
-                Positioned(
-                  bottom: IsmChatDimens.eighty,
-                  child: Padding(
-                    padding: IsmChatDimens.edgeInsets8,
-                    child: InkWell(
-                      onTap: controller.scrollDown,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.2),
-                            border:
-                                Border.all(color: Colors.grey.withOpacity(0.8)),
-                            borderRadius:
-                                BorderRadius.circular(IsmChatDimens.thirtyTwo)),
-                        padding: IsmChatDimens.edgeInsets10,
-                        // color: Colors.red,
-                        child: Icon(
-                          Icons.expand_more,
-                          color: IsmChatColors.whiteColor,
-                          size: IsmChatDimens.twentyFour,
+              Obx(
+                () => !controller.showDownSideButton
+                    ? const SizedBox.shrink()
+                    : Positioned(
+                        bottom: IsmChatDimens.eighty,
+                        right: IsmChatDimens.eight,
+                        child: IsmChatTapHandler(
+                          onTap: controller.scrollDown,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: IsmChatConfig.chatTheme.backgroundColor!
+                                  .withOpacity(0.5),
+                              border: Border.all(
+                                color: IsmChatConfig.chatTheme.primaryColor!,
+                                width: 1.5,
+                              ),
+                              shape: BoxShape.circle,
+                            ),
+                            padding: IsmChatDimens.edgeInsets8,
+                            child: Icon(
+                              Icons.expand_more_rounded,
+                              color: IsmChatConfig.chatTheme.primaryColor,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
+              ),
             ],
           ),
-          // bottomSheet: const ,
         ),
       );
 }
 
 class ChatMessage extends StatelessWidget {
-  const ChatMessage(this.message, this.ismChatPageController, this.index,
-      {super.key});
+  ChatMessage(this.index, {super.key})
+      : controller = Get.find<IsmChatPageController>(),
+        message = Get.find<IsmChatPageController>().messages[index];
 
   final IsmChatChatMessageModel message;
   final int index;
-  final IsmChatPageController ismChatPageController;
+  final IsmChatPageController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -136,13 +131,11 @@ class ChatMessage extends StatelessWidget {
             message.customType! == IsmChatCustomMessageType.block ||
             message.customType! == IsmChatCustomMessageType.unblock;
     return IsmChatTapHandler(
-      onTap: () {
-        if (!showMessageInCenter) {
-          ismChatPageController.whenMessgeIsSeleted(message);
-        }
-      },
+      onTap: showMessageInCenter
+          ? null
+          : () => controller.onMessageSelect(message),
       child: Container(
-        color: ismChatPageController.selectedMessage.contains(message)
+        color: controller.selectedMessage.contains(message)
             ? IsmChatConfig.chatTheme.primaryColor!.withOpacity(.2)
             : null,
         child: UnconstrainedBox(
@@ -151,214 +144,107 @@ class ChatMessage extends StatelessWidget {
               : message.sentByMe
                   ? Alignment.centerRight
                   : Alignment.centerLeft,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: message.sentByMe
-                ? CrossAxisAlignment.end
-                : CrossAxisAlignment.start,
-            children: [
-              SwipeTo(
-                offsetDx: showMessageInCenter ? 0 : 1,
-                // iconOnRightSwipe: Icons.replay,
-                onRightSwipe: () {
-                  if (!showMessageInCenter) {
-                    ismChatPageController.isreplying = true;
-                    ismChatPageController.chatMessageModel = message;
-                  }
-                },
-                child: FocusedMenuHolder(
-                  openWithTap: showMessageInCenter ? true : false,
-                  menuWidth: 160,
-                  menuOffset: IsmChatDimens.twenty,
-                  blurSize: 3, // IconButton(
-                  //   onPressed: () {},
-                  //   icon: const Icon(Icons.reply_rounded),
-                  // )
-                  animateMenuItems: false,
-                  blurBackgroundColor: Colors.grey,
-                  onPressed: () {},
-                  menuItems: [
-                    if (message.sentByMe)
-                      FocusedMenuItem(
-                        backgroundColor: Colors.white,
-                        title: const Text(
-                          'Info',
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                        onPressed: () async {
-                          await ismChatPageController
-                              .getMessageInformation(message);
+          child: Padding(
+            padding: showMessageInCenter
+                ? IsmChatDimens.edgeInsets0
+                : IsmChatDimens.edgeInsets4,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: message.sentByMe
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
+              children: [
+                SwipeTo(
+                  offsetDx: showMessageInCenter ? 0 : 0.75,
+                  animationDuration: IsmChatConstants.swipeDuration,
+                  iconColor: IsmChatConfig.chatTheme.primaryColor,
+                  iconSize: 24,
+                  onLeftSwipe: showMessageInCenter || !message.sentByMe
+                      ? null
+                      : () {
+                          controller.isreplying = true;
+                          controller.chatMessageModel = message;
                         },
-                        trailingIcon: Icon(
-                          Icons.info_outline,
-                          color: Colors.black,
-                          size: IsmChatDimens.twenty,
-                        ),
-                      ),
-                    FocusedMenuItem(
-                      backgroundColor: Colors.white,
-                      title: const Text(
-                        'Reply',
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),
-                      onPressed: () {
-                        ismChatPageController.isreplying = true;
-                        ismChatPageController.chatMessageModel = message;
-                      },
-                      trailingIcon: Icon(
-                        Icons.reply_outlined,
-                        color: Colors.black,
-                        size: IsmChatDimens.twenty,
-                      ),
-                    ),
-                    FocusedMenuItem(
-                      backgroundColor: Colors.white,
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: const [
-                          Text(
-                            'Forward',
-                            style: TextStyle(
-                              color: Colors.black,
+                  onRightSwipe: showMessageInCenter || message.sentByMe
+                      ? null
+                      : () {
+                          controller.isreplying = true;
+                          controller.chatMessageModel = message;
+                        },
+                  child: FocusedMenuHolder(
+                    openWithTap: showMessageInCenter ? true : false,
+                    menuWidth: 160,
+                    menuOffset: IsmChatDimens.twenty,
+                    blurSize: 3,
+                    animateMenuItems: false,
+                    blurBackgroundColor: Colors.grey,
+                    onPressed: () {},
+                    menuItems: IsmChatFocusMenuType.values
+                        .where((e) => e == IsmChatFocusMenuType.info
+                            ? message.sentByMe
+                            : true)
+                        .toList()
+                        .map(
+                          (e) => FocusedMenuItem(
+                            title: Text(
+                              e.toString(),
+                              style: IsmChatStyles.w400Black12,
                             ),
+                            onPressed: () =>
+                                controller.onMenuItemSelected(e, message),
+                            trailingIcon: Icon(e.icon),
                           ),
-                        ],
-                      ),
-                      onPressed: () async {
-                        Get.back<void>();
-                        var chatConversationController =
-                            Get.find<IsmChatConversationsController>();
-                        chatConversationController.userList.clear();
-                        chatConversationController.forwardedList.clear();
-                        chatConversationController.forwardSeletedUserList
-                            .clear();
-                        await Get.to<void>(IsmChatForwardListView(
-                          ismChatChatMessageModel: message,
-                          ismChatConversationModel:
-                              ismChatPageController.conversation!,
-                        ));
-                      },
-                      trailingIcon: Icon(
-                        Icons.forward_5,
-                        color: Colors.black,
-                        size: IsmChatDimens.twenty,
-                      ),
-                    ),
-                    if (message.customType == IsmChatCustomMessageType.text ||
-                        message.customType == IsmChatCustomMessageType.link ||
-                        message.customType ==
-                            IsmChatCustomMessageType.location ||
-                        message.customType == IsmChatCustomMessageType.reply)
-                      FocusedMenuItem(
-                        backgroundColor: Colors.white,
-                        title: const Text(
-                          'Copy',
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                        onPressed: () {
-                          Clipboard.setData(ClipboardData(text: message.body));
-                        },
-                        trailingIcon: Icon(
-                          Icons.copy,
-                          color: Colors.black,
-                          size: IsmChatDimens.twenty,
-                        ),
-                      ),
-                    FocusedMenuItem(
-                      backgroundColor: Colors.white,
-                      title: const Text(
-                        'Delete',
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),
-                      onPressed: () {
-                        ismChatPageController
-                            .showDialogForMessageDelete(message);
-                      },
-                      trailingIcon: Icon(
-                        Icons.delete_outline_rounded,
-                        color: Colors.red,
-                        size: IsmChatDimens.twenty,
-                      ),
-                    ),
-                    FocusedMenuItem(
-                      backgroundColor: Colors.white,
-                      title: const Text(
-                        'Select Message',
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),
-                      onPressed: () {
-                        ismChatPageController.selectedMessage.clear();
-                        ismChatPageController.isMessageSeleted = true;
-                        ismChatPageController.selectedMessage.add(message);
-                      },
-                      trailingIcon: Icon(
-                        Icons.select_all_rounded,
-                        color: Colors.black,
-                        size: IsmChatDimens.twenty,
-                      ),
-                    ),
-                  ],
-                  child: IsmChatTapHandler(
-                    child: AutoScrollTag(
-                      controller:
-                          ismChatPageController.messagesScrollController,
-                      index: index,
-                      key: Key('scroll-${message.messageId}'),
-                      child: Container(
-                        padding: IsmChatDimens.edgeInsets4,
-                        constraints: showMessageInCenter
-                            ? null
-                            : BoxConstraints(
-                                maxWidth: context.width * .8,
-                                minWidth: context.width * .1,
-                              ),
-                        decoration: showMessageInCenter
-                            ? null
-                            : BoxDecoration(
-                                color: message.sentByMe
-                                    ? IsmChatConfig.chatTheme.primaryColor
-                                    : IsmChatConfig.chatTheme.backgroundColor,
-                                borderRadius: BorderRadius.only(
-                                  topRight:
-                                      Radius.circular(IsmChatDimens.twelve),
-                                  topLeft: message.sentByMe
-                                      ? Radius.circular(IsmChatDimens.twelve)
-                                      : Radius.circular(IsmChatDimens.four),
-                                  bottomLeft:
-                                      Radius.circular(IsmChatDimens.twelve),
-                                  bottomRight: message.sentByMe
-                                      ? Radius.circular(IsmChatDimens.four)
-                                      : Radius.circular(IsmChatDimens.twelve),
+                        )
+                        .toList(),
+                    child: IsmChatTapHandler(
+                      child: AutoScrollTag(
+                        controller: controller.messagesScrollController,
+                        index: index,
+                        key: Key('scroll-${message.messageId}'),
+                        child: Container(
+                          padding: IsmChatDimens.edgeInsets4,
+                          constraints: showMessageInCenter
+                              ? null
+                              : BoxConstraints(
+                                  maxWidth: context.width * .8,
+                                  minWidth: context.width * .1,
                                 ),
-                              ),
-                        child: message.customType!.messageType(message),
+                          decoration: showMessageInCenter
+                              ? null
+                              : BoxDecoration(
+                                  color: message.sentByMe
+                                      ? IsmChatConfig.chatTheme.primaryColor
+                                      : IsmChatConfig.chatTheme.backgroundColor,
+                                  borderRadius: BorderRadius.only(
+                                    topRight:
+                                        Radius.circular(IsmChatDimens.twelve),
+                                    topLeft: message.sentByMe
+                                        ? Radius.circular(IsmChatDimens.twelve)
+                                        : Radius.circular(IsmChatDimens.four),
+                                    bottomLeft:
+                                        Radius.circular(IsmChatDimens.twelve),
+                                    bottomRight: message.sentByMe
+                                        ? Radius.circular(IsmChatDimens.four)
+                                        : Radius.circular(IsmChatDimens.twelve),
+                                  ),
+                                ),
+                          child: message.customType!.messageType(message),
+                        ),
                       ),
+                      onTap: () async {
+                        if (message.messageType == IsmChatMessageType.reply) {
+                          controller
+                              .scrollToMessage(message.parentMessageId ?? '');
+                        } else {
+                          controller.tapForMediaPreview(message);
+                        }
+                      },
                     ),
-                    onTap: () async {
-                      if (message.messageType == IsmChatMessageType.reply) {
-                        ismChatPageController
-                            .scrollToMessage(message.parentMessageId ?? '');
-                      } else {
-                        ismChatPageController.tapForMediaPreview(message);
-                      }
-                    },
                   ),
                 ),
-              ),
-              if (!showMessageInCenter)
-                Padding(
-                  padding: IsmChatDimens.edgeInsets0_4,
-                  child: Row(
+                if (!showMessageInCenter) ...[
+                  IsmChatDimens.boxHeight2,
+                  Row(
                     children: [
                       Text(
                         message.sentAt.toTimeString(),
@@ -382,8 +268,9 @@ class ChatMessage extends StatelessWidget {
                       ],
                     ],
                   ),
-                ),
-            ],
+                ],
+              ],
+            ),
           ),
         ),
       ),

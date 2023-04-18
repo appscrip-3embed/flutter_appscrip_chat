@@ -23,6 +23,7 @@ dependencies:
   flutter_svg: 0.23.0+1
   flutter_web_plugins:
     sdk: flutter
+  fluttertoast: ^8.2.1
   focused_menu: ^1.0.5
   geocode: ^1.0.2
   geocoding: ^2.1.0

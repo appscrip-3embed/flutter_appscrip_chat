@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/widgets/alert_dailog.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -228,16 +228,43 @@ class IsmChatConversationsController extends GetxController {
     IsmChatConversationModel chatConversationModel,
   ) async {
     await Get.bottomSheet(
-      IsmChatBottomSheet(
-        onClearTap: () {
-          showDialogForClearChat(chatConversationModel);
-        },
-        onDeleteTap: () async {
-          showDialogForDeletChat(chatConversationModel);
-        },
+      CupertinoActionSheet(
+        actions: [
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Get.back();
+              showDialogForClearChat(chatConversationModel);
+            },
+            isDestructiveAction: true,
+            child: Text(
+              IsmChatStrings.clearChat,
+              overflow: TextOverflow.ellipsis,
+              style: IsmChatStyles.w600Black16,
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Get.back();
+              showDialogForDeletChat(chatConversationModel);
+            },
+            isDestructiveAction: true,
+            child: Text(
+              IsmChatStrings.deleteChat,
+              overflow: TextOverflow.ellipsis,
+              style: IsmChatStyles.w600Black16
+                  .copyWith(color: IsmChatColors.redColor),
+            ),
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: Get.back,
+          child: Text(
+            IsmChatStrings.cancel,
+            style: IsmChatStyles.w600Black16,
+          ),
+        ),
       ),
-      elevation: 0,
-      backgroundColor: Colors.transparent,
+      isDismissible: false,
     );
   }
 

@@ -120,20 +120,6 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
 
                       return Slidable(
                         closeOnScroll: true,
-                        startActionPane: ActionPane(
-                          extentRatio: 0.3,
-                          motion: const ScrollMotion(),
-                          children: [
-                            SlidableAction(
-                              onPressed: (_) async {},
-                              flex: 1,
-                              backgroundColor: Colors.purple,
-                              foregroundColor: Colors.white,
-                              icon: Icons.archive_rounded,
-                              label: IsmChatStrings.archive,
-                            ),
-                          ],
-                        ),
                         endActionPane: ActionPane(
                           extentRatio: 0.3,
                           motion: const ScrollMotion(),
@@ -144,8 +130,8 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                                     controller.conversations[index]);
                               },
                               flex: 1,
-                              backgroundColor: Colors.red,
-                              foregroundColor: Colors.white,
+                              backgroundColor: IsmChatColors.redColor,
+                              foregroundColor: IsmChatColors.whiteColor,
                               icon: Icons.delete_rounded,
                               label: IsmChatStrings.delete,
                             ),
