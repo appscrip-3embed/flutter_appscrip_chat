@@ -162,14 +162,6 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
               ),
             ),
           );
-
-          // if (widget.childBuilder != null) {
-          //   return widget.childBuilder!(
-          //     _,
-          //     index,
-          //     controller.conversations[index],
-          //   );
-          // }
         },
       );
 }

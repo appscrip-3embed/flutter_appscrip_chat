@@ -6,10 +6,12 @@ import 'package:get/get.dart';
 class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
   IsmChatPageHeader({
     this.height,
+    this.onTap,
     super.key,
   });
 
   final double? height;
+  final VoidCallback? onTap;
 
   @override
   Size get preferredSize =>
@@ -39,61 +41,65 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
               ),
               titleSpacing: IsmChatDimens.four,
               centerTitle: false,
-              title: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IsmChatImage.profile(
-                    controller.conversation?.opponentDetails
-                            ?.userProfileImageUrl ??
-                        '',
-                    name: controller.conversation!.chatName.isNotEmpty
-                        ? controller.conversation?.chatName
-                        : controller.conversation?.opponentDetails?.userName ??
-                            '',
-                  ),
-                  IsmChatDimens.boxWidth8,
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        controller.conversation!.chatName.isNotEmpty
-                            ? controller.conversation!.chatName
-                            : controller
-                                    .conversation?.opponentDetails?.userName ??
-                                '',
-                        style: IsmChatStyles.w600White18,
-                      ),
-                      (!controller.conversation!.isChattingAllowed)
-                          ? const SizedBox.shrink()
-                          : Obx(
-                              () => mqttController.typingUsersIds.contains(
-                                      controller.conversation?.conversationId)
-                                  ? Text(
-                                      IsmChatStrings.typing,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: IsmChatStyles.w400White12,
-                                    )
-                                  : controller.conversation?.opponentDetails
-                                              ?.online ??
-                                          false
-                                      ? Text(
-                                          IsmChatStrings.online,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: IsmChatStyles.w400White12,
-                                        )
-                                      : Text(
-                                          '${controller.conversation?.opponentDetails?.lastSeen.toCurrentTimeStirng().capitalizeFirst}',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: IsmChatStyles.w400White12,
-                                        ),
-                            ),
-                    ],
-                  ),
-                ],
+              title: IsmChatTapHandler(
+                onTap: onTap,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IsmChatImage.profile(
+                      controller.conversation?.opponentDetails
+                              ?.userProfileImageUrl ??
+                          '',
+                      name: controller.conversation!.chatName.isNotEmpty
+                          ? controller.conversation?.chatName
+                          : controller
+                                  .conversation?.opponentDetails?.userName ??
+                              '',
+                    ),
+                    IsmChatDimens.boxWidth8,
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          controller.conversation!.chatName.isNotEmpty
+                              ? controller.conversation!.chatName
+                              : controller.conversation?.opponentDetails
+                                      ?.userName ??
+                                  '',
+                          style: IsmChatStyles.w600White18,
+                        ),
+                        (!controller.conversation!.isChattingAllowed)
+                            ? const SizedBox.shrink()
+                            : Obx(
+                                () => mqttController.typingUsersIds.contains(
+                                        controller.conversation?.conversationId)
+                                    ? Text(
+                                        IsmChatStrings.typing,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: IsmChatStyles.w400White12,
+                                      )
+                                    : controller.conversation?.opponentDetails
+                                                ?.online ??
+                                            false
+                                        ? Text(
+                                            IsmChatStrings.online,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: IsmChatStyles.w400White12,
+                                          )
+                                        : Text(
+                                            '${controller.conversation?.opponentDetails?.lastSeen.toCurrentTimeStirng().capitalizeFirst}',
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: IsmChatStyles.w400White12,
+                                          ),
+                              ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               actions: [
                 PopupMenuButton(

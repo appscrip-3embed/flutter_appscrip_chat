@@ -14,6 +14,7 @@ class IsmChatDimens {
   static final double two = 2.sp;
   static final double four = 4.sp;
   static final double five = 5.sp;
+  static final double six = 6.sp;
 
   static final double eight = 8.sp;
   static final double ten = 10.sp;
@@ -58,13 +59,15 @@ class IsmChatDimens {
 
   static final Widget boxWidth32 = SizedBox(width: thirtyTwo);
 
+  static final EdgeInsets edgeInsets6 = EdgeInsets.all(six);
   static final EdgeInsets edgeInsets4 = EdgeInsets.all(four);
   static final EdgeInsets edgeInsets0 = EdgeInsets.all(zero);
 
   static final EdgeInsets edgeInsets4_0 =
       EdgeInsets.symmetric(horizontal: four);
   static final EdgeInsets edgeInsets0_4 = EdgeInsets.symmetric(vertical: four);
-   static final EdgeInsets edgeInsets4_8 = EdgeInsets.symmetric(vertical: four,horizontal: eight);
+  static final EdgeInsets edgeInsets4_8 =
+      EdgeInsets.symmetric(vertical: four, horizontal: eight);
   static final EdgeInsets edgeInsets8_4 =
       EdgeInsets.symmetric(horizontal: eight, vertical: four);
   static final EdgeInsets edgeInsets8 = EdgeInsets.all(eight);

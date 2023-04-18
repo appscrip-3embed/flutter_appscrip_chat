@@ -9,7 +9,7 @@ class IsmChatLogutBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
-      builder: (controller) => Container(
+        builder: (controller) => Container(
           padding: IsmChatDimens.edgeInsets10,
           height: IsmChatDimens.hundred,
           child: ListTile(
@@ -32,5 +32,7 @@ class IsmChatLogutBottomSheet extends StatelessWidget {
                 child: Text('Sign out', style: IsmChatStyles.w400White14),
               ),
             ),
-          )));
+          ),
+        ),
+      );
 }

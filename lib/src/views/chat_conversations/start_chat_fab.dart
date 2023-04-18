@@ -2,11 +2,10 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
 class IsmChatStartChatFAB extends StatelessWidget {
-  const IsmChatStartChatFAB(
-      {required this.onTap, required this.onCreateChat, super.key});
+  const IsmChatStartChatFAB({required this.onTap, this.icon, super.key});
 
   final VoidCallback onTap;
-  final void Function(BuildContext, IsmChatConversationModel) onCreateChat;
+  final Widget? icon;
 
   @override
   Widget build(BuildContext context) => Theme(
@@ -17,10 +16,12 @@ class IsmChatStartChatFAB extends StatelessWidget {
         ),
         child: FloatingActionButton(
           onPressed: onTap,
-          child: const Icon(
-            Icons.chat_rounded,
-            color: IsmChatColors.whiteColor,
-          ),
+          child: icon ??
+              Icon(
+                Icons.chat_rounded,
+                color: IsmChatConfig
+                    .chatTheme.floatingActionButtonTheme!.foregroundColor,
+              ),
         ),
       );
 }

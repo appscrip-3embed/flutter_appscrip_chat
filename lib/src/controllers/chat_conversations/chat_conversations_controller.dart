@@ -43,10 +43,6 @@ class IsmChatConversationsController extends GetxController {
     initialLoadStatus: LoadStatus.idle,
   );
 
-  final _userList = <UserDetails>[].obs;
-  List<UserDetails> get userList => _userList;
-  set userList(List<UserDetails> value) => _userList.value = value;
-
   var userListScrollController = ScrollController();
 
   var conversationScrollController = ScrollController();
@@ -141,8 +137,8 @@ class IsmChatConversationsController extends GetxController {
         uiSettings: [
           AndroidUiSettings(
             toolbarTitle: 'Cropper'.tr,
-            toolbarColor: Colors.black,
-            toolbarWidgetColor: Colors.white,
+            toolbarColor: IsmChatColors.blackColor,
+            toolbarWidgetColor: IsmChatColors.whiteColor,
             initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: false,
           ),
@@ -152,8 +148,8 @@ class IsmChatConversationsController extends GetxController {
         ],
       );
       var bytes = File(croppedFile!.path).readAsBytesSync();
-      var extension = result.name.split('.').last;
-      await getPresignedUrl(extension, bytes);
+      var fileExtension = result.name.split('.').last;
+      await getPresignedUrl(fileExtension, bytes);
     }
   }
 
@@ -212,15 +208,15 @@ class IsmChatConversationsController extends GetxController {
       return;
     }
 
-    userList.addAll(response.users);
-    userList.sort((a, b) => a.userName.compareTo(b.userName));
+    var users = response.users;
+    users.sort((a, b) => a.userName.compareTo(b.userName));
 
-    forwardedList = List.from(userList)
+    forwardedList.addAll(List.from(users)
         .map((e) => SelectedForwardUser(
               selectedUser: false,
               userDetails: e as UserDetails,
             ))
-        .toList();
+        .toList());
     usersPageToken = response.pageToken;
   }
 

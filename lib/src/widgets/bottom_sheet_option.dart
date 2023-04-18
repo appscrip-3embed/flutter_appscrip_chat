@@ -1,6 +1,9 @@
+import 'package:appscrip_chat_component/src/controllers/controllers.dart';
 import 'package:appscrip_chat_component/src/res/res.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class IsmChatBottomSheet extends StatelessWidget {
   const IsmChatBottomSheet({
@@ -75,6 +78,79 @@ class IsmChatBottomSheet extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ),
+      );
+}
+
+@protected
+class IsmChatProfilePhotoBottomSheet extends StatelessWidget {
+  const IsmChatProfilePhotoBottomSheet({super.key});
+
+  @override
+  Widget build(BuildContext context) =>
+      GetBuilder<IsmChatConversationsController>(
+        builder: (controller) => CupertinoActionSheet(
+          actions: [
+            CupertinoActionSheetAction(
+              onPressed: () => controller.ismUploadImage(ImageSource.camera),
+              child: Padding(
+                padding: IsmChatDimens.edgeInsets10_0,
+                child: Row(
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.blueAccent,
+                      ),
+                      width: IsmChatDimens.forty,
+                      height: IsmChatDimens.forty,
+                      child: const Icon(
+                        Icons.camera_alt_rounded,
+                        color: IsmChatColors.whiteColor,
+                      ),
+                    ),
+                    IsmChatDimens.boxWidth8,
+                    Text(
+                      'Camera',
+                      style: IsmChatStyles.w500Black16,
+                    )
+                  ],
+                ),
+              ),
+            ),
+            CupertinoActionSheetAction(
+              onPressed: () => controller.ismUploadImage(ImageSource.gallery),
+              child: Padding(
+                padding: IsmChatDimens.edgeInsets10_0,
+                child: Row(
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.purpleAccent,
+                      ),
+                      width: IsmChatDimens.forty,
+                      height: IsmChatDimens.forty,
+                      child: const Icon(
+                        Icons.photo_rounded,
+                        color: IsmChatColors.whiteColor,
+                      ),
+                    ),
+                    IsmChatDimens.boxWidth8,
+                    Text(
+                      'Gallery',
+                      style: IsmChatStyles.w500Black16,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            onPressed: Get.back,
+            isDestructiveAction: true,
+            child: const Text('Cancel'),
           ),
         ),
       );

@@ -5,7 +5,9 @@ class IsmChatLoadingDialog extends StatelessWidget {
   const IsmChatLoadingDialog({super.key});
 
   @override
-  Widget build(BuildContext context) => Center(
+  Widget build(BuildContext context) =>
+      IsmChatConfig.loadingDialog ??
+      Center(
         child: SizedBox(
           height: 60,
           width: 60,

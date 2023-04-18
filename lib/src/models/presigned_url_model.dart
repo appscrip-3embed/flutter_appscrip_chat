@@ -20,7 +20,6 @@ class PresignedUrlModel {
     this.presignedUrl,
     this.msg,
   });
-  
 
   PresignedUrlModel copyWith({
     num? ttl,
@@ -31,72 +30,74 @@ class PresignedUrlModel {
     String? mediaId,
     String? presignedUrl,
     String? msg,
-  }) {
-    return PresignedUrlModel(
-      ttl: ttl ?? this.ttl,
-      thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-      thumbnailPresignedUrl: thumbnailPresignedUrl ?? this.thumbnailPresignedUrl,
-      mediaUrl: mediaUrl ?? this.mediaUrl,
-      mediaPresignedUrl: mediaPresignedUrl ?? this.mediaPresignedUrl,
-      mediaId: mediaId ?? this.mediaId,
-      presignedUrl: presignedUrl ?? this.presignedUrl,
-      msg: msg ?? this.msg,
-    );
-  }
+  }) =>
+      PresignedUrlModel(
+        ttl: ttl ?? this.ttl,
+        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+        thumbnailPresignedUrl:
+            thumbnailPresignedUrl ?? this.thumbnailPresignedUrl,
+        mediaUrl: mediaUrl ?? this.mediaUrl,
+        mediaPresignedUrl: mediaPresignedUrl ?? this.mediaPresignedUrl,
+        mediaId: mediaId ?? this.mediaId,
+        presignedUrl: presignedUrl ?? this.presignedUrl,
+        msg: msg ?? this.msg,
+      );
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'ttl': ttl,
-      'thumbnailUrl': thumbnailUrl,
-      'thumbnailPresignedUrl': thumbnailPresignedUrl,
-      'mediaUrl': mediaUrl,
-      'mediaPresignedUrl': mediaPresignedUrl,
-      'mediaId': mediaId,
-      'presignedUrl': presignedUrl,
-      'msg': msg,
-    };
-  }
+  Map<String, dynamic> toMap() => <String, dynamic>{
+        'ttl': ttl,
+        'thumbnailUrl': thumbnailUrl,
+        'thumbnailPresignedUrl': thumbnailPresignedUrl,
+        'mediaUrl': mediaUrl,
+        'mediaPresignedUrl': mediaPresignedUrl,
+        'mediaId': mediaId,
+        'presignedUrl': presignedUrl,
+        'msg': msg,
+      };
 
-  factory PresignedUrlModel.fromMap(Map<String, dynamic> map) {
-    return PresignedUrlModel(
-      ttl: map['ttl'] != null ? map['ttl'] as num : null,
-      thumbnailUrl: map['thumbnailUrl'] != null ? map['thumbnailUrl'] as String : null,
-      thumbnailPresignedUrl: map['thumbnailPresignedUrl'] != null ? map['thumbnailPresignedUrl'] as String : null,
-      mediaUrl: map['mediaUrl'] != null ? map['mediaUrl'] as String : null,
-      mediaPresignedUrl: map['mediaPresignedUrl'] != null ? map['mediaPresignedUrl'] as String : null,
-      mediaId: map['mediaId'] != null ? map['mediaId'] as String : null,
-      presignedUrl: map['presignedUrl'] != null ? map['presignedUrl'] as String : null,
-      msg: map['msg'] != null ? map['msg'] as String : null,
-    );
-  }
+  factory PresignedUrlModel.fromMap(Map<String, dynamic> map) =>
+      PresignedUrlModel(
+        ttl: map['ttl'] != null ? map['ttl'] as num : null,
+        thumbnailUrl:
+            map['thumbnailUrl'] != null ? map['thumbnailUrl'] as String : null,
+        thumbnailPresignedUrl: map['thumbnailPresignedUrl'] != null
+            ? map['thumbnailPresignedUrl'] as String
+            : null,
+        mediaUrl: map['mediaUrl'] != null ? map['mediaUrl'] as String : null,
+        mediaPresignedUrl: map['mediaPresignedUrl'] != null
+            ? map['mediaPresignedUrl'] as String
+            : null,
+        mediaId: map['mediaId'] != null ? map['mediaId'] as String : null,
+        presignedUrl:
+            map['presignedUrl'] != null ? map['presignedUrl'] as String : null,
+        msg: map['msg'] != null ? map['msg'] as String : null,
+      );
 
   String toJson() => json.encode(toMap());
 
-  factory PresignedUrlModel.fromJson(String source) => PresignedUrlModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory PresignedUrlModel.fromJson(String source) =>
+      PresignedUrlModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() {
-    return 'PresignedUrlModel(ttl: $ttl, thumbnailUrl: $thumbnailUrl, thumbnailPresignedUrl: $thumbnailPresignedUrl, mediaUrl: $mediaUrl, mediaPresignedUrl: $mediaPresignedUrl, mediaId: $mediaId, presignedUrl: $presignedUrl, msg: $msg)';
-  }
+  String toString() =>
+      'PresignedUrlModel(ttl: $ttl, thumbnailUrl: $thumbnailUrl, thumbnailPresignedUrl: $thumbnailPresignedUrl, mediaUrl: $mediaUrl, mediaPresignedUrl: $mediaPresignedUrl, mediaId: $mediaId, presignedUrl: $presignedUrl, msg: $msg)';
 
   @override
   bool operator ==(covariant PresignedUrlModel other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.ttl == ttl &&
-      other.thumbnailUrl == thumbnailUrl &&
-      other.thumbnailPresignedUrl == thumbnailPresignedUrl &&
-      other.mediaUrl == mediaUrl &&
-      other.mediaPresignedUrl == mediaPresignedUrl &&
-      other.mediaId == mediaId &&
-      other.presignedUrl == presignedUrl &&
-      other.msg == msg;
+
+    return other.ttl == ttl &&
+        other.thumbnailUrl == thumbnailUrl &&
+        other.thumbnailPresignedUrl == thumbnailPresignedUrl &&
+        other.mediaUrl == mediaUrl &&
+        other.mediaPresignedUrl == mediaPresignedUrl &&
+        other.mediaId == mediaId &&
+        other.presignedUrl == presignedUrl &&
+        other.msg == msg;
   }
 
   @override
-  int get hashCode {
-    return ttl.hashCode ^
+  int get hashCode =>
+      ttl.hashCode ^
       thumbnailUrl.hashCode ^
       thumbnailPresignedUrl.hashCode ^
       mediaUrl.hashCode ^
@@ -104,5 +105,4 @@ class PresignedUrlModel {
       mediaId.hashCode ^
       presignedUrl.hashCode ^
       msg.hashCode;
-  }
 }

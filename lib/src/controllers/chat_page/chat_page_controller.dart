@@ -225,13 +225,11 @@ class IsmChatPageController extends GetxController {
         break;
       case IsmChatFocusMenuType.forward:
         // TODO: check this forward code
-        Get.back<void>();
         var chatConversationController =
             Get.find<IsmChatConversationsController>();
-        chatConversationController.userList.clear();
         chatConversationController.forwardedList.clear();
         chatConversationController.forwardSeletedUserList.clear();
-        await Get.to<void>(
+        await IsmChatUtility.openFullScreenBottomSheet(
           IsmChatForwardListView(
             ismChatChatMessageModel: message,
             ismChatConversationModel: conversation!,

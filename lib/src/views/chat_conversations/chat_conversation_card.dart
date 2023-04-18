@@ -32,30 +32,6 @@ class IsmChatConversationCard extends StatelessWidget {
                       ? conversation.chatName
                       : conversation.opponentDetails?.userName,
                 ),
-            trailing: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(conversation.lastMessageDetails!.sentAt
-                    .toLastMessageTimeString()),
-                // IsmChatDimens.boxHeight10,
-                if (conversation.unreadMessagesCount != null &&
-                    conversation.unreadMessagesCount != 0)
-                  Container(
-                    height: IsmChatDimens.twenty,
-                    width: IsmChatDimens.twenty,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: IsmChatConfig.chatTheme.primaryColor,
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      conversation.unreadMessagesCount.toString(),
-                      style: IsmChatStyles.w700White10,
-                    ),
-                  )
-              ],
-            ),
             title: nameBuilder?.call(context, conversation.chatName) ??
                 Text(
                   conversation.chatName.isNotEmpty
@@ -73,6 +49,32 @@ class IsmChatConversationCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: IsmChatStyles.w400Black12,
                 ),
+            trailing: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  conversation.lastMessageDetails!.sentAt
+                      .toLastMessageTimeString(),
+                  style: IsmChatStyles.w400Black10,
+                ),
+                if (conversation.unreadMessagesCount != null &&
+                    conversation.unreadMessagesCount != 0)
+                  Container(
+                    height: IsmChatDimens.twenty,
+                    width: IsmChatDimens.twenty,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: IsmChatConfig.chatTheme.primaryColor,
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      conversation.unreadMessagesCount.toString(),
+                      style: IsmChatStyles.w700White10,
+                    ),
+                  )
+              ],
+            ),
           ),
         ),
       );

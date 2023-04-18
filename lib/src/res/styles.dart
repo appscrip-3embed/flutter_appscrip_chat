@@ -37,10 +37,16 @@ class IsmChatStyles {
     fontWeight: FontWeight.w600,
   );
 
-   static TextStyle w600Black10 = TextStyle(
+  static TextStyle w600Black10 = TextStyle(
     color: IsmChatColors.blackColor,
     fontSize: IsmChatDimens.ten,
     fontWeight: FontWeight.w600,
+  );
+
+  static TextStyle w400Black10 = TextStyle(
+    color: IsmChatColors.blackColor,
+    fontSize: IsmChatDimens.ten,
+    fontWeight: FontWeight.w400,
   );
 
   static TextStyle w600Black12 = TextStyle(
@@ -98,6 +104,12 @@ class IsmChatStyles {
   static TextStyle w500Black14 = TextStyle(
     color: IsmChatColors.textColor,
     fontSize: IsmChatDimens.forteen,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle w500Black16 = TextStyle(
+    color: IsmChatColors.textColor,
+    fontSize: IsmChatDimens.sixteen,
     fontWeight: FontWeight.w500,
   );
 

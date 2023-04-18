@@ -44,7 +44,8 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
     if (result != null) {
       for (var x in result) {
         var file = await x.file;
-        if (IsmChatUtility.imageTypeList.contains(file!.path.split('.').last)) {
+        if (IsmChatConstants.imageExtensions
+            .contains(file!.path.split('.').last)) {
           ismChatPageController.listOfAssetsPath.add(AttachmentModel(
               mediaUrl: file.path.toString(),
               attachmentType: IsmChatAttachmentType.image));
@@ -100,9 +101,8 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                 //   statusBarBrightness: Brightness.light, // For iOS (dark icons)
                 // ),
                 leading: InkWell(
-                  child: Icon(
+                  child: const Icon(
                     Icons.clear,
-                    size: IsmChatDimens.twentyFour,
                     color: IsmChatColors.whiteColor,
                   ),
                   onTap: () {
@@ -189,7 +189,7 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    IsmChatUtility.imageTypeList.contains(controller
+                    IsmChatConstants.imageExtensions.contains(controller
                             .listOfAssetsPath[controller.assetsIndex].mediaUrl!
                             .split('.')
                             .last)

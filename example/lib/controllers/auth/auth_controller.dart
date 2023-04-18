@@ -31,7 +31,7 @@ class AuthController extends GetxController {
       passwordController.text.trim(),
     );
     if (isLoggedIn) {
-      Get.offNamed(AppRoutes.chatList);
+      Get.offAllNamed(AppRoutes.chatList);
     }
   }
 
@@ -54,7 +54,7 @@ class AuthController extends GetxController {
   }
 
   Uint8List? bytes;
-  
+
   void ismUploadImage(ImageSource imageSource) async {
     XFile? result;
     if (imageSource == ImageSource.gallery) {
