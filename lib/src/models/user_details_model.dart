@@ -14,7 +14,9 @@ class UserDetails {
         userIdentifier: map['userIdentifier'] as String,
         userId: map['userId'] != null ? map['userId'] as String : '',
         online: map['online'] as bool? ?? false,
-        // metaData: ChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
+        metaData: map['metaData'] == null
+            ? IsmChatMetaData()
+            : IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
         lastSeen: map['lastSeen'] as int? ?? 0,
         timestamp: map['timestamp'] as int? ?? 0,
         visibility:
@@ -31,7 +33,7 @@ class UserDetails {
       required this.userIdentifier,
       required this.userId,
       required this.online,
-      // required this.metaData,
+      this.metaData,
       required this.lastSeen,
       this.visibility,
       this.notification,
@@ -45,8 +47,7 @@ class UserDetails {
   final String userIdentifier;
   final String userId;
   final bool online;
-  // @Transient()
-  // final ChatMetaData metaData;
+  final IsmChatMetaData? metaData;
   final int lastSeen;
   final bool? visibility;
   final bool? notification;

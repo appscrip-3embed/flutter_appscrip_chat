@@ -27,7 +27,11 @@ class IsmChatConversationCard extends StatelessWidget {
             leading: profileImageBuilder?.call(context,
                     conversation.opponentDetails?.userProfileImageUrl ?? '') ??
                 IsmChatImage.profile(
-                  conversation.opponentDetails?.userProfileImageUrl ?? '',
+                  conversation.opponentDetails?.metaData?.profilePic
+                              ?.isNotEmpty ==
+                          true
+                      ? conversation.opponentDetails?.metaData?.profilePic ?? ''
+                      : conversation.opponentDetails?.userProfileImageUrl ?? '',
                   name: conversation.chatName.isNotEmpty
                       ? conversation.chatName
                       : conversation.opponentDetails?.userName,
