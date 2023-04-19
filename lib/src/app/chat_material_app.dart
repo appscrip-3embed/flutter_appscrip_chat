@@ -88,7 +88,7 @@ class IsmChatApp extends StatelessWidget {
   /// Call this function on SignOut to delete the data stored locally in the Local Database
   static void logout() => IsmChatConfig.objectBox.deleteChatLocalDb();
 
-  static void startChatting({
+  static Future<void> startChatting({
     required String profileImageUrl,
     required String name,
     required String email,
