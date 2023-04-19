@@ -81,9 +81,7 @@ class IsmChatConversationsRepository {
     }
   }
 
-  Future<IsmChatResponseModel?> deleteChat({
-    required String conversationId,
-  }) async {
+  Future<IsmChatResponseModel?> deleteChat(String conversationId) async {
     try {
       var response = await _apiWrapper.delete(
         '${IsmChatAPI.chatConversationDelete}?conversationId=$conversationId',

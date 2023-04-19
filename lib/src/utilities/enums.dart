@@ -303,10 +303,9 @@ enum SendMessageType {
   forwardMessage,
 }
 
-enum GetChatConversationApiCall {
-  fromOnInit,
-  fromRefresh,
-  fromPullDown,
+enum ApiCallOrigin {
+  referesh,
+  loadMore,
 }
 
 enum IsmChatFocusMenuType {

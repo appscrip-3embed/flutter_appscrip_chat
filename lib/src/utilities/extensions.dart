@@ -303,3 +303,23 @@ extension MenuIcon on IsmChatFocusMenuType {
     }
   }
 }
+
+extension SelectedUsers on List<SelectedForwardUser> {
+  List<SelectedForwardUser> get selectedUsers =>
+      where((e) => e.isUserSelected).toList();
+}
+
+extension ModelConversion on IsmChatConversationModel {
+  DBConversationModel convertToDbModel(List<String>? messages) =>
+      DBConversationModel(
+        conversationId: conversationId,
+        conversationImageUrl: conversationImageUrl,
+        conversationTitle: conversationTitle,
+        isGroup: isGroup,
+        lastMessageSentAt: lastMessageSentAt,
+        messagingDisabled: messagingDisabled,
+        membersCount: membersCount,
+        unreadMessagesCount: unreadMessagesCount,
+        messages: messages ?? [],
+      );
+}

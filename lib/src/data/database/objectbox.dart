@@ -44,6 +44,14 @@ class IsmChatObjectBox {
     return IsmChatObjectBox._create(store);
   }
 
+  List<IsmChatConversationModel> getAllConversations() {
+    var conversations = chatConversationBox.getAll();
+    if (conversations.isEmpty) {
+      return [];
+    }
+    return conversations.map(IsmChatConversationModel.fromDB).toList();
+  }
+
   /// delete chat object box
   void deleteChatLocalDb() async {
     userDetailsBox.removeAll();
@@ -64,37 +72,34 @@ class IsmChatObjectBox {
   }
 
   /// Create Db with user
-  Future<void> createAndUpdateDB(
-      {required DBConversationModel dbConversationModel}) async {
+  Future<void> createAndUpdateDB(DBConversationModel dbConversation) async {
     var resposne = chatConversationBox.getAll();
     if (resposne.isEmpty) {
-      chatConversationBox.put(dbConversationModel);
+      chatConversationBox.put(dbConversation);
     } else {
       final query = chatConversationBox
           .query(DBConversationModel_.conversationId
-              .equals(dbConversationModel.conversationId!))
+              .equals(dbConversation.conversationId!))
           .build();
       final chatConversationResponse = query.findUnique();
       if (chatConversationResponse != null) {
-        chatConversationResponse.isGroup = dbConversationModel.isGroup;
-        chatConversationResponse.membersCount =
-            dbConversationModel.membersCount;
+        chatConversationResponse.isGroup = dbConversation.isGroup;
+        chatConversationResponse.membersCount = dbConversation.membersCount;
         chatConversationResponse.lastMessageSentAt =
-            dbConversationModel.lastMessageSentAt;
+            dbConversation.lastMessageSentAt;
         chatConversationResponse.messagingDisabled =
-            dbConversationModel.messagingDisabled;
+            dbConversation.messagingDisabled;
         chatConversationResponse.unreadMessagesCount =
-            dbConversationModel.unreadMessagesCount;
+            dbConversation.unreadMessagesCount;
         chatConversationResponse.opponentDetails.target =
-            dbConversationModel.opponentDetails.target;
+            dbConversation.opponentDetails.target;
         chatConversationResponse.lastMessageDetails.target =
-            dbConversationModel.lastMessageDetails.target;
-        chatConversationResponse.config.target =
-            dbConversationModel.config.target;
+            dbConversation.lastMessageDetails.target;
+        chatConversationResponse.config.target = dbConversation.config.target;
         chatConversationBox.put(chatConversationResponse);
       } else {
         // IsmChatLog.success('dsfdsfsfdsdfs ${dbConversationModel.opponentDetails.target.}')
-        chatConversationBox.put(dbConversationModel);
+        chatConversationBox.put(dbConversation);
       }
     }
   }

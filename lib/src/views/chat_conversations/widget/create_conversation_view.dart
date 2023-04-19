@@ -3,8 +3,8 @@ import 'package:appscrip_chat_component/src/widgets/alert_dailog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class IsmChatUserPageView extends StatelessWidget {
-  const IsmChatUserPageView({
+class IsmChatCreateConversationView extends StatelessWidget {
+  const IsmChatCreateConversationView({
     super.key,
     this.onChatTap,
     this.isGroupConversation = false,
@@ -21,7 +21,7 @@ class IsmChatUserPageView extends StatelessWidget {
           chatConversationController.profileImage = '';
           chatConversationController.forwardedList.clear();
           chatConversationController.addGrouNameController.clear();
-          chatConversationController.forwardSeletedUserList.clear();
+          chatConversationController.forwardedList.selectedUsers.clear();
           chatConversationController.usersPageToken = '';
           chatConversationController.getUserList(
               opponentId: IsmChatConfig.communicationConfig.userConfig.userId);
@@ -80,8 +80,7 @@ class IsmChatUserPageView extends StatelessWidget {
                           return IsmChatTapHandler(
                             onTap: () async {
                               if (isGroupConversation) {
-                                controller.removeAndAddForwardList(
-                                    conversation, index);
+                                controller.onForwardUserTap(index);
                               } else {
                                 var ismChatConversation =
                                     IsmChatConversationModel(
@@ -96,7 +95,7 @@ class IsmChatUserPageView extends StatelessWidget {
                                   membersCount: 1,
                                 );
                                 ismChatConversation.conversationId = controller
-                                    .getConversationid(conversation)
+                                    .getConversationId(conversation)
                                     .toString();
                                 Get.back<void>();
                                 controller
@@ -134,7 +133,7 @@ class IsmChatUserPageView extends StatelessWidget {
                                       ),
                                       child: Text(
                                         controller.forwardedList[index]
-                                                .selectedUser
+                                                .isUserSelected
                                             ? 'Remove'
                                             : 'Add',
                                         style:
@@ -149,7 +148,7 @@ class IsmChatUserPageView extends StatelessWidget {
                         },
                       ),
                     ),
-                    if (controller.forwardSeletedUserList.isNotEmpty &&
+                    if (controller.forwardedList.selectedUsers.isNotEmpty &&
                         isGroupConversation)
                       Container(
                         decoration: BoxDecoration(
@@ -160,7 +159,7 @@ class IsmChatUserPageView extends StatelessWidget {
                             ),
                           ),
                         ),
-                        height: IsmChatDimens.hundred,
+                        height: IsmChatDimens.eighty,
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -168,17 +167,20 @@ class IsmChatUserPageView extends StatelessWidget {
                             Expanded(
                               child: ListView.separated(
                                 scrollDirection: Axis.horizontal,
-                                itemCount:
-                                    controller.forwardSeletedUserList.length,
+                                itemCount: controller
+                                    .forwardedList.selectedUsers.length,
                                 separatorBuilder: (_, __) =>
                                     IsmChatDimens.boxWidth8,
                                 itemBuilder: (context, index) {
-                                  var conversation = controller
-                                      .forwardSeletedUserList[index]
-                                      .userDetails;
+                                  var conversation = controller.forwardedList
+                                      .selectedUsers[index].userDetails;
                                   return IsmChatTapHandler(
-                                    onTap: () => controller
-                                        .removeFromSelectedList(conversation),
+                                    onTap: () => controller.onForwardUserTap(
+                                      controller.forwardedList.indexOf(
+                                        controller
+                                            .forwardedList.selectedUsers[index],
+                                      ),
+                                    ),
                                     child: SizedBox(
                                       width: IsmChatDimens.fifty,
                                       child: Column(
@@ -246,7 +248,8 @@ class IsmChatUserPageView extends StatelessWidget {
                                 color: IsmChatColors.whiteColor,
                               ),
                               onPressed: () async {
-                                if (controller.forwardSeletedUserList.isEmpty ||
+                                if (controller
+                                        .forwardedList.selectedUsers.isEmpty ||
                                     controller.profileImage.isEmpty ||
                                     controller
                                         .addGrouNameController.text.isEmpty) {
@@ -273,8 +276,8 @@ class IsmChatUserPageView extends StatelessWidget {
                                   lastMessageSentAt: 0,
                                   conversationType:
                                       IsmChatConversationType.private,
-                                  membersCount:
-                                      controller.forwardSeletedUserList.length,
+                                  membersCount: controller
+                                      .forwardedList.selectedUsers.length,
                                 );
                                 Get.back<void>();
                                 controller
@@ -283,6 +286,7 @@ class IsmChatUserPageView extends StatelessWidget {
                                     .call(context, ismChatConversation);
                               },
                             ),
+                            IsmChatDimens.boxWidth8,
                           ],
                         ),
                       ),

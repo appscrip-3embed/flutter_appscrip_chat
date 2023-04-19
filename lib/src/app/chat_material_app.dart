@@ -84,6 +84,9 @@ class IsmChatApp extends StatelessWidget {
   final bool showAppBar;
   final VoidCallback? onSignOut;
 
+  /// Call this function on SignOut to delete the data stored locally in the Local Database
+  static void logout() => IsmChatConfig.objectBox.deleteChatLocalDb();
+
   @override
   Widget build(BuildContext context) => IsmChatConversations(
         onChatTap: onChatTap,

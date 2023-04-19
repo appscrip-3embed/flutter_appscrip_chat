@@ -1,15 +1,27 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class PresignedUrlModel {
-  num? ttl;
-  String? thumbnailUrl;
-  String? thumbnailPresignedUrl;
-  String? mediaUrl;
-  String? mediaPresignedUrl;
-  String? mediaId;
-  String? presignedUrl;
-  String? msg;
+  factory PresignedUrlModel.fromJson(String source) =>
+      PresignedUrlModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  factory PresignedUrlModel.fromMap(Map<String, dynamic> map) =>
+      PresignedUrlModel(
+        ttl: map['ttl'] != null ? map['ttl'] as num : null,
+        thumbnailUrl:
+            map['thumbnailUrl'] != null ? map['thumbnailUrl'] as String : null,
+        thumbnailPresignedUrl: map['thumbnailPresignedUrl'] != null
+            ? map['thumbnailPresignedUrl'] as String
+            : null,
+        mediaUrl: map['mediaUrl'] != null ? map['mediaUrl'] as String : null,
+        mediaPresignedUrl: map['mediaPresignedUrl'] != null
+            ? map['mediaPresignedUrl'] as String
+            : null,
+        mediaId: map['mediaId'] != null ? map['mediaId'] as String : null,
+        presignedUrl:
+            map['presignedUrl'] != null ? map['presignedUrl'] as String : null,
+        msg: map['msg'] != null ? map['msg'] as String : null,
+      );
+
   PresignedUrlModel({
     this.ttl,
     this.thumbnailUrl,
@@ -20,6 +32,15 @@ class PresignedUrlModel {
     this.presignedUrl,
     this.msg,
   });
+
+  final num? ttl;
+  final String? thumbnailUrl;
+  final String? thumbnailPresignedUrl;
+  final String? mediaUrl;
+  final String? mediaPresignedUrl;
+  final String? mediaId;
+  final String? presignedUrl;
+  final String? msg;
 
   PresignedUrlModel copyWith({
     num? ttl,
@@ -54,28 +75,7 @@ class PresignedUrlModel {
         'msg': msg,
       };
 
-  factory PresignedUrlModel.fromMap(Map<String, dynamic> map) =>
-      PresignedUrlModel(
-        ttl: map['ttl'] != null ? map['ttl'] as num : null,
-        thumbnailUrl:
-            map['thumbnailUrl'] != null ? map['thumbnailUrl'] as String : null,
-        thumbnailPresignedUrl: map['thumbnailPresignedUrl'] != null
-            ? map['thumbnailPresignedUrl'] as String
-            : null,
-        mediaUrl: map['mediaUrl'] != null ? map['mediaUrl'] as String : null,
-        mediaPresignedUrl: map['mediaPresignedUrl'] != null
-            ? map['mediaPresignedUrl'] as String
-            : null,
-        mediaId: map['mediaId'] != null ? map['mediaId'] as String : null,
-        presignedUrl:
-            map['presignedUrl'] != null ? map['presignedUrl'] as String : null,
-        msg: map['msg'] != null ? map['msg'] as String : null,
-      );
-
   String toJson() => json.encode(toMap());
-
-  factory PresignedUrlModel.fromJson(String source) =>
-      PresignedUrlModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() =>

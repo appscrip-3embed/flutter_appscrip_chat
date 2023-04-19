@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/widgets/alert_dailog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -59,13 +58,6 @@ class IsmChatConversationsController extends GetxController {
     _forwardedList.value = value;
   }
 
-  final _forwardSeletedUserList = <SelectedForwardUser>[].obs;
-  List<SelectedForwardUser> get forwardSeletedUserList =>
-      _forwardSeletedUserList;
-  set forwardSeletedUserList(List<SelectedForwardUser> value) {
-    _forwardSeletedUserList.value = value;
-  }
-
   final _blockUsers = <UserDetails>[].obs;
   List<UserDetails> get blockUsers => _blockUsers;
   set blockUsers(List<UserDetails> value) => _blockUsers.value = value;
@@ -99,58 +91,40 @@ class IsmChatConversationsController extends GetxController {
     super.onClose();
   }
 
-  void removeAndAddForwardList(UserDetails userDetails, int index) {
-    forwardedList[index].selectedUser = !forwardedList[index].selectedUser;
-    if (forwardedList[index].selectedUser == true) {
-      forwardSeletedUserList.add(
-          SelectedForwardUser(userDetails: userDetails, selectedUser: true));
-    } else {
-      forwardSeletedUserList
-          .removeWhere((e) => e.userDetails.userId == userDetails.userId);
-    }
+  /// This function will be used in [Forward Screen] to Select or Unselect users
+  void onForwardUserTap(int index) {
+    forwardedList[index].isUserSelected = !forwardedList[index].isUserSelected;
   }
 
-  void removeFromSelectedList(UserDetails userDetails) {
-    forwardSeletedUserList
-        .removeWhere((e) => e.userDetails.userId == userDetails.userId);
-    forwardedList
-        .firstWhere((e) => e.userDetails.userId == userDetails.userId)
-        .selectedUser = false;
-  }
-
+  // TODO: Move this logic from here to make is generic for other places
   void ismUploadImage(ImageSource imageSource) async {
     XFile? result;
-    if (imageSource == ImageSource.gallery) {
-      result = await ImagePicker()
-          .pickImage(imageQuality: 25, source: ImageSource.gallery);
-    } else {
-      result = await ImagePicker().pickImage(
-        imageQuality: 25,
-        source: ImageSource.camera,
-      );
+    result =
+        await ImagePicker().pickImage(imageQuality: 25, source: imageSource);
+
+    if (result == null) {
+      return;
     }
-    if (result != null) {
-      var croppedFile = await ImageCropper().cropImage(
-        sourcePath: result.path,
-        cropStyle: CropStyle.circle,
-        compressQuality: 100,
-        uiSettings: [
-          AndroidUiSettings(
-            toolbarTitle: 'Cropper'.tr,
-            toolbarColor: IsmChatColors.blackColor,
-            toolbarWidgetColor: IsmChatColors.whiteColor,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false,
-          ),
-          IOSUiSettings(
-            title: 'Cropper',
-          )
-        ],
-      );
-      var bytes = File(croppedFile!.path).readAsBytesSync();
-      var fileExtension = result.name.split('.').last;
-      await getPresignedUrl(fileExtension, bytes);
-    }
+    var croppedFile = await ImageCropper().cropImage(
+      sourcePath: result.path,
+      cropStyle: CropStyle.circle,
+      compressQuality: 100,
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Cropper'.tr,
+          toolbarColor: IsmChatColors.blackColor,
+          toolbarWidgetColor: IsmChatColors.whiteColor,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+        ),
+        IOSUiSettings(
+          title: 'Cropper',
+        )
+      ],
+    );
+    var bytes = File(croppedFile!.path).readAsBytesSync();
+    var fileExtension = result.name.split('.').last;
+    await getPresignedUrl(fileExtension, bytes);
   }
 
   // / get Api for presigned Url.....
@@ -159,24 +133,24 @@ class IsmChatConversationsController extends GetxController {
         isLoading: true,
         userIdentifier: userDetails?.userIdentifier ?? '',
         mediaExtension: mediaExtension);
-    if (response != null) {
-      var urlResponse =
-          await updatePresignedUrl(response.presignedUrl ?? '', bytes);
-      if (urlResponse == 200) {
-        profileImage = response.mediaUrl!;
-      }
+
+    if (response == null) {
+      return;
+    }
+    var responseCode = await updatePresignedUrl(response.presignedUrl, bytes);
+    if (responseCode == 200) {
+      profileImage = response.mediaUrl!;
     }
   }
 
   /// put Api for updatePresignedUrl...
-  Future<int?> updatePresignedUrl(String presignedUrl, Uint8List bytes) async {
-    var response = await _viewModel.updatePresignedUrl(
-        isLoading: true, presignedUrl: presignedUrl, file: bytes);
-    if (response!.errorCode == 200) {
-      return response.errorCode;
-    } else {
+  Future<int?> updatePresignedUrl(String? presignedUrl, Uint8List bytes) async {
+    if (presignedUrl == null || presignedUrl.isEmpty) {
       return 404;
     }
+    var response = await _viewModel.updatePresignedUrl(
+        isLoading: true, presignedUrl: presignedUrl, file: bytes);
+    return response?.errorCode ?? 404;
   }
 
   void userListScrollListener() {
@@ -213,143 +187,67 @@ class IsmChatConversationsController extends GetxController {
 
     forwardedList.addAll(List.from(users)
         .map((e) => SelectedForwardUser(
-              selectedUser: false,
+              isUserSelected: false,
               userDetails: e as UserDetails,
             ))
         .toList());
     usersPageToken = response.pageToken;
   }
 
-  void deleteConversationAndClearChat(
-    IsmChatConversationModel chatConversationModel,
-  ) async {
-    await Get.bottomSheet(
-      CupertinoActionSheet(
-        actions: [
-          CupertinoActionSheetAction(
-            onPressed: () {
-              Get.back();
-              showDialogForClearChat(chatConversationModel);
-            },
-            isDestructiveAction: true,
-            child: Text(
-              IsmChatStrings.clearChat,
-              overflow: TextOverflow.ellipsis,
-              style: IsmChatStyles.w600Black16,
-            ),
-          ),
-          CupertinoActionSheetAction(
-            onPressed: () {
-              Get.back();
-              showDialogForDeletChat(chatConversationModel);
-            },
-            isDestructiveAction: true,
-            child: Text(
-              IsmChatStrings.deleteChat,
-              overflow: TextOverflow.ellipsis,
-              style: IsmChatStyles.w600Black16
-                  .copyWith(color: IsmChatColors.redColor),
-            ),
-          ),
-        ],
-        cancelButton: CupertinoActionSheetAction(
-          onPressed: Get.back,
-          child: Text(
-            IsmChatStrings.cancel,
-            style: IsmChatStyles.w600Black16,
-          ),
-        ),
-      ),
-      isDismissible: false,
-    );
-  }
-
-  void showDialogForClearChat(
-    IsmChatConversationModel chatConversationModel,
-  ) async {
-    await Get.dialog(IsmChatAlertDialogBox(
-      titile: IsmChatStrings.deleteAllMessage,
-      actionLabels: const [IsmChatStrings.clearChat],
-      callbackActions: [
-        () => clearAllMessages(
-            conversationId: chatConversationModel.conversationId ?? ''),
-      ],
-    ));
-  }
-
-  void showDialogForDeletChat(
-      IsmChatConversationModel chatConversationModel) async {
-    await Get.dialog(
-      IsmChatAlertDialogBox(
-        titile: '${IsmChatStrings.deleteChat}?',
-        actionLabels: const [IsmChatStrings.deleteChat],
-        callbackActions: [
-          () => deleteChat(
-                conversationId: chatConversationModel.conversationId ?? '',
-              ),
-        ],
-      ),
-    );
-  }
-
-  void navigateToMessages(IsmChatConversationModel conversation) async {
-    currentConversation = conversation;
-    // var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
-    // var dbConversation = conversationBox
-    //     .query(DBConversationModel_.conversationId
-    //         .equals(conversation.conversationId!))
-    //     .build()
-    //     .findUnique();
-    // if (dbConversation != null) {
-    //   dbConversation.unreadMessagesCount = 0;
-    //   conversationBox.put(dbConversation);
-    //   getConversationsFromDB();
-    // }
-  }
-
-  Future<void> deleteChat({
-    required String conversationId,
-  }) async {
-    var response = await _viewModel.deleteChat(conversationId: conversationId);
-    if (!response!.hasError) {
-      await IsmChatConfig.objectBox.removeUser(conversationId);
-      await getChatConversations();
+  Future<void> clearAllMessages(String? conversationId) async {
+    if (conversationId == null || conversationId.isEmpty) {
+      return;
     }
+    return _viewModel.clearAllMessages(conversationId);
   }
 
-  Future<void> clearAllMessages({
-    required String conversationId,
-  }) async {
-    await _viewModel.clearAllMessages(conversationId: conversationId);
+  void navigateToMessages(IsmChatConversationModel conversation) =>
+      currentConversation = conversation;
+
+  Future<void> deleteChat(String? conversationId) async {
+    if (conversationId == null || conversationId.isEmpty) {
+      return;
+    }
+
+    var response = await _viewModel.deleteChat(conversationId);
+
+    if (response?.hasError ?? true) {
+      return;
+    }
+
+    await IsmChatConfig.objectBox.removeUser(conversationId);
+    await getChatConversations();
   }
 
   Future<void> getConversationsFromDB() async {
-    var dbConversations = IsmChatConfig.objectBox.chatConversationBox.getAll();
-    if (dbConversations.isNotEmpty) {
-      conversations.clear();
-      conversations =
-          dbConversations.map(IsmChatConversationModel.fromDB).toList();
-      if (conversations.length != 1) {
-        conversations.sort((a, b) => b.lastMessageDetails!.sentAt
-            .compareTo(a.lastMessageDetails!.sentAt));
-      }
-      isConversationsLoading = false;
+    var dbConversations = IsmChatConfig.objectBox.getAllConversations();
+    if (dbConversations.isEmpty) {
+      return;
     }
+    conversations.clear();
+    conversations = dbConversations;
+
+    if (conversations.length <= 1) {
+      return;
+    }
+    conversations.sort((a, b) =>
+        b.lastMessageDetails!.sentAt.compareTo(a.lastMessageDetails!.sentAt));
   }
 
-  String getConversationid(UserDetails userDetails) {
-    var conversationId = conversations.where(
-        (element) => element.opponentDetails?.userId == userDetails.userId);
-    if (conversationId.isNotEmpty) {
-      return conversationId.first.conversationId ?? '';
+  String getConversationId(UserDetails userDetails) {
+    var conversation = conversations.firstWhere(
+        (element) => element.opponentDetails?.userId == userDetails.userId,
+        orElse: IsmChatConversationModel.new);
+
+    if (conversation.chatName.isEmpty) {
+      return '';
     }
-    return '';
+    return conversation.conversationId!;
   }
 
   Future<void> getChatConversations({
     int noOfConvesation = 0,
-    GetChatConversationApiCall getChatConversationApiCall =
-        GetChatConversationApiCall.fromOnInit,
+    ApiCallOrigin? origin,
   }) async {
     if (conversations.isEmpty) {
       isConversationsLoading = true;
@@ -357,54 +255,28 @@ class IsmChatConversationsController extends GetxController {
 
     var apiConversations =
         await _viewModel.getChatConversations(noOfConvesation);
-    var dbConversations = IsmChatConfig.objectBox.chatConversationBox.getAll();
+
     if (conversations.isEmpty) {
       isConversationsLoading = false;
     }
 
-    if (apiConversations != null && apiConversations.isNotEmpty) {
-      unawaited(getBlockUser());
-      conversationPage = conversationPage + 20;
-      for (var conversation in apiConversations) {
-        DBConversationModel? dbConversation;
-        if (dbConversations.isNotEmpty) {
-          try {
-            dbConversation = dbConversations.firstWhere(
-                (e) => e.conversationId == conversation.conversationId);
-          } catch (e) {
-            IsmChatLog.error('No element');
-          }
-        }
-        var dbConversationModel = DBConversationModel(
-          conversationId: conversation.conversationId,
-          conversationImageUrl: conversation.conversationImageUrl,
-          conversationTitle: conversation.conversationTitle,
-          isGroup: conversation.isGroup,
-          lastMessageSentAt: conversation.lastMessageSentAt,
-          messagingDisabled: conversation.messagingDisabled,
-          membersCount: conversation.membersCount,
-          unreadMessagesCount: conversation.unreadMessagesCount,
-          messages: dbConversation?.messages ?? [],
-        );
-
-        dbConversationModel.opponentDetails.target =
-            conversation.opponentDetails;
-        dbConversationModel.lastMessageDetails.target =
-            conversation.lastMessageDetails;
-        dbConversationModel.config.target = conversation.config;
-        await IsmChatConfig.objectBox.createAndUpdateDB(
-          dbConversationModel: dbConversationModel,
-        );
-      }
-
-      await getConversationsFromDB();
+    if (apiConversations.isEmpty) {
+      return;
     }
-    if (getChatConversationApiCall == GetChatConversationApiCall.fromRefresh) {
+
+    unawaited(getBlockUser());
+    conversationPage = conversationPage + 20;
+    await getConversationsFromDB();
+
+    if (origin == null) {
+      return;
+    }
+
+    if (origin == ApiCallOrigin.referesh) {
       refreshController.refreshCompleted(
         resetFooterState: true,
       );
-    } else if (getChatConversationApiCall ==
-        GetChatConversationApiCall.fromPullDown) {
+    } else if (origin == ApiCallOrigin.loadMore) {
       refreshController.loadComplete();
     }
   }
@@ -435,10 +307,6 @@ class IsmChatConversationsController extends GetxController {
           )
           .toList();
     }
-  }
-
-  Future<void> signOut() async {
-    IsmChatConfig.objectBox.deleteChatLocalDb();
   }
 
   /// This will call an API that will notify the sender that the message has been delivered to me using mqtt

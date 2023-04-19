@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/views/chat_conversations/logout_bottomsheet.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -40,10 +39,7 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
           elevation: IsmChatDimens.appBarElevation,
           title: IsmChatTapHandler(
             onTap: () => Get.bottomSheet(
-              IsmChatLogutBottomSheet(signOutTap: () {
-                onSignOut!();
-                controller.signOut();
-              }),
+              IsmChatLogutBottomSheet(signOutTap: () => onSignOut?.call()),
               elevation: IsmChatDimens.twenty,
               enableDrag: true,
               backgroundColor: IsmChatColors.whiteColor,

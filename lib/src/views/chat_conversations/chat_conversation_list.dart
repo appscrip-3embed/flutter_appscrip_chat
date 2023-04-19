@@ -98,15 +98,12 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
               enablePullUp: true,
               onRefresh: () {
                 controller.conversationPage = 0;
-                controller.getChatConversations(
-                    getChatConversationApiCall:
-                        GetChatConversationApiCall.fromRefresh);
+                controller.getChatConversations(origin: ApiCallOrigin.referesh);
               },
               onLoading: () {
                 controller.getChatConversations(
                     noOfConvesation: controller.conversationPage,
-                    getChatConversationApiCall:
-                        GetChatConversationApiCall.fromPullDown);
+                    origin: ApiCallOrigin.loadMore);
               },
               child: ListView.separated(
                 padding: IsmChatDimens.edgeInsets0_10,
@@ -126,8 +123,12 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                           children: [
                             SlidableAction(
                               onPressed: (_) async {
-                                controller.deleteConversationAndClearChat(
-                                    controller.conversations[index]);
+                                await Get.bottomSheet(
+                                  IsmChatClearConversationBottomSheet(
+                                    controller.conversations[index],
+                                  ),
+                                  isDismissible: false,
+                                );
                               },
                               flex: 1,
                               backgroundColor: IsmChatColors.redColor,

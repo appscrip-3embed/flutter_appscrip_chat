@@ -1,3 +1,4 @@
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/main.dart';
 import 'package:chat_component_example/models/models.dart';
 import 'package:chat_component_example/res/res.dart';
@@ -18,6 +19,7 @@ class ChatListController extends GetxController {
 
   void onSignOut() {
     objectBox.deleteLocalDb();
+    IsmChatApp.logout();
     Get.offAllNamed(AppRoutes.login);
   }
 }

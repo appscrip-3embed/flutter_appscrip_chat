@@ -6,7 +6,6 @@ import 'dart:io';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
 import 'package:appscrip_chat_component/src/views/chat_page/widget/media_preview.dart';
-import 'package:appscrip_chat_component/src/widgets/alert_dailog.dart';
 import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -228,11 +227,10 @@ class IsmChatPageController extends GetxController {
         var chatConversationController =
             Get.find<IsmChatConversationsController>();
         chatConversationController.forwardedList.clear();
-        chatConversationController.forwardSeletedUserList.clear();
         await IsmChatUtility.openFullScreenBottomSheet(
-          IsmChatForwardListView(
-            ismChatChatMessageModel: message,
-            ismChatConversationModel: conversation!,
+          IsmChatForwardView(
+            message: message,
+            conversation: conversation!,
           ),
         );
         break;
@@ -1637,8 +1635,7 @@ class IsmChatPageController extends GetxController {
       dbConversationModel.lastMessageDetails.target =
           conversation?.lastMessageDetails;
       dbConversationModel.config.target = conversation?.config;
-      await IsmChatConfig.objectBox
-          .createAndUpdateDB(dbConversationModel: dbConversationModel);
+      await IsmChatConfig.objectBox.createAndUpdateDB(dbConversationModel);
       return conversationId.toString();
     }
 

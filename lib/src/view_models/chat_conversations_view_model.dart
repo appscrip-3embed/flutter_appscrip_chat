@@ -7,10 +7,38 @@ class IsmChatConversationsViewModel {
   final IsmChatConversationsRepository _repository;
 
   var chatLimit = 20;
-  Future<List<IsmChatConversationModel>?> getChatConversations(
-          int conversationPage) async =>
-      await _repository.getChatConversations(
-          skip: conversationPage, limit: chatLimit);
+  Future<List<IsmChatConversationModel>> getChatConversations(
+      int conversationPage) async {
+    var conversations = await _repository.getChatConversations(
+        skip: conversationPage, limit: chatLimit);
+
+    if (conversations == null || conversations.isEmpty) {
+      return [];
+    }
+
+    var dbConversations = IsmChatConfig.objectBox.chatConversationBox.getAll();
+
+    for (var conversation in conversations) {
+      DBConversationModel? dbConversation;
+      if (dbConversations.isNotEmpty) {
+        dbConversation = dbConversations.firstWhere(
+          (e) => e.conversationId == conversation.conversationId,
+          orElse: () => DBConversationModel(messages: []),
+        );
+      }
+      var dbConversationModel =
+          conversation.convertToDbModel(dbConversation?.messages);
+
+      dbConversationModel.opponentDetails.target = conversation.opponentDetails;
+      dbConversationModel.lastMessageDetails.target =
+          conversation.lastMessageDetails;
+      dbConversationModel.config.target = conversation.config;
+
+      await IsmChatConfig.objectBox.createAndUpdateDB(dbConversationModel);
+    }
+
+    return conversations;
+  }
 
   Future<UserDetails?> getUserData() async => await _repository.getUserData();
 
@@ -35,16 +63,10 @@ class IsmChatConversationsViewModel {
     return IsmChatUserListModel(users: data, pageToken: response.pageToken);
   }
 
-  Future<IsmChatResponseModel?> deleteChat({
-    required String conversationId,
-  }) async =>
-      await _repository.deleteChat(
-        conversationId: conversationId,
-      );
+  Future<IsmChatResponseModel?> deleteChat(String conversationId) async =>
+      await _repository.deleteChat(conversationId);
 
-  Future<void> clearAllMessages({
-    required String conversationId,
-  }) async {
+  Future<void> clearAllMessages(String conversationId) async {
     var response = await _repository.clearAllMessages(
       conversationId: conversationId,
     );
@@ -63,8 +85,10 @@ class IsmChatConversationsViewModel {
         messageId: messageId,
       );
 
-  Future<IsmChatUserListModel?> getBlockUser(
-          {required int? skip, required int limit}) async =>
+  Future<IsmChatUserListModel?> getBlockUser({
+    required int? skip,
+    required int limit,
+  }) async =>
       await _repository.getBlockUser(skip: skip, limit: limit);
 
   // get Api for Presigned Url.....
