@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:appscrip_chat_component/src/utilities/chat_log.dart';
+
 class IsmChatMetaData {
   final String? country;
   final String? parentMessageBody;
@@ -43,20 +45,23 @@ class IsmChatMetaData {
           'profilePic': profilePic
       };
 
-  factory IsmChatMetaData.fromMap(Map<String, dynamic> map) => IsmChatMetaData(
-        country: map['country'] != null ? map['country'] as String : null,
-        parentMessageBody: map['parentMessageBody'] != null
-            ? map['parentMessageBody'] as String
-            : null,
-        locationAddress: map['locationAddress'] != null
-            ? map['locationAddress'] as String
-            : null,
-        profilePic:
-            map['profilePic'] != null ? map['profilePic'] as String : null,
-        parentMessageInitiator: map['parentMessageInitiator'] != null
-            ? map['parentMessageInitiator'] as bool
-            : null,
-      );
+  factory IsmChatMetaData.fromMap(Map<String, dynamic> map) {
+    IsmChatLog.error('profilePIc ${map['profilePic']}');
+    return IsmChatMetaData(
+      country: map['country'] != null ? map['country'] as String : null,
+      parentMessageBody: map['parentMessageBody'] != null
+          ? map['parentMessageBody'] as String
+          : null,
+      locationAddress: map['locationAddress'] != null
+          ? map['locationAddress'] as String
+          : null,
+      profilePic:
+          map['profilePic'] != null ? map['profilePic'] as String : null,
+      parentMessageInitiator: map['parentMessageInitiator'] != null
+          ? map['parentMessageInitiator'] as bool
+          : null,
+    );
+  }
 
   String toJson() => json.encode(toMap());
 

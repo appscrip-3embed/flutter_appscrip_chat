@@ -8,42 +8,44 @@ class IsmChatConversationModel {
       IsmChatConversationModel.fromMap(
           json.decode(source) as Map<String, dynamic>);
 
-  factory IsmChatConversationModel.fromMap(Map<String, dynamic> map) =>
-      IsmChatConversationModel(
-        updatedAt: map['updatedAt'] as int? ?? 0,
-        unreadMessagesCount: map['unreadMessagesCount'] as int? ?? 0,
-        // searchableTags:
-        //     List<String>.from(map['searchableTags'] as List<dynamic>),
-        privateOneToOne: map['privateOneToOne'] as bool? ?? false,
-        opponentDetails:
-            UserDetails.fromMap(map['opponentDetails'] as Map<String, dynamic>),
-        metaData: map['metaData'] == null
-            ? IsmChatMetaData()
-            : IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
-        messagingDisabled: map['messagingDisabled'] as bool? ?? false,
-        membersCount: map['membersCount'] as int? ?? 0,
-        // lastReadAt: LastReadAt.fromNetworkMap(
-        //     map['lastReadAt'] as Map<String, dynamic>? ?? {}),
-        lastMessageSentAt: map['lastMessageSentAt'] as int? ?? 0,
-        lastMessageDetails: map['lastMessageDetails'] != null
-            ? LastMessageDetails.fromMap(
-                map['lastMessageDetails'] as Map<String, dynamic>)
-            : null,
-        isGroup: map['isGroup'] as bool? ?? false,
-        customType: map['customType'],
-        // createdByUserName: map['createdByUserName'] as String? ?? '',
-        // createdByUserImageUrl: map['createdByUserImageUrl'] as String? ?? '',
-        // createdBy: map['createdBy'] as String? ?? '',
-        // createdAt: map['createdAt'] as int? ?? 0,
-        conversationType: IsmChatConversationType.fromValue(
-            map['conversationType'] as int? ?? 1),
-        conversationTitle: map['conversationTitle'] as String?,
-        conversationImageUrl: map['conversationImageUrl'] as String?,
-        conversationId: map['conversationId'] as String? ?? '',
-        config: ConversationConfigModel.fromMap(
-            map['config'] as Map<String, dynamic>),
-        // adminCount: map['adminCount'] as int? ?? 0,
-      );
+  factory IsmChatConversationModel.fromMap(Map<String, dynamic> map) {
+    IsmChatLog.error('metaDatas ${map['metaData']}');
+    return IsmChatConversationModel(
+      updatedAt: map['updatedAt'] as int? ?? 0,
+      unreadMessagesCount: map['unreadMessagesCount'] as int? ?? 0,
+      // searchableTags:
+      //     List<String>.from(map['searchableTags'] as List<dynamic>),
+      privateOneToOne: map['privateOneToOne'] as bool? ?? false,
+      opponentDetails:
+          UserDetails.fromMap(map['opponentDetails'] as Map<String, dynamic>),
+      metaData: map['metaData'] == null
+          ? IsmChatMetaData()
+          : IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
+      messagingDisabled: map['messagingDisabled'] as bool? ?? false,
+      membersCount: map['membersCount'] as int? ?? 0,
+      // lastReadAt: LastReadAt.fromNetworkMap(
+      //     map['lastReadAt'] as Map<String, dynamic>? ?? {}),
+      lastMessageSentAt: map['lastMessageSentAt'] as int? ?? 0,
+      lastMessageDetails: map['lastMessageDetails'] != null
+          ? LastMessageDetails.fromMap(
+              map['lastMessageDetails'] as Map<String, dynamic>)
+          : null,
+      isGroup: map['isGroup'] as bool? ?? false,
+      customType: map['customType'],
+      // createdByUserName: map['createdByUserName'] as String? ?? '',
+      // createdByUserImageUrl: map['createdByUserImageUrl'] as String? ?? '',
+      // createdBy: map['createdBy'] as String? ?? '',
+      // createdAt: map['createdAt'] as int? ?? 0,
+      conversationType: IsmChatConversationType.fromValue(
+          map['conversationType'] as int? ?? 1),
+      conversationTitle: map['conversationTitle'] as String?,
+      conversationImageUrl: map['conversationImageUrl'] as String?,
+      conversationId: map['conversationId'] as String? ?? '',
+      config: ConversationConfigModel.fromMap(
+          map['config'] as Map<String, dynamic>),
+      // adminCount: map['adminCount'] as int? ?? 0,
+    );
+  }
 
   factory IsmChatConversationModel.fromDB(DBConversationModel dbConversation) =>
       IsmChatConversationModel(
