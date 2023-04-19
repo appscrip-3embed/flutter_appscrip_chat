@@ -158,7 +158,8 @@ class IsmChatForwardView extends StatelessWidget {
                                                 .forwardedList
                                                 .selectedUsers
                                                 .first
-                                                .userDetails)
+                                                .userDetails
+                                                .userId)
                                             .toString();
                                     Get.back<void>();
                                     controller.navigateToMessages(
@@ -268,8 +269,9 @@ class IsmChatForwardView extends StatelessWidget {
                                           .forwardedList.selectedUsers) {
                                         IsmChatLog.success(
                                             'Forward Message sent to ${x.userDetails.userName}');
-                                        var conversationId = controller
-                                            .getConversationId(x.userDetails);
+                                        var conversationId =
+                                            controller.getConversationId(
+                                                x.userDetails.userId);
                                         await Future.delayed(
                                             const Duration(milliseconds: 1000));
                                         if (message.customType ==

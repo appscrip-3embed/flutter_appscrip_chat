@@ -1,5 +1,6 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class IsmChatApp extends StatelessWidget {
   IsmChatApp({
@@ -86,6 +87,51 @@ class IsmChatApp extends StatelessWidget {
 
   /// Call this function on SignOut to delete the data stored locally in the Local Database
   static void logout() => IsmChatConfig.objectBox.deleteChatLocalDb();
+
+  static void startChatting({
+    required String profileImageUrl,
+    required String name,
+    required String email,
+    required String userId,
+  }) async {
+    assert(
+        [profileImageUrl, name, email, userId].every((e) => e.isNotEmpty), '');
+    // if (name) {
+    //   return;
+    // }
+
+    if (!Get.isRegistered<IsmChatConversationsController>()) {
+      IsmChatConversationsBinding().dependencies();
+    }
+    var controller = Get.find<IsmChatConversationsController>();
+    var conversationId = controller.getConversationId(userId);
+    late IsmChatConversationModel conversation;
+    if (conversationId.isEmpty) {
+      // conversation = IsmChatConversationModel();
+      var userDetails = UserDetails(
+        userProfileImageUrl: profileImageUrl,
+        userName: name,
+        userIdentifier: email,
+        userId: userId,
+        online: false,
+        lastSeen: 0,
+      );
+      conversation = IsmChatConversationModel(
+        messagingDisabled: false,
+        conversationImageUrl: profileImageUrl,
+        isGroup: false,
+        opponentDetails: userDetails,
+        unreadMessagesCount: 0,
+        lastMessageDetails: null,
+        lastMessageSentAt: 0,
+        membersCount: 1,
+      );
+    } else {
+      conversation = controller.conversations
+          .firstWhere((e) => e.conversationId == conversationId);
+    }
+    controller.navigateToMessages(conversation);
+  }
 
   @override
   Widget build(BuildContext context) => IsmChatConversations(

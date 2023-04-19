@@ -95,7 +95,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                   membersCount: 1,
                                 );
                                 ismChatConversation.conversationId = controller
-                                    .getConversationId(conversation)
+                                    .getConversationId(conversation.userId)
                                     .toString();
                                 Get.back<void>();
                                 controller

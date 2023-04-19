@@ -227,6 +227,8 @@ class IsmChatConversationsController extends GetxController {
     conversations.clear();
     conversations = dbConversations;
 
+    isConversationsLoading = false;
+
     if (conversations.length <= 1) {
       return;
     }
@@ -234,9 +236,9 @@ class IsmChatConversationsController extends GetxController {
         b.lastMessageDetails!.sentAt.compareTo(a.lastMessageDetails!.sentAt));
   }
 
-  String getConversationId(UserDetails userDetails) {
+  String getConversationId(String userId) {
     var conversation = conversations.firstWhere(
-        (element) => element.opponentDetails?.userId == userDetails.userId,
+        (element) => element.opponentDetails?.userId == userId,
         orElse: IsmChatConversationModel.new);
 
     if (conversation.chatName.isEmpty) {
