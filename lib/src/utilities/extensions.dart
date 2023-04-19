@@ -99,6 +99,9 @@ extension DateConvertor on int {
     final currentDay = int.parse(DateFormat('d').format(currentTime));
     final currentDayFromStamp = int.parse(DateFormat('d').format(timeStamp));
     var timeFormate = '';
+    if (this == -1 || this == 0) {
+      return timeFormate;
+    }
     if (currentDay == currentDayFromStamp) {
       timeFormate =
           '${IsmChatStrings.lastSeen} ${IsmChatStrings.today} ${IsmChatStrings.at} ${DateFormat.jm().format(timeStamp)}';

@@ -15,10 +15,11 @@ class IsmChatConversationModel {
         // searchableTags:
         //     List<String>.from(map['searchableTags'] as List<dynamic>),
         privateOneToOne: map['privateOneToOne'] as bool? ?? false,
-        opponentDetails: 
+        opponentDetails:
             UserDetails.fromMap(map['opponentDetails'] as Map<String, dynamic>),
-        metaData: map['metaData'] == null ? IsmChatMetaData() :
-            IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
+        metaData: map['metaData'] == null
+            ? IsmChatMetaData()
+            : IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
         messagingDisabled: map['messagingDisabled'] as bool? ?? false,
         membersCount: map['membersCount'] as int? ?? 0,
         // lastReadAt: LastReadAt.fromNetworkMap(

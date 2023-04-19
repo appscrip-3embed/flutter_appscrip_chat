@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/widgets/alert_dailog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -47,9 +46,13 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IsmChatImage.profile(
-                      controller.conversation?.opponentDetails
-                              ?.userProfileImageUrl ??
-                          '',
+                      controller.conversation?.metaData?.profilePic
+                                  ?.isNotEmpty ==
+                              true
+                          ? controller.conversation?.metaData?.profilePic ?? ''
+                          : controller.conversation?.opponentDetails
+                                  ?.userProfileImageUrl ??
+                              '',
                       name: controller.conversation!.chatName.isNotEmpty
                           ? controller.conversation?.chatName
                           : controller

@@ -5,11 +5,13 @@ class IsmChatMetaData {
   final String? country;
   final String? parentMessageBody;
   final String? locationAddress;
+  final String? profilePic;
   final bool? parentMessageInitiator;
   IsmChatMetaData({
     this.country,
     this.parentMessageBody,
     this.locationAddress,
+    this.profilePic,
     this.parentMessageInitiator,
   });
 
@@ -17,12 +19,14 @@ class IsmChatMetaData {
     String? country,
     String? parentMessageBody,
     String? locationAddress,
+    String? profilePic,
     bool? parentMessageInitiator,
   }) =>
       IsmChatMetaData(
         country: country ?? this.country,
         parentMessageBody: parentMessageBody ?? this.parentMessageBody,
         locationAddress: locationAddress ?? this.locationAddress,
+        profilePic: profilePic ?? this.profilePic,
         parentMessageInitiator:
             parentMessageInitiator ?? this.parentMessageInitiator,
       );
@@ -35,6 +39,8 @@ class IsmChatMetaData {
           'locationAddress': locationAddress,
         if (parentMessageInitiator != null)
           'parentMessageInitiator': parentMessageInitiator,
+        if (profilePic != null || profilePic?.isNotEmpty == true)
+          'profilePic': profilePic
       };
 
   factory IsmChatMetaData.fromMap(Map<String, dynamic> map) => IsmChatMetaData(
@@ -45,6 +51,8 @@ class IsmChatMetaData {
         locationAddress: map['locationAddress'] != null
             ? map['locationAddress'] as String
             : null,
+        profilePic:
+            map['profilePic'] != null ? map['profilePic'] as String : null,
         parentMessageInitiator: map['parentMessageInitiator'] != null
             ? map['parentMessageInitiator'] as bool
             : null,
@@ -57,7 +65,7 @@ class IsmChatMetaData {
 
   @override
   String toString() =>
-      'IsmChatMetaData(country: $country, parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, parentMessageInitiator: $parentMessageInitiator)';
+      'IsmChatMetaData(country: $country, parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, profilePic: $profilePic, parentMessageInitiator: $parentMessageInitiator)';
 
   @override
   bool operator ==(covariant IsmChatMetaData other) {
@@ -66,6 +74,7 @@ class IsmChatMetaData {
     return other.country == country &&
         other.parentMessageBody == parentMessageBody &&
         other.locationAddress == locationAddress &&
+        other.profilePic == profilePic &&
         other.parentMessageInitiator == parentMessageInitiator;
   }
 
@@ -74,5 +83,6 @@ class IsmChatMetaData {
       country.hashCode ^
       parentMessageBody.hashCode ^
       locationAddress.hashCode ^
+      profilePic.hashCode ^
       parentMessageInitiator.hashCode;
 }
