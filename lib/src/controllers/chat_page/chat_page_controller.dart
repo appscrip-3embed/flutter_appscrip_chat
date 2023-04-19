@@ -1466,6 +1466,7 @@ class IsmChatPageController extends GetxController {
     var data =
         await _viewModel.getConverstaionDetails(conversationId: conversationId);
     if (data != null) {
+      IsmChatLog.error('userImage ${data.metaData!.profilePic}');
       conversation = data.copyWith(conversationId: conversationId);
     }
   }
