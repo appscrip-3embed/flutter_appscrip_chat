@@ -1451,15 +1451,15 @@ class IsmChatPageController extends GetxController {
         ),
       ]),
     );
-    await Get.to<void>(IsmChatMessageInfo(message: chatMessageModel));
+    await Get.to<void>(IsmChatMessageInfo(message: chatMessageModel),);
   }
 
-  /// Call function for Get Chat Conversation Details
+  /// Call function for Get Chat Conversation Detailss
   void getConversationDetailEveryOneMinutes() {
     conversationDetailsApTimer = Timer.periodic(
         const Duration(minutes: 1),
         (Timer t) => getConverstaionDetails(
-            conversationId: conversation?.conversationId ?? ''));
+            conversationId: conversation?.conversationId ?? ''),);
   }
 
   ///

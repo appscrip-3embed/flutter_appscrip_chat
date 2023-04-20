@@ -47,6 +47,7 @@ class UserDetails {
   final String userIdentifier;
   final String userId;
   final bool online;
+  @Transient()
   final IsmChatMetaData? metaData;
   final int lastSeen;
   final bool? visibility;
@@ -72,7 +73,7 @@ class UserDetails {
         userIdentifier: userIdentifier ?? this.userIdentifier,
         userId: userId ?? this.userId,
         online: online ?? this.online,
-        // metaData: metaData ?? this.metaData,
+        metaData: metaData ?? this.metaData,
         lastSeen: lastSeen ?? this.lastSeen,
         visibility: visibility ?? this.visibility,
         notification: notification ?? this.notification,
@@ -85,7 +86,7 @@ class UserDetails {
         'userIdentifier': userIdentifier,
         'userId': userId,
         'online': online,
-        // 'metaData': metaData.toMap(),
+        'metaData': metaData!.toMap(),
         'lastSeen': lastSeen,
         'visibility': visibility,
         'notification': notification,

@@ -33,7 +33,6 @@ class IsmChatConversationsViewModel {
       dbConversationModel.lastMessageDetails.target =
           conversation.lastMessageDetails;
       dbConversationModel.config.target = conversation.config;
-
       await IsmChatConfig.objectBox.createAndUpdateDB(dbConversationModel);
     }
 
