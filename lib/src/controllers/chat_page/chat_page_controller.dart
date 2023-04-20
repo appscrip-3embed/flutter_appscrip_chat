@@ -468,7 +468,7 @@ class IsmChatPageController extends GetxController {
 
     if (data != null) {
       await getMessagesFromDB(conversation?.conversationId ?? '');
-      _scrollToBottom();
+    
     }
   }
 
