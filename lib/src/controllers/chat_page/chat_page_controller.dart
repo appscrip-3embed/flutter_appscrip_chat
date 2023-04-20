@@ -414,15 +414,18 @@ class IsmChatPageController extends GetxController {
     var chatConversation = await IsmChatConfig.objectBox
         .getDBConversation(conversationId: conversation?.conversationId ?? '');
     if (chatConversation != null) {
-      chatConversation.lastMessageDetails.target = LastMessageDetails(
-        showInConversation: true,
-        sentAt: messages.last.sentAt,
-        senderName: messages.last.chatName,
-        messageType: messages.last.messageType?.value ?? 0,
-        messageId: messages.last.messageId ?? '',
-        conversationId: messages.last.conversationId ?? '',
-        body: messages.last.body,
-      );
+      if (messages.isNotEmpty) {
+        chatConversation.lastMessageDetails.target = LastMessageDetails(
+          showInConversation: true,
+          sentAt: messages.last.sentAt,
+          senderName: messages.last.chatName,
+          messageType: messages.last.messageType?.value ?? 0,
+          messageId: messages.last.messageId ?? '',
+          conversationId: messages.last.conversationId ?? '',
+          body: messages.last.body,
+        );
+      }
+
       // Todo: check for last message for display in converstiaon list
       chatConversation.unreadMessagesCount = 0;
       IsmChatConfig.objectBox.chatConversationBox.put(chatConversation);
@@ -1413,6 +1416,9 @@ class IsmChatPageController extends GetxController {
           .map(IsmChatChatMessageModel.fromJson)
           .toList());
       isMessagesLoading = false;
+      if (messages.isEmpty) {
+        return;
+      }
       _scrollToBottom();
       _refreshAutoScrollMapping();
     }
@@ -1466,7 +1472,6 @@ class IsmChatPageController extends GetxController {
     var data =
         await _viewModel.getConverstaionDetails(conversationId: conversationId);
     if (data != null) {
-      IsmChatLog.error('userImage ${data.metaData!.profilePic}');
       conversation = data.copyWith(conversationId: conversationId);
     }
   }
