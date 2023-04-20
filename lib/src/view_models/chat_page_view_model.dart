@@ -424,5 +424,7 @@ class IsmChatPageViewModel {
         members: members,
         isGroup: isGroup,
         conversationType: conversationType,
+        conversationImageUrl: conversationImageUrl,
+        conversationTitle: conversationTitle
       );
 }

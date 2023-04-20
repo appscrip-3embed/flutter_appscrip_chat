@@ -12,11 +12,12 @@ class IsmChatConversationModel {
       IsmChatConversationModel(
         updatedAt: map['updatedAt'] as int? ?? 0,
         unreadMessagesCount: map['unreadMessagesCount'] as int? ?? 0,
-        // searchableTags:
-        //     List<String>.from(map['searchableTags'] as List<dynamic>),
+        userIds: map['userIds'] == null
+            ? []
+            : List<String>.from(map['userIds'] as List<dynamic>),
         privateOneToOne: map['privateOneToOne'] as bool? ?? false,
-        opponentDetails:
-            UserDetails.fromMap(map['opponentDetails'] as Map<String, dynamic>),
+        opponentDetails:  UserDetails.fromMap(
+                map['opponentDetails'] as Map<String, dynamic>),
         metaData: map['metaData'] == null
             ? IsmChatMetaData()
             : IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
@@ -64,35 +65,37 @@ class IsmChatConversationModel {
         config: dbConversation.config.target,
       );
 
-  IsmChatConversationModel({
-    this.updatedAt,
-    this.unreadMessagesCount,
-    //  this.searchableTags,
-    this.privateOneToOne,
-    this.opponentDetails,
-    this.metaData,
-    this.messagingDisabled,
-    this.membersCount,
-    //  this.lastReadAt,
-    this.lastMessageSentAt,
-    this.lastMessageDetails,
-    this.isGroup,
-    this.customType,
-    //  this.createdByUserName,
-    //  this.createdByUserImageUrl,
-    //  this.createdBy,
-    //  this.createdAt,
-    this.conversationType,
-    this.conversationTitle,
-    this.conversationImageUrl,
-    this.conversationId,
-    this.config,
-    //  this.adminCount,
-  });
+  IsmChatConversationModel(
+      {this.updatedAt,
+      this.unreadMessagesCount,
+      //  this.searchableTags,
+      this.privateOneToOne,
+      this.opponentDetails,
+      this.metaData,
+      this.messagingDisabled,
+      this.membersCount,
+      //  this.lastReadAt,
+      this.lastMessageSentAt,
+      this.lastMessageDetails,
+      this.isGroup,
+      this.customType,
+      //  this.createdByUserName,
+      //  this.createdByUserImageUrl,
+      //  this.createdBy,
+      //  this.createdAt,
+      this.conversationType,
+      this.conversationTitle,
+      this.conversationImageUrl,
+      this.conversationId,
+      this.config,
+      this.userIds
+      //  this.adminCount,
+      });
 
   int? updatedAt;
   int? unreadMessagesCount;
   //  List<String> searchableTags;
+  List<String>? userIds;
   bool? privateOneToOne;
   UserDetails? opponentDetails;
   IsmChatMetaData? metaData;

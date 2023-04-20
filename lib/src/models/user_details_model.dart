@@ -9,10 +9,10 @@ class UserDetails {
       UserDetails.fromMap(json.decode(source) as Map<String, dynamic>);
 
   factory UserDetails.fromMap(Map<String, dynamic> map) => UserDetails(
-        userProfileImageUrl: map['userProfileImageUrl'] as String,
-        userName: map['userName'] as String,
-        userIdentifier: map['userIdentifier'] as String,
-        userId: map['userId'] != null ? map['userId'] as String : '',
+        userProfileImageUrl: map['userProfileImageUrl'] as String? ?? '',
+        userName: map['userName'] as String? ?? '',
+        userIdentifier: map['userIdentifier'] as String? ?? '',
+        userId:  map['userId'] as String? ?? '',
         online: map['online'] as bool? ?? false,
         metaData: map['metaData'] == null
             ? IsmChatMetaData()

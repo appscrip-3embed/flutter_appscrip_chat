@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/widgets/alert_dailog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -261,11 +260,18 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                   );
                                   return;
                                 }
-                                controller.addGrouNameController.text;
+                                var userIds = <String>[];
+                                for (var x in controller.forwardedList) {
+                                  if (x.isUserSelected == true) {
+                                    userIds.add(x.userDetails.userId);
+                                  }
+                                }
+                                
                                 // TODO: Add API for creating group
                                 var ismChatConversation =
                                     IsmChatConversationModel(
                                   messagingDisabled: false,
+                                  userIds: userIds,
                                   conversationTitle:
                                       controller.addGrouNameController.text,
                                   conversationImageUrl: controller.profileImage,
@@ -300,8 +306,7 @@ class _GroupChatImageAndName extends StatelessWidget {
   const _GroupChatImageAndName();
 
   @override
-  Widget build(BuildContext context) =>
-      GetBuilder<IsmChatConversationsController>(
+  Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
         builder: (controller) => Column(
           children: [
             IsmChatDimens.boxHeight10,

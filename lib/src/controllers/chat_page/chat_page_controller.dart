@@ -189,6 +189,9 @@ class IsmChatPageController extends GetxController {
             conversationId: conversation?.conversationId ?? '');
         getConversationDetailEveryOneMinutes();
       } else {
+        if (conversation!.isGroup == true) {
+          createConversation(userId: [], isGroup: true);
+        }
         isMessagesLoading = false;
       }
     }
@@ -468,7 +471,6 @@ class IsmChatPageController extends GetxController {
 
     if (data != null) {
       await getMessagesFromDB(conversation?.conversationId ?? '');
-    
     }
   }
 
@@ -1451,15 +1453,18 @@ class IsmChatPageController extends GetxController {
         ),
       ]),
     );
-    await Get.to<void>(IsmChatMessageInfo(message: chatMessageModel),);
+    await Get.to<void>(
+      IsmChatMessageInfo(message: chatMessageModel),
+    );
   }
 
   /// Call function for Get Chat Conversation Detailss
   void getConversationDetailEveryOneMinutes() {
     conversationDetailsApTimer = Timer.periodic(
-        const Duration(minutes: 1),
-        (Timer t) => getConverstaionDetails(
-            conversationId: conversation?.conversationId ?? ''),);
+      const Duration(minutes: 1),
+      (Timer t) => getConverstaionDetails(
+          conversationId: conversation?.conversationId ?? ''),
+    );
   }
 
   ///
@@ -1606,19 +1611,25 @@ class IsmChatPageController extends GetxController {
     }
   }
 
-  Future<String> createConversation({required List<String> userId}) async {
+  Future<String> createConversation(
+      {required List<String> userId, bool isGroup = false}) async {
+    if (isGroup) {
+      userId = conversation!.userIds ?? [];
+  
+    }
     var response = await _viewModel.createConversation(
       typingEvents: true,
       readEvents: true,
       pushNotifications: true,
       members: userId,
-      isGroup: false,
+      isGroup: isGroup,
       conversationType: 0,
       searchableTags: [' '],
       metaData: <String, dynamic>{},
       customType: null,
-      conversationImageUrl: '',
-      conversationTitle: '',
+      conversationImageUrl:
+          isGroup ? conversation!.conversationImageUrl ?? '' : '',
+      conversationTitle: isGroup ? conversation!.conversationTitle ?? '' : '',
     );
 
     if (response != null) {

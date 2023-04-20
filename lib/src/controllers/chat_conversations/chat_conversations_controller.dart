@@ -140,6 +140,7 @@ class IsmChatConversationsController extends GetxController {
     var responseCode = await updatePresignedUrl(response.presignedUrl, bytes);
     if (responseCode == 200) {
       profileImage = response.mediaUrl!;
+      Get.back();
     }
   }
 

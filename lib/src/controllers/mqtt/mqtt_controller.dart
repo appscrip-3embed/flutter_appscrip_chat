@@ -136,8 +136,9 @@ class IsmChatMqttController extends GetxController {
       var payload = jsonDecode(
               MqttPublishPayload.bytesToStringAsString(recMess.payload.message))
           as Map<String, dynamic>;
-
+    
       if (payload['action'] != null) {
+      
         var actionModel = IsmChatMqttActionModel.fromMap(payload);
         IsmChatLog.info(actionModel);
         _handleAction(actionModel);
