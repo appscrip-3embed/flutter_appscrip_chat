@@ -244,7 +244,7 @@ class IsmChatConversationsController extends GetxController {
     if (conversation.conversationId?.isEmpty == true) {
       return '';
     }
-    return conversation.conversationId!;
+    return conversation.conversationId ?? '';
   }
 
   Future<void> getChatConversations({
