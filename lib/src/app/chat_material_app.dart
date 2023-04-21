@@ -88,17 +88,28 @@ class IsmChatApp extends StatelessWidget {
   /// Call this function on SignOut to delete the data stored locally in the Local Database
   static void logout() => IsmChatConfig.objectBox.deleteChatLocalDb();
 
-  static Future<void> startChatting({
+  /// This function can be used to directly go to chatting page and start chatting from anywhere in the app
+  ///
+  /// Follow the following steps :-
+  /// 1. Navigate to the screen where `IsmChatApp` is used as the root widget for `Chat` module
+  static Future<void> chatFromOutside({
     required String profileImageUrl,
     required String name,
     required String email,
     required String userId,
+    Duration? duration,
   }) async {
     assert(
-        [profileImageUrl, name, email, userId].every((e) => e.isNotEmpty), '');
-    // if (name) {
-    //   return;
-    // }
+      [name, email, userId].every((e) => e.isNotEmpty),
+      '''Input Error: Please make sure that all required fields are filled out.
+      Name, email, and userId cannot be empty.''',
+    );
+
+    IsmChatUtility.showLoader();
+
+    await Future.delayed(duration ?? const Duration(milliseconds: 500));
+
+    IsmChatUtility.closeLoader();
 
     if (!Get.isRegistered<IsmChatConversationsController>()) {
       IsmChatConversationsBinding().dependencies();
@@ -107,7 +118,6 @@ class IsmChatApp extends StatelessWidget {
     var conversationId = controller.getConversationId(userId);
     late IsmChatConversationModel conversation;
     if (conversationId.isEmpty) {
-      // conversation = IsmChatConversationModel();
       var userDetails = UserDetails(
         userProfileImageUrl: profileImageUrl,
         userName: name,
@@ -131,6 +141,7 @@ class IsmChatApp extends StatelessWidget {
           .firstWhere((e) => e.conversationId == conversationId);
     }
     controller.navigateToMessages(conversation);
+    IsmChatConfig.onChatTap(Get.context!, conversation);
   }
 
   @override

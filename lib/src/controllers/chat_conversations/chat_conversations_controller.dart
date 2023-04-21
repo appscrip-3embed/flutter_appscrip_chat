@@ -242,10 +242,10 @@ class IsmChatConversationsController extends GetxController {
         (element) => element.opponentDetails?.userId == userId,
         orElse: IsmChatConversationModel.new);
 
-    if (conversation.conversationId?.isEmpty == true) {
+    if (conversation.conversationId == null) {
       return '';
     }
-    return conversation.conversationId ?? '';
+    return conversation.conversationId!;
   }
 
   Future<void> getChatConversations({
