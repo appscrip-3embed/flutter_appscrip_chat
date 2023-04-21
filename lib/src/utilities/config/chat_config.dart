@@ -8,17 +8,18 @@ class IsmChatConfig {
   const IsmChatConfig._();
 
   static late IsmChatCommunicationConfig communicationConfig;
-  static late IsmChatThemeData _chatLightTheme;
-  static late IsmChatThemeData _chatDarkTheme;
-  static late Widget? loadingDialog;
+  static IsmChatThemeData? _chatLightTheme;
+  static IsmChatThemeData? _chatDarkTheme;
+  static Widget? loadingDialog;
   static late IsmChatObjectBox objectBox;
   static String dbName = IsmChatStrings.dbname;
   static bool isInitialized = false;
   static Duration animationDuration = const Duration(milliseconds: 300);
   static late void Function(BuildContext, IsmChatConversationModel) onChatTap;
 
-  static IsmChatThemeData get chatTheme =>
-      Get.isDarkMode ? _chatDarkTheme : _chatLightTheme;
+  static IsmChatThemeData get chatTheme => Get.isDarkMode
+      ? _chatDarkTheme ?? IsmChatThemeData.light()
+      : _chatLightTheme ?? IsmChatThemeData.dark();
 
   static set chatLightTheme(IsmChatThemeData data) => _chatLightTheme = data;
 
