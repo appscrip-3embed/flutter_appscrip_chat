@@ -4,8 +4,6 @@ import 'package:get/get.dart';
 class IsmChatMqttBinding extends Bindings {
   @override
   void dependencies() {
-    Get.put(
-      IsmChatMqttController(),
-    );
+    Get.put(IsmChatMqttController(), permanent: true);
   }
 }

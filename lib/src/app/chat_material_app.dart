@@ -86,7 +86,11 @@ class IsmChatApp extends StatelessWidget {
   final VoidCallback? onSignOut;
 
   /// Call this function on SignOut to delete the data stored locally in the Local Database
-  static void logout() => IsmChatConfig.objectBox.deleteChatLocalDb();
+  static void logout() {
+    IsmChatConfig.objectBox.deleteChatLocalDb();
+    Get.delete<IsmChatConversationsController>(force: true);
+    Get.delete<IsmChatMqttController>(force: true);
+  }
 
   /// This function can be used to directly go to chatting page and start chatting from anywhere in the app
   ///
@@ -114,7 +118,7 @@ class IsmChatApp extends StatelessWidget {
       Name, email, and userId cannot be empty.''',
     );
 
-    await Future.delayed(const Duration(milliseconds: 10));
+    await Future.delayed(const Duration(milliseconds: 100));
 
     IsmChatUtility.showLoader();
 
