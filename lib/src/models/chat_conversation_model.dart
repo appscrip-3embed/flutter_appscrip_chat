@@ -16,8 +16,8 @@ class IsmChatConversationModel {
             ? []
             : List<String>.from(map['userIds'] as List<dynamic>),
         privateOneToOne: map['privateOneToOne'] as bool? ?? false,
-        opponentDetails:  UserDetails.fromMap(
-                map['opponentDetails'] as Map<String, dynamic>),
+        opponentDetails:
+            UserDetails.fromMap(map['opponentDetails'] as Map<String, dynamic>),
         metaData: map['metaData'] == null
             ? IsmChatMetaData()
             : IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
@@ -118,6 +118,8 @@ class IsmChatConversationModel {
   //  int adminCount;
 
   String get chatName => conversationTitle ?? opponentDetails?.userName ?? '';
+  String get profileUrl =>
+      conversationImageUrl ?? opponentDetails?.userProfileImageUrl ?? '';
 
   IsmChatConversationModel copyWith({
     int? updatedAt,

@@ -47,11 +47,11 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
         floatingActionButton: widget.showCreateChatIcon
             ? IsmChatStartChatFAB(
                 icon: widget.createChatIcon,
-                // onTap: () => IsmChatUtility.openFullScreenBottomSheet(
-                //   const IsmChatCreateConversationView(),
-                // ),
+                onTap: () => IsmChatUtility.openFullScreenBottomSheet(
+                  const IsmChatCreateConversationView(),
+                ),
                 //TODO: Uncomment this for group chat
-                onTap: () => Get.bottomSheet(const _CreateChatBottomSheet()),
+                // onTap: () => Get.bottomSheet(const _CreateChatBottomSheet()),
               )
             : null,
       );
