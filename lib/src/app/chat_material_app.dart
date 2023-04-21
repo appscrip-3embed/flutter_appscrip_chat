@@ -91,14 +91,22 @@ class IsmChatApp extends StatelessWidget {
   /// This function can be used to directly go to chatting page and start chatting from anywhere in the app
   ///
   /// Follow the following steps :-
-  /// 1. Navigate to the screen where `IsmChatApp` is used as the root widget for `Chat` module
+  /// 1. Navigate to the Screen/View where `IsmChatApp` is used as the root widget for `Chat` module
+  /// 2. Call this function by providing all the required data (must add `await` keyword as this is a Future)
+  ///
+  /// * `userId` - UserID of the user coming from backend APIs (`Required`)
+  /// * `name` - The name to be displayed (`Required`)
+  /// * `email` - Email of the user (`Required`)
+  /// * `profileImageUrl` - The image url of the user (`Optional`)
+  /// * `duration` - The duration for which the loading dialog will be displayed, this is to make sure all the controllers and variables are initialized before executing any statement and/or calling the APIs for data. (default `Duration(milliseconds: 500)`)
+  /// * `onNavigateToChat` - This function will be executed to navigate to the specific chat screen of the selected user. If not provided, the `onChatTap` callback will be used which is passed to `IsmChatApp`.
   static Future<void> chatFromOutside({
-    required String profileImageUrl,
+    String profileImageUrl = '',
     required String name,
     required String email,
     required String userId,
-    void Function(BuildContext, IsmChatConversationModel)? navigateToChat,
-    Duration? duration,
+    void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
+    Duration duration = const Duration(milliseconds: 500),
   }) async {
     assert(
       [name, email, userId].every((e) => e.isNotEmpty),
@@ -110,7 +118,7 @@ class IsmChatApp extends StatelessWidget {
 
     IsmChatUtility.showLoader();
 
-    await Future.delayed(duration ?? const Duration(milliseconds: 500));
+    await Future.delayed(duration);
 
     IsmChatUtility.closeLoader();
 
@@ -145,7 +153,7 @@ class IsmChatApp extends StatelessWidget {
     }
     controller.navigateToMessages(conversation);
 
-    (navigateToChat ?? IsmChatConfig.onChatTap)
+    (onNavigateToChat ?? IsmChatConfig.onChatTap)
         .call(Get.context!, conversation);
   }
 
