@@ -97,6 +97,7 @@ class IsmChatApp extends StatelessWidget {
     required String name,
     required String email,
     required String userId,
+    void Function(BuildContext, IsmChatConversationModel)? navigateToChat,
     Duration? duration,
   }) async {
     assert(
@@ -104,6 +105,8 @@ class IsmChatApp extends StatelessWidget {
       '''Input Error: Please make sure that all required fields are filled out.
       Name, email, and userId cannot be empty.''',
     );
+
+    await Future.delayed(const Duration(milliseconds: 10));
 
     IsmChatUtility.showLoader();
 
@@ -141,7 +144,9 @@ class IsmChatApp extends StatelessWidget {
           .firstWhere((e) => e.conversationId == conversationId);
     }
     controller.navigateToMessages(conversation);
-    IsmChatConfig.onChatTap(Get.context!, conversation);
+
+    (navigateToChat ?? IsmChatConfig.onChatTap)
+        .call(Get.context!, conversation);
   }
 
   @override
