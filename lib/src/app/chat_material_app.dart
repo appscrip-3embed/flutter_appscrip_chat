@@ -15,6 +15,8 @@ class IsmChatApp extends StatelessWidget {
     this.databaseName,
     this.onSignOut,
     this.showAppBar = false,
+    this.enableGroupChat = false,
+    this.createChatIcon,
   }) {
     assert(IsmChatConfig.isInitialized,
         'ChatObjectBox is not initialized\nYou are getting this error because the IsmChatObjectBox class is not initialized, to initialize ChatObjectBox class call AppscripChatComponent.initialize() before your runApp()');
@@ -33,6 +35,7 @@ class IsmChatApp extends StatelessWidget {
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
     IsmChatConfig.onChatTap = onChatTap;
+    IsmChatConfig.isGroupChatEnabled = enableGroupChat;
   }
 
   /// Required field
@@ -45,6 +48,10 @@ class IsmChatApp extends StatelessWidget {
   final IsmChatThemeData? chatTheme;
 
   final IsmChatThemeData? chatDarkTheme;
+
+  final Widget? createChatIcon;
+
+  final bool enableGroupChat;
 
   /// Opitonal field
   ///
@@ -168,5 +175,7 @@ class IsmChatApp extends StatelessWidget {
         showCreateChatIcon: showCreateChatIcon,
         showAppBar: showAppBar,
         onSignOut: onSignOut,
+        isGroupChatEnabled: enableGroupChat,
+        createChatIcon: createChatIcon,
       );
 }

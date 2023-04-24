@@ -11,11 +11,14 @@ class IsmChatConversations extends StatefulWidget {
     this.showCreateChatIcon = false,
     this.onCreateChatTap,
     this.createChatIcon,
+    this.isGroupChatEnabled = false,
     super.key,
   });
 
   final bool showAppBar;
   final VoidCallback? onSignOut;
+
+  final bool isGroupChatEnabled;
 
   final void Function(BuildContext, IsmChatConversationModel) onChatTap;
 
@@ -47,11 +50,15 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
         floatingActionButton: widget.showCreateChatIcon
             ? IsmChatStartChatFAB(
                 icon: widget.createChatIcon,
-                onTap: () => IsmChatUtility.openFullScreenBottomSheet(
-                  const IsmChatCreateConversationView(),
-                ),
-                //TODO: Uncomment this for group chat
-                // onTap: () => Get.bottomSheet(const _CreateChatBottomSheet()),
+                onTap: () {
+                  if (widget.isGroupChatEnabled) {
+                    Get.bottomSheet(const _CreateChatBottomSheet());
+                  } else {
+                    IsmChatUtility.openFullScreenBottomSheet(
+                      const IsmChatCreateConversationView(),
+                    );
+                  }
+                },
               )
             : null,
       );

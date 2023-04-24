@@ -14,6 +14,7 @@ class IsmChatConfig {
   static late IsmChatObjectBox objectBox;
   static String dbName = IsmChatStrings.dbname;
   static bool isInitialized = false;
+  static bool isGroupChatEnabled = false;
   static Duration animationDuration = const Duration(milliseconds: 300);
   static late void Function(BuildContext, IsmChatConversationModel) onChatTap;
 
