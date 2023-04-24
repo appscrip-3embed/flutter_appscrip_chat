@@ -321,3 +321,17 @@ enum IsmChatFocusMenuType {
       ? 'Select Message'
       : '${name[0].toUpperCase()}${name.substring(1).toLowerCase()}';
 }
+
+enum IsmChatSheetAttachmentType {
+  camera(1),
+  gallery(2),
+  document(3),
+  location(4);
+
+  const IsmChatSheetAttachmentType(this.value);
+  final int value;
+
+  @override
+  String toString() =>
+      '${name[0].toUpperCase()}${name.substring(1).toLowerCase()}';
+}

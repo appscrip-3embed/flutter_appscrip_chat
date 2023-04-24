@@ -263,7 +263,12 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
           if (!controller.conversation!.isChattingAllowed) {
             controller.showDialogCheckBlockUnBlock();
           } else {
-            await Get.bottomSheet(const IsmChatAttachmentCard());
+            await Get.bottomSheet(
+              const IsmChatAttachmentCard(),
+              enterBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
+              exitBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
+              elevation: 0,
+            );
           }
         },
         color: IsmChatConfig.chatTheme.primaryColor,

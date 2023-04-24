@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
@@ -173,6 +174,33 @@ class IsmChatPageController extends GetxController
     _selectedMessage.value = value;
   }
 
+  List<IsmChatBottomSheetAttachmentModel> attachments = [
+    const IsmChatBottomSheetAttachmentModel(
+      label: 'Camera',
+      backgroundColor: Colors.blueAccent,
+      icon: Icons.camera_alt_rounded,
+      attachmentType: IsmChatSheetAttachmentType.camera,
+    ),
+    const IsmChatBottomSheetAttachmentModel(
+      label: 'Gallery',
+      backgroundColor: Colors.purpleAccent,
+      icon: Icons.photo_rounded,
+      attachmentType: IsmChatSheetAttachmentType.gallery,
+    ),
+    const IsmChatBottomSheetAttachmentModel(
+      label: 'Documents',
+      backgroundColor: Colors.pinkAccent,
+      icon: Icons.description_rounded,
+      attachmentType: IsmChatSheetAttachmentType.document,
+    ),
+    const IsmChatBottomSheetAttachmentModel(
+      label: 'Location',
+      backgroundColor: Colors.greenAccent,
+      icon: Icons.location_on_rounded,
+      attachmentType: IsmChatSheetAttachmentType.location,
+    ),
+  ];
+
   @override
   void onInit() async {
     super.onInit();
@@ -214,6 +242,31 @@ class IsmChatPageController extends GetxController
     messagesScrollController.dispose();
 
     super.onClose();
+  }
+
+  void onBottomAttachmentTapped(
+    IsmChatSheetAttachmentType attachmentType,
+  ) async {
+    Get.back<void>();
+    switch (attachmentType) {
+      case IsmChatSheetAttachmentType.camera:
+        await initializeCamera();
+        await Get.to<void>(const IsmChatCameraView());
+        break;
+      case IsmChatSheetAttachmentType.gallery:
+        listOfAssetsPath.clear();
+        await Get.to<void>(const IsmChatMediaiAssetsPage());
+        break;
+      case IsmChatSheetAttachmentType.document:
+        sendDocument(
+          conversationId: conversation?.conversationId ?? '',
+          userId: conversation?.opponentDetails?.userId ?? '',
+        );
+        break;
+      case IsmChatSheetAttachmentType.location:
+        await Get.to<void>(const IsmChatLocationWidget());
+        break;
+    }
   }
 
   void onMenuItemSelected(

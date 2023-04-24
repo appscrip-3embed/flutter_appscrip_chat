@@ -17,6 +17,7 @@ class IsmChatConstants {
   const IsmChatConstants._();
 
   static const Duration swipeDuration = Duration(milliseconds: 300);
+  static const Duration bottomSheetDuration = Duration(milliseconds: 200);
 
   static const String mapAPIKey = 'AIzaSyC2YXqs5H8QSfN1NVsZKsP11XLZhfGVGPI';
 
