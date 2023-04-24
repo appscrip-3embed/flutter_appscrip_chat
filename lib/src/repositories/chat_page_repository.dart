@@ -93,7 +93,7 @@ class IsmChatPageRepository {
     }
   }
 
-  Future<void> updateMessageRead({
+  Future<void> readMessage({
     required String conversationId,
     required String messageId,
   }) async {
@@ -249,7 +249,7 @@ class IsmChatPageRepository {
     }
   }
 
-  Future<List<UserDetails>?> getMessageDelivered({
+  Future<List<UserDetails>?> getMessageDeliverTime({
     required String conversationId,
     required String messageId,
   }) async {
@@ -272,7 +272,7 @@ class IsmChatPageRepository {
     }
   }
 
-  Future<List<UserDetails>?> getMessageRead({
+  Future<List<UserDetails>?> getMessageReadTime({
     required String conversationId,
     required String messageId,
   }) async {
@@ -297,14 +297,11 @@ class IsmChatPageRepository {
 
   Future<IsmChatResponseModel?> deleteMessageForMe({
     required String conversationId,
-    required List<IsmChatMessageModel> messageIds,
+    required String messageIds,
   }) async {
     try {
-      var messageIdString =
-          messageIds.map((e) => e.messageId).toList().join(',');
-
       var response = await _apiWrapper.delete(
-        '${IsmChatAPI.deleteMessagesForMe}?conversationId=$conversationId&messageIds=$messageIdString',
+        '${IsmChatAPI.deleteMessagesForMe}?conversationId=$conversationId&messageIds=$messageIds',
         payload: null,
         headers: IsmChatUtility.tokenCommonHeader(),
       );
@@ -320,13 +317,11 @@ class IsmChatPageRepository {
 
   Future<IsmChatResponseModel?> deleteMessageForEveryone({
     required String conversationId,
-    required List<IsmChatMessageModel> messageIds,
+    required String messages,
   }) async {
     try {
-      var messageIdString =
-          messageIds.map((e) => e.messageId).toList().join(',');
       var response = await _apiWrapper.delete(
-        '${IsmChatAPI.deleteMessages}?conversationId=$conversationId&messageIds=$messageIdString',
+        '${IsmChatAPI.deleteMessages}?conversationId=$conversationId&messageIds=$messages',
         payload: null,
         headers: IsmChatUtility.tokenCommonHeader(),
       );

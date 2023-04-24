@@ -28,7 +28,7 @@ class IsmChatImageEditView extends StatelessWidget {
                 IsmChatDimens.boxWidth16,
                 InkWell(
                   onTap: () async {
-                    await controller.ismCropImage(controller.imagePath!);
+                    await controller.cropImage(controller.imagePath!);
                   },
                   child: Icon(
                     Icons.crop,

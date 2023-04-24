@@ -122,7 +122,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                               trailing: !isGroupConversation
                                   ? null
                                   : Container(
-                                      padding: IsmChatDimens.edgeInsets4_8,
+                                      padding: IsmChatDimens.edgeInsets8_4,
                                       decoration: BoxDecoration(
                                         color: IsmChatConfig
                                             .chatTheme.primaryColor
@@ -266,7 +266,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                     userIds.add(x.userDetails.userId);
                                   }
                                 }
-                                
+
                                 // TODO: Add API for creating group
                                 var ismChatConversation =
                                     IsmChatConversationModel(

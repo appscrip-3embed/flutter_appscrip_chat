@@ -25,9 +25,10 @@ class IsmChatPageViewModel {
       return null;
     }
 
-    messages.removeWhere((e) =>
-        e.action == IsmChatActionEvents.clearConversation.name ||
-        e.action == IsmChatActionEvents.conversationCreated.name);
+    messages.removeWhere((e) => [
+          IsmChatActionEvents.clearConversation.name,
+          IsmChatActionEvents.conversationCreated.name
+        ].contains(e.action));
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
     var conversation = conversationBox
         .query(
@@ -152,7 +153,6 @@ class IsmChatPageViewModel {
           pendingMessage.deliveredToAll = false;
           chatForwardMessages.messages.removeAt(x);
           forwardMessgeBox.put(chatForwardMessages);
-
           if (chatForwardMessages.messages.isEmpty) {
             forwardMessgeBox.remove(chatForwardMessages.id);
           }
@@ -168,7 +168,6 @@ class IsmChatPageViewModel {
           return true;
         }
       }
-
       return false;
     } catch (e, st) {
       IsmChatLog.error(e, st);
@@ -211,21 +210,14 @@ class IsmChatPageViewModel {
       );
       allMessages.addAll(messages);
     }
-
     return allMessages;
   }
 
-  // IsmChatChatMessageModel getMessageByid({
-  //   required String parentId,
-  //   required List<IsmChatChatMessageModel> data,
-  // }) =>
-  //     data.firstWhere((e) => e.messageId == parentId);
-
-  Future<void> updateMessageRead({
+  Future<void> readMessage({
     required String conversationId,
     required String messageId,
   }) async =>
-      await _repository.updateMessageRead(
+      await _repository.readMessage(
         conversationId: conversationId,
         messageId: messageId,
       );
@@ -300,75 +292,72 @@ class IsmChatPageViewModel {
         messageId: messageId,
       );
 
-  Future<List<UserDetails>?> getMessageDelivered({
+  Future<List<UserDetails>?> getMessageDeliverTime({
     required String conversationId,
     required String messageId,
   }) async =>
-      await _repository.getMessageDelivered(
+      await _repository.getMessageDeliverTime(
         conversationId: conversationId,
         messageId: messageId,
       );
 
-  Future<List<UserDetails>?> getMessageRead({
+  Future<List<UserDetails>?> getMessageReadTime({
     required String conversationId,
     required String messageId,
   }) async =>
-      await _repository.getMessageRead(
+      await _repository.getMessageReadTime(
         conversationId: conversationId,
         messageId: messageId,
       );
 
-  Future<void> deleteMessageForMe({
-    required String conversationId,
-    required List<IsmChatMessageModel> messageIds,
-  }) async {
-    var response = await _repository.deleteMessageForMe(
-      conversationId: conversationId,
-      messageIds: messageIds,
-    );
-    if (!response!.hasError) {
-      var allMessages =
-          await IsmChatConfig.objectBox.getMessages(conversationId);
-      if (allMessages == null) {
+  Future<void> deleteMessageForMe(
+    List<IsmChatMessageModel> messages,
+  ) async {
+    var conversationId = messages.first.conversationId!;
+    var myMessages = messages.where((m) => m.sentByMe).toList();
+    if (myMessages.isNotEmpty) {
+      var response = await _repository.deleteMessageForMe(
+        conversationId: conversationId,
+        messageIds: myMessages.map((e) => e.messageId).join(','),
+      );
+      if (response == null || response.hasError) {
         return;
       }
-
-      for (var x in messageIds) {
-        allMessages.removeWhere((e) => e.messageId == x.messageId);
-      }
-
-      await IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
-      if (Get.isRegistered<IsmChatPageController>()) {
-        await Get.find<IsmChatPageController>()
-            .getMessagesFromDB(conversationId);
-      }
     }
+    var allMessages = await IsmChatConfig.objectBox.getMessages(conversationId);
+    if (allMessages == null) {
+      return;
+    }
+
+    for (var x in messages) {
+      allMessages.removeWhere((e) => e.messageId == x.messageId);
+    }
+
+    await IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
+    await Get.find<IsmChatPageController>().getMessagesFromDB(conversationId);
   }
 
-  Future<void> deleteMessageForEveryone({
-    required String conversationId,
-    required List<IsmChatMessageModel> messageIds,
-  }) async {
+  Future<void> deleteMessageForEveryone(
+    List<IsmChatMessageModel> messages,
+  ) async {
+    var conversationId = messages.first.conversationId!;
     var response = await _repository.deleteMessageForEveryone(
       conversationId: conversationId,
-      messageIds: messageIds,
+      messages: messages.map((e) => e.messageId).join(','),
     );
-    if (!response!.hasError) {
-      var allMessages =
-          await IsmChatConfig.objectBox.getMessages(conversationId);
-      if (allMessages == null) {
-        return;
-      }
-
-      for (var x in messageIds) {
-        allMessages.removeWhere((e) => e.messageId == x.messageId);
-      }
-      await IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
-      if (Get.isRegistered<IsmChatPageController>()) {
-        await Get.find<IsmChatPageController>()
-            .getMessagesFromDB(conversationId);
-      }
+    if (response == null || response.hasError) {
+      return;
     }
+    var allMessages = await IsmChatConfig.objectBox.getMessages(conversationId);
+    if (allMessages == null) {
+      return;
+    }
+
+    for (var x in messages) {
+      allMessages.removeWhere((e) => e.messageId == x.messageId);
+    }
+    await IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
+    await Get.find<IsmChatPageController>().getMessagesFromDB(conversationId);
   }
 
   Future<void> clearAllMessages({
@@ -425,4 +414,21 @@ class IsmChatPageViewModel {
           conversationType: conversationType,
           conversationImageUrl: conversationImageUrl,
           conversationTitle: conversationTitle);
+
+  Map<String, int> generateIndexedMessageList(
+      List<IsmChatMessageModel> messages) {
+    var indexedMap = <String, int>{};
+    var i = 0;
+    for (var x in messages) {
+      if (![
+        IsmChatCustomMessageType.date,
+        IsmChatCustomMessageType.block,
+        IsmChatCustomMessageType.unblock,
+      ].contains(x.customType)) {
+        indexedMap[x.messageId!] = i;
+      }
+      i++;
+    }
+    return indexedMap;
+  }
 }

@@ -93,6 +93,7 @@ extension DateConvertor on int {
   String toTimeString() =>
       DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(this));
 
+  // TODO: clean this extension
   String toCurrentTimeStirng() {
     final timeStamp = DateTime.fromMillisecondsSinceEpoch(this);
     final currentTime = DateTime.now();
@@ -122,6 +123,7 @@ extension DateConvertor on int {
     return timeFormate;
   }
 
+  // TODO: clean this extension
   String toLastMessageTimeString() {
     final timeStamp = DateTime.fromMillisecondsSinceEpoch(this);
     final currentTime = DateTime.now();
@@ -172,6 +174,20 @@ extension DateConvertor on int {
       return date.toDateString();
     }
     return date.toDateString();
+  }
+
+  String get deliverTime {
+    var now = DateTime.now();
+    var timestamp = toDate();
+    late DateFormat dateFormat;
+    if (now.difference(timestamp) > const Duration(days: 365)) {
+      dateFormat = DateFormat('DD MMM yyyy, HH:mm aa');
+    } else if (now.difference(timestamp) > const Duration(days: 7)) {
+      dateFormat = DateFormat('DD MMM, HH:mm aa');
+    } else {
+      dateFormat = DateFormat('E, HH:mm aa');
+    }
+    return dateFormat.format(timestamp);
   }
 }
 

@@ -141,7 +141,10 @@ class IsmChatObjectBox {
     }
   }
 
-  Future<List<IsmChatMessageModel>?> getMessages(String conversationId) async {
+  Future<List<IsmChatMessageModel>?> getMessages(String? conversationId) async {
+    if (conversationId == null) {
+      return null;
+    }
     var conversation = chatConversationBox
         .query(DBConversationModel_.conversationId.equals(conversationId))
         .build()

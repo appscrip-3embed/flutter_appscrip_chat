@@ -59,7 +59,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                       IconButton(
                         onPressed: () async {
                           var messageSenderSide =
-                              await controller.checkMessageSenderSideOrNot();
+                              controller.isAllMessagesFromMe();
 
                           controller.showDialogForDeleteMultipleMessage(
                               messageSenderSide, controller.selectedMessage);
@@ -94,7 +94,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                             controller: controller.messagesScrollController,
                             keyboardDismissBehavior:
                                 ScrollViewKeyboardDismissBehavior.onDrag,
-                            padding: IsmChatDimens.edgeInsets0_8,
+                            padding: IsmChatDimens.edgeInsets4_8,
                             itemCount: controller.messages.length,
                             itemBuilder: (_, index) => ChatMessage(index),
                           ),

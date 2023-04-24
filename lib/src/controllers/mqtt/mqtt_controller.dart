@@ -411,7 +411,7 @@ class IsmChatMqttController extends GetxController {
             conversationId: actionModel.conversationId ?? '');
         await controller.getMessagesFromAPI(
             conversationId: actionModel.conversationId ?? '',
-            lastMessageTimestampFromFunction: controller.messages.last.sentAt);
+            lastMessageTimestamp: controller.messages.last.sentAt);
       }
     }
   }
