@@ -5,7 +5,7 @@ import 'package:voice_message_package/voice_message_package.dart';
 class IsmChatAudioMessage extends StatelessWidget {
   const IsmChatAudioMessage(this.message, {super.key});
 
-  final IsmChatChatMessageModel message;
+  final IsmChatMessageModel message;
 
   @override
   Widget build(BuildContext context) => VoiceMessage(
@@ -19,6 +19,5 @@ class IsmChatAudioMessage extends StatelessWidget {
         contactCircleColor: IsmChatConfig.chatTheme.primaryColor!,
         contactPlayIconBgColor: IsmChatConfig.chatTheme.primaryColor!,
         onPlay: () {},
-      
       );
 }

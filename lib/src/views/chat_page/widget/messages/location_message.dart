@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 class IsmChatLocationMessage extends StatelessWidget {
   const IsmChatLocationMessage(this.message, {super.key});
 
-  final IsmChatChatMessageModel message;
+  final IsmChatMessageModel message;
 
   @override
   Widget build(BuildContext context) {

@@ -9,7 +9,7 @@ class IsmChatPageViewModel {
   final IsmChatPageRepository _repository;
   var messageSkip = 0;
   var messageLimit = 20;
-  Future<List<IsmChatChatMessageModel>?> getChatMessages({
+  Future<List<IsmChatMessageModel>?> getChatMessages({
     required String conversationId,
     required int lastMessageTimestamp,
     int? pagination,
@@ -106,7 +106,7 @@ class IsmChatPageViewModel {
         }
         for (var x = 0; x < chatPendingMessages.messages.length; x++) {
           var pendingMessage =
-              IsmChatChatMessageModel.fromJson(chatPendingMessages.messages[x]);
+              IsmChatMessageModel.fromJson(chatPendingMessages.messages[x]);
           if (pendingMessage.messageId!.isNotEmpty ||
               pendingMessage.sentAt != createdAt) {
             continue;
@@ -143,7 +143,7 @@ class IsmChatPageViewModel {
         }
         for (var x = 0; x < chatForwardMessages.messages.length; x++) {
           var pendingMessage =
-              IsmChatChatMessageModel.fromJson(chatForwardMessages.messages[x]);
+              IsmChatMessageModel.fromJson(chatForwardMessages.messages[x]);
           if (pendingMessage.messageId!.isNotEmpty ||
               pendingMessage.sentAt != createdAt) {
             continue;
@@ -176,18 +176,17 @@ class IsmChatPageViewModel {
     }
   }
 
-  List<IsmChatChatMessageModel> sortMessages(
-      List<IsmChatChatMessageModel> messages) {
+  List<IsmChatMessageModel> sortMessages(List<IsmChatMessageModel> messages) {
     messages.sort((a, b) => a.sentAt.compareTo(b.sentAt));
     return _parseMessagesWithDate(messages);
   }
 
-  List<IsmChatChatMessageModel> _parseMessagesWithDate(
-    List<IsmChatChatMessageModel> messages,
+  List<IsmChatMessageModel> _parseMessagesWithDate(
+    List<IsmChatMessageModel> messages,
   ) {
-    var result = <List<IsmChatChatMessageModel>>[];
-    var list1 = <IsmChatChatMessageModel>[];
-    var allMessages = <IsmChatChatMessageModel>[];
+    var result = <List<IsmChatMessageModel>>[];
+    var list1 = <IsmChatMessageModel>[];
+    var allMessages = <IsmChatMessageModel>[];
     for (var x = 0; x < messages.length; x++) {
       if (x == 0) {
         list1.add(messages[x]);
@@ -206,7 +205,7 @@ class IsmChatPageViewModel {
 
     for (var messages in result) {
       allMessages.add(
-        IsmChatChatMessageModel.fromDate(
+        IsmChatMessageModel.fromDate(
           messages.first.sentAt,
         ),
       );
@@ -247,7 +246,7 @@ class IsmChatPageViewModel {
         conversationId: conversationId,
       );
 
-  Future<List<IsmChatChatMessageModel>?> blockUser(
+  Future<List<IsmChatMessageModel>?> blockUser(
       {required String opponentId,
       required int lastMessageTimeStamp,
       required String conversationId}) async {
@@ -263,7 +262,7 @@ class IsmChatPageViewModel {
     return null;
   }
 
-  Future<List<IsmChatChatMessageModel>?> unblockUser(
+  Future<List<IsmChatMessageModel>?> unblockUser(
       {required String opponentId,
       required int lastMessageTimeStamp,
       required String conversationId}) async {
@@ -321,19 +320,19 @@ class IsmChatPageViewModel {
 
   Future<void> deleteMessageForMe({
     required String conversationId,
-    required List<IsmChatChatMessageModel> messageIds,
+    required List<IsmChatMessageModel> messageIds,
   }) async {
     var response = await _repository.deleteMessageForMe(
       conversationId: conversationId,
       messageIds: messageIds,
     );
-      if (!response!.hasError) {
+    if (!response!.hasError) {
       var allMessages =
           await IsmChatConfig.objectBox.getMessages(conversationId);
       if (allMessages == null) {
         return;
       }
-    
+
       for (var x in messageIds) {
         allMessages.removeWhere((e) => e.messageId == x.messageId);
       }
@@ -348,7 +347,7 @@ class IsmChatPageViewModel {
 
   Future<void> deleteMessageForEveryone({
     required String conversationId,
-    required List<IsmChatChatMessageModel> messageIds,
+    required List<IsmChatMessageModel> messageIds,
   }) async {
     var response = await _repository.deleteMessageForEveryone(
       conversationId: conversationId,
@@ -401,7 +400,7 @@ class IsmChatPageViewModel {
       await _repository.getLocation(
         latitude: latitude,
         longitude: longitude,
-        searchKeyword: searchKeyword,
+        query: searchKeyword,
       );
 
   Future<IsmChatResponseModel?> createConversation({
@@ -418,13 +417,12 @@ class IsmChatPageViewModel {
     String? conversationImageUrl,
   }) async =>
       await _repository.createConversation(
-        typingEvents: typingEvents,
-        readEvents: readEvents,
-        pushNotifications: pushNotifications,
-        members: members,
-        isGroup: isGroup,
-        conversationType: conversationType,
-        conversationImageUrl: conversationImageUrl,
-        conversationTitle: conversationTitle
-      );
+          typingEvents: typingEvents,
+          readEvents: readEvents,
+          pushNotifications: pushNotifications,
+          members: members,
+          isGroup: isGroup,
+          conversationType: conversationType,
+          conversationImageUrl: conversationImageUrl,
+          conversationTitle: conversationTitle);
 }

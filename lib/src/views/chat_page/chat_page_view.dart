@@ -143,7 +143,7 @@ class ChatMessage extends StatelessWidget {
       : controller = Get.find<IsmChatPageController>(),
         message = Get.find<IsmChatPageController>().messages[index];
 
-  final IsmChatChatMessageModel message;
+  final IsmChatMessageModel message;
   final int index;
   final IsmChatPageController controller;
 

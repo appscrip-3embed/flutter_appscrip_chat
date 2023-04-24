@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class IsmChatDeletedMessage extends StatelessWidget {
   const IsmChatDeletedMessage(this.message, {super.key});
 
-  final IsmChatChatMessageModel message;
+  final IsmChatMessageModel message;
 
   @override
   Widget build(BuildContext context) => Text(

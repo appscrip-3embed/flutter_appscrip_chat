@@ -136,14 +136,13 @@ class IsmChatMqttController extends GetxController {
       var payload = jsonDecode(
               MqttPublishPayload.bytesToStringAsString(recMess.payload.message))
           as Map<String, dynamic>;
-    
+
       if (payload['action'] != null) {
-      
         var actionModel = IsmChatMqttActionModel.fromMap(payload);
         IsmChatLog.info(actionModel);
         _handleAction(actionModel);
       } else {
-        var message = IsmChatChatMessageModel.fromMap(payload);
+        var message = IsmChatMessageModel.fromMap(payload);
         _handleMessage(message);
       }
     });
@@ -223,7 +222,7 @@ class IsmChatMqttController extends GetxController {
     }
   }
 
-  void _handleMessage(IsmChatChatMessageModel message) async {
+  void _handleMessage(IsmChatMessageModel message) async {
     var conversationController = Get.find<IsmChatConversationsController>();
     if (message.senderInfo!.userId == _communicationConfig.userConfig.userId) {
       return;
@@ -303,7 +302,7 @@ class IsmChatMqttController extends GetxController {
         .findUnique();
     if (conversation != null) {
       var lastMessage =
-          IsmChatChatMessageModel.fromJson(conversation.messages.last);
+          IsmChatMessageModel.fromJson(conversation.messages.last);
       if (lastMessage.messageId == actionModel.messageId) {
         lastMessage.deliveredToAll = true;
         conversation.messages.last = lastMessage.toJson();
@@ -327,7 +326,7 @@ class IsmChatMqttController extends GetxController {
         .findUnique();
     if (conversation != null) {
       var lastMessage =
-          IsmChatChatMessageModel.fromJson(conversation.messages.last);
+          IsmChatMessageModel.fromJson(conversation.messages.last);
       if (lastMessage.messageId == actionModel.messageId) {
         lastMessage.readByAll = true;
         conversation.messages.last = lastMessage.toJson();
@@ -354,7 +353,7 @@ class IsmChatMqttController extends GetxController {
       return;
     }
     var allMessages =
-        conversation.messages.map(IsmChatChatMessageModel.fromJson).toList();
+        conversation.messages.map(IsmChatMessageModel.fromJson).toList();
 
     var modifiedMessages = <String>[];
     for (var message in allMessages) {

@@ -7,7 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class IsmChatPageRepository {
   final _apiWrapper = IsmChatApiWrapper();
 
-  Future<List<IsmChatChatMessageModel>?> getChatMessages({
+  Future<List<IsmChatMessageModel>?> getChatMessages({
     required String conversationId,
     required int lastMessageTimestamp,
     required int limit,
@@ -23,8 +23,7 @@ class IsmChatPageRepository {
       }
       var data = jsonDecode(response.data);
       return (data['messages'] as List)
-          .map(
-              (e) => IsmChatChatMessageModel.fromMap(e as Map<String, dynamic>))
+          .map((e) => IsmChatMessageModel.fromMap(e as Map<String, dynamic>))
           .toList();
     } catch (e, st) {
       IsmChatLog.error('GetChatMessages $e', st);
@@ -298,12 +297,12 @@ class IsmChatPageRepository {
 
   Future<IsmChatResponseModel?> deleteMessageForMe({
     required String conversationId,
-    required List<IsmChatChatMessageModel> messageIds,
+    required List<IsmChatMessageModel> messageIds,
   }) async {
     try {
       var messageIdString =
           messageIds.map((e) => e.messageId).toList().join(',');
-    
+
       var response = await _apiWrapper.delete(
         '${IsmChatAPI.deleteMessagesForMe}?conversationId=$conversationId&messageIds=$messageIdString',
         payload: null,
@@ -321,7 +320,7 @@ class IsmChatPageRepository {
 
   Future<IsmChatResponseModel?> deleteMessageForEveryone({
     required String conversationId,
-    required List<IsmChatChatMessageModel> messageIds,
+    required List<IsmChatMessageModel> messageIds,
   }) async {
     try {
       var messageIdString =
@@ -386,13 +385,13 @@ class IsmChatPageRepository {
   Future<List<IsmChatPrediction>?> getLocation({
     required String latitude,
     required String longitude,
-    required String searchKeyword,
+    required String query,
   }) async {
     try {
       var response = await _apiWrapper.get(
-        searchKeyword.isNotEmpty
-            ? 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&name=$searchKeyword&radius=1000000&key=AIzaSyC2YXqs5H8QSfN1NVsZKsP11XLZhfGVGPI'
-            : 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=500&key=AIzaSyC2YXqs5H8QSfN1NVsZKsP11XLZhfGVGPI',
+        query.trim().isNotEmpty
+            ? 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&name=$query&radius=1000000&key=${IsmChatConstants.mapAPIKey}'
+            : 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=500&key=${IsmChatConstants.mapAPIKey}',
         headers: {},
       );
       if (response.hasError) {

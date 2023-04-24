@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 class IsmChatMessageInfo extends StatelessWidget {
   const IsmChatMessageInfo({Key? key, required this.message}) : super(key: key);
 
-  final IsmChatChatMessageModel message;
+  final IsmChatMessageModel message;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(

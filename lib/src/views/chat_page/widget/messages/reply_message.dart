@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 class IsmChatReplyMessage extends StatelessWidget {
   const IsmChatReplyMessage(this.message, {super.key});
 
-  final IsmChatChatMessageModel message;
+  final IsmChatMessageModel message;
 
   @override
   Widget build(BuildContext context) => IntrinsicWidth(
@@ -39,7 +39,7 @@ class IsmChatReplyMessage extends StatelessWidget {
 class _ReplyMessage extends StatelessWidget {
   const _ReplyMessage(this.message);
 
-  final IsmChatChatMessageModel message;
+  final IsmChatMessageModel message;
 
   @override
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(

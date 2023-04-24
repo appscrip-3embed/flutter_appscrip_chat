@@ -105,7 +105,7 @@ class IsmChatObjectBox {
   }
 
   /// Add pending Message
-  Future<void> addPendingMessage(IsmChatChatMessageModel messageModel) async {
+  Future<void> addPendingMessage(IsmChatMessageModel messageModel) async {
     final query = pendingMessageBox
         .query(PendingMessageModel_.conversationId
             .equals(messageModel.conversationId ?? ''))
@@ -124,7 +124,7 @@ class IsmChatObjectBox {
   }
 
   /// Add forward Message
-  Future<void> addForwardMessage(IsmChatChatMessageModel messageModel) async {
+  Future<void> addForwardMessage(IsmChatMessageModel messageModel) async {
     final query = forwardMessageBox
         .query(ForwardMessageModel_.conversationId
             .equals(messageModel.conversationId ?? ''))
@@ -141,8 +141,7 @@ class IsmChatObjectBox {
     }
   }
 
-  Future<List<IsmChatChatMessageModel>?> getMessages(
-      String conversationId) async {
+  Future<List<IsmChatMessageModel>?> getMessages(String conversationId) async {
     var conversation = chatConversationBox
         .query(DBConversationModel_.conversationId.equals(conversationId))
         .build()
@@ -150,7 +149,7 @@ class IsmChatObjectBox {
     if (conversation == null) {
       return null;
     }
-    return conversation.messages.map(IsmChatChatMessageModel.fromJson).toList();
+    return conversation.messages.map(IsmChatMessageModel.fromJson).toList();
   }
 
   Future<DBConversationModel?> getDBConversation(
@@ -167,7 +166,7 @@ class IsmChatObjectBox {
 
   Future<void> saveMessages(
     String conversationId,
-    List<IsmChatChatMessageModel> messages,
+    List<IsmChatMessageModel> messages,
   ) async {
     var conversation = chatConversationBox
         .query(DBConversationModel_.conversationId.equals(conversationId))

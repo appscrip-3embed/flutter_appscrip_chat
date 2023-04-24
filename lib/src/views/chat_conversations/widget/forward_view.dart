@@ -11,7 +11,7 @@ class IsmChatForwardView extends StatelessWidget {
   });
 
   /// The selected [message] which is to be forwarded
-  final IsmChatChatMessageModel message;
+  final IsmChatMessageModel message;
 
   /// The [conversation] to which the selected [message] is to be forwarded
   final IsmChatConversationModel conversation;
@@ -235,7 +235,7 @@ class IsmChatForwardView extends StatelessWidget {
                                           userId: ismChatConversation
                                                   .opponentDetails?.userId ??
                                               '',
-                                          ismChatChatMessageModel: message,
+                                          message: message,
                                           sendMessageType:
                                               SendMessageType.forwardMessage,
                                         );
@@ -323,7 +323,7 @@ class IsmChatForwardView extends StatelessWidget {
                                           ismChatPageController.sendDocument(
                                             conversationId: conversationId,
                                             userId: x.userDetails.userId,
-                                            ismChatChatMessageModel: message,
+                                            message: message,
                                             forwardMessgeForMulitpleUser: true,
                                             sendMessageType:
                                                 SendMessageType.forwardMessage,

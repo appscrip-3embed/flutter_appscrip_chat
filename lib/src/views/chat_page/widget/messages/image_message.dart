@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class IsmChatImageMessage extends StatelessWidget {
   const IsmChatImageMessage(this.message, {super.key});
 
-  final IsmChatChatMessageModel message;
+  final IsmChatMessageModel message;
 
   @override
   Widget build(BuildContext context) => IsmChatImage(

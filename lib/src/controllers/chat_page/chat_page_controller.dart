@@ -44,9 +44,9 @@ class IsmChatPageController extends GetxController {
   bool get isMessagesLoading => _isMessagesLoading.value;
   set isMessagesLoading(bool value) => _isMessagesLoading.value = value;
 
-  final _messages = <IsmChatChatMessageModel>[].obs;
-  List<IsmChatChatMessageModel> get messages => _messages;
-  set messages(List<IsmChatChatMessageModel> value) => _messages.value = value;
+  final _messages = <IsmChatMessageModel>[].obs;
+  List<IsmChatMessageModel> get messages => _messages;
+  set messages(List<IsmChatMessageModel> value) => _messages.value = value;
 
   final _predictionList = <IsmChatPrediction>[].obs;
   List<IsmChatPrediction> get predictionList => _predictionList;
@@ -61,10 +61,10 @@ class IsmChatPageController extends GetxController {
   bool get isreplying => _isreplying.value;
   set isreplying(bool value) => _isreplying.value = value;
 
-  final Rx<IsmChatChatMessageModel?> _chatMessageModel =
-      Rx<IsmChatChatMessageModel?>(null);
-  IsmChatChatMessageModel? get chatMessageModel => _chatMessageModel.value;
-  set chatMessageModel(IsmChatChatMessageModel? value) =>
+  final Rx<IsmChatMessageModel?> _chatMessageModel =
+      Rx<IsmChatMessageModel?>(null);
+  IsmChatMessageModel? get chatMessageModel => _chatMessageModel.value;
+  set chatMessageModel(IsmChatMessageModel? value) =>
       _chatMessageModel.value = value;
 
   final RxString _deliveredTime = ''.obs;
@@ -167,9 +167,9 @@ class IsmChatPageController extends GetxController {
     _isMessageSeleted.value = value;
   }
 
-  final _selectedMessage = <IsmChatChatMessageModel>[].obs;
-  List<IsmChatChatMessageModel> get selectedMessage => _selectedMessage;
-  set selectedMessage(List<IsmChatChatMessageModel> value) {
+  final _selectedMessage = <IsmChatMessageModel>[].obs;
+  List<IsmChatMessageModel> get selectedMessage => _selectedMessage;
+  set selectedMessage(List<IsmChatMessageModel> value) {
     _selectedMessage.value = value;
   }
 
@@ -215,7 +215,7 @@ class IsmChatPageController extends GetxController {
 
   void onMenuItemSelected(
     IsmChatFocusMenuType menuType,
-    IsmChatChatMessageModel message,
+    IsmChatMessageModel message,
   ) async {
     switch (menuType) {
       case IsmChatFocusMenuType.info:
@@ -252,7 +252,7 @@ class IsmChatPageController extends GetxController {
     }
   }
 
-  void onMessageSelect(IsmChatChatMessageModel ismChatChatMessageModel) {
+  void onMessageSelect(IsmChatMessageModel ismChatChatMessageModel) {
     if (isMessageSeleted) {
       if (selectedMessage.contains(ismChatChatMessageModel)) {
         selectedMessage.removeWhere(
@@ -335,8 +335,7 @@ class IsmChatPageController extends GetxController {
     }
   }
 
-  void tapForMediaPreview(
-      IsmChatChatMessageModel ismChatChatMessageModel) async {
+  void tapForMediaPreview(IsmChatMessageModel ismChatChatMessageModel) async {
     if (ismChatChatMessageModel.customType == IsmChatCustomMessageType.image ||
         ismChatChatMessageModel.customType == IsmChatCustomMessageType.video) {
       var mediaList = messages
@@ -566,8 +565,7 @@ class IsmChatPageController extends GetxController {
     }
   }
 
-  void showDialogForMessageDelete(
-      IsmChatChatMessageModel chatMessageModel) async {
+  void showDialogForMessageDelete(IsmChatMessageModel chatMessageModel) async {
     if (chatMessageModel.sentByMe) {
       await Get.dialog(
         IsmChatAlertDialogBox(
@@ -603,7 +601,7 @@ class IsmChatPageController extends GetxController {
   }
 
   void showDialogForDeleteMultipleMessage(
-      bool sentByMe, List<IsmChatChatMessageModel> listOfMessage) async {
+      bool sentByMe, List<IsmChatMessageModel> listOfMessage) async {
     if (sentByMe) {
       await Get.dialog(
         IsmChatAlertDialogBox(
@@ -664,7 +662,7 @@ class IsmChatPageController extends GetxController {
     String? file,
     SendMessageType sendMessageType = SendMessageType.pendingMessage,
     bool forwardMessgeForMulitpleUser = false,
-    IsmChatChatMessageModel? ismChatChatMessageModel,
+    IsmChatMessageModel? ismChatChatMessageModel,
     required String conversationId,
     required String userId,
   }) async {
@@ -674,7 +672,7 @@ class IsmChatPageController extends GetxController {
     if (chatConversationResponse == null) {
       conversationId = await createConversation(userId: [userId]);
     }
-    IsmChatChatMessageModel? audioMessage;
+    IsmChatMessageModel? audioMessage;
     String? nameWithExtension;
     Uint8List? bytes;
     String? mediaId;
@@ -704,20 +702,21 @@ class IsmChatPageController extends GetxController {
         nameWithExtension = file.split('/').last;
         final extension = nameWithExtension.split('.').last;
         mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
-        audioMessage = IsmChatChatMessageModel(
+        audioMessage = IsmChatMessageModel(
           body: 'Audio',
           conversationId: conversationId,
           customType: IsmChatCustomMessageType.audio,
           attachments: [
             AttachmentModel(
-                attachmentType: IsmChatAttachmentType.audio,
-                thumbnailUrl: file,
-                size: double.parse(bytes.length.toString()),
-                name: nameWithExtension,
-                mimeType: extension,
-                mediaUrl: file,
-                mediaId: mediaId,
-                extension: extension)
+              attachmentType: IsmChatAttachmentType.audio,
+              thumbnailUrl: file,
+              size: double.parse(bytes.length.toString()),
+              name: nameWithExtension,
+              mimeType: extension,
+              mediaUrl: file,
+              mediaId: mediaId,
+              extension: extension,
+            ),
           ],
           deliveredToAll: false,
           messageId: '',
@@ -757,34 +756,33 @@ class IsmChatPageController extends GetxController {
 
   void sendDocument({
     SendMessageType sendMessageType = SendMessageType.pendingMessage,
-    IsmChatChatMessageModel? ismChatChatMessageModel,
+    IsmChatMessageModel? message,
     bool forwardMessgeForMulitpleUser = false,
     required String conversationId,
     required String userId,
   }) async {
     var ismChatObjectBox = IsmChatConfig.objectBox;
-    IsmChatChatMessageModel? documentMessage;
+    IsmChatMessageModel? documentMessage;
     String? nameWithExtension;
     Uint8List? bytes;
     bool? isNetWorkUrl;
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     if (sendMessageType == SendMessageType.forwardMessage) {
-      ismChatChatMessageModel!.conversationId = conversationId;
-      ismChatChatMessageModel.deliveredToAll = false;
-      ismChatChatMessageModel.readByAll = false;
-      ismChatChatMessageModel.messageType = IsmChatMessageType.forward;
-      ismChatChatMessageModel.sentByMe = true;
-      ismChatChatMessageModel.sentAt = sentAt;
-      ismChatChatMessageModel.messageId = '';
-      if (ismChatChatMessageModel.attachments!.first.mediaUrl!.isValidUrl) {
+      message!.conversationId = conversationId;
+      message.deliveredToAll = false;
+      message.readByAll = false;
+      message.messageType = IsmChatMessageType.forward;
+      message.sentByMe = true;
+      message.sentAt = sentAt;
+      message.messageId = '';
+      if (message.attachments!.first.mediaUrl!.isValidUrl) {
         isNetWorkUrl = true;
       } else {
         isNetWorkUrl = false;
-        var file =
-            File(ismChatChatMessageModel.attachments!.first.mediaUrl ?? '');
+        var file = File(message.attachments!.first.mediaUrl ?? '');
         bytes = file.readAsBytesSync();
       }
-      documentMessage = ismChatChatMessageModel;
+      documentMessage = message;
     } else {
       final result = await FilePicker.platform.pickFiles(
           allowMultiple: true,
@@ -803,7 +801,7 @@ class IsmChatPageController extends GetxController {
           bytes = x.bytes;
           nameWithExtension = x.path!.split('/').last;
           final extension = nameWithExtension.split('.').last;
-          documentMessage = IsmChatChatMessageModel(
+          documentMessage = IsmChatMessageModel(
             body: 'Documet',
             conversationId: conversationId,
             customType: IsmChatCustomMessageType.file,
@@ -860,7 +858,7 @@ class IsmChatPageController extends GetxController {
     bool isThumbnail = false,
     File? thumbnailFiles,
     SendMessageType sendMessageType = SendMessageType.pendingMessage,
-    IsmChatChatMessageModel? ismChatChatMessageModel,
+    IsmChatMessageModel? ismChatChatMessageModel,
     bool forwardMessgeForMulitpleUser = false,
     required String conversationId,
     required String userId,
@@ -871,7 +869,7 @@ class IsmChatPageController extends GetxController {
     if (chatConversationResponse == null) {
       conversationId = await createConversation(userId: [userId]);
     }
-    IsmChatChatMessageModel? videoMessage;
+    IsmChatMessageModel? videoMessage;
     String? nameWithExtension;
     Uint8List? bytes;
     Uint8List? thumbnailBytes;
@@ -924,7 +922,7 @@ class IsmChatPageController extends GetxController {
         mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
         final extension = nameWithExtension.split('.').last;
 
-        videoMessage = IsmChatChatMessageModel(
+        videoMessage = IsmChatMessageModel(
           body: 'Video',
           conversationId: conversationId,
           customType: IsmChatCustomMessageType.video,
@@ -982,7 +980,7 @@ class IsmChatPageController extends GetxController {
 
   Future<void> sendImage({
     SendMessageType sendMessageType = SendMessageType.pendingMessage,
-    IsmChatChatMessageModel? ismChatChatMessageModel,
+    IsmChatMessageModel? ismChatChatMessageModel,
     bool forwardMessgeForMulitpleUser = false,
     required String conversationId,
     required String userId,
@@ -993,7 +991,7 @@ class IsmChatPageController extends GetxController {
     if (chatConversationResponse == null) {
       conversationId = await createConversation(userId: [userId]);
     }
-    IsmChatChatMessageModel? imageMessage;
+    IsmChatMessageModel? imageMessage;
     String? nameWithExtension;
     Uint8List? bytes;
     String? mediaId;
@@ -1027,7 +1025,7 @@ class IsmChatPageController extends GetxController {
       nameWithExtension = compressedFile.path.split('/').last;
       mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
       final extension = nameWithExtension.split('.').last;
-      imageMessage = IsmChatChatMessageModel(
+      imageMessage = IsmChatMessageModel(
         body: 'Image',
         conversationId: conversationId,
         customType: IsmChatCustomMessageType.image,
@@ -1096,7 +1094,7 @@ class IsmChatPageController extends GetxController {
       conversationId = await createConversation(userId: [userId]);
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
-    var textMessage = IsmChatChatMessageModel(
+    var textMessage = IsmChatMessageModel(
         body: sendMessageType == SendMessageType.pendingMessage
             ? 'https://www.google.com/maps/search/?api=1&map_action=map&query=$latitude%2C$longitude&query_place_id=$placeId'
             : messageBody ?? '',
@@ -1150,7 +1148,7 @@ class IsmChatPageController extends GetxController {
       conversationId = await createConversation(userId: [userId]);
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
-    var textMessage = IsmChatChatMessageModel(
+    var textMessage = IsmChatMessageModel(
       body: sendMessageType == SendMessageType.pendingMessage
           ? chatInputController.text.trim()
           : messageBody ?? '',
@@ -1203,7 +1201,7 @@ class IsmChatPageController extends GetxController {
   }
 
   Future<void> ismPostMediaUrl(
-      {required IsmChatChatMessageModel ismChatChatMessageModel,
+      {required IsmChatMessageModel ismChatChatMessageModel,
       required String notificationBody,
       required String notificationTitle,
       required String nameWithExtension,
@@ -1415,7 +1413,7 @@ class IsmChatPageController extends GetxController {
     final chatConversationMessages = query.findUnique();
     if (chatConversationMessages != null) {
       messages = _viewModel.sortMessages(chatConversationMessages.messages
-          .map(IsmChatChatMessageModel.fromJson)
+          .map(IsmChatMessageModel.fromJson)
           .toList());
       isMessagesLoading = false;
       if (messages.isEmpty) {
@@ -1438,7 +1436,7 @@ class IsmChatPageController extends GetxController {
   }
 
   Future<void> getMessageInformation(
-      IsmChatChatMessageModel chatMessageModel) async {
+      IsmChatMessageModel chatMessageModel) async {
     readTime = '';
     deliveredTime = '';
     unawaited(
@@ -1554,7 +1552,7 @@ class IsmChatPageController extends GetxController {
 
   Future<void> ismMessageDeleteEveryOne({
     required String conversationId,
-    required List<IsmChatChatMessageModel> messageIds,
+    required List<IsmChatMessageModel> messageIds,
   }) async {
     await _viewModel.deleteMessageForEveryone(
         conversationId: conversationId, messageIds: messageIds);
@@ -1563,7 +1561,7 @@ class IsmChatPageController extends GetxController {
 
   Future<void> ismMessageDeleteSelf({
     required String conversationId,
-    required List<IsmChatChatMessageModel> messageIds,
+    required List<IsmChatMessageModel> messageIds,
   }) async {
     await _viewModel.deleteMessageForMe(
         conversationId: conversationId, messageIds: messageIds);
@@ -1572,7 +1570,7 @@ class IsmChatPageController extends GetxController {
 
   Future<void> messageDeleteForMe({
     required String conversationId,
-    required List<IsmChatChatMessageModel> messageIdsList,
+    required List<IsmChatMessageModel> messageIdsList,
   }) async {
     var allMessages = await IsmChatConfig.objectBox.getMessages(conversationId);
     if (allMessages == null) {
@@ -1615,7 +1613,6 @@ class IsmChatPageController extends GetxController {
       {required List<String> userId, bool isGroup = false}) async {
     if (isGroup) {
       userId = conversation!.userIds ?? [];
-  
     }
     var response = await _viewModel.createConversation(
       typingEvents: true,

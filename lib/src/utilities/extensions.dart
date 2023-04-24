@@ -187,7 +187,7 @@ extension DateFormats on DateTime {
 }
 
 extension ChildWidget on IsmChatCustomMessageType {
-  Widget messageType(IsmChatChatMessageModel message) {
+  Widget messageType(IsmChatMessageModel message) {
     switch (this) {
       case IsmChatCustomMessageType.text:
         return IsmChatTextMessage(message);

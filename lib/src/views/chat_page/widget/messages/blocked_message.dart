@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 class IsmChatBlockedMessage extends StatelessWidget {
   const IsmChatBlockedMessage(this.message, {super.key});
 
-  final IsmChatChatMessageModel message;
+  final IsmChatMessageModel message;
 
   @override
   Widget build(BuildContext context) =>

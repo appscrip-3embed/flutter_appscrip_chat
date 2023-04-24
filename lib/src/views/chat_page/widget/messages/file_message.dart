@@ -7,7 +7,7 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 class IsmChatFileMessage extends StatelessWidget {
   const IsmChatFileMessage(this.message, {super.key});
 
-  final IsmChatChatMessageModel message;
+  final IsmChatMessageModel message;
 
   @override
   Widget build(BuildContext context) => Container(

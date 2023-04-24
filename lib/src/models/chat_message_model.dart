@@ -3,13 +3,12 @@ import 'dart:convert';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/foundation.dart';
 
-class IsmChatChatMessageModel {
-  factory IsmChatChatMessageModel.fromJson(String source) =>
-      IsmChatChatMessageModel.fromMap(
-          json.decode(source) as Map<String, dynamic>);
+class IsmChatMessageModel {
+  factory IsmChatMessageModel.fromJson(String source) =>
+      IsmChatMessageModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
-  factory IsmChatChatMessageModel.fromMap(Map<String, dynamic> map) {
-    var model = IsmChatChatMessageModel(
+  factory IsmChatMessageModel.fromMap(Map<String, dynamic> map) {
+    var model = IsmChatMessageModel(
       body: map['body'] != null && (map['body'] as String).isNotEmpty
           ? IsmChatUtility.decodePayload(map['body'] as String)
           : '',
@@ -94,8 +93,7 @@ class IsmChatChatMessageModel {
     );
   }
 
-  factory IsmChatChatMessageModel.fromDate(int sentAt) =>
-      IsmChatChatMessageModel(
+  factory IsmChatMessageModel.fromDate(int sentAt) => IsmChatMessageModel(
         body: sentAt.toMessageDateString(),
         action: '',
         updatedAt: 0,
@@ -131,7 +129,7 @@ class IsmChatChatMessageModel {
         mentionedUsers: null,
       );
 
-  IsmChatChatMessageModel({
+  IsmChatMessageModel({
     required this.body,
     this.action,
     required this.sentAt,
@@ -207,7 +205,7 @@ class IsmChatChatMessageModel {
 
   String get chatName => conversationTitle ?? senderInfo?.userName ?? '';
 
-  IsmChatChatMessageModel copyWith({
+  IsmChatMessageModel copyWith({
     String? body,
     String? action,
     int? sentAt,
@@ -245,7 +243,7 @@ class IsmChatChatMessageModel {
     bool? sentByMe,
     dynamic mentionedUsers,
   }) =>
-      IsmChatChatMessageModel(
+      IsmChatMessageModel(
         body: body ?? this.body,
         action: action ?? this.action,
         updatedAt: updatedAt ?? this.updatedAt,
@@ -324,13 +322,13 @@ class IsmChatChatMessageModel {
 
   @override
   String toString() =>
-      'ChatMessageModel(body: $body, action: $action, updatedAt: $updatedAt, sentAt: $sentAt, unreadMessagesCount: $unreadMessagesCount, searchableTags: $searchableTags, privateOneToOne: $privateOneToOne, showInConversation: $showInConversation, readByAll: $readByAll, senderInfo: $senderInfo, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, attachments: $attachments, lastMessageSentAt: $lastMessageSentAt, isGroup: $isGroup, deliveredToAll: $deliveredToAll, customType: $customType, createdByUserName: $createdByUserName, createdByUserImageUrl: $createdByUserImageUrl, createdBy: $createdBy, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, parentMessageId: $parentMessageId, initiatorId : $initiatorId  messageId: $messageId, deviceId: $deviceId, adminCount: $adminCount, messageType: $messageType, sentByMe: $sentByMe, mentionedUsers: $mentionedUsers)';
+      'IsmChatMessageModel(body: $body, action: $action, updatedAt: $updatedAt, sentAt: $sentAt, unreadMessagesCount: $unreadMessagesCount, searchableTags: $searchableTags, privateOneToOne: $privateOneToOne, showInConversation: $showInConversation, readByAll: $readByAll, senderInfo: $senderInfo, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, attachments: $attachments, lastMessageSentAt: $lastMessageSentAt, isGroup: $isGroup, deliveredToAll: $deliveredToAll, customType: $customType, createdByUserName: $createdByUserName, createdByUserImageUrl: $createdByUserImageUrl, createdBy: $createdBy, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, parentMessageId: $parentMessageId, initiatorId : $initiatorId  messageId: $messageId, deviceId: $deviceId, adminCount: $adminCount, messageType: $messageType, sentByMe: $sentByMe, mentionedUsers: $mentionedUsers)';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is IsmChatChatMessageModel &&
+    return other is IsmChatMessageModel &&
         other.body == body &&
         other.action == action &&
         other.updatedAt == updatedAt &&

@@ -10,7 +10,7 @@ class IsmChatLinkMessage extends StatelessWidget {
     super.key,
   });
 
-  final IsmChatChatMessageModel message;
+  final IsmChatMessageModel message;
 
   @override
   Widget build(BuildContext context) => ConstrainedBox(

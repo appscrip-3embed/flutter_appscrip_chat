@@ -18,6 +18,8 @@ class IsmChatConstants {
 
   static const Duration swipeDuration = Duration(milliseconds: 300);
 
+  static const String mapAPIKey = 'AIzaSyC2YXqs5H8QSfN1NVsZKsP11XLZhfGVGPI';
+
   /// Video Type List For Every Platform
   static List<String> videoExtensions = [
     'mp4',

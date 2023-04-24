@@ -15,7 +15,7 @@ class IsmMediaPreview extends StatefulWidget {
     required this.mediaTime,
   }) : super(key: key);
 
-  final List<IsmChatChatMessageModel> messageData;
+  final List<IsmChatMessageModel> messageData;
 
   final String mediaUserName;
 
