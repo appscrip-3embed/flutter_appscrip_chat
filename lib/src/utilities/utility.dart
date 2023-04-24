@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 
 class IsmChatUtility {
   const IsmChatUtility._();
@@ -82,5 +85,32 @@ class IsmChatUtility {
       textColor: IsmChatConfig.chatTheme.primaryColor,
       fontSize: 16.0,
     );
+  }
+
+  static Future<File?> pickImage(ImageSource source) async {
+    XFile? result;
+    result = await ImagePicker().pickImage(imageQuality: 25, source: source);
+
+    if (result == null) {
+      return null;
+    }
+    var croppedFile = await ImageCropper().cropImage(
+      sourcePath: result.path,
+      cropStyle: CropStyle.circle,
+      compressQuality: 100,
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Cropper'.tr,
+          toolbarColor: IsmChatColors.blackColor,
+          toolbarWidgetColor: IsmChatColors.whiteColor,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+        ),
+        IOSUiSettings(
+          title: 'Cropper',
+        )
+      ],
+    );
+    return File(croppedFile!.path);
   }
 }

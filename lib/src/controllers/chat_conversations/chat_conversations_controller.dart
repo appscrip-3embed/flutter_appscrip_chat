@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -96,34 +94,13 @@ class IsmChatConversationsController extends GetxController {
     forwardedList[index].isUserSelected = !forwardedList[index].isUserSelected;
   }
 
-  // TODO: Move this logic from here to make is generic for other places
   void ismUploadImage(ImageSource imageSource) async {
-    XFile? result;
-    result =
-        await ImagePicker().pickImage(imageQuality: 25, source: imageSource);
-
-    if (result == null) {
+    var file = await IsmChatUtility.pickImage(imageSource);
+    if (file == null) {
       return;
     }
-    var croppedFile = await ImageCropper().cropImage(
-      sourcePath: result.path,
-      cropStyle: CropStyle.circle,
-      compressQuality: 100,
-      uiSettings: [
-        AndroidUiSettings(
-          toolbarTitle: 'Cropper'.tr,
-          toolbarColor: IsmChatColors.blackColor,
-          toolbarWidgetColor: IsmChatColors.whiteColor,
-          initAspectRatio: CropAspectRatioPreset.original,
-          lockAspectRatio: false,
-        ),
-        IOSUiSettings(
-          title: 'Cropper',
-        )
-      ],
-    );
-    var bytes = File(croppedFile!.path).readAsBytesSync();
-    var fileExtension = result.name.split('.').last;
+    var bytes = file.readAsBytesSync();
+    var fileExtension = file.path.split('.').last;
     await getPresignedUrl(fileExtension, bytes);
   }
 

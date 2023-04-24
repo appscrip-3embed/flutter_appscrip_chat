@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/main.dart';
 import 'package:chat_component_example/models/models.dart';

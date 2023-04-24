@@ -2,7 +2,6 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-//TODO: Refactor Attachment Bottom sheet UI
 class IsmChatAttachmentCard extends StatelessWidget {
   const IsmChatAttachmentCard({super.key});
 

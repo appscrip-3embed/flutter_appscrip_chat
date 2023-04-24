@@ -267,7 +267,6 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                   }
                                 }
 
-                                // TODO: Add API for creating group
                                 var ismChatConversation =
                                     IsmChatConversationModel(
                                   messagingDisabled: false,

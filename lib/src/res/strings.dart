@@ -22,9 +22,9 @@ class IsmChatStrings {
   static const String typing = 'Typing...';
   static const String online = 'Online';
 
-  static const String lastSeen = 'last seen';
-  static const String today = 'today';
-  static const String yestarday = 'yesterday';
+  static const String lastSeen = 'Last seen';
+  static const String today = 'Today';
+  static const String yestarday = 'Yesterday';
   static const String at = 'at';
   static const String on = 'on';
   static const String ok = 'Okay';

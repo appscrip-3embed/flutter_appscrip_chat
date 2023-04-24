@@ -111,6 +111,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
               conversationId: _controller.conversation?.conversationId ?? '',
               userId: _controller.conversation?.opponentDetails?.userId ?? '');
         }
+        // await Future.delayed(const Duration(milliseconds: 1));
       }
       _controller.listOfAssetsPath.clear();
     }

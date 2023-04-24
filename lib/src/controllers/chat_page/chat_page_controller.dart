@@ -282,7 +282,6 @@ class IsmChatPageController extends GetxController
         chatMessageModel = message;
         break;
       case IsmChatFocusMenuType.forward:
-        // TODO: check this forward code
         var chatConversationController =
             Get.find<IsmChatConversationsController>();
         chatConversationController.forwardedList.clear();
@@ -379,7 +378,6 @@ class IsmChatPageController extends GetxController
     }
   }
 
-  // TODO: clean this function
   void tapForMediaPreview(IsmChatMessageModel message) async {
     if ([IsmChatCustomMessageType.image, IsmChatCustomMessageType.video]
         .contains(message.customType)) {
@@ -410,12 +408,13 @@ class IsmChatPageController extends GetxController
           if (!File(localPath).existsSync()) {
             final file = File(localPath);
             await file.writeAsBytes(bytes);
+            localPath = file.path;
           }
+          await OpenFilex.open(localPath);
         } catch (e) {
           IsmChatLog.error(e);
         }
       }
-      await OpenFilex.open(localPath);
     }
   }
 

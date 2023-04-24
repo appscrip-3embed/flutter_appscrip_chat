@@ -93,53 +93,32 @@ extension DateConvertor on int {
   String toTimeString() =>
       DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(this));
 
-  // TODO: clean this extension
   String toCurrentTimeStirng() {
-    final timeStamp = DateTime.fromMillisecondsSinceEpoch(this);
-    final currentTime = DateTime.now();
-    final currentDay = int.parse(DateFormat('d').format(currentTime));
-    final currentDayFromStamp = int.parse(DateFormat('d').format(timeStamp));
-    var timeFormate = '';
-    if (this == -1 || this == 0) {
-      return timeFormate;
+    final timeStamp = toDate().removeTime();
+    final now = DateTime.now().removeTime();
+
+    if (now.day == timeStamp.day) {
+      return '${IsmChatStrings.lastSeen} ${IsmChatStrings.today} ${IsmChatStrings.at} ${DateFormat.jm().format(toDate())}';
     }
-    if (currentDay == currentDayFromStamp) {
-      timeFormate =
-          '${IsmChatStrings.lastSeen} ${IsmChatStrings.today} ${IsmChatStrings.at} ${DateFormat.jm().format(timeStamp)}';
-    } else if (((currentDay - currentDayFromStamp) == 1) ||
-        (currentDayFromStamp == 31)) {
-      timeFormate =
-          '${IsmChatStrings.lastSeen} ${IsmChatStrings.yestarday} ${IsmChatStrings.at} ${DateFormat.jm().format(timeStamp)}';
-    } else if (((currentDay - currentDayFromStamp) > 1 &&
-            (currentDay - currentDayFromStamp) < 7) ||
-        (currentDayFromStamp > currentDay)) {
-      timeFormate =
-          '${IsmChatStrings.lastSeen} ${IsmChatStrings.at} ${DateFormat('E h:mm a').format(timeStamp)}';
-    } else if (((currentDay - currentDayFromStamp) > 7) ||
-        (currentDayFromStamp > currentDay)) {
-      timeFormate =
-          '${IsmChatStrings.lastSeen} ${IsmChatStrings.on} ${DateFormat('MMM d, yyyy h:mm a').format(timeStamp)}';
+    if (now.difference(timeStamp) <= const Duration(days: 1)) {
+      return '${IsmChatStrings.lastSeen} ${IsmChatStrings.yestarday} ${IsmChatStrings.at} ${DateFormat.jm().format(toDate())}';
     }
-    return timeFormate;
+    if (now.difference(timeStamp) <= const Duration(days: 7)) {
+      return '${IsmChatStrings.lastSeen} ${IsmChatStrings.at} ${DateFormat('E h:mm a').format(toDate())}';
+    }
+    return '${IsmChatStrings.lastSeen} ${IsmChatStrings.on} ${DateFormat('MMM d, yyyy h:mm a').format(toDate())}';
   }
 
-  // TODO: clean this extension
   String toLastMessageTimeString() {
-    final timeStamp = DateTime.fromMillisecondsSinceEpoch(this);
-    final currentTime = DateTime.now();
-    final currentDay = int.parse(DateFormat('d').format(currentTime));
-    final currentDayFromStamp = int.parse(DateFormat('d').format(timeStamp));
-    var timeFormate = '';
-    if (currentDay == currentDayFromStamp) {
-      timeFormate = DateFormat.jm().format(timeStamp);
-    } else if (((currentDay - currentDayFromStamp) == 1) ||
-        (currentDayFromStamp == 31)) {
-      timeFormate = IsmChatStrings.yestarday.capitalizeFirst!;
-    } else if (((currentDay - currentDayFromStamp) > 1) ||
-        (currentDayFromStamp > currentDay)) {
-      timeFormate = DateFormat('dd/MM/yyyy').format(timeStamp);
+    final timeStamp = toDate().removeTime();
+    final now = DateTime.now().removeTime();
+    if (now.day == timeStamp.day) {
+      return DateFormat.jm().format(toDate());
     }
-    return timeFormate;
+    if (now.difference(timeStamp) <= const Duration(days: 1)) {
+      return IsmChatStrings.yestarday.capitalizeFirst!;
+    }
+    return DateFormat('dd/MM/yyyy').format(toDate());
   }
 
   String get weekDayString {
@@ -200,6 +179,8 @@ extension DateFormats on DateTime {
       year == other.year && month == other.month;
 
   String toDateString() => DateFormat('dd MMM yyyy').format(this);
+
+  DateTime removeTime() => DateTime(year, month, day);
 }
 
 extension ChildWidget on IsmChatCustomMessageType {
