@@ -1,45 +1,116 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:flutter/services.dart';
 
-class ChatConversationsViewModel {
-  ChatConversationsViewModel(this._repository);
+class IsmChatConversationsViewModel {
+  IsmChatConversationsViewModel(this._repository);
 
-  final ChatConversationsRepository _repository;
+  final IsmChatConversationsRepository _repository;
 
-  var chatSkip = 0;
   var chatLimit = 20;
-  Future<List<ChatConversationModel>?> getChatConversations() async =>
-      await _repository.getChatConversations(skip: chatSkip, limit: chatLimit);
+  Future<List<IsmChatConversationModel>> getChatConversations(
+      int conversationPage) async {
+    var conversations = await _repository.getChatConversations(
+        skip: conversationPage, limit: chatLimit);
+
+    if (conversations == null || conversations.isEmpty) {
+      return [];
+    }
+
+    var dbConversations = IsmChatConfig.objectBox.chatConversationBox.getAll();
+
+    for (var conversation in conversations) {
+      DBConversationModel? dbConversation;
+      if (dbConversations.isNotEmpty) {
+        dbConversation = dbConversations.firstWhere(
+          (e) => e.conversationId == conversation.conversationId,
+          orElse: () => DBConversationModel(messages: []),
+        );
+      }
+      var dbConversationModel =
+          conversation.convertToDbModel(dbConversation?.messages);
+
+      dbConversationModel.opponentDetails.target = conversation.opponentDetails;
+      dbConversationModel.lastMessageDetails.target =
+          conversation.lastMessageDetails;
+      dbConversationModel.config.target = conversation.config;
+      await IsmChatConfig.objectBox.createAndUpdateDB(dbConversationModel);
+    }
+
+    return conversations;
+  }
 
   Future<UserDetails?> getUserData() async => await _repository.getUserData();
 
-  Future<void> updateDeliveredMessage({
+  Future<IsmChatUserListModel?> getUserList({
+    String? pageToken,
+    int? count,
+    String? opponentId,
+  }) async {
+    var response =
+        await _repository.getUserList(count: count, pageToken: pageToken);
+
+    if (response == null) {
+      return null;
+    }
+    var data = [...response.users];
+    data.removeWhere(
+        (e) => e.userId == IsmChatConfig.communicationConfig.userConfig.userId);
+
+    if (opponentId != null) {
+      data.removeWhere((e) => e.userId == opponentId);
+    }
+    return IsmChatUserListModel(users: data, pageToken: response.pageToken);
+  }
+
+  Future<IsmChatResponseModel?> deleteChat(String conversationId) async =>
+      await _repository.deleteChat(conversationId);
+
+  Future<void> clearAllMessages(String conversationId) async {
+    var response = await _repository.clearAllMessages(
+      conversationId: conversationId,
+    );
+    if (!response!.hasError) {
+      await IsmChatConfig.objectBox
+          .clearAllMessage(conversationId: conversationId);
+    }
+  }
+
+  Future<void> pingMessageDelivered({
     required String conversationId,
     required String messageId,
   }) async =>
-      await _repository.updateDeliveredMessage(
+      await _repository.pingMessageDelivered(
         conversationId: conversationId,
         messageId: messageId,
       );
 
-  Future<void> createConversation({
-    required bool typingEvents,
-    required bool readEvents,
-    required bool pushNotifications,
-    required List<String> members,
-    required bool isGroup,
-    required int conversationType,
-    List<String>? searchableTags,
-    Map<String, dynamic>? metaData,
-    String? customType,
-    String? conversationTitle,
-    String? conversationImageUrl,
+  Future<IsmChatUserListModel?> getBlockUser({
+    required int? skip,
+    required int limit,
   }) async =>
-      await _repository.createConversation(
-        typingEvents: typingEvents,
-        readEvents: readEvents,
-        pushNotifications: pushNotifications,
-        members: members,
-        isGroup: isGroup,
-        conversationType: conversationType,
+      await _repository.getBlockUser(skip: skip, limit: limit);
+
+  // get Api for Presigned Url.....
+  Future<PresignedUrlModel?> getPresignedUrl({
+    required bool isLoading,
+    required String userIdentifier,
+    required String mediaExtension,
+  }) async =>
+      await _repository.getPresignedUrl(
+        isLoading: isLoading,
+        userIdentifier: userIdentifier,
+        mediaExtension: mediaExtension,
+      );
+
+  // update Api for Presigned Url.....
+  Future<IsmChatResponseModel?> updatePresignedUrl({
+    required bool isLoading,
+    required String presignedUrl,
+    required Uint8List file,
+  }) async =>
+      await _repository.updatePresignedUrl(
+        isLoading: isLoading,
+        presignedUrl: presignedUrl,
+        file: file,
       );
 }

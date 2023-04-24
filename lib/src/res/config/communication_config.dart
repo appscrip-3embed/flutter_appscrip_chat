@@ -1,31 +1,21 @@
-///[ChatCommunicationConfig] class will be used to store all the configurations required to setup the communication connection
-class ChatCommunicationConfig {
-  const ChatCommunicationConfig({
-    required this.accountId,
-    required this.userToken,
-    required this.userId,
-    required this.appSecret,
-    required this.userSecret,
-    required this.keySetId,
-    required this.licenseKey,
-    required this.projectId,
-    required this.mqttHostName,
-    required this.mqttPort,
+import 'package:appscrip_chat_component/src/res/config/config.dart';
+
+///[IsmChatCommunicationConfig] class will be used to store all the configurations required to setup the communication connection
+class IsmChatCommunicationConfig {
+  IsmChatCommunicationConfig({
+    required this.userConfig,
+    required this.projectConfig,
+    required this.mqttConfig,
     String? username,
     String? password,
-  })  : username = username ?? '2$accountId$projectId',
-        password = password ?? '$licenseKey$keySetId';
+  })  : username =
+            username ?? '2${projectConfig.accountId}${projectConfig.projectId}',
+        password =
+            password ?? '${projectConfig.licenseKey}${projectConfig.keySetId}';
 
-  final String accountId;
-  final String userToken;
-  final String userId;
-  final String appSecret;
-  final String userSecret;
-  final String keySetId;
-  final String licenseKey;
-  final String projectId;
-  final String mqttHostName;
-  final int mqttPort;
+  final IsmChatUserConfig userConfig;
+  final IsmChatProjectConfig projectConfig;
+  final IsmChatMqttConfig mqttConfig;
   final String? username;
   final String? password;
 }

@@ -1,19 +1,19 @@
 import 'package:appscrip_chat_component/src/res/res.dart';
 import 'package:flutter/material.dart';
 
-class ChatTheme extends StatelessWidget {
-  const ChatTheme({
+class IsmChatTheme extends StatelessWidget {
+  const IsmChatTheme({
     Key? key,
     required this.chatThemeData,
     required this.child,
   }) : super(key: key);
 
-  final ChatThemeData chatThemeData;
+  final IsmChatThemeData chatThemeData;
   final Widget child;
 
-  static final ChatThemeData _kFallbackTheme = ChatThemeData.fallback();
+  static final IsmChatThemeData _kFallbackTheme = IsmChatThemeData.fallback();
 
-  static ChatThemeData of(BuildContext context) =>
+  static IsmChatThemeData of(BuildContext context) =>
       context
           .dependOnInheritedWidgetOfExactType<_InheritedChatTheme>()
           ?.chatTheme
@@ -34,7 +34,7 @@ class _InheritedChatTheme extends InheritedTheme {
     required super.child,
   });
 
-  final ChatTheme chatTheme;
+  final IsmChatTheme chatTheme;
 
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) =>

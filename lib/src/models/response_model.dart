@@ -1,16 +1,17 @@
 import 'dart:convert';
 
-class ResponseModel {
-  factory ResponseModel.fromJson(String source) =>
-      ResponseModel.fromMap(json.decode(source) as Map<String, dynamic>);
+class IsmChatResponseModel {
+  factory IsmChatResponseModel.fromJson(String source) =>
+      IsmChatResponseModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
-  factory ResponseModel.fromMap(Map<String, dynamic> map) => ResponseModel(
+  factory IsmChatResponseModel.fromMap(Map<String, dynamic> map) =>
+      IsmChatResponseModel(
         data: map['data'] as String,
         hasError: map['hasError'] as bool,
         errorCode: map['errorCode'] as int,
       );
 
-  const ResponseModel({
+  const IsmChatResponseModel({
     required this.data,
     required this.hasError,
     required this.errorCode,
@@ -20,12 +21,12 @@ class ResponseModel {
   final bool hasError;
   final int errorCode;
 
-  ResponseModel copyWith({
+  IsmChatResponseModel copyWith({
     String? data,
     bool? hasError,
     int? errorCode,
   }) =>
-      ResponseModel(
+      IsmChatResponseModel(
         data: data ?? this.data,
         hasError: hasError ?? this.hasError,
         errorCode: errorCode ?? this.errorCode,
@@ -44,7 +45,7 @@ class ResponseModel {
       'ResponseModel(data: $data, hasError: $hasError, errorCode: $errorCode)';
 
   @override
-  bool operator ==(covariant ResponseModel other) {
+  bool operator ==(covariant IsmChatResponseModel other) {
     if (identical(this, other)) return true;
 
     return other.data == data &&

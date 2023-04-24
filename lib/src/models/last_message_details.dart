@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:appscrip_chat_component/src/utilities/utilities.dart';
 import 'package:objectbox/objectbox.dart';
+
 @Entity()
 class LastMessageDetails {
   factory LastMessageDetails.fromJson(String source) =>
@@ -15,10 +16,10 @@ class LastMessageDetails {
         messageType: map['messageType'] as int? ?? 0,
         messageId: map['messageId'] as String? ?? '',
         conversationId: map['conversationId'] as String? ?? '',
-        body: ChatUtility.decodePayload(map['body'] as String? ?? ''),
+        body: IsmChatUtility.decodePayload(map['body'] as String? ?? ''),
       );
 
-   LastMessageDetails({
+  LastMessageDetails({
     this.id = 0,
     required this.showInConversation,
     required this.sentAt,

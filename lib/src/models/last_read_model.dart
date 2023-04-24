@@ -1,26 +1,27 @@
 import 'dart:convert';
 
-class LastReadAt {
-  factory LastReadAt.fromJson(String source) =>
-      LastReadAt.fromMap(json.decode(source) as Map<String, dynamic>);
+class IsmChatLastReadAt {
+  factory IsmChatLastReadAt.fromJson(String source) =>
+      IsmChatLastReadAt.fromMap(json.decode(source) as Map<String, dynamic>);
 
-  factory LastReadAt.fromMap(Map<String, dynamic> map) => LastReadAt(
+  factory IsmChatLastReadAt.fromMap(Map<String, dynamic> map) =>
+      IsmChatLastReadAt(
         userId: map['userId'] as String,
         readAt: map['readAt'] as int,
       );
 
-  const LastReadAt({
+  const IsmChatLastReadAt({
     required this.userId,
     required this.readAt,
   });
   final String userId;
   final int readAt;
 
-  LastReadAt copyWith({
+  IsmChatLastReadAt copyWith({
     String? userId,
     int? readAt,
   }) =>
-      LastReadAt(
+      IsmChatLastReadAt(
         userId: userId ?? this.userId,
         readAt: readAt ?? this.readAt,
       );
@@ -30,11 +31,11 @@ class LastReadAt {
         'readAt': readAt,
       };
 
-  static List<LastReadAt> fromNetworkMap(Map<String, dynamic> map) {
-    var data = <LastReadAt>[];
+  static List<IsmChatLastReadAt> fromNetworkMap(Map<String, dynamic> map) {
+    var data = <IsmChatLastReadAt>[];
     for (MapEntry map in map.entries) {
       data.add(
-        LastReadAt(
+        IsmChatLastReadAt(
           userId: map.key as String,
           readAt: map.value as int,
         ),
@@ -49,7 +50,7 @@ class LastReadAt {
   String toString() => 'LastReadAt(userId: $userId, readAt: $readAt)';
 
   @override
-  bool operator ==(covariant LastReadAt other) {
+  bool operator ==(covariant IsmChatLastReadAt other) {
     if (identical(this, other)) return true;
 
     return other.userId == userId && other.readAt == readAt;

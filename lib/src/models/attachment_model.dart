@@ -9,44 +9,47 @@ class AttachmentModel {
       AttachmentModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   factory AttachmentModel.fromMap(Map<String, dynamic> map) => AttachmentModel(
-        thumbnailUrl: map['thumbnailUrl'] != null &&
-                (map['thumbnailUrl'] as String).isNotEmpty
-            ? ChatUtility.decodePayload(map['thumbnailUrl'] as String)
-            : '',
+        thumbnailUrl: map['thumbnailUrl'] as String,
+        // != null &&
+        //         (map['thumbnailUrl'] as String).isNotEmpty
+        //     ? IsmChatUtility.decodePayload(map['thumbnailUrl'] as String)
+        //     : '',
         size: (map['size'] as num).toDouble(),
         name: map['name'] as String,
         mimeType: map['mimeType'] as String,
-        mediaUrl:
-            map['mediaUrl'] != null && (map['mediaUrl'] as String).isNotEmpty
-                ? ChatUtility.decodePayload(map['mediaUrl'] as String)
-                : '',
+        mediaUrl: map['mediaUrl'] as String,
+        // map['mediaUrl'] != null && (map['mediaUrl'] as String).isNotEmpty
+        //     ? IsmChatUtility.decodePayload(map['mediaUrl'] as String)
+        //     : '',
         mediaId: map['mediaId'] as String,
         extension: map['extension'] as String,
-        attachmentType: AttachmentType.fromMap(map['attachmentType'] as int),
+        attachmentType: map['attachmentType'] == null
+            ? IsmChatAttachmentType.image
+            : IsmChatAttachmentType.fromMap(map['attachmentType'] as int),
       );
 
   AttachmentModel({
     this.id = 0,
-    required this.thumbnailUrl,
-    required this.size,
-    required this.name,
-    required this.mimeType,
-    required this.mediaUrl,
-    required this.mediaId,
-    required this.extension,
+    this.thumbnailUrl,
+    this.size,
+    this.name,
+    this.mimeType,
+    this.mediaUrl,
+    this.mediaId,
+    this.extension,
     this.attachmentType,
   });
 
   int id;
-  final String thumbnailUrl;
-  final double size;
-  final String name;
-  final String mimeType;
-  final String mediaUrl;
-  final String mediaId;
-  final String extension;
+  String? thumbnailUrl;
+  double? size;
+  String? name;
+  String? mimeType;
+  String? mediaUrl;
+  String? mediaId;
+  String? extension;
   @Transient()
-  AttachmentType? attachmentType;
+  IsmChatAttachmentType? attachmentType;
 
   int? get attachmentIndex => attachmentType?.index;
 
@@ -54,10 +57,10 @@ class AttachmentModel {
     if (value == null) {
       attachmentType = null;
     }
-    if (value! < 0 || value >= AttachmentType.values.length) {
-      attachmentType = AttachmentType.file;
+    if (value! < 0 || value >= IsmChatAttachmentType.values.length) {
+      attachmentType = IsmChatAttachmentType.file;
     }
-    attachmentType = AttachmentType.values[value];
+    attachmentType = IsmChatAttachmentType.values[value];
   }
 
   AttachmentModel copyWith({
@@ -68,7 +71,7 @@ class AttachmentModel {
     String? mediaUrl,
     String? mediaId,
     String? extension,
-    AttachmentType? attachmentType,
+    IsmChatAttachmentType? attachmentType,
   }) =>
       AttachmentModel(
         thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,

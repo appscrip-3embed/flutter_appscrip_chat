@@ -14,6 +14,13 @@ class AppValidator {
     return null;
   }
 
+  static String? userName(String? value) {
+    if (value == null || value.isEmpty) {
+      return Strings.required;
+    }
+    return null;
+  }
+
   static String? passwordValidator(String? value) {
     if (value == null || value.isEmpty) {
       return Strings.required;

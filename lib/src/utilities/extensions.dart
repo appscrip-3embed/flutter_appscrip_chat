@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -9,6 +13,78 @@ extension MatchString on String {
 
   String get convertToValidUrl =>
       'https://${replaceAll('http://', '').replaceAll('https://', '')}';
+
+  bool get isValidUrl =>
+      toLowerCase().contains('https') || toLowerCase().contains('www');
+}
+
+extension MessagePagination on int {
+  int pagination({int endValue = 20}) {
+    if (this == 0) {
+      return this;
+    }
+    if (this <= endValue) {
+      return endValue;
+    }
+    endValue = endValue + 20;
+    return pagination(endValue: endValue);
+  }
+}
+
+extension DistanceLatLng on LatLng {
+  double getDistance(LatLng other) {
+    var lat1 = latitude,
+        lon1 = longitude,
+        lat2 = other.latitude,
+        lon2 = other.longitude;
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+    return 12742 * asin(sqrt(a));
+  }
+}
+
+extension DurationExtensions on Duration {
+  String formatDuration() {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    var twoDigitMinutes = twoDigits(inMinutes.remainder(60));
+    var twoDigitSeconds = twoDigits(inSeconds.remainder(60));
+    var hour = num.parse(twoDigits(inHours));
+    if (hour > 0) {
+      return '${twoDigits(inHours)}:$twoDigitMinutes:$twoDigitSeconds';
+    } else {
+      return '$twoDigitMinutes:$twoDigitSeconds';
+    }
+  }
+}
+
+extension IntToTimeLeft on int {
+  String getTimerRecord(int value) {
+    int h, m, s;
+    h = value ~/ 3600;
+    m = (value - h * 3600) ~/ 60;
+    s = value - (h * 3600) - (m * 60);
+    var minuteLeft = m.toString().length < 2 ? '0$m' : m.toString();
+    var secondsLeft = s.toString().length < 2 ? '0$s' : s.toString();
+    var result = '$minuteLeft:$secondsLeft';
+    return result;
+  }
+}
+
+extension FlashIcon on FlashMode {
+  IconData get icon {
+    switch (this) {
+      case FlashMode.off:
+        return Icons.flash_off_rounded;
+      case FlashMode.auto:
+        return Icons.flash_auto_rounded;
+      case FlashMode.always:
+      case FlashMode.torch:
+        return Icons.flash_on_rounded;
+    }
+  }
 }
 
 extension DateConvertor on int {
@@ -17,9 +93,37 @@ extension DateConvertor on int {
   String toTimeString() =>
       DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(this));
 
+  String toCurrentTimeStirng() {
+    final timeStamp = toDate().removeTime();
+    final now = DateTime.now().removeTime();
+
+    if (now.day == timeStamp.day) {
+      return '${IsmChatStrings.lastSeen} ${IsmChatStrings.today} ${IsmChatStrings.at} ${DateFormat.jm().format(toDate())}';
+    }
+    if (now.difference(timeStamp) <= const Duration(days: 1)) {
+      return '${IsmChatStrings.lastSeen} ${IsmChatStrings.yestarday} ${IsmChatStrings.at} ${DateFormat.jm().format(toDate())}';
+    }
+    if (now.difference(timeStamp) <= const Duration(days: 7)) {
+      return '${IsmChatStrings.lastSeen} ${IsmChatStrings.at} ${DateFormat('E h:mm a').format(toDate())}';
+    }
+    return '${IsmChatStrings.lastSeen} ${IsmChatStrings.on} ${DateFormat('MMM d, yyyy h:mm a').format(toDate())}';
+  }
+
+  String toLastMessageTimeString() {
+    final timeStamp = toDate().removeTime();
+    final now = DateTime.now().removeTime();
+    if (now.day == timeStamp.day) {
+      return DateFormat.jm().format(toDate());
+    }
+    if (now.difference(timeStamp) <= const Duration(days: 1)) {
+      return IsmChatStrings.yestarday.capitalizeFirst!;
+    }
+    return DateFormat('dd/MM/yyyy').format(toDate());
+  }
+
   String get weekDayString {
     if (this > 7 || this < 1) {
-      throw const InvalidWeekdayNumber('Value should be between 1 & 7');
+      throw const IsmChatInvalidWeekdayNumber('Value should be between 1 & 7');
     }
     var weekDays = {
       1: 'Monday',
@@ -50,6 +154,20 @@ extension DateConvertor on int {
     }
     return date.toDateString();
   }
+
+  String get deliverTime {
+    var now = DateTime.now();
+    var timestamp = toDate();
+    late DateFormat dateFormat;
+    if (now.difference(timestamp) > const Duration(days: 365)) {
+      dateFormat = DateFormat('DD MMM yyyy, HH:mm aa');
+    } else if (now.difference(timestamp) > const Duration(days: 7)) {
+      dateFormat = DateFormat('DD MMM, HH:mm aa');
+    } else {
+      dateFormat = DateFormat('E, HH:mm aa');
+    }
+    return dateFormat.format(timestamp);
+  }
 }
 
 extension DateFormats on DateTime {
@@ -61,54 +179,63 @@ extension DateFormats on DateTime {
       year == other.year && month == other.month;
 
   String toDateString() => DateFormat('dd MMM yyyy').format(this);
+
+  DateTime removeTime() => DateTime(year, month, day);
 }
 
-extension ChildWidget on CustomMessageType {
-  Widget messageType(ChatMessageModel message) {
+extension ChildWidget on IsmChatCustomMessageType {
+  Widget messageType(IsmChatMessageModel message) {
     switch (this) {
-      case CustomMessageType.text:
-        return TextMessage(message);
+      case IsmChatCustomMessageType.text:
+        return IsmChatTextMessage(message);
 
-      case CustomMessageType.reply:
-        return ReplyMessage(message);
+      case IsmChatCustomMessageType.reply:
+        return IsmChatReplyMessage(message);
 
-      case CustomMessageType.forward:
-        return ForwardMessage(message);
+      case IsmChatCustomMessageType.forward:
+        return IsmChatForwardMessage(message);
 
-      case CustomMessageType.image:
-        return ImageMessage(message);
+      case IsmChatCustomMessageType.image:
+        return IsmChatImageMessage(message);
 
-      case CustomMessageType.video:
-        return VideoMessage(message);
+      case IsmChatCustomMessageType.video:
+        return IsmChatVideoMessage(message);
 
-      case CustomMessageType.audio:
-        return AudioMessage(message);
+      case IsmChatCustomMessageType.audio:
+        return IsmChatAudioMessage(message);
 
-      case CustomMessageType.file:
-        return FileMessage(message);
+      case IsmChatCustomMessageType.file:
+        return IsmChatFileMessage(message);
 
-      case CustomMessageType.location:
-        return LocationMessage(message);
+      case IsmChatCustomMessageType.location:
+        return IsmChatLocationMessage(message);
 
-      case CustomMessageType.block:
-        return BlockedMessage(message);
+      case IsmChatCustomMessageType.block:
+        return IsmChatBlockedMessage(message);
 
-      case CustomMessageType.unblock:
-        return BlockedMessage(message);
+      case IsmChatCustomMessageType.unblock:
+        return IsmChatBlockedMessage(message);
 
-      case CustomMessageType.deletedForMe:
-        return DeletedMessage(message);
+      case IsmChatCustomMessageType.deletedForMe:
+        return IsmChatDeletedMessage(message);
 
-      case CustomMessageType.deletedForEveryone:
-        return DeletedMessage(message);
+      case IsmChatCustomMessageType.deletedForEveryone:
+        return IsmChatDeletedMessage(message);
 
-      case CustomMessageType.link:
-        return LinkMessage(message);
+      case IsmChatCustomMessageType.link:
+        return IsmChatLinkMessage(message);
 
-      case CustomMessageType.date:
-        return DateMessage(message);
+      case IsmChatCustomMessageType.date:
+        return IsmChatDateMessage(message);
     }
   }
+
+  bool get canCopy => [
+        IsmChatCustomMessageType.text,
+        IsmChatCustomMessageType.link,
+        IsmChatCustomMessageType.location,
+        IsmChatCustomMessageType.reply,
+      ].contains(this);
 }
 
 extension GetLink on String {
@@ -116,7 +243,7 @@ extension GetLink on String {
   /// <BaseUrl>?<Params>&query=`Lat`%2C`Lng`&<Rest Params>
   LatLng get position {
     if (!contains('map')) {
-      throw const InvalidMapUrlException(
+      throw const IsmChatInvalidMapUrlException(
           "Invalid url, link doesn't contains map link to extract position coordinates");
     }
     var position = split('query=')
@@ -143,4 +270,56 @@ extension AddressString on Placemark {
         country,
         postalCode
       ].join(', ');
+}
+
+extension BlockStatus on IsmChatConversationModel {
+  bool get isChattingAllowed => !(messagingDisabled ?? false);
+
+  bool get isBlockedByMe {
+    if (isChattingAllowed) {
+      return false;
+    }
+    var controller = Get.find<IsmChatConversationsController>();
+    var blockedList = controller.blockUsers.map((e) => e.userId);
+    return blockedList.contains(opponentDetails!.userId);
+  }
+}
+
+extension MenuIcon on IsmChatFocusMenuType {
+  IconData get icon {
+    switch (this) {
+      case IsmChatFocusMenuType.info:
+        return Icons.info_outline_rounded;
+      case IsmChatFocusMenuType.reply:
+        return Icons.reply_rounded;
+      case IsmChatFocusMenuType.forward:
+        return Icons.shortcut_rounded;
+      case IsmChatFocusMenuType.copy:
+        return Icons.copy_rounded;
+      case IsmChatFocusMenuType.delete:
+        return Icons.delete_outline_rounded;
+      case IsmChatFocusMenuType.selectMessage:
+        return Icons.select_all_rounded;
+    }
+  }
+}
+
+extension SelectedUsers on List<SelectedForwardUser> {
+  List<SelectedForwardUser> get selectedUsers =>
+      where((e) => e.isUserSelected).toList();
+}
+
+extension ModelConversion on IsmChatConversationModel {
+  DBConversationModel convertToDbModel(List<String>? messages) =>
+      DBConversationModel(
+        conversationId: conversationId,
+        conversationImageUrl: conversationImageUrl,
+        conversationTitle: conversationTitle,
+        isGroup: isGroup,
+        lastMessageSentAt: lastMessageSentAt,
+        messagingDisabled: messagingDisabled,
+        membersCount: membersCount,
+        unreadMessagesCount: unreadMessagesCount,
+        messages: messages ?? [],
+      );
 }

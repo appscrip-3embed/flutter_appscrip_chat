@@ -3,36 +3,41 @@ import 'dart:convert';
 import 'package:appscrip_chat_component/src/models/models.dart';
 import 'package:appscrip_chat_component/src/utilities/utilities.dart';
 
-class ChatConversationModel {
-  factory ChatConversationModel.fromJson(String source) =>
-      ChatConversationModel.fromMap(
+class IsmChatConversationModel {
+  factory IsmChatConversationModel.fromJson(String source) =>
+      IsmChatConversationModel.fromMap(
           json.decode(source) as Map<String, dynamic>);
 
-  factory ChatConversationModel.fromMap(Map<String, dynamic> map) =>
-      ChatConversationModel(
+  factory IsmChatConversationModel.fromMap(Map<String, dynamic> map) =>
+      IsmChatConversationModel(
         updatedAt: map['updatedAt'] as int? ?? 0,
         unreadMessagesCount: map['unreadMessagesCount'] as int? ?? 0,
-        // searchableTags:
-        //     List<String>.from(map['searchableTags'] as List<dynamic>),
+        userIds: map['userIds'] == null
+            ? []
+            : List<String>.from(map['userIds'] as List<dynamic>),
         privateOneToOne: map['privateOneToOne'] as bool? ?? false,
         opponentDetails:
             UserDetails.fromMap(map['opponentDetails'] as Map<String, dynamic>),
-        metaData: ChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
+        metaData: map['metaData'] == null
+            ? IsmChatMetaData()
+            : IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
         messagingDisabled: map['messagingDisabled'] as bool? ?? false,
         membersCount: map['membersCount'] as int? ?? 0,
         // lastReadAt: LastReadAt.fromNetworkMap(
         //     map['lastReadAt'] as Map<String, dynamic>? ?? {}),
         lastMessageSentAt: map['lastMessageSentAt'] as int? ?? 0,
-        lastMessageDetails: LastMessageDetails.fromMap(
-            map['lastMessageDetails'] as Map<String, dynamic>? ?? {}),
+        lastMessageDetails: map['lastMessageDetails'] != null
+            ? LastMessageDetails.fromMap(
+                map['lastMessageDetails'] as Map<String, dynamic>)
+            : null,
         isGroup: map['isGroup'] as bool? ?? false,
         customType: map['customType'],
         // createdByUserName: map['createdByUserName'] as String? ?? '',
         // createdByUserImageUrl: map['createdByUserImageUrl'] as String? ?? '',
         // createdBy: map['createdBy'] as String? ?? '',
         // createdAt: map['createdAt'] as int? ?? 0,
-        conversationType:
-            ConversationType.fromValue(map['conversationType'] as int? ?? 1),
+        conversationType: IsmChatConversationType.fromValue(
+            map['conversationType'] as int? ?? 1),
         conversationTitle: map['conversationTitle'] as String?,
         conversationImageUrl: map['conversationImageUrl'] as String?,
         conversationId: map['conversationId'] as String? ?? '',
@@ -41,8 +46,8 @@ class ChatConversationModel {
         // adminCount: map['adminCount'] as int? ?? 0,
       );
 
-  factory ChatConversationModel.fromDB(DBConversationModel dbConversation) =>
-      ChatConversationModel(
+  factory IsmChatConversationModel.fromDB(DBConversationModel dbConversation) =>
+      IsmChatConversationModel(
         updatedAt: 0,
         unreadMessagesCount: dbConversation.unreadMessagesCount,
         privateOneToOne: false,
@@ -53,45 +58,47 @@ class ChatConversationModel {
         lastMessageDetails: dbConversation.lastMessageDetails.target,
         isGroup: dbConversation.isGroup,
         customType: null,
-        conversationType: ConversationType.public,
+        conversationType: IsmChatConversationType.public,
         conversationTitle: dbConversation.conversationTitle,
         conversationImageUrl: dbConversation.conversationImageUrl,
         conversationId: dbConversation.conversationId,
         config: dbConversation.config.target,
       );
 
-  ChatConversationModel({
-    this.updatedAt,
-    this.unreadMessagesCount,
-    //  this.searchableTags,
-    this.privateOneToOne,
-    this.opponentDetails,
-    this.metaData,
-    this.messagingDisabled,
-    this.membersCount,
-    //  this.lastReadAt,
-    this.lastMessageSentAt,
-    this.lastMessageDetails,
-    this.isGroup,
-    this.customType,
-    //  this.createdByUserName,
-    //  this.createdByUserImageUrl,
-    //  this.createdBy,
-    //  this.createdAt,
-    this.conversationType,
-    this.conversationTitle,
-    this.conversationImageUrl,
-    this.conversationId,
-    this.config,
-    //  this.adminCount,
-  });
+  IsmChatConversationModel(
+      {this.updatedAt,
+      this.unreadMessagesCount,
+      //  this.searchableTags,
+      this.privateOneToOne,
+      this.opponentDetails,
+      this.metaData,
+      this.messagingDisabled,
+      this.membersCount,
+      //  this.lastReadAt,
+      this.lastMessageSentAt,
+      this.lastMessageDetails,
+      this.isGroup,
+      this.customType,
+      //  this.createdByUserName,
+      //  this.createdByUserImageUrl,
+      //  this.createdBy,
+      //  this.createdAt,
+      this.conversationType,
+      this.conversationTitle,
+      this.conversationImageUrl,
+      this.conversationId,
+      this.config,
+      this.userIds
+      //  this.adminCount,
+      });
 
   int? updatedAt;
   int? unreadMessagesCount;
   //  List<String> searchableTags;
+  List<String>? userIds;
   bool? privateOneToOne;
   UserDetails? opponentDetails;
-  ChatMetaData? metaData;
+  IsmChatMetaData? metaData;
   bool? messagingDisabled;
   int? membersCount;
   //  List<LastReadAt> lastReadAt;
@@ -103,7 +110,7 @@ class ChatConversationModel {
   //  String createdByUserImageUrl;
   //  String createdBy;
   //  int createdAt;
-  ConversationType? conversationType;
+  IsmChatConversationType? conversationType;
   String? conversationTitle;
   String? conversationImageUrl;
   String? conversationId;
@@ -111,17 +118,19 @@ class ChatConversationModel {
   //  int adminCount;
 
   String get chatName => conversationTitle ?? opponentDetails?.userName ?? '';
+  String get profileUrl =>
+      conversationImageUrl ?? opponentDetails?.userProfileImageUrl ?? '';
 
-  ChatConversationModel copyWith({
+  IsmChatConversationModel copyWith({
     int? updatedAt,
     int? unreadMessagesCount,
     List<String>? searchableTags,
     bool? privateOneToOne,
     UserDetails? opponentDetails,
-    ChatMetaData? metaData,
+    IsmChatMetaData? metaData,
     bool? messagingDisabled,
     int? membersCount,
-    List<LastReadAt>? lastReadAt,
+    List<IsmChatLastReadAt>? lastReadAt,
     LastMessageDetails? lastMessageDetails,
     int? lastMessageSentAt,
     bool? isGroup,
@@ -130,14 +139,14 @@ class ChatConversationModel {
     String? createdByUserImageUrl,
     String? createdBy,
     int? createdAt,
-    ConversationType? conversationType,
+    IsmChatConversationType? conversationType,
     String? conversationTitle,
     String? conversationImageUrl,
     String? conversationId,
     ConversationConfigModel? config,
     int? adminCount,
   }) =>
-      ChatConversationModel(
+      IsmChatConversationModel(
         updatedAt: updatedAt ?? this.updatedAt,
         unreadMessagesCount: unreadMessagesCount ?? this.unreadMessagesCount,
         // searchableTags: searchableTags ?? this.searchableTags,
@@ -200,7 +209,7 @@ class ChatConversationModel {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is ChatConversationModel &&
+    return other is IsmChatConversationModel &&
         other.updatedAt == updatedAt &&
         other.unreadMessagesCount == unreadMessagesCount &&
         // listEquals(other.searchableTags, searchableTags) &&

@@ -34,6 +34,7 @@ class IsmChatAPI {
   static const String readAllMessages = '$chatMessages/read';
   static const String deleteMessagesForMe = '$chatMessages/self';
   static const String deleteMessages = '$chatMessages/everyone';
+  static const String createPresignedurl = '$user/presignedurl/create';
   static const String presignedUrls = '$chatMessages/presignedurls';
   static const String chatMedia = '$baseUrl/chat/messages/presignedurls';
 

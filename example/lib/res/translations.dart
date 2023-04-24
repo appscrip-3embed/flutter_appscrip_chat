@@ -6,6 +6,7 @@ class AppTranslations extends Translations {
   Map<String, Map<String, String>> get keys => {
         'en': {
           TranslationKeys.login: 'Login',
+          TranslationKeys.signUp : 'SignUp',
           TranslationKeys.register: 'Register',
           TranslationKeys.required: '*Required',
           TranslationKeys.email: 'Email',

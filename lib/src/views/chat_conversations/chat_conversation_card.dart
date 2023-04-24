@@ -11,7 +11,7 @@ class IsmChatConversationCard extends StatelessWidget {
     super.key,
   });
 
-  final ChatConversationModel conversation;
+  final IsmChatConversationModel conversation;
   final VoidCallback? onTap;
 
   final Widget? Function(BuildContext, String)? profileImageBuilder;
@@ -19,7 +19,7 @@ class IsmChatConversationCard extends StatelessWidget {
   final Widget? Function(BuildContext, String)? subtitleBuilder;
 
   @override
-  Widget build(BuildContext context) => IsmTapHandler(
+  Widget build(BuildContext context) => IsmChatTapHandler(
         onTap: onTap,
         child: SizedBox(
           child: ListTile(
@@ -27,22 +27,58 @@ class IsmChatConversationCard extends StatelessWidget {
             leading: profileImageBuilder?.call(context,
                     conversation.opponentDetails?.userProfileImageUrl ?? '') ??
                 IsmChatImage.profile(
-                  conversation.opponentDetails?.userProfileImageUrl ?? '',
-                  name: conversation.chatName,
+                  conversation.opponentDetails?.metaData?.profilePic
+                              ?.isNotEmpty ==
+                          true
+                      ? conversation.opponentDetails?.metaData?.profilePic ?? ''
+                      : conversation.opponentDetails?.userProfileImageUrl ?? '',
+                  name: conversation.chatName.isNotEmpty
+                      ? conversation.chatName
+                      : conversation.opponentDetails?.userName,
                 ),
             title: nameBuilder?.call(context, conversation.chatName) ??
                 Text(
-                  conversation.chatName,
-                  style: ChatStyles.w600Black14,
+                  conversation.chatName.isNotEmpty
+                      ? conversation.chatName
+                      : conversation.opponentDetails?.userName ?? '',
+                  style: IsmChatStyles.w600Black14,
                 ),
             subtitle: subtitleBuilder?.call(
                     context, conversation.lastMessageDetails?.body ?? '') ??
                 Text(
-                  conversation.lastMessageDetails?.body ?? '',
+                  conversation.lastMessageDetails!.body.contains('maps')
+                      ? 'Location'
+                      : conversation.lastMessageDetails?.body ?? '',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: ChatStyles.w400Black12,
+                  style: IsmChatStyles.w400Black12,
                 ),
+            trailing: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  conversation.lastMessageDetails!.sentAt
+                      .toLastMessageTimeString(),
+                  style: IsmChatStyles.w400Black10,
+                ),
+                if (conversation.unreadMessagesCount != null &&
+                    conversation.unreadMessagesCount != 0)
+                  Container(
+                    height: IsmChatDimens.twenty,
+                    width: IsmChatDimens.twenty,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: IsmChatConfig.chatTheme.primaryColor,
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      conversation.unreadMessagesCount.toString(),
+                      style: IsmChatStyles.w700White10,
+                    ),
+                  )
+              ],
+            ),
           ),
         ),
       );

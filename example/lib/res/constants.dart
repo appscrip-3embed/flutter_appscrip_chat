@@ -13,3 +13,9 @@ class Constants {
   static const String hostname = 'connections.isometrik.io';
   static const int port = 2052;
 }
+
+class AssetConstants {
+  const AssetConstants._();
+
+  static const String noImage = 'assets/images/noperson.png';
+}

@@ -4,10 +4,10 @@ import 'package:get/get.dart';
 class IsmChatConversationsBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(
-      () => IsmChatConversationsController(
-        ChatConversationsViewModel(
-          ChatConversationsRepository(),
+    Get.put(
+      IsmChatConversationsController(
+        IsmChatConversationsViewModel(
+          IsmChatConversationsRepository(),
         ),
       ),
     );

@@ -1,42 +1,89 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-class ChatMetaData {
-  factory ChatMetaData.fromJson(String source) =>
-      ChatMetaData.fromMap(json.decode(source) as Map<String, dynamic>);
 
-  factory ChatMetaData.fromMap(Map<String, dynamic> map) => ChatMetaData(
-        country: map['country'] != null ? map['country'] as String : null,
-      );
-
-  ChatMetaData({
+class IsmChatMetaData {
+  final String? country;
+  final String? parentMessageBody;
+  final String? locationAddress;
+  final String? profilePic;
+  final bool? parentMessageInitiator;
+  IsmChatMetaData({
     this.country,
+    this.parentMessageBody,
+    this.locationAddress,
+    this.profilePic,
+    this.parentMessageInitiator,
   });
 
-  final String? country;
-
-  ChatMetaData copyWith({
+  IsmChatMetaData copyWith({
     String? country,
+    String? parentMessageBody,
+    String? locationAddress,
+    String? profilePic,
+    bool? parentMessageInitiator,
   }) =>
-      ChatMetaData(
+      IsmChatMetaData(
         country: country ?? this.country,
+        parentMessageBody: parentMessageBody ?? this.parentMessageBody,
+        locationAddress: locationAddress ?? this.locationAddress,
+        profilePic: profilePic ?? this.profilePic,
+        parentMessageInitiator:
+            parentMessageInitiator ?? this.parentMessageInitiator,
       );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
-        'country': country,
+        if (country != null || country?.isNotEmpty == true) 'country': country,
+        if (parentMessageBody != null || parentMessageBody?.isNotEmpty == true)
+          'parentMessageBody': parentMessageBody,
+        if (locationAddress != null || locationAddress?.isNotEmpty == true)
+          'locationAddress': locationAddress,
+        if (parentMessageInitiator != null)
+          'parentMessageInitiator': parentMessageInitiator,
+        if (profilePic != null || profilePic?.isNotEmpty == true)
+          'profilePic': profilePic
       };
+
+  factory IsmChatMetaData.fromMap(Map<String, dynamic> map) => IsmChatMetaData(
+        country: map['country'] != null ? map['country'] as String : null,
+        parentMessageBody: map['parentMessageBody'] != null
+            ? map['parentMessageBody'] as String
+            : null,
+        locationAddress: map['locationAddress'] != null
+            ? map['locationAddress'] as String
+            : null,
+        profilePic:
+            map['profilePic'] != null ? map['profilePic'] as String : null,
+        parentMessageInitiator: map['parentMessageInitiator'] != null
+            ? map['parentMessageInitiator'] as bool
+            : null,
+      );
 
   String toJson() => json.encode(toMap());
 
-  @override
-  String toString() => 'MetaData(country: $country)';
+  factory IsmChatMetaData.fromJson(String source) =>
+      IsmChatMetaData.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  bool operator ==(covariant ChatMetaData other) {
+  String toString() =>
+      'IsmChatMetaData(country: $country, parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, profilePic: $profilePic, parentMessageInitiator: $parentMessageInitiator)';
+
+  @override
+  bool operator ==(covariant IsmChatMetaData other) {
     if (identical(this, other)) return true;
 
-    return other.country == country;
+    return other.country == country &&
+        other.parentMessageBody == parentMessageBody &&
+        other.locationAddress == locationAddress &&
+        other.profilePic == profilePic &&
+        other.parentMessageInitiator == parentMessageInitiator;
   }
 
   @override
-  int get hashCode => country.hashCode;
+  int get hashCode =>
+      country.hashCode ^
+      parentMessageBody.hashCode ^
+      locationAddress.hashCode ^
+      profilePic.hashCode ^
+      parentMessageInitiator.hashCode;
 }
