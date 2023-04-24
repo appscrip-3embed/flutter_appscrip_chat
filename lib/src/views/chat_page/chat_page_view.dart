@@ -101,7 +101,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                         ),
                       ),
                     ),
-                    const IsmChatInputField()
+                    const SafeArea(child: IsmChatInputField())
                   ],
                 ),
                 Obx(

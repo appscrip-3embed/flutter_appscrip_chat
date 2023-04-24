@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
@@ -329,12 +328,13 @@ class IsmChatPageController extends GetxController
 
   // TODO: clean this function
   void tapForMediaPreview(IsmChatMessageModel message) async {
-    if (message.customType == IsmChatCustomMessageType.image ||
-        message.customType == IsmChatCustomMessageType.video) {
+    if ([IsmChatCustomMessageType.image, IsmChatCustomMessageType.video]
+        .contains(message.customType)) {
       var mediaList = messages
-          .where((item) =>
-              item.customType == IsmChatCustomMessageType.image ||
-              item.customType == IsmChatCustomMessageType.video)
+          .where((item) => [
+                IsmChatCustomMessageType.image,
+                IsmChatCustomMessageType.video
+              ].contains(message.customType))
           .toList();
       var selectedMediaIndex = mediaList.indexOf(message);
       await Get.to<void>(IsmMediaPreview(
@@ -362,7 +362,6 @@ class IsmChatPageController extends GetxController
           IsmChatLog.error(e);
         }
       }
-
       await OpenFilex.open(localPath);
     }
   }
