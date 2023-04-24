@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:get/get.dart';
 import 'package:mqtt_client/mqtt_client.dart';

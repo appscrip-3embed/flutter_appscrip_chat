@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:objectbox/objectbox.dart';
 
 @Entity()
 class DBConversationModel {

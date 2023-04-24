@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
