@@ -14,7 +14,6 @@ class ChatList extends GetView<ChatListController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: IsmChatApp(
-       
         communicationConfig: IsmChatCommunicationConfig(
           userConfig: IsmChatUserConfig(
             userToken: controller.userDetails?.userToken ?? '',
@@ -38,6 +37,7 @@ class ChatList extends GetView<ChatListController> {
         onChatTap: (_, __) => RouteManagement.goToChatMessages(),
         showCreateChatIcon: true,
         onCreateChatTap: RouteManagement.goToUserList,
+        enableGroupChat: false,
       ),
     );
   }
