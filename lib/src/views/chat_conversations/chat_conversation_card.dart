@@ -24,19 +24,15 @@ class IsmChatConversationCard extends StatelessWidget {
         child: SizedBox(
           child: ListTile(
             dense: true,
-            leading: profileImageBuilder?.call(context,
-                    conversation.opponentDetails?.userProfileImageUrl ?? '') ??
-                IsmChatImage.profile(
-                  conversation.profileUrl,
-                  name: conversation.chatName.isNotEmpty
-                      ? conversation.chatName
-                      : conversation.opponentDetails?.userName,
-                ),
+            leading:
+                profileImageBuilder?.call(context, conversation.profileUrl) ??
+                    IsmChatImage.profile(
+                      conversation.profileUrl,
+                      name: conversation.chatName,
+                    ),
             title: nameBuilder?.call(context, conversation.chatName) ??
                 Text(
-                  conversation.chatName.isNotEmpty
-                      ? conversation.chatName
-                      : conversation.opponentDetails?.userName ?? '',
+                  conversation.chatName,
                   style: IsmChatStyles.w600Black14,
                 ),
             subtitle: subtitleBuilder?.call(

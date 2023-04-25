@@ -3,8 +3,10 @@ part of '../chat_page_controller.dart';
 mixin IsmChatPageSendMessageMixin on GetxController {
   IsmChatPageController get _controller => Get.find<IsmChatPageController>();
 
-  Future<String> createConversation(
-      {required List<String> userId, bool isGroup = false}) async {
+  Future<String> createConversation({
+    required List<String> userId,
+    bool isGroup = false,
+  }) async {
     if (isGroup) {
       userId = _controller.conversation!.userIds ?? [];
     }
@@ -17,7 +19,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       conversationType: 0,
       searchableTags: [' '],
       metaData: <String, dynamic>{},
-      customType: null,
       conversationImageUrl:
           isGroup ? _controller.conversation!.conversationImageUrl ?? '' : '',
       conversationTitle:
@@ -30,8 +31,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       _controller.conversation?.conversationId = conversationId.toString();
       var dbConversationModel = DBConversationModel(
         conversationId: conversationId.toString(),
-        conversationImageUrl: '',
-        conversationTitle: '',
+        conversationImageUrl: _controller.conversation!.conversationImageUrl,
+        conversationTitle: _controller.conversation!.conversationTitle,
         isGroup: false,
         lastMessageSentAt: _controller.conversation?.lastMessageSentAt ?? 0,
         messagingDisabled: _controller.conversation?.messagingDisabled,

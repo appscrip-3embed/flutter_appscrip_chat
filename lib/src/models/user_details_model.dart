@@ -12,7 +12,7 @@ class UserDetails {
         userProfileImageUrl: map['userProfileImageUrl'] as String? ?? '',
         userName: map['userName'] as String? ?? '',
         userIdentifier: map['userIdentifier'] as String? ?? '',
-        userId:  map['userId'] as String? ?? '',
+        userId: map['userId'] as String? ?? '',
         online: map['online'] as bool? ?? false,
         metaData: map['metaData'] == null
             ? IsmChatMetaData()
@@ -54,6 +54,8 @@ class UserDetails {
   final bool? notification;
   final String? language;
   final int? timestamp;
+
+  String get profileUrl => metaData?.profilePic ?? userProfileImageUrl;
 
   UserDetails copyWith({
     String? userProfileImageUrl,

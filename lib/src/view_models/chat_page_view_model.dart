@@ -400,7 +400,6 @@ class IsmChatPageViewModel {
     required int conversationType,
     List<String>? searchableTags,
     Map<String, dynamic>? metaData,
-    String? customType,
     String? conversationTitle,
     String? conversationImageUrl,
   }) async =>

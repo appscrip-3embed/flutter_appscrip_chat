@@ -417,7 +417,6 @@ class IsmChatPageRepository {
       required int conversationType,
       List<String>? searchableTags,
       Map<String, dynamic>? metaData,
-      String? customType,
       String? conversationTitle,
       String? conversationImageUrl}) async {
     try {
@@ -430,7 +429,7 @@ class IsmChatPageRepository {
         'conversationType': conversationType,
         'searchableTags': searchableTags,
         'metaData': metaData,
-        'customType': customType,
+        'customType': null,
         'conversationTitle': conversationTitle,
         'conversationImageUrl': conversationImageUrl
       };
