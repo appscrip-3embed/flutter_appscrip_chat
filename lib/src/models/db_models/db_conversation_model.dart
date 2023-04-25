@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:objectbox/objectbox.dart';
 
 @Entity()
 class DBConversationModel {
@@ -35,7 +34,6 @@ class DBConversationModel {
   final lastMessageDetails = ToOne<LastMessageDetails>();
   bool? isGroup;
   List<String> messages;
-
   String? conversationTitle;
   String? conversationImageUrl;
   String? conversationId;

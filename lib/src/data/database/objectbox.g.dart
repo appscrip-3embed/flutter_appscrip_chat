@@ -28,7 +28,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(1, 329637739332878047),
       name: 'UserDetails',
-      lastPropertyId: const IdUid(10, 1014758314160979593),
+      lastPropertyId: const IdUid(11, 2743344435005786162),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -80,6 +80,11 @@ final _entities = <ModelEntity>[
             id: const IdUid(10, 1014758314160979593),
             name: 'language',
             type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(11, 2743344435005786162),
+            name: 'timestamp',
+            type: 6,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -459,7 +464,7 @@ ModelDefinition getObjectBoxModel() {
           final languageOffset = object.language == null
               ? null
               : fbb.writeString(object.language!);
-          fbb.startTable(11);
+          fbb.startTable(12);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, userProfileImageUrlOffset);
           fbb.addOffset(2, userNameOffset);
@@ -470,6 +475,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addBool(7, object.visibility);
           fbb.addBool(8, object.notification);
           fbb.addOffset(9, languageOffset);
+          fbb.addInt64(10, object.timestamp);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -495,7 +501,8 @@ ModelDefinition getObjectBoxModel() {
                   .vTableGetNullable(buffer, rootOffset, 18),
               notification:
                   const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 20),
-              language: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 22));
+              language: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 22),
+              timestamp: const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 24));
 
           return object;
         }),
@@ -508,12 +515,22 @@ ModelDefinition getObjectBoxModel() {
           object.id = id;
         },
         objectToFB: (AttachmentModel object, fb.Builder fbb) {
-          final thumbnailUrlOffset = fbb.writeString(object.thumbnailUrl);
-          final nameOffset = fbb.writeString(object.name);
-          final mimeTypeOffset = fbb.writeString(object.mimeType);
-          final mediaUrlOffset = fbb.writeString(object.mediaUrl);
-          final mediaIdOffset = fbb.writeString(object.mediaId);
-          final extensionOffset = fbb.writeString(object.extension);
+          final thumbnailUrlOffset = object.thumbnailUrl == null
+              ? null
+              : fbb.writeString(object.thumbnailUrl!);
+          final nameOffset =
+              object.name == null ? null : fbb.writeString(object.name!);
+          final mimeTypeOffset = object.mimeType == null
+              ? null
+              : fbb.writeString(object.mimeType!);
+          final mediaUrlOffset = object.mediaUrl == null
+              ? null
+              : fbb.writeString(object.mediaUrl!);
+          final mediaIdOffset =
+              object.mediaId == null ? null : fbb.writeString(object.mediaId!);
+          final extensionOffset = object.extension == null
+              ? null
+              : fbb.writeString(object.extension!);
           fbb.startTable(11);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, thumbnailUrlOffset);
@@ -534,19 +551,19 @@ ModelDefinition getObjectBoxModel() {
           final object = AttachmentModel(
               id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
               thumbnailUrl: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 6, ''),
-              size:
-                  const fb.Float64Reader().vTableGet(buffer, rootOffset, 18, 0),
+                  .vTableGetNullable(buffer, rootOffset, 6),
+              size: const fb.Float64Reader()
+                  .vTableGetNullable(buffer, rootOffset, 18),
               name: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 8, ''),
+                  .vTableGetNullable(buffer, rootOffset, 8),
               mimeType: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 10, ''),
+                  .vTableGetNullable(buffer, rootOffset, 10),
               mediaUrl: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 12, ''),
+                  .vTableGetNullable(buffer, rootOffset, 12),
               mediaId: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 14, ''),
+                  .vTableGetNullable(buffer, rootOffset, 14),
               extension: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 16, ''))
+                  .vTableGetNullable(buffer, rootOffset, 16))
             ..attachmentIndex = const fb.Int64Reader()
                 .vTableGetNullable(buffer, rootOffset, 20);
 
@@ -821,6 +838,10 @@ class UserDetails_ {
   /// see [UserDetails.language]
   static final language =
       QueryStringProperty<UserDetails>(_entities[0].properties[9]);
+
+  /// see [UserDetails.timestamp]
+  static final timestamp =
+      QueryIntegerProperty<UserDetails>(_entities[0].properties[10]);
 }
 
 /// [AttachmentModel] entity fields to define ObjectBox queries.

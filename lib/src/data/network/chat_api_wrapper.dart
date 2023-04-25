@@ -6,17 +6,17 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class IsmChatApiWrapper {
-  Future<ResponseModel> get(
+  Future<IsmChatResponseModel> get(
     String api, {
     bool showLoader = false,
     required Map<String, String> headers,
   }) async {
     if (kDebugMode) {
-      ChatLog('Request - GET $api');
+      IsmChatLog('Request - GET $api');
     }
     var uri = Uri.parse(api);
     if (showLoader) {
-      ChatUtility.showLoader();
+      IsmChatUtility.showLoader();
     }
     try {
       final response = await http
@@ -24,15 +24,15 @@ class IsmChatApiWrapper {
           .timeout(const Duration(seconds: 60));
 
       if (showLoader) {
-        ChatUtility.closeLoader();
+        IsmChatUtility.closeLoader();
       }
 
       return _processResponse(response);
     } on TimeoutException catch (_) {
       if (showLoader) {
-        ChatUtility.closeLoader();
+        IsmChatUtility.closeLoader();
       }
-      return const ResponseModel(
+      return const IsmChatResponseModel(
         data: '{"message":"Request timed out"}',
         hasError: true,
         errorCode: 1000,
@@ -40,18 +40,18 @@ class IsmChatApiWrapper {
     }
   }
 
-  Future<ResponseModel> post(
+  Future<IsmChatResponseModel> post(
     String api, {
     required dynamic payload,
     required Map<String, String> headers,
     bool showLoader = false,
   }) async {
     if (kDebugMode) {
-      ChatLog('Request - POST $api $payload');
+      IsmChatLog('Request - POST $api $payload');
     }
     var uri = Uri.parse(api);
     if (showLoader) {
-      ChatUtility.showLoader();
+      IsmChatUtility.showLoader();
     }
     try {
       final response = await http
@@ -63,15 +63,15 @@ class IsmChatApiWrapper {
           .timeout(const Duration(seconds: 60));
 
       if (showLoader) {
-        ChatUtility.closeLoader();
+        IsmChatUtility.closeLoader();
       }
 
       return _processResponse(response);
     } on TimeoutException catch (_) {
       if (showLoader) {
-        ChatUtility.closeLoader();
+        IsmChatUtility.closeLoader();
       }
-      return const ResponseModel(
+      return const IsmChatResponseModel(
         data: '{"message":"Request timed out"}',
         hasError: true,
         errorCode: 1000,
@@ -79,38 +79,39 @@ class IsmChatApiWrapper {
     }
   }
 
-  Future<ResponseModel> put(
+  Future<IsmChatResponseModel> put(
     String api, {
     required dynamic payload,
     required Map<String, String> headers,
     bool showLoader = false,
+    bool forAwsUpload = false,
   }) async {
     if (kDebugMode) {
-      ChatLog('Request - PUT $api $payload');
+      IsmChatLog('Request - PUT $api $payload');
     }
     var uri = Uri.parse(api);
     if (showLoader) {
-      ChatUtility.showLoader();
+      IsmChatUtility.showLoader();
     }
     try {
       final response = await http
           .put(
             uri,
-            body: jsonEncode(payload),
+            body: forAwsUpload ? payload : jsonEncode(payload),
             headers: headers,
           )
           .timeout(const Duration(seconds: 60));
 
       if (showLoader) {
-        ChatUtility.closeLoader();
+        IsmChatUtility.closeLoader();
       }
 
       return _processResponse(response);
     } on TimeoutException catch (_) {
       if (showLoader) {
-        ChatUtility.closeLoader();
+        IsmChatUtility.closeLoader();
       }
-      return const ResponseModel(
+      return const IsmChatResponseModel(
         data: '{"message":"Request timed out"}',
         hasError: true,
         errorCode: 1000,
@@ -118,18 +119,18 @@ class IsmChatApiWrapper {
     }
   }
 
-  Future<ResponseModel> patch(
+  Future<IsmChatResponseModel> patch(
     String api, {
     required dynamic payload,
     required Map<String, String> headers,
     bool showLoader = false,
   }) async {
     if (kDebugMode) {
-      ChatLog('Request - PATCH $api $payload');
+      IsmChatLog('Request - PATCH $api $payload');
     }
     var uri = Uri.parse(api);
     if (showLoader) {
-      ChatUtility.showLoader();
+      IsmChatUtility.showLoader();
     }
     try {
       final response = await http
@@ -141,15 +142,15 @@ class IsmChatApiWrapper {
           .timeout(const Duration(seconds: 60));
 
       if (showLoader) {
-        ChatUtility.closeLoader();
+        IsmChatUtility.closeLoader();
       }
 
       return _processResponse(response);
     } on TimeoutException catch (_) {
       if (showLoader) {
-        ChatUtility.closeLoader();
+        IsmChatUtility.closeLoader();
       }
-      return const ResponseModel(
+      return const IsmChatResponseModel(
         data: '{"message":"Request timed out"}',
         hasError: true,
         errorCode: 1000,
@@ -157,18 +158,18 @@ class IsmChatApiWrapper {
     }
   }
 
-  Future<ResponseModel> delete(
+  Future<IsmChatResponseModel> delete(
     String api, {
     required dynamic payload,
     required Map<String, String> headers,
     bool showLoader = false,
   }) async {
     if (kDebugMode) {
-      ChatLog('Request - DELETE $api $payload');
+      IsmChatLog('Request - DELETE $api $payload');
     }
     var uri = Uri.parse(api);
     if (showLoader) {
-      ChatUtility.showLoader();
+      IsmChatUtility.showLoader();
     }
     try {
       final response = await http
@@ -180,15 +181,15 @@ class IsmChatApiWrapper {
           .timeout(const Duration(seconds: 60));
 
       if (showLoader) {
-        ChatUtility.closeLoader();
+        IsmChatUtility.closeLoader();
       }
 
       return _processResponse(response);
     } on TimeoutException catch (_) {
       if (showLoader) {
-        ChatUtility.closeLoader();
+        IsmChatUtility.closeLoader();
       }
-      return const ResponseModel(
+      return const IsmChatResponseModel(
         data: '{"message":"Request timed out"}',
         hasError: true,
         errorCode: 1000,
@@ -196,9 +197,9 @@ class IsmChatApiWrapper {
     }
   }
 
-  ResponseModel _processResponse(http.Response response) {
+  IsmChatResponseModel _processResponse(http.Response response) {
     if (kDebugMode) {
-      ChatLog(
+      IsmChatLog(
           'Response - ${response.request?.method} ${response.statusCode} ${response.request?.url}\n${response.body}');
     }
     switch (response.statusCode) {
@@ -209,7 +210,7 @@ class IsmChatApiWrapper {
       case 204:
       case 205:
       case 208:
-        return ResponseModel(
+        return IsmChatResponseModel(
           data: response.body,
           hasError: false,
           errorCode: response.statusCode,
@@ -224,7 +225,7 @@ class IsmChatApiWrapper {
       case 522:
 
       default:
-        return ResponseModel(
+        return IsmChatResponseModel(
           data: response.body,
           hasError: true,
           errorCode: response.statusCode,

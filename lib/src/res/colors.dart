@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ChatColors {
-  const ChatColors._();
+class IsmChatColors {
+  const IsmChatColors._();
 
   static const Color primaryColorLight = Color(0xFF8F3CF0);
 
@@ -11,9 +11,13 @@ class ChatColors {
 
   static const Color blueColor = Color(0xFF80C3E5);
 
+  static const Color greenColor = Color(0xFF4CBB17);
+
   static const Color whiteColor = Color(0xFFFBFBFB);
 
   static const Color blackColor = Color(0xFF262428);
+
+  static const Color redColor = Color(0xFFF30606);
 
   static const Color textColor = Color(0xFF3D3A41);
 

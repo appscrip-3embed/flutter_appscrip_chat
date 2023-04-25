@@ -1,10 +1,12 @@
-class IsmAssets {
-  const IsmAssets._();
+class IsmChatAssets {
+  const IsmChatAssets._();
 
   static const String _base = 'packages/appscrip_chat_component/assets';
 
   static const String _svgBase = '$_base/svg';
-  static const String _imageBase = '$_base/svg';
+  static const String _imageBase = '$_base/images';
+
+  static const String noImage = '$_imageBase/noperson.png';
 
   static const String pdfSvg = '$_svgBase/pdf.svg';
   static const String txtSvg = '$_svgBase/txt.svg';
@@ -13,6 +15,11 @@ class IsmAssets {
 
 class IsmChatConstants {
   const IsmChatConstants._();
+
+  static const Duration swipeDuration = Duration(milliseconds: 300);
+  static const Duration bottomSheetDuration = Duration(milliseconds: 200);
+
+  static const String mapAPIKey = 'AIzaSyC2YXqs5H8QSfN1NVsZKsP11XLZhfGVGPI';
 
   /// Video Type List For Every Platform
   static List<String> videoExtensions = [

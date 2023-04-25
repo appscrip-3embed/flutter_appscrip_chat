@@ -14,6 +14,5 @@ class Dimens {
   static final Widget boxHeight8 = SizedBox(height: eight);
   static final Widget boxHeight16 = SizedBox(height: sixTeen);
   static final Widget boxHeight32 = SizedBox(height: thirtyTwo);
-
-  static final EdgeInsets egdeInsets16 = EdgeInsets.all(sixTeen);
+  static final EdgeInsets edgeInsets16 = EdgeInsets.all(sixTeen);
 }

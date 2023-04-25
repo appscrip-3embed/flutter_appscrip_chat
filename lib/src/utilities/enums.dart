@@ -1,26 +1,26 @@
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 
-enum MessageType {
+enum IsmChatMessageType {
   normal(0),
   forward(1),
   reply(2),
   admin(3);
 
-  const MessageType(this.value);
+  const IsmChatMessageType(this.value);
 
-  factory MessageType.fromValue(int value) {
+  factory IsmChatMessageType.fromValue(int value) {
     switch (value) {
       case 0:
-        return MessageType.normal;
+        return IsmChatMessageType.normal;
       case 1:
-        return MessageType.forward;
+        return IsmChatMessageType.forward;
       case 2:
-        return MessageType.reply;
+        return IsmChatMessageType.reply;
       case 3:
-        return MessageType.admin;
+        return IsmChatMessageType.admin;
       default:
-        return MessageType.normal;
+        return IsmChatMessageType.normal;
     }
   }
 
@@ -31,7 +31,7 @@ enum MessageType {
       '${name[0].toUpperCase()}${name.substring(1).toLowerCase()}';
 }
 
-enum CustomMessageType {
+enum IsmChatCustomMessageType {
   text(1),
   reply(2),
   forward(3),
@@ -47,100 +47,129 @@ enum CustomMessageType {
   link(13),
   date(100);
 
-  const CustomMessageType(this.value);
+  const IsmChatCustomMessageType(this.value);
 
-  factory CustomMessageType.fromValue(int val) {
+  factory IsmChatCustomMessageType.fromValue(int val) {
     switch (val) {
       case 1:
-        return CustomMessageType.text;
+        return IsmChatCustomMessageType.text;
       case 2:
-        return CustomMessageType.reply;
+        return IsmChatCustomMessageType.reply;
       case 3:
-        return CustomMessageType.forward;
+        return IsmChatCustomMessageType.forward;
       case 4:
-        return CustomMessageType.image;
+        return IsmChatCustomMessageType.image;
       case 5:
-        return CustomMessageType.video;
+        return IsmChatCustomMessageType.video;
       case 6:
-        return CustomMessageType.audio;
+        return IsmChatCustomMessageType.audio;
       case 7:
-        return CustomMessageType.file;
+        return IsmChatCustomMessageType.file;
       case 8:
-        return CustomMessageType.location;
+        return IsmChatCustomMessageType.location;
       case 9:
-        return CustomMessageType.block;
+        return IsmChatCustomMessageType.block;
       case 10:
-        return CustomMessageType.unblock;
+        return IsmChatCustomMessageType.unblock;
       case 11:
-        return CustomMessageType.deletedForMe;
+        return IsmChatCustomMessageType.deletedForMe;
       case 12:
-        return CustomMessageType.deletedForEveryone;
+        return IsmChatCustomMessageType.deletedForEveryone;
       case 13:
-        return CustomMessageType.link;
+        return IsmChatCustomMessageType.link;
       case 100:
-        return CustomMessageType.date;
+        return IsmChatCustomMessageType.date;
       default:
-        return CustomMessageType.text;
+        return IsmChatCustomMessageType.text;
     }
   }
 
-  factory CustomMessageType.fromString(String value) {
-    const map = <String, CustomMessageType>{
-      'text': CustomMessageType.text,
-      'file': CustomMessageType.file,
-      'replyText': CustomMessageType.reply,
-      'reply': CustomMessageType.reply,
-      'image': CustomMessageType.image,
-      'voice': CustomMessageType.audio,
-      'video': CustomMessageType.video,
-      'location': CustomMessageType.location,
-      'block': CustomMessageType.block,
-      'unblock': CustomMessageType.unblock,
+  factory IsmChatCustomMessageType.fromString(String value) {
+    const map = <String, IsmChatCustomMessageType>{
+      'text': IsmChatCustomMessageType.text,
+      'file': IsmChatCustomMessageType.file,
+      'replyText': IsmChatCustomMessageType.reply,
+      'reply': IsmChatCustomMessageType.reply,
+      'image': IsmChatCustomMessageType.image,
+      'audio': IsmChatCustomMessageType.audio,
+      'video': IsmChatCustomMessageType.video,
+      'location': IsmChatCustomMessageType.location,
+      'block': IsmChatCustomMessageType.block,
+      'unblock': IsmChatCustomMessageType.unblock,
     };
 
     var type = value.split('.').last;
-    return map[type] ?? CustomMessageType.text;
+    return map[type] ?? IsmChatCustomMessageType.text;
   }
 
-  factory CustomMessageType.fromMap(dynamic value) {
+  factory IsmChatCustomMessageType.fromMap(dynamic value) {
     if (value.runtimeType != int && value.runtimeType != String) {
-      return CustomMessageType.text;
+      return IsmChatCustomMessageType.text;
     }
     if (value.runtimeType == int) {
-      return CustomMessageType.fromValue(value as int);
+      return IsmChatCustomMessageType.fromValue(value as int);
     } else {
-      return CustomMessageType.fromString(value as String);
+      return IsmChatCustomMessageType.fromString(value as String);
     }
   }
 
-  factory CustomMessageType.withBody(String body) {
+  factory IsmChatCustomMessageType.withBody(String body) {
     if (body.isEmpty) {
-      return CustomMessageType.text;
+      return IsmChatCustomMessageType.text;
     }
     if (body.toLowerCase().contains('map')) {
-      return CustomMessageType.location;
+      return IsmChatCustomMessageType.location;
     }
     if (IsmChatConstants.imageExtensions
         .any((e) => body.toLowerCase().endsWith(e.toLowerCase()))) {
-      return CustomMessageType.image;
+      return IsmChatCustomMessageType.image;
     }
     if (IsmChatConstants.videoExtensions
         .any((e) => body.toLowerCase().endsWith(e.toLowerCase()))) {
-      return CustomMessageType.video;
+      return IsmChatCustomMessageType.video;
     }
     if (IsmChatConstants.audioExtensions
         .any((e) => body.toLowerCase().endsWith(e.toLowerCase()))) {
-      return CustomMessageType.audio;
+      return IsmChatCustomMessageType.audio;
     }
     if (IsmChatConstants.fileExtensions
         .any((e) => body.toLowerCase().endsWith(e.toLowerCase()))) {
-      return CustomMessageType.file;
+      return IsmChatCustomMessageType.file;
     }
     if (AnyLinkPreview.isValidLink(body) ||
         body.toLowerCase().contains('.com')) {
-      return CustomMessageType.link;
+      return IsmChatCustomMessageType.link;
     }
-    return CustomMessageType.text;
+    return IsmChatCustomMessageType.text;
+  }
+
+  static IsmChatCustomMessageType? fromAction(String value) {
+    var action = IsmChatActionEvents.fromName(value);
+
+    switch (action) {
+      case IsmChatActionEvents.typingEvent:
+        return null;
+      case IsmChatActionEvents.conversationCreated:
+        return null;
+      case IsmChatActionEvents.messageDelivered:
+        return null;
+      case IsmChatActionEvents.messageRead:
+        return null;
+      case IsmChatActionEvents.messagesDeleteForAll:
+        return null;
+      case IsmChatActionEvents.multipleMessagesRead:
+        return null;
+      case IsmChatActionEvents.clearConversation:
+        return null;
+      case IsmChatActionEvents.userBlock:
+        return IsmChatCustomMessageType.block;
+      case IsmChatActionEvents.userBlockConversation:
+        return IsmChatCustomMessageType.block;
+      case IsmChatActionEvents.userUnblock:
+        return IsmChatCustomMessageType.unblock;
+      case IsmChatActionEvents.userUnblockConversation:
+        return IsmChatCustomMessageType.unblock;
+    }
   }
 
   final int value;
@@ -150,7 +179,7 @@ enum CustomMessageType {
       '${name[0].toUpperCase()}${name.substring(1).toLowerCase()}';
 }
 
-enum ChatConnectionState {
+enum IsmChatConnectionState {
   connected,
   disconnected,
   connecting,
@@ -162,34 +191,34 @@ enum ChatConnectionState {
       '${name[0].toUpperCase()}${name.substring(1).toLowerCase()}';
 }
 
-enum MessageStatus {
+enum IsmChatMessageStatus {
   pending(0),
   sent(1),
   delivered(2),
   read(3);
 
-  const MessageStatus(this.value);
+  const IsmChatMessageStatus(this.value);
 
   final int value;
 }
 
-enum ConversationType {
+enum IsmChatConversationType {
   private(0),
   public(1),
   open(2);
 
-  const ConversationType(this.value);
+  const IsmChatConversationType(this.value);
 
-  factory ConversationType.fromValue(int value) {
+  factory IsmChatConversationType.fromValue(int value) {
     switch (value) {
       case 0:
-        return ConversationType.private;
+        return IsmChatConversationType.private;
       case 1:
-        return ConversationType.public;
+        return IsmChatConversationType.public;
       case 2:
-        return ConversationType.open;
+        return IsmChatConversationType.open;
       default:
-        return ConversationType.public;
+        return IsmChatConversationType.public;
     }
   }
 
@@ -200,28 +229,109 @@ enum ConversationType {
       '${name[0].toUpperCase()}${name.substring(1).toLowerCase()}';
 }
 
-enum AttachmentType {
+enum IsmChatAttachmentType {
   image(0),
   video(1),
   audio(2),
   file(3);
 
-  const AttachmentType(this.value);
+  const IsmChatAttachmentType(this.value);
 
-  factory AttachmentType.fromMap(int value) {
+  factory IsmChatAttachmentType.fromMap(int value) {
     switch (value) {
       case 0:
-        return AttachmentType.image;
+        return IsmChatAttachmentType.image;
       case 1:
-        return AttachmentType.video;
+        return IsmChatAttachmentType.video;
       case 2:
-        return AttachmentType.audio;
+        return IsmChatAttachmentType.audio;
       case 3:
-        return AttachmentType.file;
+        return IsmChatAttachmentType.file;
       default:
-        return AttachmentType.image;
+        return IsmChatAttachmentType.image;
     }
   }
 
   final int value;
+}
+
+enum IsmChatActionEvents {
+  typingEvent,
+  conversationCreated,
+  messageDelivered,
+  messageRead,
+  messagesDeleteForAll,
+  multipleMessagesRead,
+  userBlock,
+  userBlockConversation,
+  userUnblock,
+  userUnblockConversation,
+  clearConversation;
+
+  factory IsmChatActionEvents.fromName(String name) {
+    switch (name) {
+      case 'typingEvent':
+        return IsmChatActionEvents.typingEvent;
+      case 'conversationCreated':
+        return IsmChatActionEvents.conversationCreated;
+      case 'messageDelivered':
+        return IsmChatActionEvents.messageDelivered;
+      case 'messageRead':
+        return IsmChatActionEvents.messageRead;
+      case 'messagesDeleteForAll':
+        return IsmChatActionEvents.messagesDeleteForAll;
+      case 'multipleMessagesRead':
+        return IsmChatActionEvents.multipleMessagesRead;
+      case 'userBlock':
+        return IsmChatActionEvents.userBlock;
+      case 'userBlockConversation':
+        return IsmChatActionEvents.userBlockConversation;
+      case 'userUnblock':
+        return IsmChatActionEvents.userUnblock;
+      case 'userUnblockConversation':
+        return IsmChatActionEvents.userUnblockConversation;
+      case 'clearConversation':
+        return IsmChatActionEvents.clearConversation;
+      default:
+        return IsmChatActionEvents.typingEvent;
+    }
+  }
+}
+
+enum SendMessageType {
+  pendingMessage,
+  forwardMessage,
+}
+
+enum ApiCallOrigin {
+  referesh,
+  loadMore,
+}
+
+enum IsmChatFocusMenuType {
+  info,
+  reply,
+  forward,
+  copy,
+  delete,
+  selectMessage;
+
+  @override
+  String toString() => this == IsmChatFocusMenuType.selectMessage
+      ? 'Select Message'
+      : '${name[0].toUpperCase()}${name.substring(1).toLowerCase()}';
+}
+
+enum IsmChatSheetAttachmentType {
+  camera(1),
+  gallery(2),
+  document(3),
+  location(4);
+
+  const IsmChatSheetAttachmentType(this.value);
+  final int value;
+
+  @override
+  String toString() =>
+      '${name[0].toUpperCase()}${name.substring(1).toLowerCase()}';
 }

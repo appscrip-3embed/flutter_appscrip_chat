@@ -6,8 +6,8 @@ class IsmChatPageBinding implements Bindings {
   void dependencies() {
     Get.lazyPut<IsmChatPageController>(
       () => IsmChatPageController(
-        ChatPageViewModel(
-          ChatPageRepository(),
+        IsmChatPageViewModel(
+          IsmChatPageRepository(),
         ),
       ),
     );

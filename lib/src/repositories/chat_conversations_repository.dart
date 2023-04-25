@@ -1,28 +1,62 @@
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:flutter/services.dart';
 
-class ChatConversationsRepository {
+class IsmChatConversationsRepository {
   final _apiWrapper = IsmChatApiWrapper();
 
-  Future<List<ChatConversationModel>?> getChatConversations({
+  Future<IsmChatUserListModel?> getUserList({
+    String? pageToken,
+    int? count,
+  }) async {
+    try {
+      String? url;
+      if (pageToken?.isNotEmpty ?? false) {
+        url = '${IsmChatAPI.allUsers}?pageToken=$pageToken&count=$count';
+      } else {
+        url = IsmChatAPI.allUsers;
+      }
+      var response = await _apiWrapper.get(
+        url,
+        headers: IsmChatUtility.commonHeader(),
+      );
+      if (response.hasError) {
+        return null;
+      }
+      var data = jsonDecode(response.data) as Map<String, dynamic>;
+      var user = IsmChatUserListModel.fromMap(data);
+      return user;
+    } catch (e, st) {
+      IsmChatLog.error('GetChatConversations $e', st);
+      return null;
+    }
+  }
+
+  Future<List<IsmChatConversationModel>?> getChatConversations({
     required int skip,
     required int limit,
   }) async {
     try {
       var response = await _apiWrapper.get(
         '${IsmChatAPI.getChatConversations}?skip=$skip&limit=$limit',
-        headers: ChatUtility.tokenCommonHeader(),
+        headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
         return null;
       }
       var data = jsonDecode(response.data);
-      return (data['conversations'] as List)
-          .map((e) => ChatConversationModel.fromMap(e as Map<String, dynamic>))
+      var listData = (data['conversations'] as List)
+          .map((e) =>
+              IsmChatConversationModel.fromMap(e as Map<String, dynamic>))
           .toList();
+      listData.sort(
+        (a, b) => a.lastMessageDetails!.sentAt
+            .compareTo(b.lastMessageDetails!.sentAt),
+      );
+      return listData;
     } catch (e, st) {
-      ChatLog.error('GetChatConversations $e', st);
+      IsmChatLog.error('GetChatConversations $e', st);
       return null;
     }
   }
@@ -31,23 +65,59 @@ class ChatConversationsRepository {
     try {
       var response = await _apiWrapper.get(
         IsmChatAPI.userDetails,
-        headers: ChatUtility.tokenCommonHeader(),
+        headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
         return null;
       }
+
       var data = jsonDecode(response.data) as Map<String, dynamic>;
       var user = UserDetails.fromMap(data);
-      ChatLog(user);
       IsmChatConfig.objectBox.userDetailsBox.put(user);
       return user;
     } catch (e, st) {
-      ChatLog.error('GetChatConversations $e', st);
+      IsmChatLog.error('GetChatConversations $e', st);
       return null;
     }
   }
 
-  Future<void> updateDeliveredMessage({
+  Future<IsmChatResponseModel?> deleteChat(String conversationId) async {
+    try {
+      var response = await _apiWrapper.delete(
+        '${IsmChatAPI.chatConversationDelete}?conversationId=$conversationId',
+        payload: null,
+        headers: IsmChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return null;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Delete chat $e', st);
+      return null;
+    }
+  }
+
+  Future<IsmChatResponseModel?> clearAllMessages({
+    required String conversationId,
+  }) async {
+    try {
+      var response = await _apiWrapper.delete(
+        '${IsmChatAPI.chatConversationClear}?conversationId=$conversationId',
+        payload: null,
+        headers: IsmChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return response;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Clear chat $e', st);
+      return null;
+    }
+  }
+
+  Future<void> pingMessageDelivered({
     required String conversationId,
     required String messageId,
   }) async {
@@ -56,52 +126,78 @@ class ChatConversationsRepository {
       var response = await _apiWrapper.put(
         IsmChatAPI.deliveredIndicator,
         payload: payload,
-        headers: ChatUtility.tokenCommonHeader(),
+        headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
         return;
       }
     } catch (e, st) {
-      ChatLog.error('Delivery Message $e', st);
+      IsmChatLog.error('Delivery Message $e', st);
     }
   }
 
-  Future<void> createConversation(
-      {required bool typingEvents,
-      required bool readEvents,
-      required bool pushNotifications,
-      required List<String> members,
-      required bool isGroup,
-      required int conversationType,
-      List<String>? searchableTags,
-      Map<String, dynamic>? metaData,
-      String? customType,
-      String? conversationTitle,
-      String? conversationImageUrl}) async {
+  Future<IsmChatUserListModel?> getBlockUser(
+      {required int? skip, required int limit}) async {
     try {
-      var payload = {
-        'typingEvents': typingEvents,
-        'readEvents': readEvents,
-        'pushNotifications': pushNotifications,
-        'members': members,
-        'isGroup': isGroup,
-        'conversationType': conversationType,
-        'searchableTags': searchableTags,
-        'metaData': metaData,
-        'customType': customType,
-        'conversationTitle': conversationTitle,
-        'conversationImageUrl': conversationImageUrl
-      };
-      var response = await _apiWrapper.post(
-        IsmChatAPI.chatConversation,
-        payload: payload,
-        headers: ChatUtility.tokenCommonHeader(),
+      var response = await _apiWrapper.get(
+        '${IsmChatAPI.blockUser}?skip=$skip&limit=$limit',
+        headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
-        return;
+        return null;
       }
+      var data = jsonDecode(response.data) as Map<String, dynamic>;
+      var user = IsmChatUserListModel.fromMap(data);
+      return user;
     } catch (e, st) {
-      ChatLog.error('Create converstaion $e', st);
+      IsmChatLog.error('GetChat Block users $e', st);
+      return null;
+    }
+  }
+
+  // get Api for Presigned Url.....
+  Future<PresignedUrlModel?> getPresignedUrl({
+    required bool isLoading,
+    required String userIdentifier,
+    required String mediaExtension,
+  }) async {
+    try {
+      var response = await _apiWrapper.get(
+        '${IsmChatAPI.createPresignedurl}?userIdentifier=$userIdentifier&mediaExtension=$mediaExtension',
+        headers: IsmChatUtility.commonHeader(),
+        showLoader: isLoading,
+      );
+      if (response.hasError) {
+        return null;
+      }
+      var data = jsonDecode(response.data);
+      return PresignedUrlModel.fromMap(data as Map<String, dynamic>);
+    } catch (e) {
+      return null;
+    }
+  }
+
+// update for Presigned Url.....
+  Future<IsmChatResponseModel?> updatePresignedUrl({
+    required bool isLoading,
+    required String presignedUrl,
+    required Uint8List file,
+  }) async {
+    try {
+      var response = await _apiWrapper.put(
+        presignedUrl,
+        payload: file,
+        headers: {},
+        forAwsUpload: true,
+        showLoader: isLoading,
+      );
+
+      if (response.hasError) {
+        return response;
+      }
+      return response;
+    } catch (e) {
+      return null;
     }
   }
 }

@@ -1,27 +1,33 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/data/database/objectbox.g.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
-class ChatPageViewModel {
-  ChatPageViewModel(this._repository);
+class IsmChatPageViewModel {
+  IsmChatPageViewModel(this._repository);
 
-  final ChatPageRepository _repository;
+  final IsmChatPageRepository _repository;
   var messageSkip = 0;
   var messageLimit = 20;
-  Future<List<ChatMessageModel>?> getChatMessages({
+  Future<List<IsmChatMessageModel>?> getChatMessages({
     required String conversationId,
     required int lastMessageTimestamp,
+    int? pagination,
   }) async {
     var messages = await _repository.getChatMessages(
       conversationId: conversationId,
       lastMessageTimestamp: lastMessageTimestamp,
       limit: messageLimit,
-      skip: messageSkip,
+      skip: pagination ?? messageSkip,
     );
 
     if (messages == null) {
       return null;
     }
 
+    messages.removeWhere((e) => [
+          IsmChatActionEvents.clearConversation.name,
+          IsmChatActionEvents.conversationCreated.name
+        ].contains(e.action));
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
     var conversation = conversationBox
         .query(
@@ -31,13 +37,23 @@ class ChatPageViewModel {
         .findUnique();
 
     if (conversation != null) {
-      conversation.messages = messages.map((e) => e.toJson()).toList();
+      conversation.messages.addAll(messages.map((e) => e.toJson()).toList());
       conversationBox.put(
         conversation,
       );
     }
 
     return messages;
+  }
+
+  Future<int?> updatePresignedUrl(
+      {String? presignedUrl, Uint8List? bytes}) async {
+    var respone = await _repository.updatePresignedUrl(
+        presignedUrl: presignedUrl, bytes: bytes);
+    if (!respone!.hasError) {
+      return respone.errorCode;
+    }
+    return null;
   }
 
   Future<bool> sendMessage({
@@ -48,9 +64,11 @@ class ChatPageViewModel {
     required String conversationId,
     required String body,
     required int createdAt,
-    required ChatMessageModel messageModel,
+    required String notificationBody,
+    required String notificationTitle,
+    SendMessageType sendMessageType = SendMessageType.pendingMessage,
     String? parentMessageId,
-    Map<String, dynamic>? metaData,
+    IsmChatMetaData? metaData,
     List<Map<String, dynamic>>? mentionedUsers,
     Map<String, dynamic>? events,
     String? customType,
@@ -59,71 +77,114 @@ class ChatPageViewModel {
     try {
       var messageId = await _repository.sendMessage(
         showInConversation: showInConversation,
+        attachments: attachments,
+        events: events,
+        mentionedUsers: mentionedUsers,
+        metaData: metaData,
         messageType: messageType,
+        customType: customType,
+        parentMessageId: parentMessageId,
         encrypted: encrypted,
         deviceId: deviceId,
         conversationId: conversationId,
+        notificationBody: notificationBody,
+        notificationTitle: notificationTitle,
         body: body,
       );
       if (messageId == null || messageId.isEmpty) {
         return false;
       }
-      var pendingMessgeBox = IsmChatConfig.objectBox.pendingMessageBox;
-      var chatConversationBox = IsmChatConfig.objectBox.chatConversationBox;
-      final pendingQuery = pendingMessgeBox
-          .query(PendingMessageModel_.conversationId.equals(conversationId))
-          .build();
-      final chatPendingMessages = pendingQuery.findUnique();
-      if (chatPendingMessages == null) {
-        return false;
-      }
-
-      for (var x = 0; x < chatPendingMessages.messages.length; x++) {
-        var pendingMessage =
-            ChatMessageModel.fromJson(chatPendingMessages.messages[x]);
-        if (pendingMessage.messageId!.isNotEmpty ||
-            pendingMessage.sentAt != createdAt) {
-          continue;
-        }
-
-        messageModel.messageId = messageId;
-        messageModel.deliveredToAll = false;
-        chatPendingMessages.messages.removeAt(x);
-        pendingMessgeBox.put(chatPendingMessages);
-
-        if (chatPendingMessages.messages.isEmpty) {
-          pendingMessgeBox.remove(chatPendingMessages.id);
-        }
-
-        final query = chatConversationBox
-            .query(DBConversationModel_.conversationId.equals(conversationId))
+      if (sendMessageType == SendMessageType.pendingMessage) {
+        var pendingMessgeBox = IsmChatConfig.objectBox.pendingMessageBox;
+        var chatConversationBox = IsmChatConfig.objectBox.chatConversationBox;
+        final pendingQuery = pendingMessgeBox
+            .query(PendingMessageModel_.conversationId.equals(conversationId))
             .build();
-        final conversationModel = query.findUnique();
-        if (conversationModel != null) {
-          conversationModel.messages.add(messageModel.toJson());
+        final chatPendingMessages = pendingQuery.findUnique();
+        if (chatPendingMessages == null) {
+          return false;
         }
+        for (var x = 0; x < chatPendingMessages.messages.length; x++) {
+          var pendingMessage =
+              IsmChatMessageModel.fromJson(chatPendingMessages.messages[x]);
+          if (pendingMessage.messageId!.isNotEmpty ||
+              pendingMessage.sentAt != createdAt) {
+            continue;
+          }
+          pendingMessage.messageId = messageId;
+          pendingMessage.deliveredToAll = false;
+          chatPendingMessages.messages.removeAt(x);
+          pendingMessgeBox.put(chatPendingMessages);
 
-        chatConversationBox.put(conversationModel!, mode: PutMode.update);
-        return true;
+          if (chatPendingMessages.messages.isEmpty) {
+            pendingMessgeBox.remove(chatPendingMessages.id);
+          }
+
+          final query = chatConversationBox
+              .query(DBConversationModel_.conversationId.equals(conversationId))
+              .build();
+          final conversationModel = query.findUnique();
+          if (conversationModel != null) {
+            conversationModel.messages.add(pendingMessage.toJson());
+          }
+          chatConversationBox.put(conversationModel!, mode: PutMode.update);
+          return true;
+        }
+      } else {
+        var forwardMessgeBox = IsmChatConfig.objectBox.forwardMessageBox;
+        var chatConversationBox = IsmChatConfig.objectBox.chatConversationBox;
+        final chatForwardMessages = forwardMessgeBox
+            .query(ForwardMessageModel_.conversationId.equals(conversationId))
+            .build()
+            .findUnique();
+
+        if (chatForwardMessages == null) {
+          return false;
+        }
+        for (var x = 0; x < chatForwardMessages.messages.length; x++) {
+          var pendingMessage =
+              IsmChatMessageModel.fromJson(chatForwardMessages.messages[x]);
+          if (pendingMessage.messageId!.isNotEmpty ||
+              pendingMessage.sentAt != createdAt) {
+            continue;
+          }
+          pendingMessage.messageId = messageId;
+          pendingMessage.deliveredToAll = false;
+          chatForwardMessages.messages.removeAt(x);
+          forwardMessgeBox.put(chatForwardMessages);
+          if (chatForwardMessages.messages.isEmpty) {
+            forwardMessgeBox.remove(chatForwardMessages.id);
+          }
+
+          final query = chatConversationBox
+              .query(DBConversationModel_.conversationId.equals(conversationId))
+              .build();
+          final conversationModel = query.findUnique();
+          if (conversationModel != null) {
+            conversationModel.messages.add(pendingMessage.toJson());
+          }
+          chatConversationBox.put(conversationModel!, mode: PutMode.update);
+          return true;
+        }
       }
       return false;
     } catch (e, st) {
-      ChatLog.error(e, st);
+      IsmChatLog.error(e, st);
       return false;
     }
   }
 
-  List<ChatMessageModel> sortMessages(List<ChatMessageModel> messages) {
+  List<IsmChatMessageModel> sortMessages(List<IsmChatMessageModel> messages) {
     messages.sort((a, b) => a.sentAt.compareTo(b.sentAt));
     return _parseMessagesWithDate(messages);
   }
 
-  List<ChatMessageModel> _parseMessagesWithDate(
-    List<ChatMessageModel> messages,
+  List<IsmChatMessageModel> _parseMessagesWithDate(
+    List<IsmChatMessageModel> messages,
   ) {
-    var result = <List<ChatMessageModel>>[];
-    var list1 = <ChatMessageModel>[];
-    var allMessages = <ChatMessageModel>[];
+    var result = <List<IsmChatMessageModel>>[];
+    var list1 = <IsmChatMessageModel>[];
+    var allMessages = <IsmChatMessageModel>[];
     for (var x = 0; x < messages.length; x++) {
       if (x == 0) {
         list1.add(messages[x]);
@@ -142,7 +203,7 @@ class ChatPageViewModel {
 
     for (var messages in result) {
       allMessages.add(
-        ChatMessageModel.fromDate(
+        IsmChatMessageModel.fromDate(
           messages.first.sentAt,
         ),
       );
@@ -151,52 +212,64 @@ class ChatPageViewModel {
     return allMessages;
   }
 
-  ChatMessageModel getMessageByid({
-    required String parentId,
-    required List<ChatMessageModel> data,
-  }) =>
-      data.firstWhere((e) => e.messageId == parentId);
-
-  Future<void> updateMessageRead({
+  Future<void> readMessage({
     required String conversationId,
     required String messageId,
   }) async =>
-      await _repository.updateMessageRead(
+      await _repository.readMessage(
         conversationId: conversationId,
         messageId: messageId,
       );
 
-  Future<void> ismTypingIndicator({required String conversationId}) async =>
-      await _repository.updateTypingIndicator(
+  Future<void> notifyTyping({required String conversationId}) async =>
+      await _repository.notifyTyping(
         conversationId: conversationId,
       );
 
-  Future<void> getChatUserDetails({
+  Future<IsmChatConversationModel?> getConverstaionDetails({
     required String conversationId,
     String? ids,
     bool? includeMembers,
     int? membersSkip,
     int? membersLimit,
   }) async =>
-      await _repository.getChatUserDetails(
+      await _repository.getConverstaionDetails(
         conversationId: conversationId,
       );
 
-  Future<void> blockUser({
-    required String opponentId,
-  }) async =>
-      await _repository.blockUser(
-        opponentId: opponentId,
-      );
+  Future<List<IsmChatMessageModel>?> blockUser(
+      {required String opponentId,
+      required int lastMessageTimeStamp,
+      required String conversationId}) async {
+    var response = await _repository.blockUser(
+      opponentId: opponentId,
+    );
+    if (!response!.hasError) {
+      var responseMessage = await getChatMessages(
+          conversationId: conversationId,
+          lastMessageTimestamp: lastMessageTimeStamp);
+      return responseMessage;
+    }
+    return null;
+  }
 
-  Future<void> unblockUser({
-    required String opponentId,
-  }) async =>
-      await _repository.unblockUser(
-        opponentId: opponentId,
-      );
+  Future<List<IsmChatMessageModel>?> unblockUser(
+      {required String opponentId,
+      required int lastMessageTimeStamp,
+      required String conversationId}) async {
+    var response = await _repository.unblockUser(
+      opponentId: opponentId,
+    );
+    if (!response!.hasError) {
+      var responseMessage = await getChatMessages(
+          conversationId: conversationId,
+          lastMessageTimestamp: lastMessageTimeStamp);
+      return responseMessage;
+    }
+    return null;
+  }
 
-  Future<void> postMediaUrl({
+  Future<List<PresignedUrlModel>?> postMediaUrl({
     required String conversationId,
     required String nameWithExtension,
     required int mediaType,
@@ -209,55 +282,94 @@ class ChatPageViewModel {
         mediaId: mediaId,
       );
 
-  Future<void> readMessage({
+  Future<void> readSingleMessage({
     required String conversationId,
     required String messageId,
   }) async =>
-      await _repository.readMessage(
+      await _repository.readSingleMessage(
         conversationId: conversationId,
         messageId: messageId,
       );
 
-  Future<void> getMessageDelivered({
+  Future<List<UserDetails>?> getMessageDeliverTime({
     required String conversationId,
     required String messageId,
   }) async =>
-      await _repository.getMessageDelivered(
+      await _repository.getMessageDeliverTime(
         conversationId: conversationId,
         messageId: messageId,
       );
 
-  Future<void> deleteMessageForMe({
+  Future<List<UserDetails>?> getMessageReadTime({
     required String conversationId,
-    required String messageIds,
+    required String messageId,
   }) async =>
-      await _repository.deleteMessageForMe(
+      await _repository.getMessageReadTime(
         conversationId: conversationId,
-        messageIds: messageIds,
+        messageId: messageId,
       );
 
-  Future<void> deleteMessageForEveryone({
-    required String conversationId,
-    required String messageIds,
-  }) async =>
-      await _repository.deleteMessageForEveryone(
+  Future<void> deleteMessageForMe(
+    List<IsmChatMessageModel> messages,
+  ) async {
+    var conversationId = messages.first.conversationId!;
+    var myMessages = messages.where((m) => m.sentByMe).toList();
+    if (myMessages.isNotEmpty) {
+      var response = await _repository.deleteMessageForMe(
         conversationId: conversationId,
-        messageIds: messageIds,
+        messageIds: myMessages.map((e) => e.messageId).join(','),
       );
+      if (response == null || response.hasError) {
+        return;
+      }
+    }
+    var allMessages = await IsmChatConfig.objectBox.getMessages(conversationId);
+    if (allMessages == null) {
+      return;
+    }
 
-  Future<void> clearChat({
-    required String conversationId,
-  }) async =>
-      await _repository.clearChat(
-        conversationId: conversationId,
-      );
+    for (var x in messages) {
+      allMessages.removeWhere((e) => e.messageId == x.messageId);
+    }
 
-  Future<void> deleteChat({
+    await IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
+    await Get.find<IsmChatPageController>().getMessagesFromDB(conversationId);
+  }
+
+  Future<void> deleteMessageForEveryone(
+    List<IsmChatMessageModel> messages,
+  ) async {
+    var conversationId = messages.first.conversationId!;
+    var response = await _repository.deleteMessageForEveryone(
+      conversationId: conversationId,
+      messages: messages.map((e) => e.messageId).join(','),
+    );
+    if (response == null || response.hasError) {
+      return;
+    }
+    var allMessages = await IsmChatConfig.objectBox.getMessages(conversationId);
+    if (allMessages == null) {
+      return;
+    }
+
+    for (var x in messages) {
+      allMessages.removeWhere((e) => e.messageId == x.messageId);
+    }
+    await IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
+    await Get.find<IsmChatPageController>().getMessagesFromDB(conversationId);
+  }
+
+  Future<void> clearAllMessages({
     required String conversationId,
-  }) async =>
-      await _repository.deleteChat(
-        conversationId: conversationId,
-      );
+  }) async {
+    var response = await _repository.clearAllMessages(
+      conversationId: conversationId,
+    );
+    if (!response!.hasError) {
+      await IsmChatConfig.objectBox
+          .clearAllMessage(conversationId: conversationId);
+    }
+  }
 
   Future<void> readAllMessages({
     required String conversationId,
@@ -268,14 +380,54 @@ class ChatPageViewModel {
         timestamp: timestamp,
       );
 
-  Future<void> googleApi({
+  Future<List<IsmChatPrediction>?> getLocation({
     required String latitude,
     required String longitude,
     required String searchKeyword,
   }) async =>
-      await _repository.googleApi(
+      await _repository.getLocation(
         latitude: latitude,
         longitude: longitude,
-        searchKeyword: searchKeyword,
+        query: searchKeyword,
       );
+
+  Future<IsmChatResponseModel?> createConversation({
+    required bool typingEvents,
+    required bool readEvents,
+    required bool pushNotifications,
+    required List<String> members,
+    required bool isGroup,
+    required int conversationType,
+    List<String>? searchableTags,
+    Map<String, dynamic>? metaData,
+    String? customType,
+    String? conversationTitle,
+    String? conversationImageUrl,
+  }) async =>
+      await _repository.createConversation(
+          typingEvents: typingEvents,
+          readEvents: readEvents,
+          pushNotifications: pushNotifications,
+          members: members,
+          isGroup: isGroup,
+          conversationType: conversationType,
+          conversationImageUrl: conversationImageUrl,
+          conversationTitle: conversationTitle);
+
+  Map<String, int> generateIndexedMessageList(
+      List<IsmChatMessageModel> messages) {
+    var indexedMap = <String, int>{};
+    var i = 0;
+    for (var x in messages) {
+      if (![
+        IsmChatCustomMessageType.date,
+        IsmChatCustomMessageType.block,
+        IsmChatCustomMessageType.unblock,
+      ].contains(x.customType)) {
+        indexedMap[x.messageId!] = i;
+      }
+      i++;
+    }
+    return indexedMap;
+  }
 }

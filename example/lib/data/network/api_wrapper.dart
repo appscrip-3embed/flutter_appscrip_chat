@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 class ApiWrapper {
   const ApiWrapper._();
 
-  static Future<ResponseModel> get(
+  static Future<IsmChatResponseModel> get(
     String api, {
     bool showLoader = false,
     required Map<String, String> headers,
@@ -35,7 +35,7 @@ class ApiWrapper {
       if (showLoader) {
         Utility.closeLoader();
       }
-      return const ResponseModel(
+      return const IsmChatResponseModel(
         data: '{"message":"Request timed out"}',
         hasError: true,
         errorCode: 1000,
@@ -43,7 +43,7 @@ class ApiWrapper {
     }
   }
 
-  static Future<ResponseModel> post(
+  static Future<IsmChatResponseModel> post(
     String api, {
     required dynamic payload,
     required Map<String, String> headers,
@@ -74,7 +74,7 @@ class ApiWrapper {
       if (showLoader) {
         Utility.closeLoader();
       }
-      return const ResponseModel(
+      return const IsmChatResponseModel(
         data: '{"message":"Request timed out"}',
         hasError: true,
         errorCode: 1000,
@@ -82,11 +82,12 @@ class ApiWrapper {
     }
   }
 
-  static Future<ResponseModel> put(
+  static Future<IsmChatResponseModel> put(
     String api, {
     required dynamic payload,
     required Map<String, String> headers,
     bool showLoader = false,
+    bool forAwsApi = false,
   }) async {
     if (kDebugMode) {
       AppLog('Request - PUT $api $payload');
@@ -99,7 +100,7 @@ class ApiWrapper {
       final response = await http
           .put(
             uri,
-            body: jsonEncode(payload),
+            body: forAwsApi ? payload : jsonEncode(payload),
             headers: headers,
           )
           .timeout(const Duration(seconds: 60));
@@ -113,7 +114,7 @@ class ApiWrapper {
       if (showLoader) {
         Utility.closeLoader();
       }
-      return const ResponseModel(
+      return const IsmChatResponseModel(
         data: '{"message":"Request timed out"}',
         hasError: true,
         errorCode: 1000,
@@ -121,7 +122,7 @@ class ApiWrapper {
     }
   }
 
-  static Future<ResponseModel> patch(
+  static Future<IsmChatResponseModel> patch(
     String api, {
     required dynamic payload,
     required Map<String, String> headers,
@@ -152,7 +153,7 @@ class ApiWrapper {
       if (showLoader) {
         Utility.closeLoader();
       }
-      return const ResponseModel(
+      return const IsmChatResponseModel(
         data: '{"message":"Request timed out"}',
         hasError: true,
         errorCode: 1000,
@@ -160,7 +161,7 @@ class ApiWrapper {
     }
   }
 
-  static Future<ResponseModel> delete(
+  static Future<IsmChatResponseModel> delete(
     String api, {
     required dynamic payload,
     required Map<String, String> headers,
@@ -191,7 +192,7 @@ class ApiWrapper {
       if (showLoader) {
         Utility.closeLoader();
       }
-      return const ResponseModel(
+      return const IsmChatResponseModel(
         data: '{"message":"Request timed out"}',
         hasError: true,
         errorCode: 1000,
@@ -199,7 +200,7 @@ class ApiWrapper {
     }
   }
 
-  static ResponseModel _processResponse(http.Response response) {
+  static IsmChatResponseModel _processResponse(http.Response response) {
     if (kDebugMode) {
       AppLog(
           'Response - ${response.request?.method} ${response.statusCode} ${response.request?.url}\n${response.body}');
@@ -212,7 +213,7 @@ class ApiWrapper {
       case 204:
       case 205:
       case 208:
-        return ResponseModel(
+        return IsmChatResponseModel(
           data: response.body,
           hasError: false,
           errorCode: response.statusCode,
@@ -227,7 +228,7 @@ class ApiWrapper {
       case 522:
 
       default:
-        return ResponseModel(
+        return IsmChatResponseModel(
           data: response.body,
           hasError: true,
           errorCode: response.statusCode,

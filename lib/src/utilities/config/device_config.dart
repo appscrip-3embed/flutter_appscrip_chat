@@ -1,7 +1,7 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:get/get.dart';
 
-class DeviceConfig {
+class IsmChatDeviceConfig {
   void init() async {
     _info = DeviceInfoPlugin();
 

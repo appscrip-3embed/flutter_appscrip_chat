@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatPageView extends StatefulWidget {
-  const IsmChatPageView({super.key});
+  const IsmChatPageView({this.onTitleTap, super.key});
+
+  final void Function(IsmChatConversationModel)? onTitleTap;
 
   @override
   State<IsmChatPageView> createState() => _IsmChatPageViewState();
@@ -18,116 +20,116 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
-        builder: (controller) => Scaffold(
-          resizeToAvoidBottomInset: true,
-          appBar: const IsmChatPageHeader(),
-          body: Column(
-            children: [
-              Expanded(
-                child: Visibility(
-                  visible: !controller.isMessagesLoading,
-                  replacement: const IsmLoadingDialog(),
-                  child: Visibility(
-                    visible: controller.messages.isNotEmpty &&
-                        controller.messages.length != 1,
-                    replacement: const IsmNoMessage(),
-                    child: ListView.separated(
-                      controller: controller.messagesScrollController,
-                      keyboardDismissBehavior:
-                          ScrollViewKeyboardDismissBehavior.onDrag,
-                      padding: ChatDimens.egdeInsets8,
-                      itemCount: controller.messages.length,
-                      separatorBuilder: (_, __) => ChatDimens.boxHeight4,
-                      itemBuilder: (_, index) =>
-                          ChatMessage(controller.messages[index]),
+        builder: (controller) => WillPopScope(
+          onWillPop: () async {
+            if (controller.isMessageSeleted) {
+              controller.isMessageSeleted = false;
+              controller.selectedMessage.clear();
+              return false;
+            } else {
+              Get.back<void>();
+              await controller.updateLastMessage();
+              return true;
+            }
+          },
+          child: Scaffold(
+            resizeToAvoidBottomInset: true,
+            appBar: controller.isMessageSeleted
+                ? AppBar(
+                    leading: IsmChatTapHandler(
+                      onTap: () async {
+                        controller.isMessageSeleted = false;
+                        controller.selectedMessage.clear();
+                      },
+                      child: const Icon(Icons.arrow_back_rounded),
                     ),
+                    titleSpacing: IsmChatDimens.four,
+                    title: Text(
+                      '${controller.selectedMessage.length} Messages',
+                      style: IsmChatStyles.w600White18,
+                    ),
+                    backgroundColor: IsmChatConfig.chatTheme.primaryColor,
+                    iconTheme:
+                        const IconThemeData(color: IsmChatColors.whiteColor),
+                    actions: [
+                      IconButton(
+                        onPressed: () async {
+                          var messageSenderSide =
+                              controller.isAllMessagesFromMe();
+
+                          controller.showDialogForDeleteMultipleMessage(
+                              messageSenderSide, controller.selectedMessage);
+                        },
+                        icon: const Icon(Icons.delete_rounded),
+                      ),
+                    ],
+                  )
+                : IsmChatPageHeader(
+                    onTap: widget.onTitleTap != null
+                        ? () =>
+                            widget.onTitleTap?.call(controller.conversation!)
+                        : () {
+                            // TODO: Make Conversation details screen
+                            // IsmChatUtility.openFullScreenBottomSheet(child)
+                          },
                   ),
+            body: Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                Column(
+                  children: [
+                    Expanded(
+                      child: Visibility(
+                        visible: !controller.isMessagesLoading,
+                        replacement: const IsmChatLoadingDialog(),
+                        child: Visibility(
+                          visible: controller.messages.isNotEmpty &&
+                              controller.messages.length != 1,
+                          replacement: const IsmChatNoMessage(),
+                          child: ListView.builder(
+                            controller: controller.messagesScrollController,
+                            keyboardDismissBehavior:
+                                ScrollViewKeyboardDismissBehavior.onDrag,
+                            padding: IsmChatDimens.edgeInsets4_8,
+                            itemCount: controller.messages.length,
+                            itemBuilder: (_, index) => IsmChatMessage(index),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SafeArea(child: IsmChatInputField())
+                  ],
                 ),
-              ),
-              const IsmChatInputField(),
-            ],
+                Obx(
+                  () => !controller.showDownSideButton
+                      ? const SizedBox.shrink()
+                      : Positioned(
+                          bottom: IsmChatDimens.eighty,
+                          right: IsmChatDimens.eight,
+                          child: IsmChatTapHandler(
+                            onTap: controller.scrollDown,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: IsmChatConfig.chatTheme.backgroundColor!
+                                    .withOpacity(0.5),
+                                border: Border.all(
+                                  color: IsmChatConfig.chatTheme.primaryColor!,
+                                  width: 1.5,
+                                ),
+                                shape: BoxShape.circle,
+                              ),
+                              padding: IsmChatDimens.edgeInsets8,
+                              child: Icon(
+                                Icons.expand_more_rounded,
+                                color: IsmChatConfig.chatTheme.primaryColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                ),
+              ],
+            ),
           ),
         ),
       );
-}
-
-class ChatMessage extends StatelessWidget {
-  const ChatMessage(this.message, {super.key});
-
-  final ChatMessageModel message;
-
-  @override
-  Widget build(BuildContext context) {
-    var isDateType = message.customType! == CustomMessageType.date;
-    return UnconstrainedBox(
-      alignment: isDateType
-          ? Alignment.center
-          : message.sentByMe
-              ? Alignment.centerRight
-              : Alignment.centerLeft,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: message.sentByMe
-            ? CrossAxisAlignment.end
-            : CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: ChatDimens.egdeInsets4,
-            constraints: isDateType
-                ? null
-                : BoxConstraints(
-                    maxWidth: context.width * .8,
-                    minWidth: context.width * .1,
-                  ),
-            decoration: isDateType
-                ? null
-                : BoxDecoration(
-                    color: message.sentByMe
-                        ? IsmChatConfig.chatTheme.primaryColor
-                        : IsmChatConfig.chatTheme.backgroundColor,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(ChatDimens.twelve),
-                      topLeft: message.sentByMe
-                          ? Radius.circular(ChatDimens.twelve)
-                          : Radius.circular(ChatDimens.four),
-                      bottomLeft: Radius.circular(ChatDimens.twelve),
-                      bottomRight: message.sentByMe
-                          ? Radius.circular(ChatDimens.four)
-                          : Radius.circular(ChatDimens.twelve),
-                    ),
-                  ),
-            child: message.customType!.messageType(message),
-          ),
-          if (!isDateType)
-            Padding(
-              padding: ChatDimens.egdeInsets0_4,
-              child: Row(
-                children: [
-                  Text(
-                    message.sentAt.toTimeString(),
-                    style: ChatStyles.w400Grey10,
-                  ),
-                  if (message.sentByMe) ...[
-                    ChatDimens.boxWidth2,
-                    Icon(
-                      message.messageId!.isEmpty
-                          ? Icons.watch_later_rounded
-                          : message.deliveredToAll!
-                              ? Icons.done_all_rounded
-                              : Icons.done_rounded,
-                      color: message.messageId!.isEmpty
-                          ? Colors.grey
-                          : message.readByAll!
-                              ? Colors.blue
-                              : Colors.grey,
-                      size: ChatDimens.forteen,
-                    ),
-                  ],
-                ],
-              ),
-            ),
-        ],
-      ),
-    );
-  }
 }

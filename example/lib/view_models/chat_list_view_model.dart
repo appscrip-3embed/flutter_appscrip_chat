@@ -1,4 +1,3 @@
-import 'package:chat_component_example/data/data.dart';
 import 'package:get/get.dart';
 
 class ChatListViewModel extends GetxController {

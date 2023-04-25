@@ -47,5 +47,23 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs access to you camera</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app needs access to your location permisison</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app needs access to your location permisison</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs access to your location permisison</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>This app needs access to your media</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to your photos usage</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs access for microphone to record the audio</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app needs access to your location permisison</string>
 </dict>
 </plist>

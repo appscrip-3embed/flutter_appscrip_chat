@@ -1,26 +1,27 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
-class StartChatFAB extends StatelessWidget {
-  const StartChatFAB({this.onTap, super.key});
+class IsmChatStartChatFAB extends StatelessWidget {
+  const IsmChatStartChatFAB({required this.onTap, this.icon, super.key});
 
-  final VoidCallback? onTap;
+  final VoidCallback onTap;
+  final Widget? icon;
 
   @override
   Widget build(BuildContext context) => Theme(
         data: ThemeData.light(useMaterial3: true).copyWith(
-          floatingActionButtonTheme:
-              ChatTheme.of(context).floatingActionButtonTheme ??
-                  FloatingActionButtonThemeData(
-                    backgroundColor: ChatTheme.of(context).primaryColor,
-                  ),
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: IsmChatConfig.chatTheme.primaryColor,
+          ),
         ),
         child: FloatingActionButton(
-          onPressed: onTap ?? () {},
-          child: const Icon(
-            Icons.chat_rounded,
-            color: ChatColors.whiteColor,
-          ),
+          onPressed: onTap,
+          child: icon ??
+              Icon(
+                Icons.chat_rounded,
+                color: IsmChatConfig
+                    .chatTheme.floatingActionButtonTheme!.foregroundColor,
+              ),
         ),
       );
 }

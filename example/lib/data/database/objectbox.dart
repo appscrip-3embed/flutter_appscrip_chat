@@ -1,10 +1,8 @@
 import 'dart:io';
-
 import 'package:chat_component_example/models/models.dart';
 import 'package:chat_component_example/res/strings.dart';
 import 'package:chat_component_example/utilities/app_log.dart';
 import 'package:path_provider/path_provider.dart';
-
 import 'objectbox.g.dart';
 
 // import 'objectbox.g.dart'; // created by `flutter pub run build_runner build`

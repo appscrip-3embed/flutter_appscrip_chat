@@ -9,13 +9,16 @@ class UserDetails {
       UserDetails.fromMap(json.decode(source) as Map<String, dynamic>);
 
   factory UserDetails.fromMap(Map<String, dynamic> map) => UserDetails(
-        userProfileImageUrl: map['userProfileImageUrl'] as String,
-        userName: map['userName'] as String,
-        userIdentifier: map['userIdentifier'] as String,
-        userId: map['userId'] != null ? map['userId'] as String : '',
-        online: map['online'] as bool,
-        // metaData: ChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
-        lastSeen: map['lastSeen'] as int,
+        userProfileImageUrl: map['userProfileImageUrl'] as String? ?? '',
+        userName: map['userName'] as String? ?? '',
+        userIdentifier: map['userIdentifier'] as String? ?? '',
+        userId:  map['userId'] as String? ?? '',
+        online: map['online'] as bool? ?? false,
+        metaData: map['metaData'] == null
+            ? IsmChatMetaData()
+            : IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
+        lastSeen: map['lastSeen'] as int? ?? 0,
+        timestamp: map['timestamp'] as int? ?? 0,
         visibility:
             map['visibility'] != null ? map['visibility'] as bool : true,
         notification:
@@ -23,19 +26,19 @@ class UserDetails {
         language: map['language'] != null ? map['language'] as String : null,
       );
 
-  UserDetails({
-    this.id = 0,
-    required this.userProfileImageUrl,
-    required this.userName,
-    required this.userIdentifier,
-    required this.userId,
-    required this.online,
-    // required this.metaData,
-    required this.lastSeen,
-    this.visibility,
-    this.notification,
-    this.language,
-  });
+  UserDetails(
+      {this.id = 0,
+      required this.userProfileImageUrl,
+      required this.userName,
+      required this.userIdentifier,
+      required this.userId,
+      required this.online,
+      this.metaData,
+      required this.lastSeen,
+      this.visibility,
+      this.notification,
+      this.language,
+      this.timestamp});
 
   @Id()
   int id;
@@ -44,12 +47,13 @@ class UserDetails {
   final String userIdentifier;
   final String userId;
   final bool online;
-  // @Transient()
-  // final ChatMetaData metaData;
+  @Transient()
+  final IsmChatMetaData? metaData;
   final int lastSeen;
   final bool? visibility;
   final bool? notification;
   final String? language;
+  final int? timestamp;
 
   UserDetails copyWith({
     String? userProfileImageUrl,
@@ -57,7 +61,7 @@ class UserDetails {
     String? userIdentifier,
     String? userId,
     bool? online,
-    ChatMetaData? metaData,
+    IsmChatMetaData? metaData,
     int? lastSeen,
     bool? visibility,
     bool? notification,
@@ -69,7 +73,7 @@ class UserDetails {
         userIdentifier: userIdentifier ?? this.userIdentifier,
         userId: userId ?? this.userId,
         online: online ?? this.online,
-        // metaData: metaData ?? this.metaData,
+        metaData: metaData ?? this.metaData,
         lastSeen: lastSeen ?? this.lastSeen,
         visibility: visibility ?? this.visibility,
         notification: notification ?? this.notification,
@@ -82,7 +86,7 @@ class UserDetails {
         'userIdentifier': userIdentifier,
         'userId': userId,
         'online': online,
-        // 'metaData': metaData.toMap(),
+        'metaData': metaData?.toMap(),
         'lastSeen': lastSeen,
         'visibility': visibility,
         'notification': notification,
