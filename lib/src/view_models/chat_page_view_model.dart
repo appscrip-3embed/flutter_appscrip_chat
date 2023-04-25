@@ -26,7 +26,6 @@ class IsmChatPageViewModel {
 
     messages.removeWhere((e) => [
           IsmChatActionEvents.clearConversation.name,
-          IsmChatActionEvents.conversationCreated.name
         ].contains(e.action));
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
     var conversation = conversationBox
@@ -422,6 +421,7 @@ class IsmChatPageViewModel {
         IsmChatCustomMessageType.date,
         IsmChatCustomMessageType.block,
         IsmChatCustomMessageType.unblock,
+        IsmChatCustomMessageType.conversationCreated,
       ].contains(x.customType)) {
         indexedMap[x.messageId!] = i;
       }

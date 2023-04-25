@@ -94,6 +94,9 @@ extension DateConvertor on int {
       DateFormat.jm().format(DateTime.fromMillisecondsSinceEpoch(this));
 
   String toCurrentTimeStirng() {
+    if (this == 0 || this == -1) {
+      return '';
+    }
     final timeStamp = toDate().removeTime();
     final now = DateTime.now().removeTime();
 
@@ -227,6 +230,9 @@ extension ChildWidget on IsmChatCustomMessageType {
 
       case IsmChatCustomMessageType.date:
         return IsmChatDateMessage(message);
+
+      case IsmChatCustomMessageType.conversationCreated:
+        return IsmChatConversationCreatedMessage(message);
     }
   }
 

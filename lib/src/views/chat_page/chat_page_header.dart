@@ -87,7 +87,10 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                             style: IsmChatStyles.w400White12,
                                           )
                                         : Text(
-                                            '${controller.conversation?.opponentDetails?.lastSeen.toCurrentTimeStirng()}',
+                                            controller.conversation
+                                                    ?.opponentDetails?.lastSeen
+                                                    .toCurrentTimeStirng() ??
+                                                '',
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: IsmChatStyles.w400White12,

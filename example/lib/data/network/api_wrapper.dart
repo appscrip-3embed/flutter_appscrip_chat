@@ -202,7 +202,7 @@ class ApiWrapper {
 
   static IsmChatResponseModel _processResponse(http.Response response) {
     if (kDebugMode) {
-      AppLog(
+      AppLog.info(
           'Response - ${response.request?.method} ${response.statusCode} ${response.request?.url}\n${response.body}');
     }
     switch (response.statusCode) {

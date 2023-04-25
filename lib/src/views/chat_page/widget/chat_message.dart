@@ -20,7 +20,8 @@ class IsmChatMessage extends StatelessWidget {
     var showMessageInCenter = [
       IsmChatCustomMessageType.date,
       IsmChatCustomMessageType.block,
-      IsmChatCustomMessageType.unblock
+      IsmChatCustomMessageType.unblock,
+      IsmChatCustomMessageType.conversationCreated,
     ].contains(message.customType!);
 
     return IsmChatTapHandler(

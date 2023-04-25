@@ -45,6 +45,7 @@ enum IsmChatCustomMessageType {
   deletedForMe(11),
   deletedForEveryone(12),
   link(13),
+  conversationCreated(14),
   date(100);
 
   const IsmChatCustomMessageType(this.value);
@@ -77,6 +78,8 @@ enum IsmChatCustomMessageType {
         return IsmChatCustomMessageType.deletedForEveryone;
       case 13:
         return IsmChatCustomMessageType.link;
+      case 14:
+        return IsmChatCustomMessageType.conversationCreated;
       case 100:
         return IsmChatCustomMessageType.date;
       default:
@@ -96,6 +99,7 @@ enum IsmChatCustomMessageType {
       'location': IsmChatCustomMessageType.location,
       'block': IsmChatCustomMessageType.block,
       'unblock': IsmChatCustomMessageType.unblock,
+      'conversationCreated': IsmChatCustomMessageType.conversationCreated,
     };
 
     var type = value.split('.').last;
@@ -150,7 +154,7 @@ enum IsmChatCustomMessageType {
       case IsmChatActionEvents.typingEvent:
         return null;
       case IsmChatActionEvents.conversationCreated:
-        return null;
+        return IsmChatCustomMessageType.conversationCreated;
       case IsmChatActionEvents.messageDelivered:
         return null;
       case IsmChatActionEvents.messageRead:

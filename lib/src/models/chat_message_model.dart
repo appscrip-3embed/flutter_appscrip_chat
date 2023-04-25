@@ -16,6 +16,8 @@ class IsmChatMessageModel {
       updatedAt: map['updatedAt'] as int? ?? 0,
       sentAt: map['sentAt'] as int? ?? 0,
       unreadMessagesCount: map['unreadMessagesCount'] as int? ?? 0,
+      userId: map['userId'] as String? ?? '',
+      userName: map['userName'] as String? ?? '',
       searchableTags: map['searchableTags'] != null
           ? List<String>.from(map['searchableTags'] as List<dynamic>)
           : [],
@@ -135,6 +137,8 @@ class IsmChatMessageModel {
     required this.sentAt,
     this.updatedAt,
     this.unreadMessagesCount,
+    this.userId,
+    this.userName,
     this.searchableTags,
     this.privateOneToOne,
     this.showInConversation,
@@ -171,6 +175,8 @@ class IsmChatMessageModel {
   int sentAt;
   int? updatedAt;
   int? unreadMessagesCount;
+  String? userId;
+  String? userName;
   List<String>? searchableTags;
   bool? privateOneToOne;
   bool? showInConversation;
@@ -211,6 +217,8 @@ class IsmChatMessageModel {
     int? sentAt,
     int? updatedAt,
     int? unreadMessagesCount,
+    String? userId,
+    String? userName,
     List<String>? searchableTags,
     bool? privateOneToOne,
     bool? showInConversation,
@@ -249,6 +257,8 @@ class IsmChatMessageModel {
         updatedAt: updatedAt ?? this.updatedAt,
         sentAt: sentAt ?? this.sentAt,
         unreadMessagesCount: unreadMessagesCount ?? this.unreadMessagesCount,
+        userName: userName ?? this.userName,
+        userId: userId ?? this.userId,
         searchableTags: searchableTags ?? this.searchableTags,
         privateOneToOne: privateOneToOne ?? this.privateOneToOne,
         showInConversation: showInConversation ?? this.showInConversation,
@@ -287,6 +297,8 @@ class IsmChatMessageModel {
         'updatedAt': updatedAt,
         'sentAt': sentAt,
         'unreadMessagesCount': unreadMessagesCount,
+        'userName': userName,
+        'userId': userId,
         'searchableTags': searchableTags,
         'privateOneToOne': privateOneToOne,
         'showInConversation': showInConversation,
@@ -322,7 +334,7 @@ class IsmChatMessageModel {
 
   @override
   String toString() =>
-      'IsmChatMessageModel(body: $body, action: $action, updatedAt: $updatedAt, sentAt: $sentAt, unreadMessagesCount: $unreadMessagesCount, searchableTags: $searchableTags, privateOneToOne: $privateOneToOne, showInConversation: $showInConversation, readByAll: $readByAll, senderInfo: $senderInfo, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, attachments: $attachments, lastMessageSentAt: $lastMessageSentAt, isGroup: $isGroup, deliveredToAll: $deliveredToAll, customType: $customType, createdByUserName: $createdByUserName, createdByUserImageUrl: $createdByUserImageUrl, createdBy: $createdBy, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, parentMessageId: $parentMessageId, initiatorId : $initiatorId  messageId: $messageId, deviceId: $deviceId, adminCount: $adminCount, messageType: $messageType, sentByMe: $sentByMe, mentionedUsers: $mentionedUsers)';
+      'IsmChatMessageModel(body: $body, action: $action, updatedAt: $updatedAt, sentAt: $sentAt, unreadMessagesCount: $unreadMessagesCount, userName: $userName, userId: $userId, searchableTags: $searchableTags, privateOneToOne: $privateOneToOne, showInConversation: $showInConversation, readByAll: $readByAll, senderInfo: $senderInfo, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, attachments: $attachments, lastMessageSentAt: $lastMessageSentAt, isGroup: $isGroup, deliveredToAll: $deliveredToAll, customType: $customType, createdByUserName: $createdByUserName, createdByUserImageUrl: $createdByUserImageUrl, createdBy: $createdBy, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, parentMessageId: $parentMessageId, initiatorId : $initiatorId  messageId: $messageId, deviceId: $deviceId, adminCount: $adminCount, messageType: $messageType, sentByMe: $sentByMe, mentionedUsers: $mentionedUsers)';
 
   @override
   bool operator ==(Object other) {
@@ -334,6 +346,8 @@ class IsmChatMessageModel {
         other.updatedAt == updatedAt &&
         other.sentAt == sentAt &&
         other.unreadMessagesCount == unreadMessagesCount &&
+        other.userId == userId &&
+        other.userName == userName &&
         listEquals(other.searchableTags, searchableTags) &&
         other.privateOneToOne == privateOneToOne &&
         other.showInConversation == showInConversation &&
@@ -372,6 +386,8 @@ class IsmChatMessageModel {
       updatedAt.hashCode ^
       sentAt.hashCode ^
       unreadMessagesCount.hashCode ^
+      userId.hashCode ^
+      userName.hashCode ^
       searchableTags.hashCode ^
       privateOneToOne.hashCode ^
       showInConversation.hashCode ^
