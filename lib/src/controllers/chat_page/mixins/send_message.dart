@@ -663,8 +663,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         conversationId: textMessage.conversationId ?? '',
         messageType: textMessage.messageType?.value ?? 0,
         notificationBody: textMessage.body,
-        notificationTitle:
-            _controller.conversation?.opponentDetails?.userName ?? 'User');
+        notificationTitle: 'User');
   }
 
   Future<void> ismPostMediaUrl(

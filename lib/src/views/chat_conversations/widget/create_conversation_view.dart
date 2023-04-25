@@ -277,7 +277,15 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                   isGroup: true,
                                   opponentDetails: controller.userDetails,
                                   unreadMessagesCount: 0,
-                                  lastMessageDetails: null,
+                                  lastMessageDetails: LastMessageDetails(
+                                      showInConversation: true,
+                                      sentAt:
+                                          DateTime.now().millisecondsSinceEpoch,
+                                      senderName: '',
+                                      messageType: 0,
+                                      messageId: '',
+                                      conversationId: '',
+                                      body: ''),
                                   lastMessageSentAt: 0,
                                   conversationType:
                                       IsmChatConversationType.private,

@@ -46,15 +46,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IsmChatImage.profile(
-                      controller.conversation?.opponentDetails?.metaData
-                                  ?.profilePic?.isNotEmpty ==
-                              true
-                          ? controller.conversation?.opponentDetails?.metaData
-                                  ?.profilePic ??
-                              ''
-                          : controller.conversation?.opponentDetails
-                                  ?.userProfileImageUrl ??
-                              '',
+                      controller.conversation?.profileUrl ?? '',
                       name: controller.conversation!.chatName.isNotEmpty
                           ? controller.conversation?.chatName
                           : controller
