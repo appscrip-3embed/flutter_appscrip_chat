@@ -69,8 +69,10 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                         ? () =>
                             widget.onTitleTap?.call(controller.conversation!)
                         : () {
-                            // TODO: Make Conversation details screen
-                            // IsmChatUtility.openFullScreenBottomSheet(child)
+                            IsmChatUtility.openFullScreenBottomSheet(
+                                const IsmChatConverstaionInfoView(
+                              isGroup: true,
+                            ));
                           },
                   ),
             body: Stack(

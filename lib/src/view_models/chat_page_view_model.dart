@@ -237,6 +237,7 @@ class IsmChatPageViewModel {
   }) async =>
       await _repository.getConverstaionDetails(
         conversationId: conversationId,
+        includeMembers: includeMembers
       );
 
   Future<List<IsmChatMessageModel>?> blockUser(

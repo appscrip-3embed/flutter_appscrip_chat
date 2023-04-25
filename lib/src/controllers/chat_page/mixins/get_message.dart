@@ -94,7 +94,7 @@ mixin IsmChatPageGetMessageMixin {
     int? membersLimit,
   }) async {
     var data = await _controller._viewModel
-        .getConverstaionDetails(conversationId: conversationId);
+        .getConverstaionDetails(conversationId: conversationId,includeMembers: includeMembers);
     if (data != null) {
       _controller.conversation = data.copyWith(conversationId: conversationId);
     }

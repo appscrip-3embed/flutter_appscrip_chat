@@ -138,8 +138,15 @@ class IsmChatPageRepository {
     int? membersLimit,
   }) async {
     try {
+      String? url;
+      if (includeMembers == true) {
+        url =
+            '${IsmChatAPI.conversationDetails}/$conversationId?includeMembers=$includeMembers';
+      } else {
+        url = '${IsmChatAPI.conversationDetails}/$conversationId';
+      }
       var response = await _apiWrapper.get(
-        '${IsmChatAPI.conversationDetails}/$conversationId',
+        url,
         headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {

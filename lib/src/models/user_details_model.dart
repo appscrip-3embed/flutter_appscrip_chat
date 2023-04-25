@@ -24,21 +24,24 @@ class UserDetails {
         notification:
             map['notification'] != null ? map['notification'] as bool : null,
         language: map['language'] != null ? map['language'] as String : null,
+        isAdmin: map['isAdmin'] as bool? ??  false
       );
 
-  UserDetails(
-      {this.id = 0,
-      required this.userProfileImageUrl,
-      required this.userName,
-      required this.userIdentifier,
-      required this.userId,
-      required this.online,
-      this.metaData,
-      required this.lastSeen,
-      this.visibility,
-      this.notification,
-      this.language,
-      this.timestamp});
+  UserDetails({
+    this.id = 0,
+    required this.userProfileImageUrl,
+    required this.userName,
+    required this.userIdentifier,
+    required this.userId,
+    required this.online,
+    this.metaData,
+    required this.lastSeen,
+    this.visibility,
+    this.notification,
+    this.language,
+    this.timestamp,
+    this.isAdmin
+  });
 
   @Id()
   int id;
@@ -54,6 +57,7 @@ class UserDetails {
   final bool? notification;
   final String? language;
   final int? timestamp;
+  final bool? isAdmin;
 
   String get profileUrl => metaData?.profilePic ?? userProfileImageUrl;
 
@@ -68,6 +72,7 @@ class UserDetails {
     bool? visibility,
     bool? notification,
     String? language,
+    bool? isAdmin,
   }) =>
       UserDetails(
         userProfileImageUrl: userProfileImageUrl ?? this.userProfileImageUrl,
@@ -80,6 +85,7 @@ class UserDetails {
         visibility: visibility ?? this.visibility,
         notification: notification ?? this.notification,
         language: language ?? this.language,
+        isAdmin: isAdmin ??  this.isAdmin
       );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
@@ -93,13 +99,14 @@ class UserDetails {
         'visibility': visibility,
         'notification': notification,
         'language': language,
+        'isAdmin' : isAdmin
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'UserDetails(userProfileImageUrl: $userProfileImageUrl, userName: $userName, userIdentifier: $userIdentifier, userId: $userId, online: $online, lastSeen: $lastSeen, visibility: $visibility, notification: $notification, language: $language)';
+      'UserDetails(userProfileImageUrl: $userProfileImageUrl, userName: $userName, userIdentifier: $userIdentifier, userId: $userId, online: $online, lastSeen: $lastSeen, visibility: $visibility, notification: $notification, language: $language, isAdmin : $isAdmin)';
 
   @override
   bool operator ==(covariant UserDetails other) {
@@ -114,7 +121,7 @@ class UserDetails {
         other.lastSeen == lastSeen &&
         other.visibility == visibility &&
         other.notification == notification &&
-        other.language == language;
+        other.language == language && other.isAdmin == isAdmin;
   }
 
   @override
@@ -128,5 +135,6 @@ class UserDetails {
       lastSeen.hashCode ^
       visibility.hashCode ^
       notification.hashCode ^
+      isAdmin.hashCode ^
       language.hashCode;
 }
