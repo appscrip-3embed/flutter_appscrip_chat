@@ -11,9 +11,7 @@ class IsmChatApiWrapper {
     bool showLoader = false,
     required Map<String, String> headers,
   }) async {
-    if (kDebugMode) {
-      IsmChatLog('Request - GET $api');
-    }
+    IsmChatLog('Request - GET $api');
     var uri = Uri.parse(api);
     if (showLoader) {
       IsmChatUtility.showLoader();
@@ -46,9 +44,7 @@ class IsmChatApiWrapper {
     required Map<String, String> headers,
     bool showLoader = false,
   }) async {
-    if (kDebugMode) {
-      IsmChatLog('Request - POST $api $payload');
-    }
+    IsmChatLog('Request - POST $api $payload');
     var uri = Uri.parse(api);
     if (showLoader) {
       IsmChatUtility.showLoader();
@@ -86,9 +82,7 @@ class IsmChatApiWrapper {
     bool showLoader = false,
     bool forAwsUpload = false,
   }) async {
-    if (kDebugMode) {
-      IsmChatLog('Request - PUT $api $payload');
-    }
+    IsmChatLog('Request - PUT $api $payload');
     var uri = Uri.parse(api);
     if (showLoader) {
       IsmChatUtility.showLoader();
@@ -125,9 +119,7 @@ class IsmChatApiWrapper {
     required Map<String, String> headers,
     bool showLoader = false,
   }) async {
-    if (kDebugMode) {
-      IsmChatLog('Request - PATCH $api $payload');
-    }
+    IsmChatLog('Request - PATCH $api $payload');
     var uri = Uri.parse(api);
     if (showLoader) {
       IsmChatUtility.showLoader();
@@ -164,9 +156,7 @@ class IsmChatApiWrapper {
     required Map<String, String> headers,
     bool showLoader = false,
   }) async {
-    if (kDebugMode) {
-      IsmChatLog('Request - DELETE $api $payload');
-    }
+    IsmChatLog('Request - DELETE $api $payload');
     var uri = Uri.parse(api);
     if (showLoader) {
       IsmChatUtility.showLoader();
@@ -198,10 +188,8 @@ class IsmChatApiWrapper {
   }
 
   IsmChatResponseModel _processResponse(http.Response response) {
-    if (kDebugMode) {
-      IsmChatLog(
-          'Response - ${response.request?.method} ${response.statusCode} ${response.request?.url}\n${response.body}');
-    }
+    IsmChatLog.info(
+        'Response - ${response.request?.method} ${response.statusCode} ${response.request?.url}\n${response.body}');
     switch (response.statusCode) {
       case 200:
       case 201:

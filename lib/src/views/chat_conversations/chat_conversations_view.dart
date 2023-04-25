@@ -52,7 +52,11 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
                 icon: widget.createChatIcon,
                 onTap: () {
                   if (widget.isGroupChatEnabled) {
-                    Get.bottomSheet(const _CreateChatBottomSheet());
+                    Get.bottomSheet(
+                      const _CreateChatBottomSheet(),
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                    );
                   } else {
                     IsmChatUtility.openFullScreenBottomSheet(
                       const IsmChatCreateConversationView(),

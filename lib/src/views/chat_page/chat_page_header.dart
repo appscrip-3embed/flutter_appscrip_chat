@@ -168,7 +168,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                       // This means chatting is not allowed and opponent has blocked the user
                       await Get.dialog(
                         const IsmChatAlertDialogBox(
-                          titile: IsmChatStrings.doNotBlock,
+                          title: IsmChatStrings.doNotBlock,
                           cancelLabel: 'Okay',
                         ),
                       );

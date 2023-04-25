@@ -30,6 +30,7 @@ class IsmChatStrings {
   static const String ok = 'Okay';
   static const String blockUser = 'Block User';
   static const String unBlockUser = 'Unblock User';
+  static const String blockedUsers = 'Blocked Users';
   static const String clearChat = 'Clear chat';
   static const String deleteAllMessage = 'Delete All Messages?';
   static const String cancel = 'Cancel';
@@ -41,6 +42,7 @@ class IsmChatStrings {
       'Action not allowed, the user has already blocked you';
   static const String block = 'Block';
   static const String unblock = 'Unblock';
+  static const String blocked = 'Blocked';
   static const String deleteMessgae = 'Delete message?';
   static const String deleteForEvery = 'Delete for eveyone';
   static const String deleteForMe = 'Delete for me';

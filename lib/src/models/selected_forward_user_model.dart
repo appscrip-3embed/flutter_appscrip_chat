@@ -20,15 +20,18 @@ class SelectedForwardUser {
                 userIdentifier: '',
                 userProfileImageUrl: '',
               ),
+        isBlocked: map['isBlocked'] as bool? ?? false,
       );
 
   SelectedForwardUser({
     required bool isUserSelected,
     required this.userDetails,
+    required this.isBlocked,
   }) : _isUserSelected = isUserSelected.obs;
 
   final RxBool _isUserSelected;
   final UserDetails userDetails;
+  final bool isBlocked;
 
   bool get isUserSelected => _isUserSelected.value;
   set isUserSelected(bool value) => _isUserSelected.value = value;
@@ -36,31 +39,36 @@ class SelectedForwardUser {
   SelectedForwardUser copyWith({
     bool? isUserSelected,
     UserDetails? userDetails,
+    bool? isBlocked,
   }) =>
       SelectedForwardUser(
         isUserSelected: isUserSelected ?? this.isUserSelected,
         userDetails: userDetails ?? this.userDetails,
+        isBlocked: isBlocked ?? this.isBlocked,
       );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
         'isUserSelected': isUserSelected,
         'userDetails': userDetails.toMap(),
+        'isBlocked': isBlocked,
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'SelectedForwardUser(isUserSelected: $isUserSelected, userDetails: $userDetails)';
+      'SelectedForwardUser(isUserSelected: $isUserSelected, userDetails: $userDetails, isBlocked: $isBlocked)';
 
   @override
   bool operator ==(covariant SelectedForwardUser other) {
     if (identical(this, other)) return true;
 
     return other.isUserSelected == isUserSelected &&
-        other.userDetails == userDetails;
+        other.userDetails == userDetails &&
+        other.isBlocked == isBlocked;
   }
 
   @override
-  int get hashCode => isUserSelected.hashCode ^ userDetails.hashCode;
+  int get hashCode =>
+      isUserSelected.hashCode ^ userDetails.hashCode ^ isBlocked.hashCode;
 }

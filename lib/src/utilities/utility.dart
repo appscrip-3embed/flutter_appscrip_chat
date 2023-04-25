@@ -31,6 +31,15 @@ class IsmChatUtility {
     }
   }
 
+  static Future<void> showErrorDialog(String message) async {
+    await Get.dialog(
+      IsmChatAlertDialogBox(
+        title: message,
+        cancelLabel: IsmChatStrings.ok,
+      ),
+    );
+  }
+
   static Future<T?> openFullScreenBottomSheet<T>(Widget child) async =>
       await Get.bottomSheet<T>(
         child,

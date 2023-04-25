@@ -513,7 +513,7 @@ class IsmChatPageController extends GetxController
 
   void showDialogForClearChat() async {
     await Get.dialog(IsmChatAlertDialogBox(
-      titile: IsmChatStrings.deleteAllMessage,
+      title: IsmChatStrings.deleteAllMessage,
       actionLabels: const [IsmChatStrings.clearChat],
       callbackActions: [
         () => clearAllMessages(conversation?.conversationId ?? ''),
@@ -524,7 +524,7 @@ class IsmChatPageController extends GetxController
   void showDialogForBlockUnBlockUser(
       bool userBlockOrNot, int lastMessageTimsStamp) async {
     await Get.dialog(IsmChatAlertDialogBox(
-      titile: userBlockOrNot
+      title: userBlockOrNot
           ? IsmChatStrings.doWantUnBlckUser
           : IsmChatStrings.doWantBlckUser,
       actionLabels: [
@@ -548,7 +548,7 @@ class IsmChatPageController extends GetxController
     if (conversation?.isBlockedByMe ?? false) {
       await Get.dialog(
         IsmChatAlertDialogBox(
-          titile: IsmChatStrings.youBlockUser,
+          title: IsmChatStrings.youBlockUser,
           actionLabels: const [IsmChatStrings.unblock],
           callbackActions: [
             () => unblockUser(
@@ -560,7 +560,7 @@ class IsmChatPageController extends GetxController
     } else {
       await Get.dialog(
         const IsmChatAlertDialogBox(
-          titile: IsmChatStrings.doNotBlock,
+          title: IsmChatStrings.doNotBlock,
           cancelLabel: 'Okay',
         ),
       );
@@ -571,7 +571,7 @@ class IsmChatPageController extends GetxController
     if (message.sentByMe) {
       await Get.dialog(
         IsmChatAlertDialogBox(
-          titile: IsmChatStrings.deleteMessgae,
+          title: IsmChatStrings.deleteMessgae,
           actionLabels: const [
             IsmChatStrings.deleteForEvery,
             IsmChatStrings.deleteForMe,
@@ -585,7 +585,7 @@ class IsmChatPageController extends GetxController
     } else {
       await Get.dialog(
         IsmChatAlertDialogBox(
-          titile:
+          title:
               '${IsmChatStrings.deleteFromUser} ${conversation?.opponentDetails?.userName}',
           actionLabels: const [IsmChatStrings.deleteForMe],
           callbackActions: [
@@ -601,7 +601,7 @@ class IsmChatPageController extends GetxController
     if (sentByMe) {
       await Get.dialog(
         IsmChatAlertDialogBox(
-          titile: IsmChatStrings.deleteMessgae,
+          title: IsmChatStrings.deleteMessgae,
           actionLabels: const [
             IsmChatStrings.deleteForEvery,
             IsmChatStrings.deleteForMe,
@@ -615,7 +615,7 @@ class IsmChatPageController extends GetxController
     } else {
       await Get.dialog(
         IsmChatAlertDialogBox(
-          titile:
+          title:
               '${IsmChatStrings.deleteFromUser} ${conversation?.opponentDetails?.userName}',
           actionLabels: const [IsmChatStrings.deleteForMe],
           callbackActions: [

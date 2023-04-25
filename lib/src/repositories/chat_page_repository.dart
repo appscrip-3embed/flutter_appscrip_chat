@@ -439,6 +439,11 @@ class IsmChatPageRepository {
         headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
+        if (response.errorCode.toString().startsWith('4')) {
+          var error = (jsonDecode(response.data) as Map)['error'] as String? ??
+              'Error in creating conversation';
+          await IsmChatUtility.showErrorDialog(error);
+        }
         return null;
       }
       return response;

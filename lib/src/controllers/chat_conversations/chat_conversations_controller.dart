@@ -167,6 +167,7 @@ class IsmChatConversationsController extends GetxController {
         .map((e) => SelectedForwardUser(
               isUserSelected: false,
               userDetails: e as UserDetails,
+              isBlocked: blockUsers.map((e) => e.userId).contains(e.userId),
             ))
         .toList());
     usersPageToken = response.pageToken;
