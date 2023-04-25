@@ -12,6 +12,7 @@ class IsmChatPageViewModel {
     required String conversationId,
     required int lastMessageTimestamp,
     int? pagination,
+    required bool isGroup,
   }) async {
     var messages = await _repository.getChatMessages(
       conversationId: conversationId,
@@ -26,6 +27,8 @@ class IsmChatPageViewModel {
 
     messages.removeWhere((e) => [
           IsmChatActionEvents.clearConversation.name,
+          if (!isGroup) IsmChatActionEvents.conversationCreated.name,
+          IsmChatActionEvents.deleteConversationLocally.name,
         ].contains(e.action));
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
     var conversation = conversationBox
@@ -245,8 +248,10 @@ class IsmChatPageViewModel {
     );
     if (!response!.hasError) {
       var responseMessage = await getChatMessages(
-          conversationId: conversationId,
-          lastMessageTimestamp: lastMessageTimeStamp);
+        conversationId: conversationId,
+        lastMessageTimestamp: lastMessageTimeStamp,
+        isGroup: false,
+      );
       return responseMessage;
     }
     return null;
@@ -261,8 +266,10 @@ class IsmChatPageViewModel {
     );
     if (!response!.hasError) {
       var responseMessage = await getChatMessages(
-          conversationId: conversationId,
-          lastMessageTimestamp: lastMessageTimeStamp);
+        conversationId: conversationId,
+        lastMessageTimestamp: lastMessageTimeStamp,
+        isGroup: false,
+      );
       return responseMessage;
     }
     return null;

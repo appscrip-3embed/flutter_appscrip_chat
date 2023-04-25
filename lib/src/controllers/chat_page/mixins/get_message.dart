@@ -47,6 +47,7 @@ mixin IsmChatPageGetMessageMixin {
       pagination: forPagination ? messagesList.length.pagination() : 0,
       conversationId: conversationID,
       lastMessageTimestamp: timeStamp,
+      isGroup: _controller.conversation?.isGroup ?? false,
     );
     if (_controller.messages.isEmpty) {
       _controller.isMessagesLoading = false;

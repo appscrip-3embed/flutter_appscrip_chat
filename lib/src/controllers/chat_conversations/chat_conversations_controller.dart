@@ -237,6 +237,14 @@ class IsmChatConversationsController extends GetxController {
     var apiConversations =
         await _viewModel.getChatConversations(noOfConvesation);
 
+    if (origin == ApiCallOrigin.referesh) {
+      refreshController.refreshCompleted(
+        resetFooterState: true,
+      );
+    } else if (origin == ApiCallOrigin.loadMore) {
+      refreshController.loadComplete();
+    }
+
     if (conversations.isEmpty) {
       isConversationsLoading = false;
     }
@@ -248,18 +256,6 @@ class IsmChatConversationsController extends GetxController {
     unawaited(getBlockUser());
     conversationPage = conversationPage + 20;
     await getConversationsFromDB();
-
-    if (origin == null) {
-      return;
-    }
-
-    if (origin == ApiCallOrigin.referesh) {
-      refreshController.refreshCompleted(
-        resetFooterState: true,
-      );
-    } else if (origin == ApiCallOrigin.loadMore) {
-      refreshController.loadComplete();
-    }
   }
 
   Future<void> getBlockUser() async {

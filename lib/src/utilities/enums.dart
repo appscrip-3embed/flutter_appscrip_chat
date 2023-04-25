@@ -173,6 +173,8 @@ enum IsmChatCustomMessageType {
         return IsmChatCustomMessageType.unblock;
       case IsmChatActionEvents.userUnblockConversation:
         return IsmChatCustomMessageType.unblock;
+      case IsmChatActionEvents.deleteConversationLocally:
+        return null;
     }
   }
 
@@ -270,7 +272,8 @@ enum IsmChatActionEvents {
   userBlockConversation,
   userUnblock,
   userUnblockConversation,
-  clearConversation;
+  clearConversation,
+  deleteConversationLocally;
 
   factory IsmChatActionEvents.fromName(String name) {
     switch (name) {
@@ -296,6 +299,9 @@ enum IsmChatActionEvents {
         return IsmChatActionEvents.userUnblockConversation;
       case 'clearConversation':
         return IsmChatActionEvents.clearConversation;
+      case 'deleteConversationLocally':
+        IsmChatLog.error(IsmChatActionEvents.deleteConversationLocally);
+        return IsmChatActionEvents.deleteConversationLocally;
       default:
         return IsmChatActionEvents.typingEvent;
     }
