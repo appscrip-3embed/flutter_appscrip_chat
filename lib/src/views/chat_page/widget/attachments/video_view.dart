@@ -21,9 +21,11 @@ class IsmChatVideoView extends StatelessWidget {
             child: Stack(
           fit: StackFit.expand,
           children: [
-            VideoViewPage(
-              path: file.path,
-            ),
+            IsmVideoTrimmerView(
+                file: file, durationInSeconds: 0.0, isCaptionRequired: false),
+            // VideoViewPage(
+            //   path: file.path,
+            // ),
             Align(
               alignment: Alignment.topLeft,
               child: Padding(

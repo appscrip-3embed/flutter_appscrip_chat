@@ -86,17 +86,20 @@ mixin IsmChatPageGetMessageMixin {
     _controller.readTime = (response.first.timestamp ?? 0).deliverTime;
   }
 
-  Future<void> getConverstaionDetails({
-    required String conversationId,
-    String? ids,
-    bool? includeMembers,
-    int? membersSkip,
-    int? membersLimit,
-  }) async {
-    var data = await _controller._viewModel
-        .getConverstaionDetails(conversationId: conversationId,includeMembers: includeMembers);
+  Future<void> getConverstaionDetails(
+      {required String conversationId,
+      String? ids,
+      bool? includeMembers,
+      int? membersSkip,
+      int? membersLimit,
+      bool? isLoading}) async {
+    var data = await _controller._viewModel.getConverstaionDetails(
+        conversationId: conversationId,
+        includeMembers: includeMembers,
+        isLoading: isLoading);
     if (data != null) {
       _controller.conversation = data.copyWith(conversationId: conversationId);
+    
     }
   }
 }

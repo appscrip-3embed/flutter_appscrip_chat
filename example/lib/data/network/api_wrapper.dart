@@ -47,7 +47,7 @@ class ApiWrapper {
     required Map<String, String> headers,
     bool showLoader = false,
   }) async {
-    AppLog.success('Request - POST $api $payload');
+    AppLog('Request - POST $api $payload');
     var uri = Uri.parse(api);
     if (showLoader) {
       Utility.showLoader();

@@ -136,6 +136,7 @@ class IsmChatPageRepository {
     bool? includeMembers,
     int? membersSkip,
     int? membersLimit,
+    bool? isLoading
   }) async {
     try {
       String? url;
@@ -148,6 +149,8 @@ class IsmChatPageRepository {
       var response = await _apiWrapper.get(
         url,
         headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading ?? false
+        
       );
       if (response.hasError) {
         return null;

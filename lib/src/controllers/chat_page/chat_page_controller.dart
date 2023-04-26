@@ -201,6 +201,8 @@ class IsmChatPageController extends GetxController
     ),
   ];
 
+  bool canRefreshDetails = true;
+
   @override
   void onInit() async {
     super.onInit();
@@ -659,8 +661,13 @@ class IsmChatPageController extends GetxController
   void checkUserStatus() {
     conversationDetailsApTimer = Timer.periodic(
       const Duration(minutes: 1),
-      (Timer t) => getConverstaionDetails(
-          conversationId: conversation?.conversationId ?? ''),
+      (Timer t) {
+      
+        if (canRefreshDetails) {
+          getConverstaionDetails(
+              conversationId: conversation?.conversationId ?? '');
+        }
+      },
     );
   }
 

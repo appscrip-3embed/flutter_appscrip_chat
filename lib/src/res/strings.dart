@@ -52,4 +52,5 @@ class IsmChatStrings {
   static const String deleteChat = 'Delete chat';
   static const String createGroupAlert =
       'Select at least one user, add group name and choose one photo';
+  static const String admin = 'Admin';
 }

@@ -106,6 +106,7 @@ class IsmChatPageViewModel {
         if (chatPendingMessages == null) {
           return false;
         }
+        // Todo update messgae with url for audio
         for (var x = 0; x < chatPendingMessages.messages.length; x++) {
           var pendingMessage =
               IsmChatMessageModel.fromJson(chatPendingMessages.messages[x]);
@@ -234,10 +235,12 @@ class IsmChatPageViewModel {
     bool? includeMembers,
     int? membersSkip,
     int? membersLimit,
+    bool? isLoading
   }) async =>
       await _repository.getConverstaionDetails(
         conversationId: conversationId,
-        includeMembers: includeMembers
+        includeMembers: includeMembers,
+        isLoading: isLoading
       );
 
   Future<List<IsmChatMessageModel>?> blockUser(

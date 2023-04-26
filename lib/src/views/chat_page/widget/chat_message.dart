@@ -30,6 +30,7 @@ class IsmChatMessage extends StatelessWidget {
           ? null
           : () => controller.onMessageSelect(message),
       child: Container(
+        padding: IsmChatDimens.edgeInsets4_0,
         color: controller.selectedMessage.contains(message)
             ? IsmChatConfig.chatTheme.primaryColor!.withOpacity(.2)
             : null,

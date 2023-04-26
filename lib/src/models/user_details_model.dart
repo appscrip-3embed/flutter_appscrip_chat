@@ -40,7 +40,7 @@ class UserDetails {
     this.notification,
     this.language,
     this.timestamp,
-    this.isAdmin
+    this.isAdmin = false,
   });
 
   @Id()
@@ -57,7 +57,7 @@ class UserDetails {
   final bool? notification;
   final String? language;
   final int? timestamp;
-  final bool? isAdmin;
+  final bool isAdmin;
 
   String get profileUrl => metaData?.profilePic ?? userProfileImageUrl;
 

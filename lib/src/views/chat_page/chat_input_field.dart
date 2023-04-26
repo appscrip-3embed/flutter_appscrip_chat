@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 
 class IsmChatInputField extends StatelessWidget {
   const IsmChatInputField({super.key});
@@ -193,7 +194,11 @@ class _MicOrSendButton extends StatelessWidget {
                         // Check and request permission
                         if (await controller.recordAudio.hasPermission()) {
                           // Start recording
-                          await controller.recordAudio.start();
+                          var path =
+                              (await getApplicationDocumentsDirectory()).path;
+                          var name = DateTime.now().millisecondsSinceEpoch;
+                          await controller.recordAudio
+                              .start(path: '$path/record_$name.m4a');
                         }
                       }
                     },

@@ -11,38 +11,47 @@ class IsmChatConversationModel {
 
   factory IsmChatConversationModel.fromMap(Map<String, dynamic> map) =>
       IsmChatConversationModel(
-          updatedAt: map['updatedAt'] as int? ?? 0,
-          unreadMessagesCount: map['unreadMessagesCount'] as int? ?? 0,
-          userIds: map['userIds'] == null
-              ? []
-              : List<String>.from(map['userIds'] as List<dynamic>),
-          privateOneToOne: map['privateOneToOne'] as bool? ?? false,
-          opponentDetails: UserDetails.fromMap(
-              map['opponentDetails'] as Map<String, dynamic>),
-          metaData: map['metaData'] == null
-              ? IsmChatMetaData()
-              : IsmChatMetaData.fromMap(
-                  map['metaData'] as Map<String, dynamic>),
-          messagingDisabled: map['messagingDisabled'] as bool? ?? false,
-          membersCount: map['membersCount'] as int? ?? 0,
-          lastReadAt: IsmChatLastReadAt.fromNetworkMap(
-              map['lastReadAt'] as Map<String, dynamic>? ?? {}),
-          lastMessageSentAt: map['lastMessageSentAt'] as int? ?? 0,
-          lastMessageDetails: map['lastMessageDetails'] != null
-              ? LastMessageDetails.fromMap(
-                  map['lastMessageDetails'] as Map<String, dynamic>)
-              : null,
-          isGroup: map['isGroup'] as bool? ?? false,
-          conversationType: IsmChatConversationType.fromValue(
-              map['conversationType'] as int? ?? 1),
-          conversationTitle: map['conversationTitle'] as String?,
-          conversationImageUrl: map['conversationImageUrl'] as String?,
-          conversationId: map['conversationId'] as String? ?? '',
-          config: ConversationConfigModel.fromMap(
-              map['config'] as Map<String, dynamic>),
-          members: map['members'] == null
-              ? []
-              : List<UserDetails>.from(map['members'] as List));
+        updatedAt: map['updatedAt'] as int? ?? 0,
+        unreadMessagesCount: map['unreadMessagesCount'] as int? ?? 0,
+        userIds: map['userIds'] == null
+            ? []
+            : List<String>.from(map['userIds'] as List<dynamic>),
+        privateOneToOne: map['privateOneToOne'] as bool? ?? false,
+        opponentDetails:
+            UserDetails.fromMap(map['opponentDetails'] as Map<String, dynamic>),
+        metaData: map['metaData'] == null
+            ? IsmChatMetaData()
+            : IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
+        messagingDisabled: map['messagingDisabled'] as bool? ?? false,
+        membersCount: map['membersCount'] as int? ?? 0,
+        lastReadAt: IsmChatLastReadAt.fromNetworkMap(
+            map['lastReadAt'] as Map<String, dynamic>? ?? {}),
+        lastMessageSentAt: map['lastMessageSentAt'] as int? ?? 0,
+        lastMessageDetails: map['lastMessageDetails'] != null
+            ? LastMessageDetails.fromMap(
+                map['lastMessageDetails'] as Map<String, dynamic>)
+            : null,
+        isGroup: map['isGroup'] as bool? ?? false,
+        createdAt: map['createdAt'] as int? ?? 0,
+        conversationType: IsmChatConversationType.fromValue(
+            map['conversationType'] as int? ?? 1),
+        conversationTitle: map['conversationTitle'] as String?,
+        conversationImageUrl: map['conversationImageUrl'] as String?,
+        conversationId: map['conversationId'] as String? ?? '',
+        config: ConversationConfigModel.fromMap(
+            map['config'] as Map<String, dynamic>),
+        members: map['members'] == null
+            ? []
+            : List<UserDetails>.from(
+                (map['members'] as List).map(
+                  (e) => UserDetails.fromMap(e as Map<String, dynamic>),
+                ),
+              ),
+        usersOwnDetails: map['usersOwnDetails'] != null
+            ? IsmChatUserOwnDetails.fromMap(
+                map['usersOwnDetails'] as Map<String, dynamic>)
+            : null,
+      );
 
   factory IsmChatConversationModel.fromDB(DBConversationModel dbConversation) =>
       IsmChatConversationModel(
@@ -62,26 +71,29 @@ class IsmChatConversationModel {
         config: dbConversation.config.target,
       );
 
-  IsmChatConversationModel(
-      {this.updatedAt,
-      this.unreadMessagesCount,
-      //  this.searchableTags,
-      this.privateOneToOne,
-      this.opponentDetails,
-      this.metaData,
-      this.messagingDisabled,
-      this.membersCount,
-      this.lastReadAt,
-      this.lastMessageSentAt,
-      this.lastMessageDetails,
-      this.isGroup,
-      this.conversationType,
-      this.conversationTitle,
-      this.conversationImageUrl,
-      this.conversationId,
-      this.config,
-      this.userIds,
-      this.members});
+  IsmChatConversationModel({
+    this.updatedAt,
+    this.unreadMessagesCount,
+    //  this.searchableTags,
+    this.privateOneToOne,
+    this.opponentDetails,
+    this.metaData,
+    this.messagingDisabled,
+    this.membersCount,
+    this.lastReadAt,
+    this.lastMessageSentAt,
+    this.lastMessageDetails,
+    this.isGroup,
+    this.createdAt,
+    this.conversationType,
+    this.conversationTitle,
+    this.conversationImageUrl,
+    this.conversationId,
+    this.config,
+    this.userIds,
+    this.members,
+    this.usersOwnDetails,
+  });
 
   int? updatedAt;
   int? unreadMessagesCount;
@@ -97,11 +109,13 @@ class IsmChatConversationModel {
   LastMessageDetails? lastMessageDetails;
   bool? isGroup;
   IsmChatConversationType? conversationType;
+  int? createdAt;
   String? conversationTitle;
   String? conversationImageUrl;
   String? conversationId;
   ConversationConfigModel? config;
   List<UserDetails>? members;
+  IsmChatUserOwnDetails? usersOwnDetails;
 
   String get chatName => conversationTitle ?? opponentDetails?.userName ?? '';
   String get profileUrl =>
@@ -131,6 +145,8 @@ class IsmChatConversationModel {
     String? conversationId,
     ConversationConfigModel? config,
     int? adminCount,
+    List<UserDetails>? members,
+    IsmChatUserOwnDetails? usersOwnDetails,
   }) =>
       IsmChatConversationModel(
         updatedAt: updatedAt ?? this.updatedAt,
@@ -149,7 +165,10 @@ class IsmChatConversationModel {
         conversationTitle: conversationTitle ?? this.conversationTitle,
         conversationImageUrl: conversationImageUrl ?? this.conversationImageUrl,
         conversationId: conversationId ?? this.conversationId,
+        createdAt: createdAt ?? this.createdAt,
         config: config ?? this.config,
+        members: members ?? this.members,
+        usersOwnDetails: usersOwnDetails ?? this.usersOwnDetails,
       );
 
   Map<String, dynamic> toMap() => {
@@ -169,13 +188,16 @@ class IsmChatConversationModel {
         'conversationImageUrl': conversationImageUrl,
         'conversationId': conversationId,
         'config': config!.toMap(),
+        'createdAt': createdAt,
+        'members': members?.map((e) => e.toMap()).toList(),
+        'usersOwnDetails': usersOwnDetails!.toMap(),
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'ChatConversationModel(updatedAt: $updatedAt, unreadMessagesCount: $unreadMessagesCount, privateOneToOne: $privateOneToOne, opponentDetails: $opponentDetails, metaData: $metaData, messagingDisabled: $messagingDisabled, lastMessageSentAt: $lastMessageSentAt, lastMessageDetails: $lastMessageDetails, isGroup: $isGroup, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, config: $config, lastReadAt: $lastReadAt)';
+      'ChatConversationModel(updatedAt: $updatedAt, unreadMessagesCount: $unreadMessagesCount, privateOneToOne: $privateOneToOne, opponentDetails: $opponentDetails, metaData: $metaData, messagingDisabled: $messagingDisabled, lastMessageSentAt: $lastMessageSentAt, lastMessageDetails: $lastMessageDetails, isGroup: $isGroup, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, config: $config, lastReadAt: $lastReadAt, createdAt $createdAt, usersOwnDetails $usersOwnDetails)';
 
   @override
   bool operator ==(Object other) {
@@ -198,6 +220,8 @@ class IsmChatConversationModel {
         other.conversationTitle == conversationTitle &&
         other.conversationImageUrl == conversationImageUrl &&
         other.conversationId == conversationId &&
+        other.createdAt == createdAt &&
+        other.usersOwnDetails == usersOwnDetails &&
         other.config == config;
   }
 
@@ -219,5 +243,7 @@ class IsmChatConversationModel {
       conversationTitle.hashCode ^
       conversationImageUrl.hashCode ^
       conversationId.hashCode ^
+      createdAt.hashCode ^
+      usersOwnDetails.hashCode ^
       config.hashCode;
 }
