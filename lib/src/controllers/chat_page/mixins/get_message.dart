@@ -110,6 +110,7 @@ mixin IsmChatPageGetMessageMixin {
       if (data.members != null) {
         _controller.groupMembers = data.members!;
       }
+      _controller.update();
     }
   }
 }

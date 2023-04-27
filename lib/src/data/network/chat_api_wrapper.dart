@@ -5,12 +5,25 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:http/http.dart' as http;
 
 class IsmChatApiWrapper {
+  Future<IsmChatResponseModel> _handleNoInternet() async {
+    IsmChatLog.error('----- Internet not working -----');
+    await IsmChatUtility.showErrorDialog(IsmChatStrings.noInternet);
+    return const IsmChatResponseModel(
+      data: IsmChatStrings.noInternet,
+      errorCode: 1000,
+      hasError: true,
+    );
+  }
+
   Future<IsmChatResponseModel> get(
     String api, {
     bool showLoader = false,
     required Map<String, String> headers,
   }) async {
     IsmChatLog('Request - GET $api');
+    if (!(await IsmChatUtility.isNetworkAvailable)) {
+      return await _handleNoInternet();
+    }
     var uri = Uri.parse(api);
     if (showLoader) {
       IsmChatUtility.showLoader();
@@ -44,6 +57,9 @@ class IsmChatApiWrapper {
     bool showLoader = false,
   }) async {
     IsmChatLog('Request - POST $api $payload');
+    if (!(await IsmChatUtility.isNetworkAvailable)) {
+      return await _handleNoInternet();
+    }
     var uri = Uri.parse(api);
     if (showLoader) {
       IsmChatUtility.showLoader();
@@ -82,6 +98,9 @@ class IsmChatApiWrapper {
     bool forAwsUpload = false,
   }) async {
     IsmChatLog('Request - PUT $api $payload');
+    if (!(await IsmChatUtility.isNetworkAvailable)) {
+      return await _handleNoInternet();
+    }
     var uri = Uri.parse(api);
     if (showLoader) {
       IsmChatUtility.showLoader();
@@ -119,6 +138,9 @@ class IsmChatApiWrapper {
     bool showLoader = false,
   }) async {
     IsmChatLog('Request - PATCH $api $payload');
+    if (!(await IsmChatUtility.isNetworkAvailable)) {
+      return await _handleNoInternet();
+    }
     var uri = Uri.parse(api);
     if (showLoader) {
       IsmChatUtility.showLoader();
@@ -156,6 +178,9 @@ class IsmChatApiWrapper {
     bool showLoader = false,
   }) async {
     IsmChatLog('Request - DELETE $api $payload');
+    if (!(await IsmChatUtility.isNetworkAvailable)) {
+      return await _handleNoInternet();
+    }
     var uri = Uri.parse(api);
     if (showLoader) {
       IsmChatUtility.showLoader();

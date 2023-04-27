@@ -143,36 +143,11 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ],
                   elevation: 2,
-                  onSelected: (value) async {
+                  onSelected: (value) {
                     if (value == 1) {
                       controller.showDialogForClearChat();
                     } else {
-                      if (controller.conversation!.isBlockedByMe) {
-                        // This means chatting is not allowed and user has blocked the opponent
-                        controller.showDialogForBlockUnBlockUser(
-                            true,
-                            controller.messages.isEmpty
-                                ? DateTime.now().millisecondsSinceEpoch
-                                : controller.messages.last.sentAt);
-                        return;
-                      }
-                      if (controller.conversation!.isChattingAllowed) {
-                        // This means chatting is allowed i.e. no one is blocked
-                        controller.showDialogForBlockUnBlockUser(
-                            false,
-                            controller.messages.isEmpty
-                                ? DateTime.now().millisecondsSinceEpoch
-                                : controller.messages.last.sentAt);
-                        return;
-                      }
-
-                      // This means chatting is not allowed and opponent has blocked the user
-                      await Get.dialog(
-                        const IsmChatAlertDialogBox(
-                          title: IsmChatStrings.doNotBlock,
-                          cancelLabel: 'Okay',
-                        ),
-                      );
+                      controller.handleBlockUnblock();
                     }
                   },
                 ),

@@ -390,6 +390,27 @@ class IsmChatPageController extends GetxController
     }
   }
 
+  Future<void> handleBlockUnblock([bool includeMembers = false]) async {
+    if (conversation!.isBlockedByMe) {
+      // This means chatting is not allowed and user has blocked the opponent
+      showDialogForBlockUnBlockUser(true, includeMembers);
+      return;
+    }
+    if (conversation!.isChattingAllowed) {
+      // This means chatting is allowed i.e. no one is blocked
+      showDialogForBlockUnBlockUser(false, includeMembers);
+      return;
+    }
+
+    // This means chatting is not allowed and opponent has blocked the user
+    await Get.dialog(
+      const IsmChatAlertDialogBox(
+        title: IsmChatStrings.cannotBlock,
+        cancelLabel: 'Okay',
+      ),
+    );
+  }
+
   /// Updates the [] mapping with the latest messages.
   void _generateIndexedMessageList() =>
       indexedMessageList = _viewModel.generateIndexedMessageList(messages);
@@ -551,7 +572,12 @@ class IsmChatPageController extends GetxController
   }
 
   void showDialogForBlockUnBlockUser(
-      bool userBlockOrNot, int lastMessageTimsStamp) async {
+    bool userBlockOrNot, [
+    bool includeMembers = false,
+  ]) async {
+    var lastMessageTimsStamp = messages.isEmpty
+        ? DateTime.now().millisecondsSinceEpoch
+        : messages.last.sentAt;
     await Get.dialog(IsmChatAlertDialogBox(
       title: userBlockOrNot
           ? IsmChatStrings.doWantUnBlckUser
@@ -564,10 +590,14 @@ class IsmChatPageController extends GetxController
           userBlockOrNot
               ? unblockUser(
                   opponentId: conversation?.opponentDetails!.userId ?? '',
-                  lastMessageTimeStamp: lastMessageTimsStamp)
+                  lastMessageTimeStamp: lastMessageTimsStamp,
+                  includeMembers: includeMembers,
+                )
               : blockUser(
                   opponentId: conversation?.opponentDetails!.userId ?? '',
-                  lastMessageTimeStamp: lastMessageTimsStamp);
+                  lastMessageTimeStamp: lastMessageTimsStamp,
+                  includeMembers: includeMembers,
+                );
         },
       ],
     ));
@@ -589,7 +619,7 @@ class IsmChatPageController extends GetxController
     } else {
       await Get.dialog(
         const IsmChatAlertDialogBox(
-          title: IsmChatStrings.doNotBlock,
+          title: IsmChatStrings.cannotBlock,
           cancelLabel: 'Okay',
         ),
       );
@@ -700,6 +730,7 @@ class IsmChatPageController extends GetxController
   Future<void> blockUser({
     required String opponentId,
     required int lastMessageTimeStamp,
+    bool includeMembers = false,
   }) async {
     var data = await _viewModel.blockUser(
         opponentId: opponentId,
@@ -709,7 +740,9 @@ class IsmChatPageController extends GetxController
       await Future.wait([
         Get.find<IsmChatConversationsController>().getBlockUser(),
         getConverstaionDetails(
-            conversationId: conversation?.conversationId ?? ''),
+          conversationId: conversation?.conversationId ?? '',
+          includeMembers: includeMembers,
+        ),
         getMessagesFromDB(conversation?.conversationId ?? ''),
       ]);
     }
@@ -718,6 +751,7 @@ class IsmChatPageController extends GetxController
   Future<void> unblockUser({
     required String opponentId,
     required int lastMessageTimeStamp,
+    bool includeMembers = false,
   }) async {
     var data = await _viewModel.unblockUser(
         opponentId: opponentId,
@@ -727,7 +761,9 @@ class IsmChatPageController extends GetxController
       await Future.wait([
         Get.find<IsmChatConversationsController>().getBlockUser(),
         getConverstaionDetails(
-            conversationId: conversation?.conversationId ?? ''),
+          conversationId: conversation?.conversationId ?? '',
+          includeMembers: includeMembers,
+        ),
         getMessagesFromDB(conversation?.conversationId ?? ''),
       ]);
     }

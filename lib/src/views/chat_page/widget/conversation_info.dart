@@ -14,7 +14,6 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
             includeMembers: true,
             isLoading: false,
           );
-          controller.update();
         },
         builder: (controller) => Scaffold(
           appBar: const IsmChatAppBar(title: 'Group Info'),
@@ -209,7 +208,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                   ] else ...[
                     IsmChatDimens.boxHeight10,
                     TextButton.icon(
-                      onPressed: () {},
+                      onPressed: () => controller.handleBlockUnblock(true),
                       icon: Icon(
                         controller.conversation!.isBlockedByMe
                             ? Icons.person_rounded

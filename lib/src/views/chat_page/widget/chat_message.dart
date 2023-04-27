@@ -90,7 +90,9 @@ class _Message extends StatelessWidget {
               ? CrossAxisAlignment.end
               : CrossAxisAlignment.start,
           children: [
-            if (!showMessageInCenter && !message.sentByMe) ...[
+            if (!showMessageInCenter &&
+                (controller.conversation!.isGroup ?? false) &&
+                !message.sentByMe) ...[
               SizedBox(
                 width: IsmChatDimens.percentWidth(0.4),
                 child: Padding(
@@ -209,7 +211,7 @@ class _Message extends StatelessWidget {
                     IsmChatDimens.boxWidth2,
                     Icon(
                       message.messageId!.isEmpty
-                          ? Icons.watch_later_rounded
+                          ? Icons.watch_later_outlined
                           : message.deliveredToAll!
                               ? Icons.done_all_rounded
                               : Icons.done_rounded,

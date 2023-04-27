@@ -46,7 +46,7 @@ class IsmChatAlertDialogBox extends StatelessWidget {
               IsmChatTapHandler(
                 onTap: () {
                   Get.back<void>();
-                  callbackActions!.first.call();
+                  callbackActions!.first();
                 },
                 child: Text(
                   actionLabels!.first,
