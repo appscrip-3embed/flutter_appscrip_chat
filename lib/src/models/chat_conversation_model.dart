@@ -33,6 +33,8 @@ class IsmChatConversationModel {
             : null,
         isGroup: map['isGroup'] as bool? ?? false,
         createdAt: map['createdAt'] as int? ?? 0,
+        createdBy: map['createdBy'] as String?,
+        createdByUserName: map['createdByUserName'] as String? ?? '',
         conversationType: IsmChatConversationType.fromValue(
             map['conversationType'] as int? ?? 1),
         conversationTitle: map['conversationTitle'] as String?,
@@ -93,6 +95,8 @@ class IsmChatConversationModel {
     this.userIds,
     this.members,
     this.usersOwnDetails,
+    this.createdBy,
+    this.createdByUserName,
   });
 
   int? updatedAt;
@@ -116,6 +120,8 @@ class IsmChatConversationModel {
   ConversationConfigModel? config;
   List<UserDetails>? members;
   IsmChatUserOwnDetails? usersOwnDetails;
+  String? createdBy;
+  String? createdByUserName;
 
   String get chatName => conversationTitle ?? opponentDetails?.userName ?? '';
   String get profileUrl =>
@@ -166,6 +172,8 @@ class IsmChatConversationModel {
         conversationImageUrl: conversationImageUrl ?? this.conversationImageUrl,
         conversationId: conversationId ?? this.conversationId,
         createdAt: createdAt ?? this.createdAt,
+        createdBy: createdBy ?? this.createdBy,
+        createdByUserName: createdByUserName ?? this.createdByUserName,
         config: config ?? this.config,
         members: members ?? this.members,
         usersOwnDetails: usersOwnDetails ?? this.usersOwnDetails,
@@ -183,6 +191,8 @@ class IsmChatConversationModel {
         'lastMessageSentAt': lastMessageSentAt,
         'lastMessageDetails': lastMessageDetails,
         'isGroup': isGroup,
+        'createdBy': createdBy,
+        'createdByUserName': createdByUserName,
         'conversationType': conversationType,
         'conversationTitle': conversationTitle,
         'conversationImageUrl': conversationImageUrl,
@@ -197,7 +207,7 @@ class IsmChatConversationModel {
 
   @override
   String toString() =>
-      'ChatConversationModel(updatedAt: $updatedAt, unreadMessagesCount: $unreadMessagesCount, privateOneToOne: $privateOneToOne, opponentDetails: $opponentDetails, metaData: $metaData, messagingDisabled: $messagingDisabled, lastMessageSentAt: $lastMessageSentAt, lastMessageDetails: $lastMessageDetails, isGroup: $isGroup, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, config: $config, lastReadAt: $lastReadAt, createdAt $createdAt, usersOwnDetails $usersOwnDetails)';
+      'ChatConversationModel(updatedAt: $updatedAt, unreadMessagesCount: $unreadMessagesCount, privateOneToOne: $privateOneToOne, opponentDetails: $opponentDetails, metaData: $metaData, messagingDisabled: $messagingDisabled, lastMessageSentAt: $lastMessageSentAt, lastMessageDetails: $lastMessageDetails, isGroup: $isGroup, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, config: $config, lastReadAt: $lastReadAt, createdAt $createdAt, usersOwnDetails $usersOwnDetails, createdBy: $createdBy, createdByUserName: $createdByUserName)';
 
   @override
   bool operator ==(Object other) {
@@ -221,6 +231,8 @@ class IsmChatConversationModel {
         other.conversationImageUrl == conversationImageUrl &&
         other.conversationId == conversationId &&
         other.createdAt == createdAt &&
+        other.createdBy == createdBy &&
+        other.createdByUserName == createdByUserName &&
         other.usersOwnDetails == usersOwnDetails &&
         other.config == config;
   }
@@ -244,6 +256,8 @@ class IsmChatConversationModel {
       conversationImageUrl.hashCode ^
       conversationId.hashCode ^
       createdAt.hashCode ^
+      createdBy.hashCode ^
+      createdByUserName.hashCode ^
       usersOwnDetails.hashCode ^
       config.hashCode;
 }

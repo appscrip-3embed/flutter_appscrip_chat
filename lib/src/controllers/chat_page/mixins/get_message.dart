@@ -99,7 +99,17 @@ mixin IsmChatPageGetMessageMixin {
         isLoading: isLoading);
     if (data != null) {
       _controller.conversation = data.copyWith(conversationId: conversationId);
-    
+      _controller.mediaList = _controller.messages
+          .where((e) => [
+                IsmChatCustomMessageType.image,
+                IsmChatCustomMessageType.video,
+                IsmChatCustomMessageType.audio,
+                IsmChatCustomMessageType.file,
+              ].contains(e.customType))
+          .toList();
+      if (data.members != null) {
+        _controller.groupMembers = data.members!;
+      }
     }
   }
 }

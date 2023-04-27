@@ -2,6 +2,8 @@ part of '../chat_page_controller.dart';
 
 mixin IsmChatPageSendMessageMixin on GetxController {
   IsmChatPageController get _controller => Get.find<IsmChatPageController>();
+  IsmChatConversationsController get conversationController =>
+      Get.find<IsmChatConversationsController>();
 
   Future<String> createConversation({
     required List<String> userId,
@@ -420,6 +422,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     } else {
       await ismChatObjectBox.addForwardMessage(videoMessage!);
     }
+    var notificationTitle =
+        conversationController.userDetails?.userName ?? 'User';
+
     await ismPostMediaUrl(
       forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
       isNetWorkUrl: isNetWorkUrl ?? false,
@@ -435,8 +440,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       thumbnailMediaId: thumbnailMediaId,
       thumbnailBytes: thumbnailBytes,
       thumbanilMediaType: IsmChatAttachmentType.image.value,
-      notificationTitle:
-          _controller.conversation?.opponentDetails?.userName ?? 'User',
+      notificationTitle: notificationTitle,
     );
   }
 
@@ -522,6 +526,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     } else {
       await ismChatObjectBox.addForwardMessage(imageMessage);
     }
+    var notificationTitle =
+        conversationController.userDetails?.userName ?? 'User';
     await ismPostMediaUrl(
       forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
       isNetWorkUrl: isNetWorkUrl ?? false,
@@ -534,8 +540,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       nameWithExtension: nameWithExtension ?? '',
       notificationBody: 'Send you an Image',
       imageAndFile: true,
-      notificationTitle:
-          _controller.conversation?.opponentDetails?.userName ?? 'User',
+      notificationTitle: notificationTitle,
     );
   }
 

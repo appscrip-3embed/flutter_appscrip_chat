@@ -79,8 +79,11 @@ class IsmChatPageRepository {
         'notificationBody': notificationBody,
         'notificationTitle': notificationTitle
       };
-      var response = await _apiWrapper.post(IsmChatAPI.sendMessage,
-          payload: payload, headers: IsmChatUtility.tokenCommonHeader());
+      var response = await _apiWrapper.post(
+        IsmChatAPI.sendMessage,
+        payload: payload,
+        headers: IsmChatUtility.tokenCommonHeader(),
+      );
       if (response.hasError) {
         return null;
       }
@@ -130,14 +133,13 @@ class IsmChatPageRepository {
     }
   }
 
-  Future<IsmChatConversationModel?> getConverstaionDetails({
-    required String conversationId,
-    String? ids,
-    bool? includeMembers,
-    int? membersSkip,
-    int? membersLimit,
-    bool? isLoading
-  }) async {
+  Future<IsmChatConversationModel?> getConverstaionDetails(
+      {required String conversationId,
+      String? ids,
+      bool? includeMembers,
+      int? membersSkip,
+      int? membersLimit,
+      bool? isLoading}) async {
     try {
       String? url;
       if (includeMembers == true) {
@@ -146,12 +148,9 @@ class IsmChatPageRepository {
       } else {
         url = '${IsmChatAPI.conversationDetails}/$conversationId';
       }
-      var response = await _apiWrapper.get(
-        url,
-        headers: IsmChatUtility.tokenCommonHeader(),
-        showLoader: isLoading ?? false
-        
-      );
+      var response = await _apiWrapper.get(url,
+          headers: IsmChatUtility.tokenCommonHeader(),
+          showLoader: isLoading ?? false);
       if (response.hasError) {
         return null;
       }

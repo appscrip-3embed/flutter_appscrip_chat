@@ -229,19 +229,17 @@ class IsmChatPageViewModel {
         conversationId: conversationId,
       );
 
-  Future<IsmChatConversationModel?> getConverstaionDetails({
-    required String conversationId,
-    String? ids,
-    bool? includeMembers,
-    int? membersSkip,
-    int? membersLimit,
-    bool? isLoading
-  }) async =>
+  Future<IsmChatConversationModel?> getConverstaionDetails(
+          {required String conversationId,
+          String? ids,
+          bool? includeMembers,
+          int? membersSkip,
+          int? membersLimit,
+          bool? isLoading}) async =>
       await _repository.getConverstaionDetails(
-        conversationId: conversationId,
-        includeMembers: includeMembers,
-        isLoading: isLoading
-      );
+          conversationId: conversationId,
+          includeMembers: includeMembers,
+          isLoading: isLoading);
 
   Future<List<IsmChatMessageModel>?> blockUser(
       {required String opponentId,

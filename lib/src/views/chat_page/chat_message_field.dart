@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 
-class IsmChatInputField extends StatelessWidget {
-  const IsmChatInputField({super.key});
+class IsmChatMessageField extends StatelessWidget {
+  const IsmChatMessageField({super.key});
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(

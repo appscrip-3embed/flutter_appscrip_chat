@@ -53,4 +53,9 @@ class IsmChatStrings {
   static const String createGroupAlert =
       'Select at least one user, add group name and choose one photo';
   static const String admin = 'Admin';
+  static const String participants = 'participants';
+  static const String exitGroup = 'Exit group';
+  static const String createdOn = 'Created on';
+  static const String by = 'by';
+  static const String noMedia = 'No Media';
 }

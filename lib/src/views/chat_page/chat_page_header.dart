@@ -52,6 +52,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                           : controller
                                   .conversation?.opponentDetails?.userName ??
                               '',
+                      dimensions: IsmChatDimens.forty,
                     ),
                     IsmChatDimens.boxWidth8,
                     Column(

@@ -71,9 +71,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                         : () async {
                             controller.canRefreshDetails = false;
                             await IsmChatUtility.openFullScreenBottomSheet(
-                              const IsmChatConverstaionInfoView(
-                                isGroup: true,
-                              ),
+                              const IsmChatConverstaionInfoView(),
                             );
                             controller.canRefreshDetails = true;
                           },
@@ -102,7 +100,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                         ),
                       ),
                     ),
-                    const SafeArea(child: IsmChatInputField())
+                    const SafeArea(child: IsmChatMessageField())
                   ],
                 ),
                 Obx(

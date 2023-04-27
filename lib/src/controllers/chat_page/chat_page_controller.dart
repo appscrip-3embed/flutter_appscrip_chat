@@ -80,6 +80,14 @@ class IsmChatPageController extends GetxController
   bool get isSearchSelect => _isSearchSelect.value;
   set isSearchSelect(bool value) => _isSearchSelect.value = value;
 
+  final RxList<UserDetails> _groupMembers = <UserDetails>[].obs;
+  List<UserDetails> get groupMembers => _groupMembers;
+  set groupMembers(List<UserDetails> value) => _groupMembers.value = value;
+
+  final RxList<IsmChatMessageModel> _mediaList = <IsmChatMessageModel>[].obs;
+  List<IsmChatMessageModel> get mediaList => _mediaList;
+  set mediaList(List<IsmChatMessageModel> value) => _mediaList.value = value;
+
   final Completer<GoogleMapController> googleMapCompleter =
       Completer<GoogleMapController>();
 
@@ -344,6 +352,25 @@ class IsmChatPageController extends GetxController
       duration: IsmChatConfig.animationDuration,
       curve: Curves.fastOutSlowIn,
     );
+  }
+
+  void onGroupSearch(String query) {
+    if (query.trim().isEmpty) {
+      groupMembers = conversation!.members!;
+      return;
+    }
+    groupMembers = conversation!.members!
+        .where(
+          (e) => [
+            e.userName,
+            e.userIdentifier,
+          ].any(
+            (e) => e.toLowerCase().contains(
+                  query.toLowerCase(),
+                ),
+          ),
+        )
+        .toList();
   }
 
   void startTimer() {
@@ -662,7 +689,6 @@ class IsmChatPageController extends GetxController
     conversationDetailsApTimer = Timer.periodic(
       const Duration(minutes: 1),
       (Timer t) {
-      
         if (canRefreshDetails) {
           getConverstaionDetails(
               conversationId: conversation?.conversationId ?? '');
