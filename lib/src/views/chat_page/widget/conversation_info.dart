@@ -165,11 +165,30 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                           var member = controller.groupMembers[index];
                           return ListTile(
                             trailing: member.isAdmin
-                                ? Text(
-                                    IsmChatStrings.admin,
-                                    style: IsmChatStyles.w600Black12.copyWith(
-                                        color: IsmChatConfig
-                                            .chatTheme.primaryColor),
+                                ? IsmChatTapHandler(
+                                    onTap: (controller.conversation!
+                                                    .usersOwnDetails?.isAdmin ??
+                                                false) &&
+                                            controller
+                                                    .conversation!
+                                                    .usersOwnDetails
+                                                    ?.memberId !=
+                                                member.userId
+                                        ? () {
+                                            Get.dialog(
+                                              IsmChatGroupAdminDialog(
+                                                userId: member.userId,
+                                                isAdmin: true,
+                                              ),
+                                            );
+                                          }
+                                        : null,
+                                    child: Text(
+                                      IsmChatStrings.admin,
+                                      style: IsmChatStyles.w600Black12.copyWith(
+                                          color: IsmChatConfig
+                                              .chatTheme.primaryColor),
+                                    ),
                                   )
                                 : controller.conversation!.usersOwnDetails
                                             ?.isAdmin ??
@@ -177,7 +196,10 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                     ? IconButton(
                                         onPressed: () {
                                           Get.dialog(
-                                              const IsmChatGroupAdminDialog());
+                                            IsmChatGroupAdminDialog(
+                                              userId: member.userId,
+                                            ),
+                                          );
                                         },
                                         icon: const Icon(
                                           Icons.more_vert,

@@ -265,8 +265,11 @@ class IsmChatPageViewModel {
       await _repository.addMembers(memberList, conversationId, isLoading);
 
   /// Remove members from conversation
-  Future<IsmChatResponseModel?> removeMembers(
-          String conversationId, String userId, bool isLoading) async =>
+  Future<IsmChatResponseModel?> removeMember({
+    required String conversationId,
+    required String userId,
+    bool isLoading = false,
+  }) async =>
       await _repository.removeMembers(conversationId, userId, isLoading);
 
   /// Get eligible members to add to a conversation
@@ -281,13 +284,19 @@ class IsmChatPageViewModel {
       await _repository.leaveConversation(conversationId, isLoading);
 
   /// make admin api
-  Future<IsmChatResponseModel?> makeAdmin(
-          String memberId, String conversationId, bool isLoading) async =>
+  Future<IsmChatResponseModel?> makeAdmin({
+    required String memberId,
+    required String conversationId,
+    bool isLoading = false,
+  }) async =>
       await _repository.makeAdmin(memberId, conversationId, isLoading);
 
   /// Remove member as admin from conversation
-  Future<IsmChatResponseModel?> removeAdmin(
-          String conversationId, String memberId, bool isLoading) async =>
+  Future<IsmChatResponseModel?> removeAdmin({
+    required String conversationId,
+    required String memberId,
+    bool isLoading = false,
+  }) async =>
       await _repository.removeAdmin(conversationId, memberId, isLoading);
 
   Future<List<IsmChatMessageModel>?> unblockUser(

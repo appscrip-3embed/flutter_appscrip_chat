@@ -20,21 +20,21 @@ mixin IsmChatGroupAdminMixin {
   }
 
   ///Remove members from conversation
-  Future<void> removeMembers(
-      String? conversationId, String? userId, bool isLoading) async {
-    if (conversationId == null ||
-        conversationId.isEmpty ||
-        userId == null ||
-        userId.isEmpty) {
-      return;
-    }
-
-    var response = await _controller._viewModel
-        .removeMembers(conversationId, userId, isLoading);
+  Future<void> removeMember(String userId) async {
+    var conversationId = _controller.conversation!.conversationId!;
+    var response = await _controller._viewModel.removeMember(
+      conversationId: conversationId,
+      userId: userId,
+    );
 
     if (response?.hasError ?? true) {
       return;
     }
+    await _controller.getConverstaionDetails(
+      conversationId: conversationId,
+      includeMembers: true,
+      isLoading: false,
+    );
   }
 
   ///variable to store eligible list for adding members in a conversation
@@ -59,49 +59,47 @@ mixin IsmChatGroupAdminMixin {
   }
 
   ///Remove members from conversation
-  Future<void> leaveConversation(String? conversationId, bool isLoading) async {
-    if (conversationId == null || conversationId.isEmpty) {
-      return;
-    }
-
-    var response = await _controller._viewModel
-        .leaveConversation(conversationId, isLoading);
+  Future<bool> leaveConversation(String conversationId) async {
+    var response =
+        await _controller._viewModel.leaveConversation(conversationId, true);
 
     if (response?.hasError ?? true) {
-      return;
+      return false;
     }
+    return true;
   }
 
   /// make admin
-  Future<void> makeAdmin(
-      String memberId, String? conversationId, bool isLoading) async {
-    if (memberId.isEmpty || conversationId == null || conversationId.isEmpty) {
-      return;
-    }
+  Future<void> makeAdmin(String memberId) async {
+    var conversationId = _controller.conversation!.conversationId!;
 
     var response = await _controller._viewModel
-        .makeAdmin(memberId, conversationId, isLoading);
+        .makeAdmin(memberId: memberId, conversationId: conversationId);
     if (response?.hasError ?? true) {
       return;
     }
-    log('res------>$response');
+    await _controller.getConverstaionDetails(
+      conversationId: conversationId,
+      includeMembers: true,
+      isLoading: false,
+    );
   }
 
   ///Remove member as admin from conversation
-  Future<void> removeAdmin(
-      String? conversationId, String? memberId, bool isLoading) async {
-    if (conversationId == null ||
-        conversationId.isEmpty ||
-        memberId == null ||
-        memberId.isEmpty) {
-      return;
-    }
-
-    var response = await _controller._viewModel
-        .removeAdmin(conversationId, memberId, isLoading);
+  Future<void> removeAdmin(String memberId) async {
+    var conversationId = _controller.conversation!.conversationId!;
+    var response = await _controller._viewModel.removeAdmin(
+      conversationId: conversationId,
+      memberId: memberId,
+    );
 
     if (response?.hasError ?? true) {
       return;
     }
+    await _controller.getConverstaionDetails(
+      conversationId: conversationId,
+      includeMembers: true,
+      isLoading: false,
+    );
   }
 }
