@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
@@ -20,10 +21,14 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:video_compress/video_compress.dart';
 
 part './mixins/get_message.dart';
+part './mixins/group_admin.dart';
 part './mixins/send_message.dart';
 
 class IsmChatPageController extends GetxController
-    with IsmChatPageSendMessageMixin, IsmChatPageGetMessageMixin {
+    with
+        IsmChatPageSendMessageMixin,
+        IsmChatPageGetMessageMixin,
+        IsmChatGroupAdminMixin {
   IsmChatPageController(this._viewModel);
   final IsmChatPageViewModel _viewModel;
 
