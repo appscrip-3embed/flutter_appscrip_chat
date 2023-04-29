@@ -5,16 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_trimmer/video_trimmer.dart';
 
+// Todo refactor code
 class IsmVideoTrimmerView extends StatefulWidget {
   const IsmVideoTrimmerView({
     Key? key,
     required this.file,
     required this.durationInSeconds,
-    required this.isCaptionRequired,
   }) : super(key: key);
   final File file;
   final double durationInSeconds;
-  final bool isCaptionRequired;
 
   @override
   State<IsmVideoTrimmerView> createState() => _VideoTrimmerViewState();
@@ -112,10 +111,12 @@ class _VideoTrimmerViewState extends State<IsmVideoTrimmerView> {
                 SizedBox(
                   width: IsmChatDimens.percentWidth(.95),
                   child: TrimViewer(
-                    showDuration: false,
+                    showDuration: true,
+                    durationStyle: DurationStyle.FORMAT_MM_SS,
                     trimmer: trimmer,
                     viewerWidth: IsmChatDimens.percentWidth(.95),
-                    maxVideoLength: const Duration(seconds: 60),
+                    maxVideoLength:
+                        Duration(seconds: widget.durationInSeconds.toInt()),
                     onChangeStart: (value) {
                       startValue.value = value;
                     },
@@ -173,115 +174,116 @@ class _VideoTrimmerViewState extends State<IsmVideoTrimmerView> {
                           ),
                         ),
                       ),
-                      // AnimatedIcon(icon: AnimatedIcons.play_pause, progress: ,),
                       AnimatedOpacity(
-                          duration: const Duration(milliseconds: 250),
-                          opacity: playPausedAction ? 1 : 0,
-                          child:
-                              trimmer.videoPlayerController?.value.isPlaying ==
-                                      true
-                                  ? const Icon(Icons.pause_circle_rounded)
-                                  : const Icon(Icons.play_arrow_rounded)
-                          // SvgPicture.asset(
-                          //   trimmer.videoPlayerController?.value.isPlaying == true
-                          //       ? AssetConstants.pausedRoundedSvg
-                          //       : AssetConstants.reelsPlaySvg,
-                          // ),
-                          ),
+                        duration: const Duration(milliseconds: 250),
+                        opacity: playPausedAction ? 1 : 0,
+                        child: trimmer.videoPlayerController?.value.isPlaying ==
+                                true
+                            ? Icon(
+                                Icons.pause_circle_rounded,
+                                color: IsmChatColors.whiteColor,
+                                size: IsmChatDimens.sixty,
+                              )
+                            : Icon(
+                                Icons.play_arrow_rounded,
+                                color: IsmChatColors.whiteColor,
+                                size: IsmChatDimens.sixty,
+                              ),
+                      ),
                     ],
                   ),
                 ),
               ),
             ),
-            widget.isCaptionRequired
-                ? Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: IsmChatDimens.edgeInsets10.copyWith(
-                        bottom: IsmChatDimens.eight,
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                            width: IsmChatDimens.percentWidth(.85),
-                            height: IsmChatDimens.forty,
-                            decoration: BoxDecoration(
-                              color: IsmChatColors.whiteColor,
-                              borderRadius: BorderRadius.circular(
-                                IsmChatDimens.twenty,
-                              ),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                IsmChatDimens.twenty,
-                              ),
-                              child: TextField(
-                                keyboardType: TextInputType.multiline,
-                                maxLines: null,
-                                controller: descriptionTEC,
-                                decoration: InputDecoration(
-                                  contentPadding: IsmChatDimens.edgeInsets10,
-                                  hintText: 'addACaption'.tr,
-                                  hintStyle: IsmChatStyles.w400Black12.copyWith(
-                                    color: IsmChatColors.greenColor,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                              onTap: () async {
-                                await trimmer.saveTrimmedVideo(
-                                  startValue: startValue.value,
-                                  endValue: endValue.value,
-                                  onSave: (value) async {
-                                    Get.back<VideoTrimmerClass>(
-                                      result: VideoTrimmerClass(
-                                        description: descriptionTEC.text,
-                                        file: File('$value'),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                              child: const Icon(Icons.share)
-                              // SvgPicture.asset(
-                              //   AssetConstants.whatsappShareSvg,
-                              // ),
-                              )
-                        ],
-                      ),
-                    ),
-                  )
-                : Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                        padding: IsmChatDimens.edgeInsets16.copyWith(
-                          bottom: IsmChatDimens.hundred,
-                        ),
-                        child: ElevatedButton(
-                            onPressed: () {}, child: const Icon(Icons.done))
-                        //  CustomButton(
-                        //   title: TranslationUtil.continueWord,
-                        //   onPress: () async {
-                        //     await trimmer.saveTrimmedVideo(
-                        //       startValue: startValue.value,
-                        //       endValue: endValue.value,
-                        //       onSave: (value) async {
-                        //         Get.back<VideoTrimmerClass>(
-                        //           result: VideoTrimmerClass(
-                        //             description: descriptionTEC.text,
-                        //             file: File('$value'),
-                        //           ),
-                        //         );
-                        //       },
-                        //     );
-                        //   },
-                        // ),
-                        ),
-                  ),
+            // widget.isCaptionRequired
+            //     ? Align(
+            //         alignment: Alignment.bottomCenter,
+            //         child: Padding(
+            //           padding: IsmChatDimens.edgeInsets10.copyWith(
+            //             bottom: IsmChatDimens.eight,
+            //           ),
+            //           child: Row(
+            //             crossAxisAlignment: CrossAxisAlignment.center,
+            //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //             children: [
+            //               Container(
+            //                 width: IsmChatDimens.percentWidth(.85),
+            //                 height: IsmChatDimens.forty,
+            //                 decoration: BoxDecoration(
+            //                   color: IsmChatColors.whiteColor,
+            //                   borderRadius: BorderRadius.circular(
+            //                     IsmChatDimens.twenty,
+            //                   ),
+            //                 ),
+            //                 child: ClipRRect(
+            //                   borderRadius: BorderRadius.circular(
+            //                     IsmChatDimens.twenty,
+            //                   ),
+            //                   child: TextField(
+            //                     keyboardType: TextInputType.multiline,
+            //                     maxLines: null,
+            //                     controller: descriptionTEC,
+            //                     decoration: InputDecoration(
+            //                       contentPadding: IsmChatDimens.edgeInsets10,
+            //                       hintText: 'addACaption'.tr,
+            //                       hintStyle: IsmChatStyles.w400Black12.copyWith(
+            //                         color: IsmChatColors.greenColor,
+            //                       ),
+            //                     ),
+            //                   ),
+            //                 ),
+            //               ),
+            //               InkWell(
+            //                   onTap: () async {
+            //                     await trimmer.saveTrimmedVideo(
+            //                       startValue: startValue.value,
+            //                       endValue: endValue.value,
+            //                       onSave: (value) async {
+            //                         Get.back<VideoTrimmerClass>(
+            //                           result: VideoTrimmerClass(
+            //                             description: descriptionTEC.text,
+            //                             file: File('$value'),
+            //                           ),
+            //                         );
+            //                       },
+            //                     );
+            //                   },
+            //                   child: const Icon(Icons.share)
+            //                   // SvgPicture.asset(
+            //                   //   AssetConstants.whatsappShareSvg,
+            //                   // ),
+            //                   )
+            //             ],
+            //           ),
+            //         ),
+            //       )
+            //     : Align(
+            //         alignment: Alignment.bottomCenter,
+            //         child: Padding(
+            //             padding: IsmChatDimens.edgeInsets16.copyWith(
+            //               bottom: IsmChatDimens.hundred,
+            //             ),
+            //             child: ElevatedButton(
+            //                 onPressed: () {}, child: const Icon(Icons.done))
+            //             //  CustomButton(
+            //             //   title: TranslationUtil.continueWord,
+            //             //   onPress: () async {
+            //             //     await trimmer.saveTrimmedVideo(
+            //             //       startValue: startValue.value,
+            //             //       endValue: endValue.value,
+            //             //       onSave: (value) async {
+            //             //         Get.back<VideoTrimmerClass>(
+            //             //           result: VideoTrimmerClass(
+            //             //             description: descriptionTEC.text,
+            //             //             file: File('$value'),
+            //             //           ),
+            //             //         );
+            //             //       },
+            //             //     );
+            //             //   },
+            //             // ),
+            //             ),
+            //       ),
           ],
         ),
       );

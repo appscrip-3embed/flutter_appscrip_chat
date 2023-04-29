@@ -21,26 +21,25 @@ class IsmChatVideoView extends StatelessWidget {
             child: Stack(
           fit: StackFit.expand,
           children: [
-            IsmVideoTrimmerView(
-                file: file, durationInSeconds: 0.0, isCaptionRequired: false),
+            IsmVideoTrimmerView(file: file, durationInSeconds: 30),
             // VideoViewPage(
             //   path: file.path,
             // ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: IsmChatDimens.edgeInsets10,
-                child: IconButton(
-                    onPressed: () {
-                      Get.back<void>();
-                    },
-                    icon: Icon(
-                      Icons.close,
-                      color: IsmChatColors.whiteColor,
-                      size: IsmChatDimens.thirtyTwo,
-                    )),
-              ),
-            ),
+            // Align(
+            //   alignment: Alignment.topLeft,
+            //   child: Padding(
+            //     padding: IsmChatDimens.edgeInsets10,
+            //     child: IconButton(
+            //         onPressed: () {
+            //           Get.back<void>();
+            //         },
+            //         icon: Icon(
+            //           Icons.close,
+            //           color: IsmChatColors.whiteColor,
+            //           size: IsmChatDimens.thirtyTwo,
+            //         )),
+            //   ),
+            // ),
           ],
         )),
         floatingActionButton: Padding(

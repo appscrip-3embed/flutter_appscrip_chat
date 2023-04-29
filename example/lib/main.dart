@@ -20,9 +20,11 @@ void main() async {
 
 Future<void> initialize() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
   objectBox = await ObjectBox.create();
   var deviceConfig = Get.put(IsmChatDeviceConfig());
   deviceConfig.init();
+  // await LocalNoticeService().setup();
   await AppscripChatComponent.initialize();
 }
 
@@ -58,6 +60,57 @@ class _MyAppState extends State<MyApp> {
   //   // message was in flight, we want to discard the reply rather than calling
   //   // setState to update our non-existent appearance.
   //   if (!mounted) return;
+  // }
+
+
+  // Future<PermissionStatus> permissionStatus =
+  //     NotificationPermissions.getNotificationPermissionStatus();
+
+  // Future<PermissionStatus> permissionRequest =
+  //     NotificationPermissions.requestNotificationPermissions();
+  // Future<String?>? permissionStatusFuture;
+
+  // var permGranted = 'granted';
+  // var permDenied = 'denied';
+  // var permUnknown = 'unknown';
+  // var permProvisional = 'provisional';
+
+  // /// Checks the notification permission status
+  // Future<String?> getCheckNotificationPermStatus() async =>
+  //     NotificationPermissions.getNotificationPermissionStatus().then(
+  //       (status) async {
+  //         switch (status) {
+  //           case PermissionStatus.denied:
+  //             return permDenied;
+  //           case PermissionStatus.granted:
+  //             return permGranted;
+  //           case PermissionStatus.unknown:
+  //             return permUnknown;
+  //           case PermissionStatus.provisional:
+  //             return permProvisional;
+  //           default:
+  //             return null;
+  //         }
+  //       },
+  //     );
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   permissionStatusFuture = getCheckNotificationPermStatus();
+  //   WidgetsBinding.instance.addObserver(this);
+
+  //   SystemChrome.setSystemUIOverlayStyle(
+  //       const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+  // }
+
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   if (state == AppLifecycleState.resumed) {
+  //     setState(() {
+  //       permissionStatusFuture = getCheckNotificationPermStatus();
+  //     });
+  //   }
   // }
 
   @override
