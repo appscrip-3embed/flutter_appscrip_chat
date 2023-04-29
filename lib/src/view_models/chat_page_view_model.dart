@@ -229,19 +229,17 @@ class IsmChatPageViewModel {
         conversationId: conversationId,
       );
 
-  Future<IsmChatConversationModel?> getConverstaionDetails({
-    required String conversationId,
-    String? ids,
-    bool? includeMembers,
-    int? membersSkip,
-    int? membersLimit,
-    bool? isLoading
-  }) async =>
+  Future<IsmChatConversationModel?> getConverstaionDetails(
+          {required String conversationId,
+          String? ids,
+          bool? includeMembers,
+          int? membersSkip,
+          int? membersLimit,
+          bool? isLoading}) async =>
       await _repository.getConverstaionDetails(
-        conversationId: conversationId,
-        includeMembers: includeMembers,
-        isLoading: isLoading
-      );
+          conversationId: conversationId,
+          includeMembers: includeMembers,
+          isLoading: isLoading);
 
   Future<List<IsmChatMessageModel>?> blockUser(
       {required String opponentId,
@@ -260,6 +258,46 @@ class IsmChatPageViewModel {
     }
     return null;
   }
+
+  /// Add members to a conversation
+  Future<IsmChatResponseModel?> addMembers(List<String> memberList,
+          String conversationId, bool isLoading) async =>
+      await _repository.addMembers(memberList, conversationId, isLoading);
+
+  /// Remove members from conversation
+  Future<IsmChatResponseModel?> removeMember({
+    required String conversationId,
+    required String userId,
+    bool isLoading = false,
+  }) async =>
+      await _repository.removeMembers(conversationId, userId, isLoading);
+
+  /// Get eligible members to add to a conversation
+  Future<List<UserDetails>?> getEligibleMembers(
+          String conversationId, bool isLoading, int limit, int skip) async =>
+      await _repository.getEligibleMembers(
+          conversationId, isLoading, limit, skip);
+
+  /// Leave conversation
+  Future<IsmChatResponseModel?> leaveConversation(
+          String conversationId, bool isLoading) async =>
+      await _repository.leaveConversation(conversationId, isLoading);
+
+  /// make admin api
+  Future<IsmChatResponseModel?> makeAdmin({
+    required String memberId,
+    required String conversationId,
+    bool isLoading = false,
+  }) async =>
+      await _repository.makeAdmin(memberId, conversationId, isLoading);
+
+  /// Remove member as admin from conversation
+  Future<IsmChatResponseModel?> removeAdmin({
+    required String conversationId,
+    required String memberId,
+    bool isLoading = false,
+  }) async =>
+      await _repository.removeAdmin(conversationId, memberId, isLoading);
 
   Future<List<IsmChatMessageModel>?> unblockUser(
       {required String opponentId,

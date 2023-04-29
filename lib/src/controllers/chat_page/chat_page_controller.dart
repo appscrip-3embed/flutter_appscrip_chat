@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
@@ -20,10 +21,14 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:video_compress/video_compress.dart';
 
 part './mixins/get_message.dart';
+part './mixins/group_admin.dart';
 part './mixins/send_message.dart';
 
 class IsmChatPageController extends GetxController
-    with IsmChatPageSendMessageMixin, IsmChatPageGetMessageMixin {
+    with
+        IsmChatPageSendMessageMixin,
+        IsmChatPageGetMessageMixin,
+        IsmChatGroupAdminMixin {
   IsmChatPageController(this._viewModel);
   final IsmChatPageViewModel _viewModel;
 
@@ -79,6 +84,14 @@ class IsmChatPageController extends GetxController
   final RxBool _isSearchSelect = false.obs;
   bool get isSearchSelect => _isSearchSelect.value;
   set isSearchSelect(bool value) => _isSearchSelect.value = value;
+
+  final RxList<UserDetails> _groupMembers = <UserDetails>[].obs;
+  List<UserDetails> get groupMembers => _groupMembers;
+  set groupMembers(List<UserDetails> value) => _groupMembers.value = value;
+
+  final RxList<IsmChatMessageModel> _mediaList = <IsmChatMessageModel>[].obs;
+  List<IsmChatMessageModel> get mediaList => _mediaList;
+  set mediaList(List<IsmChatMessageModel> value) => _mediaList.value = value;
 
   final Completer<GoogleMapController> googleMapCompleter =
       Completer<GoogleMapController>();
@@ -346,6 +359,25 @@ class IsmChatPageController extends GetxController
     );
   }
 
+  void onGroupSearch(String query) {
+    if (query.trim().isEmpty) {
+      groupMembers = conversation!.members!;
+      return;
+    }
+    groupMembers = conversation!.members!
+        .where(
+          (e) => [
+            e.userName,
+            e.userIdentifier,
+          ].any(
+            (e) => e.toLowerCase().contains(
+                  query.toLowerCase(),
+                ),
+          ),
+        )
+        .toList();
+  }
+
   void startTimer() {
     forVideoRecordTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       var seconds = myDuration.inSeconds + 1;
@@ -361,6 +393,27 @@ class IsmChatPageController extends GetxController
     if (_cameras.isNotEmpty) {
       toggleCamera();
     }
+  }
+
+  Future<void> handleBlockUnblock([bool includeMembers = false]) async {
+    if (conversation!.isBlockedByMe) {
+      // This means chatting is not allowed and user has blocked the opponent
+      showDialogForBlockUnBlockUser(true, includeMembers);
+      return;
+    }
+    if (conversation!.isChattingAllowed) {
+      // This means chatting is allowed i.e. no one is blocked
+      showDialogForBlockUnBlockUser(false, includeMembers);
+      return;
+    }
+
+    // This means chatting is not allowed and opponent has blocked the user
+    await Get.dialog(
+      const IsmChatAlertDialogBox(
+        title: IsmChatStrings.cannotBlock,
+        cancelLabel: 'Okay',
+      ),
+    );
   }
 
   /// Updates the [] mapping with the latest messages.
@@ -524,7 +577,12 @@ class IsmChatPageController extends GetxController
   }
 
   void showDialogForBlockUnBlockUser(
-      bool userBlockOrNot, int lastMessageTimsStamp) async {
+    bool userBlockOrNot, [
+    bool includeMembers = false,
+  ]) async {
+    var lastMessageTimsStamp = messages.isEmpty
+        ? DateTime.now().millisecondsSinceEpoch
+        : messages.last.sentAt;
     await Get.dialog(IsmChatAlertDialogBox(
       title: userBlockOrNot
           ? IsmChatStrings.doWantUnBlckUser
@@ -537,10 +595,14 @@ class IsmChatPageController extends GetxController
           userBlockOrNot
               ? unblockUser(
                   opponentId: conversation?.opponentDetails!.userId ?? '',
-                  lastMessageTimeStamp: lastMessageTimsStamp)
+                  lastMessageTimeStamp: lastMessageTimsStamp,
+                  includeMembers: includeMembers,
+                )
               : blockUser(
                   opponentId: conversation?.opponentDetails!.userId ?? '',
-                  lastMessageTimeStamp: lastMessageTimsStamp);
+                  lastMessageTimeStamp: lastMessageTimsStamp,
+                  includeMembers: includeMembers,
+                );
         },
       ],
     ));
@@ -562,7 +624,7 @@ class IsmChatPageController extends GetxController
     } else {
       await Get.dialog(
         const IsmChatAlertDialogBox(
-          title: IsmChatStrings.doNotBlock,
+          title: IsmChatStrings.cannotBlock,
           cancelLabel: 'Okay',
         ),
       );
@@ -662,7 +724,6 @@ class IsmChatPageController extends GetxController
     conversationDetailsApTimer = Timer.periodic(
       const Duration(minutes: 1),
       (Timer t) {
-      
         if (canRefreshDetails) {
           getConverstaionDetails(
               conversationId: conversation?.conversationId ?? '');
@@ -674,6 +735,7 @@ class IsmChatPageController extends GetxController
   Future<void> blockUser({
     required String opponentId,
     required int lastMessageTimeStamp,
+    bool includeMembers = false,
   }) async {
     var data = await _viewModel.blockUser(
         opponentId: opponentId,
@@ -683,7 +745,9 @@ class IsmChatPageController extends GetxController
       await Future.wait([
         Get.find<IsmChatConversationsController>().getBlockUser(),
         getConverstaionDetails(
-            conversationId: conversation?.conversationId ?? ''),
+          conversationId: conversation?.conversationId ?? '',
+          includeMembers: includeMembers,
+        ),
         getMessagesFromDB(conversation?.conversationId ?? ''),
       ]);
     }
@@ -692,6 +756,7 @@ class IsmChatPageController extends GetxController
   Future<void> unblockUser({
     required String opponentId,
     required int lastMessageTimeStamp,
+    bool includeMembers = false,
   }) async {
     var data = await _viewModel.unblockUser(
         opponentId: opponentId,
@@ -701,7 +766,9 @@ class IsmChatPageController extends GetxController
       await Future.wait([
         Get.find<IsmChatConversationsController>().getBlockUser(),
         getConverstaionDetails(
-            conversationId: conversation?.conversationId ?? ''),
+          conversationId: conversation?.conversationId ?? '',
+          includeMembers: includeMembers,
+        ),
         getMessagesFromDB(conversation?.conversationId ?? ''),
       ]);
     }

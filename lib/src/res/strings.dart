@@ -15,6 +15,9 @@ class IsmChatStrings {
   static const String noMessages =
       'This is the beginning of your chat history. Start a conversation by typing a message below.';
 
+  static const String noInternet =
+      "Oops! It looks like your internet connection is not working at the moment. Please check your network settings and make sure you're connected to a Wi-Fi network or cellular data.";
+
   static const String errorLoadingPreview = 'Error loading link preview';
 
   static const String errorLoadingImage = 'Error loading image';
@@ -38,7 +41,7 @@ class IsmChatStrings {
   static const String doWantUnBlckUser = 'Do you want to Unblock this User?';
   static const String youBlockUser = 'You blocked this user.';
   static const String youareBlocked = 'You are blocked.';
-  static const String doNotBlock =
+  static const String cannotBlock =
       'Action not allowed, the user has already blocked you';
   static const String block = 'Block';
   static const String unblock = 'Unblock';
@@ -53,4 +56,9 @@ class IsmChatStrings {
   static const String createGroupAlert =
       'Select at least one user, add group name and choose one photo';
   static const String admin = 'Admin';
+  static const String participants = 'participants';
+  static const String exitGroup = 'Exit group';
+  static const String createdOn = 'Created on';
+  static const String by = 'by';
+  static const String noMedia = 'No Media';
 }
