@@ -193,8 +193,8 @@ class IsmChatConversationsController extends GetxController {
     if (response?.hasError ?? true) {
       return;
     }
-
     await IsmChatConfig.objectBox.removeUser(conversationId);
+    await getConversationsFromDB();
     await getChatConversations();
   }
 

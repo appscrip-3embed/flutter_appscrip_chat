@@ -79,29 +79,34 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
             body: Stack(
               alignment: Alignment.bottomRight,
               children: [
-                Column(
-                  children: [
-                    Expanded(
-                      child: Visibility(
-                        visible: !controller.isMessagesLoading,
-                        replacement: const IsmChatLoadingDialog(),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    children: [
+                      Expanded(
                         child: Visibility(
-                          visible: controller.messages.isNotEmpty &&
-                              controller.messages.length != 1,
-                          replacement: const IsmChatNoMessage(),
-                          child: ListView.builder(
-                            controller: controller.messagesScrollController,
-                            keyboardDismissBehavior:
-                                ScrollViewKeyboardDismissBehavior.onDrag,
-                            padding: IsmChatDimens.edgeInsets4_8,
-                            itemCount: controller.messages.length,
-                            itemBuilder: (_, index) => IsmChatMessage(index),
+                          visible: !controller.isMessagesLoading,
+                          replacement: const IsmChatLoadingDialog(),
+                          child: Visibility(
+                            visible: controller.messages.isNotEmpty &&
+                                controller.messages.length != 1,
+                            replacement: const IsmChatNoMessage(),
+                            child: ListView.builder(
+                              controller: controller.messagesScrollController,
+                              shrinkWrap: true,
+                              keyboardDismissBehavior:
+                                  ScrollViewKeyboardDismissBehavior.onDrag,
+                              padding: IsmChatDimens.edgeInsets4_8,
+                              itemCount: controller.messages.length,
+                              itemBuilder: (_, index) => IsmChatMessage(index),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SafeArea(child: IsmChatMessageField())
-                  ],
+                      const SafeArea(child: IsmChatMessageField())
+                    ],
+                  ),
                 ),
                 Obx(
                   () => !controller.showDownSideButton

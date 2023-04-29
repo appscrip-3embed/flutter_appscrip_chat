@@ -368,53 +368,59 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       }
       videoMessage = ismChatChatMessageModel;
     } else {
-      final videoCopress = await VideoCompress.compressVideo(file!.path,
-          quality: VideoQuality.LowQuality, includeAudio: true);
-      final thumbnailFile = isThumbnail
-          ? thumbnailFiles!
-          : await VideoCompress.getFileThumbnail(file.path,
-              quality: 50, // default(100)
-              position: -1 // default(-1)
-              );
-      if (videoCopress != null) {
-        bytes = videoCopress.file!.readAsBytesSync();
-        thumbnailBytes = thumbnailFile.readAsBytesSync();
-        thumbnailNameWithExtension = thumbnailFile.path.split('/').last;
-        thumbnailMediaId =
-            thumbnailNameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
-        nameWithExtension = file.path.split('/').last;
-        mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
-        final extension = nameWithExtension.split('.').last;
+    
+        final videoCopress = await VideoCompress.compressVideo(file!.path,
+            quality: VideoQuality.LowQuality, includeAudio: true);
+        final thumbnailFile = isThumbnail
+            ? thumbnailFiles!
+            : await VideoCompress.getFileThumbnail(file.path,
+                quality: 50, // default(100)
+                position: -1 // default(-1)
+                );
+        if (videoCopress != null) {
+          bytes = videoCopress.file!.readAsBytesSync();
+          thumbnailBytes = thumbnailFile.readAsBytesSync();
+          thumbnailNameWithExtension = thumbnailFile.path.split('/').last;
+          thumbnailMediaId =
+              thumbnailNameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
+          nameWithExtension = file.path.split('/').last;
+          mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
+          final extension = nameWithExtension.split('.').last;
 
-        videoMessage = IsmChatMessageModel(
-          body: 'Video',
-          conversationId: conversationId,
-          customType: IsmChatCustomMessageType.video,
-          attachments: [
-            AttachmentModel(
-                attachmentType: IsmChatAttachmentType.video,
-                thumbnailUrl: thumbnailFile.path,
-                size: double.parse(bytes.length.toString()),
-                name: nameWithExtension,
-                mimeType: extension,
-                mediaUrl: videoCopress.file!.path,
-                mediaId: mediaId,
-                extension: extension)
-          ],
-          deliveredToAll: false,
-          messageId: '',
-          deviceId: _controller._deviceConfig.deviceId!,
-          messageType: IsmChatMessageType.normal,
-          messagingDisabled: false,
-          parentMessageId: '',
-          readByAll: false,
-          sentAt: sentAt,
-          sentByMe: true,
-        );
-      }
+          videoMessage = IsmChatMessageModel(
+            body: 'Video',
+            conversationId: conversationId,
+            customType: IsmChatCustomMessageType.video,
+            attachments: [
+              AttachmentModel(
+                  attachmentType: IsmChatAttachmentType.video,
+                  thumbnailUrl: thumbnailFile.path,
+                  size: double.parse(bytes.length.toString()),
+                  name: nameWithExtension,
+                  mimeType: extension,
+                  mediaUrl: videoCopress.file!.path,
+                  mediaId: mediaId,
+                  extension: extension)
+            ],
+            deliveredToAll: false,
+            messageId: '',
+            deviceId: _controller._deviceConfig.deviceId!,
+            messageType: IsmChatMessageType.normal,
+            messagingDisabled: false,
+            parentMessageId: '',
+            readByAll: false,
+            sentAt: sentAt,
+            sentByMe: true,
+          );
+        }
+     
     }
     if (!forwardMessgeForMulitpleUser) {
-      _controller.messages.add(videoMessage!);
+      try {
+        _controller.messages.add(videoMessage!);
+      } catch (e, st) {
+        IsmChatLog.error('$e,/n$st');
+      }
     }
 
     if (sendMessageType == SendMessageType.pendingMessage) {

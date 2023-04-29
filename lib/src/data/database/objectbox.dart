@@ -144,14 +144,31 @@ class IsmChatObjectBox {
     if (conversationId == null) {
       return null;
     }
+    var messages = <String>[];
+    var conversationForPending = pendingMessageBox
+        .query(PendingMessageModel_.conversationId.equals(conversationId))
+        .build()
+        .findUnique();
+    if (conversationForPending != null) {
+      messages.addAll(conversationForPending.messages);
+    }
+    var conversationForForward = forwardMessageBox
+        .query(ForwardMessageModel_.conversationId.equals(conversationId))
+        .build()
+        .findUnique();
+    if (conversationForForward != null) {
+      messages.addAll(conversationForForward.messages);
+    }
     var conversation = chatConversationBox
         .query(DBConversationModel_.conversationId.equals(conversationId))
         .build()
         .findUnique();
     if (conversation == null) {
       return null;
+    } else {
+      messages.addAll(conversation.messages);
     }
-    return conversation.messages.map(IsmChatMessageModel.fromJson).toList();
+    return messages.map(IsmChatMessageModel.fromJson).toList();
   }
 
   Future<DBConversationModel?> getDBConversation(
@@ -177,7 +194,69 @@ class IsmChatObjectBox {
     if (conversation != null) {
       conversation.messages =
           messages.isEmpty ? [] : messages.map((e) => e.toJson()).toList();
+      if (messages.isEmpty) {
+        conversation.lastMessageDetails.target = LastMessageDetails(
+          showInConversation:
+              conversation.lastMessageDetails.target!.showInConversation,
+          sentAt: DateTime.now().millisecondsSinceEpoch,
+          senderName: conversation.lastMessageDetails.target!.senderName,
+          messageType: 0,
+          messageId: '',
+          conversationId: conversationId,
+          body: '',
+        );
+      }
       chatConversationBox.put(conversation);
+      if (messages.isEmpty) {
+        var conversationForPendingMessge = pendingMessageBox
+            .query(PendingMessageModel_.conversationId.equals(conversationId))
+            .build()
+            .findUnique();
+        if (conversationForPendingMessge != null) {
+          pendingMessageBox.remove(conversationForPendingMessge.id);
+        }
+        var conversationForForwardMessge = forwardMessageBox
+            .query(ForwardMessageModel_.conversationId.equals(conversationId))
+            .build()
+            .findUnique();
+        if (conversationForForwardMessge != null) {
+          forwardMessageBox.remove(conversationForForwardMessge.id);
+        }
+      }
+    }
+  }
+
+  Future<void> removePendingMessage(
+      String conversationId, List<IsmChatMessageModel> messages) async {
+    var conversationForPendingMessge = pendingMessageBox
+        .query(PendingMessageModel_.conversationId.equals(conversationId))
+        .build()
+        .findUnique();
+    if (conversationForPendingMessge != null) {
+      var pendingMessages = conversationForPendingMessge.messages
+          .map(IsmChatMessageModel.fromJson)
+          .toList();
+      for (var x in messages) {
+        pendingMessages.removeWhere((e) => e.sentAt == x.sentAt);
+      }
+      conversationForPendingMessge.messages =
+          pendingMessages.map((e) => e.toJson()).toList();
+      pendingMessageBox.put(conversationForPendingMessge);
+    }
+    var conversationForForwardMessge = forwardMessageBox
+        .query(ForwardMessageModel_.conversationId.equals(conversationId))
+        .build()
+        .findUnique();
+    if (conversationForForwardMessge != null) {
+      var forwardMessages = conversationForForwardMessge.messages
+          .map(IsmChatMessageModel.fromJson)
+          .toList();
+      for (var x in messages) {
+        forwardMessages.removeWhere((e) => e.sentAt == x.sentAt);
+      }
+      conversationForForwardMessge.messages =
+          forwardMessages.map((e) => e.toJson()).toList();
+      forwardMessageBox.put(conversationForForwardMessge);
     }
   }
 
@@ -188,6 +267,20 @@ class IsmChatObjectBox {
         .findUnique();
     if (conversation != null) {
       chatConversationBox.remove(conversation.id);
+    }
+    var conversationForPending = pendingMessageBox
+        .query(PendingMessageModel_.conversationId.equals(conversationId))
+        .build()
+        .findUnique();
+    if (conversationForPending != null) {
+      pendingMessageBox.remove(conversationForPending.id);
+    }
+    var conversationForForward = forwardMessageBox
+        .query(ForwardMessageModel_.conversationId.equals(conversationId))
+        .build()
+        .findUnique();
+    if (conversationForForward != null) {
+      forwardMessageBox.remove(conversationForForward.id);
     }
   }
 

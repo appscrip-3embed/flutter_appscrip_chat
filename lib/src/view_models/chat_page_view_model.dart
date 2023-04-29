@@ -361,6 +361,10 @@ class IsmChatPageViewModel {
     List<IsmChatMessageModel> messages,
   ) async {
     var conversationId = messages.first.conversationId!;
+    messages.removeWhere((e) => e.messageId == '');
+    if (messages.isEmpty) {
+      return;
+    }
     var myMessages = messages.where((m) => m.sentByMe).toList();
     if (myMessages.isNotEmpty) {
       var response = await _repository.deleteMessageForMe(
@@ -387,6 +391,10 @@ class IsmChatPageViewModel {
   Future<void> deleteMessageForEveryone(
     List<IsmChatMessageModel> messages,
   ) async {
+    messages.removeWhere((e) => e.messageId == '');
+    if (messages.isEmpty) {
+      return;
+    }
     var conversationId = messages.first.conversationId!;
     var response = await _repository.deleteMessageForEveryone(
       conversationId: conversationId,

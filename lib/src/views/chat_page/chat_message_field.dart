@@ -95,7 +95,13 @@ class IsmChatMessageField extends StatelessWidget {
                                               '',
                                       style: IsmChatStyles.w600White14,
                                     ),
-                                    Text(messageBody),
+                                    SizedBox(
+                                      width: IsmChatDimens.percentWidth(.68),
+                                      child: Text(
+                                        messageBody,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
                                   ],
                                 ),
                                 IsmChatTapHandler(
@@ -114,6 +120,7 @@ class IsmChatMessageField extends StatelessWidget {
                           children: [
                             Expanded(
                               child: TextFormField(
+                              
                                 maxLines: 4,
                                 minLines: 1,
                                 focusNode: controller.focusNode,

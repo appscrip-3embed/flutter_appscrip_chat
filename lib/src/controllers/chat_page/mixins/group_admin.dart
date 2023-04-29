@@ -56,6 +56,7 @@ mixin IsmChatGroupAdminMixin {
     } else {
       return null;
     }
+    return null;
   }
 
   ///Remove members from conversation

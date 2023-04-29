@@ -5,23 +5,18 @@ mixin IsmChatPageGetMessageMixin {
 
   Future<void> getMessagesFromDB(String conversationId) async {
     _controller.messages.clear();
-    final query = IsmChatConfig.objectBox.chatConversationBox
-        .query(DBConversationModel_.conversationId.equals(conversationId))
-        .build();
-
-    final chatConversationMessages = query.findUnique();
-    if (chatConversationMessages != null) {
-      _controller.messages = _controller._viewModel.sortMessages(
-          chatConversationMessages.messages
-              .map(IsmChatMessageModel.fromJson)
-              .toList());
-      _controller.isMessagesLoading = false;
-      if (_controller.messages.isEmpty) {
-        return;
-      }
-      _controller._scrollToBottom();
-      _controller._generateIndexedMessageList();
+    var messages = await IsmChatConfig.objectBox.getMessages(conversationId);
+    if (messages?.isEmpty ?? false || messages == null) {
+      return;
     }
+
+    _controller.messages = _controller._viewModel.sortMessages(messages!);
+    _controller.isMessagesLoading = false;
+    if (_controller.messages.isEmpty) {
+      return;
+    }
+    _controller._scrollToBottom();
+    _controller._generateIndexedMessageList();
   }
 
   Future<void> getMessagesFromAPI({

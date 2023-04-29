@@ -7,92 +7,79 @@ import 'package:get/get.dart';
 
 /// show the Photo and Video editing view page
 class IsmChatImageEditView extends StatelessWidget {
-  const IsmChatImageEditView({Key? key, required this.file}) : super(key: key);
+  const IsmChatImageEditView({Key? key}) : super(key: key);
 
-  final File file;
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
-        builder: (controller) {
-          controller.imagePath = file;
-          return Scaffold(
+        builder: (controller) => Scaffold(
+          backgroundColor: IsmChatColors.blackColor,
+          appBar: AppBar(
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: IsmChatColors.whiteColor,
+            ),
             backgroundColor: IsmChatColors.blackColor,
-            appBar: AppBar(
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: IsmChatColors.blackColor,
-                statusBarIconBrightness:
-                    Brightness.light, // For Android (dark icons)
-                statusBarBrightness: Brightness.light, // For iOS (dark icons)
-              ),
-              backgroundColor: IsmChatColors.blackColor,
-              actions: [
-                IsmChatDimens.boxWidth16,
-                InkWell(
-                  onTap: () async {
-                    await controller.cropImage(controller.imagePath!);
-                  },
-                  child: Icon(
-                    Icons.crop,
-                    size: IsmChatDimens.twenty,
-                    color: IsmChatColors.whiteColor,
-                  ),
-                ),
-                IsmChatDimens.boxWidth16,
-                Icon(
-                  Icons.emoji_emotions_outlined,
-                  size: IsmChatDimens.twenty,
-                  color: IsmChatColors.whiteColor,
-                ),
-                IsmChatDimens.boxWidth16,
-                InkWell(
-                  onTap: () {
-                    Get.to<void>(IsmChatImagePainterWidget(
-                      file: controller.imagePath!,
-                    ));
-                  },
-                  child: Icon(
-                    Icons.edit,
-                    size: IsmChatDimens.twenty,
-                    color: IsmChatColors.whiteColor,
-                  ),
-                ),
-                IsmChatDimens.boxWidth8,
-              ],
-              leading: InkWell(
-                child: Icon(
-                  Icons.clear,
-                  size: IsmChatDimens.twenty,
-                  color: IsmChatColors.whiteColor,
-                ),
-                onTap: () {
-                  Get.back<void>();
-                  Get.back<void>();
+            actions: [
+              IsmChatDimens.boxWidth16,
+              InkWell(
+                onTap: () async {
+                  await controller.cropImage(controller.imagePath!);
                 },
+                child: Icon(
+                  Icons.crop,
+                  size: IsmChatDimens.twenty,
+                  color: IsmChatColors.whiteColor,
+                ),
               ),
-            ),
-            body: SizedBox(
-              height: IsmChatDimens.percentHeight(1),
-              child: Image.file(
-                controller.imagePath!,
-                fit: BoxFit.cover,
+              IsmChatDimens.boxWidth16,
+              InkWell(
+                onTap: () async {
+                  controller.imagePath =
+                      await Get.to<File>(IsmChatImagePainterWidget(
+                    file: controller.imagePath!,
+                  ));
+                },
+                child: Icon(
+                  Icons.edit,
+                  size: IsmChatDimens.twenty,
+                  color: IsmChatColors.whiteColor,
+                ),
               ),
-            ),
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: IsmChatConfig.chatTheme.primaryColor,
-              onPressed: () {
-                controller.sendImage(
-                    conversationId:
-                        controller.conversation?.conversationId ?? '',
-                    userId:
-                        controller.conversation?.opponentDetails?.userId ?? '');
+              IsmChatDimens.boxWidth8,
+            ],
+            leading: InkWell(
+              child: Icon(
+                Icons.clear,
+                size: IsmChatDimens.twenty,
+                color: IsmChatColors.whiteColor,
+              ),
+              onTap: () {
                 Get.back<void>();
                 Get.back<void>();
               },
-              child: const Icon(
-                Icons.send,
-                color: IsmChatColors.whiteColor,
-              ),
             ),
-          );
-        },
+          ),
+          body: Image.file(
+            controller.imagePath!,
+            fit: BoxFit.cover,
+            height: IsmChatDimens.percentHeight(1),
+            width: IsmChatDimens.percentWidth(1),
+            alignment: Alignment.center,
+          ),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: IsmChatConfig.chatTheme.primaryColor,
+            onPressed: () {
+              controller.sendImage(
+                  conversationId: controller.conversation?.conversationId ?? '',
+                  userId:
+                      controller.conversation?.opponentDetails?.userId ?? '');
+              Get.back<void>();
+              Get.back<void>();
+            },
+            child: const Icon(
+              Icons.send,
+              color: IsmChatColors.whiteColor,
+            ),
+          ),
+        ),
       );
 }

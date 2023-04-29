@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
@@ -122,21 +121,16 @@ class IsmChatPageController extends GetxController
 
   final Rx<File?> _imagePath = Rx<File?>(null);
   File? get imagePath => _imagePath.value;
-  set imagePath(File? value) {
-    _imagePath.value = value;
-  }
+  set imagePath(File? value) => _imagePath.value = value;
 
   final RxList<AttachmentModel> _listOfAssetsPath = <AttachmentModel>[].obs;
   List<AttachmentModel> get listOfAssetsPath => _listOfAssetsPath;
-  set listOfAssetsPath(List<AttachmentModel> value) {
-    _listOfAssetsPath.value = value;
-  }
+  set listOfAssetsPath(List<AttachmentModel> value) =>
+      _listOfAssetsPath.value = value;
 
   final RxInt _assetsIndex = 0.obs;
   int get assetsIndex => _assetsIndex.value;
-  set assetsIndex(int value) {
-    _assetsIndex.value = value;
-  }
+  set assetsIndex(int value) => _assetsIndex.value = value;
 
   Timer? conversationDetailsApTimer;
 
@@ -144,48 +138,37 @@ class IsmChatPageController extends GetxController
 
   final RxBool _isEnableRecordingAudio = false.obs;
   bool get isEnableRecordingAudio => _isEnableRecordingAudio.value;
-  set isEnableRecordingAudio(bool value) {
-    _isEnableRecordingAudio.value = value;
-  }
+  set isEnableRecordingAudio(bool value) =>
+      _isEnableRecordingAudio.value = value;
 
   final recordAudio = Record();
 
   final RxInt _seconds = 0.obs;
   int get seconds => _seconds.value;
-  set seconds(int value) {
-    _seconds.value = value;
-  }
+  set seconds(int value) => _seconds.value = value;
 
   final Rx<Duration> _myDuration = const Duration().obs;
   Duration get myDuration => _myDuration.value;
-  set myDuration(Duration value) {
-    _myDuration.value = value;
-  }
+  set myDuration(Duration value) => _myDuration.value = value;
 
   final RxBool _showDownSideButton = false.obs;
   bool get showDownSideButton => _showDownSideButton.value;
-  set showDownSideButton(bool value) {
-    _showDownSideButton.value = value;
-  }
+  set showDownSideButton(bool value) => _showDownSideButton.value = value;
 
   /// Keep track of all the auto scroll indices by their respective message's id to allow animating to them.
   final _autoScrollIndexById = <String, int>{}.obs;
   Map<String, int> get indexedMessageList => _autoScrollIndexById;
-  set indexedMessageList(Map<String, int> value) {
-    _autoScrollIndexById.value = value;
-  }
+  set indexedMessageList(Map<String, int> value) =>
+      _autoScrollIndexById.value = value;
 
   final RxBool _isMessageSeleted = false.obs;
   bool get isMessageSeleted => _isMessageSeleted.value;
-  set isMessageSeleted(bool value) {
-    _isMessageSeleted.value = value;
-  }
+  set isMessageSeleted(bool value) => _isMessageSeleted.value = value;
 
   final _selectedMessage = <IsmChatMessageModel>[].obs;
   List<IsmChatMessageModel> get selectedMessage => _selectedMessage;
-  set selectedMessage(List<IsmChatMessageModel> value) {
-    _selectedMessage.value = value;
-  }
+  set selectedMessage(List<IsmChatMessageModel> value) =>
+      _selectedMessage.value = value;
 
   List<IsmChatBottomSheetAttachmentModel> attachments = [
     const IsmChatBottomSheetAttachmentModel(
@@ -215,6 +198,11 @@ class IsmChatPageController extends GetxController
   ];
 
   bool canRefreshDetails = true;
+
+  /// Store varialbe for whether is user in chat page or not
+  final RxBool _isChatPage = true.obs;
+  bool get isChatPage => _isChatPage.value;
+  set isChatPage(bool value) => _isChatPage.value = value;
 
   @override
   void onInit() async {
@@ -563,7 +551,8 @@ class IsmChatPageController extends GetxController
 
   void takePhoto() async {
     var file = await cameraController.takePicture();
-    await Get.to(IsmChatImageEditView(file: File(file.path)));
+    imagePath = File(file.path);
+    await Get.to(const IsmChatImageEditView());
   }
 
   void showDialogForClearChat() async {
@@ -795,15 +784,29 @@ class IsmChatPageController extends GetxController
   Future<void> deleteMessageForEveryone(
     List<IsmChatMessageModel> messages,
   ) async {
+    var pendingMessges = List<IsmChatMessageModel>.from(messages);
     await _viewModel.deleteMessageForEveryone(messages);
     selectedMessage.clear();
+    pendingMessges.where((e) => e.messageId == '').toList();
+    if (pendingMessges.isNotEmpty) {
+      await IsmChatConfig.objectBox
+          .removePendingMessage(conversation!.conversationId!, pendingMessges);
+      await getMessagesFromDB(conversation!.conversationId!);
+    }
   }
 
   Future<void> deleteMessageForMe(
     List<IsmChatMessageModel> messages,
   ) async {
+    var pendingMessges = List<IsmChatMessageModel>.from(messages);
     await _viewModel.deleteMessageForMe(messages);
     selectedMessage.clear();
+    pendingMessges.where((e) => e.messageId == '').toList();
+    if (pendingMessges.isNotEmpty) {
+      await IsmChatConfig.objectBox
+          .removePendingMessage(conversation!.conversationId!, pendingMessges);
+      await getMessagesFromDB(conversation!.conversationId!);
+    }
   }
 
   bool isAllMessagesFromMe() => selectedMessage.every((e) => e.sentByMe);

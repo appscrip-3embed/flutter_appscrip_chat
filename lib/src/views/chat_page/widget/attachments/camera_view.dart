@@ -95,11 +95,9 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                                   controller.toggleCamera();
                                 }
                               });
-                              await Get.to<void>(
-                                IsmChatVideoView(
+                              await Get.to<void>(IsmChatVideoView(
                                 file: File(file.path),
-                              )
-                              );
+                              ));
                             },
                             onTap: controller.isRecording
                                 ? null
