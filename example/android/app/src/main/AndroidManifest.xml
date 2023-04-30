@@ -56,6 +56,8 @@
    <application
         android:label="chat_component_example"
         android:name="${applicationName}"
+        android:requestLegacyExternalStorage="true"
+        android:usesCleartextTraffic="true" 
         android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.google.android.geo.API_KEY"
            android:value="AIzaSyC2YXqs5H8QSfN1NVsZKsP11XLZhfGVGPI"/>
