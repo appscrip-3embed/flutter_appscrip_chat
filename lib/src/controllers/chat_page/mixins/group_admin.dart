@@ -5,18 +5,21 @@ mixin IsmChatGroupAdminMixin {
 
   /// Add members to a conversation
   Future<void> addMembers(
-      List<String> memberList, String? conversationId, bool isLoading) async {
-    if (memberList.isEmpty ||
-        conversationId == null ||
-        conversationId.isEmpty) {
-      return;
-    }
-
-    var response = await _controller._viewModel
-        .addMembers(memberList, conversationId, isLoading);
+      {required List<String> memberIds, bool isLoading = false}) async {
+    var conversationId = _controller.conversation!.conversationId!;
+    var response = await _controller._viewModel.addMembers(
+        memberList: memberIds,
+        conversationId: conversationId,
+        isLoading: isLoading);
     if (response?.hasError ?? true) {
       return;
     }
+    await _controller.getConverstaionDetails(
+      conversationId: conversationId,
+      includeMembers: true,
+      isLoading: false,
+    );
+    await _controller.getMessagesFromAPI();
   }
 
   ///Remove members from conversation
@@ -35,28 +38,32 @@ mixin IsmChatGroupAdminMixin {
       includeMembers: true,
       isLoading: false,
     );
+    await _controller.getMessagesFromAPI();
   }
 
-  ///variable to store eligible list for adding members in a conversation
-  List<UserDetails> eligibleList = [];
-
   ///Remove members from conversation
-  Future<List<UserDetails>?> getEligibleMembers(
-      String? conversationId, bool isLoading, int limit, int skip) async {
-    if (conversationId == null || conversationId.isEmpty) {
-      return null;
+  Future<void> getEligibleMembers(
+      {required String conversationId,
+      bool isLoading = false,
+      int limit = 10,
+      int skip = 0}) async {
+    var response = await _controller._viewModel.getEligibleMembers(
+        conversationId: conversationId,
+        isLoading: isLoading,
+        limit: limit,
+        skip: skip);
+    if (response?.isEmpty ?? false) {
+      return;
     }
-
-    var response = await _controller._viewModel
-        .getEligibleMembers(conversationId, isLoading, limit, skip);
-
-    if (response!.isNotEmpty) {
-      eligibleList.addAll(response);
-      _controller.update();
-    } else {
-      return null;
-    }
-    return null;
+    var users = response!;
+    users.sort((a, b) => a.userName.compareTo(b.userName));
+    _controller.groupEligibleUser.addAll(List.from(users)
+        .map((e) => SelectedForwardUser(
+              isUserSelected: false,
+              userDetails: e as UserDetails,
+              isBlocked: false,
+            ))
+        .toList());
   }
 
   ///Remove members from conversation

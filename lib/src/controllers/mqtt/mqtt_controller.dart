@@ -219,6 +219,16 @@ class IsmChatMqttController extends GetxController {
       case IsmChatActionEvents.deleteConversationLocally:
         // TODO: Handle this case.
         break;
+      case IsmChatActionEvents.membersAdd:
+      case IsmChatActionEvents.membersRemove:
+        _handleGroupRemoveAndAddUser(actionModel);
+        break;
+      case IsmChatActionEvents.removeAdmin:
+        // TODO: Handle this case.
+        break;
+      case IsmChatActionEvents.addAdmin:
+        // TODO: Handle this case.
+        break;
     }
   }
 
@@ -401,6 +411,19 @@ class IsmChatMqttController extends GetxController {
         _communicationConfig.userConfig.userId) {
       return;
     }
+    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
+
+    var conversation = conversationBox
+        .query(DBConversationModel_.conversationId
+            .equals(actionModel.conversationId!))
+        .build()
+        .findUnique();
+
+    if (conversation == null ||
+        conversation.lastMessageDetails.target!.messageId ==
+            actionModel.messageId) {
+      return;
+    }
 
     if (Get.isRegistered<IsmChatPageController>()) {
       var controller = Get.find<IsmChatPageController>();
@@ -409,6 +432,23 @@ class IsmChatMqttController extends GetxController {
         await Get.find<IsmChatConversationsController>().getBlockUser();
         await controller.getConverstaionDetails(
             conversationId: actionModel.conversationId ?? '');
+        await controller.getMessagesFromAPI(
+            conversationId: actionModel.conversationId ?? '',
+            lastMessageTimestamp: controller.messages.last.sentAt);
+      }
+    }
+  }
+
+  void _handleGroupRemoveAndAddUser(IsmChatMqttActionModel actionModel) async {
+    if (actionModel.initiatorDetails?.userId ==
+        _communicationConfig.userConfig.userId) {
+      return;
+    }
+
+    if (Get.isRegistered<IsmChatPageController>()) {
+      var controller = Get.find<IsmChatPageController>();
+      if (controller.conversation!.conversationId ==
+          actionModel.conversationId) {
         await controller.getMessagesFromAPI(
             conversationId: actionModel.conversationId ?? '',
             lastMessageTimestamp: controller.messages.last.sentAt);

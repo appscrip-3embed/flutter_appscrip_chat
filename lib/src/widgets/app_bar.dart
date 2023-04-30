@@ -7,16 +7,18 @@ import 'package:get/get.dart';
 class IsmChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   const IsmChatAppBar({
     required this.title,
-    this.onSearch,
     this.onBack,
     this.height,
+    this.action,
     super.key,
   });
 
   final double? height;
   final String title;
-  final VoidCallback? onSearch;
+
   final VoidCallback? onBack;
+
+  final List<Widget>? action;
 
   @override
   Size get preferredSize =>
@@ -37,16 +39,6 @@ class IsmChatAppBar extends StatelessWidget implements PreferredSizeWidget {
           style: IsmChatStyles.w600White18,
         ),
         centerTitle: true,
-        actions: onSearch != null
-            ? [
-                IconButton(
-                  onPressed: onSearch,
-                  icon: const Icon(
-                    Icons.search,
-                    color: IsmChatColors.whiteColor,
-                  ),
-                ),
-              ]
-            : null,
+        actions: action,
       );
 }

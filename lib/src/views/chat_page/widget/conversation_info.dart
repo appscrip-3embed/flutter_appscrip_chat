@@ -16,7 +16,12 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
           );
         },
         builder: (controller) => Scaffold(
-          appBar: const IsmChatAppBar(title: 'Group Info'),
+          appBar: IsmChatAppBar(
+            title: controller.conversation?.isGroup ?? false
+                ? 'Group Info'
+                : controller.conversation!.chatName,
+            action: const [_MoreIcon()],
+          ),
           resizeToAvoidBottomInset: false,
           body: SafeArea(
             child: SingleChildScrollView(
@@ -251,5 +256,42 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
             ),
           ),
         ),
+      );
+}
+
+class _MoreIcon extends StatelessWidget {
+  const _MoreIcon();
+
+  @override
+  Widget build(BuildContext context) => PopupMenuButton(
+        color: IsmChatColors.whiteColor,
+        offset: Offset(0, IsmChatDimens.forty),
+        icon: const Icon(
+          Icons.more_vert_rounded,
+          color: IsmChatColors.whiteColor,
+        ),
+        onSelected: (index) {
+          if (index == 1) {
+            IsmChatUtility.openFullScreenBottomSheet(
+                const IsmChatGroupEligibleUser());
+          }
+        },
+        itemBuilder: (_) => [
+          PopupMenuItem(
+            padding: IsmChatDimens.edgeInsetsLeft10,
+            value: 1,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.group_add_outlined,
+                  color: IsmChatConfig.chatTheme.primaryColor,
+                ),
+                IsmChatDimens.boxWidth8,
+                const Text(IsmChatStrings.addParticioants),
+              ],
+            ),
+          ),
+        ],
       );
 }

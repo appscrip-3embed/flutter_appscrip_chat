@@ -8,6 +8,8 @@ export 'forward_message.dart';
 export 'image_message.dart';
 export 'link_message.dart';
 export 'location_message.dart';
+export 'members_add.dart';
+export 'members_remove.dart';
 export 'reply_message.dart';
 export 'text_message.dart';
 export 'video_message.dart';

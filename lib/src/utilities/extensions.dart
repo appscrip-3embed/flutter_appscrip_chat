@@ -233,6 +233,12 @@ extension ChildWidget on IsmChatCustomMessageType {
 
       case IsmChatCustomMessageType.conversationCreated:
         return IsmChatConversationCreatedMessage(message);
+
+      case IsmChatCustomMessageType.membersRemove:
+        return IsmChatConversationMembersRemove(message);
+
+      case IsmChatCustomMessageType.membersAdd:
+        return IsmChatConversationMembersAdd(message);
     }
   }
 

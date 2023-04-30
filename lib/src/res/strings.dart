@@ -61,4 +61,5 @@ class IsmChatStrings {
   static const String createdOn = 'Created on';
   static const String by = 'by';
   static const String noMedia = 'No Media';
+  static const String addParticioants = 'Add participants';
 }

@@ -117,14 +117,15 @@ class IsmChatPageRepository {
 
   /// Add members to a conversation
   Future<IsmChatResponseModel?> addMembers(
-      List<String> memberList, String conversationId, bool? isLoading) async {
+     {required List<String> memberList,
+          required  String conversationId, bool isLoading =  false}) async {
     var payload = {'members': memberList, 'conversationId': conversationId};
     try {
       var response = await _apiWrapper.put(
         IsmChatAPI.conversationMembers,
         payload: payload,
         headers: IsmChatUtility.tokenCommonHeader(),
-        showLoader: isLoading ?? false,
+        showLoader: isLoading,
       );
       if (response.hasError) {
         return null;
@@ -158,16 +159,15 @@ class IsmChatPageRepository {
 
   /// Get eligible members to add to a conversation
   Future<List<UserDetails>?> getEligibleMembers(
-    String conversationId,
-    bool? isLoading,
-    int? limit,
-    int? skip,
-  ) async {
+      {required String conversationId,
+      bool isLoading = false,
+      int limit = 10,
+      int skip = 0}) async {
     try {
       var response = await _apiWrapper.get(
-        '${IsmChatAPI.eligibleMembers}?conversationId=$conversationId&limit=${limit ?? 10}&skip=${skip ?? 0}',
+        '${IsmChatAPI.eligibleMembers}?conversationId=$conversationId&limit=$limit&skip=$skip',
         headers: IsmChatUtility.tokenCommonHeader(),
-        showLoader: isLoading ?? false,
+        showLoader: isLoading,
       );
       if (response.hasError) {
         return null;

@@ -29,6 +29,8 @@ class IsmChatPageViewModel {
           IsmChatActionEvents.clearConversation.name,
           if (!isGroup) IsmChatActionEvents.conversationCreated.name,
           IsmChatActionEvents.deleteConversationLocally.name,
+          IsmChatActionEvents.removeAdmin.name,
+          IsmChatActionEvents.addAdmin.name,
         ].contains(e.action));
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
     var conversation = conversationBox
@@ -260,9 +262,9 @@ class IsmChatPageViewModel {
   }
 
   /// Add members to a conversation
-  Future<IsmChatResponseModel?> addMembers(List<String> memberList,
-          String conversationId, bool isLoading) async =>
-      await _repository.addMembers(memberList, conversationId, isLoading);
+    Future<IsmChatResponseModel?> addMembers({required List<String> memberList,
+          required  String conversationId, bool isLoading =  false}) async =>
+      await _repository.addMembers(memberList : memberList,conversationId : conversationId,isLoading : isLoading);
 
   /// Remove members from conversation
   Future<IsmChatResponseModel?> removeMember({
@@ -274,9 +276,15 @@ class IsmChatPageViewModel {
 
   /// Get eligible members to add to a conversation
   Future<List<UserDetails>?> getEligibleMembers(
-          String conversationId, bool isLoading, int limit, int skip) async =>
+          {required String conversationId,
+          bool isLoading = false,
+          int limit = 10,
+          int skip = 0}) async =>
       await _repository.getEligibleMembers(
-          conversationId, isLoading, limit, skip);
+          conversationId: conversationId,
+          isLoading: isLoading,
+          limit: limit,
+          skip: skip);
 
   /// Leave conversation
   Future<IsmChatResponseModel?> leaveConversation(

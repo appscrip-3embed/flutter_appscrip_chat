@@ -46,6 +46,8 @@ enum IsmChatCustomMessageType {
   deletedForEveryone(12),
   link(13),
   conversationCreated(14),
+  membersRemove(15),
+  membersAdd(16),
   date(100);
 
   const IsmChatCustomMessageType(this.value);
@@ -80,6 +82,10 @@ enum IsmChatCustomMessageType {
         return IsmChatCustomMessageType.link;
       case 14:
         return IsmChatCustomMessageType.conversationCreated;
+      case 15:
+        return IsmChatCustomMessageType.membersRemove;
+      case 16:
+        return IsmChatCustomMessageType.membersAdd;
       case 100:
         return IsmChatCustomMessageType.date;
       default:
@@ -100,6 +106,8 @@ enum IsmChatCustomMessageType {
       'block': IsmChatCustomMessageType.block,
       'unblock': IsmChatCustomMessageType.unblock,
       'conversationCreated': IsmChatCustomMessageType.conversationCreated,
+      'membersRemove': IsmChatCustomMessageType.membersRemove,
+      'membersAdd': IsmChatCustomMessageType.membersAdd,
     };
 
     var type = value.split('.').last;
@@ -165,6 +173,13 @@ enum IsmChatCustomMessageType {
         return null;
       case IsmChatActionEvents.clearConversation:
         return null;
+      case IsmChatActionEvents.deleteConversationLocally:
+        return null;
+      case IsmChatActionEvents.removeAdmin:
+        return null;
+      case IsmChatActionEvents.addAdmin:
+        return null;
+
       case IsmChatActionEvents.userBlock:
         return IsmChatCustomMessageType.block;
       case IsmChatActionEvents.userBlockConversation:
@@ -173,9 +188,12 @@ enum IsmChatCustomMessageType {
         return IsmChatCustomMessageType.unblock;
       case IsmChatActionEvents.userUnblockConversation:
         return IsmChatCustomMessageType.unblock;
-      case IsmChatActionEvents.deleteConversationLocally:
-        return null;
+      case IsmChatActionEvents.membersRemove:
+        return IsmChatCustomMessageType.membersRemove;
+      case IsmChatActionEvents.membersAdd:
+        return IsmChatCustomMessageType.membersAdd;
     }
+    return null;
   }
 
   final int value;
@@ -273,6 +291,10 @@ enum IsmChatActionEvents {
   userUnblock,
   userUnblockConversation,
   clearConversation,
+  membersRemove,
+  membersAdd,
+  removeAdmin,
+  addAdmin,
   deleteConversationLocally;
 
   factory IsmChatActionEvents.fromName(String name) {
@@ -300,8 +322,15 @@ enum IsmChatActionEvents {
       case 'clearConversation':
         return IsmChatActionEvents.clearConversation;
       case 'deleteConversationLocally':
-        IsmChatLog.error(IsmChatActionEvents.deleteConversationLocally);
         return IsmChatActionEvents.deleteConversationLocally;
+      case 'membersRemove':
+        return IsmChatActionEvents.membersRemove;
+      case 'membersAdd':
+        return IsmChatActionEvents.membersAdd;
+      case 'removeAdmin':
+        return IsmChatActionEvents.removeAdmin;
+      case 'addAdmin':
+        return IsmChatActionEvents.addAdmin;
       default:
         return IsmChatActionEvents.typingEvent;
     }

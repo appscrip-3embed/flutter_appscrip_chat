@@ -43,6 +43,8 @@ class IsmChatPageController extends GetxController
 
   var messagesScrollController = AutoScrollController();
 
+  var groupEligibleUserScrollController = AutoScrollController();
+
   final textEditingController = TextEditingController();
 
   final RxBool _isMessagesLoading = true.obs;
@@ -199,10 +201,11 @@ class IsmChatPageController extends GetxController
 
   bool canRefreshDetails = true;
 
-  /// Store varialbe for whether is user in chat page or not
-  final RxBool _isChatPage = true.obs;
-  bool get isChatPage => _isChatPage.value;
-  set isChatPage(bool value) => _isChatPage.value = value;
+  final _groupEligibleUser = <SelectedForwardUser>[].obs;
+  List<SelectedForwardUser> get groupEligibleUser => _groupEligibleUser;
+  set groupEligibleUser(List<SelectedForwardUser> value) {
+    _groupEligibleUser.value = value;
+  }
 
   @override
   void onInit() async {
@@ -243,8 +246,28 @@ class IsmChatPageController extends GetxController
     }
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
+    groupEligibleUserScrollController.dispose();
 
     super.onClose();
+  }
+
+  /// This function will be used in [Add participants Screen] to Select or Unselect users
+  void onGrouEligibleUserTap(int index) {
+    groupEligibleUser[index].isUserSelected =
+        !groupEligibleUser[index].isUserSelected;
+  }
+
+  void userListScrollListener() {
+    groupEligibleUserScrollController.addListener(
+      () {
+        if (groupEligibleUserScrollController.offset >=
+            groupEligibleUserScrollController.position.maxScrollExtent) {
+          // if (usersPageToken.isNotEmpty) {
+          //   getUserList();
+          // }
+        }
+      },
+    );
   }
 
   void onBottomAttachmentTapped(

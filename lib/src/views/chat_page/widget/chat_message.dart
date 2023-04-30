@@ -22,6 +22,8 @@ class IsmChatMessage extends StatelessWidget {
       IsmChatCustomMessageType.block,
       IsmChatCustomMessageType.unblock,
       IsmChatCustomMessageType.conversationCreated,
+      IsmChatCustomMessageType.membersRemove,
+      IsmChatCustomMessageType.membersAdd,
     ].contains(message.customType!);
     var isGroup = controller.conversation!.isGroup ?? false;
 
