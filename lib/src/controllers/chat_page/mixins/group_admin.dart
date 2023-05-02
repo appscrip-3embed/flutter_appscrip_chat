@@ -63,8 +63,9 @@ mixin IsmChatGroupAdminMixin {
               isBlocked: false,
             ))
         .toList());
-    _controller.groupEligibleUser.sort(
-        (a, b) => a.userDetails.userName.compareTo(b.userDetails.userName));
+    _controller.groupEligibleUser.sort((a, b) => a.userDetails.userName
+        .toLowerCase()
+        .compareTo(b.userDetails.userName.toLowerCase()));
     _controller.canCallEligibleApi = true;
   }
 
@@ -93,6 +94,7 @@ mixin IsmChatGroupAdminMixin {
       includeMembers: true,
       isLoading: false,
     );
+    await _controller.getMessagesFromAPI();
   }
 
   ///Remove member as admin from conversation
@@ -111,5 +113,6 @@ mixin IsmChatGroupAdminMixin {
       includeMembers: true,
       isLoading: false,
     );
+    await _controller.getMessagesFromAPI();
   }
 }

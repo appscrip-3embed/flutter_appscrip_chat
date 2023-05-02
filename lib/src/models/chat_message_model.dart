@@ -16,8 +16,9 @@ class IsmChatMessageModel {
       updatedAt: map['updatedAt'] as int? ?? 0,
       sentAt: map['sentAt'] as int? ?? 0,
       unreadMessagesCount: map['unreadMessagesCount'] as int? ?? 0,
-      userId: map['userId'] as String? ?? '',
-      userName: map['userName'] as String? ?? '',
+      userId: map['userId'] as String? ?? map['initiatorId'] as String? ?? '',
+      userName:
+          map['userName'] as String? ?? map['initiatorName'] as String? ?? '',
       searchableTags: map['searchableTags'] != null
           ? List<String>.from(map['searchableTags'] as List<dynamic>)
           : [],
@@ -72,6 +73,8 @@ class IsmChatMessageModel {
       adminCount: map['adminCount'] as int? ?? 0,
       messageType:
           IsmChatMessageType.fromValue(map['messageType'] as int? ?? 0),
+      memberId: map['memberId'] as String?,
+      memberName: map['memberName'] as String?,
       sentByMe: true,
       mentionedUsers: map['mentionedUsers'],
       initiatorId: map['initiatorId'] as String? ?? '',
@@ -180,6 +183,8 @@ class IsmChatMessageModel {
     this.initiatorId,
     this.initiatorName,
     this.members,
+    this.memberId,
+    this.memberName,
   });
 
   String body;
@@ -220,8 +225,15 @@ class IsmChatMessageModel {
   dynamic mentionedUsers;
   IsmChatCustomMessageType? customType;
   bool sentByMe;
+  String? memberId;
+  String? memberName;
 
   String get chatName => conversationTitle ?? senderInfo?.userName ?? '';
+
+  String get initiator =>
+      userId == IsmChatConfig.communicationConfig.userConfig.userId
+          ? 'You'
+          : userName!;
 
   IsmChatMessageModel copyWith({
     String? body,
@@ -264,48 +276,52 @@ class IsmChatMessageModel {
     bool? sentByMe,
     dynamic mentionedUsers,
     List<UserDetails>? members,
+    String? memberId,
+    String? memberName,
   }) =>
       IsmChatMessageModel(
-          body: body ?? this.body,
-          action: action ?? this.action,
-          updatedAt: updatedAt ?? this.updatedAt,
-          sentAt: sentAt ?? this.sentAt,
-          unreadMessagesCount: unreadMessagesCount ?? this.unreadMessagesCount,
-          userName: userName ?? this.userName,
-          userId: userId ?? this.userId,
-          searchableTags: searchableTags ?? this.searchableTags,
-          privateOneToOne: privateOneToOne ?? this.privateOneToOne,
-          showInConversation: showInConversation ?? this.showInConversation,
-          readByAll: readByAll ?? this.readByAll,
-          senderInfo: senderInfo ?? this.senderInfo,
-          metaData: metaData ?? this.metaData,
-          messagingDisabled: messagingDisabled ?? this.messagingDisabled,
-          membersCount: membersCount ?? this.membersCount,
-          lastReadAt: lastReadAt ?? this.lastReadAt,
-          attachments: attachments ?? this.attachments,
-          lastMessageSentAt: lastMessageSentAt ?? this.lastMessageSentAt,
-          isGroup: isGroup ?? this.isGroup,
-          deliveredToAll: deliveredToAll ?? this.deliveredToAll,
-          customType: customType ?? this.customType,
-          createdByUserName: createdByUserName ?? this.createdByUserName,
-          createdByUserImageUrl:
-              createdByUserImageUrl ?? this.createdByUserImageUrl,
-          createdBy: createdBy ?? this.createdBy,
-          conversationType: conversationType ?? this.conversationType,
-          conversationTitle: conversationTitle ?? this.conversationTitle,
-          conversationImageUrl:
-              conversationImageUrl ?? this.conversationImageUrl,
-          conversationId: conversationId ?? this.conversationId,
-          parentMessageId: parentMessageId ?? this.parentMessageId,
-          initiatorId: initiatorId ?? this.initiatorId,
-          messageId: messageId ?? this.messageId,
-          deviceId: deviceId ?? this.deviceId,
-          adminCount: adminCount ?? this.adminCount,
-          messageType: messageType ?? this.messageType,
-          sentByMe: sentByMe ?? this.sentByMe,
-          mentionedUsers: mentionedUsers ?? this.mentionedUsers,
-          initiatorName: initiatorId ?? this.initiatorName,
-          members: members ?? this.members);
+        body: body ?? this.body,
+        action: action ?? this.action,
+        updatedAt: updatedAt ?? this.updatedAt,
+        sentAt: sentAt ?? this.sentAt,
+        unreadMessagesCount: unreadMessagesCount ?? this.unreadMessagesCount,
+        userName: userName ?? this.userName,
+        userId: userId ?? this.userId,
+        searchableTags: searchableTags ?? this.searchableTags,
+        privateOneToOne: privateOneToOne ?? this.privateOneToOne,
+        showInConversation: showInConversation ?? this.showInConversation,
+        readByAll: readByAll ?? this.readByAll,
+        senderInfo: senderInfo ?? this.senderInfo,
+        metaData: metaData ?? this.metaData,
+        messagingDisabled: messagingDisabled ?? this.messagingDisabled,
+        membersCount: membersCount ?? this.membersCount,
+        lastReadAt: lastReadAt ?? this.lastReadAt,
+        attachments: attachments ?? this.attachments,
+        lastMessageSentAt: lastMessageSentAt ?? this.lastMessageSentAt,
+        isGroup: isGroup ?? this.isGroup,
+        deliveredToAll: deliveredToAll ?? this.deliveredToAll,
+        customType: customType ?? this.customType,
+        createdByUserName: createdByUserName ?? this.createdByUserName,
+        createdByUserImageUrl:
+            createdByUserImageUrl ?? this.createdByUserImageUrl,
+        createdBy: createdBy ?? this.createdBy,
+        conversationType: conversationType ?? this.conversationType,
+        conversationTitle: conversationTitle ?? this.conversationTitle,
+        conversationImageUrl: conversationImageUrl ?? this.conversationImageUrl,
+        conversationId: conversationId ?? this.conversationId,
+        parentMessageId: parentMessageId ?? this.parentMessageId,
+        initiatorId: initiatorId ?? this.initiatorId,
+        messageId: messageId ?? this.messageId,
+        deviceId: deviceId ?? this.deviceId,
+        adminCount: adminCount ?? this.adminCount,
+        messageType: messageType ?? this.messageType,
+        sentByMe: sentByMe ?? this.sentByMe,
+        mentionedUsers: mentionedUsers ?? this.mentionedUsers,
+        initiatorName: initiatorId ?? this.initiatorName,
+        members: members ?? this.members,
+        memberId: memberId ?? this.memberId,
+        memberName: memberName ?? this.memberName,
+      );
 
   Map<String, dynamic> toMap() => {
         'body': IsmChatUtility.encodePayload(body),
@@ -346,13 +362,15 @@ class IsmChatMessageModel {
         'initiatorId': initiatorId,
         'initiatorName': initiatorName,
         'members': members?.map((e) => e.toMap()).toList(),
+        'memberId': memberId,
+        'memberName': memberName,
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'IsmChatMessageModel(body: $body, action: $action, updatedAt: $updatedAt, sentAt: $sentAt, unreadMessagesCount: $unreadMessagesCount, userName: $userName, userId: $userId, searchableTags: $searchableTags, privateOneToOne: $privateOneToOne, showInConversation: $showInConversation, readByAll: $readByAll, senderInfo: $senderInfo, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, attachments: $attachments, lastMessageSentAt: $lastMessageSentAt, isGroup: $isGroup, deliveredToAll: $deliveredToAll, customType: $customType, createdByUserName: $createdByUserName, createdByUserImageUrl: $createdByUserImageUrl, createdBy: $createdBy, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, parentMessageId: $parentMessageId, initiatorId : $initiatorId  messageId: $messageId, deviceId: $deviceId, adminCount: $adminCount, messageType: $messageType, sentByMe: $sentByMe, mentionedUsers: $mentionedUsers, initiatorName : $initiatorName, members: $members)';
+      'IsmChatMessageModel(body: $body, action: $action, updatedAt: $updatedAt, sentAt: $sentAt, unreadMessagesCount: $unreadMessagesCount, userName: $userName, userId: $userId, searchableTags: $searchableTags, privateOneToOne: $privateOneToOne, showInConversation: $showInConversation, readByAll: $readByAll, senderInfo: $senderInfo, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, attachments: $attachments, lastMessageSentAt: $lastMessageSentAt, isGroup: $isGroup, deliveredToAll: $deliveredToAll, customType: $customType, createdByUserName: $createdByUserName, createdByUserImageUrl: $createdByUserImageUrl, createdBy: $createdBy, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, parentMessageId: $parentMessageId, initiatorId : $initiatorId  messageId: $messageId, deviceId: $deviceId, adminCount: $adminCount, messageType: $messageType, sentByMe: $sentByMe, mentionedUsers: $mentionedUsers, initiatorName : $initiatorName, members: $members, memberId: $memberId, memberName: $memberName)';
 
   @override
   bool operator ==(Object other) {
@@ -396,6 +414,8 @@ class IsmChatMessageModel {
         other.mentionedUsers == mentionedUsers &&
         other.sentByMe == sentByMe &&
         other.initiatorName == initiatorName &&
+        other.memberId == memberId &&
+        other.memberName == memberName &&
         other.adminCount == adminCount;
   }
 
@@ -438,5 +458,7 @@ class IsmChatMessageModel {
       sentByMe.hashCode ^
       initiatorName.hashCode ^
       members.hashCode ^
+      memberId.hashCode ^
+      memberName.hashCode ^
       adminCount.hashCode;
 }

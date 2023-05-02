@@ -219,11 +219,11 @@ class IsmChatMqttController extends GetxController {
       case IsmChatActionEvents.deleteConversationLocally:
         // TODO: Handle this case.
         break;
-      case IsmChatActionEvents.membersAdd:
-      case IsmChatActionEvents.membersRemove:
+      case IsmChatActionEvents.addMember:
+      case IsmChatActionEvents.removeMember:
         _handleGroupRemoveAndAddUser(actionModel);
         break;
-      case IsmChatActionEvents.removeAdmin:
+      case IsmChatActionEvents.revokeAdmin:
         // TODO: Handle this case.
         break;
       case IsmChatActionEvents.addAdmin:
@@ -440,7 +440,6 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleGroupRemoveAndAddUser(IsmChatMqttActionModel actionModel) async {
-  
     if (actionModel.userDetails?.userId ==
         _communicationConfig.userConfig.userId) {
       return;
@@ -449,7 +448,8 @@ class IsmChatMqttController extends GetxController {
     if (Get.isRegistered<IsmChatPageController>()) {
       var controller = Get.find<IsmChatPageController>();
       if (controller.conversation!.conversationId ==
-          actionModel.conversationId) {
+              actionModel.conversationId &&
+          controller.conversation!.lastMessageSentAt != actionModel.sentAt) {
         await controller.getMessagesFromAPI(
             conversationId: actionModel.conversationId ?? '',
             lastMessageTimestamp: controller.messages.last.sentAt);

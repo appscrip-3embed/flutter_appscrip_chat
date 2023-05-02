@@ -8,6 +8,9 @@ class IsmChatPageViewModel {
   final IsmChatPageRepository _repository;
   var messageSkip = 0;
   var messageLimit = 20;
+
+  IsmChatPageController get _controller => Get.find<IsmChatPageController>();
+
   Future<List<IsmChatMessageModel>?> getChatMessages({
     required String conversationId,
     required int lastMessageTimestamp,
@@ -25,13 +28,23 @@ class IsmChatPageViewModel {
       return null;
     }
 
-    messages.removeWhere((e) => [
-          IsmChatActionEvents.clearConversation.name,
-          if (!isGroup) IsmChatActionEvents.conversationCreated.name,
-          IsmChatActionEvents.deleteConversationLocally.name,
-          IsmChatActionEvents.removeAdmin.name,
+    messages.removeWhere((e) {
+      IsmChatLog.info(
+          'removewhere $e\n${e.memberId}\n${e.userId}\n${IsmChatConfig.communicationConfig.userConfig.userId}\n${![
+        e.memberId,
+        e.userId
+      ].any((e) => e == IsmChatConfig.communicationConfig.userConfig.userId)}');
+      return [
+        IsmChatActionEvents.clearConversation.name,
+        if (!isGroup) IsmChatActionEvents.conversationCreated.name,
+        IsmChatActionEvents.deleteConversationLocally.name,
+        if (![e.memberId, e.userId].any((e) =>
+            e == IsmChatConfig.communicationConfig.userConfig.userId)) ...[
+          IsmChatActionEvents.revokeAdmin.name,
           IsmChatActionEvents.addAdmin.name,
-        ].contains(e.action));
+        ],
+      ].contains(e.action);
+    });
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
     var conversation = conversationBox
         .query(
@@ -262,9 +275,14 @@ class IsmChatPageViewModel {
   }
 
   /// Add members to a conversation
-    Future<IsmChatResponseModel?> addMembers({required List<String> memberList,
-          required  String conversationId, bool isLoading =  false}) async =>
-      await _repository.addMembers(memberList : memberList,conversationId : conversationId,isLoading : isLoading);
+  Future<IsmChatResponseModel?> addMembers(
+          {required List<String> memberList,
+          required String conversationId,
+          bool isLoading = false}) async =>
+      await _repository.addMembers(
+          memberList: memberList,
+          conversationId: conversationId,
+          isLoading: isLoading);
 
   /// Remove members from conversation
   Future<IsmChatResponseModel?> removeMember({

@@ -175,7 +175,8 @@ class _SelectedUsers extends StatelessWidget {
                     await controller.addMembers(
                         isLoading: true, memberIds: memberIds);
                   },
-                )
+                ),
+                IsmChatDimens.boxWidth4,
               ],
             ),
           ),

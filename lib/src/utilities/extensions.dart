@@ -234,11 +234,17 @@ extension ChildWidget on IsmChatCustomMessageType {
       case IsmChatCustomMessageType.conversationCreated:
         return IsmChatConversationCreatedMessage(message);
 
-      case IsmChatCustomMessageType.membersRemove:
-        return IsmChatConversationMembersRemove(message);
+      case IsmChatCustomMessageType.removeMember:
+        return IsmChatAddRemoveMember(message, isAdded: false);
 
-      case IsmChatCustomMessageType.membersAdd:
-        return IsmChatConversationMembersAdd(message);
+      case IsmChatCustomMessageType.addMember:
+        return IsmChatAddRemoveMember(message);
+
+      case IsmChatCustomMessageType.addAdmin:
+        return IsmChatAddRevokeAdmin(message);
+
+      case IsmChatCustomMessageType.revokeAdmin:
+        return IsmChatAddRevokeAdmin(message, isAdded: false);
     }
   }
 

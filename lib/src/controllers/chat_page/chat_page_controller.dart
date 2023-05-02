@@ -240,6 +240,9 @@ class IsmChatPageController extends GetxController
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
     });
+    _messages.listen((p0) {
+      _scrollToBottom();
+    });
   }
 
   @override
@@ -369,7 +372,6 @@ class IsmChatPageController extends GetxController
   }
 
   Future<void> scrollDown() async {
-    IsmChatLog.error('scroll');
     await messagesScrollController.animateTo(
       messagesScrollController.position.maxScrollExtent,
       duration: IsmChatConfig.animationDuration,
