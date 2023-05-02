@@ -201,6 +201,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     } else {
       await ismChatObjectBox.addForwardMessage(audioMessage!);
     }
+    var notificationTitle =
+        conversationController.userDetails?.userName ?? 'User';
     await ismPostMediaUrl(
       forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
       isNetWorkUrl: isNetWorkUrl ?? false,
@@ -211,9 +213,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       mediaId: sentAt.toString(),
       mediaType: IsmChatAttachmentType.audio.value,
       nameWithExtension: nameWithExtension ?? '',
-      notificationBody: 'Send you an Audio',
-      notificationTitle:
-          _controller.conversation?.opponentDetails?.userName ?? 'User',
+      notificationBody: 'Sent you an Audio',
+      notificationTitle: notificationTitle,
     );
   }
 
@@ -301,6 +302,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     } else {
       await ismChatObjectBox.addForwardMessage(documentMessage!);
     }
+    var notificationTitle =
+        conversationController.userDetails?.userName ?? 'User';
     await ismPostMediaUrl(
       forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
       isNetWorkUrl: isNetWorkUrl ?? false,
@@ -311,9 +314,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       mediaId: sentAt.toString(),
       mediaType: IsmChatAttachmentType.file.value,
       nameWithExtension: nameWithExtension ?? '',
-      notificationBody: 'Send you an Document',
-      notificationTitle:
-          _controller.conversation?.opponentDetails?.userName ?? 'User',
+      notificationBody: 'Sent you an Document',
+      notificationTitle: notificationTitle,
     );
   }
 
@@ -368,52 +370,50 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       }
       videoMessage = ismChatChatMessageModel;
     } else {
-    
-        final videoCopress = await VideoCompress.compressVideo(file!.path,
-            quality: VideoQuality.LowQuality, includeAudio: true);
-        final thumbnailFile = isThumbnail
-            ? thumbnailFiles!
-            : await VideoCompress.getFileThumbnail(file.path,
-                quality: 50, // default(100)
-                position: -1 // default(-1)
-                );
-        if (videoCopress != null) {
-          bytes = videoCopress.file!.readAsBytesSync();
-          thumbnailBytes = thumbnailFile.readAsBytesSync();
-          thumbnailNameWithExtension = thumbnailFile.path.split('/').last;
-          thumbnailMediaId =
-              thumbnailNameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
-          nameWithExtension = file.path.split('/').last;
-          mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
-          final extension = nameWithExtension.split('.').last;
+      final videoCopress = await VideoCompress.compressVideo(file!.path,
+          quality: VideoQuality.LowQuality, includeAudio: true);
+      final thumbnailFile = isThumbnail
+          ? thumbnailFiles!
+          : await VideoCompress.getFileThumbnail(file.path,
+              quality: 50, // default(100)
+              position: -1 // default(-1)
+              );
+      if (videoCopress != null) {
+        bytes = videoCopress.file!.readAsBytesSync();
+        thumbnailBytes = thumbnailFile.readAsBytesSync();
+        thumbnailNameWithExtension = thumbnailFile.path.split('/').last;
+        thumbnailMediaId =
+            thumbnailNameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
+        nameWithExtension = file.path.split('/').last;
+        mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
+        final extension = nameWithExtension.split('.').last;
 
-          videoMessage = IsmChatMessageModel(
-            body: 'Video',
-            conversationId: conversationId,
-            customType: IsmChatCustomMessageType.video,
-            attachments: [
-              AttachmentModel(
-                  attachmentType: IsmChatAttachmentType.video,
-                  thumbnailUrl: thumbnailFile.path,
-                  size: double.parse(bytes.length.toString()),
-                  name: nameWithExtension,
-                  mimeType: extension,
-                  mediaUrl: videoCopress.file!.path,
-                  mediaId: mediaId,
-                  extension: extension)
-            ],
-            deliveredToAll: false,
-            messageId: '',
-            deviceId: _controller._deviceConfig.deviceId!,
-            messageType: IsmChatMessageType.normal,
-            messagingDisabled: false,
-            parentMessageId: '',
-            readByAll: false,
-            sentAt: sentAt,
-            sentByMe: true,
-          );
-        }
-     
+        videoMessage = IsmChatMessageModel(
+          body: 'Video',
+          conversationId: conversationId,
+          customType: IsmChatCustomMessageType.video,
+          attachments: [
+            AttachmentModel(
+                attachmentType: IsmChatAttachmentType.video,
+                thumbnailUrl: thumbnailFile.path,
+                size: double.parse(bytes.length.toString()),
+                name: nameWithExtension,
+                mimeType: extension,
+                mediaUrl: videoCopress.file!.path,
+                mediaId: mediaId,
+                extension: extension)
+          ],
+          deliveredToAll: false,
+          messageId: '',
+          deviceId: _controller._deviceConfig.deviceId!,
+          messageType: IsmChatMessageType.normal,
+          messagingDisabled: false,
+          parentMessageId: '',
+          readByAll: false,
+          sentAt: sentAt,
+          sentByMe: true,
+        );
+      }
     }
     if (!forwardMessgeForMulitpleUser) {
       try {
@@ -441,7 +441,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       mediaId: mediaId ?? '',
       mediaType: IsmChatAttachmentType.video.value,
       nameWithExtension: nameWithExtension ?? '',
-      notificationBody: 'Send you an Video',
+      notificationBody: 'Sent you an Video',
       thumbnailNameWithExtension: thumbnailNameWithExtension,
       thumbnailMediaId: thumbnailMediaId,
       thumbnailBytes: thumbnailBytes,
@@ -544,7 +544,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       mediaId: mediaId ?? '',
       mediaType: IsmChatAttachmentType.image.value,
       nameWithExtension: nameWithExtension ?? '',
-      notificationBody: 'Send you an Image',
+      notificationBody: 'Sent you an Image',
       imageAndFile: true,
       notificationTitle: notificationTitle,
     );
@@ -595,6 +595,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     } else {
       await ismChatObjectBox.addForwardMessage(textMessage);
     }
+    var notificationTitle =
+        conversationController.userDetails?.userName ?? 'User';
     sendMessage(
         metaData: textMessage.metaData,
         forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
@@ -605,8 +607,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         conversationId: textMessage.conversationId ?? '',
         messageType: textMessage.messageType?.value ?? 0,
         notificationBody: 'Sent you a location',
-        notificationTitle:
-            _controller.conversation?.opponentDetails?.userName ?? '');
+        notificationTitle: notificationTitle);
   }
 
   void sendTextMessage({
@@ -662,7 +663,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     } else {
       await ismChatObjectBox.addForwardMessage(textMessage);
     }
-
+    var notificationTitle =
+        conversationController.userDetails?.userName ?? 'User';
     sendMessage(
         metaData: textMessage.metaData,
         forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
@@ -675,7 +677,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         conversationId: textMessage.conversationId ?? '',
         messageType: textMessage.messageType?.value ?? 0,
         notificationBody: textMessage.body,
-        notificationTitle: 'User');
+        notificationTitle: notificationTitle);
   }
 
   Future<void> ismPostMediaUrl(

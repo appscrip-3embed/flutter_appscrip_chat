@@ -32,7 +32,7 @@ class IsmChatDimens {
   static final double sixty = 60.sp;
 
   static final double eighty = 80.sp;
-  static final double ninghty = 90.sp;
+  static final double ninty = 90.sp;
 
   static final double hundred = 100.sp;
   static final double oneHundredFifty = 150.sp;
@@ -106,5 +106,5 @@ class IsmChatDimens {
       EdgeInsets.symmetric(horizontal: eight, vertical: 10);
   static final EdgeInsets edgeInsetsBottom10 = EdgeInsets.only(bottom: ten);
   static final EdgeInsets edgeInsetsBottom50 = EdgeInsets.only(bottom: fifty);
-   static final EdgeInsets edgeInsetsLeft10 = EdgeInsets.only(left: ten);
+  static final EdgeInsets edgeInsetsLeft10 = EdgeInsets.only(left: ten);
 }

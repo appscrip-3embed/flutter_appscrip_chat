@@ -440,7 +440,8 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleGroupRemoveAndAddUser(IsmChatMqttActionModel actionModel) async {
-    if (actionModel.initiatorDetails?.userId ==
+  
+    if (actionModel.userDetails?.userId ==
         _communicationConfig.userConfig.userId) {
       return;
     }

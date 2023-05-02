@@ -15,6 +15,7 @@ class IsmChatConversationMembersAdd extends StatelessWidget {
         padding: IsmChatDimens.edgeInsets8_4,
         child: Text(
           '${message.userName} added ${message.members?.map((e) => e.memberName).join(', ')}',
+          textAlign: TextAlign.center,
           style: IsmChatStyles.w500Black12.copyWith(
             color: IsmChatConfig.chatTheme.primaryColor,
           ),

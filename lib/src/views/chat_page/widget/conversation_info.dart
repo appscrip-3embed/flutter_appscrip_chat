@@ -20,7 +20,6 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
             title: controller.conversation?.isGroup ?? false
                 ? 'Group Info'
                 : controller.conversation!.chatName,
-            action: const [_MoreIcon()],
           ),
           resizeToAvoidBottomInset: false,
           body: SafeArea(
@@ -78,64 +77,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Obx(
-                        () {
-                          if (controller.mediaList.isEmpty) {
-                            return const Align(
-                              alignment: Alignment.center,
-                              child: Text(IsmChatStrings.noMedia),
-                            );
-                          } else {
-                            return SizedBox(
-                              height: IsmChatDimens.hundred,
-                              child: ListView.separated(
-                                padding: IsmChatDimens.edgeInsets10_0,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: controller.mediaList.take(10).length,
-                                separatorBuilder: (_, index) =>
-                                    IsmChatDimens.boxWidth8,
-                                itemBuilder: (_, index) {
-                                  var media = controller.mediaList[index];
-                                  var url = media.customType ==
-                                          IsmChatCustomMessageType.image
-                                      ? media.attachments!.first.mediaUrl!
-                                      : media.attachments!.first.thumbnailUrl!;
-                                  var iconData = media.customType ==
-                                          IsmChatCustomMessageType.audio
-                                      ? Icons.audio_file_rounded
-                                      : Icons.description_rounded;
-                                  return Container(
-                                    height: IsmChatDimens.hundred,
-                                    width: IsmChatDimens.hundred,
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
-                                      color: IsmChatConfig
-                                          .chatTheme.backgroundColor,
-                                      borderRadius: BorderRadius.circular(
-                                        IsmChatDimens.twenty,
-                                      ),
-                                    ),
-                                    child: [
-                                      IsmChatCustomMessageType.audio,
-                                      IsmChatCustomMessageType.file
-                                    ].contains(media.customType)
-                                        ? Icon(
-                                            iconData,
-                                            color: IsmChatConfig
-                                                .chatTheme.primaryColor,
-                                          )
-                                        : IsmChatImage(
-                                            url,
-                                            isNetworkImage:
-                                                url.contains('http'),
-                                          ),
-                                  );
-                                },
-                              ),
-                            );
-                          }
-                        },
-                      ),
+                      const _MediaList(),
                     ],
                   ),
                   if (controller.conversation!.isGroup ?? false) ...[
@@ -144,12 +86,21 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Padding(
-                          padding: IsmChatDimens.edgeInsets10_0,
+                          padding: IsmChatDimens.edgeInsets10,
                           child: Text(
                             '${controller.conversation?.membersCount} ${IsmChatStrings.participants}',
                             style: IsmChatStyles.w500Black16,
                           ),
                         ),
+                        IconButton(
+                          onPressed: () =>
+                              IsmChatUtility.openFullScreenBottomSheet(
+                                  const IsmChatGroupEligibleUser()),
+                          icon: Icon(
+                            Icons.group_add_outlined,
+                            color: IsmChatConfig.chatTheme.primaryColor,
+                          ),
+                        )
                       ],
                     ),
                     IsmChatInputField(
@@ -256,6 +207,65 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
             ),
           ),
         ),
+      );
+}
+
+class _MediaList extends StatelessWidget {
+  const _MediaList();
+
+  @override
+  Widget build(BuildContext context) => GetX<IsmChatPageController>(
+        builder: (controller) {
+          if (controller.mediaList.isEmpty) {
+            return const Align(
+              alignment: Alignment.center,
+              child: Text(IsmChatStrings.noMedia),
+            );
+          } else {
+            return SizedBox(
+              height: IsmChatDimens.hundred,
+              child: ListView.separated(
+                padding: IsmChatDimens.edgeInsets10_0,
+                scrollDirection: Axis.horizontal,
+                itemCount: controller.mediaList.take(10).length,
+                separatorBuilder: (_, index) => IsmChatDimens.boxWidth8,
+                itemBuilder: (_, index) {
+                  var media = controller.mediaList[index];
+                  var url = media.customType == IsmChatCustomMessageType.image
+                      ? media.attachments!.first.mediaUrl!
+                      : media.attachments!.first.thumbnailUrl!;
+                  var iconData =
+                      media.customType == IsmChatCustomMessageType.audio
+                          ? Icons.audio_file_rounded
+                          : Icons.description_rounded;
+                  return Container(
+                    height: IsmChatDimens.hundred,
+                    width: IsmChatDimens.hundred,
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                      color: IsmChatConfig.chatTheme.backgroundColor,
+                      borderRadius: BorderRadius.circular(
+                        IsmChatDimens.twenty,
+                      ),
+                    ),
+                    child: [
+                      IsmChatCustomMessageType.audio,
+                      IsmChatCustomMessageType.file
+                    ].contains(media.customType)
+                        ? Icon(
+                            iconData,
+                            color: IsmChatConfig.chatTheme.primaryColor,
+                          )
+                        : IsmChatImage(
+                            url,
+                            isNetworkImage: url.contains('http'),
+                          ),
+                  );
+                },
+              ),
+            );
+          }
+        },
       );
 }
 

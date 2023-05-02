@@ -45,18 +45,17 @@ mixin IsmChatGroupAdminMixin {
   Future<void> getEligibleMembers(
       {required String conversationId,
       bool isLoading = false,
-      int limit = 10,
+      int limit = 20,
       int skip = 0}) async {
     var response = await _controller._viewModel.getEligibleMembers(
         conversationId: conversationId,
         isLoading: isLoading,
         limit: limit,
-        skip: skip);
+        skip: _controller.groupEligibleUser.length);
     if (response?.isEmpty ?? false) {
       return;
     }
     var users = response!;
-    users.sort((a, b) => a.userName.compareTo(b.userName));
     _controller.groupEligibleUser.addAll(List.from(users)
         .map((e) => SelectedForwardUser(
               isUserSelected: false,
@@ -64,6 +63,9 @@ mixin IsmChatGroupAdminMixin {
               isBlocked: false,
             ))
         .toList());
+    _controller.groupEligibleUser.sort(
+        (a, b) => a.userDetails.userName.compareTo(b.userDetails.userName));
+    _controller.canCallEligibleApi = true;
   }
 
   ///Remove members from conversation

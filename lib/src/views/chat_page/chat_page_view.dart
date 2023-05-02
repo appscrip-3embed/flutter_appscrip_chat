@@ -112,7 +112,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                   () => !controller.showDownSideButton
                       ? const SizedBox.shrink()
                       : Positioned(
-                          bottom: IsmChatDimens.eighty,
+                          bottom: IsmChatDimens.ninty,
                           right: IsmChatDimens.eight,
                           child: IsmChatTapHandler(
                             onTap: controller.scrollDown,

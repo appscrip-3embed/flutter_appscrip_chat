@@ -117,8 +117,9 @@ class IsmChatPageRepository {
 
   /// Add members to a conversation
   Future<IsmChatResponseModel?> addMembers(
-     {required List<String> memberList,
-          required  String conversationId, bool isLoading =  false}) async {
+      {required List<String> memberList,
+      required String conversationId,
+      bool isLoading = false}) async {
     var payload = {'members': memberList, 'conversationId': conversationId};
     try {
       var response = await _apiWrapper.put(
@@ -161,7 +162,7 @@ class IsmChatPageRepository {
   Future<List<UserDetails>?> getEligibleMembers(
       {required String conversationId,
       bool isLoading = false,
-      int limit = 10,
+      int limit = 20,
       int skip = 0}) async {
     try {
       var response = await _apiWrapper.get(

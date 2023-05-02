@@ -37,7 +37,7 @@ class IsmChatPageController extends GetxController
 
   IsmChatConversationModel? conversation;
 
-  var focusNode = FocusNode();
+  var messageFieldFocusNode = FocusNode();
 
   var chatInputController = TextEditingController();
 
@@ -201,6 +201,8 @@ class IsmChatPageController extends GetxController
 
   bool canRefreshDetails = true;
 
+  bool canCallEligibleApi = true;
+
   final _groupEligibleUser = <SelectedForwardUser>[].obs;
   List<SelectedForwardUser> get groupEligibleUser => _groupEligibleUser;
   set groupEligibleUser(List<SelectedForwardUser> value) {
@@ -233,6 +235,8 @@ class IsmChatPageController extends GetxController
       }
     }
     scrollListener();
+    onGrouEligibleUserListener();
+    messageFieldFocusNode.addListener(_scrollToBottom);
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
     });
@@ -257,14 +261,16 @@ class IsmChatPageController extends GetxController
         !groupEligibleUser[index].isUserSelected;
   }
 
-  void userListScrollListener() {
+  void onGrouEligibleUserListener() {
     groupEligibleUserScrollController.addListener(
       () {
-        if (groupEligibleUserScrollController.offset >=
-            groupEligibleUserScrollController.position.maxScrollExtent) {
-          // if (usersPageToken.isNotEmpty) {
-          //   getUserList();
-          // }
+        if (groupEligibleUserScrollController.position.pixels >
+                groupEligibleUserScrollController.position.maxScrollExtent *
+                    0.8 &&
+            canCallEligibleApi) {
+          canCallEligibleApi = false;
+
+          getEligibleMembers(conversationId: conversation!.conversationId!);
         }
       },
     );
@@ -353,7 +359,7 @@ class IsmChatPageController extends GetxController
           messagesScrollController.position.minScrollExtent) {
         getMessagesFromAPI(forPagination: true, lastMessageTimestamp: 0);
       }
-      if (messagesScrollController.position.maxScrollExtent ==
+      if (messagesScrollController.position.maxScrollExtent <=
           messagesScrollController.offset) {
         showDownSideButton = false;
       } else {
@@ -363,6 +369,7 @@ class IsmChatPageController extends GetxController
   }
 
   Future<void> scrollDown() async {
+    IsmChatLog.error('scroll');
     await messagesScrollController.animateTo(
       messagesScrollController.position.maxScrollExtent,
       duration: IsmChatConfig.animationDuration,
@@ -544,7 +551,7 @@ class IsmChatPageController extends GetxController
 
   void _scrollToBottom() async {
     await Future.delayed(
-      const Duration(milliseconds: 10),
+      const Duration(milliseconds: 500),
       () async => await scrollDown(),
     );
   }

@@ -169,7 +169,10 @@ class _Message extends StatelessWidget {
                     child: Container(
                       padding: IsmChatDimens.edgeInsets4,
                       constraints: showMessageInCenter
-                          ? null
+                          ? BoxConstraints(
+                              maxWidth: context.width * .85,
+                              minWidth: context.width * .1,
+                            )
                           : BoxConstraints(
                               maxWidth: context.width * .8,
                               minWidth: context.width * .1,

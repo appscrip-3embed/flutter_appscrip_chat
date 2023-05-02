@@ -278,7 +278,7 @@ class IsmChatPageViewModel {
   Future<List<UserDetails>?> getEligibleMembers(
           {required String conversationId,
           bool isLoading = false,
-          int limit = 10,
+          int limit = 20,
           int skip = 0}) async =>
       await _repository.getEligibleMembers(
           conversationId: conversationId,
