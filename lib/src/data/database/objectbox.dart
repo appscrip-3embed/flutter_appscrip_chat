@@ -260,7 +260,7 @@ class IsmChatObjectBox {
     }
   }
 
-  Future<void> removeUser(String conversationId) async {
+  Future<void> removeConversation(String conversationId) async {
     var conversation = chatConversationBox
         .query(DBConversationModel_.conversationId.equals(conversationId))
         .build()

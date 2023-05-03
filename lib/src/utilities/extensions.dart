@@ -245,6 +245,8 @@ extension ChildWidget on IsmChatCustomMessageType {
 
       case IsmChatCustomMessageType.revokeAdmin:
         return IsmChatAddRevokeAdmin(message, isAdded: false);
+      case IsmChatCustomMessageType.memberLeave:
+        return IsmChatAddRemoveMember(message, didLeft: true);
     }
   }
 

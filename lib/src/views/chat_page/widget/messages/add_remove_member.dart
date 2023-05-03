@@ -5,11 +5,13 @@ class IsmChatAddRemoveMember extends StatelessWidget {
   const IsmChatAddRemoveMember(
     this.message, {
     this.isAdded = true,
+    this.didLeft = false,
     super.key,
   });
 
   final IsmChatMessageModel message;
   final bool isAdded;
+  final bool didLeft;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -19,7 +21,9 @@ class IsmChatAddRemoveMember extends StatelessWidget {
         ),
         padding: IsmChatDimens.edgeInsets8_4,
         child: Text(
-          '${message.initiator} ${isAdded ? 'added' : 'removed'} ${message.members?.map((e) => e.memberName).join(', ')}',
+          didLeft
+              ? '${message.userName} has left'
+              : '${message.initiator} ${isAdded ? 'added' : 'removed'} ${message.members?.map((e) => e.memberName).join(', ')}',
           textAlign: TextAlign.center,
           style: IsmChatStyles.w500Black12.copyWith(
             color: IsmChatConfig.chatTheme.primaryColor,

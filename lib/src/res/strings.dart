@@ -62,4 +62,10 @@ class IsmChatStrings {
   static const String by = 'by';
   static const String noMedia = 'No Media';
   static const String addParticioants = 'Add participants';
+
+  static const String areYouSure = 'Are you sure?';
+  static const String assignAdmin = 'Assign group admin';
+  static const String exit = 'Exit anyway';
+  static const String youAreOnlyAdmin =
+      "You're the only admin of the group, make a group admin or a random person will be assigned as group admin";
 }

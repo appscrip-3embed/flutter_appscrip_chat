@@ -28,23 +28,16 @@ class IsmChatPageViewModel {
       return null;
     }
 
-    messages.removeWhere((e) {
-      IsmChatLog.info(
-          'removewhere $e\n${e.memberId}\n${e.userId}\n${IsmChatConfig.communicationConfig.userConfig.userId}\n${![
-        e.memberId,
-        e.userId
-      ].any((e) => e == IsmChatConfig.communicationConfig.userConfig.userId)}');
-      return [
-        IsmChatActionEvents.clearConversation.name,
-        if (!isGroup) IsmChatActionEvents.conversationCreated.name,
-        IsmChatActionEvents.deleteConversationLocally.name,
-        if (![e.memberId, e.userId].any((e) =>
-            e == IsmChatConfig.communicationConfig.userConfig.userId)) ...[
-          IsmChatActionEvents.revokeAdmin.name,
-          IsmChatActionEvents.addAdmin.name,
-        ],
-      ].contains(e.action);
-    });
+    messages.removeWhere((e) => [
+          IsmChatActionEvents.clearConversation.name,
+          if (!isGroup) IsmChatActionEvents.conversationCreated.name,
+          IsmChatActionEvents.deleteConversationLocally.name,
+          if (![e.memberId, e.userId].any((e) =>
+              e == IsmChatConfig.communicationConfig.userConfig.userId)) ...[
+            IsmChatActionEvents.revokeAdmin.name,
+            IsmChatActionEvents.addAdmin.name,
+          ],
+        ].contains(e.action));
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
     var conversation = conversationBox
         .query(

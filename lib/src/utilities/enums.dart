@@ -50,6 +50,7 @@ enum IsmChatCustomMessageType {
   addMember(16),
   addAdmin(17),
   revokeAdmin(18),
+  memberLeave(19),
   date(100);
 
   const IsmChatCustomMessageType(this.value);
@@ -92,6 +93,8 @@ enum IsmChatCustomMessageType {
         return IsmChatCustomMessageType.addAdmin;
       case 18:
         return IsmChatCustomMessageType.revokeAdmin;
+      case 19:
+        return IsmChatCustomMessageType.memberLeave;
       case 100:
         return IsmChatCustomMessageType.date;
       default:
@@ -118,6 +121,7 @@ enum IsmChatCustomMessageType {
       'addMember': IsmChatCustomMessageType.addMember,
       'addAdmin': IsmChatCustomMessageType.addAdmin,
       'revokeAdmin': IsmChatCustomMessageType.revokeAdmin,
+      'memberLeave': IsmChatCustomMessageType.memberLeave,
     };
 
     var type = value.split('.').last;
@@ -189,7 +193,6 @@ enum IsmChatCustomMessageType {
         return IsmChatCustomMessageType.revokeAdmin;
       case IsmChatActionEvents.addAdmin:
         return IsmChatCustomMessageType.addAdmin;
-
       case IsmChatActionEvents.userBlock:
         return IsmChatCustomMessageType.block;
       case IsmChatActionEvents.userBlockConversation:
@@ -202,6 +205,8 @@ enum IsmChatCustomMessageType {
         return IsmChatCustomMessageType.removeMember;
       case IsmChatActionEvents.addMember:
         return IsmChatCustomMessageType.addMember;
+      case IsmChatActionEvents.memberLeave:
+        return IsmChatCustomMessageType.memberLeave;
     }
   }
 
@@ -304,6 +309,7 @@ enum IsmChatActionEvents {
   addMember,
   revokeAdmin,
   addAdmin,
+  memberLeave,
   deleteConversationLocally;
 
   factory IsmChatActionEvents.fromName(String name) {
@@ -340,6 +346,8 @@ enum IsmChatActionEvents {
         return IsmChatActionEvents.revokeAdmin;
       case 'addAdmin':
         return IsmChatActionEvents.addAdmin;
+      case 'memberLeave':
+        return IsmChatActionEvents.memberLeave;
       default:
         return IsmChatActionEvents.typingEvent;
     }

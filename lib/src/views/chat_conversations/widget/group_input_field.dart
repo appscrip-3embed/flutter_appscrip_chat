@@ -8,31 +8,32 @@ class GroupInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       GetBuilder<IsmChatConversationsController>(
-          builder: (controller) => SizedBox(
-                width: IsmChatDimens.percentWidth(.9),
-                child: TextFormField(
-                  textCapitalization: TextCapitalization.sentences,
-                  controller: controller.addGrouNameController,
-                  decoration: InputDecoration(
-                    hintText: 'Write your group name',
-                    hintStyle: IsmChatStyles.w400Grey12,
-                    contentPadding: IsmChatDimens.edgeInsets10,
-                    isDense: true,
-                    isCollapsed: true,
-                    filled: true,
-                    fillColor: IsmChatTheme.of(context).backgroundColor,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(IsmChatDimens.ten),
-                      borderSide: const BorderSide(color: Colors.transparent),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(IsmChatDimens.ten),
-                      borderSide: const BorderSide(
-                        color: Colors.transparent,
-                      ),
-                    ),
-                  ),
-                  onChanged: (_) {},
+        builder: (controller) => SizedBox(
+          width: IsmChatDimens.percentWidth(.9),
+          child: TextFormField(
+            textCapitalization: TextCapitalization.sentences,
+            controller: controller.addGrouNameController,
+            decoration: InputDecoration(
+              hintText: 'Write your group name',
+              hintStyle: IsmChatStyles.w400Grey12,
+              contentPadding: IsmChatDimens.edgeInsets10,
+              isDense: true,
+              isCollapsed: true,
+              filled: true,
+              fillColor: IsmChatTheme.of(context).backgroundColor,
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(IsmChatDimens.ten),
+                borderSide: const BorderSide(color: Colors.transparent),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(IsmChatDimens.ten),
+                borderSide: const BorderSide(
+                  color: Colors.transparent,
                 ),
-              ));
+              ),
+            ),
+            onChanged: (_) {},
+          ),
+        ),
+      );
 }

@@ -81,7 +81,10 @@ mixin IsmChatGroupAdminMixin {
   }
 
   /// make admin
-  Future<void> makeAdmin(String memberId) async {
+  Future<void> makeAdmin(
+    String memberId, [
+    bool updateConversation = true,
+  ]) async {
     var conversationId = _controller.conversation!.conversationId!;
 
     var response = await _controller._viewModel
@@ -89,12 +92,14 @@ mixin IsmChatGroupAdminMixin {
     if (response?.hasError ?? true) {
       return;
     }
-    await _controller.getConverstaionDetails(
-      conversationId: conversationId,
-      includeMembers: true,
-      isLoading: false,
-    );
-    await _controller.getMessagesFromAPI();
+    if (updateConversation) {
+      await _controller.getConverstaionDetails(
+        conversationId: conversationId,
+        includeMembers: true,
+        isLoading: false,
+      );
+      await _controller.getMessagesFromAPI();
+    }
   }
 
   ///Remove member as admin from conversation

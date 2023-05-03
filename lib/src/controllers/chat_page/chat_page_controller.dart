@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:camera/camera.dart';
@@ -436,34 +437,62 @@ class IsmChatPageController extends GetxController
     );
   }
 
-  Future<void> showDialogExitButton(List<UserDetails> groupMembe) async {
-    var countAdminMember = groupMembers.where((e) => e.isAdmin).toList().length;
-    if (countAdminMember == 1) {
+  Future<void> showDialogExitButton([bool askToLeave = false]) async {
+    var adminCount = groupMembers.where((e) => e.isAdmin).length;
+    var isUserAdmin = groupMembers.any((e) =>
+        e.userId == IsmChatConfig.communicationConfig.userConfig.userId &&
+        e.isAdmin);
+    if (adminCount == 1 && !askToLeave && isUserAdmin) {
       await Get.dialog(
         IsmChatAlertDialogBox(
-          title: 'Exit Group name group?',
-          content: const Text(
-              'Only group admins will be notified that you left the group'),
+          title: IsmChatStrings.areYouSure,
+          content: const Text(IsmChatStrings.youAreOnlyAdmin),
           contentTextStyle: IsmChatStyles.w400Grey14,
-          actionLabels: const ['Exit'],
-          callbackActions: [() {}],
-          cancelLabel: IsmChatStrings.cancel,
-          onCancel: Get.back,
+          actionLabels: const [IsmChatStrings.exit],
+          callbackActions: [
+            () => showDialogExitButton(true),
+          ],
+          cancelLabel: IsmChatStrings.assignAdmin,
         ),
       );
     } else {
       await Get.dialog(
         IsmChatAlertDialogBox(
-          title: 'Exit Group name group?',
+          title: 'Exit ${conversation!.chatName}?',
           content: const Text(
-              'Only group admins will be notified that you left the group'),
+            'Only group admins will be notified that you left the group',
+          ),
           contentTextStyle: IsmChatStyles.w400Grey14,
           actionLabels: const ['Exit'],
-          callbackActions: [() {}],
-          cancelLabel: IsmChatStrings.cancel,
-          onCancel: Get.back,
+          callbackActions: [
+            () => _leaveGroup(
+                  adminCount: adminCount,
+                  isUserAdmin: isUserAdmin,
+                )
+          ],
         ),
       );
+    }
+  }
+
+  void _leaveGroup({
+    required int adminCount,
+    required bool isUserAdmin,
+  }) async {
+    if (adminCount == 1 && isUserAdmin) {
+      var members = groupMembers.where((e) => !e.isAdmin).toList();
+      var member = members[Random().nextInt(members.length)];
+      await makeAdmin(member.userId, false);
+    }
+    var didLeft = await leaveConversation(conversation!.conversationId!);
+    if (didLeft) {
+      Get.back(); // to Chat Page
+      Get.back(); // to Conversation Page
+      await Future.wait([
+        IsmChatConfig.objectBox
+            .removeConversation(conversation!.conversationId!),
+        _conversationController.getChatConversations(),
+      ]);
     }
   }
 

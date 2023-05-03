@@ -42,9 +42,10 @@ class IsmChatAlertDialogBox extends StatelessWidget {
           content: content,
           actions: [
             IsmChatTapHandler(
-              onTap: () {
-                Get.back<void>();
-              },
+              onTap: onCancel ??
+                  () {
+                    Get.back<void>();
+                  },
               child: Text(
                 cancelLabel,
                 style: IsmChatStyles.w400Black14,
