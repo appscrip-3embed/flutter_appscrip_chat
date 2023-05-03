@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatAlertDialogBox extends StatelessWidget {
-  const IsmChatAlertDialogBox({
-    super.key,
-    this.title = 'Are you sure?',
-    this.actionLabels,
-    this.callbackActions,
-    this.cancelLabel = IsmChatStrings.cancel,
-    this.onCancel,
-  }) : assert(
+  const IsmChatAlertDialogBox(
+      {super.key,
+      this.title = 'Are you sure?',
+      this.actionLabels,
+      this.callbackActions,
+      this.cancelLabel = IsmChatStrings.cancel,
+      this.onCancel,
+      this.content,
+      this.contentPadding,
+      this.contentTextStyle})
+      : assert(
           (actionLabels == null && callbackActions == null) ||
               (actionLabels != null &&
                   callbackActions != null &&
@@ -23,6 +26,9 @@ class IsmChatAlertDialogBox extends StatelessWidget {
   final List<VoidCallback>? callbackActions;
   final String cancelLabel;
   final VoidCallback? onCancel;
+  final Widget? content;
+  final TextStyle? contentTextStyle;
+  final EdgeInsetsGeometry? contentPadding;
 
   @override
   Widget build(BuildContext context) => (actionLabels?.length ?? 0) <= 1
@@ -31,6 +37,9 @@ class IsmChatAlertDialogBox extends StatelessWidget {
           title: Text(title),
           backgroundColor: IsmChatColors.whiteColor,
           titleTextStyle: IsmChatStyles.w600Black14,
+          contentPadding: contentPadding,
+          contentTextStyle: contentTextStyle,
+          content: content,
           actions: [
             IsmChatTapHandler(
               onTap: () {

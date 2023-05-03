@@ -172,7 +172,10 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                     ),
                     IsmChatDimens.boxHeight10,
                     TextButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        controller
+                            .showDialogExitButton(controller.groupMembers);
+                      },
                       icon: const Icon(
                         Icons.logout_rounded,
                         color: IsmChatColors.redColor,

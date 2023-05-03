@@ -436,6 +436,37 @@ class IsmChatPageController extends GetxController
     );
   }
 
+  Future<void> showDialogExitButton(List<UserDetails> groupMembe) async {
+    var countAdminMember = groupMembers.where((e) => e.isAdmin).toList().length;
+    if (countAdminMember == 1) {
+      await Get.dialog(
+        IsmChatAlertDialogBox(
+          title: 'Exit Group name group?',
+          content: const Text(
+              'Only group admins will be notified that you left the group'),
+          contentTextStyle: IsmChatStyles.w400Grey14,
+          actionLabels: const ['Exit'],
+          callbackActions: [() {}],
+          cancelLabel: IsmChatStrings.cancel,
+          onCancel: Get.back,
+        ),
+      );
+    } else {
+      await Get.dialog(
+        IsmChatAlertDialogBox(
+          title: 'Exit Group name group?',
+          content: const Text(
+              'Only group admins will be notified that you left the group'),
+          contentTextStyle: IsmChatStyles.w400Grey14,
+          actionLabels: const ['Exit'],
+          callbackActions: [() {}],
+          cancelLabel: IsmChatStrings.cancel,
+          onCancel: Get.back,
+        ),
+      );
+    }
+  }
+
   /// Updates the [] mapping with the latest messages.
   void _generateIndexedMessageList() =>
       indexedMessageList = _viewModel.generateIndexedMessageList(messages);
