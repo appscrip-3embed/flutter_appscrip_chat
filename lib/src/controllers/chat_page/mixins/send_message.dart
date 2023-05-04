@@ -121,7 +121,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
   }
 
   void sendAudio({
-    String? file,
+    String? path,
     SendMessageType sendMessageType = SendMessageType.pendingMessage,
     bool forwardMessgeForMulitpleUser = false,
     IsmChatMessageModel? ismChatChatMessageModel,
@@ -159,47 +159,49 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       }
       audioMessage = ismChatChatMessageModel;
     } else {
-      if (file != null) {
-        bytes = File(file).readAsBytesSync();
-        nameWithExtension = file.split('/').last;
-        final extension = nameWithExtension.split('.').last;
-        mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
-        audioMessage = IsmChatMessageModel(
-          body: 'Audio',
-          conversationId: conversationId,
-          customType: IsmChatCustomMessageType.audio,
-          attachments: [
-            AttachmentModel(
-              attachmentType: IsmChatAttachmentType.audio,
-              thumbnailUrl: file,
-              size: double.parse(bytes.length.toString()),
-              name: nameWithExtension,
-              mimeType: extension,
-              mediaUrl: file,
-              mediaId: mediaId,
-              extension: extension,
-            ),
-          ],
-          deliveredToAll: false,
-          messageId: '',
-          deviceId: _controller._deviceConfig.deviceId!,
-          messageType: IsmChatMessageType.normal,
-          messagingDisabled: false,
-          parentMessageId: '',
-          readByAll: false,
-          sentAt: sentAt,
-          sentByMe: true,
-        );
+      if (path == null || path.isEmpty) {
+        return;
       }
+      bytes =
+          Uint8List.fromList(await File.fromUri(Uri.parse(path)).readAsBytes());
+      nameWithExtension = path.split('/').last;
+      final extension = nameWithExtension.split('.').last;
+      mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
+      audioMessage = IsmChatMessageModel(
+        body: 'Audio',
+        conversationId: conversationId,
+        customType: IsmChatCustomMessageType.audio,
+        attachments: [
+          AttachmentModel(
+            attachmentType: IsmChatAttachmentType.audio,
+            thumbnailUrl: path,
+            size: double.parse(bytes.length.toString()),
+            name: nameWithExtension,
+            mimeType: extension,
+            mediaUrl: path,
+            mediaId: mediaId,
+            extension: extension,
+          ),
+        ],
+        deliveredToAll: false,
+        messageId: '',
+        deviceId: _controller._deviceConfig.deviceId!,
+        messageType: IsmChatMessageType.normal,
+        messagingDisabled: false,
+        parentMessageId: '',
+        readByAll: false,
+        sentAt: sentAt,
+        sentByMe: true,
+      );
     }
 
     if (!forwardMessgeForMulitpleUser) {
-      _controller.messages.add(audioMessage!);
+      _controller.messages.add(audioMessage);
     }
     if (sendMessageType == SendMessageType.pendingMessage) {
-      await ismChatObjectBox.addPendingMessage(audioMessage!);
+      await ismChatObjectBox.addPendingMessage(audioMessage);
     } else {
-      await ismChatObjectBox.addForwardMessage(audioMessage!);
+      await ismChatObjectBox.addForwardMessage(audioMessage);
     }
     var notificationTitle =
         conversationController.userDetails?.userName ?? 'User';
