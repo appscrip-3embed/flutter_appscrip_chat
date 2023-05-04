@@ -716,7 +716,7 @@ class IsmChatPageController extends GetxController
     if (message.sentByMe) {
       await Get.dialog(
         IsmChatAlertDialogBox(
-          title: IsmChatStrings.deleteMessgae,
+          title: IsmChatStrings.deleteMessage,
           actionLabels: const [
             IsmChatStrings.deleteForEvery,
             IsmChatStrings.deleteForMe,
@@ -746,7 +746,7 @@ class IsmChatPageController extends GetxController
     if (sentByMe) {
       await Get.dialog(
         IsmChatAlertDialogBox(
-          title: IsmChatStrings.deleteMessgae,
+          title: IsmChatStrings.deleteMessage,
           actionLabels: const [
             IsmChatStrings.deleteForEvery,
             IsmChatStrings.deleteForMe,
@@ -839,20 +839,18 @@ class IsmChatPageController extends GetxController
     required int lastMessageTimeStamp,
     bool includeMembers = false,
   }) async {
-    var data = await _viewModel.unblockUser(
-        opponentId: opponentId,
-        conversationId: conversation?.conversationId ?? '',
-        lastMessageTimeStamp: lastMessageTimeStamp);
-    if (data != null) {
-      await Future.wait([
-        Get.find<IsmChatConversationsController>().getBlockUser(),
-        getConverstaionDetails(
-          conversationId: conversation?.conversationId ?? '',
-          includeMembers: includeMembers,
-        ),
-        getMessagesFromDB(conversation?.conversationId ?? ''),
-      ]);
+    var isBlocked =
+        await _conversationController.unblockUser(opponentId: opponentId, isLoading: true);
+    if (!isBlocked) {
+      return;
     }
+    await Future.wait([
+      getConverstaionDetails(
+        conversationId: conversation?.conversationId ?? '',
+        includeMembers: includeMembers,
+      ),
+      getMessagesFromAPI(),
+    ]);
   }
 
   Future<void> readSingleMessage({

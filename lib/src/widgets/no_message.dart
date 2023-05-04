@@ -1,5 +1,5 @@
 import 'package:appscrip_chat_component/src/res/res.dart';
-import 'package:appscrip_chat_component/src/utilities/config/chat_config.dart';
+import 'package:appscrip_chat_component/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class IsmChatNoMessage extends StatelessWidget {
@@ -9,24 +9,9 @@ class IsmChatNoMessage extends StatelessWidget {
   Widget build(BuildContext context) => Center(
         child: Padding(
           padding: IsmChatDimens.edgeInsets16,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.chat_outlined,
-                size: 64,
-                color: IsmChatConfig.chatTheme.primaryColor,
-              ),
-              IsmChatDimens.boxHeight16,
-              Text(
-                IsmChatStrings.noMessages,
-                style: IsmChatStyles.w600Black20.copyWith(
-                  color: IsmChatConfig.chatTheme.primaryColor,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
+          child: const IsmIconAndText(
+            icon: Icons.chat_outlined,
+            text: IsmChatStrings.noMessages,
           ),
         ),
       );
