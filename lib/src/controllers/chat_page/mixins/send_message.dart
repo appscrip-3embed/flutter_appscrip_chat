@@ -8,11 +8,13 @@ mixin IsmChatPageSendMessageMixin on GetxController {
   Future<String> createConversation({
     required List<String> userId,
     bool isGroup = false,
+    bool isLoading = true,
   }) async {
     if (isGroup) {
       userId = _controller.conversation!.userIds ?? [];
     }
     var response = await _controller._viewModel.createConversation(
+      isLoading: isLoading,
       typingEvents: true,
       readEvents: true,
       pushNotifications: true,

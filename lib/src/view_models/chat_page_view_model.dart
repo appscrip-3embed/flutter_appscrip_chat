@@ -477,16 +477,19 @@ class IsmChatPageViewModel {
     Map<String, dynamic>? metaData,
     String? conversationTitle,
     String? conversationImageUrl,
+     bool isLoading = false,
   }) async =>
       await _repository.createConversation(
-          typingEvents: typingEvents,
-          readEvents: readEvents,
-          pushNotifications: pushNotifications,
-          members: members,
-          isGroup: isGroup,
-          conversationType: conversationType,
-          conversationImageUrl: conversationImageUrl,
-          conversationTitle: conversationTitle);
+        typingEvents: typingEvents,
+        readEvents: readEvents,
+        pushNotifications: pushNotifications,
+        members: members,
+        isGroup: isGroup,
+        conversationType: conversationType,
+        conversationImageUrl: conversationImageUrl,
+        conversationTitle: conversationTitle,
+        isLoading: isLoading
+      );
 
   Map<String, int> generateIndexedMessageList(
       List<IsmChatMessageModel> messages) {

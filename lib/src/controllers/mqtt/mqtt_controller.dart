@@ -138,6 +138,7 @@ class IsmChatMqttController extends GetxController {
 
       if (payload['action'] != null) {
         var actionModel = IsmChatMqttActionModel.fromMap(payload);
+
         IsmChatLog.info(actionModel);
         _handleAction(actionModel);
       } else {
@@ -219,15 +220,16 @@ class IsmChatMqttController extends GetxController {
       case IsmChatActionEvents.deleteConversationLocally:
         // TODO: Handle this case.
         break;
+      case IsmChatActionEvents.memberLeave:
+        // TODO: Handle this case.
+        break;
       case IsmChatActionEvents.addMember:
       case IsmChatActionEvents.removeMember:
         _handleGroupRemoveAndAddUser(actionModel);
         break;
       case IsmChatActionEvents.revokeAdmin:
-        // TODO: Handle this case.
-        break;
       case IsmChatActionEvents.addAdmin:
-        // TODO: Handle this case.
+        _handleAdminRemoveAndAdd(actionModel);
         break;
     }
   }
@@ -440,6 +442,24 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleGroupRemoveAndAddUser(IsmChatMqttActionModel actionModel) async {
+    if (actionModel.userDetails?.userId ==
+        _communicationConfig.userConfig.userId) {
+      return;
+    }
+
+    if (Get.isRegistered<IsmChatPageController>()) {
+      var controller = Get.find<IsmChatPageController>();
+      if (controller.conversation!.conversationId ==
+              actionModel.conversationId &&
+          controller.conversation!.lastMessageSentAt != actionModel.sentAt) {
+        await controller.getMessagesFromAPI(
+            conversationId: actionModel.conversationId ?? '',
+            lastMessageTimestamp: controller.messages.last.sentAt);
+      }
+    }
+  }
+
+  void _handleAdminRemoveAndAdd(IsmChatMqttActionModel actionModel) async {
     if (actionModel.userDetails?.userId ==
         _communicationConfig.userConfig.userId) {
       return;

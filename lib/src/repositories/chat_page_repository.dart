@@ -547,17 +547,19 @@ class IsmChatPageRepository {
     }
   }
 
-  Future<IsmChatResponseModel?> createConversation(
-      {required bool typingEvents,
-      required bool readEvents,
-      required bool pushNotifications,
-      required List<String> members,
-      required bool isGroup,
-      required int conversationType,
-      List<String>? searchableTags,
-      Map<String, dynamic>? metaData,
-      String? conversationTitle,
-      String? conversationImageUrl}) async {
+  Future<IsmChatResponseModel?> createConversation({
+    required bool typingEvents,
+    required bool readEvents,
+    required bool pushNotifications,
+    required List<String> members,
+    required bool isGroup,
+    required int conversationType,
+    List<String>? searchableTags,
+    Map<String, dynamic>? metaData,
+    String? conversationTitle,
+    String? conversationImageUrl,
+     bool isLoading = false,
+  }) async {
     try {
       var payload = {
         'typingEvents': typingEvents,
@@ -576,6 +578,7 @@ class IsmChatPageRepository {
         IsmChatAPI.chatConversation,
         payload: payload,
         headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading
       );
       if (response.hasError) {
         if (response.errorCode.toString().startsWith('4')) {
