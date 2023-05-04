@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:path_provider/path_provider.dart';
 
 class IsmChatMessageField extends StatelessWidget {
   const IsmChatMessageField({super.key});
@@ -199,12 +198,7 @@ class _MicOrSendButton extends StatelessWidget {
                         });
                         // Check and request permission
                         if (await controller.recordAudio.hasPermission()) {
-                          // Start recording
-                          // var path =
-                          //     (await getApplicationDocumentsDirectory()).path;
-                          // var name = DateTime.now().millisecondsSinceEpoch;
-                          await controller.recordAudio
-                              .start();
+                          await controller.recordAudio.start();
                         }
                       }
                     },
@@ -216,7 +210,7 @@ class _MicOrSendButton extends StatelessWidget {
                       controller.seconds = 0;
                       var path = await controller.recordAudio.stop();
                       controller.sendAudio(
-                          file: path,
+                          path: path,
                           conversationId:
                               controller.conversation?.conversationId ?? '',
                           userId: controller
