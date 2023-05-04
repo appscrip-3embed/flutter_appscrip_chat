@@ -16,6 +16,10 @@ class IsmChatAPI {
   static const String chatConversationDelete = '$chatConversation/local';
   static const String getChatConversations = '$baseUrl/chat/conversations';
   static const String conversationDetails = '$chatConversation/details';
+  static const String conversationMembers = '$chatConversation/members';
+  static const String eligibleMembers = '$chatConversation/eligible/members';
+  static const String leaveConversation = '$chatConversation/leave';
+  static const String conversationAdmin = '$chatConversation/admin';
 
   static const String blockUser = '$user/block';
   static const String unblockUser = '$user/unblock';

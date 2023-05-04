@@ -12,9 +12,11 @@ class LastMessageDetails {
       LastMessageDetails(
         showInConversation: map['showInConversation'] as bool? ?? false,
         sentAt: map['sentAt'] as int,
-        senderName: map['senderName'] as String? ?? '',
+        senderName:
+            map['senderName'] as String? ?? map['userName'] as String? ?? '',
         messageType: map['messageType'] as int? ?? 0,
-        messageId: map['messageId'] as String? ?? '',
+        messageId:
+            map['messageId'] as String? ?? map['userId'] as String? ?? '',
         conversationId: map['conversationId'] as String? ?? '',
         body: IsmChatUtility.decodePayload(map['body'] as String? ?? ''),
       );

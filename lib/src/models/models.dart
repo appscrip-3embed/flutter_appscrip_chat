@@ -14,3 +14,4 @@ export 'response_model.dart';
 export 'selected_forward_user_model.dart';
 export 'user_details_model.dart';
 export 'user_list_model.dart';
+export 'user_own_details.dart';

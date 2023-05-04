@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/views/chat_conversations/widget/blocked_users.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -84,10 +85,35 @@ class _MoreIcon extends StatelessWidget {
   const _MoreIcon();
 
   @override
-  Widget build(BuildContext context) => IconButton(
-        color: IsmChatConfig.chatTheme.primaryColor,
-        onPressed: () {},
-        icon: const Icon(Icons.more_vert_rounded),
+  Widget build(BuildContext context) => PopupMenuButton(
+        color: IsmChatColors.whiteColor,
+        offset: Offset(0, IsmChatDimens.forty),
+        icon: Icon(
+          Icons.more_vert_rounded,
+          color: IsmChatConfig.chatTheme.primaryColor,
+        ),
+        onSelected: (index) {
+          if (index == 1) {
+            IsmChatUtility.openFullScreenBottomSheet(
+              const IsmChatBlockedUsersView(),
+            );
+          }
+        },
+        itemBuilder: (_) => [
+          PopupMenuItem(
+            value: 1,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.no_accounts_rounded,
+                  color: IsmChatConfig.chatTheme.primaryColor,
+                ),
+                IsmChatDimens.boxWidth8,
+                const Text(IsmChatStrings.blockedUsers),
+              ],
+            ),
+          ),
+        ],
       );
 }
 

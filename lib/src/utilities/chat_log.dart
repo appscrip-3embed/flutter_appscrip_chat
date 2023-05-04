@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:appscrip_chat_component/src/res/strings.dart';
+import 'package:flutter/foundation.dart';
 
 class IsmChatLog {
   ///This Constructor of `ChatLog` take 2 parameters
@@ -18,12 +19,14 @@ class IsmChatLog {
   ///- `ChatLog.info()` - for info log
   ///- `ChatLog.success()` - for success log
   IsmChatLog.error(this.message, [this.stackTrace]) {
-    log(
-      '\x1B[31m[${IsmChatStrings.name}] - $message\x1B[0m',
-      stackTrace: stackTrace,
-      name: 'Error',
-      level: 1200,
-    );
+    if (kDebugMode) {
+      log(
+        '\x1B[31m[${IsmChatStrings.name}] - $message\x1B[0m',
+        stackTrace: stackTrace,
+        name: 'Error',
+        level: 1200,
+      );
+    }
   }
 
   ///This Constructor of `ChatLog` take 2 parameters
@@ -41,12 +44,14 @@ class IsmChatLog {
   ///- `ChatLog.info()` - for info log
   ///- `ChatLog.error()` - for error log
   IsmChatLog.success(this.message, [this.stackTrace]) {
-    log(
-      '\x1B[32m[${IsmChatStrings.name}] - $message\x1B[0m',
-      stackTrace: stackTrace,
-      name: 'Success',
-      level: 800,
-    );
+    if (kDebugMode) {
+      log(
+        '\x1B[32m[${IsmChatStrings.name}] - $message\x1B[0m',
+        stackTrace: stackTrace,
+        name: 'Success',
+        level: 800,
+      );
+    }
   }
 
   ///This Constructor of `ChatLog` take 2 parameters
@@ -64,12 +69,14 @@ class IsmChatLog {
   ///- `ChatLog.success()` - for success log
   ///- `ChatLog.error()` - for error log
   IsmChatLog.info(this.message, [this.stackTrace]) {
-    log(
-      '\x1B[33m[${IsmChatStrings.name}] - $message\x1B[0m',
-      stackTrace: stackTrace,
-      name: 'Info',
-      level: 900,
-    );
+    if (kDebugMode) {
+      log(
+        '\x1B[33m[${IsmChatStrings.name}] - $message\x1B[0m',
+        stackTrace: stackTrace,
+        name: 'Info',
+        level: 900,
+      );
+    }
   }
 
   ///This Constructor of `ChatLog` take 2 parameters
@@ -87,12 +94,14 @@ class IsmChatLog {
   ///- `ChatLog.success()` - for success log
   ///- `ChatLog.error()` - for error log
   IsmChatLog(this.message, [this.stackTrace]) {
-    log(
-      '\x1B[37m[${IsmChatStrings.name}] - $message\x1B[0m',
-      // '[${ChatStrings.name}] - $message',
-      stackTrace: stackTrace,
-      level: 700,
-    );
+    if (kDebugMode) {
+      log(
+        '\x1B[37m[${IsmChatStrings.name}] - $message\x1B[0m',
+        // '[${ChatStrings.name}] - $message',
+        stackTrace: stackTrace,
+        level: 700,
+      );
+    }
   }
   final dynamic message;
   final StackTrace? stackTrace;

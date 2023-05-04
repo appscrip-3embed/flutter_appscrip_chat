@@ -32,29 +32,9 @@ class IsmChatForwardView extends StatelessWidget {
               opponentId: conversation.opponentDetails?.userId);
         },
         builder: (controller) => Scaffold(
-          appBar: AppBar(
-            backgroundColor: IsmChatConfig.chatTheme.primaryColor,
-            leading: IconButton(
-              onPressed: Get.back,
-              icon: const Icon(
-                Icons.arrow_back_rounded,
-                color: IsmChatColors.whiteColor,
-              ),
-            ),
-            title: Text(
-              'Forward to...  ${controller.forwardedList.selectedUsers.isEmpty ? '' : controller.forwardedList.selectedUsers.length}',
-              style: IsmChatStyles.w600White18,
-            ),
-            centerTitle: true,
-            actions: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.search,
-                  color: IsmChatColors.whiteColor,
-                ),
-              ),
-            ],
+          appBar: IsmChatAppBar(
+            title:
+                'Forward to...  ${controller.forwardedList.selectedUsers.isEmpty ? '' : controller.forwardedList.selectedUsers.length}',
           ),
           body: controller.forwardedList.isEmpty
               ? const IsmChatLoadingDialog()

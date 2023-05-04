@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class IsmChatUtility {
   const IsmChatUtility._();
@@ -31,6 +32,15 @@ class IsmChatUtility {
     }
   }
 
+  static Future<void> showErrorDialog(String message) async {
+    await Get.dialog(
+      IsmChatAlertDialogBox(
+        title: message,
+        cancelLabel: IsmChatStrings.ok,
+      ),
+    );
+  }
+
   static Future<T?> openFullScreenBottomSheet<T>(Widget child) async =>
       await Get.bottomSheet<T>(
         child,
@@ -39,6 +49,10 @@ class IsmChatUtility {
         ignoreSafeArea: false,
         enableDrag: false,
       );
+
+  /// Returns true if the internet connection is available.
+  static Future<bool> get isNetworkAvailable async =>
+      await InternetConnectionChecker().hasConnection;
 
   /// common header for All api
   static Map<String, String> commonHeader() {

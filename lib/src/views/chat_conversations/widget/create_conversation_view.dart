@@ -27,31 +27,10 @@ class IsmChatCreateConversationView extends StatelessWidget {
         },
         builder: (controller) => Scaffold(
           resizeToAvoidBottomInset: false,
-          appBar: AppBar(
-            backgroundColor: IsmChatConfig.chatTheme.primaryColor,
-            leading: IconButton(
-              onPressed: Get.back,
-              icon: const Icon(
-                Icons.arrow_back_rounded,
-                color: IsmChatColors.whiteColor,
-              ),
-            ),
-            title: Text(
-              isGroupConversation
-                  ? 'New Group Conversation'
-                  : 'New Conversation',
-              style: IsmChatStyles.w600White18,
-            ),
-            centerTitle: true,
-            actions: const [
-              IconButton(
-                onPressed: null,
-                icon: Icon(
-                  Icons.search,
-                  color: IsmChatColors.whiteColor,
-                ),
-              ),
-            ],
+          appBar: IsmChatAppBar(
+            title: isGroupConversation
+                ? 'New Group Conversation'
+                : 'New Conversation',
           ),
           body: controller.forwardedList.isEmpty
               ? const IsmChatLoadingDialog()
@@ -70,78 +49,87 @@ class IsmChatCreateConversationView extends StatelessWidget {
                         itemCount: controller.forwardedList.length,
                         separatorBuilder: (_, __) => IsmChatDimens.boxHeight8,
                         itemBuilder: (_, index) {
-                          var conversation =
-                              controller.forwardedList[index].userDetails;
-                          if (conversation.userId ==
+                          var user = controller.forwardedList[index];
+                          if (user.userDetails.userId ==
                               Get.find<IsmChatMqttController>().userId) {
                             return const SizedBox.shrink();
                           }
                           return IsmChatTapHandler(
-                            onTap: () async {
-                              if (isGroupConversation) {
-                                controller.onForwardUserTap(index);
-                              } else {
-                                var ismChatConversation =
-                                    IsmChatConversationModel(
-                                  messagingDisabled: false,
-                                  conversationImageUrl:
-                                      conversation.userProfileImageUrl,
-                                  isGroup: false,
-                                  opponentDetails: conversation,
-                                  unreadMessagesCount: 0,
-                                  lastMessageDetails: null,
-                                  lastMessageSentAt: 0,
-                                  membersCount: 1,
-                                );
-                                ismChatConversation.conversationId = controller
-                                    .getConversationId(conversation.userId)
-                                    .toString();
-                                Get.back<void>();
-                                controller
-                                    .navigateToMessages(ismChatConversation);
-                                (onChatTap ?? IsmChatConfig.onChatTap)
-                                    .call(_, ismChatConversation);
-                              }
-                            },
+                            onTap: user.isBlocked
+                                ? null
+                                : () async {
+                                    if (isGroupConversation) {
+                                      controller.onForwardUserTap(index);
+                                    } else {
+                                      var ismChatConversation =
+                                          IsmChatConversationModel(
+                                        messagingDisabled: false,
+                                        conversationImageUrl: user
+                                            .userDetails.userProfileImageUrl,
+                                        isGroup: false,
+                                        opponentDetails: user.userDetails,
+                                        unreadMessagesCount: 0,
+                                        lastMessageDetails: null,
+                                        lastMessageSentAt: 0,
+                                        membersCount: 1,
+                                      );
+                                      ismChatConversation.conversationId =
+                                          controller
+                                              .getConversationId(
+                                                  user.userDetails.userId)
+                                              .toString();
+                                      Get.back<void>();
+                                      controller.navigateToMessages(
+                                          ismChatConversation);
+                                      (onChatTap ?? IsmChatConfig.onChatTap)
+                                          .call(_, ismChatConversation);
+                                    }
+                                  },
                             child: ListTile(
                               dense: true,
+                              tileColor: user.isBlocked
+                                  ? IsmChatColors.greyColor.withOpacity(0.3)
+                                  : user.isUserSelected
+                                      ? IsmChatConfig.chatTheme.backgroundColor
+                                      : null,
                               leading: IsmChatImage.profile(
-                                conversation.userProfileImageUrl,
-                                name: conversation.userName,
+                                user.userDetails.userProfileImageUrl,
+                                name: user.userDetails.userName,
                               ),
                               title: Text(
-                                conversation.userName,
+                                user.userDetails.userName,
                                 style: IsmChatStyles.w600Black14,
                               ),
                               subtitle: Text(
-                                conversation.userIdentifier,
+                                user.userDetails.userIdentifier,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: IsmChatStyles.w400Black12,
                               ),
-                              trailing: !isGroupConversation
-                                  ? null
-                                  : Container(
-                                      padding: IsmChatDimens.edgeInsets8_4,
-                                      decoration: BoxDecoration(
-                                        color: IsmChatConfig
-                                            .chatTheme.primaryColor
-                                            ?.withOpacity(.2),
-                                        borderRadius: BorderRadius.circular(
-                                            IsmChatDimens.eight),
-                                      ),
-                                      child: Text(
-                                        controller.forwardedList[index]
-                                                .isUserSelected
-                                            ? 'Remove'
-                                            : 'Add',
-                                        style:
-                                            IsmChatStyles.w400Black12.copyWith(
-                                          color: IsmChatConfig
-                                              .chatTheme.primaryColor,
+                              trailing: user.isBlocked
+                                  ? const Text(IsmChatStrings.blocked)
+                                  : !isGroupConversation
+                                      ? null
+                                      : Container(
+                                          padding: IsmChatDimens.edgeInsets8_4,
+                                          decoration: BoxDecoration(
+                                            color: IsmChatConfig
+                                                .chatTheme.primaryColor
+                                                ?.withOpacity(.2),
+                                            borderRadius: BorderRadius.circular(
+                                                IsmChatDimens.eight),
+                                          ),
+                                          child: Text(
+                                            user.isUserSelected
+                                                ? 'Remove'
+                                                : 'Add',
+                                            style: IsmChatStyles.w400Black12
+                                                .copyWith(
+                                              color: IsmChatConfig
+                                                  .chatTheme.primaryColor,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
                             ),
                           );
                         },
@@ -255,7 +243,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                   await Get.dialog(
                                     const IsmChatAlertDialogBox(
                                       cancelLabel: IsmChatStrings.ok,
-                                      titile: IsmChatStrings.createGroupAlert,
+                                      title: IsmChatStrings.createGroupAlert,
                                     ),
                                   );
                                   return;
@@ -277,7 +265,15 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                   isGroup: true,
                                   opponentDetails: controller.userDetails,
                                   unreadMessagesCount: 0,
-                                  lastMessageDetails: null,
+                                  lastMessageDetails: LastMessageDetails(
+                                      showInConversation: true,
+                                      sentAt:
+                                          DateTime.now().millisecondsSinceEpoch,
+                                      senderName: '',
+                                      messageType: 0,
+                                      messageId: '',
+                                      conversationId: '',
+                                      body: ''),
                                   lastMessageSentAt: 0,
                                   conversationType:
                                       IsmChatConversationType.private,

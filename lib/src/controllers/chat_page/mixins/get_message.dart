@@ -5,23 +5,18 @@ mixin IsmChatPageGetMessageMixin {
 
   Future<void> getMessagesFromDB(String conversationId) async {
     _controller.messages.clear();
-    final query = IsmChatConfig.objectBox.chatConversationBox
-        .query(DBConversationModel_.conversationId.equals(conversationId))
-        .build();
-
-    final chatConversationMessages = query.findUnique();
-    if (chatConversationMessages != null) {
-      _controller.messages = _controller._viewModel.sortMessages(
-          chatConversationMessages.messages
-              .map(IsmChatMessageModel.fromJson)
-              .toList());
-      _controller.isMessagesLoading = false;
-      if (_controller.messages.isEmpty) {
-        return;
-      }
-      _controller._scrollToBottom();
-      _controller._generateIndexedMessageList();
+    var messages = await IsmChatConfig.objectBox.getMessages(conversationId);
+    if (messages?.isEmpty ?? false || messages == null) {
+      return;
     }
+
+    _controller.messages = _controller._viewModel.sortMessages(messages!);
+    _controller.isMessagesLoading = false;
+    if (_controller.messages.isEmpty) {
+      return;
+    }
+    _controller._scrollToBottom();
+    _controller._generateIndexedMessageList();
   }
 
   Future<void> getMessagesFromAPI({
@@ -47,6 +42,7 @@ mixin IsmChatPageGetMessageMixin {
       pagination: forPagination ? messagesList.length.pagination() : 0,
       conversationId: conversationID,
       lastMessageTimestamp: timeStamp,
+      isGroup: _controller.conversation?.isGroup ?? false,
     );
     if (_controller.messages.isEmpty) {
       _controller.isMessagesLoading = false;
@@ -85,17 +81,31 @@ mixin IsmChatPageGetMessageMixin {
     _controller.readTime = (response.first.timestamp ?? 0).deliverTime;
   }
 
-  Future<void> getConverstaionDetails({
-    required String conversationId,
-    String? ids,
-    bool? includeMembers,
-    int? membersSkip,
-    int? membersLimit,
-  }) async {
-    var data = await _controller._viewModel
-        .getConverstaionDetails(conversationId: conversationId);
+  Future<void> getConverstaionDetails(
+      {required String conversationId,
+      String? ids,
+      bool? includeMembers,
+      int? membersSkip,
+      int? membersLimit,
+      bool? isLoading}) async {
+    var data = await _controller._viewModel.getConverstaionDetails(
+        conversationId: conversationId,
+        includeMembers: includeMembers,
+        isLoading: isLoading);
     if (data != null) {
       _controller.conversation = data.copyWith(conversationId: conversationId);
+      _controller.mediaList = _controller.messages
+          .where((e) => [
+                IsmChatCustomMessageType.image,
+                IsmChatCustomMessageType.video,
+                IsmChatCustomMessageType.audio,
+                IsmChatCustomMessageType.file,
+              ].contains(e.customType))
+          .toList();
+      if (data.members != null) {
+        _controller.groupMembers = data.members!;
+      }
+      _controller.update();
     }
   }
 }

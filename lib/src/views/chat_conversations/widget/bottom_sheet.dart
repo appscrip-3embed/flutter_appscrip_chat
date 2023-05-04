@@ -57,7 +57,7 @@ class IsmChatClearConversationBottomSheet extends StatelessWidget {
                 Get.back();
                 await Get.dialog(
                   IsmChatAlertDialogBox(
-                    titile: IsmChatStrings.deleteAllMessage,
+                    title: IsmChatStrings.deleteAllMessage,
                     actionLabels: const [IsmChatStrings.clearChat],
                     callbackActions: [
                       () => controller
@@ -78,7 +78,7 @@ class IsmChatClearConversationBottomSheet extends StatelessWidget {
                 Get.back();
                 await Get.dialog(
                   IsmChatAlertDialogBox(
-                    titile: '${IsmChatStrings.deleteChat}?',
+                    title: '${IsmChatStrings.deleteChat}?',
                     actionLabels: const [IsmChatStrings.deleteChat],
                     callbackActions: [
                       () => controller.deleteChat(conversation.conversationId),

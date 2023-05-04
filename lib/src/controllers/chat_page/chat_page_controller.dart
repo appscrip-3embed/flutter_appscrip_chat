@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:camera/camera.dart';
@@ -20,10 +21,14 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:video_compress/video_compress.dart';
 
 part './mixins/get_message.dart';
+part './mixins/group_admin.dart';
 part './mixins/send_message.dart';
 
 class IsmChatPageController extends GetxController
-    with IsmChatPageSendMessageMixin, IsmChatPageGetMessageMixin {
+    with
+        IsmChatPageSendMessageMixin,
+        IsmChatPageGetMessageMixin,
+        IsmChatGroupAdminMixin {
   IsmChatPageController(this._viewModel);
   final IsmChatPageViewModel _viewModel;
 
@@ -33,11 +38,13 @@ class IsmChatPageController extends GetxController
 
   IsmChatConversationModel? conversation;
 
-  var focusNode = FocusNode();
+  var messageFieldFocusNode = FocusNode();
 
   var chatInputController = TextEditingController();
 
   var messagesScrollController = AutoScrollController();
+
+  var groupEligibleUserScrollController = AutoScrollController();
 
   final textEditingController = TextEditingController();
 
@@ -80,6 +87,14 @@ class IsmChatPageController extends GetxController
   bool get isSearchSelect => _isSearchSelect.value;
   set isSearchSelect(bool value) => _isSearchSelect.value = value;
 
+  final RxList<UserDetails> _groupMembers = <UserDetails>[].obs;
+  List<UserDetails> get groupMembers => _groupMembers;
+  set groupMembers(List<UserDetails> value) => _groupMembers.value = value;
+
+  final RxList<IsmChatMessageModel> _mediaList = <IsmChatMessageModel>[].obs;
+  List<IsmChatMessageModel> get mediaList => _mediaList;
+  set mediaList(List<IsmChatMessageModel> value) => _mediaList.value = value;
+
   final Completer<GoogleMapController> googleMapCompleter =
       Completer<GoogleMapController>();
 
@@ -109,21 +124,16 @@ class IsmChatPageController extends GetxController
 
   final Rx<File?> _imagePath = Rx<File?>(null);
   File? get imagePath => _imagePath.value;
-  set imagePath(File? value) {
-    _imagePath.value = value;
-  }
+  set imagePath(File? value) => _imagePath.value = value;
 
   final RxList<AttachmentModel> _listOfAssetsPath = <AttachmentModel>[].obs;
   List<AttachmentModel> get listOfAssetsPath => _listOfAssetsPath;
-  set listOfAssetsPath(List<AttachmentModel> value) {
-    _listOfAssetsPath.value = value;
-  }
+  set listOfAssetsPath(List<AttachmentModel> value) =>
+      _listOfAssetsPath.value = value;
 
   final RxInt _assetsIndex = 0.obs;
   int get assetsIndex => _assetsIndex.value;
-  set assetsIndex(int value) {
-    _assetsIndex.value = value;
-  }
+  set assetsIndex(int value) => _assetsIndex.value = value;
 
   Timer? conversationDetailsApTimer;
 
@@ -131,48 +141,37 @@ class IsmChatPageController extends GetxController
 
   final RxBool _isEnableRecordingAudio = false.obs;
   bool get isEnableRecordingAudio => _isEnableRecordingAudio.value;
-  set isEnableRecordingAudio(bool value) {
-    _isEnableRecordingAudio.value = value;
-  }
+  set isEnableRecordingAudio(bool value) =>
+      _isEnableRecordingAudio.value = value;
 
   final recordAudio = Record();
 
   final RxInt _seconds = 0.obs;
   int get seconds => _seconds.value;
-  set seconds(int value) {
-    _seconds.value = value;
-  }
+  set seconds(int value) => _seconds.value = value;
 
   final Rx<Duration> _myDuration = const Duration().obs;
   Duration get myDuration => _myDuration.value;
-  set myDuration(Duration value) {
-    _myDuration.value = value;
-  }
+  set myDuration(Duration value) => _myDuration.value = value;
 
   final RxBool _showDownSideButton = false.obs;
   bool get showDownSideButton => _showDownSideButton.value;
-  set showDownSideButton(bool value) {
-    _showDownSideButton.value = value;
-  }
+  set showDownSideButton(bool value) => _showDownSideButton.value = value;
 
   /// Keep track of all the auto scroll indices by their respective message's id to allow animating to them.
   final _autoScrollIndexById = <String, int>{}.obs;
   Map<String, int> get indexedMessageList => _autoScrollIndexById;
-  set indexedMessageList(Map<String, int> value) {
-    _autoScrollIndexById.value = value;
-  }
+  set indexedMessageList(Map<String, int> value) =>
+      _autoScrollIndexById.value = value;
 
   final RxBool _isMessageSeleted = false.obs;
   bool get isMessageSeleted => _isMessageSeleted.value;
-  set isMessageSeleted(bool value) {
-    _isMessageSeleted.value = value;
-  }
+  set isMessageSeleted(bool value) => _isMessageSeleted.value = value;
 
   final _selectedMessage = <IsmChatMessageModel>[].obs;
   List<IsmChatMessageModel> get selectedMessage => _selectedMessage;
-  set selectedMessage(List<IsmChatMessageModel> value) {
-    _selectedMessage.value = value;
-  }
+  set selectedMessage(List<IsmChatMessageModel> value) =>
+      _selectedMessage.value = value;
 
   List<IsmChatBottomSheetAttachmentModel> attachments = [
     const IsmChatBottomSheetAttachmentModel(
@@ -201,6 +200,16 @@ class IsmChatPageController extends GetxController
     ),
   ];
 
+  bool canRefreshDetails = true;
+
+  bool canCallEligibleApi = true;
+
+  final _groupEligibleUser = <SelectedForwardUser>[].obs;
+  List<SelectedForwardUser> get groupEligibleUser => _groupEligibleUser;
+  set groupEligibleUser(List<SelectedForwardUser> value) {
+    _groupEligibleUser.value = value;
+  }
+
   @override
   void onInit() async {
     super.onInit();
@@ -227,8 +236,13 @@ class IsmChatPageController extends GetxController
       }
     }
     scrollListener();
+    onGrouEligibleUserListener();
+    messageFieldFocusNode.addListener(_scrollToBottom);
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
+    });
+    _messages.listen((p0) {
+      _scrollToBottom();
     });
   }
 
@@ -240,8 +254,30 @@ class IsmChatPageController extends GetxController
     }
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
+    groupEligibleUserScrollController.dispose();
 
     super.onClose();
+  }
+
+  /// This function will be used in [Add participants Screen] to Select or Unselect users
+  void onGrouEligibleUserTap(int index) {
+    groupEligibleUser[index].isUserSelected =
+        !groupEligibleUser[index].isUserSelected;
+  }
+
+  void onGrouEligibleUserListener() {
+    groupEligibleUserScrollController.addListener(
+      () {
+        if (groupEligibleUserScrollController.position.pixels >
+                groupEligibleUserScrollController.position.maxScrollExtent *
+                    0.8 &&
+            canCallEligibleApi) {
+          canCallEligibleApi = false;
+
+          getEligibleMembers(conversationId: conversation!.conversationId!);
+        }
+      },
+    );
   }
 
   void onBottomAttachmentTapped(
@@ -327,7 +363,7 @@ class IsmChatPageController extends GetxController
           messagesScrollController.position.minScrollExtent) {
         getMessagesFromAPI(forPagination: true, lastMessageTimestamp: 0);
       }
-      if (messagesScrollController.position.maxScrollExtent ==
+      if (messagesScrollController.position.maxScrollExtent <=
           messagesScrollController.offset) {
         showDownSideButton = false;
       } else {
@@ -344,6 +380,25 @@ class IsmChatPageController extends GetxController
     );
   }
 
+  void onGroupSearch(String query) {
+    if (query.trim().isEmpty) {
+      groupMembers = conversation!.members!;
+      return;
+    }
+    groupMembers = conversation!.members!
+        .where(
+          (e) => [
+            e.userName,
+            e.userIdentifier,
+          ].any(
+            (e) => e.toLowerCase().contains(
+                  query.toLowerCase(),
+                ),
+          ),
+        )
+        .toList();
+  }
+
   void startTimer() {
     forVideoRecordTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       var seconds = myDuration.inSeconds + 1;
@@ -358,6 +413,86 @@ class IsmChatPageController extends GetxController
     _cameras = await availableCameras();
     if (_cameras.isNotEmpty) {
       toggleCamera();
+    }
+  }
+
+  Future<void> handleBlockUnblock([bool includeMembers = false]) async {
+    if (conversation!.isBlockedByMe) {
+      // This means chatting is not allowed and user has blocked the opponent
+      showDialogForBlockUnBlockUser(true, includeMembers);
+      return;
+    }
+    if (conversation!.isChattingAllowed) {
+      // This means chatting is allowed i.e. no one is blocked
+      showDialogForBlockUnBlockUser(false, includeMembers);
+      return;
+    }
+
+    // This means chatting is not allowed and opponent has blocked the user
+    await Get.dialog(
+      const IsmChatAlertDialogBox(
+        title: IsmChatStrings.cannotBlock,
+        cancelLabel: 'Okay',
+      ),
+    );
+  }
+
+  Future<void> showDialogExitButton([bool askToLeave = false]) async {
+    var adminCount = groupMembers.where((e) => e.isAdmin).length;
+    var isUserAdmin = groupMembers.any((e) =>
+        e.userId == IsmChatConfig.communicationConfig.userConfig.userId &&
+        e.isAdmin);
+    if (adminCount == 1 && !askToLeave && isUserAdmin) {
+      await Get.dialog(
+        IsmChatAlertDialogBox(
+          title: IsmChatStrings.areYouSure,
+          content: const Text(IsmChatStrings.youAreOnlyAdmin),
+          contentTextStyle: IsmChatStyles.w400Grey14,
+          actionLabels: const [IsmChatStrings.exit],
+          callbackActions: [
+            () => showDialogExitButton(true),
+          ],
+          cancelLabel: IsmChatStrings.assignAdmin,
+        ),
+      );
+    } else {
+      await Get.dialog(
+        IsmChatAlertDialogBox(
+          title: 'Exit ${conversation!.chatName}?',
+          content: const Text(
+            'Only group admins will be notified that you left the group',
+          ),
+          contentTextStyle: IsmChatStyles.w400Grey14,
+          actionLabels: const ['Exit'],
+          callbackActions: [
+            () => _leaveGroup(
+                  adminCount: adminCount,
+                  isUserAdmin: isUserAdmin,
+                )
+          ],
+        ),
+      );
+    }
+  }
+
+  void _leaveGroup({
+    required int adminCount,
+    required bool isUserAdmin,
+  }) async {
+    if (adminCount == 1 && isUserAdmin) {
+      var members = groupMembers.where((e) => !e.isAdmin).toList();
+      var member = members[Random().nextInt(members.length)];
+      await makeAdmin(member.userId, false);
+    }
+    var didLeft = await leaveConversation(conversation!.conversationId!);
+    if (didLeft) {
+      Get.back(); // to Chat Page
+      Get.back(); // to Conversation Page
+      await Future.wait([
+        IsmChatConfig.objectBox
+            .removeConversation(conversation!.conversationId!),
+        _conversationController.getChatConversations(),
+      ]);
     }
   }
 
@@ -478,7 +613,7 @@ class IsmChatPageController extends GetxController
 
   void _scrollToBottom() async {
     await Future.delayed(
-      const Duration(milliseconds: 10),
+      const Duration(milliseconds: 500),
       () async => await scrollDown(),
     );
   }
@@ -508,12 +643,13 @@ class IsmChatPageController extends GetxController
 
   void takePhoto() async {
     var file = await cameraController.takePicture();
-    await Get.to(IsmChatImageEditView(file: File(file.path)));
+    imagePath = File(file.path);
+    await Get.to(const IsmChatImageEditView());
   }
 
   void showDialogForClearChat() async {
     await Get.dialog(IsmChatAlertDialogBox(
-      titile: IsmChatStrings.deleteAllMessage,
+      title: IsmChatStrings.deleteAllMessage,
       actionLabels: const [IsmChatStrings.clearChat],
       callbackActions: [
         () => clearAllMessages(conversation?.conversationId ?? ''),
@@ -522,9 +658,14 @@ class IsmChatPageController extends GetxController
   }
 
   void showDialogForBlockUnBlockUser(
-      bool userBlockOrNot, int lastMessageTimsStamp) async {
+    bool userBlockOrNot, [
+    bool includeMembers = false,
+  ]) async {
+    var lastMessageTimsStamp = messages.isEmpty
+        ? DateTime.now().millisecondsSinceEpoch
+        : messages.last.sentAt;
     await Get.dialog(IsmChatAlertDialogBox(
-      titile: userBlockOrNot
+      title: userBlockOrNot
           ? IsmChatStrings.doWantUnBlckUser
           : IsmChatStrings.doWantBlckUser,
       actionLabels: [
@@ -535,10 +676,14 @@ class IsmChatPageController extends GetxController
           userBlockOrNot
               ? unblockUser(
                   opponentId: conversation?.opponentDetails!.userId ?? '',
-                  lastMessageTimeStamp: lastMessageTimsStamp)
+                  lastMessageTimeStamp: lastMessageTimsStamp,
+                  includeMembers: includeMembers,
+                )
               : blockUser(
                   opponentId: conversation?.opponentDetails!.userId ?? '',
-                  lastMessageTimeStamp: lastMessageTimsStamp);
+                  lastMessageTimeStamp: lastMessageTimsStamp,
+                  includeMembers: includeMembers,
+                );
         },
       ],
     ));
@@ -548,7 +693,7 @@ class IsmChatPageController extends GetxController
     if (conversation?.isBlockedByMe ?? false) {
       await Get.dialog(
         IsmChatAlertDialogBox(
-          titile: IsmChatStrings.youBlockUser,
+          title: IsmChatStrings.youBlockUser,
           actionLabels: const [IsmChatStrings.unblock],
           callbackActions: [
             () => unblockUser(
@@ -560,7 +705,7 @@ class IsmChatPageController extends GetxController
     } else {
       await Get.dialog(
         const IsmChatAlertDialogBox(
-          titile: IsmChatStrings.doNotBlock,
+          title: IsmChatStrings.cannotBlock,
           cancelLabel: 'Okay',
         ),
       );
@@ -571,7 +716,7 @@ class IsmChatPageController extends GetxController
     if (message.sentByMe) {
       await Get.dialog(
         IsmChatAlertDialogBox(
-          titile: IsmChatStrings.deleteMessgae,
+          title: IsmChatStrings.deleteMessgae,
           actionLabels: const [
             IsmChatStrings.deleteForEvery,
             IsmChatStrings.deleteForMe,
@@ -585,7 +730,7 @@ class IsmChatPageController extends GetxController
     } else {
       await Get.dialog(
         IsmChatAlertDialogBox(
-          titile:
+          title:
               '${IsmChatStrings.deleteFromUser} ${conversation?.opponentDetails?.userName}',
           actionLabels: const [IsmChatStrings.deleteForMe],
           callbackActions: [
@@ -601,7 +746,7 @@ class IsmChatPageController extends GetxController
     if (sentByMe) {
       await Get.dialog(
         IsmChatAlertDialogBox(
-          titile: IsmChatStrings.deleteMessgae,
+          title: IsmChatStrings.deleteMessgae,
           actionLabels: const [
             IsmChatStrings.deleteForEvery,
             IsmChatStrings.deleteForMe,
@@ -615,7 +760,7 @@ class IsmChatPageController extends GetxController
     } else {
       await Get.dialog(
         IsmChatAlertDialogBox(
-          titile:
+          title:
               '${IsmChatStrings.deleteFromUser} ${conversation?.opponentDetails?.userName}',
           actionLabels: const [IsmChatStrings.deleteForMe],
           callbackActions: [
@@ -659,14 +804,19 @@ class IsmChatPageController extends GetxController
   void checkUserStatus() {
     conversationDetailsApTimer = Timer.periodic(
       const Duration(minutes: 1),
-      (Timer t) => getConverstaionDetails(
-          conversationId: conversation?.conversationId ?? ''),
+      (Timer t) {
+        if (canRefreshDetails) {
+          getConverstaionDetails(
+              conversationId: conversation?.conversationId ?? '');
+        }
+      },
     );
   }
 
   Future<void> blockUser({
     required String opponentId,
     required int lastMessageTimeStamp,
+    bool includeMembers = false,
   }) async {
     var data = await _viewModel.blockUser(
         opponentId: opponentId,
@@ -676,7 +826,9 @@ class IsmChatPageController extends GetxController
       await Future.wait([
         Get.find<IsmChatConversationsController>().getBlockUser(),
         getConverstaionDetails(
-            conversationId: conversation?.conversationId ?? ''),
+          conversationId: conversation?.conversationId ?? '',
+          includeMembers: includeMembers,
+        ),
         getMessagesFromDB(conversation?.conversationId ?? ''),
       ]);
     }
@@ -685,6 +837,7 @@ class IsmChatPageController extends GetxController
   Future<void> unblockUser({
     required String opponentId,
     required int lastMessageTimeStamp,
+    bool includeMembers = false,
   }) async {
     var data = await _viewModel.unblockUser(
         opponentId: opponentId,
@@ -694,7 +847,9 @@ class IsmChatPageController extends GetxController
       await Future.wait([
         Get.find<IsmChatConversationsController>().getBlockUser(),
         getConverstaionDetails(
-            conversationId: conversation?.conversationId ?? ''),
+          conversationId: conversation?.conversationId ?? '',
+          includeMembers: includeMembers,
+        ),
         getMessagesFromDB(conversation?.conversationId ?? ''),
       ]);
     }
@@ -721,15 +876,29 @@ class IsmChatPageController extends GetxController
   Future<void> deleteMessageForEveryone(
     List<IsmChatMessageModel> messages,
   ) async {
+    var pendingMessges = List<IsmChatMessageModel>.from(messages);
     await _viewModel.deleteMessageForEveryone(messages);
     selectedMessage.clear();
+    pendingMessges.where((e) => e.messageId == '').toList();
+    if (pendingMessges.isNotEmpty) {
+      await IsmChatConfig.objectBox
+          .removePendingMessage(conversation!.conversationId!, pendingMessges);
+      await getMessagesFromDB(conversation!.conversationId!);
+    }
   }
 
   Future<void> deleteMessageForMe(
     List<IsmChatMessageModel> messages,
   ) async {
+    var pendingMessges = List<IsmChatMessageModel>.from(messages);
     await _viewModel.deleteMessageForMe(messages);
     selectedMessage.clear();
+    pendingMessges.where((e) => e.messageId == '').toList();
+    if (pendingMessges.isNotEmpty) {
+      await IsmChatConfig.objectBox
+          .removePendingMessage(conversation!.conversationId!, pendingMessges);
+      await getMessagesFromDB(conversation!.conversationId!);
+    }
   }
 
   bool isAllMessagesFromMe() => selectedMessage.every((e) => e.sentByMe);

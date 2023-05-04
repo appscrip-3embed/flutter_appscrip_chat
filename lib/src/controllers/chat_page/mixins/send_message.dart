@@ -2,9 +2,13 @@ part of '../chat_page_controller.dart';
 
 mixin IsmChatPageSendMessageMixin on GetxController {
   IsmChatPageController get _controller => Get.find<IsmChatPageController>();
+  IsmChatConversationsController get conversationController =>
+      Get.find<IsmChatConversationsController>();
 
-  Future<String> createConversation(
-      {required List<String> userId, bool isGroup = false}) async {
+  Future<String> createConversation({
+    required List<String> userId,
+    bool isGroup = false,
+  }) async {
     if (isGroup) {
       userId = _controller.conversation!.userIds ?? [];
     }
@@ -17,7 +21,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       conversationType: 0,
       searchableTags: [' '],
       metaData: <String, dynamic>{},
-      customType: null,
       conversationImageUrl:
           isGroup ? _controller.conversation!.conversationImageUrl ?? '' : '',
       conversationTitle:
@@ -30,8 +33,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       _controller.conversation?.conversationId = conversationId.toString();
       var dbConversationModel = DBConversationModel(
         conversationId: conversationId.toString(),
-        conversationImageUrl: '',
-        conversationTitle: '',
+        conversationImageUrl: _controller.conversation!.conversationImageUrl,
+        conversationTitle: _controller.conversation!.conversationTitle,
         isGroup: false,
         lastMessageSentAt: _controller.conversation?.lastMessageSentAt ?? 0,
         messagingDisabled: _controller.conversation?.messagingDisabled,
@@ -198,6 +201,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     } else {
       await ismChatObjectBox.addForwardMessage(audioMessage!);
     }
+    var notificationTitle =
+        conversationController.userDetails?.userName ?? 'User';
     await ismPostMediaUrl(
       forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
       isNetWorkUrl: isNetWorkUrl ?? false,
@@ -208,9 +213,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       mediaId: sentAt.toString(),
       mediaType: IsmChatAttachmentType.audio.value,
       nameWithExtension: nameWithExtension ?? '',
-      notificationBody: 'Send you an Audio',
-      notificationTitle:
-          _controller.conversation?.opponentDetails?.userName ?? 'User',
+      notificationBody: 'Sent you an Audio',
+      notificationTitle: notificationTitle,
     );
   }
 
@@ -298,6 +302,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     } else {
       await ismChatObjectBox.addForwardMessage(documentMessage!);
     }
+    var notificationTitle =
+        conversationController.userDetails?.userName ?? 'User';
     await ismPostMediaUrl(
       forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
       isNetWorkUrl: isNetWorkUrl ?? false,
@@ -308,9 +314,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       mediaId: sentAt.toString(),
       mediaType: IsmChatAttachmentType.file.value,
       nameWithExtension: nameWithExtension ?? '',
-      notificationBody: 'Send you an Document',
-      notificationTitle:
-          _controller.conversation?.opponentDetails?.userName ?? 'User',
+      notificationBody: 'Sent you an Document',
+      notificationTitle: notificationTitle,
     );
   }
 
@@ -411,7 +416,11 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       }
     }
     if (!forwardMessgeForMulitpleUser) {
-      _controller.messages.add(videoMessage!);
+      try {
+        _controller.messages.add(videoMessage!);
+      } catch (e, st) {
+        IsmChatLog.error('$e,/n$st');
+      }
     }
 
     if (sendMessageType == SendMessageType.pendingMessage) {
@@ -419,6 +428,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     } else {
       await ismChatObjectBox.addForwardMessage(videoMessage!);
     }
+    var notificationTitle =
+        conversationController.userDetails?.userName ?? 'User';
+
     await ismPostMediaUrl(
       forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
       isNetWorkUrl: isNetWorkUrl ?? false,
@@ -429,13 +441,12 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       mediaId: mediaId ?? '',
       mediaType: IsmChatAttachmentType.video.value,
       nameWithExtension: nameWithExtension ?? '',
-      notificationBody: 'Send you an Video',
+      notificationBody: 'Sent you an Video',
       thumbnailNameWithExtension: thumbnailNameWithExtension,
       thumbnailMediaId: thumbnailMediaId,
       thumbnailBytes: thumbnailBytes,
       thumbanilMediaType: IsmChatAttachmentType.image.value,
-      notificationTitle:
-          _controller.conversation?.opponentDetails?.userName ?? 'User',
+      notificationTitle: notificationTitle,
     );
   }
 
@@ -521,6 +532,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     } else {
       await ismChatObjectBox.addForwardMessage(imageMessage);
     }
+    var notificationTitle =
+        conversationController.userDetails?.userName ?? 'User';
     await ismPostMediaUrl(
       forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
       isNetWorkUrl: isNetWorkUrl ?? false,
@@ -531,10 +544,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       mediaId: mediaId ?? '',
       mediaType: IsmChatAttachmentType.image.value,
       nameWithExtension: nameWithExtension ?? '',
-      notificationBody: 'Send you an Image',
+      notificationBody: 'Sent you an Image',
       imageAndFile: true,
-      notificationTitle:
-          _controller.conversation?.opponentDetails?.userName ?? 'User',
+      notificationTitle: notificationTitle,
     );
   }
 
@@ -583,6 +595,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     } else {
       await ismChatObjectBox.addForwardMessage(textMessage);
     }
+    var notificationTitle =
+        conversationController.userDetails?.userName ?? 'User';
     sendMessage(
         metaData: textMessage.metaData,
         forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
@@ -593,8 +607,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         conversationId: textMessage.conversationId ?? '',
         messageType: textMessage.messageType?.value ?? 0,
         notificationBody: 'Sent you a location',
-        notificationTitle:
-            _controller.conversation?.opponentDetails?.userName ?? '');
+        notificationTitle: notificationTitle);
   }
 
   void sendTextMessage({
@@ -650,7 +663,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     } else {
       await ismChatObjectBox.addForwardMessage(textMessage);
     }
-
+    var notificationTitle =
+        conversationController.userDetails?.userName ?? 'User';
     sendMessage(
         metaData: textMessage.metaData,
         forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
@@ -663,8 +677,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         conversationId: textMessage.conversationId ?? '',
         messageType: textMessage.messageType?.value ?? 0,
         notificationBody: textMessage.body,
-        notificationTitle:
-            _controller.conversation?.opponentDetails?.userName ?? 'User');
+        notificationTitle: notificationTitle);
   }
 
   Future<void> ismPostMediaUrl(

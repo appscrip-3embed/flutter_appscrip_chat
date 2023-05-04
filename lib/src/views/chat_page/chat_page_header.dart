@@ -46,20 +46,13 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IsmChatImage.profile(
-                      controller.conversation?.opponentDetails?.metaData
-                                  ?.profilePic?.isNotEmpty ==
-                              true
-                          ? controller.conversation?.opponentDetails?.metaData
-                                  ?.profilePic ??
-                              ''
-                          : controller.conversation?.opponentDetails
-                                  ?.userProfileImageUrl ??
-                              '',
+                      controller.conversation?.profileUrl ?? '',
                       name: controller.conversation!.chatName.isNotEmpty
                           ? controller.conversation?.chatName
                           : controller
                                   .conversation?.opponentDetails?.userName ??
                               '',
+                      dimensions: IsmChatDimens.forty,
                     ),
                     IsmChatDimens.boxWidth8,
                     Column(
@@ -95,7 +88,10 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                             style: IsmChatStyles.w400White12,
                                           )
                                         : Text(
-                                            '${controller.conversation?.opponentDetails?.lastSeen.toCurrentTimeStirng()}',
+                                            controller.conversation
+                                                    ?.opponentDetails?.lastSeen
+                                                    .toCurrentTimeStirng() ??
+                                                '',
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: IsmChatStyles.w400White12,
@@ -147,36 +143,11 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ],
                   elevation: 2,
-                  onSelected: (value) async {
+                  onSelected: (value) {
                     if (value == 1) {
                       controller.showDialogForClearChat();
                     } else {
-                      if (controller.conversation!.isBlockedByMe) {
-                        // This means chatting is not allowed and user has blocked the opponent
-                        controller.showDialogForBlockUnBlockUser(
-                            true,
-                            controller.messages.isEmpty
-                                ? DateTime.now().millisecondsSinceEpoch
-                                : controller.messages.last.sentAt);
-                        return;
-                      }
-                      if (controller.conversation!.isChattingAllowed) {
-                        // This means chatting is allowed i.e. no one is blocked
-                        controller.showDialogForBlockUnBlockUser(
-                            false,
-                            controller.messages.isEmpty
-                                ? DateTime.now().millisecondsSinceEpoch
-                                : controller.messages.last.sentAt);
-                        return;
-                      }
-
-                      // This means chatting is not allowed and opponent has blocked the user
-                      await Get.dialog(
-                        const IsmChatAlertDialogBox(
-                          titile: IsmChatStrings.doNotBlock,
-                          cancelLabel: 'Okay',
-                        ),
-                      );
+                      controller.handleBlockUnblock();
                     }
                   },
                 ),

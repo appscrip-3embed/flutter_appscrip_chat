@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,6 +19,46 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
     super.initState();
     IsmChatPageBinding().dependencies();
   }
+
+  IsmChatPageController get controller => Get.find<IsmChatPageController>();
+
+  Future<bool> navigateBack() async {
+    if (controller.isMessageSeleted) {
+      controller.isMessageSeleted = false;
+      controller.selectedMessage.clear();
+      return false;
+    } else {
+      Get.back<void>();
+      await controller.updateLastMessage();
+      return true;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => WillPopScope(
+        onWillPop: () async {
+          if (!Platform.isAndroid) {
+            return false;
+          }
+          return await navigateBack();
+        },
+        child: Platform.isIOS
+            ? GestureDetector(
+                onHorizontalDragEnd: (details) {
+                  if (details.velocity.pixelsPerSecond.dx > 50) {
+                    navigateBack();
+                  }
+                },
+                child: _IsmChatPageView(onTitleTap: widget.onTitleTap),
+              )
+            : _IsmChatPageView(onTitleTap: widget.onTitleTap),
+      );
+}
+
+class _IsmChatPageView extends StatelessWidget {
+  const _IsmChatPageView({this.onTitleTap});
+
+  final void Function(IsmChatConversationModel)? onTitleTap;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
@@ -65,46 +107,53 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                     ],
                   )
                 : IsmChatPageHeader(
-                    onTap: widget.onTitleTap != null
-                        ? () =>
-                            widget.onTitleTap?.call(controller.conversation!)
-                        : () {
-                            // TODO: Make Conversation details screen
-                            // IsmChatUtility.openFullScreenBottomSheet(child)
+                    onTap: onTitleTap != null
+                        ? () => onTitleTap?.call(controller.conversation!)
+                        : () async {
+                            controller.canRefreshDetails = false;
+                            await IsmChatUtility.openFullScreenBottomSheet(
+                              const IsmChatConverstaionInfoView(),
+                            );
+                            controller.canRefreshDetails = true;
                           },
                   ),
             body: Stack(
               alignment: Alignment.bottomRight,
               children: [
-                Column(
-                  children: [
-                    Expanded(
-                      child: Visibility(
-                        visible: !controller.isMessagesLoading,
-                        replacement: const IsmChatLoadingDialog(),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    children: [
+                      Expanded(
                         child: Visibility(
-                          visible: controller.messages.isNotEmpty &&
-                              controller.messages.length != 1,
-                          replacement: const IsmChatNoMessage(),
-                          child: ListView.builder(
-                            controller: controller.messagesScrollController,
-                            keyboardDismissBehavior:
-                                ScrollViewKeyboardDismissBehavior.onDrag,
-                            padding: IsmChatDimens.edgeInsets4_8,
-                            itemCount: controller.messages.length,
-                            itemBuilder: (_, index) => IsmChatMessage(index),
+                          visible: !controller.isMessagesLoading,
+                          replacement: const IsmChatLoadingDialog(),
+                          child: Visibility(
+                            visible: controller.messages.isNotEmpty &&
+                                controller.messages.length != 1,
+                            replacement: const IsmChatNoMessage(),
+                            child: ListView.builder(
+                              controller: controller.messagesScrollController,
+                              shrinkWrap: true,
+                              keyboardDismissBehavior:
+                                  ScrollViewKeyboardDismissBehavior.onDrag,
+                              padding: IsmChatDimens.edgeInsets4_8,
+                              itemCount: controller.messages.length,
+                              itemBuilder: (_, index) => IsmChatMessage(index),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SafeArea(child: IsmChatInputField())
-                  ],
+                      const SafeArea(child: IsmChatMessageField())
+                    ],
+                  ),
                 ),
                 Obx(
                   () => !controller.showDownSideButton
                       ? const SizedBox.shrink()
                       : Positioned(
-                          bottom: IsmChatDimens.eighty,
+                          bottom: IsmChatDimens.ninty,
                           right: IsmChatDimens.eight,
                           child: IsmChatTapHandler(
                             onTap: controller.scrollDown,

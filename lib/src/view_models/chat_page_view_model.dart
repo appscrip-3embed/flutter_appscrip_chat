@@ -8,10 +8,14 @@ class IsmChatPageViewModel {
   final IsmChatPageRepository _repository;
   var messageSkip = 0;
   var messageLimit = 20;
+
+  IsmChatPageController get _controller => Get.find<IsmChatPageController>();
+
   Future<List<IsmChatMessageModel>?> getChatMessages({
     required String conversationId,
     required int lastMessageTimestamp,
     int? pagination,
+    required bool isGroup,
   }) async {
     var messages = await _repository.getChatMessages(
       conversationId: conversationId,
@@ -26,7 +30,13 @@ class IsmChatPageViewModel {
 
     messages.removeWhere((e) => [
           IsmChatActionEvents.clearConversation.name,
-          IsmChatActionEvents.conversationCreated.name
+          if (!isGroup) IsmChatActionEvents.conversationCreated.name,
+          IsmChatActionEvents.deleteConversationLocally.name,
+          if (![e.memberId, e.userId].any((e) =>
+              e == IsmChatConfig.communicationConfig.userConfig.userId)) ...[
+            IsmChatActionEvents.revokeAdmin.name,
+            IsmChatActionEvents.addAdmin.name,
+          ],
         ].contains(e.action));
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
     var conversation = conversationBox
@@ -104,6 +114,7 @@ class IsmChatPageViewModel {
         if (chatPendingMessages == null) {
           return false;
         }
+        // Todo update messgae with url for audio
         for (var x = 0; x < chatPendingMessages.messages.length; x++) {
           var pendingMessage =
               IsmChatMessageModel.fromJson(chatPendingMessages.messages[x]);
@@ -226,16 +237,17 @@ class IsmChatPageViewModel {
         conversationId: conversationId,
       );
 
-  Future<IsmChatConversationModel?> getConverstaionDetails({
-    required String conversationId,
-    String? ids,
-    bool? includeMembers,
-    int? membersSkip,
-    int? membersLimit,
-  }) async =>
+  Future<IsmChatConversationModel?> getConverstaionDetails(
+          {required String conversationId,
+          String? ids,
+          bool? includeMembers,
+          int? membersSkip,
+          int? membersLimit,
+          bool? isLoading}) async =>
       await _repository.getConverstaionDetails(
-        conversationId: conversationId,
-      );
+          conversationId: conversationId,
+          includeMembers: includeMembers,
+          isLoading: isLoading);
 
   Future<List<IsmChatMessageModel>?> blockUser(
       {required String opponentId,
@@ -246,12 +258,65 @@ class IsmChatPageViewModel {
     );
     if (!response!.hasError) {
       var responseMessage = await getChatMessages(
-          conversationId: conversationId,
-          lastMessageTimestamp: lastMessageTimeStamp);
+        conversationId: conversationId,
+        lastMessageTimestamp: lastMessageTimeStamp,
+        isGroup: false,
+      );
       return responseMessage;
     }
     return null;
   }
+
+  /// Add members to a conversation
+  Future<IsmChatResponseModel?> addMembers(
+          {required List<String> memberList,
+          required String conversationId,
+          bool isLoading = false}) async =>
+      await _repository.addMembers(
+          memberList: memberList,
+          conversationId: conversationId,
+          isLoading: isLoading);
+
+  /// Remove members from conversation
+  Future<IsmChatResponseModel?> removeMember({
+    required String conversationId,
+    required String userId,
+    bool isLoading = false,
+  }) async =>
+      await _repository.removeMembers(conversationId, userId, isLoading);
+
+  /// Get eligible members to add to a conversation
+  Future<List<UserDetails>?> getEligibleMembers(
+          {required String conversationId,
+          bool isLoading = false,
+          int limit = 20,
+          int skip = 0}) async =>
+      await _repository.getEligibleMembers(
+          conversationId: conversationId,
+          isLoading: isLoading,
+          limit: limit,
+          skip: skip);
+
+  /// Leave conversation
+  Future<IsmChatResponseModel?> leaveConversation(
+          String conversationId, bool isLoading) async =>
+      await _repository.leaveConversation(conversationId, isLoading);
+
+  /// make admin api
+  Future<IsmChatResponseModel?> makeAdmin({
+    required String memberId,
+    required String conversationId,
+    bool isLoading = false,
+  }) async =>
+      await _repository.makeAdmin(memberId, conversationId, isLoading);
+
+  /// Remove member as admin from conversation
+  Future<IsmChatResponseModel?> removeAdmin({
+    required String conversationId,
+    required String memberId,
+    bool isLoading = false,
+  }) async =>
+      await _repository.removeAdmin(conversationId, memberId, isLoading);
 
   Future<List<IsmChatMessageModel>?> unblockUser(
       {required String opponentId,
@@ -262,8 +327,10 @@ class IsmChatPageViewModel {
     );
     if (!response!.hasError) {
       var responseMessage = await getChatMessages(
-          conversationId: conversationId,
-          lastMessageTimestamp: lastMessageTimeStamp);
+        conversationId: conversationId,
+        lastMessageTimestamp: lastMessageTimeStamp,
+        isGroup: false,
+      );
       return responseMessage;
     }
     return null;
@@ -313,6 +380,10 @@ class IsmChatPageViewModel {
     List<IsmChatMessageModel> messages,
   ) async {
     var conversationId = messages.first.conversationId!;
+    messages.removeWhere((e) => e.messageId == '');
+    if (messages.isEmpty) {
+      return;
+    }
     var myMessages = messages.where((m) => m.sentByMe).toList();
     if (myMessages.isNotEmpty) {
       var response = await _repository.deleteMessageForMe(
@@ -339,6 +410,10 @@ class IsmChatPageViewModel {
   Future<void> deleteMessageForEveryone(
     List<IsmChatMessageModel> messages,
   ) async {
+    messages.removeWhere((e) => e.messageId == '');
+    if (messages.isEmpty) {
+      return;
+    }
     var conversationId = messages.first.conversationId!;
     var response = await _repository.deleteMessageForEveryone(
       conversationId: conversationId,
@@ -400,7 +475,6 @@ class IsmChatPageViewModel {
     required int conversationType,
     List<String>? searchableTags,
     Map<String, dynamic>? metaData,
-    String? customType,
     String? conversationTitle,
     String? conversationImageUrl,
   }) async =>
@@ -423,6 +497,7 @@ class IsmChatPageViewModel {
         IsmChatCustomMessageType.date,
         IsmChatCustomMessageType.block,
         IsmChatCustomMessageType.unblock,
+        IsmChatCustomMessageType.conversationCreated,
       ].contains(x.customType)) {
         indexedMap[x.messageId!] = i;
       }

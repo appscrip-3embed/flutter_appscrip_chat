@@ -79,8 +79,11 @@ class IsmChatPageRepository {
         'notificationBody': notificationBody,
         'notificationTitle': notificationTitle
       };
-      var response = await _apiWrapper.post(IsmChatAPI.sendMessage,
-          payload: payload, headers: IsmChatUtility.tokenCommonHeader());
+      var response = await _apiWrapper.post(
+        IsmChatAPI.sendMessage,
+        payload: payload,
+        headers: IsmChatUtility.tokenCommonHeader(),
+      );
       if (response.hasError) {
         return null;
       }
@@ -112,6 +115,136 @@ class IsmChatPageRepository {
     }
   }
 
+  /// Add members to a conversation
+  Future<IsmChatResponseModel?> addMembers(
+      {required List<String> memberList,
+      required String conversationId,
+      bool isLoading = false}) async {
+    var payload = {'members': memberList, 'conversationId': conversationId};
+    try {
+      var response = await _apiWrapper.put(
+        IsmChatAPI.conversationMembers,
+        payload: payload,
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading,
+      );
+      if (response.hasError) {
+        return null;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Remove members $e', st);
+      return null;
+    }
+  }
+
+  /// Remove members from a conversation
+  Future<IsmChatResponseModel?> removeMembers(
+      String conversationId, String userId, bool? isLoading) async {
+    try {
+      var response = await _apiWrapper.delete(
+        '${IsmChatAPI.conversationMembers}?conversationId=$conversationId&members=$userId',
+        payload: null,
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading ?? false,
+      );
+      if (response.hasError) {
+        return null;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Remove members $e', st);
+      return null;
+    }
+  }
+
+  /// Get eligible members to add to a conversation
+  Future<List<UserDetails>?> getEligibleMembers(
+      {required String conversationId,
+      bool isLoading = false,
+      int limit = 20,
+      int skip = 0}) async {
+    try {
+      var response = await _apiWrapper.get(
+        '${IsmChatAPI.eligibleMembers}?conversationId=$conversationId&limit=$limit&skip=$skip',
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading,
+      );
+      if (response.hasError) {
+        return null;
+      }
+      var data = jsonDecode(response.data) as Map<String, dynamic>;
+      var user = (data['conversationEligibleMembers'] as List)
+          .map((e) => UserDetails.fromMap(e as Map<String, dynamic>))
+          .toList();
+      return user;
+    } catch (e, st) {
+      IsmChatLog.error('Get eligible members $e', st);
+      return null;
+    }
+  }
+
+  /// Leave conversation
+  Future<IsmChatResponseModel?> leaveConversation(
+      String conversationId, bool? isLoading) async {
+    try {
+      var response = await _apiWrapper.delete(
+        '${IsmChatAPI.leaveConversation}?conversationId=$conversationId',
+        payload: null,
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading ?? false,
+      );
+      if (response.hasError) {
+        return null;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Leave conversation $e', st);
+      return null;
+    }
+  }
+
+  /// Make admin api
+  Future<IsmChatResponseModel?> makeAdmin(
+      String memberId, String conversationId, bool? isLoading) async {
+    var payload = {'memberId': memberId, 'conversationId': conversationId};
+    try {
+      var response = await _apiWrapper.put(
+        IsmChatAPI.conversationAdmin,
+        payload: payload,
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading ?? false,
+      );
+      if (response.hasError) {
+        return null;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Make admin $e', st);
+      return null;
+    }
+  }
+
+  /// Remove member as admin from a conversation
+  Future<IsmChatResponseModel?> removeAdmin(
+      String conversationId, String memberId, bool? isLoading) async {
+    try {
+      var response = await _apiWrapper.delete(
+        '${IsmChatAPI.conversationAdmin}?conversationId=$conversationId&memberId=$memberId',
+        payload: null,
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading ?? false,
+      );
+      if (response.hasError) {
+        return null;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Remove member as admin $e', st);
+      return null;
+    }
+  }
+
   Future<void> notifyTyping({
     required String conversationId,
   }) async {
@@ -130,18 +263,24 @@ class IsmChatPageRepository {
     }
   }
 
-  Future<IsmChatConversationModel?> getConverstaionDetails({
-    required String conversationId,
-    String? ids,
-    bool? includeMembers,
-    int? membersSkip,
-    int? membersLimit,
-  }) async {
+  Future<IsmChatConversationModel?> getConverstaionDetails(
+      {required String conversationId,
+      String? ids,
+      bool? includeMembers,
+      int? membersSkip,
+      int? membersLimit,
+      bool? isLoading}) async {
     try {
-      var response = await _apiWrapper.get(
-        '${IsmChatAPI.conversationDetails}/$conversationId',
-        headers: IsmChatUtility.tokenCommonHeader(),
-      );
+      String? url;
+      if (includeMembers == true) {
+        url =
+            '${IsmChatAPI.conversationDetails}/$conversationId?includeMembers=$includeMembers';
+      } else {
+        url = '${IsmChatAPI.conversationDetails}/$conversationId';
+      }
+      var response = await _apiWrapper.get(url,
+          headers: IsmChatUtility.tokenCommonHeader(),
+          showLoader: isLoading ?? false);
       if (response.hasError) {
         return null;
       }
@@ -417,7 +556,6 @@ class IsmChatPageRepository {
       required int conversationType,
       List<String>? searchableTags,
       Map<String, dynamic>? metaData,
-      String? customType,
       String? conversationTitle,
       String? conversationImageUrl}) async {
     try {
@@ -430,7 +568,7 @@ class IsmChatPageRepository {
         'conversationType': conversationType,
         'searchableTags': searchableTags,
         'metaData': metaData,
-        'customType': customType,
+        'customType': null,
         'conversationTitle': conversationTitle,
         'conversationImageUrl': conversationImageUrl
       };
@@ -440,6 +578,11 @@ class IsmChatPageRepository {
         headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
+        if (response.errorCode.toString().startsWith('4')) {
+          var error = (jsonDecode(response.data) as Map)['error'] as String? ??
+              'Error in creating conversation';
+          await IsmChatUtility.showErrorDialog(error);
+        }
         return null;
       }
       return response;

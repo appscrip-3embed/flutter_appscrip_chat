@@ -107,6 +107,8 @@ class IsmChatSearchDelegate extends SearchDelegate<void> {
                         ),
                       ],
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   );
                 },
               ),

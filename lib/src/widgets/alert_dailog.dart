@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatAlertDialogBox extends StatelessWidget {
-  const IsmChatAlertDialogBox({
-    super.key,
-    this.titile = 'Are you sure?',
-    this.actionLabels,
-    this.callbackActions,
-    this.cancelLabel = IsmChatStrings.cancel,
-    this.onCancel,
-  }) : assert(
+  const IsmChatAlertDialogBox(
+      {super.key,
+      this.title = 'Are you sure?',
+      this.actionLabels,
+      this.callbackActions,
+      this.cancelLabel = IsmChatStrings.cancel,
+      this.onCancel,
+      this.content,
+      this.contentPadding,
+      this.contentTextStyle})
+      : assert(
           (actionLabels == null && callbackActions == null) ||
               (actionLabels != null &&
                   callbackActions != null &&
@@ -18,24 +21,31 @@ class IsmChatAlertDialogBox extends StatelessWidget {
           'Equal number of actionLabels & callbackActions must be passed',
         );
 
-  final String titile;
+  final String title;
   final List<String>? actionLabels;
   final List<VoidCallback>? callbackActions;
   final String cancelLabel;
   final VoidCallback? onCancel;
+  final Widget? content;
+  final TextStyle? contentTextStyle;
+  final EdgeInsetsGeometry? contentPadding;
 
   @override
   Widget build(BuildContext context) => (actionLabels?.length ?? 0) <= 1
       ? AlertDialog(
           actionsPadding: IsmChatDimens.edgeInsets16,
-          title: Text(titile),
+          title: Text(title),
           backgroundColor: IsmChatColors.whiteColor,
           titleTextStyle: IsmChatStyles.w600Black14,
+          contentPadding: contentPadding,
+          contentTextStyle: contentTextStyle,
+          content: content,
           actions: [
             IsmChatTapHandler(
-              onTap: () {
-                Get.back<void>();
-              },
+              onTap: onCancel ??
+                  () {
+                    Get.back<void>();
+                  },
               child: Text(
                 cancelLabel,
                 style: IsmChatStyles.w400Black14,
@@ -46,7 +56,7 @@ class IsmChatAlertDialogBox extends StatelessWidget {
               IsmChatTapHandler(
                 onTap: () {
                   Get.back<void>();
-                  callbackActions!.first.call();
+                  callbackActions!.first();
                 },
                 child: Text(
                   actionLabels!.first,
@@ -58,7 +68,7 @@ class IsmChatAlertDialogBox extends StatelessWidget {
         )
       : SimpleDialog(
           title: Text(
-            titile,
+            title,
             style: IsmChatStyles.w600Black14,
           ),
           children: [

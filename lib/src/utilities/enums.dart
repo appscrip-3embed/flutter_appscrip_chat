@@ -45,6 +45,12 @@ enum IsmChatCustomMessageType {
   deletedForMe(11),
   deletedForEveryone(12),
   link(13),
+  conversationCreated(14),
+  removeMember(15),
+  addMember(16),
+  addAdmin(17),
+  revokeAdmin(18),
+  memberLeave(19),
   date(100);
 
   const IsmChatCustomMessageType(this.value);
@@ -77,6 +83,18 @@ enum IsmChatCustomMessageType {
         return IsmChatCustomMessageType.deletedForEveryone;
       case 13:
         return IsmChatCustomMessageType.link;
+      case 14:
+        return IsmChatCustomMessageType.conversationCreated;
+      case 15:
+        return IsmChatCustomMessageType.removeMember;
+      case 16:
+        return IsmChatCustomMessageType.addMember;
+      case 17:
+        return IsmChatCustomMessageType.addAdmin;
+      case 18:
+        return IsmChatCustomMessageType.revokeAdmin;
+      case 19:
+        return IsmChatCustomMessageType.memberLeave;
       case 100:
         return IsmChatCustomMessageType.date;
       default:
@@ -96,6 +114,14 @@ enum IsmChatCustomMessageType {
       'location': IsmChatCustomMessageType.location,
       'block': IsmChatCustomMessageType.block,
       'unblock': IsmChatCustomMessageType.unblock,
+      'conversationCreated': IsmChatCustomMessageType.conversationCreated,
+      'membersRemove': IsmChatCustomMessageType.removeMember,
+      'removeMember': IsmChatCustomMessageType.removeMember,
+      'membersAdd': IsmChatCustomMessageType.addMember,
+      'addMember': IsmChatCustomMessageType.addMember,
+      'addAdmin': IsmChatCustomMessageType.addAdmin,
+      'revokeAdmin': IsmChatCustomMessageType.revokeAdmin,
+      'memberLeave': IsmChatCustomMessageType.memberLeave,
     };
 
     var type = value.split('.').last;
@@ -150,7 +176,7 @@ enum IsmChatCustomMessageType {
       case IsmChatActionEvents.typingEvent:
         return null;
       case IsmChatActionEvents.conversationCreated:
-        return null;
+        return IsmChatCustomMessageType.conversationCreated;
       case IsmChatActionEvents.messageDelivered:
         return null;
       case IsmChatActionEvents.messageRead:
@@ -161,6 +187,12 @@ enum IsmChatCustomMessageType {
         return null;
       case IsmChatActionEvents.clearConversation:
         return null;
+      case IsmChatActionEvents.deleteConversationLocally:
+        return null;
+      case IsmChatActionEvents.revokeAdmin:
+        return IsmChatCustomMessageType.revokeAdmin;
+      case IsmChatActionEvents.addAdmin:
+        return IsmChatCustomMessageType.addAdmin;
       case IsmChatActionEvents.userBlock:
         return IsmChatCustomMessageType.block;
       case IsmChatActionEvents.userBlockConversation:
@@ -169,6 +201,12 @@ enum IsmChatCustomMessageType {
         return IsmChatCustomMessageType.unblock;
       case IsmChatActionEvents.userUnblockConversation:
         return IsmChatCustomMessageType.unblock;
+      case IsmChatActionEvents.removeMember:
+        return IsmChatCustomMessageType.removeMember;
+      case IsmChatActionEvents.addMember:
+        return IsmChatCustomMessageType.addMember;
+      case IsmChatActionEvents.memberLeave:
+        return IsmChatCustomMessageType.memberLeave;
     }
   }
 
@@ -266,7 +304,13 @@ enum IsmChatActionEvents {
   userBlockConversation,
   userUnblock,
   userUnblockConversation,
-  clearConversation;
+  clearConversation,
+  removeMember,
+  addMember,
+  revokeAdmin,
+  addAdmin,
+  memberLeave,
+  deleteConversationLocally;
 
   factory IsmChatActionEvents.fromName(String name) {
     switch (name) {
@@ -292,6 +336,18 @@ enum IsmChatActionEvents {
         return IsmChatActionEvents.userUnblockConversation;
       case 'clearConversation':
         return IsmChatActionEvents.clearConversation;
+      case 'deleteConversationLocally':
+        return IsmChatActionEvents.deleteConversationLocally;
+      case 'membersRemove':
+        return IsmChatActionEvents.removeMember;
+      case 'membersAdd':
+        return IsmChatActionEvents.addMember;
+      case 'removeAdmin':
+        return IsmChatActionEvents.revokeAdmin;
+      case 'addAdmin':
+        return IsmChatActionEvents.addAdmin;
+      case 'memberLeave':
+        return IsmChatActionEvents.memberLeave;
       default:
         return IsmChatActionEvents.typingEvent;
     }

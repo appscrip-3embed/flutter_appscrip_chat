@@ -1,5 +1,6 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
 class IsmChatConversationsViewModel {
   IsmChatConversationsViewModel(this._repository);
@@ -72,6 +73,7 @@ class IsmChatConversationsViewModel {
     if (!response!.hasError) {
       await IsmChatConfig.objectBox
           .clearAllMessage(conversationId: conversationId);
+      await Get.find<IsmChatConversationsController>().getConversationsFromDB();
     }
   }
 

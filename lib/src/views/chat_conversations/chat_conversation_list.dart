@@ -114,7 +114,6 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                 itemBuilder: widget.itemBuilder ??
                     (_, index) {
                       var conversation = controller.conversations[index];
-
                       return Slidable(
                         closeOnScroll: true,
                         endActionPane: ActionPane(
@@ -128,6 +127,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                                     controller.conversations[index],
                                   ),
                                   isDismissible: false,
+                                  elevation: 0,
                                 );
                               },
                               flex: 1,
@@ -135,6 +135,8 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                               foregroundColor: IsmChatColors.whiteColor,
                               icon: Icons.delete_rounded,
                               label: IsmChatStrings.delete,
+                              borderRadius:
+                                  BorderRadius.circular(IsmChatDimens.eight),
                             ),
                           ],
                         ),

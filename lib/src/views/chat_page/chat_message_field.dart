@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 
-class IsmChatInputField extends StatelessWidget {
-  const IsmChatInputField({super.key});
+class IsmChatMessageField extends StatelessWidget {
+  const IsmChatMessageField({super.key});
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
@@ -94,7 +95,13 @@ class IsmChatInputField extends StatelessWidget {
                                               '',
                                       style: IsmChatStyles.w600White14,
                                     ),
-                                    Text(messageBody),
+                                    SizedBox(
+                                      width: IsmChatDimens.percentWidth(.68),
+                                      child: Text(
+                                        messageBody,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
                                   ],
                                 ),
                                 IsmChatTapHandler(
@@ -115,7 +122,7 @@ class IsmChatInputField extends StatelessWidget {
                               child: TextFormField(
                                 maxLines: 4,
                                 minLines: 1,
-                                focusNode: controller.focusNode,
+                                focusNode: controller.messageFieldFocusNode,
                                 controller: controller.chatInputController,
                                 cursorColor:
                                     IsmChatConfig.chatTheme.primaryColor,
@@ -193,7 +200,11 @@ class _MicOrSendButton extends StatelessWidget {
                         // Check and request permission
                         if (await controller.recordAudio.hasPermission()) {
                           // Start recording
-                          await controller.recordAudio.start();
+                          var path =
+                              (await getApplicationDocumentsDirectory()).path;
+                          var name = DateTime.now().millisecondsSinceEpoch;
+                          await controller.recordAudio
+                              .start(path: '$path/record_$name.m4a');
                         }
                       }
                     },

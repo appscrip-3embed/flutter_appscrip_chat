@@ -16,6 +16,9 @@ class IsmChatMessageModel {
       updatedAt: map['updatedAt'] as int? ?? 0,
       sentAt: map['sentAt'] as int? ?? 0,
       unreadMessagesCount: map['unreadMessagesCount'] as int? ?? 0,
+      userId: map['userId'] as String? ?? map['initiatorId'] as String? ?? '',
+      userName:
+          map['userName'] as String? ?? map['initiatorName'] as String? ?? '',
       searchableTags: map['searchableTags'] != null
           ? List<String>.from(map['searchableTags'] as List<dynamic>)
           : [],
@@ -70,9 +73,19 @@ class IsmChatMessageModel {
       adminCount: map['adminCount'] as int? ?? 0,
       messageType:
           IsmChatMessageType.fromValue(map['messageType'] as int? ?? 0),
+      memberId: map['memberId'] as String?,
+      memberName: map['memberName'] as String?,
       sentByMe: true,
       mentionedUsers: map['mentionedUsers'],
       initiatorId: map['initiatorId'] as String? ?? '',
+      initiatorName: map['initiatorName'] as String? ?? '',
+      members: map['members'] == null
+          ? []
+          : List<UserDetails>.from(
+              (map['members'] as List).map(
+                (e) => UserDetails.fromMap(e as Map<String, dynamic>),
+              ),
+            ),
     );
     return model.copyWith(
       customType: model.customType != null &&
@@ -94,40 +107,42 @@ class IsmChatMessageModel {
   }
 
   factory IsmChatMessageModel.fromDate(int sentAt) => IsmChatMessageModel(
-        body: sentAt.toMessageDateString(),
-        action: '',
-        updatedAt: 0,
-        sentAt: sentAt,
-        unreadMessagesCount: 0,
-        searchableTags: [],
-        privateOneToOne: false,
-        showInConversation: true,
-        readByAll: false,
-        senderInfo: null,
-        metaData: null,
-        messagingDisabled: false,
-        membersCount: 0,
-        lastReadAt: [],
-        attachments: null,
-        lastMessageSentAt: 0,
-        isGroup: false,
-        deliveredToAll: false,
-        customType: IsmChatCustomMessageType.date,
-        createdByUserName: '',
-        createdByUserImageUrl: '',
-        createdBy: '',
-        conversationType: 0,
-        conversationTitle: null,
-        conversationImageUrl: null,
-        conversationId: '',
-        messageId: '',
-        deviceId: '',
-        parentMessageId: '',
-        adminCount: 0,
-        messageType: IsmChatMessageType.normal,
-        sentByMe: true,
-        mentionedUsers: null,
-      );
+      body: sentAt.toMessageDateString(),
+      action: '',
+      updatedAt: 0,
+      sentAt: sentAt,
+      unreadMessagesCount: 0,
+      searchableTags: [],
+      privateOneToOne: false,
+      showInConversation: true,
+      readByAll: false,
+      senderInfo: null,
+      metaData: null,
+      messagingDisabled: false,
+      membersCount: 0,
+      lastReadAt: [],
+      attachments: null,
+      lastMessageSentAt: 0,
+      isGroup: false,
+      deliveredToAll: false,
+      customType: IsmChatCustomMessageType.date,
+      createdByUserName: '',
+      createdByUserImageUrl: '',
+      createdBy: '',
+      conversationType: 0,
+      conversationTitle: null,
+      conversationImageUrl: null,
+      conversationId: '',
+      messageId: '',
+      deviceId: '',
+      parentMessageId: '',
+      adminCount: 0,
+      messageType: IsmChatMessageType.normal,
+      sentByMe: true,
+      mentionedUsers: null,
+      initiatorId: '',
+      initiatorName: '',
+      members: []);
 
   IsmChatMessageModel({
     required this.body,
@@ -135,6 +150,8 @@ class IsmChatMessageModel {
     required this.sentAt,
     this.updatedAt,
     this.unreadMessagesCount,
+    this.userId,
+    this.userName,
     this.searchableTags,
     this.privateOneToOne,
     this.showInConversation,
@@ -164,6 +181,10 @@ class IsmChatMessageModel {
     required this.sentByMe,
     this.mentionedUsers,
     this.initiatorId,
+    this.initiatorName,
+    this.members,
+    this.memberId,
+    this.memberName,
   });
 
   String body;
@@ -171,6 +192,8 @@ class IsmChatMessageModel {
   int sentAt;
   int? updatedAt;
   int? unreadMessagesCount;
+  String? userId;
+  String? userName;
   List<String>? searchableTags;
   bool? privateOneToOne;
   bool? showInConversation;
@@ -195,15 +218,22 @@ class IsmChatMessageModel {
   String? initiatorId;
   String? messageId;
   String? deviceId;
-
+  String? initiatorName;
+  List<UserDetails>? members;
   int? adminCount;
-
   IsmChatMessageType? messageType;
   dynamic mentionedUsers;
   IsmChatCustomMessageType? customType;
   bool sentByMe;
+  String? memberId;
+  String? memberName;
 
   String get chatName => conversationTitle ?? senderInfo?.userName ?? '';
+
+  String get initiator =>
+      userId == IsmChatConfig.communicationConfig.userConfig.userId
+          ? 'You'
+          : userName!;
 
   IsmChatMessageModel copyWith({
     String? body,
@@ -211,6 +241,8 @@ class IsmChatMessageModel {
     int? sentAt,
     int? updatedAt,
     int? unreadMessagesCount,
+    String? userId,
+    String? userName,
     List<String>? searchableTags,
     bool? privateOneToOne,
     bool? showInConversation,
@@ -236,12 +268,16 @@ class IsmChatMessageModel {
     String? parentMessageId,
     String? initiatorId,
     String? messageId,
+    String? initiatorName,
     String? deviceId,
     ConversationConfigModel? config,
     int? adminCount,
     IsmChatMessageType? messageType,
     bool? sentByMe,
     dynamic mentionedUsers,
+    List<UserDetails>? members,
+    String? memberId,
+    String? memberName,
   }) =>
       IsmChatMessageModel(
         body: body ?? this.body,
@@ -249,6 +285,8 @@ class IsmChatMessageModel {
         updatedAt: updatedAt ?? this.updatedAt,
         sentAt: sentAt ?? this.sentAt,
         unreadMessagesCount: unreadMessagesCount ?? this.unreadMessagesCount,
+        userName: userName ?? this.userName,
+        userId: userId ?? this.userId,
         searchableTags: searchableTags ?? this.searchableTags,
         privateOneToOne: privateOneToOne ?? this.privateOneToOne,
         showInConversation: showInConversation ?? this.showInConversation,
@@ -279,6 +317,10 @@ class IsmChatMessageModel {
         messageType: messageType ?? this.messageType,
         sentByMe: sentByMe ?? this.sentByMe,
         mentionedUsers: mentionedUsers ?? this.mentionedUsers,
+        initiatorName: initiatorId ?? this.initiatorName,
+        members: members ?? this.members,
+        memberId: memberId ?? this.memberId,
+        memberName: memberName ?? this.memberName,
       );
 
   Map<String, dynamic> toMap() => {
@@ -287,6 +329,8 @@ class IsmChatMessageModel {
         'updatedAt': updatedAt,
         'sentAt': sentAt,
         'unreadMessagesCount': unreadMessagesCount,
+        'userName': userName,
+        'userId': userId,
         'searchableTags': searchableTags,
         'privateOneToOne': privateOneToOne,
         'showInConversation': showInConversation,
@@ -316,13 +360,17 @@ class IsmChatMessageModel {
         'sentByMe': sentByMe,
         'mentionedUsers': mentionedUsers,
         'initiatorId': initiatorId,
+        'initiatorName': initiatorName,
+        'members': members?.map((e) => e.toMap()).toList(),
+        'memberId': memberId,
+        'memberName': memberName,
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'IsmChatMessageModel(body: $body, action: $action, updatedAt: $updatedAt, sentAt: $sentAt, unreadMessagesCount: $unreadMessagesCount, searchableTags: $searchableTags, privateOneToOne: $privateOneToOne, showInConversation: $showInConversation, readByAll: $readByAll, senderInfo: $senderInfo, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, attachments: $attachments, lastMessageSentAt: $lastMessageSentAt, isGroup: $isGroup, deliveredToAll: $deliveredToAll, customType: $customType, createdByUserName: $createdByUserName, createdByUserImageUrl: $createdByUserImageUrl, createdBy: $createdBy, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, parentMessageId: $parentMessageId, initiatorId : $initiatorId  messageId: $messageId, deviceId: $deviceId, adminCount: $adminCount, messageType: $messageType, sentByMe: $sentByMe, mentionedUsers: $mentionedUsers)';
+      'IsmChatMessageModel(body: $body, action: $action, updatedAt: $updatedAt, sentAt: $sentAt, unreadMessagesCount: $unreadMessagesCount, userName: $userName, userId: $userId, searchableTags: $searchableTags, privateOneToOne: $privateOneToOne, showInConversation: $showInConversation, readByAll: $readByAll, senderInfo: $senderInfo, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, attachments: $attachments, lastMessageSentAt: $lastMessageSentAt, isGroup: $isGroup, deliveredToAll: $deliveredToAll, customType: $customType, createdByUserName: $createdByUserName, createdByUserImageUrl: $createdByUserImageUrl, createdBy: $createdBy, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, parentMessageId: $parentMessageId, initiatorId : $initiatorId  messageId: $messageId, deviceId: $deviceId, adminCount: $adminCount, messageType: $messageType, sentByMe: $sentByMe, mentionedUsers: $mentionedUsers, initiatorName : $initiatorName, members: $members, memberId: $memberId, memberName: $memberName)';
 
   @override
   bool operator ==(Object other) {
@@ -334,6 +382,8 @@ class IsmChatMessageModel {
         other.updatedAt == updatedAt &&
         other.sentAt == sentAt &&
         other.unreadMessagesCount == unreadMessagesCount &&
+        other.userId == userId &&
+        other.userName == userName &&
         listEquals(other.searchableTags, searchableTags) &&
         other.privateOneToOne == privateOneToOne &&
         other.showInConversation == showInConversation &&
@@ -344,6 +394,7 @@ class IsmChatMessageModel {
         other.membersCount == membersCount &&
         listEquals(other.lastReadAt, lastReadAt) &&
         listEquals(other.attachments, attachments) &&
+        listEquals(other.members, members) &&
         other.lastMessageSentAt == lastMessageSentAt &&
         other.isGroup == isGroup &&
         other.deliveredToAll == deliveredToAll &&
@@ -362,6 +413,9 @@ class IsmChatMessageModel {
         other.messageType == messageType &&
         other.mentionedUsers == mentionedUsers &&
         other.sentByMe == sentByMe &&
+        other.initiatorName == initiatorName &&
+        other.memberId == memberId &&
+        other.memberName == memberName &&
         other.adminCount == adminCount;
   }
 
@@ -372,6 +426,8 @@ class IsmChatMessageModel {
       updatedAt.hashCode ^
       sentAt.hashCode ^
       unreadMessagesCount.hashCode ^
+      userId.hashCode ^
+      userName.hashCode ^
       searchableTags.hashCode ^
       privateOneToOne.hashCode ^
       showInConversation.hashCode ^
@@ -400,5 +456,9 @@ class IsmChatMessageModel {
       messageType.hashCode ^
       mentionedUsers.hashCode ^
       sentByMe.hashCode ^
+      initiatorName.hashCode ^
+      members.hashCode ^
+      memberId.hashCode ^
+      memberName.hashCode ^
       adminCount.hashCode;
 }

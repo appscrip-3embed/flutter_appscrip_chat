@@ -32,7 +32,7 @@ class IsmChatDimens {
   static final double sixty = 60.sp;
 
   static final double eighty = 80.sp;
-  static final double ninghty = 90.sp;
+  static final double ninty = 90.sp;
 
   static final double hundred = 100.sp;
   static final double oneHundredFifty = 150.sp;
@@ -63,6 +63,11 @@ class IsmChatDimens {
   static final EdgeInsets edgeInsets4 = EdgeInsets.all(four);
   static final EdgeInsets edgeInsets0 = EdgeInsets.all(zero);
 
+  static final EdgeInsets edgeInsetsL2 = EdgeInsets.only(left: two);
+  static final EdgeInsets edgeInsetsR4 = EdgeInsets.only(right: four);
+  static final EdgeInsets edgeInsetsL4 = EdgeInsets.only(left: four);
+
+  static final EdgeInsets edgeInsets2_0 = EdgeInsets.symmetric(horizontal: two);
   static final EdgeInsets edgeInsets4_0 =
       EdgeInsets.symmetric(horizontal: four);
   static final EdgeInsets edgeInsets0_4 = EdgeInsets.symmetric(vertical: four);
@@ -82,6 +87,9 @@ class IsmChatDimens {
       EdgeInsets.only(left: sixteen, right: ten, bottom: eight);
 
   static final EdgeInsets edgeInsets16 = EdgeInsets.all(sixteen);
+
+  static final EdgeInsets edgeInsets24_0 =
+      EdgeInsets.symmetric(horizontal: twentyFour);
   static final EdgeInsets edgeInsets0_16_0_0 =
       EdgeInsets.fromLTRB(zero, sixteen, zero, zero);
   static final EdgeInsets edgeInsets20 = EdgeInsets.all(twenty);
@@ -92,8 +100,11 @@ class IsmChatDimens {
   static final EdgeInsets edgeInsets0_10 = EdgeInsets.symmetric(vertical: ten);
   static final EdgeInsets edgeInsets10_0 =
       EdgeInsets.symmetric(horizontal: ten);
+  static final EdgeInsets edgeInsets10_4 =
+      EdgeInsets.symmetric(horizontal: ten, vertical: four);
   static final EdgeInsets edgeInsets8_10 =
       EdgeInsets.symmetric(horizontal: eight, vertical: 10);
   static final EdgeInsets edgeInsetsBottom10 = EdgeInsets.only(bottom: ten);
   static final EdgeInsets edgeInsetsBottom50 = EdgeInsets.only(bottom: fifty);
+  static final EdgeInsets edgeInsetsLeft10 = EdgeInsets.only(left: ten);
 }

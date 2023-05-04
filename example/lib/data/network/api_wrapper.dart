@@ -14,9 +14,7 @@ class ApiWrapper {
     bool showLoader = false,
     required Map<String, String> headers,
   }) async {
-    if (kDebugMode) {
-      AppLog('Request - GET $api');
-    }
+    AppLog('Request - GET $api');
     var uri = Uri.parse(api);
     if (showLoader) {
       Utility.showLoader();
@@ -49,9 +47,7 @@ class ApiWrapper {
     required Map<String, String> headers,
     bool showLoader = false,
   }) async {
-    if (kDebugMode) {
-      AppLog('Request - POST $api $payload');
-    }
+    AppLog('Request - POST $api $payload');
     var uri = Uri.parse(api);
     if (showLoader) {
       Utility.showLoader();
@@ -201,10 +197,9 @@ class ApiWrapper {
   }
 
   static IsmChatResponseModel _processResponse(http.Response response) {
-    if (kDebugMode) {
-      AppLog(
-          'Response - ${response.request?.method} ${response.statusCode} ${response.request?.url}\n${response.body}');
-    }
+    AppLog.info(
+        'Response - ${response.request?.method} ${response.statusCode} ${response.request?.url}\n${response.body}');
+
     switch (response.statusCode) {
       case 200:
       case 201:

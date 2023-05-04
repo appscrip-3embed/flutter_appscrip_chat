@@ -37,7 +37,7 @@ class ChatList extends GetView<ChatListController> {
         onChatTap: (_, __) => RouteManagement.goToChatMessages(),
         showCreateChatIcon: true,
         onCreateChatTap: RouteManagement.goToUserList,
-        enableGroupChat: false,
+        enableGroupChat: true,
       ),
     );
   }

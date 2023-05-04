@@ -69,5 +69,18 @@
 	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>Used to demonstrate image picker plugin</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Used to capture audio for image picker plugin</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used to demonstrate image picker plugin</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+    	<key>NSAllowsArbitraryLoads</key>
+    	<true/>
+   		 <key>NSAllowsArbitraryLoadsForMedia</key>
+    	<true/>
+	</dict>
 </dict>
 </plist>
