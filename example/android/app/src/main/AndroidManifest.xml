@@ -54,11 +54,12 @@
 
     </queries>
    <application
-        android:label="chat_component_example"
+        android:label="Flutter Chat"
         android:name="${applicationName}"
         android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true" 
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round">
         <meta-data android:name="com.google.android.geo.API_KEY"
            android:value="AIzaSyC2YXqs5H8QSfN1NVsZKsP11XLZhfGVGPI"/>
         <activity
@@ -103,4 +104,5 @@
                     tools:replace="android:resource" />
         </provider>    
     </application>
+    
 </manifest>
