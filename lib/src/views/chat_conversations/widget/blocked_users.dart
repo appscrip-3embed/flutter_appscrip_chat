@@ -8,29 +8,39 @@ class IsmChatBlockedUsersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: const IsmChatAppBar(title: IsmChatStrings.blockedUsers),
-        body: GetBuilder<IsmChatConversationsController>(
-          builder: (controller) => ListView.builder(
-            itemCount: controller.blockUsers.length,
-            itemBuilder: (_, index) {
-              var user = controller.blockUsers[index];
-              return ListTile(
-                leading: IsmChatImage.profile(user.profileUrl),
-                title: Text(
-                  user.userName,
+        body: GetX<IsmChatConversationsController>(
+          builder: (controller) => controller.blockUsers.isEmpty
+              ? const Center(
+                  child: IsmIconAndText(
+                    icon: Icons.supervised_user_circle_rounded,
+                    text: IsmChatStrings.noBlockedUsers,
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: controller.blockUsers.length,
+                  itemBuilder: (_, index) {
+                    var user = controller.blockUsers[index];
+                    return ListTile(
+                      leading: IsmChatImage.profile(user.profileUrl),
+                      title: Text(
+                        user.userName,
+                      ),
+                      subtitle: Text(
+                        user.userIdentifier,
+                      ),
+                      // TODO: Implement unblock API here
+                      trailing: ElevatedButton(
+                        onPressed: () {
+                          controller.unblockUser(
+                              opponentId: user.userId, isLoading: true);
+                        },
+                        child: const Text(
+                          IsmChatStrings.unblock,
+                        ),
+                      ),
+                    );
+                  },
                 ),
-                subtitle: Text(
-                  user.userIdentifier,
-                ),
-                // TODO: Implement unblock API here
-                // trailing: ElevatedButton(
-                //   onPressed: () {},
-                //   child: const Text(
-                //     IsmChatStrings.unblock,
-                //   ),
-                // ),
-              );
-            },
-          ),
         ),
       );
 }

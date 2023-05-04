@@ -313,25 +313,6 @@ class IsmChatPageRepository {
     }
   }
 
-  Future<IsmChatResponseModel?> unblockUser(
-      {required String opponentId}) async {
-    try {
-      final payload = {'opponentId': opponentId};
-      var response = await _apiWrapper.post(
-        IsmChatAPI.unblockUser,
-        payload: payload,
-        headers: IsmChatUtility.tokenCommonHeader(),
-      );
-      if (response.hasError) {
-        return null;
-      }
-      return response;
-    } catch (e, st) {
-      IsmChatLog.error(' un Block user $e', st);
-      return null;
-    }
-  }
-
   Future<List<PresignedUrlModel>?> postMediaUrl({
     required String conversationId,
     required String nameWithExtension,
