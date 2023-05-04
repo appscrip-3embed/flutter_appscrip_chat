@@ -160,7 +160,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       audioMessage = ismChatChatMessageModel;
     } else {
       if (file != null) {
-        bytes = File(file).readAsBytesSync();
+        bytes = Uint8List.fromList(
+            await File.fromUri(Uri.parse(file)).readAsBytes());
         nameWithExtension = file.split('/').last;
         final extension = nameWithExtension.split('.').last;
         mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');

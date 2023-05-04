@@ -200,11 +200,11 @@ class _MicOrSendButton extends StatelessWidget {
                         // Check and request permission
                         if (await controller.recordAudio.hasPermission()) {
                           // Start recording
-                          var path =
-                              (await getApplicationDocumentsDirectory()).path;
-                          var name = DateTime.now().millisecondsSinceEpoch;
+                          // var path =
+                          //     (await getApplicationDocumentsDirectory()).path;
+                          // var name = DateTime.now().millisecondsSinceEpoch;
                           await controller.recordAudio
-                              .start(path: '$path/record_$name.m4a');
+                              .start();
                         }
                       }
                     },
