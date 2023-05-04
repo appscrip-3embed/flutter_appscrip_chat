@@ -313,25 +313,6 @@ class IsmChatPageRepository {
     }
   }
 
-  Future<IsmChatResponseModel?> unblockUser(
-      {required String opponentId}) async {
-    try {
-      final payload = {'opponentId': opponentId};
-      var response = await _apiWrapper.post(
-        IsmChatAPI.unblockUser,
-        payload: payload,
-        headers: IsmChatUtility.tokenCommonHeader(),
-      );
-      if (response.hasError) {
-        return null;
-      }
-      return response;
-    } catch (e, st) {
-      IsmChatLog.error(' un Block user $e', st);
-      return null;
-    }
-  }
-
   Future<List<PresignedUrlModel>?> postMediaUrl({
     required String conversationId,
     required String nameWithExtension,
@@ -547,17 +528,19 @@ class IsmChatPageRepository {
     }
   }
 
-  Future<IsmChatResponseModel?> createConversation(
-      {required bool typingEvents,
-      required bool readEvents,
-      required bool pushNotifications,
-      required List<String> members,
-      required bool isGroup,
-      required int conversationType,
-      List<String>? searchableTags,
-      Map<String, dynamic>? metaData,
-      String? conversationTitle,
-      String? conversationImageUrl}) async {
+  Future<IsmChatResponseModel?> createConversation({
+    required bool typingEvents,
+    required bool readEvents,
+    required bool pushNotifications,
+    required List<String> members,
+    required bool isGroup,
+    required int conversationType,
+    List<String>? searchableTags,
+    Map<String, dynamic>? metaData,
+    String? conversationTitle,
+    String? conversationImageUrl,
+     bool isLoading = false,
+  }) async {
     try {
       var payload = {
         'typingEvents': typingEvents,
@@ -576,6 +559,7 @@ class IsmChatPageRepository {
         IsmChatAPI.chatConversation,
         payload: payload,
         headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading
       );
       if (response.hasError) {
         if (response.errorCode.toString().startsWith('4')) {

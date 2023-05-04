@@ -318,24 +318,6 @@ class IsmChatPageViewModel {
   }) async =>
       await _repository.removeAdmin(conversationId, memberId, isLoading);
 
-  Future<List<IsmChatMessageModel>?> unblockUser(
-      {required String opponentId,
-      required int lastMessageTimeStamp,
-      required String conversationId}) async {
-    var response = await _repository.unblockUser(
-      opponentId: opponentId,
-    );
-    if (!response!.hasError) {
-      var responseMessage = await getChatMessages(
-        conversationId: conversationId,
-        lastMessageTimestamp: lastMessageTimeStamp,
-        isGroup: false,
-      );
-      return responseMessage;
-    }
-    return null;
-  }
-
   Future<List<PresignedUrlModel>?> postMediaUrl({
     required String conversationId,
     required String nameWithExtension,
@@ -477,16 +459,19 @@ class IsmChatPageViewModel {
     Map<String, dynamic>? metaData,
     String? conversationTitle,
     String? conversationImageUrl,
+     bool isLoading = false,
   }) async =>
       await _repository.createConversation(
-          typingEvents: typingEvents,
-          readEvents: readEvents,
-          pushNotifications: pushNotifications,
-          members: members,
-          isGroup: isGroup,
-          conversationType: conversationType,
-          conversationImageUrl: conversationImageUrl,
-          conversationTitle: conversationTitle);
+        typingEvents: typingEvents,
+        readEvents: readEvents,
+        pushNotifications: pushNotifications,
+        members: members,
+        isGroup: isGroup,
+        conversationType: conversationType,
+        conversationImageUrl: conversationImageUrl,
+        conversationTitle: conversationTitle,
+        isLoading: isLoading
+      );
 
   Map<String, int> generateIndexedMessageList(
       List<IsmChatMessageModel> messages) {

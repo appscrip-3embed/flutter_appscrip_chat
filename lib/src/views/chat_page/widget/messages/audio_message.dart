@@ -18,11 +18,7 @@ class IsmChatAudioMessage extends StatelessWidget {
       mePlayIconColor: IsmChatConfig.chatTheme.primaryColor!,
       contactBgColor: IsmChatConfig.chatTheme.backgroundColor!,
       contactPlayIconColor: IsmChatConfig.chatTheme.backgroundColor!,
-      // contactCircleColor: IsmChatConfig.chatTheme.primaryColor!,
-      // contactPlayIconBgColor: IsmChatConfig.chatTheme.primaryColor!,
-      // formatDuration: (duration) => duration.formatDuration(),
-      // showDuration: true,
-
+      contactFgColor: IsmChatConfig.chatTheme.primaryColor!,
       onPlay: () {},
     );
   }

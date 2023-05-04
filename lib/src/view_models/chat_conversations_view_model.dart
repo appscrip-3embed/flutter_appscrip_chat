@@ -77,6 +77,17 @@ class IsmChatConversationsViewModel {
     }
   }
 
+  Future<IsmChatResponseModel?> unblockUser({
+    required String opponentId,
+    required bool isLoading,
+  }) async {
+    var response = await _repository.unblockUser(
+      opponentId: opponentId,
+      isLoading: isLoading,
+    );
+    return response;
+  }
+
   Future<void> pingMessageDelivered({
     required String conversationId,
     required String messageId,

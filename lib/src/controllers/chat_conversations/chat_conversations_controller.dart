@@ -94,6 +94,23 @@ class IsmChatConversationsController extends GetxController {
     forwardedList[index].isUserSelected = !forwardedList[index].isUserSelected;
   }
 
+  /// api to unblock user
+  Future<bool> unblockUser({
+    required String opponentId,
+    required bool isLoading,
+  }) async {
+    var data = await _viewModel.unblockUser(
+      opponentId: opponentId,
+      isLoading: isLoading,
+    );
+    if (data?.hasError ?? true) {
+      return false;
+    }
+    unawaited(getBlockUser());
+    IsmChatUtility.showToast(IsmChatStrings.unBlockedSuccessfully);
+    return true;
+  }
+
   void ismUploadImage(ImageSource imageSource) async {
     var file = await IsmChatUtility.pickImage(imageSource);
     if (file == null) {
@@ -262,6 +279,8 @@ class IsmChatConversationsController extends GetxController {
     var users = await _viewModel.getBlockUser(skip: 0, limit: 20);
     if (users != null) {
       blockUsers = users.users;
+    } else {
+      blockUsers = [];
     }
   }
 
