@@ -122,25 +122,26 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                         ],
                       ),
                     ),
-                    PopupMenuItem(
-                      value: 2,
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.block,
-                            color: IsmChatColors.redColor,
-                          ),
-                          IsmChatDimens.boxWidth8,
-                          controller.conversation!.isBlockedByMe
-                              ? const Text(
-                                  IsmChatStrings.unBlockUser,
-                                )
-                              : const Text(
-                                  IsmChatStrings.blockUser,
-                                )
-                        ],
+                    if (!controller.conversation!.isGroup!)
+                      PopupMenuItem(
+                        value: 2,
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.block,
+                              color: IsmChatColors.redColor,
+                            ),
+                            IsmChatDimens.boxWidth8,
+                            controller.conversation!.isBlockedByMe
+                                ? const Text(
+                                    IsmChatStrings.unBlockUser,
+                                  )
+                                : const Text(
+                                    IsmChatStrings.blockUser,
+                                  )
+                          ],
+                        ),
                       ),
-                    ),
                   ],
                   elevation: 2,
                   onSelected: (value) {

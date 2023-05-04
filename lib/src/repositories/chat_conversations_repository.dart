@@ -61,6 +61,26 @@ class IsmChatConversationsRepository {
     }
   }
 
+  Future<IsmChatResponseModel?> unblockUser(
+      {required String opponentId, required bool isLoading}) async {
+    try {
+      final payload = {'opponentId': opponentId};
+      var response = await _apiWrapper.post(
+        IsmChatAPI.unblockUser,
+        payload: payload,
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading,
+      );
+      if (response.hasError) {
+        return null;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error(' un Block user $e', st);
+      return null;
+    }
+  }
+
   Future<UserDetails?> getUserData() async {
     try {
       var response = await _apiWrapper.get(

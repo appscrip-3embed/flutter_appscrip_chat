@@ -46,8 +46,10 @@ class IsmChatStrings {
   static const String block = 'Block';
   static const String unblock = 'Unblock';
   static const String blocked = 'Blocked';
-  static const String deleteMessgae = 'Delete message?';
-  static const String deleteForEvery = 'Delete for eveyone';
+  static const String unBlockedSuccessfully = 'User Unblocked Successfully.';
+  static const String noBlockedUsers = 'No blocked users.';
+  static const String deleteMessage = 'Delete message?';
+  static const String deleteForEvery = 'Delete for everyone';
   static const String deleteForMe = 'Delete for me';
   static const String deleteFromUser = 'Delete message from';
   static const String delete = 'Delete';
