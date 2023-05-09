@@ -14,6 +14,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:record/record.dart';
@@ -41,6 +42,8 @@ class IsmChatPageController extends GetxController
   var messageFieldFocusNode = FocusNode();
 
   var chatInputController = TextEditingController();
+
+  var groupTitleController = TextEditingController();
 
   var messagesScrollController = AutoScrollController();
 
@@ -657,6 +660,107 @@ class IsmChatPageController extends GetxController
     ));
   }
 
+  void showDialogForChangeGroupTitle() async {
+    await Get.dialog(IsmChatAlertDialogBox(
+      title: IsmChatStrings.enterNewGroupTitle,
+      content: TextFormField(
+        controller: groupTitleController,
+      ),
+      actionLabels: const [IsmChatStrings.ok],
+      callbackActions: [
+        () => changeGroupTitle(
+            conversationTitle: groupTitleController.text,
+            conversationId: conversation?.conversationId ?? '',
+            isLoading: true),
+      ],
+    ));
+  }
+
+  Future<void> showDialogForChangeGroupProfile() async =>
+      await Get.dialog(IsmChatAlertDialogBox(
+        title: IsmChatStrings.chooseNewGroupProfile,
+        actionLabels: const [IsmChatStrings.change],
+        content: SizedBox(
+          height: IsmChatDimens.eighty,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Column(
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      await _conversationController
+                          .ismChangeImage(ImageSource.camera);
+                      await changeGroupProfile(
+                          conversationImageUrl:
+                              _conversationController.profileImage,
+                          conversationId: conversation?.conversationId ?? '',
+                          isLoading: true);
+                    },
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.blueAccent,
+                      ),
+                      width: IsmChatDimens.forty,
+                      height: IsmChatDimens.forty,
+                      child: const Icon(
+                        Icons.camera_alt_rounded,
+                        color: IsmChatColors.whiteColor,
+                      ),
+                    ),
+                  ),
+                  IsmChatDimens.boxHeight8,
+                  Text(
+                    'Camera',
+                    style: IsmChatStyles.w500Black16,
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      await _conversationController
+                          .ismChangeImage(ImageSource.gallery);
+                      await changeGroupProfile(
+                          conversationImageUrl:
+                              _conversationController.profileImage,
+                          conversationId: conversation?.conversationId ?? '',
+                          isLoading: true);
+                    },
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.purpleAccent,
+                      ),
+                      width: IsmChatDimens.forty,
+                      height: IsmChatDimens.forty,
+                      child: const Icon(
+                        Icons.photo_rounded,
+                        color: IsmChatColors.whiteColor,
+                      ),
+                    ),
+                  ),
+                  IsmChatDimens.boxHeight8,
+                  Text(
+                    'Gallery',
+                    style: IsmChatStyles.w500Black16,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        callbackActions: [
+          () => changeGroupTitle(
+              conversationTitle: groupTitleController.text,
+              conversationId: conversation?.conversationId ?? '',
+              isLoading: true),
+        ],
+      ));
+
   void showDialogForBlockUnBlockUser(
     bool userBlockOrNot, [
     bool includeMembers = false,
@@ -839,8 +943,8 @@ class IsmChatPageController extends GetxController
     required int lastMessageTimeStamp,
     bool includeMembers = false,
   }) async {
-    var isBlocked =
-        await _conversationController.unblockUser(opponentId: opponentId, isLoading: true);
+    var isBlocked = await _conversationController.unblockUser(
+        opponentId: opponentId, isLoading: true);
     if (!isBlocked) {
       return;
     }

@@ -26,8 +26,11 @@ class IsmMedia extends StatelessWidget {
                       media.customType == IsmChatCustomMessageType.audio
                           ? Icons.audio_file_rounded
                           : Icons.description_rounded;
-                  return ConversationMediaWidget(
-                      media: media, iconData: iconData, url: url);
+                  return GestureDetector(
+                    onTap: () => controller.tapForMediaPreview(media),
+                    child: ConversationMediaWidget(
+                        media: media, iconData: iconData, url: url),
+                  );
                 },
               ),
             ),

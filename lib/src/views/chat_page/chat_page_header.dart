@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,13 +23,6 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
         builder: (controller) {
           var mqttController = Get.find<IsmChatMqttController>();
-          var list = [];
-          for (var i = 0; i < controller.conversation!.membersCount!; i++) {
-            list.add('${controller.conversation?.members?[i].memberName},');
-          }
-          print("list----->$list");
-          print(
-              "data-------${controller.conversation?.membersCount.toString()}");
           return Theme(
             data: ThemeData.light(useMaterial3: true).copyWith(
               appBarTheme: AppBarTheme(
@@ -78,47 +69,34 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                         ),
                         (!controller.conversation!.isChattingAllowed)
                             ? const SizedBox.shrink()
-                            : controller.conversation!.isGroup!
-                                ? Text(
-                                    controller.conversation!.membersCount!
-                                        .toString(),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: IsmChatStyles.w400White12,
-                                  )
-                                : Obx(
-                                    () => mqttController.typingUsersIds
-                                            .contains(controller
-                                                .conversation?.conversationId)
+                            : Obx(
+                                () => mqttController.typingUsersIds.contains(
+                                        controller.conversation?.conversationId)
+                                    ? Text(
+                                        IsmChatStrings.typing,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: IsmChatStyles.w400White12,
+                                      )
+                                    : controller.conversation?.opponentDetails
+                                                ?.online ??
+                                            false
                                         ? Text(
-                                            IsmChatStrings.typing,
+                                            IsmChatStrings.online,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: IsmChatStyles.w400White12,
                                           )
-                                        : controller.conversation
-                                                    ?.opponentDetails?.online ??
-                                                false
-                                            ? Text(
-                                                IsmChatStrings.online,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style:
-                                                    IsmChatStyles.w400White12,
-                                              )
-                                            : Text(
-                                                controller
-                                                        .conversation
-                                                        ?.opponentDetails
-                                                        ?.lastSeen
-                                                        .toCurrentTimeStirng() ??
-                                                    '',
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style:
-                                                    IsmChatStyles.w400White12,
-                                              ),
-                                  ),
+                                        : Text(
+                                            controller.conversation
+                                                    ?.opponentDetails?.lastSeen
+                                                    .toCurrentTimeStirng() ??
+                                                '',
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: IsmChatStyles.w400White12,
+                                          ),
+                              ),
                       ],
                     ),
                   ],

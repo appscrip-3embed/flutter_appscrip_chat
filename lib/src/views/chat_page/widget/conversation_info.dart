@@ -20,6 +20,55 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
             title: controller.conversation?.isGroup ?? false
                 ? 'Group Info'
                 : controller.conversation!.chatName,
+            action: [
+              if (controller.conversation?.isGroup ?? false)
+                Padding(
+                  padding: EdgeInsets.only(
+                      right: IsmChatDimens.five, top: IsmChatDimens.two),
+                  child: PopupMenuButton(
+                    icon: const Icon(
+                      Icons.more_vert,
+                      color: IsmChatColors.whiteColor,
+                    ),
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        value: 1,
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.edit,
+                              color: IsmChatColors.blackColor,
+                            ),
+                            IsmChatDimens.boxWidth8,
+                            const Text(IsmChatStrings.changeGroupTitle)
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: 2,
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.photo,
+                              color: IsmChatColors.blackColor,
+                            ),
+                            IsmChatDimens.boxWidth8,
+                            const Text(IsmChatStrings.changeGroupPhoto)
+                          ],
+                        ),
+                      ),
+                    ],
+                    elevation: 2,
+                    onSelected: (value) {
+                      if (value == 1) {
+                        controller.showDialogForChangeGroupTitle();
+                      } else {
+                        controller.showDialogForChangeGroupProfile();
+                      }
+                    },
+                  ),
+                ),
+            ],
           ),
           resizeToAvoidBottomInset: false,
           body: SafeArea(
@@ -29,7 +78,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                 children: [
                   IsmChatDimens.boxHeight16,
                   IsmChatImage.profile(
-                    controller.conversation?.profileUrl ?? '',
+                    controller.conversation?.conversationImageUrl ?? '',
                     dimensions: IsmChatDimens.hundred,
                   ),
                   IsmChatDimens.boxHeight10,
@@ -73,7 +122,8 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                           const Spacer(),
                           IconButton(
                             onPressed: () {
-                              Get.to(const IsmMedia());
+                              IsmChatUtility.openFullScreenBottomSheet(
+                                  const IsmMedia());
                             },
                             icon: const Icon(Icons.arrow_forward_rounded),
                           ),
@@ -240,8 +290,11 @@ class _MediaList extends StatelessWidget {
                       media.customType == IsmChatCustomMessageType.audio
                           ? Icons.audio_file_rounded
                           : Icons.description_rounded;
-                  return ConversationMediaWidget(
-                      media: media, iconData: iconData, url: url);
+                  return GestureDetector(
+                    onTap: () => controller.tapForMediaPreview(media),
+                    child: ConversationMediaWidget(
+                        media: media, iconData: iconData, url: url),
+                  );
                 },
               ),
             );

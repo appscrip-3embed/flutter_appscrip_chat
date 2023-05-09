@@ -96,6 +96,60 @@ class IsmChatPageRepository {
     }
   }
 
+  /// change group title
+  Future<IsmChatResponseModel?> changeGroupTitle({
+    required String conversationTitle,
+    required String conversationId,
+    required bool isLoading,
+  }) async {
+    try {
+      var payload = {
+        'conversationTitle': conversationTitle,
+        'conversationId': conversationId
+      };
+      var response = await _apiWrapper.patch(
+        IsmChatAPI.conversationTitle,
+        payload: payload,
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading,
+      );
+      if (response.hasError) {
+        return null;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Change group title  $e', st);
+      return null;
+    }
+  }
+
+  /// change group profile
+  Future<IsmChatResponseModel?> changeGroupProfile({
+    required String conversationImageUrl,
+    required String conversationId,
+    required bool isLoading,
+  }) async {
+    try {
+      var payload = {
+        'conversationImageUrl': conversationImageUrl,
+        'conversationId': conversationId
+      };
+      var response = await _apiWrapper.patch(
+        IsmChatAPI.conversationImage,
+        payload: payload,
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading,
+      );
+      if (response.hasError) {
+        return null;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Change group profile  $e', st);
+      return null;
+    }
+  }
+
   Future<void> readMessage({
     required String conversationId,
     required String messageId,
@@ -539,7 +593,7 @@ class IsmChatPageRepository {
     Map<String, dynamic>? metaData,
     String? conversationTitle,
     String? conversationImageUrl,
-     bool isLoading = false,
+    bool isLoading = false,
   }) async {
     try {
       var payload = {
@@ -555,12 +609,10 @@ class IsmChatPageRepository {
         'conversationTitle': conversationTitle,
         'conversationImageUrl': conversationImageUrl
       };
-      var response = await _apiWrapper.post(
-        IsmChatAPI.chatConversation,
-        payload: payload,
-        headers: IsmChatUtility.tokenCommonHeader(),
-        showLoader: isLoading
-      );
+      var response = await _apiWrapper.post(IsmChatAPI.chatConversation,
+          payload: payload,
+          headers: IsmChatUtility.tokenCommonHeader(),
+          showLoader: isLoading);
       if (response.hasError) {
         if (response.errorCode.toString().startsWith('4')) {
           var error = (jsonDecode(response.data) as Map)['error'] as String? ??

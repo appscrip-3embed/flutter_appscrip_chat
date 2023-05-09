@@ -30,9 +30,10 @@ class IsmChatConversationCard extends StatelessWidget {
                       conversation.profileUrl,
                       name: conversation.chatName,
                     ),
-            title: nameBuilder?.call(context, conversation.chatName) ??
+            title: nameBuilder?.call(
+                    context, conversation?.conversationTitle ?? '') ??
                 Text(
-                  conversation.chatName,
+                  conversation?.conversationTitle ?? '',
                   style: IsmChatStyles.w600Black14,
                 ),
             subtitle: subtitleBuilder?.call(
