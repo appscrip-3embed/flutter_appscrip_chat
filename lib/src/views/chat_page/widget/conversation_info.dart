@@ -72,7 +72,9 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                           ),
                           const Spacer(),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(const IsmMedia());
+                            },
                             icon: const Icon(Icons.arrow_forward_rounded),
                           ),
                         ],
@@ -238,29 +240,8 @@ class _MediaList extends StatelessWidget {
                       media.customType == IsmChatCustomMessageType.audio
                           ? Icons.audio_file_rounded
                           : Icons.description_rounded;
-                  return Container(
-                    height: IsmChatDimens.hundred,
-                    width: IsmChatDimens.hundred,
-                    clipBehavior: Clip.antiAlias,
-                    decoration: BoxDecoration(
-                      color: IsmChatConfig.chatTheme.backgroundColor,
-                      borderRadius: BorderRadius.circular(
-                        IsmChatDimens.twenty,
-                      ),
-                    ),
-                    child: [
-                      IsmChatCustomMessageType.audio,
-                      IsmChatCustomMessageType.file
-                    ].contains(media.customType)
-                        ? Icon(
-                            iconData,
-                            color: IsmChatConfig.chatTheme.primaryColor,
-                          )
-                        : IsmChatImage(
-                            url,
-                            isNetworkImage: url.contains('http'),
-                          ),
-                  );
+                  return ConversationMediaWidget(
+                      media: media, iconData: iconData, url: url);
                 },
               ),
             );
