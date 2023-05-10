@@ -92,7 +92,6 @@ mixin IsmChatPageGetMessageMixin {
         conversationId: conversationId,
         includeMembers: includeMembers,
         isLoading: isLoading);
-    print("dtata------>$data");
     if (data != null) {
       _controller.conversation = data.copyWith(conversationId: conversationId);
       _controller.mediaList = _controller.messages

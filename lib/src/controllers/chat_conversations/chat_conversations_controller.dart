@@ -121,6 +121,7 @@ class IsmChatConversationsController extends GetxController {
     await getPresignedUrl(fileExtension, bytes);
   }
 
+  /// function to pick image for group profile
   Future<void> ismChangeImage(ImageSource imageSource) async {
     var file = await IsmChatUtility.pickImage(imageSource);
     if (file == null) {

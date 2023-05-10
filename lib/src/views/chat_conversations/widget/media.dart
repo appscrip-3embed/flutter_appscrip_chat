@@ -4,6 +4,7 @@ import 'package:appscrip_chat_component/src/views/chat_page/chat_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+/// IsmMedia class is for showing the conversation media
 class IsmMedia extends StatelessWidget {
   const IsmMedia({Key? key}) : super(key: key);
 

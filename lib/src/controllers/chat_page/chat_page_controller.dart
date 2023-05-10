@@ -660,6 +660,7 @@ class IsmChatPageController extends GetxController
     ));
   }
 
+  /// function to show dialog for changing the group title
   void showDialogForChangeGroupTitle() async {
     await Get.dialog(IsmChatAlertDialogBox(
       title: IsmChatStrings.enterNewGroupTitle,
@@ -676,6 +677,7 @@ class IsmChatPageController extends GetxController
     ));
   }
 
+  /// function to show dialog for changing the group profile
   Future<void> showDialogForChangeGroupProfile() async =>
       await Get.dialog(IsmChatAlertDialogBox(
         title: IsmChatStrings.chooseNewGroupProfile,

@@ -1,6 +1,7 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
+/// ConversationMediaWidget is a widget to show the media item
 class ConversationMediaWidget extends StatelessWidget {
   const ConversationMediaWidget({
     super.key,
