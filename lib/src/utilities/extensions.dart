@@ -329,7 +329,16 @@ extension SelectedUsers on List<SelectedForwardUser> {
       where((e) => e.isUserSelected).toList();
 }
 
+extension UniqueElements<T> on List<T> {
+  List<T> unique() => [
+        ...{...this}
+      ];
+}
+
 extension ModelConversion on IsmChatConversationModel {
+  IsmChatMqttController get _mqttController =>
+      Get.find<IsmChatMqttController>();
+
   DBConversationModel convertToDbModel(List<String>? messages) =>
       DBConversationModel(
         conversationId: conversationId,
@@ -342,4 +351,67 @@ extension ModelConversion on IsmChatConversationModel {
         unreadMessagesCount: unreadMessagesCount,
         messages: messages ?? [],
       );
+
+  String get typingUsers {
+    var users = _mqttController.typingUsers
+        .where(
+          (u) => u.conversationId == conversationId,
+        )
+        .toList()
+        .unique();
+    users.sort(
+      (a, b) => a.userName.toLowerCase().compareTo(b.userName.toLowerCase()),
+    );
+
+    return isGroup!
+        ? '${users.map((e) => e.userName).join(', ')} is ${IsmChatStrings.typing}'
+        : IsmChatStrings.typing;
+  }
+
+  bool get isSomeoneTyping => _mqttController.typingUsers
+      .map((e) => e.conversationId)
+      .contains(conversationId);
+}
+
+extension LastMessageBody on LastMessageDetails {
+  String get messageBody {
+    switch (customType) {
+      case IsmChatCustomMessageType.reply:
+        return 'Replied to $body';
+      case IsmChatCustomMessageType.image:
+        return 'Image';
+      case IsmChatCustomMessageType.video:
+        return 'Video';
+      case IsmChatCustomMessageType.audio:
+        return 'Audio';
+      case IsmChatCustomMessageType.file:
+        return 'File';
+      case IsmChatCustomMessageType.location:
+        return 'Location';
+      case IsmChatCustomMessageType.block:
+        return 'Blocked';
+      case IsmChatCustomMessageType.unblock:
+        return 'Unblocked';
+      case IsmChatCustomMessageType.conversationCreated:
+        return 'Conversation created';
+      case IsmChatCustomMessageType.removeMember:
+        return '';
+      case IsmChatCustomMessageType.addMember:
+        return '';
+      case IsmChatCustomMessageType.addAdmin:
+        return '';
+      case IsmChatCustomMessageType.revokeAdmin:
+        return '';
+      case IsmChatCustomMessageType.memberLeave:
+        return '';
+      case IsmChatCustomMessageType.deletedForMe:
+      case IsmChatCustomMessageType.deletedForEveryone:
+      case IsmChatCustomMessageType.link:
+      case IsmChatCustomMessageType.forward:
+      case IsmChatCustomMessageType.date:
+      case IsmChatCustomMessageType.text:
+      default:
+        return body;
+    }
+  }
 }

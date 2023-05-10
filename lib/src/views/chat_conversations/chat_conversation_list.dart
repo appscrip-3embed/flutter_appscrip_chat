@@ -144,15 +144,13 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                           () => IsmChatConversationCard(
                             conversation,
                             profileImageBuilder: widget.profileImageBuilder,
-                            subtitleBuilder: (!mqttController.typingUsersIds
-                                    .contains(conversation.conversationId))
+                            subtitleBuilder: !conversation.isSomeoneTyping
                                 ? null
                                 : (_, __) => Text(
-                                      IsmChatStrings.typing,
+                                      conversation.typingUsers,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: IsmChatStyles.w400Black12.copyWith(
-                                          color: IsmChatColors.greenColor),
+                                      style: IsmChatStyles.typing,
                                     ),
                             onTap: () {
                               controller.navigateToMessages(conversation);

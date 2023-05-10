@@ -109,6 +109,7 @@ enum IsmChatCustomMessageType {
       'replyText': IsmChatCustomMessageType.reply,
       'reply': IsmChatCustomMessageType.reply,
       'image': IsmChatCustomMessageType.image,
+      'voice': IsmChatCustomMessageType.audio,
       'audio': IsmChatCustomMessageType.audio,
       'video': IsmChatCustomMessageType.video,
       'location': IsmChatCustomMessageType.location,

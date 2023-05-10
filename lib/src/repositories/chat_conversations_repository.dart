@@ -28,7 +28,7 @@ class IsmChatConversationsRepository {
       var user = IsmChatUserListModel.fromMap(data);
       return user;
     } catch (e, st) {
-      IsmChatLog.error('GetChatConversations $e', st);
+      IsmChatLog.error('GetUserList $e', st);
       return null;
     }
   }
@@ -96,7 +96,7 @@ class IsmChatConversationsRepository {
       IsmChatConfig.objectBox.userDetailsBox.put(user);
       return user;
     } catch (e, st) {
-      IsmChatLog.error('GetChatConversations $e', st);
+      IsmChatLog.error('GetUserData $e', st);
       return null;
     }
   }

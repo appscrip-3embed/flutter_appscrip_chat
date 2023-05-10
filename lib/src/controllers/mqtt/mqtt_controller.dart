@@ -21,9 +21,9 @@ class IsmChatMqttController extends GetxController {
 
   late IsmChatConnectionState connectionState;
 
-  final RxList<String> _typingUsersIds = <String>[].obs;
-  List<String> get typingUsersIds => _typingUsersIds;
-  set typingUsersIds(List<String> value) => _typingUsersIds.value = value;
+  final RxList<IsmChatTypingModel> _typingUsers = <IsmChatTypingModel>[].obs;
+  List<IsmChatTypingModel> get typingUsers => _typingUsers;
+  set typingUsers(List<IsmChatTypingModel> value) => _typingUsers.value = value;
 
   final RxString _userId = ''.obs;
   String get userId => _userId.value;
@@ -292,11 +292,15 @@ class IsmChatMqttController extends GetxController {
         _communicationConfig.userConfig.userId) {
       return;
     }
-    typingUsersIds.add(actionModel.conversationId!);
+    var user = IsmChatTypingModel(
+      conversationId: actionModel.conversationId!,
+      userName: actionModel.userDetails?.userName ?? '',
+    );
+    typingUsers.add(user);
     Future.delayed(
       const Duration(seconds: 3),
       () {
-        typingUsersIds.remove(actionModel.conversationId);
+        typingUsers.remove(user);
       },
     );
   }
