@@ -19,6 +19,11 @@ class LastMessageDetails {
             map['messageId'] as String? ?? map['userId'] as String? ?? '',
         conversationId: map['conversationId'] as String? ?? '',
         body: IsmChatUtility.decodePayload(map['body'] as String? ?? ''),
+        customType: map['customType'] != null
+            ? IsmChatCustomMessageType.fromString(map['customType'] as String)
+            : map['action'] != null
+                ? IsmChatCustomMessageType.fromAction(map['action'] as String)
+                : null,
       );
 
   LastMessageDetails({
@@ -30,6 +35,7 @@ class LastMessageDetails {
     required this.messageId,
     required this.conversationId,
     required this.body,
+    this.customType,
   });
   int id;
   final bool showInConversation;
@@ -40,6 +46,12 @@ class LastMessageDetails {
   final String conversationId;
   final String body;
 
+  @Transient()
+  IsmChatCustomMessageType? customType;
+
+  int? get dbCustomType => customType?.value;
+  set dbCustomType(int? type) => IsmChatCustomMessageType.fromValue(type ?? 1);
+
   LastMessageDetails copyWith({
     bool? showInConversation,
     int? sentAt,
@@ -48,6 +60,7 @@ class LastMessageDetails {
     String? messageId,
     String? conversationId,
     String? body,
+    IsmChatCustomMessageType? customType,
   }) =>
       LastMessageDetails(
         showInConversation: showInConversation ?? this.showInConversation,
@@ -57,6 +70,7 @@ class LastMessageDetails {
         messageId: messageId ?? this.messageId,
         conversationId: conversationId ?? this.conversationId,
         body: body ?? this.body,
+        customType: customType ?? this.customType,
       );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
@@ -67,13 +81,14 @@ class LastMessageDetails {
         'messageId': messageId,
         'conversationId': conversationId,
         'body': body,
+        'customType': customType?.value,
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'LastMessageDetails(showInConversation: $showInConversation, sentAt: $sentAt, senderName: $senderName, messageType: $messageType, messageId: $messageId, conversationId: $conversationId, body: $body)';
+      'LastMessageDetails(showInConversation: $showInConversation, sentAt: $sentAt, senderName: $senderName, messageType: $messageType, messageId: $messageId, conversationId: $conversationId, body: $body, customType: $customType)';
 
   @override
   bool operator ==(covariant LastMessageDetails other) {
@@ -85,7 +100,8 @@ class LastMessageDetails {
         other.messageType == messageType &&
         other.messageId == messageId &&
         other.conversationId == conversationId &&
-        other.body == body;
+        other.body == body &&
+        other.customType == customType;
   }
 
   @override
@@ -96,5 +112,6 @@ class LastMessageDetails {
       messageType.hashCode ^
       messageId.hashCode ^
       conversationId.hashCode ^
-      body.hashCode;
+      body.hashCode ^
+      customType.hashCode;
 }

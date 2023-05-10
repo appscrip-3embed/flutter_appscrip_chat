@@ -28,7 +28,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(1, 329637739332878047),
       name: 'UserDetails',
-      lastPropertyId: const IdUid(11, 2743344435005786162),
+      lastPropertyId: const IdUid(13, 4261162591408815349),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -85,6 +85,16 @@ final _entities = <ModelEntity>[
             id: const IdUid(11, 2743344435005786162),
             name: 'timestamp',
             type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(12, 1753398602888573948),
+            name: 'memberName',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(13, 4261162591408815349),
+            name: 'isAdmin',
+            type: 1,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -199,7 +209,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(7, 3601465766739318501),
       name: 'LastMessageDetails',
-      lastPropertyId: const IdUid(8, 8981372878008052135),
+      lastPropertyId: const IdUid(9, 6602821607281721590),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -241,6 +251,11 @@ final _entities = <ModelEntity>[
             id: const IdUid(8, 8981372878008052135),
             name: 'body',
             type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(9, 6602821607281721590),
+            name: 'dbCustomType',
+            type: 6,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -464,7 +479,10 @@ ModelDefinition getObjectBoxModel() {
           final languageOffset = object.language == null
               ? null
               : fbb.writeString(object.language!);
-          fbb.startTable(12);
+          final memberNameOffset = object.memberName == null
+              ? null
+              : fbb.writeString(object.memberName!);
+          fbb.startTable(14);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, userProfileImageUrlOffset);
           fbb.addOffset(2, userNameOffset);
@@ -476,6 +494,8 @@ ModelDefinition getObjectBoxModel() {
           fbb.addBool(8, object.notification);
           fbb.addOffset(9, languageOffset);
           fbb.addInt64(10, object.timestamp);
+          fbb.addOffset(11, memberNameOffset);
+          fbb.addBool(12, object.isAdmin);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -502,7 +522,9 @@ ModelDefinition getObjectBoxModel() {
               notification:
                   const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 20),
               language: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 22),
-              timestamp: const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 24));
+              timestamp: const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 24),
+              memberName: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 26),
+              isAdmin: const fb.BoolReader().vTableGet(buffer, rootOffset, 28, false));
 
           return object;
         }),
@@ -648,7 +670,7 @@ ModelDefinition getObjectBoxModel() {
           final messageIdOffset = fbb.writeString(object.messageId);
           final conversationIdOffset = fbb.writeString(object.conversationId);
           final bodyOffset = fbb.writeString(object.body);
-          fbb.startTable(9);
+          fbb.startTable(10);
           fbb.addInt64(0, object.id);
           fbb.addBool(1, object.showInConversation);
           fbb.addInt64(2, object.sentAt);
@@ -657,6 +679,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(5, messageIdOffset);
           fbb.addOffset(6, conversationIdOffset);
           fbb.addOffset(7, bodyOffset);
+          fbb.addInt64(8, object.dbCustomType);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -679,7 +702,9 @@ ModelDefinition getObjectBoxModel() {
               conversationId: const fb.StringReader(asciiOptimization: true)
                   .vTableGet(buffer, rootOffset, 16, ''),
               body: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 18, ''));
+                  .vTableGet(buffer, rootOffset, 18, ''))
+            ..dbCustomType = const fb.Int64Reader()
+                .vTableGetNullable(buffer, rootOffset, 20);
 
           return object;
         }),
@@ -842,6 +867,14 @@ class UserDetails_ {
   /// see [UserDetails.timestamp]
   static final timestamp =
       QueryIntegerProperty<UserDetails>(_entities[0].properties[10]);
+
+  /// see [UserDetails.memberName]
+  static final memberName =
+      QueryStringProperty<UserDetails>(_entities[0].properties[11]);
+
+  /// see [UserDetails.isAdmin]
+  static final isAdmin =
+      QueryBooleanProperty<UserDetails>(_entities[0].properties[12]);
 }
 
 /// [AttachmentModel] entity fields to define ObjectBox queries.
@@ -950,6 +983,10 @@ class LastMessageDetails_ {
   /// see [LastMessageDetails.body]
   static final body =
       QueryStringProperty<LastMessageDetails>(_entities[4].properties[7]);
+
+  /// see [LastMessageDetails.dbCustomType]
+  static final dbCustomType =
+      QueryIntegerProperty<LastMessageDetails>(_entities[4].properties[8]);
 }
 
 /// [PendingMessageModel] entity fields to define ObjectBox queries.

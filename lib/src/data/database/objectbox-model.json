@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:329637739332878047",
-      "lastPropertyId": "11:2743344435005786162",
+      "lastPropertyId": "13:4261162591408815349",
       "name": "UserDetails",
       "properties": [
         {
@@ -63,6 +63,16 @@
           "id": "11:2743344435005786162",
           "name": "timestamp",
           "type": 6
+        },
+        {
+          "id": "12:1753398602888573948",
+          "name": "memberName",
+          "type": 9
+        },
+        {
+          "id": "13:4261162591408815349",
+          "name": "isAdmin",
+          "type": 1
         }
       ],
       "relations": []
@@ -176,7 +186,7 @@
     },
     {
       "id": "7:3601465766739318501",
-      "lastPropertyId": "8:8981372878008052135",
+      "lastPropertyId": "9:6602821607281721590",
       "name": "LastMessageDetails",
       "properties": [
         {
@@ -219,6 +229,11 @@
           "id": "8:8981372878008052135",
           "name": "body",
           "type": 9
+        },
+        {
+          "id": "9:6602821607281721590",
+          "name": "dbCustomType",
+          "type": 6
         }
       ],
       "relations": []
