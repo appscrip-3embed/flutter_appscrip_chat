@@ -20,6 +20,8 @@ class IsmChatAPI {
   static const String eligibleMembers = '$chatConversation/eligible/members';
   static const String leaveConversation = '$chatConversation/leave';
   static const String conversationAdmin = '$chatConversation/admin';
+  static const String conversationTitle = '$chatConversation/title';
+  static const String conversationImage = '$chatConversation/image';
 
   static const String blockUser = '$user/block';
   static const String unblockUser = '$user/unblock';

@@ -81,7 +81,7 @@ mixin IsmChatPageGetMessageMixin {
     _controller.readTime = (response.first.timestamp ?? 0).deliverTime;
   }
 
-  Future<void> getConverstaionDetails(
+  Future<IsmChatConversationModel?> getConverstaionDetails(
       {required String conversationId,
       String? ids,
       bool? includeMembers,

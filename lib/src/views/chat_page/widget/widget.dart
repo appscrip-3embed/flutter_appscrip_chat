@@ -2,6 +2,8 @@ export 'attachment_card.dart';
 export 'attachments/attachments.dart';
 export 'chat_message.dart';
 export 'conversation_info.dart';
+export 'conversation_media_widget.dart';
+export 'edit_group_title_and_image.dart';
 export 'group_admin_dialog.dart';
 export 'group_eligiable_user.dart';
 export 'location.dart';
