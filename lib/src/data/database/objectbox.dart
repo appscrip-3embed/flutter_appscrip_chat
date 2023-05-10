@@ -4,6 +4,7 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 
+export 'package:objectbox/objectbox.dart';
 // import 'objectbox.g.dart'; // created by `flutter pub run build_runner build`
 
 /// Provides access to the ObjectBox Store throughout the presenter.
