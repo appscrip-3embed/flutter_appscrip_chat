@@ -270,7 +270,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           nameWithExtension = x.path!.split('/').last;
           final extension = nameWithExtension.split('.').last;
           documentMessage = IsmChatMessageModel(
-            body: 'Documet',
+            body: 'Document',
             conversationId: conversationId,
             customType: IsmChatCustomMessageType.file,
             attachments: [
