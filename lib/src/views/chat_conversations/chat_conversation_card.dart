@@ -38,9 +38,7 @@ class IsmChatConversationCard extends StatelessWidget {
             subtitle: subtitleBuilder?.call(
                     context, conversation.lastMessageDetails?.body ?? '') ??
                 Text(
-                  conversation.lastMessageDetails!.body.contains('maps')
-                      ? 'Location'
-                      : conversation.lastMessageDetails?.body ?? '',
+                  conversation.lastMessageDetails!.messageBody,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: IsmChatStyles.w400Black12,
