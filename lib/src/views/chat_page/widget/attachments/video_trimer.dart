@@ -55,7 +55,7 @@ class _VideoTrimmerViewState extends State<IsmVideoTrimmerView> {
         extendBodyBehindAppBar: true,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(
-            IsmChatDimens.hundred + IsmChatDimens.thirtyTwo,
+            IsmChatDimens.hundred + IsmChatDimens.forty,
           ),
           child: Padding(
             padding: IsmChatDimens.edgeInsets10,
