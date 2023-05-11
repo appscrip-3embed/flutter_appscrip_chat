@@ -3,6 +3,9 @@ part of '../chat_page_controller.dart';
 mixin IsmChatGroupAdminMixin {
   IsmChatPageController get _controller => Get.find<IsmChatPageController>();
 
+  IsmChatConversationsController get _ismChatConversationsController =>
+      Get.find<IsmChatConversationsController>();
+
   /// Add members to a conversation
   Future<void> addMembers(
       {required List<String> memberIds, bool isLoading = false}) async {
@@ -20,6 +23,57 @@ mixin IsmChatGroupAdminMixin {
       isLoading: false,
     );
     await _controller.getMessagesFromAPI();
+  }
+
+  /// change group title
+  Future<void> changeGroupTitle({
+    required String conversationTitle,
+    required String conversationId,
+    required bool isLoading,
+  }) async {
+    var response = await _controller._viewModel.changeGroupTitle(
+        conversationTitle: conversationTitle,
+        conversationId: conversationId,
+        isLoading: isLoading);
+    if (response?.hasError ?? true) {
+      return;
+    } else {
+      _controller.conversation?.conversationTitle = conversationTitle;
+      for (var i = 0;
+          i < _ismChatConversationsController.conversations.length;
+          i++) {
+        if (_ismChatConversationsController.conversations[i].conversationId ==
+            conversationId) {
+          _ismChatConversationsController.conversations[i].conversationTitle =
+              conversationTitle;
+          await _ismChatConversationsController.getChatConversations();
+          break;
+        }
+      }
+      _controller.update();
+      _ismChatConversationsController.update();
+      IsmChatUtility.showToast('Group title changed successfully!');
+    }
+  }
+
+  /// change group profile
+  Future<void> changeGroupProfile({
+    required String conversationImageUrl,
+    required String conversationId,
+    required bool isLoading,
+  }) async {
+    var response = await _controller._viewModel.changeGroupProfile(
+        conversationImageUrl: conversationImageUrl,
+        conversationId: conversationId,
+        isLoading: isLoading);
+    if (response?.hasError ?? true) {
+      return;
+    } else {
+      _controller.conversation?.conversationImageUrl = conversationImageUrl;
+      await _ismChatConversationsController.getChatConversations();
+      _controller.update();
+      _ismChatConversationsController.update();
+    }
   }
 
   ///Remove members from conversation

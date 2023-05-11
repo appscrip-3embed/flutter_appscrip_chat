@@ -60,20 +60,15 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          controller.conversation!.chatName.isNotEmpty
-                              ? controller.conversation!.chatName
-                              : controller.conversation?.opponentDetails
-                                      ?.userName ??
-                                  '',
+                          controller.conversation!.chatName,
                           style: IsmChatStyles.w600White18,
                         ),
                         (!controller.conversation!.isChattingAllowed)
                             ? const SizedBox.shrink()
                             : Obx(
-                                () => mqttController.typingUsersIds.contains(
-                                        controller.conversation?.conversationId)
+                                () => controller.conversation!.isSomeoneTyping
                                     ? Text(
-                                        IsmChatStrings.typing,
+                                        controller.conversation!.typingUsers,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: IsmChatStyles.w400White12,

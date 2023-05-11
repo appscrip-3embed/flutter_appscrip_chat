@@ -277,6 +277,28 @@ class IsmChatPageViewModel {
           conversationId: conversationId,
           isLoading: isLoading);
 
+  /// change group title
+  Future<IsmChatResponseModel?> changeGroupTitle({
+    required String conversationTitle,
+    required String conversationId,
+    required bool isLoading,
+  }) async =>
+      await _repository.changeGroupTitle(
+          conversationTitle: conversationTitle,
+          conversationId: conversationId,
+          isLoading: isLoading);
+
+  /// change group title
+  Future<IsmChatResponseModel?> changeGroupProfile({
+    required String conversationImageUrl,
+    required String conversationId,
+    required bool isLoading,
+  }) async =>
+      await _repository.changeGroupProfile(
+          conversationImageUrl: conversationImageUrl,
+          conversationId: conversationId,
+          isLoading: isLoading);
+
   /// Remove members from conversation
   Future<IsmChatResponseModel?> removeMember({
     required String conversationId,
@@ -459,19 +481,18 @@ class IsmChatPageViewModel {
     Map<String, dynamic>? metaData,
     String? conversationTitle,
     String? conversationImageUrl,
-     bool isLoading = false,
+    bool isLoading = false,
   }) async =>
       await _repository.createConversation(
-        typingEvents: typingEvents,
-        readEvents: readEvents,
-        pushNotifications: pushNotifications,
-        members: members,
-        isGroup: isGroup,
-        conversationType: conversationType,
-        conversationImageUrl: conversationImageUrl,
-        conversationTitle: conversationTitle,
-        isLoading: isLoading
-      );
+          typingEvents: typingEvents,
+          readEvents: readEvents,
+          pushNotifications: pushNotifications,
+          members: members,
+          isGroup: isGroup,
+          conversationType: conversationType,
+          conversationImageUrl: conversationImageUrl,
+          conversationTitle: conversationTitle,
+          isLoading: isLoading);
 
   Map<String, int> generateIndexedMessageList(
       List<IsmChatMessageModel> messages) {

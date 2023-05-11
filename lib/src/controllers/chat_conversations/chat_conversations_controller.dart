@@ -121,8 +121,22 @@ class IsmChatConversationsController extends GetxController {
     await getPresignedUrl(fileExtension, bytes);
   }
 
+  /// function to pick image for group profile
+  Future<void> ismChangeImage(ImageSource imageSource) async {
+    var file = await IsmChatUtility.pickImage(imageSource);
+    if (file == null) {
+      return;
+    }
+    var bytes = file.readAsBytesSync();
+    var fileExtension = file.path.split('.').last;
+    await getPresignedUrl(fileExtension, bytes);
+  }
+
   // / get Api for presigned Url.....
-  Future<void> getPresignedUrl(String mediaExtension, Uint8List bytes) async {
+  Future<void> getPresignedUrl(
+    String mediaExtension,
+    Uint8List bytes,
+  ) async {
     var response = await _viewModel.getPresignedUrl(
         isLoading: true,
         userIdentifier: userDetails?.userIdentifier ?? '',

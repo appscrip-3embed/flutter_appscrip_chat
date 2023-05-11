@@ -31,11 +31,16 @@ class IsmChatStrings {
   static const String at = 'at';
   static const String on = 'on';
   static const String ok = 'Okay';
+  static const String change = 'Change';
   static const String blockUser = 'Block User';
   static const String unBlockUser = 'Unblock User';
   static const String blockedUsers = 'Blocked Users';
   static const String clearChat = 'Clear chat';
+  static const String changeGroupTitle = 'Change group title';
+  static const String changeGroupPhoto = 'Change group photo';
   static const String deleteAllMessage = 'Delete All Messages?';
+  static const String enterNewGroupTitle = 'Enter new group title';
+  static const String chooseNewGroupProfile = 'Choose new group profile';
   static const String cancel = 'Cancel';
   static const String doWantBlckUser = 'Do you want to Block this User?';
   static const String doWantUnBlckUser = 'Do you want to Unblock this User?';
