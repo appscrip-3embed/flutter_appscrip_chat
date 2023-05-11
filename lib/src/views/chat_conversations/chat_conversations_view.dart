@@ -40,7 +40,10 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: widget.showAppBar
-            ? IsmChatListHeader(onSignOut: widget.onSignOut!)
+            ? IsmChatListHeader(
+                onSignOut: widget.onSignOut!,
+                onSearchTap: widget.onChatTap,
+              )
             : null,
         body: SafeArea(
           child: IsmChatConversationList(

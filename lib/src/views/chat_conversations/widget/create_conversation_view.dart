@@ -37,7 +37,10 @@ class IsmChatCreateConversationView extends StatelessWidget {
               : Column(
                   children: [
                     if (isGroupConversation) ...[
-                      const _GroupChatImageAndName(),
+                      Container(
+                          width: Get.width,
+                          color: IsmChatColors.whiteColor,
+                          child: const _GroupChatImageAndName()),
                     ],
                     Expanded(
                       child: ListView.separated(
@@ -254,7 +257,6 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                     userIds.add(x.userDetails.userId);
                                   }
                                 }
-
                                 var ismChatConversation =
                                     IsmChatConversationModel(
                                   messagingDisabled: false,
