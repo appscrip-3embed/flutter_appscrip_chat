@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
@@ -217,18 +218,20 @@ class _MicOrSendButton extends StatelessWidget {
                                   .conversation?.opponentDetails?.userId ??
                               '');
                     },
-              onTap: controller.showSendButton
-                  ? !controller.conversation!.isChattingAllowed
-                      ? controller.showDialogCheckBlockUnBlock
-                      : () {
-                          controller.sendTextMessage(
-                              conversationId:
-                                  controller.conversation?.conversationId ?? '',
-                              userId: controller
-                                      .conversation?.opponentDetails?.userId ??
-                                  '');
-                        }
-                  : null,
+              onTap: (){
+                if(controller.showSendButton){
+                  if(!controller.conversation!.isChattingAllowed){
+                    controller.showDialogCheckBlockUnBlock();
+                  } else {
+                    controller.sendTextMessage(
+                        conversationId:
+                        controller.conversation?.conversationId ?? '',
+                        userId: controller
+                            .conversation?.opponentDetails?.userId ??
+                            '');
+                  }
+                }
+              },
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
