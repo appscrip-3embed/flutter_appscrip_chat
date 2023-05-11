@@ -134,7 +134,7 @@ class _Message extends StatelessWidget {
                     },
               child: FocusedMenuHolder(
                 openWithTap: showMessageInCenter ? true : false,
-                menuWidth: 160,
+                menuWidth: 170,
                 menuOffset: IsmChatDimens.twenty,
                 blurSize: 3,
                 animateMenuItems: false,
