@@ -21,6 +21,8 @@ class IsmChatMqttController extends GetxController {
 
   late IsmChatConnectionState connectionState;
 
+  String  messageId = '';
+
   final RxList<IsmChatTypingModel> _typingUsers = <IsmChatTypingModel>[].obs;
   List<IsmChatTypingModel> get typingUsers => _typingUsers;
   set typingUsers(List<IsmChatTypingModel> value) => _typingUsers.value = value;
@@ -413,6 +415,7 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleBlockUserOrUnBlock(IsmChatMqttActionModel actionModel) async {
+   
     if (actionModel.initiatorDetails!.userId ==
         _communicationConfig.userConfig.userId) {
       return;
@@ -430,6 +433,9 @@ class IsmChatMqttController extends GetxController {
             actionModel.messageId) {
       return;
     }
+    if(messageId == actionModel.messageId){
+      return;
+    }
 
     if (Get.isRegistered<IsmChatPageController>()) {
       var controller = Get.find<IsmChatPageController>();
@@ -441,6 +447,7 @@ class IsmChatMqttController extends GetxController {
         await controller.getMessagesFromAPI(
             conversationId: actionModel.conversationId ?? '',
             lastMessageTimestamp: controller.messages.last.sentAt);
+        messageId = actionModel.messageId!;    
       }
     }
   }
