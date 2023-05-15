@@ -84,8 +84,13 @@ class _ReplyMessage extends StatelessWidget {
                                   : IsmChatColors.blueColor,
                         ),
                       ),
-                      Text(
-                        message.metaData?.parentMessageBody ?? '',
+                      SizedBox(
+                        width: IsmChatDimens.percentWidth(0.7),
+                        child: Text(
+                          message.metaData?.parentMessageBody ?? '',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),
