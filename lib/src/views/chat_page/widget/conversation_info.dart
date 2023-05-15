@@ -144,7 +144,8 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                             style: IsmChatStyles.w500Black16,
                           ),
                         ),
-                        IconButton(
+                     if(controller.conversation!.usersOwnDetails
+                                            ?.isAdmin ?? false)   IconButton(
                           onPressed: () =>
                               IsmChatUtility.openFullScreenBottomSheet(
                                   const IsmChatGroupEligibleUser()),
@@ -289,7 +290,7 @@ class _MediaList extends StatelessWidget {
                   var iconData =
                       media.customType == IsmChatCustomMessageType.audio
                           ? Icons.audio_file_rounded
-                          : Icons.description_rounded;
+                          : Icons.description_rounded;  
                   return GestureDetector(
                     onTap: () => controller.tapForMediaPreview(media),
                     child: ConversationMediaWidget(

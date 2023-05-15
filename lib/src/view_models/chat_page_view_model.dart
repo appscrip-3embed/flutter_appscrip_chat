@@ -9,7 +9,7 @@ class IsmChatPageViewModel {
   var messageSkip = 0;
   var messageLimit = 20;
 
-  IsmChatPageController get _controller => Get.find<IsmChatPageController>();
+  
 
   Future<List<IsmChatMessageModel>?> getChatMessages({
     required String conversationId,

@@ -21,9 +21,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
-        builder: (controller) {
-          var mqttController = Get.find<IsmChatMqttController>();
-          return Theme(
+        builder: (controller) => Theme(
             data: ThemeData.light(useMaterial3: true).copyWith(
               appBarTheme: AppBarTheme(
                 backgroundColor: IsmChatConfig.chatTheme.primaryColor,
@@ -149,7 +147,6 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ],
             ),
-          );
-        },
+          ),
       );
 }
