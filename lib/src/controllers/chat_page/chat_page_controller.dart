@@ -950,6 +950,7 @@ class IsmChatPageController extends GetxController
     if (!isBlocked) {
       return;
     }
+    chatInputController.clear();
     await Future.wait([
       getConverstaionDetails(
         conversationId: conversation?.conversationId ?? '',
