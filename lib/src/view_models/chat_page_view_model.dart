@@ -259,7 +259,7 @@ class IsmChatPageViewModel {
     if (!response!.hasError) {
       var responseMessage = await getChatMessages(
         conversationId: conversationId,
-        lastMessageTimestamp: lastMessageTimeStamp,
+        lastMessageTimestamp: lastMessageTimeStamp+20000,
         isGroup: false,
       );
       return responseMessage;
