@@ -60,6 +60,7 @@ class _VideoTrimmerViewState extends State<IsmVideoTrimmerView> {
           child: Padding(
             padding: IsmChatDimens.edgeInsets10,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -107,9 +108,10 @@ class _VideoTrimmerViewState extends State<IsmVideoTrimmerView> {
                     ),
                   ],
                 ),
-                IsmChatDimens.boxHeight8,
+                IsmChatDimens.boxHeight2,
                 SizedBox(
                   width: IsmChatDimens.percentWidth(.95),
+
                   child: TrimViewer(
                     showDuration: true,
                     durationStyle: DurationStyle.FORMAT_MM_SS,

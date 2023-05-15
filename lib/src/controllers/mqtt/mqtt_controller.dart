@@ -440,7 +440,7 @@ class IsmChatMqttController extends GetxController {
     if (Get.isRegistered<IsmChatPageController>()) {
       var controller = Get.find<IsmChatPageController>();
       if (controller.conversation!.conversationId ==
-          actionModel.conversationId) {
+          actionModel.conversationId) { 
         await Get.find<IsmChatConversationsController>().getBlockUser();
         await controller.getConverstaionDetails(
             conversationId: actionModel.conversationId ?? '');
@@ -458,21 +458,21 @@ class IsmChatMqttController extends GetxController {
       return;
     }
 
-    if (Get.isRegistered<IsmChatPageController>()) {
-      var controller = Get.find<IsmChatPageController>();
-      if (controller.conversation!.conversationId ==
-              actionModel.conversationId &&
-          controller.conversation!.lastMessageSentAt != actionModel.sentAt) {
-        await controller.getMessagesFromAPI(
-            conversationId: actionModel.conversationId ?? '',
-            lastMessageTimestamp: controller.messages.last.sentAt);
-      }
-    }
-  }
 
-  void _handleAdminRemoveAndAdd(IsmChatMqttActionModel actionModel) async {
-    if (actionModel.userDetails?.userId ==
-        _communicationConfig.userConfig.userId) {
+    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
+
+    var conversation = conversationBox
+        .query(DBConversationModel_.conversationId
+            .equals(actionModel.conversationId!))
+        .build()
+        .findUnique();
+
+    if (conversation == null ||
+        conversation.lastMessageDetails.target!.messageId ==
+            actionModel.messageId) {
+      return;
+    }
+    if(messageId == actionModel.messageId){
       return;
     }
 
@@ -484,6 +484,43 @@ class IsmChatMqttController extends GetxController {
         await controller.getMessagesFromAPI(
             conversationId: actionModel.conversationId ?? '',
             lastMessageTimestamp: controller.messages.last.sentAt);
+            messageId = actionModel.messageId!;    
+      }
+    }
+  }
+
+  void _handleAdminRemoveAndAdd(IsmChatMqttActionModel actionModel) async {
+    if (actionModel.userDetails?.userId ==
+        _communicationConfig.userConfig.userId) {
+      return;
+    }
+
+    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
+
+    var conversation = conversationBox
+        .query(DBConversationModel_.conversationId
+            .equals(actionModel.conversationId!))
+        .build()
+        .findUnique();
+
+    if (conversation == null ||
+        conversation.lastMessageDetails.target!.messageId ==
+            actionModel.messageId) {
+      return;
+    }
+    if(messageId == actionModel.messageId){
+      return;
+    }
+
+    if (Get.isRegistered<IsmChatPageController>()) {
+      var controller = Get.find<IsmChatPageController>();
+      if (controller.conversation!.conversationId ==
+              actionModel.conversationId &&
+          controller.conversation!.lastMessageSentAt != actionModel.sentAt) {
+        await controller.getMessagesFromAPI(
+            conversationId: actionModel.conversationId ?? '',
+            lastMessageTimestamp: controller.messages.last.sentAt);
+             messageId = actionModel.messageId!;   
       }
     }
   }
