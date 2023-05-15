@@ -251,6 +251,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         bytes = file.readAsBytesSync();
       }
       documentMessage = message;
+
     } else {
       final result = await FilePicker.platform.pickFiles(
           allowMultiple: true,

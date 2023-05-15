@@ -534,25 +534,37 @@ class IsmChatPageController extends GetxController
         mediaTime: message.sentAt,
       ));
     } else if (message.customType == IsmChatCustomMessageType.file) {
+
       var localPath = message.attachments?.first.mediaUrl;
-      if (localPath?.isValidUrl ?? false) {
         try {
-          final client = http.Client();
-          final request = await client.get(Uri.parse(localPath!));
-          final bytes = request.bodyBytes;
-          final documentsDir =
-              (await path_provider.getApplicationDocumentsDirectory()).path;
-          localPath = '$documentsDir/${message.attachments?.first.name}';
-          if (!File(localPath).existsSync()) {
-            final file = File(localPath);
-            await file.writeAsBytes(bytes);
-            localPath = file.path;
+          if(localPath!.contains('https://')||localPath!.contains('http://')){
+            final client = http.Client();
+            final request = await client.get(Uri.parse(localPath!));
+            final bytes = request.bodyBytes;
+            final documentsDir =
+                (await path_provider.getApplicationDocumentsDirectory()).path;
+            localPath = '$documentsDir/${message.attachments?.first.name}';
+            if (!File(localPath).existsSync()) {
+              final file = File(localPath);
+              await file.writeAsBytes(bytes);
+              localPath = file.path;
+            }
+            await OpenFilex.open(localPath);
+          } else {
+            final documentsDir =
+                (await path_provider.getApplicationDocumentsDirectory()).path;
+            localPath = '$documentsDir/${message.attachments?.first.name}';
+            if (!File(localPath).existsSync()) {
+              final file = File(localPath);
+              await file.writeAsBytes(localPath as List<int>);
+              localPath = file.path;
+            }
+            await OpenFilex.open(localPath);
           }
-          await OpenFilex.open(localPath);
+
         } catch (e) {
-          IsmChatLog.error(e);
+          IsmChatLog.error("$e");
         }
-      }
     }
   }
 
@@ -1027,3 +1039,4 @@ class IsmChatPageController extends GetxController
     predictionList = response;
   }
 }
+
