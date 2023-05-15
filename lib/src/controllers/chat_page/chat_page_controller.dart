@@ -249,8 +249,16 @@ class IsmChatPageController extends GetxController
     });
   }
 
+  ifTimerMounted(){
+ final itimer = conversationDetailsApTimer == null ? false : conversationDetailsApTimer!.isActive;
+ if(itimer){
+   conversationDetailsApTimer!.cancel();
+ }
+}
+
   @override
   void onClose() {
+      super.onClose();
     if (areCamerasInitialized) {
       _frontCameraController.dispose();
       _backCameraController.dispose();
@@ -258,9 +266,11 @@ class IsmChatPageController extends GetxController
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
     groupEligibleUserScrollController.dispose();
-
-    super.onClose();
+    ifTimerMounted();
+  
   }
+
+
 
   /// This function will be used in [Add participants Screen] to Select or Unselect users
   void onGrouEligibleUserTap(int index) {
