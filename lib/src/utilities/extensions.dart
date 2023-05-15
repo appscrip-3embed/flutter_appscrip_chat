@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -173,6 +174,7 @@ extension DateConvertor on int {
   }
 }
 
+
 extension DateFormats on DateTime {
   String toTimeString() => DateFormat.jm().format(this);
 
@@ -256,6 +258,68 @@ extension ChildWidget on IsmChatCustomMessageType {
         IsmChatCustomMessageType.location,
         IsmChatCustomMessageType.reply,
       ].contains(this);
+}
+
+extension LastMessageWidget on String {
+
+  Widget lastMessageType(LastMessageDetails message) {
+    switch (this) {
+
+      case  'Image' :
+        return Row(
+          children: [
+            Icon(Icons.image, size: IsmChatDimens.sixteen,),
+            IsmChatDimens.boxWidth2,
+            Text('Image', style: IsmChatStyles.w400Black12,)
+          ],
+        );
+
+      case 'Video':
+        return Row(
+          children: [
+            Icon(Icons.video_call, size: IsmChatDimens.sixteen,),
+            IsmChatDimens.boxWidth2,
+            Text('Video',style: IsmChatStyles.w400Black12,)
+          ],
+        );
+
+      case 'Audio':
+        return Row(
+          children: [
+            Icon(Icons.audio_file, size: IsmChatDimens.sixteen,),
+            IsmChatDimens.boxWidth2,
+            Text('Audio',style: IsmChatStyles.w400Black12,)
+          ],
+        );
+
+      case 'Document':
+        return Row(
+          children: [
+            Icon(Icons.file_copy_outlined, size: IsmChatDimens.sixteen,),
+            IsmChatDimens.boxWidth2,
+            Text('Document',style: IsmChatStyles.w400Black12,)
+          ],
+        );
+
+    }
+    if(contains('https://www.google.com/maps/')) {
+      return Row(
+        children: [
+         Icon(Icons.location_on_outlined, size: IsmChatDimens.sixteen,),
+          IsmChatDimens.boxWidth2,
+         Text('Location',
+           style: IsmChatStyles.w400Black12,)
+        ],
+      );
+    }
+    return  Text(
+      message.body,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: IsmChatStyles.w400Black12,
+    );
+  }
+
 }
 
 extension GetLink on String {

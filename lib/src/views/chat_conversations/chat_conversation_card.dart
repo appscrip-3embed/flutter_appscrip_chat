@@ -37,12 +37,7 @@ class IsmChatConversationCard extends StatelessWidget {
                 ),
             subtitle: subtitleBuilder?.call(
                     context, conversation.lastMessageDetails?.body ?? '') ??
-                Text(
-                  conversation.lastMessageDetails!.messageBody,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: IsmChatStyles.w400Black12,
-                ),
+                conversation.lastMessageDetails!.body.lastMessageType(conversation.lastMessageDetails!),
             trailing: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.end,
