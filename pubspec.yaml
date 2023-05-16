@@ -20,7 +20,7 @@ dependencies:
   flutter_native_image: ^0.0.6+1  
   flutter_screenutil: ^5.7.0
   flutter_slidable: ^2.0.0
-  flutter_svg: 0.23.0+1
+  flutter_svg: ^1.0.3
   flutter_web_plugins:
     sdk: flutter
   fluttertoast: ^8.2.1
