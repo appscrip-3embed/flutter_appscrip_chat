@@ -16,6 +16,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
           );
         },
         builder: (controller) => Scaffold(
+          backgroundColor: IsmChatColors.whiteColor,
           appBar: IsmChatAppBar(
             title: controller.conversation?.isGroup ?? false
                 ? 'Group Info'
