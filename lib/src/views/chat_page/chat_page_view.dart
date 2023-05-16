@@ -75,7 +75,7 @@ class _IsmChatPageView extends StatelessWidget {
             }
           },
           child: Scaffold(
-            backgroundColor: IsmChatConfig.chatTheme.backgroundColor,
+            backgroundColor: IsmChatColors.whiteColor,
             resizeToAvoidBottomInset: true,
             appBar: controller.isMessageSeleted
                 ? AppBar(

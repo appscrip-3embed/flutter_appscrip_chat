@@ -74,6 +74,7 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
         builder: (controller) => Scaffold(
+          backgroundColor: IsmChatColors.whiteColor,
           appBar: AppBar(
             backgroundColor: IsmChatConfig.chatTheme.primaryColor,
             titleSpacing: 0,
