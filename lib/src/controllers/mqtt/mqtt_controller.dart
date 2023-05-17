@@ -69,8 +69,8 @@ class IsmChatMqttController extends GetxController {
       }
     } on Exception catch (e, st) {
       IsmChatLog.error('MQTT Connection Error - $e', st);
-      await unSubscribe();
-      await disconnect();
+      // await unSubscribe();
+      // await disconnect();
     }
   }
 
