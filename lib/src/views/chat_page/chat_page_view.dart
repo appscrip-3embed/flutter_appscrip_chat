@@ -7,28 +7,16 @@ import 'package:get/get.dart';
 class IsmChatPageView extends StatefulWidget {
   const IsmChatPageView({
     this.onTitleTap,
-    this.appBarBackGroundColor,
-    this.appBarIconColor,
-    this.bottomPreferredSizeWidget,
-    this.elevation,
-    this.shape,
-    this.subTitileStyle,
-    this.titileStyle,
     this.height,
-    this.addPupMenuItem,
+    this.header,
     super.key,
   });
 
   final void Function(IsmChatConversationModel)? onTitleTap;
   final double? height;
-  final ShapeBorder? shape;
-  final double? elevation;
-  final Widget? bottomPreferredSizeWidget;
-  final Color? appBarIconColor;
-  final Color? appBarBackGroundColor;
-  final TextStyle? titileStyle;
-  final TextStyle? subTitileStyle;
-   final  void Function(IsmChatConversationModel)? addPupMenuItem;
+ 
+   final IsmChatHeader? header;
+   
   
 
   @override
@@ -73,28 +61,16 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                 },
                 child: _IsmChatPageView(
                   onTitleTap: widget.onTitleTap,
-                  appBarBackGroundColor: widget.appBarBackGroundColor,
-                  appBarIconColor: widget.appBarIconColor,
-                  bottomPreferredSizeWidget: widget.bottomPreferredSizeWidget,
-                  elevation: widget.elevation,
+                  header:widget.header,
                   height: widget.height,
-                  shape: widget.shape,
-                  subTitileStyle: widget.subTitileStyle,
-                  titileStyle: widget.titileStyle,
-                  addPupMenuItem: widget.addPupMenuItem,
+                 
                 ),
               )
             : _IsmChatPageView(
                 onTitleTap: widget.onTitleTap,
-                appBarBackGroundColor: widget.appBarBackGroundColor,
-                appBarIconColor: widget.appBarIconColor,
-                bottomPreferredSizeWidget: widget.bottomPreferredSizeWidget,
-                elevation: widget.elevation,
+                header: widget.header,
                 height: widget.height,
-                shape: widget.shape,
-                subTitileStyle: widget.subTitileStyle,
-                titileStyle: widget.titileStyle,
-                addPupMenuItem: widget.addPupMenuItem,
+               
               ),
       );
 }
@@ -102,27 +78,13 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
 class _IsmChatPageView extends StatelessWidget {
   const _IsmChatPageView(
       {this.onTitleTap,
-      this.shape,
-      this.elevation,
-      this.bottomPreferredSizeWidget,
-      this.appBarIconColor,
-      this.appBarBackGroundColor,
-      this.titileStyle,
-      this.subTitileStyle,
       this.height,
-      this.addPupMenuItem,
+      this.header,
       });
 
   final void Function(IsmChatConversationModel)? onTitleTap;
-  final ShapeBorder? shape;
   final double? height;
-  final double? elevation;
-  final Widget? bottomPreferredSizeWidget;
-  final Color? appBarIconColor;
-  final Color? appBarBackGroundColor;
-  final TextStyle? titileStyle;
-  final TextStyle? subTitileStyle;
-  final  void Function(IsmChatConversationModel)? addPupMenuItem;
+  final IsmChatHeader? header;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
@@ -181,15 +143,9 @@ class _IsmChatPageView extends StatelessWidget {
                             );
                             controller.canRefreshDetails = true;
                           },
-                    appBarBackGroundColor: appBarBackGroundColor,
-                    appBarIconColor: appBarIconColor,
-                    bottomPreferredSizeWidget: bottomPreferredSizeWidget,
-                    elevation: elevation,
-                    titileStyle: titileStyle,
-                    subTitileStyle: subTitileStyle,
-                    shape: shape,
+                          header: header,
                     height: height,
-                    addPupMenuItem: addPupMenuItem,
+                  
                   ),
             body: Stack(
               alignment: Alignment.bottomRight,

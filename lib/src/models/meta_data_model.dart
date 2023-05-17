@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-
 class IsmChatMetaData {
   final String? country;
   final String? parentMessageBody;
@@ -12,29 +11,28 @@ class IsmChatMetaData {
   final bool? parentMessageInitiator;
   final String? userId;
   final String? isMatchId;
- final bool? isGuestMatch;
- final String? guestMatchInitiatedByUserId;
- final String? guestMatchInitiatedWithUserId;
- final String? genderOfUserWhoStartedGuestChat;
- final String? genderOfUserWhoReceivedTheGuestChat;
- final bool? paidChat;
-  IsmChatMetaData({
-    this.country,
-    this.parentMessageBody,
-    this.locationAddress,
-    this.profilePic,
-    this.parentMessageInitiator,
-    this.firstName,
-    this.lastName,
-    this.isMatchId,
-    this.userId,
-    this.genderOfUserWhoReceivedTheGuestChat,
-    this.genderOfUserWhoStartedGuestChat,
-    this.guestMatchInitiatedByUserId,
-    this.guestMatchInitiatedWithUserId,
-    this.isGuestMatch,
-    this.paidChat
-  });
+  final bool? isGuestMatch;
+  final String? guestMatchInitiatedByUserId;
+  final String? guestMatchInitiatedWithUserId;
+  final String? genderOfUserWhoStartedGuestChat;
+  final String? genderOfUserWhoReceivedTheGuestChat;
+  final bool? paidChat;
+  IsmChatMetaData(
+      {this.country,
+      this.parentMessageBody,
+      this.locationAddress,
+      this.profilePic,
+      this.parentMessageInitiator,
+      this.firstName,
+      this.lastName,
+      this.isMatchId,
+      this.userId,
+      this.genderOfUserWhoReceivedTheGuestChat,
+      this.genderOfUserWhoStartedGuestChat,
+      this.guestMatchInitiatedByUserId,
+      this.guestMatchInitiatedWithUserId,
+      this.isGuestMatch,
+      this.paidChat});
 
   IsmChatMetaData copyWith({
     String? country,
@@ -43,15 +41,15 @@ class IsmChatMetaData {
     String? profilePic,
     bool? parentMessageInitiator,
     String? lastName,
-   String? firstName,
-   String? userId,
-   String? isMatchId,
-     bool? isGuestMatch,
-  String? guestMatchInitiatedByUserId,
-  String? guestMatchInitiatedWithUserId,
-  String? genderOfUserWhoStartedGuestChat,
-  String? genderOfUserWhoReceivedTheGuestChat,
-  bool? paidChat,
+    String? firstName,
+    String? userId,
+    String? isMatchId,
+    bool? isGuestMatch,
+    String? guestMatchInitiatedByUserId,
+    String? guestMatchInitiatedWithUserId,
+    String? genderOfUserWhoStartedGuestChat,
+    String? genderOfUserWhoReceivedTheGuestChat,
+    bool? paidChat,
   }) =>
       IsmChatMetaData(
         country: country ?? this.country,
@@ -60,6 +58,17 @@ class IsmChatMetaData {
         profilePic: profilePic ?? this.profilePic,
         parentMessageInitiator:
             parentMessageInitiator ?? this.parentMessageInitiator,
+        userId: userId ?? this.userId,
+        isMatchId: isMatchId ??  this.isMatchId,
+        firstName: firstName ??  this.firstName,
+        lastName:  lastName ??  this.lastName,
+        isGuestMatch: isGuestMatch ??  this.isGuestMatch,
+        guestMatchInitiatedByUserId: guestMatchInitiatedByUserId ??  this.guestMatchInitiatedByUserId,
+        genderOfUserWhoReceivedTheGuestChat: genderOfUserWhoReceivedTheGuestChat ??  this.genderOfUserWhoReceivedTheGuestChat,
+        genderOfUserWhoStartedGuestChat: genderOfUserWhoStartedGuestChat ?? this.genderOfUserWhoStartedGuestChat,
+        guestMatchInitiatedWithUserId: guestMatchInitiatedWithUserId ?? this.guestMatchInitiatedWithUserId,
+        paidChat: paidChat ?? this.paidChat
+
       );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
@@ -71,7 +80,17 @@ class IsmChatMetaData {
         if (parentMessageInitiator != null)
           'parentMessageInitiator': parentMessageInitiator,
         if (profilePic != null || profilePic?.isNotEmpty == true)
-          'profilePic': profilePic
+          'profilePic': profilePic,
+        if(userId != null || userId?.isNotEmpty == true)  'userId' : userId,
+        if(isMatchId != null || isMatchId?.isNotEmpty == true) 'isMatchId' : isMatchId,
+        if(firstName != null || firstName?.isNotEmpty == true) 'firstName' : firstName,
+        if(lastName != null || lastName?.isNotEmpty == true) 'lastName' : lastName,
+        if(isGuestMatch != null) 'isGuestMatch' : isGuestMatch,
+        if(genderOfUserWhoReceivedTheGuestChat != null || genderOfUserWhoReceivedTheGuestChat?.isNotEmpty == true) 'genderOfUserWhoReceivedTheGuestChat' : genderOfUserWhoReceivedTheGuestChat,
+        if(genderOfUserWhoStartedGuestChat != null || genderOfUserWhoStartedGuestChat?.isNotEmpty == true) 'genderOfUserWhoStartedGuestChat' : genderOfUserWhoStartedGuestChat,
+        if(guestMatchInitiatedByUserId != null || guestMatchInitiatedByUserId?.isNotEmpty == true) 'guestMatchInitiatedByUserId' : guestMatchInitiatedByUserId,
+        if(guestMatchInitiatedWithUserId != null || guestMatchInitiatedWithUserId?.isNotEmpty == true) 'guestMatchInitiatedWithUserId' : guestMatchInitiatedWithUserId,
+        if(paidChat != null) 'paidChat' : paidChat
       };
 
   factory IsmChatMetaData.fromMap(Map<String, dynamic> map) => IsmChatMetaData(
@@ -87,6 +106,16 @@ class IsmChatMetaData {
         parentMessageInitiator: map['parentMessageInitiator'] != null
             ? map['parentMessageInitiator'] as bool
             : null,
+        firstName: map['firstName'] as String? ?? '',
+        lastName: map['lastName'] as String? ?? '',
+        userId: map['userId']  as String? ?? '',
+        isMatchId: map['isMatchId'] as String? ?? '',
+        isGuestMatch: map['isGuestMatch'] as bool? ?? false,
+        genderOfUserWhoReceivedTheGuestChat: map['genderOfUserWhoReceivedTheGuestChat'] as String? ?? '',
+        genderOfUserWhoStartedGuestChat: map['genderOfUserWhoStartedGuestChat'] as String? ?? '',
+        guestMatchInitiatedByUserId: map['guestMatchInitiatedByUserId'] as String? ?? '',
+        guestMatchInitiatedWithUserId: map['guestMatchInitiatedWithUserId'] as String? ?? '',
+        paidChat: map['paidChat'] as bool? ?? false  
       );
 
   String toJson() => json.encode(toMap());
