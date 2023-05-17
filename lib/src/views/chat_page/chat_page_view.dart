@@ -28,7 +28,7 @@ class IsmChatPageView extends StatefulWidget {
   final Color? appBarBackGroundColor;
   final TextStyle? titileStyle;
   final TextStyle? subTitileStyle;
-   final  VoidCallback? addPupMenuItem;
+   final  void Function(IsmChatConversationModel)? addPupMenuItem;
   
 
   @override
@@ -122,7 +122,7 @@ class _IsmChatPageView extends StatelessWidget {
   final Color? appBarBackGroundColor;
   final TextStyle? titileStyle;
   final TextStyle? subTitileStyle;
-  final  VoidCallback? addPupMenuItem;
+  final  void Function(IsmChatConversationModel)? addPupMenuItem;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(

@@ -7,13 +7,33 @@ class IsmChatMetaData {
   final String? parentMessageBody;
   final String? locationAddress;
   final String? profilePic;
+  final String? lastName;
+  final String? firstName;
   final bool? parentMessageInitiator;
+  final String? userId;
+  final String? isMatchId;
+ final bool? isGuestMatch;
+ final String? guestMatchInitiatedByUserId;
+ final String? guestMatchInitiatedWithUserId;
+ final String? genderOfUserWhoStartedGuestChat;
+ final String? genderOfUserWhoReceivedTheGuestChat;
+ final bool? paidChat;
   IsmChatMetaData({
     this.country,
     this.parentMessageBody,
     this.locationAddress,
     this.profilePic,
     this.parentMessageInitiator,
+    this.firstName,
+    this.lastName,
+    this.isMatchId,
+    this.userId,
+    this.genderOfUserWhoReceivedTheGuestChat,
+    this.genderOfUserWhoStartedGuestChat,
+    this.guestMatchInitiatedByUserId,
+    this.guestMatchInitiatedWithUserId,
+    this.isGuestMatch,
+    this.paidChat
   });
 
   IsmChatMetaData copyWith({
@@ -22,6 +42,16 @@ class IsmChatMetaData {
     String? locationAddress,
     String? profilePic,
     bool? parentMessageInitiator,
+    String? lastName,
+   String? firstName,
+   String? userId,
+   String? isMatchId,
+     bool? isGuestMatch,
+  String? guestMatchInitiatedByUserId,
+  String? guestMatchInitiatedWithUserId,
+  String? genderOfUserWhoStartedGuestChat,
+  String? genderOfUserWhoReceivedTheGuestChat,
+  bool? paidChat,
   }) =>
       IsmChatMetaData(
         country: country ?? this.country,

@@ -27,7 +27,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
   final Color? appBarBackGroundColor;
   final TextStyle? titileStyle;
   final TextStyle? subTitileStyle;
-  final   VoidCallback? addPupMenuItem;
+  final   void Function(IsmChatConversationModel)? addPupMenuItem;
  
   
 
@@ -191,8 +191,8 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                     } else if (value == 2)  {
                       controller.handleBlockUnblock();
                     } else  if (value == 3){
-                      
-                        addPupMenuItem!.call();
+
+                        addPupMenuItem!.call(controller.conversation!);
                     }
                   },
                 ),
