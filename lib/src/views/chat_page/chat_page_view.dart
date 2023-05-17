@@ -5,9 +5,31 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatPageView extends StatefulWidget {
-  const IsmChatPageView({this.onTitleTap, super.key});
+  const IsmChatPageView({
+    this.onTitleTap,
+    this.appBarBackGroundColor,
+    this.appBarIconColor,
+    this.bottomPreferredSizeWidget,
+    this.elevation,
+    this.shape,
+    this.subTitileStyle,
+    this.titileStyle,
+    this.height,
+    this.addPupMenuItem,
+    super.key,
+  });
 
   final void Function(IsmChatConversationModel)? onTitleTap;
+  final double? height;
+  final ShapeBorder? shape;
+  final double? elevation;
+  final Widget? bottomPreferredSizeWidget;
+  final Color? appBarIconColor;
+  final Color? appBarBackGroundColor;
+  final TextStyle? titileStyle;
+  final TextStyle? subTitileStyle;
+   final  VoidCallback? addPupMenuItem;
+  
 
   @override
   State<IsmChatPageView> createState() => _IsmChatPageViewState();
@@ -49,16 +71,58 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                     navigateBack();
                   }
                 },
-                child: _IsmChatPageView(onTitleTap: widget.onTitleTap),
+                child: _IsmChatPageView(
+                  onTitleTap: widget.onTitleTap,
+                  appBarBackGroundColor: widget.appBarBackGroundColor,
+                  appBarIconColor: widget.appBarIconColor,
+                  bottomPreferredSizeWidget: widget.bottomPreferredSizeWidget,
+                  elevation: widget.elevation,
+                  height: widget.height,
+                  shape: widget.shape,
+                  subTitileStyle: widget.subTitileStyle,
+                  titileStyle: widget.titileStyle,
+                  addPupMenuItem: widget.addPupMenuItem,
+                ),
               )
-            : _IsmChatPageView(onTitleTap: widget.onTitleTap),
+            : _IsmChatPageView(
+                onTitleTap: widget.onTitleTap,
+                appBarBackGroundColor: widget.appBarBackGroundColor,
+                appBarIconColor: widget.appBarIconColor,
+                bottomPreferredSizeWidget: widget.bottomPreferredSizeWidget,
+                elevation: widget.elevation,
+                height: widget.height,
+                shape: widget.shape,
+                subTitileStyle: widget.subTitileStyle,
+                titileStyle: widget.titileStyle,
+                addPupMenuItem: widget.addPupMenuItem,
+              ),
       );
 }
 
 class _IsmChatPageView extends StatelessWidget {
-  const _IsmChatPageView({this.onTitleTap});
+  const _IsmChatPageView(
+      {this.onTitleTap,
+      this.shape,
+      this.elevation,
+      this.bottomPreferredSizeWidget,
+      this.appBarIconColor,
+      this.appBarBackGroundColor,
+      this.titileStyle,
+      this.subTitileStyle,
+      this.height,
+      this.addPupMenuItem,
+      });
 
   final void Function(IsmChatConversationModel)? onTitleTap;
+  final ShapeBorder? shape;
+  final double? height;
+  final double? elevation;
+  final Widget? bottomPreferredSizeWidget;
+  final Color? appBarIconColor;
+  final Color? appBarBackGroundColor;
+  final TextStyle? titileStyle;
+  final TextStyle? subTitileStyle;
+  final  VoidCallback? addPupMenuItem;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
@@ -117,6 +181,15 @@ class _IsmChatPageView extends StatelessWidget {
                             );
                             controller.canRefreshDetails = true;
                           },
+                    appBarBackGroundColor: appBarBackGroundColor,
+                    appBarIconColor: appBarIconColor,
+                    bottomPreferredSizeWidget: bottomPreferredSizeWidget,
+                    elevation: elevation,
+                    titileStyle: titileStyle,
+                    subTitileStyle: subTitileStyle,
+                    shape: shape,
+                    height: height,
+                    addPupMenuItem: addPupMenuItem,
                   ),
             body: Stack(
               alignment: Alignment.bottomRight,

@@ -12,6 +12,9 @@ class IsmChatConversations extends StatefulWidget {
     this.onCreateChatTap,
     this.createChatIcon,
     this.isGroupChatEnabled = false,
+    this.allowDelete = false,
+    this.actions,
+    this.endActions,
     super.key,
   });
 
@@ -25,6 +28,11 @@ class IsmChatConversations extends StatefulWidget {
   final VoidCallback? onCreateChatTap;
   final bool showCreateChatIcon;
   final Widget? createChatIcon;
+
+  final bool allowDelete;
+
+  final List<IsmChatConversationAction>? actions;
+  final List<IsmChatConversationAction>? endActions;
 
   @override
   State<IsmChatConversations> createState() => _IsmChatConversationsState();
@@ -48,6 +56,9 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
         body: SafeArea(
           child: IsmChatConversationList(
             onChatTap: widget.onChatTap,
+            allowDelete: widget.allowDelete,
+            actions: widget.actions,
+            endActions:widget.endActions,
           ),
         ),
         floatingActionButton: widget.showCreateChatIcon

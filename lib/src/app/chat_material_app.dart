@@ -17,7 +17,10 @@ class IsmChatApp extends StatelessWidget {
     this.showAppBar = false,
     this.enableGroupChat = false,
     this.createChatIcon,
-    this.imageBaseUrl
+    this.imageBaseUrl,
+    this.actions,
+    this.endActions,
+    this.allowDelete = false
   }) {
     assert(IsmChatConfig.isInitialized,
         'ChatObjectBox is not initialized\nYou are getting this error because the IsmChatObjectBox class is not initialized, to initialize ChatObjectBox class call AppscripChatComponent.initialize() before your runApp()');
@@ -94,6 +97,12 @@ class IsmChatApp extends StatelessWidget {
 
   final bool showAppBar;
   final VoidCallback? onSignOut;
+
+
+  final bool allowDelete;
+
+  final List<IsmChatConversationAction>? actions;
+  final List<IsmChatConversationAction>? endActions;
 
   /// Call this function on SignOut to delete the data stored locally in the Local Database
   static void logout() {
@@ -180,5 +189,8 @@ class IsmChatApp extends StatelessWidget {
         onSignOut: onSignOut,
         isGroupChatEnabled: enableGroupChat,
         createChatIcon: createChatIcon,
+        allowDelete: allowDelete,
+        actions: actions,
+        endActions: endActions,
       );
 }

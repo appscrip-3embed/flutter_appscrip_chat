@@ -6,11 +6,32 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
   IsmChatPageHeader({
     this.height,
     this.onTap,
+    this.shape,
+    this.elevation,
+    this.bottomPreferredSizeWidget,
+    this.appBarBackGroundColor,
+    this.appBarIconColor,
+    this.titileStyle,
+    this.subTitileStyle,
+    this.addPupMenuItem,
     super.key,
   });
 
   final double? height;
   final VoidCallback? onTap;
+  final ShapeBorder?  shape;
+  final double? elevation;
+  final Widget? bottomPreferredSizeWidget;
+  
+  final Color? appBarIconColor;
+  final Color? appBarBackGroundColor;
+  final TextStyle? titileStyle;
+  final TextStyle? subTitileStyle;
+  final   VoidCallback? addPupMenuItem;
+ 
+  
+
+  
 
   @override
   Size get preferredSize =>
@@ -24,11 +45,12 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
         builder: (controller) => Theme(
             data: ThemeData.light(useMaterial3: true).copyWith(
               appBarTheme: AppBarTheme(
-                backgroundColor: IsmChatConfig.chatTheme.primaryColor,
-                iconTheme: const IconThemeData(color: IsmChatColors.whiteColor),
+                backgroundColor: appBarBackGroundColor ?? IsmChatConfig.chatTheme.primaryColor,
+                iconTheme:  IconThemeData(color: appBarIconColor ?? IsmChatColors.whiteColor),
               ),
             ),
             child: AppBar(
+               elevation: elevation,
               leading: IsmChatTapHandler(
                 onTap: () async {
                   Get.back<void>();
@@ -38,6 +60,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
               ),
               titleSpacing: IsmChatDimens.four,
               centerTitle: false,
+              shape: shape,
               title: IsmChatTapHandler(
                 onTap: onTap,
                 child: Row(
@@ -59,7 +82,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                       children: [
                         Text(
                           controller.conversation!.chatName,
-                          style: IsmChatStyles.w600White18,
+                          style: titileStyle ?? IsmChatStyles.w600White18,
                         ),
                         (!controller.conversation!.isChattingAllowed)
                             ? const SizedBox.shrink()
@@ -69,7 +92,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                         controller.conversation!.typingUsers,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: IsmChatStyles.w400White12,
+                                        style: subTitileStyle ?? IsmChatStyles.w400White12,
                                       )
                                     : controller.conversation?.opponentDetails
                                                 ?.online ??
@@ -78,7 +101,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                             IsmChatStrings.online,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
-                                            style: IsmChatStyles.w400White12,
+                                            style: subTitileStyle ?? IsmChatStyles.w400White12,
                                           )
                                         : Text(
                                             controller.conversation
@@ -87,7 +110,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                                 '',
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
-                                            style: IsmChatStyles.w400White12,
+                                            style: subTitileStyle ?? IsmChatStyles.w400White12,
                                           ),
                               ),
                       ],
@@ -95,11 +118,18 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                   ],
                 ),
               ),
+              bottom: bottomPreferredSizeWidget== null ? null : PreferredSize(
+                  preferredSize: preferredSize,
+                  child: Padding(
+                    padding: IsmChatDimens.edgeInsets4,
+                    child: bottomPreferredSizeWidget,
+                  ),
+                ),
               actions: [
                 PopupMenuButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.more_vert,
-                    color: IsmChatColors.whiteColor,
+                    color: appBarIconColor ?? IsmChatColors.whiteColor,
                   ),
                   itemBuilder: (context) => [
                     PopupMenuItem(
@@ -135,13 +165,34 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                           ],
                         ),
                       ),
+
+                     if (addPupMenuItem != null)
+                      PopupMenuItem(
+                        value: 3,
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.no_accounts,
+                              color: IsmChatColors.blackColor,
+                            ),
+                            IsmChatDimens.boxWidth8,
+                                 const Text(
+                                    'UnMatch',
+                                  )
+                          ],
+                        ),
+                      ),  
+
                   ],
                   elevation: 2,
                   onSelected: (value) {
                     if (value == 1) {
                       controller.showDialogForClearChat();
-                    } else {
+                    } else if (value == 2)  {
                       controller.handleBlockUnblock();
+                    } else  if (value == 3){
+                      
+                        addPupMenuItem!.call();
                     }
                   },
                 ),

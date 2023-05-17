@@ -18,14 +18,16 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 ///
 /// Certain properties can be modified as per requirement. You can read about each of them by hovering over the property
 class IsmChatConversationList extends StatefulWidget {
-  const IsmChatConversationList({
-    super.key,
-    required this.onChatTap,
-    this.childBuilder,
-    this.itemBuilder,
-    this.profileImageBuilder,
-    this.height,
-  });
+  const IsmChatConversationList(
+      {super.key,
+      required this.onChatTap,
+      this.childBuilder,
+      this.itemBuilder,
+      this.profileImageBuilder,
+      this.height,
+      this.actions,
+      this.endActions,
+      this.allowDelete = false});
 
   final void Function(BuildContext, IsmChatConversationModel) onChatTap;
 
@@ -56,6 +58,11 @@ class IsmChatConversationList extends StatefulWidget {
   ///
   /// If not provided, Screen height will be taken
   final double? height;
+
+  final bool allowDelete;
+
+  final List<IsmChatConversationAction>? actions;
+  final List<IsmChatConversationAction>? endActions;
 
   @override
   State<IsmChatConversationList> createState() =>
@@ -116,30 +123,76 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                       var conversation = controller.conversations[index];
                       return Slidable(
                         closeOnScroll: true,
-                        endActionPane: ActionPane(
-                          extentRatio: 0.3,
-                          motion: const ScrollMotion(),
-                          children: [
-                            SlidableAction(
-                              onPressed: (_) async {
-                                await Get.bottomSheet(
-                                  IsmChatClearConversationBottomSheet(
-                                    controller.conversations[index],
-                                  ),
-                                  isDismissible: false,
-                                  elevation: 0,
-                                );
-                              },
-                              flex: 1,
-                              backgroundColor: IsmChatColors.redColor,
-                              foregroundColor: IsmChatColors.whiteColor,
-                              icon: Icons.delete_rounded,
-                              label: IsmChatStrings.delete,
-                              borderRadius:
-                                  BorderRadius.circular(IsmChatDimens.eight),
-                            ),
-                          ],
-                        ),
+                        startActionPane:
+                            widget.actions == null || widget.actions!.isEmpty
+                                ? null
+                                : ActionPane(
+                                    extentRatio: 0.3,
+                                    motion: const ScrollMotion(),
+                                    children: [
+                                        ...widget.actions?.map(
+                                              (e) => SlidableAction(
+                                                onPressed: (_) => e.onTap(),
+                                                flex: 1,
+                                                backgroundColor:
+                                                    e.backgroundColor ??
+                                                        IsmChatConfig.chatTheme
+                                                            .primaryColor!,
+                                                icon: e.icon,
+                                                foregroundColor: e.style?.color,
+                                                label: e.label,
+                                                borderRadius: e.borderRadius ??
+                                                    BorderRadius.circular(
+                                                        IsmChatDimens.eight),
+                                              ),
+                                            ) ??
+                                            [],
+                                      ]),
+                        endActionPane: !widget.allowDelete &&
+                                (widget.endActions == null ||
+                                    widget.endActions!.isEmpty)
+                            ? null
+                            : ActionPane(
+                                extentRatio: 0.3,
+                                motion: const ScrollMotion(),
+                                children: [
+                                  ...widget.endActions?.map(
+                                        (e) => SlidableAction(
+                                          onPressed: (_) => e.onTap(),
+                                          flex: 1,
+                                          backgroundColor: e.backgroundColor ??
+                                              IsmChatConfig
+                                                  .chatTheme.primaryColor!,
+                                          icon: e.icon,
+                                          foregroundColor: e.style?.color,
+                                          label: e.label,
+                                          borderRadius: e.borderRadius ??
+                                              BorderRadius.circular(
+                                                  IsmChatDimens.eight),
+                                        ),
+                                      ) ??
+                                      [],
+                                  if (widget.allowDelete)
+                                    SlidableAction(
+                                      onPressed: (_) async {
+                                        await Get.bottomSheet(
+                                          IsmChatClearConversationBottomSheet(
+                                            controller.conversations[index],
+                                          ),
+                                          isDismissible: false,
+                                          elevation: 0,
+                                        );
+                                      },
+                                      flex: 1,
+                                      backgroundColor: IsmChatColors.redColor,
+                                      foregroundColor: IsmChatColors.whiteColor,
+                                      icon: Icons.delete_rounded,
+                                      label: IsmChatStrings.delete,
+                                      borderRadius: BorderRadius.circular(
+                                          IsmChatDimens.eight),
+                                    ),
+                                ],
+                              ),
                         child: Obx(
                           () => IsmChatConversationCard(
                             conversation,
