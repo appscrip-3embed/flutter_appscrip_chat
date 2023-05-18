@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:329637739332878047",
-      "lastPropertyId": "13:4261162591408815349",
+      "lastPropertyId": "14:6061968472417448061",
       "name": "UserDetails",
       "properties": [
         {
@@ -73,6 +73,11 @@
           "id": "13:4261162591408815349",
           "name": "isAdmin",
           "type": 1
+        },
+        {
+          "id": "14:6061968472417448061",
+          "name": "dbMetadata",
+          "type": 9
         }
       ],
       "relations": []
@@ -344,9 +349,98 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "11:8664243317588607612",
+      "lastPropertyId": "16:77958083771070236",
+      "name": "IsmChatMetaData",
+      "properties": [
+        {
+          "id": "1:3374373376569866957",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5369295778381695751",
+          "name": "country",
+          "type": 9
+        },
+        {
+          "id": "3:6002872576949986936",
+          "name": "parentMessageBody",
+          "type": 9
+        },
+        {
+          "id": "4:3680930453925048231",
+          "name": "locationAddress",
+          "type": 9
+        },
+        {
+          "id": "5:6769271318630129437",
+          "name": "profilePic",
+          "type": 9
+        },
+        {
+          "id": "6:3911463888133500617",
+          "name": "lastName",
+          "type": 9
+        },
+        {
+          "id": "7:6143536100039888705",
+          "name": "firstName",
+          "type": 9
+        },
+        {
+          "id": "8:3656712956607567510",
+          "name": "parentMessageInitiator",
+          "type": 1
+        },
+        {
+          "id": "9:6261111293735506307",
+          "name": "userId",
+          "type": 9
+        },
+        {
+          "id": "10:3007068599043538964",
+          "name": "isMatchId",
+          "type": 9
+        },
+        {
+          "id": "11:7869323669965352379",
+          "name": "isGuestMatch",
+          "type": 1
+        },
+        {
+          "id": "12:6374214950216858848",
+          "name": "guestMatchInitiatedByUserId",
+          "type": 9
+        },
+        {
+          "id": "13:331404997144763682",
+          "name": "guestMatchInitiatedWithUserId",
+          "type": 9
+        },
+        {
+          "id": "14:1878956539628848870",
+          "name": "genderOfUserWhoStartedGuestChat",
+          "type": 9
+        },
+        {
+          "id": "15:2949582644680301162",
+          "name": "genderOfUserWhoReceivedTheGuestChat",
+          "type": 9
+        },
+        {
+          "id": "16:77958083771070236",
+          "name": "paidChat",
+          "type": 1
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "10:6695352261664866221",
+  "lastEntityId": "11:8664243317588607612",
   "lastIndexId": "6:2668303341873990124",
   "lastRelationId": "3:405050114779946002",
   "lastSequenceId": "0:0",

@@ -20,6 +20,7 @@ import '../../../src/models/db_models/db_conversation_model.dart';
 import '../../../src/models/db_models/forward_message_model.dart';
 import '../../../src/models/db_models/pending_message_model.dart';
 import '../../../src/models/last_message_details.dart';
+import '../../../src/models/meta_data_model.dart';
 import '../../../src/models/user_details_model.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
@@ -28,7 +29,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(1, 329637739332878047),
       name: 'UserDetails',
-      lastPropertyId: const IdUid(13, 4261162591408815349),
+      lastPropertyId: const IdUid(14, 6061968472417448061),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -95,6 +96,11 @@ final _entities = <ModelEntity>[
             id: const IdUid(13, 4261162591408815349),
             name: 'isAdmin',
             type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(14, 6061968472417448061),
+            name: 'dbMetadata',
+            type: 9,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -363,6 +369,95 @@ final _entities = <ModelEntity>[
             flags: 0)
       ],
       relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(11, 8664243317588607612),
+      name: 'IsmChatMetaData',
+      lastPropertyId: const IdUid(16, 77958083771070236),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 3374373376569866957),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 5369295778381695751),
+            name: 'country',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 6002872576949986936),
+            name: 'parentMessageBody',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 3680930453925048231),
+            name: 'locationAddress',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 6769271318630129437),
+            name: 'profilePic',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 3911463888133500617),
+            name: 'lastName',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(7, 6143536100039888705),
+            name: 'firstName',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(8, 3656712956607567510),
+            name: 'parentMessageInitiator',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(9, 6261111293735506307),
+            name: 'userId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(10, 3007068599043538964),
+            name: 'isMatchId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(11, 7869323669965352379),
+            name: 'isGuestMatch',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(12, 6374214950216858848),
+            name: 'guestMatchInitiatedByUserId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(13, 331404997144763682),
+            name: 'guestMatchInitiatedWithUserId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(14, 1878956539628848870),
+            name: 'genderOfUserWhoStartedGuestChat',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(15, 2949582644680301162),
+            name: 'genderOfUserWhoReceivedTheGuestChat',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(16, 77958083771070236),
+            name: 'paidChat',
+            type: 1,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[])
 ];
 
@@ -386,7 +481,7 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(10, 6695352261664866221),
+      lastEntityId: const IdUid(11, 8664243317588607612),
       lastIndexId: const IdUid(6, 2668303341873990124),
       lastRelationId: const IdUid(3, 405050114779946002),
       lastSequenceId: const IdUid(0, 0),
@@ -482,7 +577,8 @@ ModelDefinition getObjectBoxModel() {
           final memberNameOffset = object.memberName == null
               ? null
               : fbb.writeString(object.memberName!);
-          fbb.startTable(14);
+          final dbMetadataOffset = fbb.writeString(object.dbMetadata);
+          fbb.startTable(15);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, userProfileImageUrlOffset);
           fbb.addOffset(2, userNameOffset);
@@ -496,6 +592,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addInt64(10, object.timestamp);
           fbb.addOffset(11, memberNameOffset);
           fbb.addBool(12, object.isAdmin);
+          fbb.addOffset(13, dbMetadataOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -524,7 +621,8 @@ ModelDefinition getObjectBoxModel() {
               language: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 22),
               timestamp: const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 24),
               memberName: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 26),
-              isAdmin: const fb.BoolReader().vTableGet(buffer, rootOffset, 28, false));
+              isAdmin: const fb.BoolReader().vTableGet(buffer, rootOffset, 28, false))
+            ..dbMetadata = const fb.StringReader(asciiOptimization: true).vTableGet(buffer, rootOffset, 30, '');
 
           return object;
         }),
@@ -816,6 +914,105 @@ ModelDefinition getObjectBoxModel() {
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0);
           object.config.attach(store);
           return object;
+        }),
+    IsmChatMetaData: EntityDefinition<IsmChatMetaData>(
+        model: _entities[7],
+        toOneRelations: (IsmChatMetaData object) => [],
+        toManyRelations: (IsmChatMetaData object) => {},
+        getId: (IsmChatMetaData object) => object.id,
+        setId: (IsmChatMetaData object, int id) {
+          object.id = id;
+        },
+        objectToFB: (IsmChatMetaData object, fb.Builder fbb) {
+          final countryOffset =
+              object.country == null ? null : fbb.writeString(object.country!);
+          final parentMessageBodyOffset = object.parentMessageBody == null
+              ? null
+              : fbb.writeString(object.parentMessageBody!);
+          final locationAddressOffset = object.locationAddress == null
+              ? null
+              : fbb.writeString(object.locationAddress!);
+          final profilePicOffset = object.profilePic == null
+              ? null
+              : fbb.writeString(object.profilePic!);
+          final lastNameOffset = object.lastName == null
+              ? null
+              : fbb.writeString(object.lastName!);
+          final firstNameOffset = object.firstName == null
+              ? null
+              : fbb.writeString(object.firstName!);
+          final userIdOffset =
+              object.userId == null ? null : fbb.writeString(object.userId!);
+          final isMatchIdOffset = object.isMatchId == null
+              ? null
+              : fbb.writeString(object.isMatchId!);
+          final guestMatchInitiatedByUserIdOffset =
+              object.guestMatchInitiatedByUserId == null
+                  ? null
+                  : fbb.writeString(object.guestMatchInitiatedByUserId!);
+          final guestMatchInitiatedWithUserIdOffset =
+              object.guestMatchInitiatedWithUserId == null
+                  ? null
+                  : fbb.writeString(object.guestMatchInitiatedWithUserId!);
+          final genderOfUserWhoStartedGuestChatOffset =
+              object.genderOfUserWhoStartedGuestChat == null
+                  ? null
+                  : fbb.writeString(object.genderOfUserWhoStartedGuestChat!);
+          final genderOfUserWhoReceivedTheGuestChatOffset =
+              object.genderOfUserWhoReceivedTheGuestChat == null
+                  ? null
+                  : fbb
+                      .writeString(object.genderOfUserWhoReceivedTheGuestChat!);
+          fbb.startTable(17);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, countryOffset);
+          fbb.addOffset(2, parentMessageBodyOffset);
+          fbb.addOffset(3, locationAddressOffset);
+          fbb.addOffset(4, profilePicOffset);
+          fbb.addOffset(5, lastNameOffset);
+          fbb.addOffset(6, firstNameOffset);
+          fbb.addBool(7, object.parentMessageInitiator);
+          fbb.addOffset(8, userIdOffset);
+          fbb.addOffset(9, isMatchIdOffset);
+          fbb.addBool(10, object.isGuestMatch);
+          fbb.addOffset(11, guestMatchInitiatedByUserIdOffset);
+          fbb.addOffset(12, guestMatchInitiatedWithUserIdOffset);
+          fbb.addOffset(13, genderOfUserWhoStartedGuestChatOffset);
+          fbb.addOffset(14, genderOfUserWhoReceivedTheGuestChatOffset);
+          fbb.addBool(15, object.paidChat);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = IsmChatMetaData(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              country: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 6),
+              parentMessageBody: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 8),
+              locationAddress: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 10),
+              profilePic: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 12),
+              parentMessageInitiator: const fb.BoolReader()
+                  .vTableGetNullable(buffer, rootOffset, 18),
+              firstName: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 16),
+              lastName: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 14),
+              isMatchId: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 22),
+              userId: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 20),
+              genderOfUserWhoReceivedTheGuestChat: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 32),
+              genderOfUserWhoStartedGuestChat: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 30),
+              guestMatchInitiatedByUserId: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 26),
+              guestMatchInitiatedWithUserId: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 28),
+              isGuestMatch: const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 24),
+              paidChat: const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 34));
+
+          return object;
         })
   };
 
@@ -875,6 +1072,10 @@ class UserDetails_ {
   /// see [UserDetails.isAdmin]
   static final isAdmin =
       QueryBooleanProperty<UserDetails>(_entities[0].properties[12]);
+
+  /// see [UserDetails.dbMetadata]
+  static final dbMetadata =
+      QueryStringProperty<UserDetails>(_entities[0].properties[13]);
 }
 
 /// [AttachmentModel] entity fields to define ObjectBox queries.
@@ -1060,4 +1261,71 @@ class DBConversationModel_ {
   /// see [DBConversationModel.messages]
   static final messages = QueryStringVectorProperty<DBConversationModel>(
       _entities[6].properties[12]);
+}
+
+/// [IsmChatMetaData] entity fields to define ObjectBox queries.
+class IsmChatMetaData_ {
+  /// see [IsmChatMetaData.id]
+  static final id =
+      QueryIntegerProperty<IsmChatMetaData>(_entities[7].properties[0]);
+
+  /// see [IsmChatMetaData.country]
+  static final country =
+      QueryStringProperty<IsmChatMetaData>(_entities[7].properties[1]);
+
+  /// see [IsmChatMetaData.parentMessageBody]
+  static final parentMessageBody =
+      QueryStringProperty<IsmChatMetaData>(_entities[7].properties[2]);
+
+  /// see [IsmChatMetaData.locationAddress]
+  static final locationAddress =
+      QueryStringProperty<IsmChatMetaData>(_entities[7].properties[3]);
+
+  /// see [IsmChatMetaData.profilePic]
+  static final profilePic =
+      QueryStringProperty<IsmChatMetaData>(_entities[7].properties[4]);
+
+  /// see [IsmChatMetaData.lastName]
+  static final lastName =
+      QueryStringProperty<IsmChatMetaData>(_entities[7].properties[5]);
+
+  /// see [IsmChatMetaData.firstName]
+  static final firstName =
+      QueryStringProperty<IsmChatMetaData>(_entities[7].properties[6]);
+
+  /// see [IsmChatMetaData.parentMessageInitiator]
+  static final parentMessageInitiator =
+      QueryBooleanProperty<IsmChatMetaData>(_entities[7].properties[7]);
+
+  /// see [IsmChatMetaData.userId]
+  static final userId =
+      QueryStringProperty<IsmChatMetaData>(_entities[7].properties[8]);
+
+  /// see [IsmChatMetaData.isMatchId]
+  static final isMatchId =
+      QueryStringProperty<IsmChatMetaData>(_entities[7].properties[9]);
+
+  /// see [IsmChatMetaData.isGuestMatch]
+  static final isGuestMatch =
+      QueryBooleanProperty<IsmChatMetaData>(_entities[7].properties[10]);
+
+  /// see [IsmChatMetaData.guestMatchInitiatedByUserId]
+  static final guestMatchInitiatedByUserId =
+      QueryStringProperty<IsmChatMetaData>(_entities[7].properties[11]);
+
+  /// see [IsmChatMetaData.guestMatchInitiatedWithUserId]
+  static final guestMatchInitiatedWithUserId =
+      QueryStringProperty<IsmChatMetaData>(_entities[7].properties[12]);
+
+  /// see [IsmChatMetaData.genderOfUserWhoStartedGuestChat]
+  static final genderOfUserWhoStartedGuestChat =
+      QueryStringProperty<IsmChatMetaData>(_entities[7].properties[13]);
+
+  /// see [IsmChatMetaData.genderOfUserWhoReceivedTheGuestChat]
+  static final genderOfUserWhoReceivedTheGuestChat =
+      QueryStringProperty<IsmChatMetaData>(_entities[7].properties[14]);
+
+  /// see [IsmChatMetaData.paidChat]
+  static final paidChat =
+      QueryBooleanProperty<IsmChatMetaData>(_entities[7].properties[15]);
 }

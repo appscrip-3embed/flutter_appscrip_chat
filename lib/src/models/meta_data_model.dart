@@ -5,6 +5,7 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 
 @Entity()
 class IsmChatMetaData {
+  int id;
   final String? country;
   final String? parentMessageBody;
   final String? locationAddress;
@@ -21,6 +22,7 @@ class IsmChatMetaData {
   final String? genderOfUserWhoReceivedTheGuestChat;
   final bool? paidChat;
   IsmChatMetaData({
+    this.id = 0,
     this.country,
     this.parentMessageBody,
     this.locationAddress,
@@ -142,8 +144,14 @@ class IsmChatMetaData {
 
   String toJson() => json.encode(toMap());
 
-  factory IsmChatMetaData.fromJson(String source) =>
-      IsmChatMetaData.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory IsmChatMetaData.fromJson(String? source) {
+    if(source == null || source.isEmpty) {
+      return IsmChatMetaData();
+    }
+    var data = jsonDecode(source);
+    print('dsfdsfds ${data.runtimeType}');
+    return IsmChatMetaData.fromMap(jsonDecode(data.toString()) as Map<String, dynamic>);
+  }
 
   @override
   String toString() =>
