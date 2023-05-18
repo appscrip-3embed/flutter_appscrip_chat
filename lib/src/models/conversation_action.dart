@@ -1,7 +1,5 @@
-import 'dart:ui';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 class IsmChatConversationAction {
@@ -15,7 +13,7 @@ class IsmChatConversationAction {
   });
 
   final String label;
-  final VoidCallback onTap;
+  final void Function(IsmChatConversationModel) onTap;
   final TextStyle? style;
   final Color? backgroundColor;
   final IconData icon;
