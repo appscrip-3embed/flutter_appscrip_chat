@@ -131,7 +131,7 @@ class IsmChatConversationModel {
   }
   String get profileUrl {
     if(opponentDetails?.metaData?.profilePic != null || opponentDetails?.metaData?.profilePic?.isNotEmpty == true){
-      return opponentDetails?.metaData?.profilePic ?? '';
+      return '${IsmChatConfig.communicationConfig.userConfig.imageUrl}/${opponentDetails?.metaData?.profilePic ?? ''}' ;
     }
     return conversationImageUrl ?? opponentDetails?.profileUrl ?? '';
   }
