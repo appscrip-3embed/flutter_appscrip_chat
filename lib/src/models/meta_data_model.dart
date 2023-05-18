@@ -1,6 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+
+@Entity()
 class IsmChatMetaData {
   final String? country;
   final String? parentMessageBody;

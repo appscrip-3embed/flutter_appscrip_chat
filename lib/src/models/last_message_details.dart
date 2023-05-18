@@ -45,12 +45,13 @@ class LastMessageDetails {
   final String messageId;
   final String conversationId;
   final String body;
-
   @Transient()
   IsmChatCustomMessageType? customType;
 
   int? get dbCustomType => customType?.value;
-  set dbCustomType(int? type) => IsmChatCustomMessageType.fromValue(type ?? 1);
+  set dbCustomType(int? type) {
+    customType = IsmChatCustomMessageType.fromValue(type ?? 1);
+  }
 
   LastMessageDetails copyWith({
     bool? showInConversation,

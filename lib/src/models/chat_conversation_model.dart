@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/models/models.dart';
 import 'package:appscrip_chat_component/src/utilities/utilities.dart';
 import 'package:flutter/foundation.dart';
@@ -105,6 +106,7 @@ class IsmChatConversationModel {
   List<String>? userIds;
   bool? privateOneToOne;
   UserDetails? opponentDetails;
+  @Transient()
   IsmChatMetaData? metaData;
   bool? messagingDisabled;
   int? membersCount;
@@ -122,6 +124,11 @@ class IsmChatConversationModel {
   IsmChatUserOwnDetails? usersOwnDetails;
   String? createdBy;
   String? createdByUserName;
+
+    String get dbMetadata => jsonEncode(metaData?.toJson());
+
+  set dbMetadata(String value) => metaData = IsmChatMetaData.fromJson(value);
+
 
   String get chatName {
     if ((opponentDetails?.metaData?.firstName?.isNotEmpty == true ||

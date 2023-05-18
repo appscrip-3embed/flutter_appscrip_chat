@@ -236,6 +236,7 @@ class IsmChatConversationsController extends GetxController {
     }
     conversations.clear();
     conversations = dbConversations;
+    
 
     isConversationsLoading = false;
 

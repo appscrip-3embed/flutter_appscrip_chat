@@ -51,7 +51,7 @@ class UserDetails {
   final String userId;
   final bool online;
   @Transient()
-  final IsmChatMetaData? metaData;
+  IsmChatMetaData? metaData;
   final int lastSeen;
   final bool? visibility;
   final bool? notification;
@@ -59,6 +59,14 @@ class UserDetails {
   final int? timestamp;
   final String? memberName;
   final bool isAdmin;
+
+
+  String get dbMetadata => jsonEncode(metaData?.toJson());
+
+  set dbMetadata(String value) => metaData = IsmChatMetaData.fromJson(value);
+
+
+
 
   String get profileUrl => metaData?.profilePic ?? userProfileImageUrl;
 
