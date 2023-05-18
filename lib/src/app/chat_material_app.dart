@@ -20,6 +20,7 @@ class IsmChatApp extends StatelessWidget {
     this.imageBaseUrl,
     this.actions,
     this.endActions,
+    this.onProfileWidget,
     this.allowDelete = false
   }) {
     assert(IsmChatConfig.isInitialized,
@@ -100,6 +101,8 @@ class IsmChatApp extends StatelessWidget {
 
 
   final bool allowDelete;
+
+  final Widget? onProfileWidget;
 
   final List<IsmChatConversationAction>? actions;
   final List<IsmChatConversationAction>? endActions;
@@ -192,5 +195,6 @@ class IsmChatApp extends StatelessWidget {
         allowDelete: allowDelete,
         actions: actions,
         endActions: endActions,
+        onProfileWidget: onProfileWidget,
       );
 }

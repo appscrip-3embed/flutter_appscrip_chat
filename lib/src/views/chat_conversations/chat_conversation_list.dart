@@ -27,6 +27,7 @@ class IsmChatConversationList extends StatefulWidget {
       this.height,
       this.actions,
       this.endActions,
+      this.onProfileWidget,
       this.allowDelete = false});
 
   final void Function(BuildContext, IsmChatConversationModel) onChatTap;
@@ -60,6 +61,8 @@ class IsmChatConversationList extends StatefulWidget {
   final double? height;
 
   final bool allowDelete;
+
+  final Widget? onProfileWidget;
 
   final List<IsmChatConversationAction>? actions;
   final List<IsmChatConversationAction>? endActions;
@@ -195,6 +198,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                               ),
                         child: Obx(
                           () => IsmChatConversationCard(
+                            onProfileWidget: widget.onProfileWidget,
                             conversation,
                             profileImageBuilder: widget.profileImageBuilder,
                             subtitleBuilder: !conversation.isSomeoneTyping

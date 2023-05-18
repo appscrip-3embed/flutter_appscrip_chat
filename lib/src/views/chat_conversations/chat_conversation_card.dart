@@ -8,12 +8,13 @@ class IsmChatConversationCard extends StatelessWidget {
     this.nameBuilder,
     this.subtitleBuilder,
     this.onTap,
+    this.onProfileWidget,
     super.key,
   });
 
   final IsmChatConversationModel conversation;
   final VoidCallback? onTap;
-
+  final Widget? onProfileWidget;
   final Widget? Function(BuildContext, String)? profileImageBuilder;
   final Widget? Function(BuildContext, String)? nameBuilder;
   final Widget? Function(BuildContext, String)? subtitleBuilder;
@@ -25,11 +26,19 @@ class IsmChatConversationCard extends StatelessWidget {
           child: ListTile(
             dense: true,
             leading:
-                profileImageBuilder?.call(context, conversation.profileUrl) ??
-                    IsmChatImage.profile(
-                      conversation.profileUrl,
-                      name: conversation.chatName,
-                    ),
+                Stack(
+                  children: [
+                    profileImageBuilder?.call(context, conversation.profileUrl) ??
+                        IsmChatImage.profile(
+                          conversation.profileUrl,
+                          name: conversation.chatName,
+                        ),
+                     Positioned(
+                        top: IsmChatDimens.twentyFour,
+                        child: onProfileWidget == null ? IsmChatDimens.box0 : conversation.metaData?.isMatchId?.isNotEmpty == true ? onProfileWidget! :IsmChatDimens.box0,
+                      )   
+                  ],
+                ),
             title: nameBuilder?.call(context, conversation.chatName) ??
                 Text(
                   conversation.chatName,

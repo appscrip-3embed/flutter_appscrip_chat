@@ -15,6 +15,7 @@ class IsmChatConversations extends StatefulWidget {
     this.allowDelete = false,
     this.actions,
     this.endActions,
+    this.onProfileWidget,
     super.key,
   });
 
@@ -30,6 +31,8 @@ class IsmChatConversations extends StatefulWidget {
   final Widget? createChatIcon;
 
   final bool allowDelete;
+
+  final Widget? onProfileWidget;
 
   final List<IsmChatConversationAction>? actions;
   final List<IsmChatConversationAction>? endActions;
@@ -59,6 +62,7 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
             allowDelete: widget.allowDelete,
             actions: widget.actions,
             endActions:widget.endActions,
+            onProfileWidget: widget.onProfileWidget,
           ),
         ),
         floatingActionButton: widget.showCreateChatIcon

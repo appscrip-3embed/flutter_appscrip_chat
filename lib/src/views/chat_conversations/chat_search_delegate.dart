@@ -63,6 +63,7 @@ class IsmChatSearchDelegate extends SearchDelegate<void> {
                     onChatTap(_, conversation);
                   },
                   child: IsmChatConversationCard(
+                  
                     _controller.suggestions[index],
                     nameBuilder: (_, name) {
                       if (!name.didMatch(query)) {
