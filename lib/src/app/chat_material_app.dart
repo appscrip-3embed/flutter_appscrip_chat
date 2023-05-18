@@ -3,26 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatApp extends StatelessWidget {
-  IsmChatApp({
-    super.key,
-    required this.communicationConfig,
-    required this.onChatTap,
-    this.onCreateChatTap,
-    this.showCreateChatIcon = false,
-    this.chatTheme,
-    this.chatDarkTheme,
-    this.loadingDialog,
-    this.databaseName,
-    this.onSignOut,
-    this.showAppBar = false,
-    this.enableGroupChat = false,
-    this.createChatIcon,
-    this.imageBaseUrl,
-    this.actions,
-    this.endActions,
-    this.onProfileWidget,
-    this.allowDelete = false
-  }) {
+  IsmChatApp(
+      {super.key,
+      required this.communicationConfig,
+      required this.onChatTap,
+      this.onCreateChatTap,
+      this.showCreateChatIcon = false,
+      this.chatTheme,
+      this.chatDarkTheme,
+      this.loadingDialog,
+      this.databaseName,
+      this.onSignOut,
+      this.showAppBar = false,
+      this.enableGroupChat = false,
+      this.createChatIcon,
+      this.imageBaseUrl,
+      this.actions,
+      this.endActions,
+      this.onProfileWidget,
+      this.allowDelete = false}) {
     assert(IsmChatConfig.isInitialized,
         'ChatObjectBox is not initialized\nYou are getting this error because the IsmChatObjectBox class is not initialized, to initialize ChatObjectBox class call AppscripChatComponent.initialize() before your runApp()');
     assert(
@@ -99,7 +98,6 @@ class IsmChatApp extends StatelessWidget {
   final bool showAppBar;
   final VoidCallback? onSignOut;
 
-
   final bool allowDelete;
 
   final Widget? onProfileWidget;
@@ -112,6 +110,11 @@ class IsmChatApp extends StatelessWidget {
     IsmChatConfig.objectBox.deleteChatLocalDb();
     Get.delete<IsmChatConversationsController>(force: true);
     Get.delete<IsmChatMqttController>(force: true);
+  }
+
+  /// Call this function on to delete chat the data stored locally in the Local Database
+  static Future<void> deleteChat(String conversationId) async {
+    await Get.find<IsmChatConversationsController>().deleteChat(conversationId);
   }
 
   // static Future<void> deleteChat();
