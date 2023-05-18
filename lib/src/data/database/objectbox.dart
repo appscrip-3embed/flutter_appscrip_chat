@@ -96,6 +96,7 @@ class IsmChatObjectBox {
         chatConversationResponse.lastMessageDetails.target =
             dbConversation.lastMessageDetails.target;
         chatConversationResponse.config.target = dbConversation.config.target;
+        chatConversationResponse.metaData = dbConversation.metaData;
         chatConversationBox.put(chatConversationResponse);
       } else {
         // IsmChatLog.success('dsfdsfsfdsdfs ${dbConversationModel.opponentDetails.target.}')
