@@ -149,7 +149,6 @@ class IsmChatMetaData {
       return IsmChatMetaData();
     }
     var data = jsonDecode(source);
-    print('dsfdsfds ${data.runtimeType}');
     return IsmChatMetaData.fromMap(jsonDecode(data.toString()) as Map<String, dynamic>);
   }
 

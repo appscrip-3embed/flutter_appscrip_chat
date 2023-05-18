@@ -23,6 +23,7 @@ class DBConversationModel {
     this.conversationTitle,
     this.conversationImageUrl,
     this.conversationId,
+    this.metaData,
     required this.messages,
   });
   int id;
@@ -38,6 +39,7 @@ class DBConversationModel {
   String? conversationImageUrl;
   String? conversationId;
   final config = ToOne<ConversationConfigModel>();
+  IsmChatMetaData? metaData;
   // @Backlink('conversation')
   // final messages = ToMany<DBMessageModel>();
 }

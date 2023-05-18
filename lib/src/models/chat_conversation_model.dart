@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/models/models.dart';
-import 'package:appscrip_chat_component/src/utilities/utilities.dart';
 import 'package:flutter/foundation.dart';
 
 class IsmChatConversationModel {
@@ -72,6 +70,7 @@ class IsmChatConversationModel {
         conversationImageUrl: dbConversation.conversationImageUrl,
         conversationId: dbConversation.conversationId,
         config: dbConversation.config.target,
+        metaData: dbConversation.metaData
       );
 
   IsmChatConversationModel({
