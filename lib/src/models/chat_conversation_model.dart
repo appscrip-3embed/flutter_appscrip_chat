@@ -125,7 +125,7 @@ class IsmChatConversationModel {
 
   String get chatName {
     if((opponentDetails?.metaData?.firstName?.isNotEmpty == true || opponentDetails?.metaData?.firstName != null) && (opponentDetails?.metaData?.lastName?.isNotEmpty == true || opponentDetails?.metaData?.lastName != null)){
-      return '${opponentDetails?.metaData?.firstName} ${opponentDetails?.metaData?.firstName}';
+      return '${opponentDetails?.metaData?.firstName} ${opponentDetails?.metaData?.lastName}';
     }
     return conversationTitle ?? opponentDetails?.userName ?? '';
   }

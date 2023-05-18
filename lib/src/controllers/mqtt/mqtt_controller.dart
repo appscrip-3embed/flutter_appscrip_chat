@@ -69,11 +69,11 @@ class IsmChatMqttController extends GetxController {
         await subscribeTo();
       }
     } on NoConnectionException catch (e) {
-      IsmChatLog.error('EXAMPLE::NoConnectionException - $e/n');
+      IsmChatLog.error('EXAMPLE::NoConnectionException - $e');
       // await unSubscribe();
       // await disconnect();
     } on SocketException catch (e) {
-      IsmChatLog.error('EXAMPLE::SocketException - $e/n');
+      IsmChatLog.error('EXAMPLE::SocketException - $e');
       // await unSubscribe();
       // await disconnect();
     }
