@@ -34,7 +34,7 @@ class IsmChatConversationCard extends StatelessWidget {
                           name: conversation.chatName,
                         ),
                      Positioned(
-                        top: IsmChatDimens.twentyFour,
+                        top: IsmChatDimens.twenty,
                         child: onProfileWidget == null ? IsmChatDimens.box0 : conversation.metaData?.isMatchId?.isNotEmpty == true ? onProfileWidget! :IsmChatDimens.box0,
                       )   
                   ],

@@ -114,6 +114,8 @@ class IsmChatApp extends StatelessWidget {
     Get.delete<IsmChatMqttController>(force: true);
   }
 
+  // static Future<void> deleteChat();
+
   /// This function can be used to directly go to chatting page and start chatting from anywhere in the app
   ///
   /// Follow the following steps :-

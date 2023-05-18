@@ -64,7 +64,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                         dimensions: IsmChatDimens.forty,
                       ),
                       Positioned(
-                        top: IsmChatDimens.twentyFour,
+                        top: IsmChatDimens.twenty ,
                         child: header?.onProfileWidget == null ? IsmChatDimens.box0 : controller.conversation?.metaData?.isMatchId?.isNotEmpty == true ? header!.onProfileWidget! :IsmChatDimens.box0,
                       )
                     ],
