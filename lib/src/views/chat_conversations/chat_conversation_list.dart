@@ -132,7 +132,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                                     children: [
                                         ...widget.actions?.map(
                                               (e) => SlidableAction(
-                                                onPressed: (_) => e.onTap(),
+                                                onPressed: (_) => e.onTap(conversation),
                                                 flex: 1,
                                                 backgroundColor:
                                                     e.backgroundColor ??
@@ -158,7 +158,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                                 children: [
                                   ...widget.endActions?.map(
                                         (e) => SlidableAction(
-                                          onPressed: (_) => e.onTap(),
+                                          onPressed: (_) => e.onTap(conversation),
                                           flex: 1,
                                           backgroundColor: e.backgroundColor ??
                                               IsmChatConfig

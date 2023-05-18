@@ -39,7 +39,7 @@ class ChatList extends GetView<ChatListController> {
         onCreateChatTap: RouteManagement.goToUserList,
         enableGroupChat: true,
         allowDelete: false,
-        actions: [IsmChatConversationAction(label: 'Unmatch', onTap: (){}, icon: Icons.no_accounts)],
+        actions: [IsmChatConversationAction(label: 'Unmatch', onTap: (_){}, icon: Icons.no_accounts)],
       ),
     );
   }
