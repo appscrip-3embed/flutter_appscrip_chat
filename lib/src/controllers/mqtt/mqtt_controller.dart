@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -67,8 +68,12 @@ class IsmChatMqttController extends GetxController {
         connectionState = IsmChatConnectionState.connected;
         await subscribeTo();
       }
-    } on Exception catch (e, st) {
-      IsmChatLog.error('MQTT Connection Error - $e', st);
+    } on NoConnectionException catch (e) {
+      IsmChatLog.error('EXAMPLE::NoConnectionException - $e/n');
+      // await unSubscribe();
+      // await disconnect();
+    } on SocketException catch (e) {
+      IsmChatLog.error('EXAMPLE::SocketException - $e/n');
       // await unSubscribe();
       // await disconnect();
     }
