@@ -13,6 +13,7 @@ class IsmChatHeader {
     this.shape,
     this.bottom,
     this.bottomOnTap,
+    this.onProfileWidget
   });
 
   final Color? backgroundColor;
@@ -25,6 +26,7 @@ class IsmChatHeader {
   final List<IsmChatPopItem>? popupItems;
   final ShapeBorder? shape;
   final Widget? bottom;
+  final Widget? onProfileWidget;
    final void Function(IsmChatConversationModel)? bottomOnTap;
 
 

@@ -51,13 +51,23 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  IsmChatImage.profile(
-                    controller.conversation?.profileUrl ?? '',
-                    name: controller.conversation!.chatName.isNotEmpty
-                        ? controller.conversation?.chatName
-                        : controller.conversation?.opponentDetails?.userName ??
-                            '',
-                    dimensions: IsmChatDimens.forty,
+                  Stack(
+                    alignment: Alignment.bottomLeft,
+                    children: [
+                      IsmChatImage.profile(
+                        controller.conversation?.profileUrl ?? '',
+                        name: controller.conversation!.chatName.isNotEmpty
+                            ? controller.conversation?.chatName
+                            : controller
+                                    .conversation?.opponentDetails?.userName ??
+                                '',
+                        dimensions: IsmChatDimens.forty,
+                      ),
+                      Positioned(
+                        top: IsmChatDimens.twenty,
+                        child: header?.onProfileWidget == null ? IsmChatDimens.box0 : header!.onProfileWidget!,
+                      )
+                    ],
                   ),
                   IsmChatDimens.boxWidth8,
                   Column(
@@ -115,13 +125,13 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                     child: Padding(
                       padding: IsmChatDimens.edgeInsets4,
                       child: InkWell(
-                        onTap: (){
-                          if(header?.bottomOnTap!= null){
-                            header?.bottomOnTap?.call(controller.conversation!);
-                          }
-                        },
-                       child: header?.bottom  
-                      ) ,
+                          onTap: () {
+                            if (header?.bottomOnTap != null) {
+                              header?.bottomOnTap
+                                  ?.call(controller.conversation!);
+                            }
+                          },
+                          child: header?.bottom),
                     ),
                   ),
             actions: [
