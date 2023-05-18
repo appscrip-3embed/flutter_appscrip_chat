@@ -126,6 +126,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                       var conversation = controller.conversations[index];
                       return Slidable(
                         closeOnScroll: true,
+                        enabled: conversation.metaData?.isMatchId?.isNotEmpty ==  true ? true : false,
                         startActionPane:
                             widget.actions == null || widget.actions!.isEmpty
                                 ? null

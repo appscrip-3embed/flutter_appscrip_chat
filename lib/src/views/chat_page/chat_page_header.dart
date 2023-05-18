@@ -64,8 +64,14 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                         dimensions: IsmChatDimens.forty,
                       ),
                       Positioned(
-                        top: IsmChatDimens.twenty ,
-                        child: header?.onProfileWidget == null ? IsmChatDimens.box0 : controller.conversation?.metaData?.isMatchId?.isNotEmpty == true ? header!.onProfileWidget! :IsmChatDimens.box0,
+                        top: IsmChatDimens.twenty,
+                        child: header?.onProfileWidget == null
+                            ? IsmChatDimens.box0
+                            : controller.conversation?.metaData?.isMatchId
+                                        ?.isNotEmpty ==
+                                    true
+                                ? header!.onProfileWidget!
+                                : IsmChatDimens.box0,
                       )
                     ],
                   ),
@@ -174,23 +180,26 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                         ],
                       ),
                     ),
-                  ...(header?.popupItems ?? []).map(
-                    (e) => PopupMenuItem(
-                      value: header!.popupItems!.indexOf(e) + 3,
-                      child: Row(
-                        children: [
-                          Icon(
-                            e.icon,
-                            color: e.color ?? IsmChatColors.blackColor,
-                          ),
-                          IsmChatDimens.boxWidth8,
-                          Text(
-                            e.label,
-                          )
-                        ],
+                  if (controller
+                          .conversation?.metaData?.isMatchId?.isNotEmpty ==
+                      true)
+                    ...(header?.popupItems ?? []).map(
+                      (e) => PopupMenuItem(
+                        value: header!.popupItems!.indexOf(e) + 3,
+                        child: Row(
+                          children: [
+                            Icon(
+                              e.icon,
+                              color: e.color ?? IsmChatColors.blackColor,
+                            ),
+                            IsmChatDimens.boxWidth8,
+                            Text(
+                              e.label,
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  )
+                    )
                 ],
                 elevation: 2,
                 onSelected: (value) {
