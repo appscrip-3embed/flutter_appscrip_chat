@@ -10,48 +10,45 @@ class ChatMessageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IsmChatPageView(
-      onTitleTap: (value) {
-          print('dsffdsfsdfdsf ${value.chatName}}');
-      },
+      onTitleTap: (_) {},
       height: 80,
       header: IsmChatHeader(
-          backgroundColor: IsmChatConfig.chatTheme.backgroundColor,
-          bottom: Container(
-            width: 222,
-            height: 30,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.black,
-            ),
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'RequestDate',
-                    style: IsmChatStyles.w400White14,
-                  ),
-                ],
-              ),
+        backgroundColor: IsmChatConfig.chatTheme.backgroundColor,
+        bottom: Container(
+          width: 222,
+          height: 30,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.black,
+          ),
+          child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'RequestDate',
+                  style: IsmChatStyles.w400White14,
+                ),
+              ],
             ),
           ),
-          bottomOnTap: (_) {
-           
-          },
-          iconColor: Colors.black,
-          popupItems: [
-            IsmChatPopItem(
-                label: 'Unmatch', icon: Icons.no_accounts, onTap: (_) {})
-          ],
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(
-                20,
-              ),
+        ),
+        bottomOnTap: (_) {},
+        iconColor: Colors.black,
+        popupItems: [
+          IsmChatPopItem(
+              label: 'Unmatch', icon: Icons.no_accounts, onTap: (_) {})
+        ],
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(
+              20,
             ),
           ),
-          subtitleStyle: IsmChatStyles.w400Black12,
-          titleStyle: IsmChatStyles.w600Black16),
+        ),
+        subtitleStyle: IsmChatStyles.w400Black12,
+        titleStyle: IsmChatStyles.w600Black16,
+      ),
     );
   }
 }
