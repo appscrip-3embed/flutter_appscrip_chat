@@ -9,15 +9,14 @@ class IsmChatPageView extends StatefulWidget {
     this.onTitleTap,
     this.height,
     this.header,
+    this.onBackTap,
     super.key,
   });
 
   final void Function(IsmChatConversationModel)? onTitleTap;
+  final VoidCallback? onBackTap;
   final double? height;
- 
-   final IsmChatHeader? header;
-   
-  
+  final IsmChatHeader? header;
 
   @override
   State<IsmChatPageView> createState() => _IsmChatPageViewState();
@@ -40,6 +39,9 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
     } else {
       Get.back<void>();
       await controller.updateLastMessage();
+      if (widget.onBackTap != null) {
+        widget.onBackTap!.call();
+      }
       return true;
     }
   }
@@ -61,26 +63,24 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                 },
                 child: _IsmChatPageView(
                   onTitleTap: widget.onTitleTap,
-                  header:widget.header,
+                  header: widget.header,
                   height: widget.height,
-                 
                 ),
               )
             : _IsmChatPageView(
                 onTitleTap: widget.onTitleTap,
                 header: widget.header,
                 height: widget.height,
-               
               ),
       );
 }
 
 class _IsmChatPageView extends StatelessWidget {
-  const _IsmChatPageView(
-      {this.onTitleTap,
-      this.height,
-      this.header,
-      });
+  const _IsmChatPageView({
+    this.onTitleTap,
+    this.height,
+    this.header,
+  });
 
   final void Function(IsmChatConversationModel)? onTitleTap;
   final double? height;
@@ -143,9 +143,8 @@ class _IsmChatPageView extends StatelessWidget {
                             );
                             controller.canRefreshDetails = true;
                           },
-                          header: header,
+                    header: header,
                     height: height,
-                  
                   ),
             body: Stack(
               alignment: Alignment.bottomRight,
