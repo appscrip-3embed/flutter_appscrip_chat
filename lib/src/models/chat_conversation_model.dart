@@ -105,7 +105,6 @@ class IsmChatConversationModel {
   List<String>? userIds;
   bool? privateOneToOne;
   UserDetails? opponentDetails;
-  @Transient()
   IsmChatMetaData? metaData;
   bool? messagingDisabled;
   int? membersCount;
@@ -124,9 +123,6 @@ class IsmChatConversationModel {
   String? createdBy;
   String? createdByUserName;
 
-  String get dbMetadata => jsonEncode(metaData?.toJson());
-
-  set dbMetadata(String value) => metaData = IsmChatMetaData.fromJson(value);
 
 
   String get chatName {

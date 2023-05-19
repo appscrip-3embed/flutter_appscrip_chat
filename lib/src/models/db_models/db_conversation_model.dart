@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 
 @Entity()
@@ -39,7 +41,14 @@ class DBConversationModel {
   String? conversationImageUrl;
   String? conversationId;
   final config = ToOne<ConversationConfigModel>();
+   @Transient()
   IsmChatMetaData? metaData;
   // @Backlink('conversation')
   // final messages = ToMany<DBMessageModel>();
+
+
+
+  String get dbMetadata => jsonEncode(metaData?.toJson());
+  
+  set dbMetadata(String value) => metaData = IsmChatMetaData.fromJson(value);
 }

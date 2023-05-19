@@ -29,7 +29,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(1, 329637739332878047),
       name: 'UserDetails',
-      lastPropertyId: const IdUid(14, 6061968472417448061),
+      lastPropertyId: const IdUid(15, 3457791717510155134),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -98,8 +98,8 @@ final _entities = <ModelEntity>[
             type: 1,
             flags: 0),
         ModelProperty(
-            id: const IdUid(14, 6061968472417448061),
-            name: 'dbMetadata',
+            id: const IdUid(15, 3457791717510155134),
+            name: 'userDBMetadata',
             type: 9,
             flags: 0)
       ],
@@ -545,7 +545,8 @@ ModelDefinition getObjectBoxModel() {
         3869402466833893640,
         4703465573552064618,
         32733709291852383,
-        6388414582076498476
+        6388414582076498476,
+        6061968472417448061
       ],
       retiredRelationUids: const [
         405050114779946002,
@@ -577,8 +578,8 @@ ModelDefinition getObjectBoxModel() {
           final memberNameOffset = object.memberName == null
               ? null
               : fbb.writeString(object.memberName!);
-          final dbMetadataOffset = fbb.writeString(object.dbMetadata);
-          fbb.startTable(15);
+          final userDBMetadataOffset = fbb.writeString(object.userDBMetadata);
+          fbb.startTable(16);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, userProfileImageUrlOffset);
           fbb.addOffset(2, userNameOffset);
@@ -592,7 +593,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addInt64(10, object.timestamp);
           fbb.addOffset(11, memberNameOffset);
           fbb.addBool(12, object.isAdmin);
-          fbb.addOffset(13, dbMetadataOffset);
+          fbb.addOffset(14, userDBMetadataOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -622,7 +623,7 @@ ModelDefinition getObjectBoxModel() {
               timestamp: const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 24),
               memberName: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 26),
               isAdmin: const fb.BoolReader().vTableGet(buffer, rootOffset, 28, false))
-            ..dbMetadata = const fb.StringReader(asciiOptimization: true).vTableGet(buffer, rootOffset, 30, '');
+            ..userDBMetadata = const fb.StringReader(asciiOptimization: true).vTableGet(buffer, rootOffset, 32, '');
 
           return object;
         }),
@@ -1073,8 +1074,8 @@ class UserDetails_ {
   static final isAdmin =
       QueryBooleanProperty<UserDetails>(_entities[0].properties[12]);
 
-  /// see [UserDetails.dbMetadata]
-  static final dbMetadata =
+  /// see [UserDetails.userDBMetadata]
+  static final userDBMetadata =
       QueryStringProperty<UserDetails>(_entities[0].properties[13]);
 }
 
