@@ -7,11 +7,13 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
     this.height,
     this.onTap,
     this.header,
+    this.onBackTap,
     super.key,
   });
 
   final double? height;
   final VoidCallback? onTap;
+  final VoidCallback? onBackTap;
   final IsmChatHeader? header;
 
   @override
@@ -40,6 +42,9 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
               onTap: () async {
                 Get.back<void>();
                 await controller.updateLastMessage();
+                if (onBackTap != null) {
+                  onBackTap!.call();
+                }
               },
               child: const Icon(Icons.arrow_back_rounded),
             ),

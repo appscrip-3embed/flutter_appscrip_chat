@@ -10,6 +10,9 @@ class ChatMessageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IsmChatPageView(
+      onBackTap: (){
+        print('rahul');
+      },
       onTitleTap: (_) {},
       height: 80,
       header: IsmChatHeader(
