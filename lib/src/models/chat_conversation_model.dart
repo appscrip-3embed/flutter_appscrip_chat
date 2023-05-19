@@ -125,23 +125,9 @@ class IsmChatConversationModel {
 
 
 
-  String get chatName {
-    if ((opponentDetails?.metaData?.firstName?.isNotEmpty == true ||
-            opponentDetails?.metaData?.firstName != null) &&
-        (opponentDetails?.metaData?.lastName?.isNotEmpty == true ||
-            opponentDetails?.metaData?.lastName != null)) {
-      return '${opponentDetails?.metaData?.firstName} ${opponentDetails?.metaData?.lastName}';
-    }
-    return conversationTitle ?? opponentDetails?.userName ?? '';
-  }
+  String get chatName => conversationTitle ?? opponentDetails?.userName ?? '';
 
-  String get profileUrl {
-    if (opponentDetails?.metaData?.profilePic != null ||
-        opponentDetails?.metaData?.profilePic?.isNotEmpty == true) {
-      return '${IsmChatConfig.communicationConfig.userConfig.imageUrl}/${opponentDetails?.metaData?.profilePic}';
-    }
-    return conversationImageUrl ?? opponentDetails?.profileUrl ?? '';
-  }
+  String get profileUrl => conversationImageUrl ?? opponentDetails?.profileUrl ?? '';
 
   IsmChatConversationModel copyWith({
     int? updatedAt,

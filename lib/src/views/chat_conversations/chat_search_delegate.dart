@@ -65,7 +65,7 @@ class IsmChatSearchDelegate extends SearchDelegate<void> {
                   child: IsmChatConversationCard(
                   
                     _controller.suggestions[index],
-                    nameBuilder: (_, name) {
+                    nameBuilder: (_,__, name) {
                       if (!name.didMatch(query)) {
                         return null;
                       }
@@ -91,7 +91,7 @@ class IsmChatSearchDelegate extends SearchDelegate<void> {
                         ),
                       );
                     },
-                    subtitleBuilder: (_, msg) {
+                    subtitleBuilder: (_,__, msg) {
                       if (!msg.didMatch(query)) {
                         return null;
                       }

@@ -28,6 +28,11 @@ class IsmChatConversationList extends StatefulWidget {
       this.actions,
       this.endActions,
       this.onProfileWidget,
+      this.name,
+      this.nameBuilder,
+      this.subtitle,
+      this.subtitleBuilder,
+      this.profileImageUrl,
       this.allowDelete = false});
 
   final void Function(BuildContext, IsmChatConversationModel) onChatTap;
@@ -53,7 +58,13 @@ class IsmChatConversationList extends StatefulWidget {
   /// Provide it like you are passing itemBuilder for `ListView` or any constructor of [ListView]
   final Widget? Function(BuildContext, int)? itemBuilder;
 
-  final Widget? Function(BuildContext, String)? profileImageBuilder;
+
+  final Widget? Function(BuildContext, IsmChatConversationModel,String)? profileImageBuilder;
+  final String Function(BuildContext, IsmChatConversationModel,String)? profileImageUrl;
+  final Widget? Function(BuildContext, IsmChatConversationModel,String)? nameBuilder;
+  final String Function(BuildContext, IsmChatConversationModel,String)? name;
+  final Widget? Function(BuildContext, IsmChatConversationModel,String)? subtitleBuilder;
+  final String Function(BuildContext, IsmChatConversationModel,String)? subtitle;
 
   /// Provide this height parameter to set the maximum height for conversation list
   ///
@@ -199,12 +210,16 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                               ),
                         child: Obx(
                           () => IsmChatConversationCard(
+                            name: widget.name,
+                            nameBuilder: widget.nameBuilder,
+                            profileImageUrl: widget.profileImageUrl,
+                            subtitle: widget.subtitle,    
                             onProfileWidget: widget.onProfileWidget,
                             conversation,
                             profileImageBuilder: widget.profileImageBuilder,
                             subtitleBuilder: !conversation.isSomeoneTyping
-                                ? null
-                                : (_, __) => Text(
+                                ? widget.subtitleBuilder
+                                : (_, __,___) => Text(
                                       conversation.typingUsers,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
@@ -213,6 +228,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                             onTap: () {
                               controller.navigateToMessages(conversation);
                               widget.onChatTap(_, conversation);
+
                             },
                           ),
                         ),

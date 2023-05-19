@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 class IsmChatApp extends StatelessWidget {
   IsmChatApp(
       {super.key,
-      required this.communicationConfig,
+      this.communicationConfig,
       required this.onChatTap,
       this.onCreateChatTap,
       this.showCreateChatIcon = false,
@@ -24,6 +24,10 @@ class IsmChatApp extends StatelessWidget {
       this.allowDelete = false}) {
     assert(IsmChatConfig.isInitialized,
         'ChatObjectBox is not initialized\nYou are getting this error because the IsmChatObjectBox class is not initialized, to initialize ChatObjectBox class call AppscripChatComponent.initialize() before your runApp()');
+    assert(IsmChatConfig.configInitilized || communicationConfig != null,'''communicationConfig of type IsmChatCommunicationConfig must be initialized
+    1. Either initialize using IsmChatApp.initializeMqtt() by passing  communicationConfig.
+    2. Or Pass  communicationConfig in IsmChatApp
+    ''');    
     assert(
       (showCreateChatIcon && onCreateChatTap != null) || !showCreateChatIcon,
       'If showCreateChatIcon is set to true then a non null callback must be passed to onCreateChatTap parameter',
@@ -34,7 +38,10 @@ class IsmChatApp extends StatelessWidget {
     );
     IsmChatConfig.dbName = databaseName ?? IsmChatStrings.dbname;
     IsmChatConfig.loadingDialog = loadingDialog;
-    IsmChatConfig.communicationConfig = communicationConfig;
+    if(communicationConfig != null){
+       IsmChatConfig.communicationConfig = communicationConfig!;
+    }
+  
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
@@ -47,7 +54,7 @@ class IsmChatApp extends StatelessWidget {
   /// This class takes sevaral parameters which are necessary to establish connection between `host` & `application`
   ///
   /// For details see:- [IsmChatCommunicationConfig]
-  final IsmChatCommunicationConfig communicationConfig;
+  final IsmChatCommunicationConfig? communicationConfig;
 
   final IsmChatThemeData? chatTheme;
 
@@ -115,6 +122,15 @@ class IsmChatApp extends StatelessWidget {
   /// Call this function on to delete chat the data stored locally in the Local Database
   static Future<void> deleteChat(String conversationId) async {
     await Get.find<IsmChatConversationsController>().deleteChat(conversationId);
+  }
+
+
+  static void initializeMqtt(IsmChatCommunicationConfig communicationConfig){
+    IsmChatConfig.communicationConfig =  communicationConfig;
+     IsmChatConfig.configInitilized  = true ;
+    if(!Get.isRegistered<IsmChatMqttController>()){
+      IsmChatMqttBinding().dependencies();
+    }
   }
 
   // static Future<void> deleteChat();

@@ -16,6 +16,12 @@ class IsmChatConversations extends StatefulWidget {
     this.actions,
     this.endActions,
     this.onProfileWidget,
+    this.name,
+    this.nameBuilder,
+    this.profileImageBuilder,
+    this.profileImageUrl,
+    this.subtitle,
+    this.subtitleBuilder,
     super.key,
   });
 
@@ -37,6 +43,13 @@ class IsmChatConversations extends StatefulWidget {
   final List<IsmChatConversationAction>? actions;
   final List<IsmChatConversationAction>? endActions;
 
+  final Widget? Function(BuildContext, IsmChatConversationModel,String)? profileImageBuilder;
+  final String Function(BuildContext, IsmChatConversationModel,String)? profileImageUrl;
+  final Widget? Function(BuildContext, IsmChatConversationModel,String)? nameBuilder;
+  final String Function(BuildContext, IsmChatConversationModel,String)? name;
+  final Widget? Function(BuildContext, IsmChatConversationModel,String)? subtitleBuilder;
+  final String Function(BuildContext, IsmChatConversationModel,String)? subtitle;
+
   @override
   State<IsmChatConversations> createState() => _IsmChatConversationsState();
 }
@@ -45,7 +58,9 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
   @override
   void initState() {
     super.initState();
-    IsmChatMqttBinding().dependencies();
+    if(!Get.isRegistered<IsmChatMqttController>()){
+      IsmChatMqttBinding().dependencies();
+    }
   }
 
   @override
@@ -63,6 +78,13 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
             actions: widget.actions,
             endActions:widget.endActions,
             onProfileWidget: widget.onProfileWidget,
+            profileImageBuilder: widget.profileImageBuilder,
+            profileImageUrl: widget.profileImageUrl,
+            name: widget.name,
+            nameBuilder: widget.nameBuilder,
+            subtitle: widget.subtitle,
+            subtitleBuilder: widget.subtitleBuilder,
+            
           ),
         ),
         floatingActionButton: widget.showCreateChatIcon

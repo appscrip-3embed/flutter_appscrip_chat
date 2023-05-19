@@ -24,6 +24,7 @@ Future<void> initialize() async {
   objectBox = await ObjectBox.create();
   var deviceConfig = Get.put(IsmChatDeviceConfig());
   deviceConfig.init();
+  
   // await LocalNoticeService().setup();
   await AppscripChatComponent.initialize();
 }

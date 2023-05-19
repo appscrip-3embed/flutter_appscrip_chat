@@ -9,15 +9,22 @@ class IsmChatConversationCard extends StatelessWidget {
     this.subtitleBuilder,
     this.onTap,
     this.onProfileWidget,
+    this.name,
+    this.profileImageUrl,
+    this.subtitle,
     super.key,
   });
 
   final IsmChatConversationModel conversation;
   final VoidCallback? onTap;
   final Widget? onProfileWidget;
-  final Widget? Function(BuildContext, String)? profileImageBuilder;
-  final Widget? Function(BuildContext, String)? nameBuilder;
-  final Widget? Function(BuildContext, String)? subtitleBuilder;
+  final Widget? Function(BuildContext, IsmChatConversationModel,String)? profileImageBuilder;
+  final String Function(BuildContext, IsmChatConversationModel,String)? profileImageUrl;
+  final Widget? Function(BuildContext, IsmChatConversationModel,String)? nameBuilder;
+  final String Function(BuildContext, IsmChatConversationModel,String)? name;
+  final Widget? Function(BuildContext, IsmChatConversationModel,String)? subtitleBuilder;
+  final String Function(BuildContext, IsmChatConversationModel,String)? subtitle;
+
 
   @override
   Widget build(BuildContext context) => IsmChatTapHandler(
@@ -29,11 +36,13 @@ class IsmChatConversationCard extends StatelessWidget {
                 Stack(
                   alignment: Alignment.bottomLeft,
                   children: [
-                    profileImageBuilder?.call(context, conversation.profileUrl) ??
+                    profileImageBuilder?.call(context, conversation, conversation.profileUrl) ??
                         IsmChatImage.profile(
-                          conversation.profileUrl,
+                           profileImageUrl?.call(context, conversation, conversation.profileUrl) ??  conversation.profileUrl,
                           name: conversation.chatName,
                         ),
+
+                     // Todo   
                      Positioned(
                         top: IsmChatDimens.twenty,
                         child:
@@ -41,13 +50,13 @@ class IsmChatConversationCard extends StatelessWidget {
                       )   
                   ],
                 ),
-            title: nameBuilder?.call(context, conversation.chatName) ??
+            title: nameBuilder?.call(context, conversation, conversation.chatName) ??
                 Text(
-                  conversation.chatName,
+                name?.call(context, conversation, conversation.chatName) ??  conversation.chatName,
                   style: IsmChatStyles.w600Black14,
                 ),
             subtitle: subtitleBuilder?.call(
-                    context, conversation.lastMessageDetails?.body ?? '') ??
+                    context, conversation, conversation.lastMessageDetails?.body ?? '') ??
                 conversation.lastMessageDetails!.body.lastMessageType(conversation.lastMessageDetails!),
             trailing: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
