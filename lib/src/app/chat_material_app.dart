@@ -229,5 +229,11 @@ class IsmChatApp extends StatelessWidget {
         actions: actions,
         endActions: endActions,
         onProfileWidget: onProfileWidget,
+        name: name,
+        nameBuilder: nameBuilder,
+        profileImageUrl: profileImageUrl,
+        profileImageBuilder: profileImageBuilder,
+        subtitle: subtitle,
+        subtitleBuilder: subtitleBuilder,
       );
 }
