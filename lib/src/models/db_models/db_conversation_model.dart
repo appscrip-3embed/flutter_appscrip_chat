@@ -4,17 +4,7 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 
 @Entity()
 class DBConversationModel {
-  // factory DBConversationModel.fromMap(Map<String, dynamic> map) =>
-  //     DBConversationModel(
-  //       unreadMessagesCount: map['unreadMessagesCount'] as int? ?? 0,
-  //       messagingDisabled: map['messagingDisabled'] as bool? ?? false,
-  //       membersCount: map['membersCount'] as int? ?? 0,
-  //       lastMessageSentAt: map['lastMessageSentAt'] as int? ?? 0,
-  //       isGroup: map['isGroup'] as bool? ?? false,
-  //       conversationTitle: map['conversationTitle'] as String?,
-  //       conversationImageUrl: map['conversationImageUrl'] as String?,
-  //       conversationId: map['conversationId'] as String? ?? '',
-  //     );
+ 
   DBConversationModel({
     this.id = 0,
     this.unreadMessagesCount,
