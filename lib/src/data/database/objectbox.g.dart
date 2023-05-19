@@ -293,7 +293,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(9, 3144208863203176583),
       name: 'DBConversationModel',
-      lastPropertyId: const IdUid(13, 4372738786490480885),
+      lastPropertyId: const IdUid(14, 5663210546040568880),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -366,6 +366,11 @@ final _entities = <ModelEntity>[
             id: const IdUid(13, 4372738786490480885),
             name: 'messages',
             type: 30,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(14, 5663210546040568880),
+            name: 'dbMetadata',
+            type: 9,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -862,7 +867,8 @@ ModelDefinition getObjectBoxModel() {
               : fbb.writeString(object.conversationId!);
           final messagesOffset = fbb.writeList(
               object.messages.map(fbb.writeString).toList(growable: false));
-          fbb.startTable(14);
+          final dbMetadataOffset = fbb.writeString(object.dbMetadata);
+          fbb.startTable(15);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.unreadMessagesCount);
           fbb.addInt64(2, object.opponentDetails.targetId);
@@ -876,6 +882,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(10, conversationIdOffset);
           fbb.addInt64(11, object.config.targetId);
           fbb.addOffset(12, messagesOffset);
+          fbb.addOffset(13, dbMetadataOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -897,14 +904,15 @@ ModelDefinition getObjectBoxModel() {
                   .vTableGetNullable(buffer, rootOffset, 18),
               conversationTitle: const fb.StringReader(asciiOptimization: true)
                   .vTableGetNullable(buffer, rootOffset, 20),
-              conversationImageUrl:
-                  const fb.StringReader(asciiOptimization: true)
-                      .vTableGetNullable(buffer, rootOffset, 22),
+              conversationImageUrl: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 22),
               conversationId: const fb.StringReader(asciiOptimization: true)
                   .vTableGetNullable(buffer, rootOffset, 24),
               messages:
                   const fb.ListReader<String>(fb.StringReader(asciiOptimization: true), lazy: false)
-                      .vTableGet(buffer, rootOffset, 28, []));
+                      .vTableGet(buffer, rootOffset, 28, []))
+            ..dbMetadata =
+                const fb.StringReader(asciiOptimization: true).vTableGet(buffer, rootOffset, 30, '');
           object.opponentDetails.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0);
           object.opponentDetails.attach(store);
@@ -1262,6 +1270,10 @@ class DBConversationModel_ {
   /// see [DBConversationModel.messages]
   static final messages = QueryStringVectorProperty<DBConversationModel>(
       _entities[6].properties[12]);
+
+  /// see [DBConversationModel.dbMetadata]
+  static final dbMetadata =
+      QueryStringProperty<DBConversationModel>(_entities[6].properties[13]);
 }
 
 /// [IsmChatMetaData] entity fields to define ObjectBox queries.

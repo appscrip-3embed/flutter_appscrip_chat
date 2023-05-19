@@ -269,7 +269,7 @@
     },
     {
       "id": "9:3144208863203176583",
-      "lastPropertyId": "13:4372738786490480885",
+      "lastPropertyId": "14:5663210546040568880",
       "name": "DBConversationModel",
       "properties": [
         {
@@ -346,6 +346,11 @@
           "id": "13:4372738786490480885",
           "name": "messages",
           "type": 30
+        },
+        {
+          "id": "14:5663210546040568880",
+          "name": "dbMetadata",
+          "type": 9
         }
       ],
       "relations": []

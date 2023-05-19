@@ -48,7 +48,7 @@ class DBConversationModel {
 
 
 
-  String get dbMetadata => jsonEncode(metaData?.toJson());
+  String get dbMetadata => metaData?.toJson() ?? '';
   
   set dbMetadata(String value) => metaData = IsmChatMetaData.fromJson(value);
 }

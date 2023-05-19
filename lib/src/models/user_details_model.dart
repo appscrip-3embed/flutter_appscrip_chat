@@ -61,9 +61,11 @@ class UserDetails {
   final bool isAdmin;
 
 
-  String get userDBMetadata => jsonEncode(metaData?.toJson());
+  String get userDBMetadata => metaData?.toJson() ?? '';
 
-  set userDBMetadata(String value) => metaData = IsmChatMetaData.fromJson(value);
+  set userDBMetadata(String value) {
+    metaData = IsmChatMetaData.fromJson(value);
+  }
 
 
 
