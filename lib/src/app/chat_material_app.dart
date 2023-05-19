@@ -201,7 +201,8 @@ class IsmChatApp extends StatelessWidget {
           lastSeen: 0,
           metaData: IsmChatMetaData(
             profilePic: profileImageUrl,
-            firstName: name,
+            firstName: name.split(' ').first,
+            lastName: name.split(' ').last
           ));
       conversation = IsmChatConversationModel(
           messagingDisabled: false,
