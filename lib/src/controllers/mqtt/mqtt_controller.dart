@@ -136,6 +136,7 @@ class IsmChatMqttController extends GetxController {
 
   /// onConnected callback, it will be called when connection is established
   void _onConnected() {
+    IsmChatApp.isMqttConnected = true;
     client.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) async {
       final recMess = c!.first.payload as MqttPublishMessage;
 
@@ -157,6 +158,7 @@ class IsmChatMqttController extends GetxController {
 
   /// onDisconnected callback, it will be called when connection is breaked
   void _onDisconnected() {
+    IsmChatApp.isMqttConnected = false;
     connectionState = IsmChatConnectionState.disconnected;
     if (client.connectionStatus!.returnCode ==
         MqttConnectReturnCode.noneSpecified) {

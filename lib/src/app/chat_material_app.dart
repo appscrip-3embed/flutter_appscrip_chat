@@ -200,10 +200,9 @@ class IsmChatApp extends StatelessWidget {
           online: false,
           lastSeen: 0,
           metaData: IsmChatMetaData(
-            profilePic: profileImageUrl,
-            firstName: name.split(' ').first,
-            lastName: name.split(' ').last
-          ));
+              profilePic: profileImageUrl,
+              firstName: name.split(' ').first,
+              lastName: name.split(' ').last));
       conversation = IsmChatConversationModel(
           messagingDisabled: false,
           conversationImageUrl: profileImageUrl,
@@ -223,6 +222,10 @@ class IsmChatApp extends StatelessWidget {
     (onNavigateToChat ?? IsmChatConfig.onChatTap)
         .call(Get.context!, conversation);
   }
+
+  static final RxBool _isMqttConnected = false.obs;
+  static bool get isMqttConnected => _isMqttConnected.value;
+  static set isMqttConnected(bool value) => _isMqttConnected.value = value;
 
   @override
   Widget build(BuildContext context) => IsmChatConversations(
