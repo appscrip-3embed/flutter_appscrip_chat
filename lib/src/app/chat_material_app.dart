@@ -29,10 +29,11 @@ class IsmChatApp extends StatelessWidget {
       this.allowDelete = false}) {
     assert(IsmChatConfig.isInitialized,
         'ChatObjectBox is not initialized\nYou are getting this error because the IsmChatObjectBox class is not initialized, to initialize ChatObjectBox class call AppscripChatComponent.initialize() before your runApp()');
-    assert(IsmChatConfig.configInitilized || communicationConfig != null,'''communicationConfig of type IsmChatCommunicationConfig must be initialized
+    assert(IsmChatConfig.configInitilized || communicationConfig != null,
+        '''communicationConfig of type IsmChatCommunicationConfig must be initialized
     1. Either initialize using IsmChatApp.initializeMqtt() by passing  communicationConfig.
     2. Or Pass  communicationConfig in IsmChatApp
-    ''');    
+    ''');
     assert(
       (showCreateChatIcon && onCreateChatTap != null) || !showCreateChatIcon,
       'If showCreateChatIcon is set to true then a non null callback must be passed to onCreateChatTap parameter',
@@ -43,10 +44,10 @@ class IsmChatApp extends StatelessWidget {
     );
     IsmChatConfig.dbName = databaseName ?? IsmChatStrings.dbname;
     IsmChatConfig.loadingDialog = loadingDialog;
-    if(communicationConfig != null){
-       IsmChatConfig.communicationConfig = communicationConfig!;
+    if (communicationConfig != null) {
+      IsmChatConfig.communicationConfig = communicationConfig!;
     }
-  
+
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
@@ -69,12 +70,17 @@ class IsmChatApp extends StatelessWidget {
 
   final bool enableGroupChat;
 
-  final Widget? Function(BuildContext, IsmChatConversationModel,String)? profileImageBuilder;
-  final String Function(BuildContext, IsmChatConversationModel,String)? profileImageUrl;
-  final Widget? Function(BuildContext, IsmChatConversationModel,String)? nameBuilder;
-  final String Function(BuildContext, IsmChatConversationModel,String)? name;
-  final Widget? Function(BuildContext, IsmChatConversationModel,String)? subtitleBuilder;
-  final String Function(BuildContext, IsmChatConversationModel,String)? subtitle;
+  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
+      profileImageBuilder;
+  final String Function(BuildContext, IsmChatConversationModel, String)?
+      profileImageUrl;
+  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
+      nameBuilder;
+  final String Function(BuildContext, IsmChatConversationModel, String)? name;
+  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
+      subtitleBuilder;
+  final String Function(BuildContext, IsmChatConversationModel, String)?
+      subtitle;
 
   /// Opitonal field
   ///
@@ -134,11 +140,10 @@ class IsmChatApp extends StatelessWidget {
     await Get.find<IsmChatConversationsController>().deleteChat(conversationId);
   }
 
-
-  static void initializeMqtt(IsmChatCommunicationConfig communicationConfig){
-    IsmChatConfig.communicationConfig =  communicationConfig;
-     IsmChatConfig.configInitilized  = true ;
-    if(!Get.isRegistered<IsmChatMqttController>()){
+  static void initializeMqtt(IsmChatCommunicationConfig communicationConfig) {
+    IsmChatConfig.communicationConfig = communicationConfig;
+    IsmChatConfig.configInitilized = true;
+    if (!Get.isRegistered<IsmChatMqttController>()) {
       IsmChatMqttBinding().dependencies();
     }
   }
@@ -188,24 +193,26 @@ class IsmChatApp extends StatelessWidget {
     late IsmChatConversationModel conversation;
     if (conversationId.isEmpty) {
       var userDetails = UserDetails(
-        userProfileImageUrl: profileImageUrl,
-        userName: name,
-        userIdentifier: email,
-        userId: userId,
-        online: false,
-        lastSeen: 0,
-      );
+          userProfileImageUrl: profileImageUrl,
+          userName: name,
+          userIdentifier: email,
+          userId: userId,
+          online: false,
+          lastSeen: 0,
+          metaData: IsmChatMetaData(
+            profilePic: profileImageUrl,
+            firstName: name,
+          ));
       conversation = IsmChatConversationModel(
-        messagingDisabled: false,
-        conversationImageUrl: profileImageUrl,
-        isGroup: false,
-        opponentDetails: userDetails,
-        unreadMessagesCount: 0,
-        lastMessageDetails: null,
-        lastMessageSentAt: 0,
-        membersCount: 1,
-        metaData: metaData
-      );
+          messagingDisabled: false,
+          conversationImageUrl: profileImageUrl,
+          isGroup: false,
+          opponentDetails: userDetails,
+          unreadMessagesCount: 0,
+          lastMessageDetails: null,
+          lastMessageSentAt: 0,
+          membersCount: 1,
+          metaData: metaData);
     } else {
       conversation = controller.conversations
           .firstWhere((e) => e.conversationId == conversationId);
