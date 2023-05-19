@@ -1,11 +1,10 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
-class IsmChatHeader {
+class   IsmChatHeader {
   IsmChatHeader({
     this.backgroundColor,
     this.iconColor,
-    this.title,
     this.subtitle,
     this.titleStyle,
     this.subtitleStyle,
@@ -13,14 +12,27 @@ class IsmChatHeader {
     this.shape,
     this.bottom,
     this.bottomOnTap,
-    this.onProfileWidget
+    this.onProfileWidget,
+    this.name,
+    this.nameBuilder,
+    this.profileImageBuilder,
+    this.profileImageUrl,
+    this.subtitleBuilder
   });
 
   final Color? backgroundColor;
   final Color? iconColor;
-
-  final String? title;
-  final String? subtitle;
+final Widget? Function(BuildContext, IsmChatConversationModel, String)?
+      profileImageBuilder;
+  final String Function(BuildContext, IsmChatConversationModel, String)?
+      profileImageUrl;
+  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
+      nameBuilder;
+  final String Function(BuildContext, IsmChatConversationModel, String)? name;
+  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
+      subtitleBuilder;
+  final String Function(BuildContext, IsmChatConversationModel, String)?
+      subtitle;
   final TextStyle? titleStyle;
   final TextStyle? subtitleStyle;
   final List<IsmChatPopItem>? popupItems;

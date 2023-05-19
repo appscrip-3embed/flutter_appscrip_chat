@@ -59,15 +59,25 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                   Stack(
                     alignment: Alignment.bottomLeft,
                     children: [
-                      IsmChatImage.profile(
-                        controller.conversation?.profileUrl ?? '',
-                        name: controller.conversation!.chatName.isNotEmpty
-                            ? controller.conversation?.chatName
-                            : controller
-                                    .conversation?.opponentDetails?.userName ??
+                      header?.profileImageBuilder?.call(
+                              context,
+                              controller.conversation!,
+                              controller.conversation?.profileUrl ?? '') ??
+                          IsmChatImage.profile(
+                            header?.profileImageUrl?.call(
+                                    context,
+                                    controller.conversation!,
+                                    controller.conversation?.profileUrl ??
+                                        '') ??
+                                controller.conversation?.profileUrl ??
                                 '',
-                        dimensions: IsmChatDimens.forty,
-                      ),
+                            name: header?.name?.call(
+                                    context,
+                                    controller.conversation!,
+                                    controller.conversation?.chatName ?? '') ??
+                                controller.conversation?.chatName,
+                            dimensions: IsmChatDimens.forty,
+                          ),
                       Positioned(
                         top: IsmChatDimens.twenty,
                         child: header?.onProfileWidget == null
@@ -86,7 +96,9 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        header?.title ?? controller.conversation!.chatName,
+                        header?.name?.call(context, controller.conversation!,
+                                controller.conversation?.chatName ?? '') ??
+                            controller.conversation!.chatName,
                         style: header?.titleStyle ?? IsmChatStyles.w600White18,
                       ),
                       (!controller.conversation!.isChattingAllowed)
@@ -94,8 +106,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                           : Obx(
                               () => controller.conversation!.isSomeoneTyping
                                   ? Text(
-                                      header?.subtitle ??
-                                          controller.conversation!.typingUsers,
+                                      controller.conversation!.typingUsers,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: header?.subtitleStyle ??
@@ -105,16 +116,14 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                               ?.online ??
                                           false
                                       ? Text(
-                                          header?.subtitle ??
-                                              IsmChatStrings.online,
+                                          IsmChatStrings.online,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: header?.subtitleStyle ??
                                               IsmChatStyles.w400White12,
                                         )
                                       : Text(
-                                          header?.subtitle ??
-                                              controller.conversation
+                                          controller.conversation
                                                   ?.opponentDetails?.lastSeen
                                                   .toCurrentTimeStirng() ??
                                               '',
