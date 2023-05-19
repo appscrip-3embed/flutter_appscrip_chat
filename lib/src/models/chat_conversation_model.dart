@@ -124,7 +124,7 @@ class IsmChatConversationModel {
   String? createdBy;
   String? createdByUserName;
 
-    String get dbMetadata => jsonEncode(metaData?.toJson());
+  String get dbMetadata => jsonEncode(metaData?.toJson());
 
   set dbMetadata(String value) => metaData = IsmChatMetaData.fromJson(value);
 
