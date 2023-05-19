@@ -5,7 +5,6 @@ class   IsmChatHeader {
   IsmChatHeader({
     this.backgroundColor,
     this.iconColor,
-    this.subtitle,
     this.titleStyle,
     this.subtitleStyle,
     this.popupItems,
@@ -17,7 +16,7 @@ class   IsmChatHeader {
     this.nameBuilder,
     this.profileImageBuilder,
     this.profileImageUrl,
-    this.subtitleBuilder
+
   });
 
   final Color? backgroundColor;
@@ -29,10 +28,7 @@ final Widget? Function(BuildContext, IsmChatConversationModel, String)?
   final Widget? Function(BuildContext, IsmChatConversationModel, String)?
       nameBuilder;
   final String Function(BuildContext, IsmChatConversationModel, String)? name;
-  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
-      subtitleBuilder;
-  final String Function(BuildContext, IsmChatConversationModel, String)?
-      subtitle;
+ 
   final TextStyle? titleStyle;
   final TextStyle? subtitleStyle;
   final List<IsmChatPopItem>? popupItems;
