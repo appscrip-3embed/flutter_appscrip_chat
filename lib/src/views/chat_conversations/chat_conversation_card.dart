@@ -27,6 +27,7 @@ class IsmChatConversationCard extends StatelessWidget {
             dense: true,
             leading:
                 Stack(
+                  alignment: Alignment.bottomLeft,
                   children: [
                     profileImageBuilder?.call(context, conversation.profileUrl) ??
                         IsmChatImage.profile(
@@ -35,7 +36,8 @@ class IsmChatConversationCard extends StatelessWidget {
                         ),
                      Positioned(
                         top: IsmChatDimens.twenty,
-                        child: onProfileWidget == null ? IsmChatDimens.box0 : conversation.metaData?.isMatchId?.isNotEmpty == true ? onProfileWidget! :IsmChatDimens.box0,
+                        child:
+                         onProfileWidget == null ? IsmChatDimens.box0 : conversation.metaData?.isMatchId?.isNotEmpty == true ? onProfileWidget! :IsmChatDimens.box0,
                       )   
                   ],
                 ),
