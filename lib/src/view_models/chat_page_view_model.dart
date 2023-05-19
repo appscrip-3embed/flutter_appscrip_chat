@@ -489,6 +489,7 @@ class IsmChatPageViewModel {
           pushNotifications: pushNotifications,
           members: members,
           isGroup: isGroup,
+          metaData: metaData,
           conversationType: conversationType,
           conversationImageUrl: conversationImageUrl,
           conversationTitle: conversationTitle,
