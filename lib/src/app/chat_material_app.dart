@@ -136,6 +136,7 @@ class IsmChatApp extends StatelessWidget {
     required String name,
     required String email,
     required String userId,
+    IsmChatMetaData? metaData,
     void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
     Duration duration = const Duration(milliseconds: 500),
   }) async {
@@ -177,6 +178,7 @@ class IsmChatApp extends StatelessWidget {
         lastMessageDetails: null,
         lastMessageSentAt: 0,
         membersCount: 1,
+        metaData: metaData
       );
     } else {
       conversation = controller.conversations

@@ -7,6 +7,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
 
   Future<String> createConversation({
     required List<String> userId,
+     IsmChatMetaData? metaData,
     bool isGroup = false,
     bool isLoading = true,
   }) async {
@@ -22,7 +23,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       isGroup: isGroup,
       conversationType: 0,
       searchableTags: [' '],
-      metaData: <String, dynamic>{},
+      metaData: metaData != null ? metaData.toMap() : {},
       conversationImageUrl:
           isGroup ? _controller.conversation!.conversationImageUrl ?? '' : '',
       conversationTitle:
@@ -134,7 +135,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversationId);
     if (chatConversationResponse == null) {
-      conversationId = await createConversation(userId: [userId]);
+      conversationId = await createConversation(userId: [userId],metaData: _controller.conversation?.metaData);
     }
     IsmChatMessageModel? audioMessage;
     String? nameWithExtension;
@@ -263,7 +264,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         final chatConversationResponse = await ismChatObjectBox
             .getDBConversation(conversationId: conversationId);
         if (chatConversationResponse == null) {
-          conversationId = await createConversation(userId: [userId]);
+          conversationId = await createConversation(userId: [userId], metaData: _controller.conversation?.metaData);
         }
         for (var x in result!.files) {
           bytes = x.bytes;
@@ -337,7 +338,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversationId);
     if (chatConversationResponse == null) {
-      conversationId = await createConversation(userId: [userId]);
+      conversationId = await createConversation(userId: [userId], metaData: _controller.conversation?.metaData);
     }
     IsmChatMessageModel? videoMessage;
     String? nameWithExtension;
@@ -465,7 +466,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversationId);
     if (chatConversationResponse == null) {
-      conversationId = await createConversation(userId: [userId]);
+      conversationId = await createConversation(userId: [userId], metaData: _controller.conversation?.metaData);
     }
     IsmChatMessageModel? imageMessage;
     String? nameWithExtension;
@@ -569,7 +570,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversationId);
     if (chatConversationResponse == null) {
-      conversationId = await createConversation(userId: [userId]);
+      conversationId = await createConversation(userId: [userId], metaData: _controller.conversation?.metaData);
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatMessageModel(
@@ -625,7 +626,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversationId);
     if (chatConversationResponse == null) {
-      conversationId = await createConversation(userId: [userId]);
+      conversationId = await createConversation(userId: [userId],metaData: _controller.conversation?.metaData);
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatMessageModel(
