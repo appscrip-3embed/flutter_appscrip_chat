@@ -131,7 +131,7 @@ class IsmChatMetaData {
       lastName: map['lastName'] as String? ?? '',
       userId: map['userId'] as String? ?? '',
       isMatchId: map['isMatchId'] as String? ?? '',
-      isGuestMatch: map['isGuestMatch'] as bool? ?? false,
+      isGuestMatch: map['isGuestMatch'] as bool?,
       genderOfUserWhoReceivedTheGuestChat:
           map['genderOfUserWhoReceivedTheGuestChat'] as String? ?? '',
       genderOfUserWhoStartedGuestChat:
@@ -140,7 +140,7 @@ class IsmChatMetaData {
           map['guestMatchInitiatedByUserId'] as String? ?? '',
       guestMatchInitiatedWithUserId:
           map['guestMatchInitiatedWithUserId'] as String? ?? '',
-      paidChat: map['paidChat'] as bool? ?? false);
+      paidChat: map['paidChat'] as bool);
 
   String toJson() => json.encode(toMap());
 
