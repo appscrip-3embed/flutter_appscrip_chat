@@ -73,35 +73,38 @@ class IsmChatObjectBox {
 
   /// Create Db with user
   Future<void> createAndUpdateDB(DBConversationModel dbConversation) async {
-    var resposne = chatConversationBox.getAll();
-    if (resposne.isEmpty) {
-      chatConversationBox.put(dbConversation);
-    } else {
-      final query = chatConversationBox
-          .query(DBConversationModel_.conversationId
-              .equals(dbConversation.conversationId!))
-          .build();
-      final chatConversationResponse = query.findUnique();
-      if (chatConversationResponse != null) {
-        chatConversationResponse.isGroup = dbConversation.isGroup;
-        chatConversationResponse.membersCount = dbConversation.membersCount;
-        chatConversationResponse.lastMessageSentAt =
-            dbConversation.lastMessageSentAt;
-        chatConversationResponse.messagingDisabled =
-            dbConversation.messagingDisabled;
-        chatConversationResponse.unreadMessagesCount =
-            dbConversation.unreadMessagesCount;
-        chatConversationResponse.opponentDetails.target =
-            dbConversation.opponentDetails.target;
-        chatConversationResponse.lastMessageDetails.target =
-            dbConversation.lastMessageDetails.target;
-        chatConversationResponse.config.target = dbConversation.config.target;
-        chatConversationResponse.metaData = dbConversation.metaData;
-        chatConversationBox.put(chatConversationResponse);
-      } else {
-       
+    try {
+      var resposne = chatConversationBox.getAll();
+      if (resposne.isEmpty) {
         chatConversationBox.put(dbConversation);
+      } else {
+        final query = chatConversationBox
+            .query(DBConversationModel_.conversationId
+                .equals(dbConversation.conversationId!))
+            .build();
+        final chatConversationResponse = query.findUnique();
+        if (chatConversationResponse != null) {
+          chatConversationResponse.isGroup = dbConversation.isGroup;
+          chatConversationResponse.membersCount = dbConversation.membersCount;
+          chatConversationResponse.lastMessageSentAt =
+              dbConversation.lastMessageSentAt;
+          chatConversationResponse.messagingDisabled =
+              dbConversation.messagingDisabled;
+          chatConversationResponse.unreadMessagesCount =
+              dbConversation.unreadMessagesCount;
+          chatConversationResponse.opponentDetails.target =
+              dbConversation.opponentDetails.target;
+          chatConversationResponse.lastMessageDetails.target =
+              dbConversation.lastMessageDetails.target;
+          chatConversationResponse.config.target = dbConversation.config.target;
+          chatConversationResponse.metaData = dbConversation.metaData;
+          chatConversationBox.put(chatConversationResponse);
+        } else {
+          chatConversationBox.put(dbConversation);
+        }
       }
+    } catch (e, st) {
+      IsmChatLog.error('$e \n$st');
     }
   }
 
