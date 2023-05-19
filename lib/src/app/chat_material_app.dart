@@ -17,7 +17,12 @@ class IsmChatApp extends StatelessWidget {
       this.showAppBar = false,
       this.enableGroupChat = false,
       this.createChatIcon,
-      this.imageBaseUrl,
+      this.name,
+      this.nameBuilder,
+      this.profileImageUrl,
+      this.profileImageBuilder,
+      this.subtitle,
+      this.subtitleBuilder,
       this.actions,
       this.endActions,
       this.onProfileWidget,
@@ -62,9 +67,14 @@ class IsmChatApp extends StatelessWidget {
 
   final Widget? createChatIcon;
 
-  final String? imageBaseUrl;
-
   final bool enableGroupChat;
+
+  final Widget? Function(BuildContext, IsmChatConversationModel,String)? profileImageBuilder;
+  final String Function(BuildContext, IsmChatConversationModel,String)? profileImageUrl;
+  final Widget? Function(BuildContext, IsmChatConversationModel,String)? nameBuilder;
+  final String Function(BuildContext, IsmChatConversationModel,String)? name;
+  final Widget? Function(BuildContext, IsmChatConversationModel,String)? subtitleBuilder;
+  final String Function(BuildContext, IsmChatConversationModel,String)? subtitle;
 
   /// Opitonal field
   ///
