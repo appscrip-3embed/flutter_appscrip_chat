@@ -201,6 +201,7 @@ class IsmChatObjectBox {
           messages.isEmpty ? [] : messages.map((e) => e.toJson()).toList();
       if (messages.isEmpty) {
         conversation.lastMessageDetails.target = LastMessageDetails(
+          sentByMe: conversation.lastMessageDetails.target!.sentByMe,
           showInConversation:
               conversation.lastMessageDetails.target!.showInConversation,
           sentAt: DateTime.now().millisecondsSinceEpoch,
@@ -208,6 +209,7 @@ class IsmChatObjectBox {
           messageType: 0,
           messageId: '',
           conversationId: conversationId,
+          customType: conversation.lastMessageDetails.target!.customType,
           body: '',
         );
       }

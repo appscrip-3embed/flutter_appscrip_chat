@@ -147,8 +147,6 @@ class IsmChatMqttController extends GetxController {
 
       if (payload['action'] != null) {
         var actionModel = IsmChatMqttActionModel.fromMap(payload);
-
-        IsmChatLog.info(actionModel);
         _handleAction(actionModel);
       } else {
         var message = IsmChatMessageModel.fromMap(payload);
@@ -266,6 +264,7 @@ class IsmChatMqttController extends GetxController {
 
     // To handle and show last message & unread count in conversation list
     conversation.lastMessageDetails.target = LastMessageDetails(
+      sentByMe: message.sentByMe,
       showInConversation: true,
       sentAt: message.sentAt,
       senderName: message.senderInfo!.userName,
@@ -273,6 +272,7 @@ class IsmChatMqttController extends GetxController {
       messageId: message.messageId!,
       conversationId: message.conversationId!,
       body: message.body,
+      customType: message.customType,
     );
     conversation.unreadMessagesCount = conversation.unreadMessagesCount! + 1;
     conversation.messages.add(message.toJson());
@@ -389,9 +389,18 @@ class IsmChatMqttController extends GetxController {
       if (lastMessage.messageId == actionModel.messageId) {
         lastMessage.deliveredToAll = true;
         conversation.messages.last = lastMessage.toJson();
+        conversation.lastMessageDetails.target =
+            conversation.lastMessageDetails.target!.copyWith(
+          deliverCount:
+              conversation.lastMessageDetails.target!.deliverCount + 1,
+        );
         conversationBox.put(conversation);
-        Get.find<IsmChatPageController>()
-            .getMessagesFromDB(actionModel.conversationId!);
+        if (Get.isRegistered<IsmChatPageController>()) {
+          Get.find<IsmChatPageController>()
+              .getMessagesFromDB(actionModel.conversationId!);
+        }
+
+        Get.find<IsmChatConversationsController>().getConversationsFromDB();
       }
     }
   }
@@ -414,8 +423,17 @@ class IsmChatMqttController extends GetxController {
         lastMessage.readByAll = true;
         conversation.messages.last = lastMessage.toJson();
         conversationBox.put(conversation);
-        Get.find<IsmChatPageController>()
-            .getMessagesFromDB(actionModel.conversationId!);
+        conversation.lastMessageDetails.target =
+            conversation.lastMessageDetails.target!.copyWith(
+          deliverCount:
+              conversation.lastMessageDetails.target!.deliverCount + 1,
+          readCount: conversation.lastMessageDetails.target!.readCount + 1,
+        );
+        if (Get.isRegistered<IsmChatPageController>()) {
+          Get.find<IsmChatPageController>()
+              .getMessagesFromDB(actionModel.conversationId!);
+        }
+        Get.find<IsmChatConversationsController>().getConversationsFromDB();
       }
     }
   }
@@ -451,11 +469,17 @@ class IsmChatMqttController extends GetxController {
       }
     }
     conversation.messages = modifiedMessages;
+    conversation.lastMessageDetails.target =
+        conversation.lastMessageDetails.target!.copyWith(
+      deliverCount: conversation.lastMessageDetails.target!.deliverCount + 1,
+      readCount: conversation.lastMessageDetails.target!.readCount + 1,
+    );
     conversationBox.put(conversation);
     if (Get.isRegistered<IsmChatPageController>()) {
       Get.find<IsmChatPageController>()
           .getMessagesFromDB(actionModel.conversationId!);
     }
+    Get.find<IsmChatConversationsController>().getConversationsFromDB();
   }
 
   void _handleMessageDelelteForEveryOne(

@@ -191,7 +191,7 @@
     },
     {
       "id": "7:3601465766739318501",
-      "lastPropertyId": "9:6602821607281721590",
+      "lastPropertyId": "13:2945155108077371716",
       "name": "LastMessageDetails",
       "properties": [
         {
@@ -239,6 +239,26 @@
           "id": "9:6602821607281721590",
           "name": "dbCustomType",
           "type": 6
+        },
+        {
+          "id": "10:8986094784348087468",
+          "name": "senderId",
+          "type": 9
+        },
+        {
+          "id": "11:210158789740956364",
+          "name": "deliverCount",
+          "type": 6
+        },
+        {
+          "id": "12:6000970811666910326",
+          "name": "readCount",
+          "type": 6
+        },
+        {
+          "id": "13:2945155108077371716",
+          "name": "sentByMe",
+          "type": 1
         }
       ],
       "relations": []

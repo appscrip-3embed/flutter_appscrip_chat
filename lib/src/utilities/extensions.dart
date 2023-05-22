@@ -458,6 +458,50 @@ extension ModelConversion on IsmChatConversationModel {
   bool get isSomeoneTyping => _mqttController.typingUsers
       .map((e) => e.conversationId)
       .contains(conversationId);
+
+  Widget get sender {
+    if (!isGroup! || lastMessageDetails!.messageBody.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    var senderName =
+        lastMessageDetails!.sentByMe ? 'You' : lastMessageDetails!.senderName;
+    return Text(
+      '$senderName: ',
+      style: IsmChatStyles.w500Black12,
+    );
+  }
+
+  Widget get readCheck {
+    if (!lastMessageDetails!.sentByMe ||
+        lastMessageDetails!.messageBody.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    var deliveredToAll = false;
+    var readByAll = false;
+    if (!isGroup!) {
+      // this means not recieved by the user
+      if (lastMessageDetails!.deliverCount != 0) {
+        deliveredToAll = true;
+        // this means not read by the user
+        if (lastMessageDetails!.readCount != 0) {
+          readByAll = true;
+        }
+      }
+    } else {
+      if (membersCount == lastMessageDetails!.deliverCount) {
+        deliveredToAll = true;
+        if (membersCount == lastMessageDetails!.readCount) {
+          readByAll = true;
+        }
+      }
+    }
+
+    return Icon(
+      deliveredToAll ? Icons.done_all_rounded : Icons.done_rounded,
+      color: readByAll ? Colors.blue : Colors.grey,
+      size: 16,
+    );
+  }
 }
 
 extension LastMessageBody on LastMessageDetails {
@@ -524,10 +568,8 @@ extension LastMessageBody on LastMessageDetails {
         iconData = Icons.location_on_rounded;
         break;
       case IsmChatCustomMessageType.block:
-        iconData = Icons.block_rounded;
-        break;
       case IsmChatCustomMessageType.unblock:
-        iconData = Icons.thumb_up_alt_rounded;
+        iconData = Icons.block_rounded;
         break;
       case IsmChatCustomMessageType.conversationCreated:
         iconData = Icons.how_to_reg_rounded;

@@ -249,16 +249,18 @@ class IsmChatPageController extends GetxController
     });
   }
 
-  ifTimerMounted(){
- final itimer = conversationDetailsApTimer == null ? false : conversationDetailsApTimer!.isActive;
- if(itimer){
-   conversationDetailsApTimer!.cancel();
- }
-}
+  ifTimerMounted() {
+    final itimer = conversationDetailsApTimer == null
+        ? false
+        : conversationDetailsApTimer!.isActive;
+    if (itimer) {
+      conversationDetailsApTimer!.cancel();
+    }
+  }
 
   @override
   void onClose() {
-      super.onClose();
+    super.onClose();
     if (areCamerasInitialized) {
       _frontCameraController.dispose();
       _backCameraController.dispose();
@@ -270,9 +272,9 @@ class IsmChatPageController extends GetxController
   }
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
-     if (areCamerasInitialized) {
+    if (areCamerasInitialized) {
       _frontCameraController.dispose();
       _backCameraController.dispose();
     }
@@ -281,8 +283,6 @@ class IsmChatPageController extends GetxController
     groupEligibleUserScrollController.dispose();
     ifTimerMounted();
   }
-
-
 
   /// This function will be used in [Add participants Screen] to Select or Unselect users
   void onGrouEligibleUserTap(int index) {
@@ -619,6 +619,7 @@ class IsmChatPageController extends GetxController
     if (chatConversation != null) {
       if (messages.isNotEmpty) {
         chatConversation.lastMessageDetails.target = LastMessageDetails(
+          sentByMe: messages.last.sentByMe,
           showInConversation: true,
           sentAt: messages.last.sentAt,
           senderName: messages.last.chatName,
@@ -626,6 +627,7 @@ class IsmChatPageController extends GetxController
           messageId: messages.last.messageId ?? '',
           conversationId: messages.last.conversationId ?? '',
           body: messages.last.body,
+          customType: messages.last.customType,
         );
       }
 
@@ -933,6 +935,9 @@ class IsmChatPageController extends GetxController
     conversationDetailsApTimer = Timer.periodic(
       const Duration(minutes: 1),
       (Timer t) {
+        if (!Get.isRegistered<IsmChatPageController>()) {
+          return;
+        }
         if (canRefreshDetails) {
           getConverstaionDetails(
               conversationId: conversation?.conversationId ?? '');

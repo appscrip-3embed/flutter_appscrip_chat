@@ -73,10 +73,11 @@ class IsmChatConversationCard extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    conversation.readCheck,
+                    conversation.sender,
                     conversation.lastMessageDetails!.icon,
                     IsmChatDimens.boxWidth2,
-                    SizedBox(
-                      width: IsmChatDimens.percentWidth(.48),
+                    Flexible(
                       child: Text(
                         conversation.lastMessageDetails!.messageBody,
                         style: IsmChatStyles.w400Black12,

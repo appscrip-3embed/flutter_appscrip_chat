@@ -215,7 +215,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(7, 3601465766739318501),
       name: 'LastMessageDetails',
-      lastPropertyId: const IdUid(9, 6602821607281721590),
+      lastPropertyId: const IdUid(13, 2945155108077371716),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -262,6 +262,26 @@ final _entities = <ModelEntity>[
             id: const IdUid(9, 6602821607281721590),
             name: 'dbCustomType',
             type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(10, 8986094784348087468),
+            name: 'senderId',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(11, 210158789740956364),
+            name: 'deliverCount',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(12, 6000970811666910326),
+            name: 'readCount',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(13, 2945155108077371716),
+            name: 'sentByMe',
+            type: 1,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -774,7 +794,8 @@ ModelDefinition getObjectBoxModel() {
           final messageIdOffset = fbb.writeString(object.messageId);
           final conversationIdOffset = fbb.writeString(object.conversationId);
           final bodyOffset = fbb.writeString(object.body);
-          fbb.startTable(10);
+          final senderIdOffset = fbb.writeString(object.senderId);
+          fbb.startTable(14);
           fbb.addInt64(0, object.id);
           fbb.addBool(1, object.showInConversation);
           fbb.addInt64(2, object.sentAt);
@@ -784,6 +805,10 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(6, conversationIdOffset);
           fbb.addOffset(7, bodyOffset);
           fbb.addInt64(8, object.dbCustomType);
+          fbb.addOffset(9, senderIdOffset);
+          fbb.addInt64(10, object.deliverCount);
+          fbb.addInt64(11, object.readCount);
+          fbb.addBool(12, object.sentByMe);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -799,6 +824,8 @@ ModelDefinition getObjectBoxModel() {
                   const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0),
               senderName: const fb.StringReader(asciiOptimization: true)
                   .vTableGet(buffer, rootOffset, 10, ''),
+              senderId: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 22, ''),
               messageType:
                   const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0),
               messageId: const fb.StringReader(asciiOptimization: true)
@@ -806,9 +833,13 @@ ModelDefinition getObjectBoxModel() {
               conversationId: const fb.StringReader(asciiOptimization: true)
                   .vTableGet(buffer, rootOffset, 16, ''),
               body: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 18, ''))
-            ..dbCustomType = const fb.Int64Reader()
-                .vTableGetNullable(buffer, rootOffset, 20);
+                  .vTableGet(buffer, rootOffset, 18, ''),
+              deliverCount:
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 24, 0),
+              readCount:
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0),
+              sentByMe: const fb.BoolReader().vTableGet(buffer, rootOffset, 28, false))
+            ..dbCustomType = const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 20);
 
           return object;
         }),
@@ -1197,6 +1228,22 @@ class LastMessageDetails_ {
   /// see [LastMessageDetails.dbCustomType]
   static final dbCustomType =
       QueryIntegerProperty<LastMessageDetails>(_entities[4].properties[8]);
+
+  /// see [LastMessageDetails.senderId]
+  static final senderId =
+      QueryStringProperty<LastMessageDetails>(_entities[4].properties[9]);
+
+  /// see [LastMessageDetails.deliverCount]
+  static final deliverCount =
+      QueryIntegerProperty<LastMessageDetails>(_entities[4].properties[10]);
+
+  /// see [LastMessageDetails.readCount]
+  static final readCount =
+      QueryIntegerProperty<LastMessageDetails>(_entities[4].properties[11]);
+
+  /// see [LastMessageDetails.sentByMe]
+  static final sentByMe =
+      QueryBooleanProperty<LastMessageDetails>(_entities[4].properties[12]);
 }
 
 /// [PendingMessageModel] entity fields to define ObjectBox queries.
