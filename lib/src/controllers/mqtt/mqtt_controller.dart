@@ -539,7 +539,6 @@ class IsmChatMqttController extends GetxController {
       var controller = Get.find<IsmChatPageController>();
       if (controller.conversation!.conversationId ==
           actionModel.conversationId) {
-        await Get.find<IsmChatConversationsController>().getBlockUser();
         await controller.getConverstaionDetails(
             conversationId: actionModel.conversationId ?? '');
         await controller.getMessagesFromAPI(
@@ -548,6 +547,9 @@ class IsmChatMqttController extends GetxController {
         messageId = actionModel.messageId!;
       }
     }
+    var conversationController = Get.find<IsmChatConversationsController>();
+    await conversationController.getBlockUser();
+    await conversationController.getChatConversations();
   }
 
   void _handleGroupRemoveAndAddUser(IsmChatMqttActionModel actionModel) async {
