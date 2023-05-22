@@ -65,16 +65,24 @@ class IsmChatConversationCard extends StatelessWidget {
                   name?.call(context, conversation, conversation.chatName) ??
                       conversation.chatName,
                   style: IsmChatStyles.w600Black14,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
             subtitle: subtitleBuilder?.call(context, conversation,
                     conversation.lastMessageDetails?.body ?? '') ??
                 Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     conversation.lastMessageDetails!.icon,
                     IsmChatDimens.boxWidth2,
-                    Text(
-                      conversation.lastMessageDetails!.messageBody,
-                      style: IsmChatStyles.w400Black12,
+                    SizedBox(
+                      width: IsmChatDimens.percentWidth(.48),
+                      child: Text(
+                        conversation.lastMessageDetails!.messageBody,
+                        style: IsmChatStyles.w400Black12,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),

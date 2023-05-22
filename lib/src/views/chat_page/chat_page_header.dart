@@ -94,12 +94,18 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        header?.name?.call(context, controller.conversation!,
-                                controller.conversation?.chatName ?? '') ??
-                            controller.conversation!.chatName,
-                        style: header?.titleStyle ?? IsmChatStyles.w600White18,
+                      SizedBox(
+                        width: IsmChatDimens.percentWidth(.55),
+                        child: Text(
+                          header?.name?.call(context, controller.conversation!,
+                                  controller.conversation?.chatName ?? '') ??
+                              controller.conversation!.chatName,
+                          style: header?.titleStyle ?? IsmChatStyles.w600White16,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       (!controller.conversation!.isChattingAllowed)
                           ? const SizedBox.shrink()
