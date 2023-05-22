@@ -73,34 +73,38 @@ class IsmChatObjectBox {
 
   /// Create Db with user
   Future<void> createAndUpdateDB(DBConversationModel dbConversation) async {
-    var resposne = chatConversationBox.getAll();
-    if (resposne.isEmpty) {
-      chatConversationBox.put(dbConversation);
-    } else {
-      final query = chatConversationBox
-          .query(DBConversationModel_.conversationId
-              .equals(dbConversation.conversationId!))
-          .build();
-      final chatConversationResponse = query.findUnique();
-      if (chatConversationResponse != null) {
-        chatConversationResponse.isGroup = dbConversation.isGroup;
-        chatConversationResponse.membersCount = dbConversation.membersCount;
-        chatConversationResponse.lastMessageSentAt =
-            dbConversation.lastMessageSentAt;
-        chatConversationResponse.messagingDisabled =
-            dbConversation.messagingDisabled;
-        chatConversationResponse.unreadMessagesCount =
-            dbConversation.unreadMessagesCount;
-        chatConversationResponse.opponentDetails.target =
-            dbConversation.opponentDetails.target;
-        chatConversationResponse.lastMessageDetails.target =
-            dbConversation.lastMessageDetails.target;
-        chatConversationResponse.config.target = dbConversation.config.target;
-        chatConversationBox.put(chatConversationResponse);
-      } else {
-        // IsmChatLog.success('dsfdsfsfdsdfs ${dbConversationModel.opponentDetails.target.}')
+    try {
+      var resposne = chatConversationBox.getAll();
+      if (resposne.isEmpty) {
         chatConversationBox.put(dbConversation);
+      } else {
+        final query = chatConversationBox
+            .query(DBConversationModel_.conversationId
+                .equals(dbConversation.conversationId!))
+            .build();
+        final chatConversationResponse = query.findUnique();
+        if (chatConversationResponse != null) {
+          chatConversationResponse.isGroup = dbConversation.isGroup;
+          chatConversationResponse.membersCount = dbConversation.membersCount;
+          chatConversationResponse.lastMessageSentAt =
+              dbConversation.lastMessageSentAt;
+          chatConversationResponse.messagingDisabled =
+              dbConversation.messagingDisabled;
+          chatConversationResponse.unreadMessagesCount =
+              dbConversation.unreadMessagesCount;
+          chatConversationResponse.opponentDetails.target =
+              dbConversation.opponentDetails.target;
+          chatConversationResponse.lastMessageDetails.target =
+              dbConversation.lastMessageDetails.target;
+          chatConversationResponse.config.target = dbConversation.config.target;
+          chatConversationResponse.metaData = dbConversation.metaData;
+          chatConversationBox.put(chatConversationResponse);
+        } else {
+          chatConversationBox.put(dbConversation);
+        }
       }
+    } catch (e, st) {
+      IsmChatLog.error('$e \n$st');
     }
   }
 
@@ -196,7 +200,9 @@ class IsmChatObjectBox {
       conversation.messages =
           messages.isEmpty ? [] : messages.map((e) => e.toJson()).toList();
       if (messages.isEmpty) {
-        conversation.lastMessageDetails.target = LastMessageDetails(
+        conversation.lastMessageDetails.target =
+            conversation.lastMessageDetails.target!.copyWith(
+          sentByMe: conversation.lastMessageDetails.target!.sentByMe,
           showInConversation:
               conversation.lastMessageDetails.target!.showInConversation,
           sentAt: DateTime.now().millisecondsSinceEpoch,
@@ -204,6 +210,7 @@ class IsmChatObjectBox {
           messageType: 0,
           messageId: '',
           conversationId: conversationId,
+          customType: conversation.lastMessageDetails.target!.customType,
           body: '',
         );
       }

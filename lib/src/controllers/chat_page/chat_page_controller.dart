@@ -249,16 +249,18 @@ class IsmChatPageController extends GetxController
     });
   }
 
-  ifTimerMounted(){
- final itimer = conversationDetailsApTimer == null ? false : conversationDetailsApTimer!.isActive;
- if(itimer){
-   conversationDetailsApTimer!.cancel();
- }
-}
+  ifTimerMounted() {
+    final itimer = conversationDetailsApTimer == null
+        ? false
+        : conversationDetailsApTimer!.isActive;
+    if (itimer) {
+      conversationDetailsApTimer!.cancel();
+    }
+  }
 
   @override
   void onClose() {
-      super.onClose();
+    super.onClose();
     if (areCamerasInitialized) {
       _frontCameraController.dispose();
       _backCameraController.dispose();
@@ -270,9 +272,9 @@ class IsmChatPageController extends GetxController
   }
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
-     if (areCamerasInitialized) {
+    if (areCamerasInitialized) {
       _frontCameraController.dispose();
       _backCameraController.dispose();
     }
@@ -281,8 +283,6 @@ class IsmChatPageController extends GetxController
     groupEligibleUserScrollController.dispose();
     ifTimerMounted();
   }
-
-
 
   /// This function will be used in [Add participants Screen] to Select or Unselect users
   void onGrouEligibleUserTap(int index) {
@@ -398,6 +398,9 @@ class IsmChatPageController extends GetxController
   }
 
   Future<void> scrollDown() async {
+    if (!Get.isRegistered<IsmChatPageController>()) {
+      return;
+    }
     await messagesScrollController.animateTo(
       messagesScrollController.position.maxScrollExtent,
       duration: IsmChatConfig.animationDuration,
@@ -633,7 +636,9 @@ class IsmChatPageController extends GetxController
         .getDBConversation(conversationId: conversation?.conversationId ?? '');
     if (chatConversation != null) {
       if (messages.isNotEmpty) {
+        IsmChatLog(messages.last);
         chatConversation.lastMessageDetails.target = LastMessageDetails(
+          sentByMe: messages.last.sentByMe,
           showInConversation: true,
           sentAt: messages.last.sentAt,
           senderName: messages.last.chatName,
@@ -641,10 +646,26 @@ class IsmChatPageController extends GetxController
           messageId: messages.last.messageId ?? '',
           conversationId: messages.last.conversationId ?? '',
           body: messages.last.body,
+          customType: messages.last.customType,
+          readCount: chatConversation.isGroup!
+              ? messages.last.readByAll!
+                  ? chatConversation.membersCount!
+                  : messages.last.lastReadAt!.length
+              : messages.last.readByAll!
+                  ? 1
+                  : 0,
+          deliverCount: chatConversation.isGroup!
+              ? messages.last.deliveredToAll!
+                  ? chatConversation.membersCount!
+                  : 0
+              : messages.last.deliveredToAll!
+                  ? 1
+                  : 0,
+          members:
+              messages.last.members?.map((e) => e.memberName ?? '').toList() ??
+                  [],
         );
       }
-
-      // Todo: check for last message for display in converstiaon list
       chatConversation.unreadMessagesCount = 0;
       IsmChatConfig.objectBox.chatConversationBox.put(chatConversation);
       await Get.find<IsmChatConversationsController>().getConversationsFromDB();
@@ -948,6 +969,9 @@ class IsmChatPageController extends GetxController
     conversationDetailsApTimer = Timer.periodic(
       const Duration(minutes: 1),
       (Timer t) {
+        if (!Get.isRegistered<IsmChatPageController>()) {
+          t.cancel();
+        }
         if (canRefreshDetails) {
           getConverstaionDetails(
               conversationId: conversation?.conversationId ?? '');

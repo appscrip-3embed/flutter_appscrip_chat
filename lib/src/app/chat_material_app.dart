@@ -3,24 +3,37 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatApp extends StatelessWidget {
-  IsmChatApp({
-    super.key,
-    required this.communicationConfig,
-    required this.onChatTap,
-    this.onCreateChatTap,
-    this.showCreateChatIcon = false,
-    this.chatTheme,
-    this.chatDarkTheme,
-    this.loadingDialog,
-    this.databaseName,
-    this.onSignOut,
-    this.showAppBar = false,
-    this.enableGroupChat = false,
-    this.createChatIcon,
-    this.imageBaseUrl
-  }) {
+  IsmChatApp(
+      {super.key,
+      this.communicationConfig,
+      required this.onChatTap,
+      this.onCreateChatTap,
+      this.showCreateChatIcon = false,
+      this.chatTheme,
+      this.chatDarkTheme,
+      this.loadingDialog,
+      this.databaseName,
+      this.onSignOut,
+      this.showAppBar = false,
+      this.enableGroupChat = false,
+      this.createChatIcon,
+      this.name,
+      this.nameBuilder,
+      this.profileImageUrl,
+      this.profileImageBuilder,
+      this.subtitle,
+      this.subtitleBuilder,
+      this.actions,
+      this.endActions,
+      this.onProfileWidget,
+      this.allowDelete = false}) {
     assert(IsmChatConfig.isInitialized,
         'ChatObjectBox is not initialized\nYou are getting this error because the IsmChatObjectBox class is not initialized, to initialize ChatObjectBox class call AppscripChatComponent.initialize() before your runApp()');
+    assert(IsmChatConfig.configInitilized || communicationConfig != null,
+        '''communicationConfig of type IsmChatCommunicationConfig must be initialized
+    1. Either initialize using IsmChatApp.initializeMqtt() by passing  communicationConfig.
+    2. Or Pass  communicationConfig in IsmChatApp
+    ''');
     assert(
       (showCreateChatIcon && onCreateChatTap != null) || !showCreateChatIcon,
       'If showCreateChatIcon is set to true then a non null callback must be passed to onCreateChatTap parameter',
@@ -31,7 +44,10 @@ class IsmChatApp extends StatelessWidget {
     );
     IsmChatConfig.dbName = databaseName ?? IsmChatStrings.dbname;
     IsmChatConfig.loadingDialog = loadingDialog;
-    IsmChatConfig.communicationConfig = communicationConfig;
+    if (communicationConfig != null) {
+      IsmChatConfig.communicationConfig = communicationConfig!;
+    }
+
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
@@ -44,7 +60,7 @@ class IsmChatApp extends StatelessWidget {
   /// This class takes sevaral parameters which are necessary to establish connection between `host` & `application`
   ///
   /// For details see:- [IsmChatCommunicationConfig]
-  final IsmChatCommunicationConfig communicationConfig;
+  final IsmChatCommunicationConfig? communicationConfig;
 
   final IsmChatThemeData? chatTheme;
 
@@ -52,9 +68,19 @@ class IsmChatApp extends StatelessWidget {
 
   final Widget? createChatIcon;
 
-  final String? imageBaseUrl;
-
   final bool enableGroupChat;
+
+  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
+      profileImageBuilder;
+  final String Function(BuildContext, IsmChatConversationModel, String)?
+      profileImageUrl;
+  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
+      nameBuilder;
+  final String Function(BuildContext, IsmChatConversationModel, String)? name;
+  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
+      subtitleBuilder;
+  final String Function(BuildContext, IsmChatConversationModel, String)?
+      subtitle;
 
   /// Opitonal field
   ///
@@ -95,12 +121,34 @@ class IsmChatApp extends StatelessWidget {
   final bool showAppBar;
   final VoidCallback? onSignOut;
 
+  final bool allowDelete;
+
+  final Widget? onProfileWidget;
+
+  final List<IsmChatConversationAction>? actions;
+  final List<IsmChatConversationAction>? endActions;
+
   /// Call this function on SignOut to delete the data stored locally in the Local Database
   static void logout() {
     IsmChatConfig.objectBox.deleteChatLocalDb();
     Get.delete<IsmChatConversationsController>(force: true);
     Get.delete<IsmChatMqttController>(force: true);
   }
+
+  /// Call this function on to delete chat the data stored locally in the Local Database
+  static Future<void> deleteChat(String conversationId) async {
+    await Get.find<IsmChatConversationsController>().deleteChat(conversationId);
+  }
+
+  static void initializeMqtt(IsmChatCommunicationConfig communicationConfig) {
+    IsmChatConfig.communicationConfig = communicationConfig;
+    IsmChatConfig.configInitilized = true;
+    if (!Get.isRegistered<IsmChatMqttController>()) {
+      IsmChatMqttBinding().dependencies();
+    }
+  }
+
+  // static Future<void> deleteChat();
 
   /// This function can be used to directly go to chatting page and start chatting from anywhere in the app
   ///
@@ -119,6 +167,7 @@ class IsmChatApp extends StatelessWidget {
     required String name,
     required String email,
     required String userId,
+    IsmChatMetaData? metaData,
     void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
     Duration duration = const Duration(milliseconds: 500),
   }) async {
@@ -144,23 +193,26 @@ class IsmChatApp extends StatelessWidget {
     late IsmChatConversationModel conversation;
     if (conversationId.isEmpty) {
       var userDetails = UserDetails(
-        userProfileImageUrl: profileImageUrl,
-        userName: name,
-        userIdentifier: email,
-        userId: userId,
-        online: false,
-        lastSeen: 0,
-      );
+          userProfileImageUrl: profileImageUrl,
+          userName: name,
+          userIdentifier: email,
+          userId: userId,
+          online: false,
+          lastSeen: 0,
+          metaData: IsmChatMetaData(
+              profilePic: profileImageUrl,
+              firstName: name.split(' ').first,
+              lastName: name.split(' ').last));
       conversation = IsmChatConversationModel(
-        messagingDisabled: false,
-        conversationImageUrl: profileImageUrl,
-        isGroup: false,
-        opponentDetails: userDetails,
-        unreadMessagesCount: 0,
-        lastMessageDetails: null,
-        lastMessageSentAt: 0,
-        membersCount: 1,
-      );
+          messagingDisabled: false,
+          conversationImageUrl: profileImageUrl,
+          isGroup: false,
+          opponentDetails: userDetails,
+          unreadMessagesCount: 0,
+          lastMessageDetails: null,
+          lastMessageSentAt: 0,
+          membersCount: 1,
+          metaData: metaData);
     } else {
       conversation = controller.conversations
           .firstWhere((e) => e.conversationId == conversationId);
@@ -171,6 +223,10 @@ class IsmChatApp extends StatelessWidget {
         .call(Get.context!, conversation);
   }
 
+  static final RxBool _isMqttConnected = false.obs;
+  static bool get isMqttConnected => _isMqttConnected.value;
+  static set isMqttConnected(bool value) => _isMqttConnected.value = value;
+
   @override
   Widget build(BuildContext context) => IsmChatConversations(
         onChatTap: onChatTap,
@@ -180,5 +236,15 @@ class IsmChatApp extends StatelessWidget {
         onSignOut: onSignOut,
         isGroupChatEnabled: enableGroupChat,
         createChatIcon: createChatIcon,
+        allowDelete: allowDelete,
+        actions: actions,
+        endActions: endActions,
+        onProfileWidget: onProfileWidget,
+        name: name,
+        nameBuilder: nameBuilder,
+        profileImageUrl: profileImageUrl,
+        profileImageBuilder: profileImageBuilder,
+        subtitle: subtitle,
+        subtitleBuilder: subtitleBuilder,
       );
 }

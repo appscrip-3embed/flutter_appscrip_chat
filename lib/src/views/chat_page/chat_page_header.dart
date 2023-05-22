@@ -6,11 +6,15 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
   IsmChatPageHeader({
     this.height,
     this.onTap,
+    this.header,
+    this.onBackTap,
     super.key,
   });
 
   final double? height;
   final VoidCallback? onTap;
+  final VoidCallback? onBackTap;
+  final IsmChatHeader? header;
 
   @override
   Size get preferredSize =>
@@ -22,131 +26,221 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
         builder: (controller) => Theme(
-            data: ThemeData.light(useMaterial3: true).copyWith(
-              appBarTheme: AppBarTheme(
-                backgroundColor: IsmChatConfig.chatTheme.primaryColor,
-                iconTheme: const IconThemeData(color: IsmChatColors.whiteColor),
+          data: ThemeData.light(useMaterial3: true).copyWith(
+            appBarTheme: AppBarTheme(
+                backgroundColor: header?.backgroundColor ??
+                    IsmChatConfig.chatTheme.primaryColor,
+                iconTheme: IconThemeData(
+                  color: header?.iconColor ?? IsmChatColors.whiteColor,
+                ),
+                actionsIconTheme: IconThemeData(
+                  color: header?.iconColor ?? IsmChatColors.whiteColor,
+                )),
+          ),
+          child: AppBar(
+            leading: IsmChatTapHandler(
+              onTap: () async {
+                Get.back<void>();
+                await controller.updateLastMessage();
+                if (onBackTap != null) {
+                  onBackTap!.call();
+                }
+              },
+              child: const Icon(Icons.arrow_back_rounded),
+            ),
+            titleSpacing: IsmChatDimens.four,
+            centerTitle: false,
+            shape: header?.shape,
+            title: IsmChatTapHandler(
+              onTap: onTap,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Stack(
+                    alignment: Alignment.bottomLeft,
+                    children: [
+                      header?.profileImageBuilder?.call(
+                              context,
+                              controller.conversation!,
+                              controller.conversation?.profileUrl ?? '') ??
+                          IsmChatImage.profile(
+                            header?.profileImageUrl?.call(
+                                    context,
+                                    controller.conversation!,
+                                    controller.conversation?.profileUrl ??
+                                        '') ??
+                                controller.conversation?.profileUrl ??
+                                '',
+                            name: header?.name?.call(
+                                    context,
+                                    controller.conversation!,
+                                    controller.conversation?.chatName ?? '') ??
+                                controller.conversation?.chatName,
+                            dimensions: IsmChatDimens.forty,
+                          ),
+                      Positioned(
+                        top: IsmChatDimens.twenty,
+                        child: header?.onProfileWidget == null
+                            ? IsmChatDimens.box0
+                            : controller.conversation?.metaData?.isMatchId
+                                        ?.isNotEmpty ==
+                                    true
+                                ? header!.onProfileWidget!
+                                : IsmChatDimens.box0,
+                      )
+                    ],
+                  ),
+                  IsmChatDimens.boxWidth8,
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          header?.name?.call(context, controller.conversation!,
+                                  controller.conversation?.chatName ?? '') ??
+                              controller.conversation!.chatName,
+                          style:
+                              header?.titleStyle ?? IsmChatStyles.w600White16,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      (!controller.conversation!.isChattingAllowed)
+                          ? const SizedBox.shrink()
+                          : Obx(
+                              () => controller.conversation!.isSomeoneTyping
+                                  ? Text(
+                                      controller.conversation!.typingUsers,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: header?.subtitleStyle ??
+                                          IsmChatStyles.w400White12,
+                                    )
+                                  : controller.conversation?.opponentDetails
+                                              ?.online ??
+                                          false
+                                      ? Text(
+                                          IsmChatStrings.online,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: header?.subtitleStyle ??
+                                              IsmChatStyles.w400White12,
+                                        )
+                                      : Text(
+                                          controller.conversation
+                                                  ?.opponentDetails?.lastSeen
+                                                  .toCurrentTimeStirng() ??
+                                              '',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: header?.subtitleStyle ??
+                                              IsmChatStyles.w400White12,
+                                        ),
+                            ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            child: AppBar(
-              leading: IsmChatTapHandler(
-                onTap: () async {
-                  Get.back<void>();
-                  await controller.updateLastMessage();
-                },
-                child: const Icon(Icons.arrow_back_rounded),
-              ),
-              titleSpacing: IsmChatDimens.four,
-              centerTitle: false,
-              title: IsmChatTapHandler(
-                onTap: onTap,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IsmChatImage.profile(
-                      controller.conversation?.profileUrl ?? '',
-                      name: controller.conversation!.chatName.isNotEmpty
-                          ? controller.conversation?.chatName
-                          : controller
-                                  .conversation?.opponentDetails?.userName ??
-                              '',
-                      dimensions: IsmChatDimens.forty,
+            bottom: header?.bottom == null
+                ? null
+                : PreferredSize(
+                    preferredSize: preferredSize,
+                    child: Padding(
+                      padding: IsmChatDimens.edgeInsets4,
+                      child: InkWell(
+                          onTap: () {
+                            if (header?.bottomOnTap != null) {
+                              header?.bottomOnTap
+                                  ?.call(controller.conversation!);
+                            }
+                          },
+                          child: header?.bottom),
                     ),
-                    IsmChatDimens.boxWidth8,
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+            actions: [
+              PopupMenuButton(
+                icon: Icon(
+                  Icons.more_vert,
+                  color: header?.iconColor ?? IsmChatColors.whiteColor,
+                ),
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: 1,
+                    child: Row(
                       children: [
-                        Text(
-                          controller.conversation!.chatName,
-                          style: IsmChatStyles.w600White18,
+                        const Icon(
+                          Icons.delete,
+                          color: IsmChatColors.blackColor,
                         ),
-                        (!controller.conversation!.isChattingAllowed)
-                            ? const SizedBox.shrink()
-                            : Obx(
-                                () => controller.conversation!.isSomeoneTyping
-                                    ? Text(
-                                        controller.conversation!.typingUsers,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: IsmChatStyles.w400White12,
-                                      )
-                                    : controller.conversation?.opponentDetails
-                                                ?.online ??
-                                            false
-                                        ? Text(
-                                            IsmChatStrings.online,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: IsmChatStyles.w400White12,
-                                          )
-                                        : Text(
-                                            controller.conversation
-                                                    ?.opponentDetails?.lastSeen
-                                                    .toCurrentTimeStirng() ??
-                                                '',
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: IsmChatStyles.w400White12,
-                                          ),
-                              ),
+                        IsmChatDimens.boxWidth8,
+                        const Text(IsmChatStrings.clearChat)
                       ],
                     ),
-                  ],
-                ),
-              ),
-              actions: [
-                PopupMenuButton(
-                  icon: const Icon(
-                    Icons.more_vert,
-                    color: IsmChatColors.whiteColor,
                   ),
-                  itemBuilder: (context) => [
+                  if (!controller.conversation!.isGroup!)
                     PopupMenuItem(
-                      value: 1,
+                      value: 2,
                       child: Row(
                         children: [
                           const Icon(
-                            Icons.delete,
-                            color: IsmChatColors.blackColor,
+                            Icons.block,
+                            color: IsmChatColors.redColor,
                           ),
                           IsmChatDimens.boxWidth8,
-                          const Text(IsmChatStrings.clearChat)
+                          controller.conversation!.isBlockedByMe
+                              ? const Text(
+                                  IsmChatStrings.unBlockUser,
+                                )
+                              : const Text(
+                                  IsmChatStrings.blockUser,
+                                )
                         ],
                       ),
                     ),
-                    if (!controller.conversation!.isGroup!)
-                      PopupMenuItem(
-                        value: 2,
+                  if (controller
+                          .conversation?.metaData?.isMatchId?.isNotEmpty ==
+                      true)
+                    ...(header?.popupItems ?? []).map(
+                      (e) => PopupMenuItem(
+                        value: header!.popupItems!.indexOf(e) + 3,
                         child: Row(
                           children: [
-                            const Icon(
-                              Icons.block,
-                              color: IsmChatColors.redColor,
+                            Icon(
+                              e.icon,
+                              color: e.color ?? IsmChatColors.blackColor,
                             ),
                             IsmChatDimens.boxWidth8,
-                            controller.conversation!.isBlockedByMe
-                                ? const Text(
-                                    IsmChatStrings.unBlockUser,
-                                  )
-                                : const Text(
-                                    IsmChatStrings.blockUser,
-                                  )
+                            Text(
+                              e.label,
+                            )
                           ],
                         ),
                       ),
-                  ],
-                  elevation: 2,
-                  onSelected: (value) {
-                    if (value == 1) {
-                      controller.showDialogForClearChat();
-                    } else {
-                      controller.handleBlockUnblock();
+                    )
+                ],
+                elevation: 2,
+                onSelected: (value) {
+                  if (value == 1) {
+                    controller.showDialogForClearChat();
+                  } else if (value == 2) {
+                    controller.handleBlockUnblock();
+                  } else {
+                    if (header == null) {
+                      return;
                     }
-                  },
-                ),
-              ],
-            ),
+                    if (header!.popupItems != null ||
+                        header!.popupItems!.isNotEmpty) {
+                      header!.popupItems![value - 3]
+                          .onTap(controller.conversation!);
+                    }
+                  }
+                },
+              ),
+            ],
           ),
+        ),
       );
 }

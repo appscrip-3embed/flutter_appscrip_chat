@@ -5,4 +5,5 @@ class IsmChatUserConfig {
   });
   final String userToken;
   final String userId;
+
 }

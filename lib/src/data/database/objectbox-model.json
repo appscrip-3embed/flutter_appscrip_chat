@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:329637739332878047",
-      "lastPropertyId": "13:4261162591408815349",
+      "lastPropertyId": "15:3457791717510155134",
       "name": "UserDetails",
       "properties": [
         {
@@ -73,6 +73,11 @@
           "id": "13:4261162591408815349",
           "name": "isAdmin",
           "type": 1
+        },
+        {
+          "id": "15:3457791717510155134",
+          "name": "userDBMetadata",
+          "type": 9
         }
       ],
       "relations": []
@@ -186,7 +191,7 @@
     },
     {
       "id": "7:3601465766739318501",
-      "lastPropertyId": "9:6602821607281721590",
+      "lastPropertyId": "14:8693756828150268330",
       "name": "LastMessageDetails",
       "properties": [
         {
@@ -234,6 +239,31 @@
           "id": "9:6602821607281721590",
           "name": "dbCustomType",
           "type": 6
+        },
+        {
+          "id": "10:8986094784348087468",
+          "name": "senderId",
+          "type": 9
+        },
+        {
+          "id": "11:210158789740956364",
+          "name": "deliverCount",
+          "type": 6
+        },
+        {
+          "id": "12:6000970811666910326",
+          "name": "readCount",
+          "type": 6
+        },
+        {
+          "id": "13:2945155108077371716",
+          "name": "sentByMe",
+          "type": 1
+        },
+        {
+          "id": "14:8693756828150268330",
+          "name": "members",
+          "type": 30
         }
       ],
       "relations": []
@@ -264,7 +294,7 @@
     },
     {
       "id": "9:3144208863203176583",
-      "lastPropertyId": "13:4372738786490480885",
+      "lastPropertyId": "14:5663210546040568880",
       "name": "DBConversationModel",
       "properties": [
         {
@@ -341,12 +371,106 @@
           "id": "13:4372738786490480885",
           "name": "messages",
           "type": 30
+        },
+        {
+          "id": "14:5663210546040568880",
+          "name": "dbMetadata",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "11:8664243317588607612",
+      "lastPropertyId": "16:77958083771070236",
+      "name": "IsmChatMetaData",
+      "properties": [
+        {
+          "id": "1:3374373376569866957",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5369295778381695751",
+          "name": "country",
+          "type": 9
+        },
+        {
+          "id": "3:6002872576949986936",
+          "name": "parentMessageBody",
+          "type": 9
+        },
+        {
+          "id": "4:3680930453925048231",
+          "name": "locationAddress",
+          "type": 9
+        },
+        {
+          "id": "5:6769271318630129437",
+          "name": "profilePic",
+          "type": 9
+        },
+        {
+          "id": "6:3911463888133500617",
+          "name": "lastName",
+          "type": 9
+        },
+        {
+          "id": "7:6143536100039888705",
+          "name": "firstName",
+          "type": 9
+        },
+        {
+          "id": "8:3656712956607567510",
+          "name": "parentMessageInitiator",
+          "type": 1
+        },
+        {
+          "id": "9:6261111293735506307",
+          "name": "userId",
+          "type": 9
+        },
+        {
+          "id": "10:3007068599043538964",
+          "name": "isMatchId",
+          "type": 9
+        },
+        {
+          "id": "11:7869323669965352379",
+          "name": "isGuestMatch",
+          "type": 1
+        },
+        {
+          "id": "12:6374214950216858848",
+          "name": "guestMatchInitiatedByUserId",
+          "type": 9
+        },
+        {
+          "id": "13:331404997144763682",
+          "name": "guestMatchInitiatedWithUserId",
+          "type": 9
+        },
+        {
+          "id": "14:1878956539628848870",
+          "name": "genderOfUserWhoStartedGuestChat",
+          "type": 9
+        },
+        {
+          "id": "15:2949582644680301162",
+          "name": "genderOfUserWhoReceivedTheGuestChat",
+          "type": 9
+        },
+        {
+          "id": "16:77958083771070236",
+          "name": "paidChat",
+          "type": 1
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "10:6695352261664866221",
+  "lastEntityId": "11:8664243317588607612",
   "lastIndexId": "6:2668303341873990124",
   "lastRelationId": "3:405050114779946002",
   "lastSequenceId": "0:0",
@@ -415,7 +539,8 @@
     3869402466833893640,
     4703465573552064618,
     32733709291852383,
-    6388414582076498476
+    6388414582076498476,
+    6061968472417448061
   ],
   "retiredRelationUids": [
     405050114779946002,

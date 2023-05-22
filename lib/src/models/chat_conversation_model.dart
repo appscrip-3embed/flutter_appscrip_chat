@@ -1,7 +1,6 @@
 import 'dart:convert';
 
-import 'package:appscrip_chat_component/src/models/models.dart';
-import 'package:appscrip_chat_component/src/utilities/utilities.dart';
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/foundation.dart';
 
 class IsmChatConversationModel {
@@ -71,6 +70,7 @@ class IsmChatConversationModel {
         conversationImageUrl: dbConversation.conversationImageUrl,
         conversationId: dbConversation.conversationId,
         config: dbConversation.config.target,
+        metaData: dbConversation.metaData
       );
 
   IsmChatConversationModel({
@@ -123,9 +123,11 @@ class IsmChatConversationModel {
   String? createdBy;
   String? createdByUserName;
 
+
+
   String get chatName => conversationTitle ?? opponentDetails?.userName ?? '';
-  String get profileUrl =>
-      conversationImageUrl ?? opponentDetails?.profileUrl ?? '';
+
+  String get profileUrl => conversationImageUrl ?? opponentDetails?.profileUrl ?? '';
 
   IsmChatConversationModel copyWith({
     int? updatedAt,

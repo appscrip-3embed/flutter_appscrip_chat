@@ -18,14 +18,22 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 ///
 /// Certain properties can be modified as per requirement. You can read about each of them by hovering over the property
 class IsmChatConversationList extends StatefulWidget {
-  const IsmChatConversationList({
-    super.key,
-    required this.onChatTap,
-    this.childBuilder,
-    this.itemBuilder,
-    this.profileImageBuilder,
-    this.height,
-  });
+  const IsmChatConversationList(
+      {super.key,
+      required this.onChatTap,
+      this.childBuilder,
+      this.itemBuilder,
+      this.profileImageBuilder,
+      this.height,
+      this.actions,
+      this.endActions,
+      this.onProfileWidget,
+      this.name,
+      this.nameBuilder,
+      this.subtitle,
+      this.subtitleBuilder,
+      this.profileImageUrl,
+      this.allowDelete = false});
 
   final void Function(BuildContext, IsmChatConversationModel) onChatTap;
 
@@ -50,12 +58,25 @@ class IsmChatConversationList extends StatefulWidget {
   /// Provide it like you are passing itemBuilder for `ListView` or any constructor of [ListView]
   final Widget? Function(BuildContext, int)? itemBuilder;
 
-  final Widget? Function(BuildContext, String)? profileImageBuilder;
+
+  final Widget? Function(BuildContext, IsmChatConversationModel,String)? profileImageBuilder;
+  final String Function(BuildContext, IsmChatConversationModel,String)? profileImageUrl;
+  final Widget? Function(BuildContext, IsmChatConversationModel,String)? nameBuilder;
+  final String Function(BuildContext, IsmChatConversationModel,String)? name;
+  final Widget? Function(BuildContext, IsmChatConversationModel,String)? subtitleBuilder;
+  final String Function(BuildContext, IsmChatConversationModel,String)? subtitle;
 
   /// Provide this height parameter to set the maximum height for conversation list
   ///
   /// If not provided, Screen height will be taken
   final double? height;
+
+  final bool allowDelete;
+
+  final Widget? onProfileWidget;
+
+  final List<IsmChatConversationAction>? actions;
+  final List<IsmChatConversationAction>? endActions;
 
   @override
   State<IsmChatConversationList> createState() =>
@@ -116,37 +137,89 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                       var conversation = controller.conversations[index];
                       return Slidable(
                         closeOnScroll: true,
-                        endActionPane: ActionPane(
-                          extentRatio: 0.3,
-                          motion: const ScrollMotion(),
-                          children: [
-                            SlidableAction(
-                              onPressed: (_) async {
-                                await Get.bottomSheet(
-                                  IsmChatClearConversationBottomSheet(
-                                    controller.conversations[index],
-                                  ),
-                                  isDismissible: false,
-                                  elevation: 0,
-                                );
-                              },
-                              flex: 1,
-                              backgroundColor: IsmChatColors.redColor,
-                              foregroundColor: IsmChatColors.whiteColor,
-                              icon: Icons.delete_rounded,
-                              label: IsmChatStrings.delete,
-                              borderRadius:
-                                  BorderRadius.circular(IsmChatDimens.eight),
-                            ),
-                          ],
-                        ),
+                        enabled: conversation.metaData?.isMatchId?.isNotEmpty ==  true ? true : false,
+                        startActionPane:
+                            widget.actions == null || widget.actions!.isEmpty
+                                ? null
+                                : ActionPane(
+                                    extentRatio: 0.3,
+                                    motion: const ScrollMotion(),
+                                    children: [
+                                        ...widget.actions?.map(
+                                              (e) => SlidableAction(
+                                                onPressed: (_) => e.onTap(conversation),
+                                                flex: 1,
+                                                backgroundColor:
+                                                    e.backgroundColor ??
+                                                        IsmChatConfig.chatTheme
+                                                            .primaryColor!,
+                                                icon: e.icon,
+                                                foregroundColor: e.style?.color,
+                                                label: e.label,
+                                                borderRadius: e.borderRadius ??
+                                                    BorderRadius.circular(
+                                                        IsmChatDimens.eight),
+                                              ),
+                                            ) ??
+                                            [],
+                                      ]),
+                        endActionPane: !widget.allowDelete &&
+                                (widget.endActions == null ||
+                                    widget.endActions!.isEmpty)
+                            ? null
+                            : ActionPane(
+                                extentRatio: 0.3,
+                                motion: const ScrollMotion(),
+                                children: [
+                                  ...widget.endActions?.map(
+                                        (e) => SlidableAction(
+                                          onPressed: (_) => e.onTap(conversation),
+                                          flex: 1,
+                                          backgroundColor: e.backgroundColor ??
+                                              IsmChatConfig
+                                                  .chatTheme.primaryColor!,
+                                          icon: e.icon,
+                                          foregroundColor: e.style?.color,
+                                          label: e.label,
+                                          borderRadius: e.borderRadius ??
+                                              BorderRadius.circular(
+                                                  IsmChatDimens.eight),
+                                        ),
+                                      ) ??
+                                      [],
+                                  if (widget.allowDelete)
+                                    SlidableAction(
+                                      onPressed: (_) async {
+                                        await Get.bottomSheet(
+                                          IsmChatClearConversationBottomSheet(
+                                            controller.conversations[index],
+                                          ),
+                                          isDismissible: false,
+                                          elevation: 0,
+                                        );
+                                      },
+                                      flex: 1,
+                                      backgroundColor: IsmChatColors.redColor,
+                                      foregroundColor: IsmChatColors.whiteColor,
+                                      icon: Icons.delete_rounded,
+                                      label: IsmChatStrings.delete,
+                                      borderRadius: BorderRadius.circular(
+                                          IsmChatDimens.eight),
+                                    ),
+                                ],
+                              ),
                         child: Obx(
                           () => IsmChatConversationCard(
+                            name: widget.name,
+                            nameBuilder: widget.nameBuilder,
+                            profileImageUrl: widget.profileImageUrl,
+                            subtitle: widget.subtitle,    
+                            onProfileWidget: widget.onProfileWidget,
                             conversation,
                             profileImageBuilder: widget.profileImageBuilder,
                             subtitleBuilder: !conversation.isSomeoneTyping
-                                ? null
-                                : (_, __) => Text(
+                                ? widget.subtitleBuilder
+                                : (_, __,___) => Text(
                                       conversation.typingUsers,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
@@ -155,6 +228,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                             onTap: () {
                               controller.navigateToMessages(conversation);
                               widget.onChatTap(_, conversation);
+
                             },
                           ),
                         ),

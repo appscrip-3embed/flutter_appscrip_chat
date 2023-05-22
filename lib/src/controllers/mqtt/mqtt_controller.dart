@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
@@ -21,7 +23,7 @@ class IsmChatMqttController extends GetxController {
 
   late IsmChatConnectionState connectionState;
 
-  String  messageId = '';
+  String messageId = '';
 
   final RxList<IsmChatTypingModel> _typingUsers = <IsmChatTypingModel>[].obs;
   List<IsmChatTypingModel> get typingUsers => _typingUsers;
@@ -67,8 +69,12 @@ class IsmChatMqttController extends GetxController {
         connectionState = IsmChatConnectionState.connected;
         await subscribeTo();
       }
-    } on Exception catch (e, st) {
-      IsmChatLog.error('MQTT Connection Error - $e', st);
+    } on NoConnectionException catch (e) {
+      IsmChatLog.error('EXAMPLE::NoConnectionException - $e');
+      // await unSubscribe();
+      // await disconnect();
+    } on SocketException catch (e) {
+      IsmChatLog.error('EXAMPLE::SocketException - $e');
       // await unSubscribe();
       // await disconnect();
     }
@@ -131,6 +137,7 @@ class IsmChatMqttController extends GetxController {
 
   /// onConnected callback, it will be called when connection is established
   void _onConnected() {
+    IsmChatApp.isMqttConnected = true;
     client.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) async {
       final recMess = c!.first.payload as MqttPublishMessage;
 
@@ -140,11 +147,11 @@ class IsmChatMqttController extends GetxController {
 
       if (payload['action'] != null) {
         var actionModel = IsmChatMqttActionModel.fromMap(payload);
-
-        IsmChatLog.info(actionModel);
+        IsmChatLog(actionModel);
         _handleAction(actionModel);
       } else {
         var message = IsmChatMessageModel.fromMap(payload);
+        _handleLocalNotification(message);
         _handleMessage(message);
       }
     });
@@ -152,6 +159,7 @@ class IsmChatMqttController extends GetxController {
 
   /// onDisconnected callback, it will be called when connection is breaked
   void _onDisconnected() {
+    IsmChatApp.isMqttConnected = false;
     connectionState = IsmChatConnectionState.disconnected;
     if (client.connectionStatus!.returnCode ==
         MqttConnectReturnCode.noneSpecified) {
@@ -223,7 +231,7 @@ class IsmChatMqttController extends GetxController {
         // TODO: Handle this case.
         break;
       case IsmChatActionEvents.memberLeave:
-        // TODO: Handle this case.
+        _handleMemberLeave(actionModel);
         break;
       case IsmChatActionEvents.addMember:
       case IsmChatActionEvents.removeMember:
@@ -254,8 +262,11 @@ class IsmChatMqttController extends GetxController {
             message.messageId) {
       return;
     }
+
     // To handle and show last message & unread count in conversation list
-    conversation.lastMessageDetails.target = LastMessageDetails(
+    conversation.lastMessageDetails.target =
+        conversation.lastMessageDetails.target!.copyWith(
+      sentByMe: message.sentByMe,
       showInConversation: true,
       sentAt: message.sentAt,
       senderName: message.senderInfo!.userName,
@@ -263,6 +274,7 @@ class IsmChatMqttController extends GetxController {
       messageId: message.messageId!,
       conversationId: message.conversationId!,
       body: message.body,
+      customType: message.customType,
     );
     conversation.unreadMessagesCount = conversation.unreadMessagesCount! + 1;
     conversation.messages.add(message.toJson());
@@ -281,12 +293,67 @@ class IsmChatMqttController extends GetxController {
     if (chatController.conversation?.conversationId != message.conversationId) {
       return;
     }
+
     unawaited(chatController.getMessagesFromDB(message.conversationId!));
     await Future.delayed(const Duration(milliseconds: 30));
     await chatController.readSingleMessage(
       conversationId: message.conversationId!,
       messageId: message.messageId!,
     );
+  }
+
+  void _handleLocalNotification(IsmChatMessageModel message) {
+    if (message.senderInfo!.userId == _communicationConfig.userConfig.userId) {
+      return;
+    }
+
+    String? mqttMessage;
+    if (message.customType == IsmChatCustomMessageType.image) {
+      mqttMessage = message.body;
+    } else if (message.customType == IsmChatCustomMessageType.video) {
+      mqttMessage = message.body;
+    } else if (message.customType == IsmChatCustomMessageType.file) {
+      mqttMessage = message.body;
+    } else if (message.customType == IsmChatCustomMessageType.audio) {
+      mqttMessage = message.body;
+    } else if (message.customType == IsmChatCustomMessageType.location) {
+      mqttMessage = 'Location';
+    } else if (message.customType == IsmChatCustomMessageType.reply) {
+      mqttMessage = message.body;
+    } else if (message.customType == IsmChatCustomMessageType.forward) {
+      mqttMessage = message.body;
+    } else if (message.customType == IsmChatCustomMessageType.link) {
+      mqttMessage = message.body;
+    } else {
+      mqttMessage = message.body;
+    }
+    if (Get.isRegistered<IsmChatPageController>()) {
+      var chatController = Get.find<IsmChatPageController>();
+      if (chatController.conversation?.conversationId !=
+          message.conversationId) {
+        LocalNoticeService().cancelAllNotification();
+        LocalNoticeService().addNotification(
+          message.chatName, // Add the  sender user name here
+          mqttMessage, // MessageName
+          DateTime.now().millisecondsSinceEpoch + 1 * 1000,
+          sound: '',
+          channel: 'message',
+        );
+        Get.snackbar(message.chatName, mqttMessage,
+            icon: const Icon(Icons.message));
+      }
+    } else {
+      LocalNoticeService().cancelAllNotification();
+      LocalNoticeService().addNotification(
+        message.chatName, // Add the  sender user name here
+        mqttMessage, // MessageName
+        DateTime.now().millisecondsSinceEpoch + 1 * 1000,
+        sound: '',
+        channel: 'message',
+      );
+      Get.snackbar(message.chatName, mqttMessage,
+          icon: const Icon(Icons.message));
+    }
   }
 
   void _handleTypingEvent(IsmChatMqttActionModel actionModel) {
@@ -324,9 +391,19 @@ class IsmChatMqttController extends GetxController {
       if (lastMessage.messageId == actionModel.messageId) {
         lastMessage.deliveredToAll = true;
         conversation.messages.last = lastMessage.toJson();
+        conversation.lastMessageDetails.target =
+            conversation.lastMessageDetails.target!.copyWith(
+          deliverCount: conversation.isGroup!
+              ? conversation.lastMessageDetails.target!.deliverCount + 1
+              : 1,
+        );
         conversationBox.put(conversation);
-        Get.find<IsmChatPageController>()
-            .getMessagesFromDB(actionModel.conversationId!);
+        if (Get.isRegistered<IsmChatPageController>()) {
+          Get.find<IsmChatPageController>()
+              .getMessagesFromDB(actionModel.conversationId!);
+        }
+
+        Get.find<IsmChatConversationsController>().getConversationsFromDB();
       }
     }
   }
@@ -349,8 +426,20 @@ class IsmChatMqttController extends GetxController {
         lastMessage.readByAll = true;
         conversation.messages.last = lastMessage.toJson();
         conversationBox.put(conversation);
-        Get.find<IsmChatPageController>()
-            .getMessagesFromDB(actionModel.conversationId!);
+        conversation.lastMessageDetails.target =
+            conversation.lastMessageDetails.target!.copyWith(
+          deliverCount: conversation.isGroup!
+              ? conversation.lastMessageDetails.target!.deliverCount + 1
+              : 1,
+          readCount: conversation.isGroup!
+              ? conversation.lastMessageDetails.target!.readCount + 1
+              : 1,
+        );
+        if (Get.isRegistered<IsmChatPageController>()) {
+          Get.find<IsmChatPageController>()
+              .getMessagesFromDB(actionModel.conversationId!);
+        }
+        Get.find<IsmChatConversationsController>().getConversationsFromDB();
       }
     }
   }
@@ -386,11 +475,21 @@ class IsmChatMqttController extends GetxController {
       }
     }
     conversation.messages = modifiedMessages;
+    conversation.lastMessageDetails.target =
+        conversation.lastMessageDetails.target!.copyWith(
+      deliverCount: conversation.isGroup!
+          ? conversation.lastMessageDetails.target!.deliverCount + 1
+          : 1,
+      readCount: conversation.isGroup!
+          ? conversation.lastMessageDetails.target!.readCount + 1
+          : 1,
+    );
     conversationBox.put(conversation);
     if (Get.isRegistered<IsmChatPageController>()) {
       Get.find<IsmChatPageController>()
           .getMessagesFromDB(actionModel.conversationId!);
     }
+    Get.find<IsmChatConversationsController>().getConversationsFromDB();
   }
 
   void _handleMessageDelelteForEveryOne(
@@ -415,7 +514,6 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleBlockUserOrUnBlock(IsmChatMqttActionModel actionModel) async {
-   
     if (actionModel.initiatorDetails!.userId ==
         _communicationConfig.userConfig.userId) {
       return;
@@ -433,23 +531,25 @@ class IsmChatMqttController extends GetxController {
             actionModel.messageId) {
       return;
     }
-    if(messageId == actionModel.messageId){
+    if (messageId == actionModel.messageId) {
       return;
     }
 
     if (Get.isRegistered<IsmChatPageController>()) {
       var controller = Get.find<IsmChatPageController>();
       if (controller.conversation!.conversationId ==
-          actionModel.conversationId) { 
-        await Get.find<IsmChatConversationsController>().getBlockUser();
+          actionModel.conversationId) {
         await controller.getConverstaionDetails(
             conversationId: actionModel.conversationId ?? '');
         await controller.getMessagesFromAPI(
             conversationId: actionModel.conversationId ?? '',
             lastMessageTimestamp: controller.messages.last.sentAt);
-        messageId = actionModel.messageId!;    
+        messageId = actionModel.messageId!;
       }
     }
+    var conversationController = Get.find<IsmChatConversationsController>();
+    await conversationController.getBlockUser();
+    await conversationController.getChatConversations();
   }
 
   void _handleGroupRemoveAndAddUser(IsmChatMqttActionModel actionModel) async {
@@ -457,7 +557,6 @@ class IsmChatMqttController extends GetxController {
         _communicationConfig.userConfig.userId) {
       return;
     }
-
 
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
 
@@ -472,7 +571,7 @@ class IsmChatMqttController extends GetxController {
             actionModel.messageId) {
       return;
     }
-    if(messageId == actionModel.messageId){
+    if (messageId == actionModel.messageId) {
       return;
     }
 
@@ -484,9 +583,47 @@ class IsmChatMqttController extends GetxController {
         await controller.getMessagesFromAPI(
             conversationId: actionModel.conversationId ?? '',
             lastMessageTimestamp: controller.messages.last.sentAt);
-            messageId = actionModel.messageId!;    
+        messageId = actionModel.messageId!;
       }
     }
+    await Get.find<IsmChatConversationsController>().getChatConversations();
+  }
+
+  void _handleMemberLeave(IsmChatMqttActionModel actionModel) async {
+    if (actionModel.userDetails?.userId ==
+        _communicationConfig.userConfig.userId) {
+      return;
+    }
+
+    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
+
+    var conversation = conversationBox
+        .query(DBConversationModel_.conversationId
+            .equals(actionModel.conversationId!))
+        .build()
+        .findUnique();
+
+    if (conversation == null ||
+        conversation.lastMessageDetails.target!.messageId ==
+            actionModel.messageId) {
+      return;
+    }
+    if (messageId == actionModel.messageId) {
+      return;
+    }
+
+    if (Get.isRegistered<IsmChatPageController>()) {
+      var controller = Get.find<IsmChatPageController>();
+      if (controller.conversation!.conversationId ==
+              actionModel.conversationId &&
+          controller.conversation!.lastMessageSentAt != actionModel.sentAt) {
+        await controller.getMessagesFromAPI(
+            conversationId: actionModel.conversationId ?? '',
+            lastMessageTimestamp: controller.messages.last.sentAt);
+        messageId = actionModel.messageId!;
+      }
+    }
+    await Get.find<IsmChatConversationsController>().getChatConversations();
   }
 
   void _handleAdminRemoveAndAdd(IsmChatMqttActionModel actionModel) async {
@@ -508,7 +645,7 @@ class IsmChatMqttController extends GetxController {
             actionModel.messageId) {
       return;
     }
-    if(messageId == actionModel.messageId){
+    if (messageId == actionModel.messageId) {
       return;
     }
 
@@ -520,9 +657,10 @@ class IsmChatMqttController extends GetxController {
         await controller.getMessagesFromAPI(
             conversationId: actionModel.conversationId ?? '',
             lastMessageTimestamp: controller.messages.last.sentAt);
-             messageId = actionModel.messageId!;   
+        messageId = actionModel.messageId!;
       }
     }
+    await Get.find<IsmChatConversationsController>().getChatConversations();
   }
 
   void _handleCreateConversation(IsmChatMqttActionModel actionModel) async {

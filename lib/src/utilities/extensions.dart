@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -174,7 +173,6 @@ extension DateConvertor on int {
   }
 }
 
-
 extension DateFormats on DateTime {
   String toTimeString() => DateFormat.jm().format(this);
 
@@ -261,65 +259,90 @@ extension ChildWidget on IsmChatCustomMessageType {
 }
 
 extension LastMessageWidget on String {
-
   Widget lastMessageType(LastMessageDetails message) {
     switch (this) {
-
-      case  'Image' :
+      case 'Image':
         return Row(
           children: [
-            Icon(Icons.image, size: IsmChatDimens.sixteen,),
+            Icon(
+              Icons.image,
+              size: IsmChatDimens.sixteen,
+            ),
             IsmChatDimens.boxWidth2,
-            Text('Image', style: IsmChatStyles.w400Black12,)
+            Text(
+              'Image',
+              style: IsmChatStyles.w400Black12,
+            )
           ],
         );
 
       case 'Video':
         return Row(
           children: [
-            Icon(Icons.video_call, size: IsmChatDimens.sixteen,),
+            Icon(
+              Icons.video_call,
+              size: IsmChatDimens.sixteen,
+            ),
             IsmChatDimens.boxWidth2,
-            Text('Video',style: IsmChatStyles.w400Black12,)
+            Text(
+              'Video',
+              style: IsmChatStyles.w400Black12,
+            )
           ],
         );
 
       case 'Audio':
         return Row(
           children: [
-            Icon(Icons.audio_file, size: IsmChatDimens.sixteen,),
+            Icon(
+              Icons.audio_file,
+              size: IsmChatDimens.sixteen,
+            ),
             IsmChatDimens.boxWidth2,
-            Text('Audio',style: IsmChatStyles.w400Black12,)
+            Text(
+              'Audio',
+              style: IsmChatStyles.w400Black12,
+            )
           ],
         );
 
       case 'Document':
         return Row(
           children: [
-            Icon(Icons.file_copy_outlined, size: IsmChatDimens.sixteen,),
+            Icon(
+              Icons.file_copy_outlined,
+              size: IsmChatDimens.sixteen,
+            ),
             IsmChatDimens.boxWidth2,
-            Text('Document',style: IsmChatStyles.w400Black12,)
+            Text(
+              'Document',
+              style: IsmChatStyles.w400Black12,
+            )
           ],
         );
-
     }
-    if(contains('https://www.google.com/maps/')) {
+    if (contains('https://www.google.com/maps/')) {
       return Row(
         children: [
-         Icon(Icons.location_on_outlined, size: IsmChatDimens.sixteen,),
+          Icon(
+            Icons.location_on_outlined,
+            size: IsmChatDimens.sixteen,
+          ),
           IsmChatDimens.boxWidth2,
-         Text('Location',
-           style: IsmChatStyles.w400Black12,)
+          Text(
+            'Location',
+            style: IsmChatStyles.w400Black12,
+          )
         ],
       );
     }
-    return  Text(
+    return Text(
       message.body,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: IsmChatStyles.w400Black12,
     );
   }
-
 }
 
 extension GetLink on String {
@@ -435,6 +458,60 @@ extension ModelConversion on IsmChatConversationModel {
   bool get isSomeoneTyping => _mqttController.typingUsers
       .map((e) => e.conversationId)
       .contains(conversationId);
+
+  Widget get sender {
+    if (!isGroup! ||
+        lastMessageDetails!.messageBody.isEmpty ||
+        [IsmChatCustomMessageType.memberLeave]
+            .contains(lastMessageDetails!.customType)) {
+      return const SizedBox.shrink();
+    }
+    var senderName =
+        lastMessageDetails!.sentByMe ? 'You' : lastMessageDetails!.senderName;
+    return Text(
+      '$senderName: ',
+      style: IsmChatStyles.w500Black12,
+    );
+  }
+
+  Widget get readCheck {
+    try {
+      if (!lastMessageDetails!.sentByMe ||
+          lastMessageDetails!.messageBody.isEmpty ||
+          [IsmChatCustomMessageType.addMember]
+              .contains(lastMessageDetails!.customType)) {
+        return const SizedBox.shrink();
+      }
+      var deliveredToAll = false;
+      var readByAll = false;
+      if (!isGroup!) {
+        // this means not recieved by the user
+        if (lastMessageDetails!.deliverCount != 0) {
+          deliveredToAll = true;
+          // this means not read by the user
+          if (lastMessageDetails!.readCount != 0) {
+            readByAll = true;
+          }
+        }
+      } else {
+        if (membersCount == lastMessageDetails!.deliverCount) {
+          deliveredToAll = true;
+          if (membersCount == lastMessageDetails!.readCount) {
+            readByAll = true;
+          }
+        }
+      }
+
+      return Icon(
+        deliveredToAll ? Icons.done_all_rounded : Icons.done_rounded,
+        color: readByAll ? Colors.blue : Colors.grey,
+        size: 16,
+      );
+    } catch (e, st) {
+      IsmChatLog.error(e, st);
+      return const SizedBox.shrink();
+    }
+  }
 }
 
 extension LastMessageBody on LastMessageDetails {
@@ -461,13 +538,13 @@ extension LastMessageBody on LastMessageDetails {
       case IsmChatCustomMessageType.removeMember:
         return '';
       case IsmChatCustomMessageType.addMember:
-        return '';
+        return 'Added ${(members ?? []).join(', ')}';
       case IsmChatCustomMessageType.addAdmin:
         return '';
       case IsmChatCustomMessageType.revokeAdmin:
         return '';
       case IsmChatCustomMessageType.memberLeave:
-        return '';
+        return '$senderName left';
       case IsmChatCustomMessageType.deletedForMe:
       case IsmChatCustomMessageType.deletedForEveryone:
       case IsmChatCustomMessageType.link:
@@ -477,5 +554,64 @@ extension LastMessageBody on LastMessageDetails {
       default:
         return body;
     }
+  }
+
+  Widget get icon {
+    IconData? iconData;
+    switch (customType) {
+      case IsmChatCustomMessageType.reply:
+        iconData = Icons.reply_rounded;
+        break;
+      case IsmChatCustomMessageType.image:
+        iconData = Icons.image_rounded;
+        break;
+      case IsmChatCustomMessageType.video:
+        iconData = Icons.videocam_rounded;
+        break;
+      case IsmChatCustomMessageType.audio:
+        iconData = Icons.audiotrack_rounded;
+        break;
+      case IsmChatCustomMessageType.file:
+        iconData = Icons.description_rounded;
+        break;
+      case IsmChatCustomMessageType.location:
+        iconData = Icons.location_on_rounded;
+        break;
+      case IsmChatCustomMessageType.block:
+      case IsmChatCustomMessageType.unblock:
+        iconData = Icons.block_rounded;
+        break;
+      case IsmChatCustomMessageType.conversationCreated:
+        iconData = Icons.how_to_reg_rounded;
+        break;
+      case IsmChatCustomMessageType.addMember:
+        iconData = Icons.waving_hand_rounded;
+        break;
+      case IsmChatCustomMessageType.memberLeave:
+        iconData = Icons.directions_walk_rounded;
+        break;
+      case IsmChatCustomMessageType.link:
+        iconData = Icons.link_rounded;
+        break;
+      case IsmChatCustomMessageType.forward:
+        iconData = Icons.shortcut_rounded;
+        break;
+      case IsmChatCustomMessageType.removeMember:
+      case IsmChatCustomMessageType.addAdmin:
+      case IsmChatCustomMessageType.revokeAdmin:
+      case IsmChatCustomMessageType.deletedForMe:
+      case IsmChatCustomMessageType.deletedForEveryone:
+      case IsmChatCustomMessageType.date:
+      case IsmChatCustomMessageType.text:
+      default:
+    }
+
+    if (iconData != null) {
+      return Icon(
+        iconData,
+        size: 16,
+      );
+    }
+    return const SizedBox.shrink();
   }
 }

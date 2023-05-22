@@ -9,6 +9,8 @@ class ChatMessageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const IsmChatPageView();
+    return const IsmChatPageView(
+      
+    );
   }
 }
