@@ -18,13 +18,17 @@ class IsmChatConversationCard extends StatelessWidget {
   final IsmChatConversationModel conversation;
   final VoidCallback? onTap;
   final Widget? onProfileWidget;
-  final Widget? Function(BuildContext, IsmChatConversationModel,String)? profileImageBuilder;
-  final String Function(BuildContext, IsmChatConversationModel,String)? profileImageUrl;
-  final Widget? Function(BuildContext, IsmChatConversationModel,String)? nameBuilder;
-  final String Function(BuildContext, IsmChatConversationModel,String)? name;
-  final Widget? Function(BuildContext, IsmChatConversationModel,String)? subtitleBuilder;
-  final String Function(BuildContext, IsmChatConversationModel,String)? subtitle;
-
+  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
+      profileImageBuilder;
+  final String Function(BuildContext, IsmChatConversationModel, String)?
+      profileImageUrl;
+  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
+      nameBuilder;
+  final String Function(BuildContext, IsmChatConversationModel, String)? name;
+  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
+      subtitleBuilder;
+  final String Function(BuildContext, IsmChatConversationModel, String)?
+      subtitle;
 
   @override
   Widget build(BuildContext context) => IsmChatTapHandler(
@@ -32,32 +36,50 @@ class IsmChatConversationCard extends StatelessWidget {
         child: SizedBox(
           child: ListTile(
             dense: true,
-            leading:
-                Stack(
-                  alignment: Alignment.bottomLeft,
-                  children: [
-                    profileImageBuilder?.call(context, conversation, conversation.profileUrl) ??
-                        IsmChatImage.profile(
-                           profileImageUrl?.call(context, conversation, conversation.profileUrl) ??  conversation.profileUrl,
-                          name: conversation.chatName,
-                        ),
+            leading: Stack(
+              alignment: Alignment.bottomLeft,
+              children: [
+                profileImageBuilder?.call(
+                        context, conversation, conversation.profileUrl) ??
+                    IsmChatImage.profile(
+                      profileImageUrl?.call(
+                              context, conversation, conversation.profileUrl) ??
+                          conversation.profileUrl,
+                      name: conversation.chatName,
+                    ),
 
-                     // Todo   
-                     Positioned(
-                        top: IsmChatDimens.twentyFour,
-                        child:
-                         onProfileWidget == null ? IsmChatDimens.box0 : conversation.metaData?.isMatchId?.isNotEmpty == true ? onProfileWidget! :IsmChatDimens.box0,
-                      )   
-                  ],
-                ),
-            title: nameBuilder?.call(context, conversation, conversation.chatName) ??
+                // Todo
+                Positioned(
+                  top: IsmChatDimens.twentyFour,
+                  child: onProfileWidget == null
+                      ? IsmChatDimens.box0
+                      : conversation.metaData?.isMatchId?.isNotEmpty == true
+                          ? onProfileWidget!
+                          : IsmChatDimens.box0,
+                )
+              ],
+            ),
+            title: nameBuilder?.call(
+                    context, conversation, conversation.chatName) ??
                 Text(
-                name?.call(context, conversation, conversation.chatName) ??  conversation.chatName,
+                  name?.call(context, conversation, conversation.chatName) ??
+                      conversation.chatName,
                   style: IsmChatStyles.w600Black14,
                 ),
-            subtitle: subtitleBuilder?.call(
-                    context, conversation, conversation.lastMessageDetails?.body ?? '') ??
-                conversation.lastMessageDetails!.body.lastMessageType(conversation.lastMessageDetails!),
+            subtitle: subtitleBuilder?.call(context, conversation,
+                    conversation.lastMessageDetails?.body ?? '') ??
+                Row(
+                  children: [
+                    conversation.lastMessageDetails!.icon,
+                    IsmChatDimens.boxWidth2,
+                    Text(
+                      conversation.lastMessageDetails!.messageBody,
+                      style: IsmChatStyles.w400Black12,
+                    ),
+                  ],
+                ),
+            // conversation.lastMessageDetails!.body
+            //     .lastMessageType(conversation.lastMessageDetails!),
             trailing: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.end,

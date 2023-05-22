@@ -173,7 +173,6 @@ extension DateConvertor on int {
   }
 }
 
-
 extension DateFormats on DateTime {
   String toTimeString() => DateFormat.jm().format(this);
 
@@ -260,65 +259,90 @@ extension ChildWidget on IsmChatCustomMessageType {
 }
 
 extension LastMessageWidget on String {
-
   Widget lastMessageType(LastMessageDetails message) {
     switch (this) {
-
-      case  'Image' :
+      case 'Image':
         return Row(
           children: [
-            Icon(Icons.image, size: IsmChatDimens.sixteen,),
+            Icon(
+              Icons.image,
+              size: IsmChatDimens.sixteen,
+            ),
             IsmChatDimens.boxWidth2,
-            Text('Image', style: IsmChatStyles.w400Black12,)
+            Text(
+              'Image',
+              style: IsmChatStyles.w400Black12,
+            )
           ],
         );
 
       case 'Video':
         return Row(
           children: [
-            Icon(Icons.video_call, size: IsmChatDimens.sixteen,),
+            Icon(
+              Icons.video_call,
+              size: IsmChatDimens.sixteen,
+            ),
             IsmChatDimens.boxWidth2,
-            Text('Video',style: IsmChatStyles.w400Black12,)
+            Text(
+              'Video',
+              style: IsmChatStyles.w400Black12,
+            )
           ],
         );
 
       case 'Audio':
         return Row(
           children: [
-            Icon(Icons.audio_file, size: IsmChatDimens.sixteen,),
+            Icon(
+              Icons.audio_file,
+              size: IsmChatDimens.sixteen,
+            ),
             IsmChatDimens.boxWidth2,
-            Text('Audio',style: IsmChatStyles.w400Black12,)
+            Text(
+              'Audio',
+              style: IsmChatStyles.w400Black12,
+            )
           ],
         );
 
       case 'Document':
         return Row(
           children: [
-            Icon(Icons.file_copy_outlined, size: IsmChatDimens.sixteen,),
+            Icon(
+              Icons.file_copy_outlined,
+              size: IsmChatDimens.sixteen,
+            ),
             IsmChatDimens.boxWidth2,
-            Text('Document',style: IsmChatStyles.w400Black12,)
+            Text(
+              'Document',
+              style: IsmChatStyles.w400Black12,
+            )
           ],
         );
-
     }
-    if(contains('https://www.google.com/maps/')) {
+    if (contains('https://www.google.com/maps/')) {
       return Row(
         children: [
-         Icon(Icons.location_on_outlined, size: IsmChatDimens.sixteen,),
+          Icon(
+            Icons.location_on_outlined,
+            size: IsmChatDimens.sixteen,
+          ),
           IsmChatDimens.boxWidth2,
-         Text('Location',
-           style: IsmChatStyles.w400Black12,)
+          Text(
+            'Location',
+            style: IsmChatStyles.w400Black12,
+          )
         ],
       );
     }
-    return  Text(
+    return Text(
       message.body,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: IsmChatStyles.w400Black12,
     );
   }
-
 }
 
 extension GetLink on String {
@@ -477,6 +501,65 @@ extension LastMessageBody on LastMessageDetails {
         return body;
     }
   }
+
+  Widget get icon {
+    IconData? iconData;
+    switch (customType) {
+      case IsmChatCustomMessageType.reply:
+        iconData = Icons.reply_rounded;
+        break;
+      case IsmChatCustomMessageType.image:
+        iconData = Icons.image_rounded;
+        break;
+      case IsmChatCustomMessageType.video:
+        iconData = Icons.videocam_rounded;
+        break;
+      case IsmChatCustomMessageType.audio:
+        iconData = Icons.audiotrack_rounded;
+        break;
+      case IsmChatCustomMessageType.file:
+        iconData = Icons.description_rounded;
+        break;
+      case IsmChatCustomMessageType.location:
+        iconData = Icons.location_on_rounded;
+        break;
+      case IsmChatCustomMessageType.block:
+        iconData = Icons.block_rounded;
+        break;
+      case IsmChatCustomMessageType.unblock:
+        iconData = Icons.thumb_up_alt_rounded;
+        break;
+      case IsmChatCustomMessageType.conversationCreated:
+        iconData = Icons.how_to_reg_rounded;
+        break;
+      case IsmChatCustomMessageType.addMember:
+        iconData = Icons.waving_hand_rounded;
+        break;
+      case IsmChatCustomMessageType.memberLeave:
+        iconData = Icons.directions_walk_rounded;
+        break;
+      case IsmChatCustomMessageType.link:
+        iconData = Icons.link_rounded;
+        break;
+      case IsmChatCustomMessageType.forward:
+        iconData = Icons.shortcut_rounded;
+        break;
+      case IsmChatCustomMessageType.removeMember:
+      case IsmChatCustomMessageType.addAdmin:
+      case IsmChatCustomMessageType.revokeAdmin:
+      case IsmChatCustomMessageType.deletedForMe:
+      case IsmChatCustomMessageType.deletedForEveryone:
+      case IsmChatCustomMessageType.date:
+      case IsmChatCustomMessageType.text:
+      default:
+    }
+
+    if (iconData != null) {
+      return Icon(
+        iconData,
+        size: 16,
+      );
+    }
+    return const SizedBox.shrink();
+  }
 }
-
-
