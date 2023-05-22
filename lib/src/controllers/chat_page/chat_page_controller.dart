@@ -936,7 +936,7 @@ class IsmChatPageController extends GetxController
       const Duration(minutes: 1),
       (Timer t) {
         if (!Get.isRegistered<IsmChatPageController>()) {
-          return;
+          t.cancel();
         }
         if (canRefreshDetails) {
           getConverstaionDetails(

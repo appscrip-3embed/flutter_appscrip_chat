@@ -230,7 +230,6 @@ class IsmChatConversationsController extends GetxController {
   }
 
   Future<void> getConversationsFromDB() async {
-    IsmChatLog('GetConversatoinFromDB');
     var dbConversations = IsmChatConfig.objectBox.getAllConversations();
     if (dbConversations.isEmpty) {
       return;
