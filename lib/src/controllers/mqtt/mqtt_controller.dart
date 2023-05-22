@@ -584,6 +584,7 @@ class IsmChatMqttController extends GetxController {
         messageId = actionModel.messageId!;
       }
     }
+    await Get.find<IsmChatConversationsController>().getChatConversations();
   }
 
   void _handleMemberLeave(IsmChatMqttActionModel actionModel) async {
