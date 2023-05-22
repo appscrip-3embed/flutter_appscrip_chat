@@ -558,10 +558,13 @@ class IsmChatPageController extends GetxController
     } else if (message.customType == IsmChatCustomMessageType.file) {
 
       var localPath = message.attachments?.first.mediaUrl;
+      if (localPath == null) {
+        return;
+      }
         try {
-          if(localPath!.contains('https://')||localPath!.contains('http://')){
+          if(localPath.contains('https://')||localPath.contains('http://')){
             final client = http.Client();
-            final request = await client.get(Uri.parse(localPath!));
+            final request = await client.get(Uri.parse(localPath));
             final bytes = request.bodyBytes;
             final documentsDir =
                 (await path_provider.getApplicationDocumentsDirectory()).path;
@@ -585,7 +588,7 @@ class IsmChatPageController extends GetxController
           }
 
         } catch (e) {
-          IsmChatLog.error("$e");
+          IsmChatLog.error('$e');
         }
     }
   }
