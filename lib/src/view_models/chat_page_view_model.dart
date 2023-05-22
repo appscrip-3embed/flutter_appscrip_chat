@@ -9,8 +9,6 @@ class IsmChatPageViewModel {
   var messageSkip = 0;
   var messageLimit = 20;
 
-  
-
   Future<List<IsmChatMessageModel>?> getChatMessages({
     required String conversationId,
     required int lastMessageTimestamp,
@@ -38,6 +36,12 @@ class IsmChatPageViewModel {
             IsmChatActionEvents.addAdmin.name,
           ],
         ].contains(e.action));
+        if(Get.find<IsmChatPageController>().messages.isNotEmpty){
+           messages.removeWhere((e) =>
+        e.messageId ==
+        Get.find<IsmChatPageController>().messages.last.messageId);
+        }
+   
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
     var conversation = conversationBox
         .query(
