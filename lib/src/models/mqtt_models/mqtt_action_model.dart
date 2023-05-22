@@ -104,7 +104,7 @@ class IsmChatMqttActionModel {
 
   @override
   String toString() =>
-      'MqttActionModel(conversationId: $conversationId, userDetails: $userDetails, opponentDetails: $opponentDetails, initiatorDetails: $initiatorDetails, sentAt: $sentAt, action: $action)';
+      'MqttActionModel(conversationId: $conversationId, messageId: $messageId, messageIds: $messageIds, userDetails: $userDetails, opponentDetails: $opponentDetails, initiatorDetails: $initiatorDetails, sentAt: $sentAt, action: $action)';
 
   @override
   bool operator ==(covariant IsmChatMqttActionModel other) {

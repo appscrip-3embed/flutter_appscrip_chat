@@ -398,6 +398,9 @@ class IsmChatPageController extends GetxController
   }
 
   Future<void> scrollDown() async {
+    if (!Get.isRegistered<IsmChatPageController>()) {
+      return;
+    }
     await messagesScrollController.animateTo(
       messagesScrollController.position.maxScrollExtent,
       duration: IsmChatConfig.animationDuration,
@@ -628,10 +631,22 @@ class IsmChatPageController extends GetxController
           conversationId: messages.last.conversationId ?? '',
           body: messages.last.body,
           customType: messages.last.customType,
+          readCount: chatConversation.isGroup!
+              ? messages.last.readByAll!
+                  ? chatConversation.membersCount!
+                  : messages.last.lastReadAt!.length
+              : messages.last.readByAll!
+                  ? 1
+                  : 0,
+          deliverCount: chatConversation.isGroup!
+              ? messages.last.deliveredToAll!
+                  ? chatConversation.membersCount!
+                  : 0
+              : messages.last.deliveredToAll!
+                  ? 1
+                  : 0,
         );
       }
-
-      // Todo: check for last message for display in converstiaon list
       chatConversation.unreadMessagesCount = 0;
       IsmChatConfig.objectBox.chatConversationBox.put(chatConversation);
       await Get.find<IsmChatConversationsController>().getConversationsFromDB();

@@ -147,6 +147,7 @@ class IsmChatMqttController extends GetxController {
 
       if (payload['action'] != null) {
         var actionModel = IsmChatMqttActionModel.fromMap(payload);
+        IsmChatLog(actionModel);
         _handleAction(actionModel);
       } else {
         var message = IsmChatMessageModel.fromMap(payload);
@@ -263,7 +264,8 @@ class IsmChatMqttController extends GetxController {
     }
 
     // To handle and show last message & unread count in conversation list
-    conversation.lastMessageDetails.target = LastMessageDetails(
+    conversation.lastMessageDetails.target =
+        conversation.lastMessageDetails.target!.copyWith(
       sentByMe: message.sentByMe,
       showInConversation: true,
       sentAt: message.sentAt,
@@ -391,8 +393,9 @@ class IsmChatMqttController extends GetxController {
         conversation.messages.last = lastMessage.toJson();
         conversation.lastMessageDetails.target =
             conversation.lastMessageDetails.target!.copyWith(
-          deliverCount:
-              conversation.lastMessageDetails.target!.deliverCount + 1,
+          deliverCount: conversation.isGroup!
+              ? conversation.lastMessageDetails.target!.deliverCount + 1
+              : 1,
         );
         conversationBox.put(conversation);
         if (Get.isRegistered<IsmChatPageController>()) {
@@ -425,9 +428,12 @@ class IsmChatMqttController extends GetxController {
         conversationBox.put(conversation);
         conversation.lastMessageDetails.target =
             conversation.lastMessageDetails.target!.copyWith(
-          deliverCount:
-              conversation.lastMessageDetails.target!.deliverCount + 1,
-          readCount: conversation.lastMessageDetails.target!.readCount + 1,
+          deliverCount: conversation.isGroup!
+              ? conversation.lastMessageDetails.target!.deliverCount + 1
+              : 1,
+          readCount: conversation.isGroup!
+              ? conversation.lastMessageDetails.target!.readCount + 1
+              : 1,
         );
         if (Get.isRegistered<IsmChatPageController>()) {
           Get.find<IsmChatPageController>()
@@ -471,8 +477,12 @@ class IsmChatMqttController extends GetxController {
     conversation.messages = modifiedMessages;
     conversation.lastMessageDetails.target =
         conversation.lastMessageDetails.target!.copyWith(
-      deliverCount: conversation.lastMessageDetails.target!.deliverCount + 1,
-      readCount: conversation.lastMessageDetails.target!.readCount + 1,
+      deliverCount: conversation.isGroup!
+          ? conversation.lastMessageDetails.target!.deliverCount + 1
+          : 1,
+      readCount: conversation.isGroup!
+          ? conversation.lastMessageDetails.target!.readCount + 1
+          : 1,
     );
     conversationBox.put(conversation);
     if (Get.isRegistered<IsmChatPageController>()) {
