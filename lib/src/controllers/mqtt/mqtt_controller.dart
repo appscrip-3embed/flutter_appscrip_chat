@@ -231,7 +231,7 @@ class IsmChatMqttController extends GetxController {
         // TODO: Handle this case.
         break;
       case IsmChatActionEvents.memberLeave:
-        // TODO: Handle this case.
+        _handleMemberLeave(actionModel);
         break;
       case IsmChatActionEvents.addMember:
       case IsmChatActionEvents.removeMember:
@@ -586,6 +586,43 @@ class IsmChatMqttController extends GetxController {
     }
   }
 
+  void _handleMemberLeave(IsmChatMqttActionModel actionModel) async {
+    if (actionModel.userDetails?.userId ==
+        _communicationConfig.userConfig.userId) {
+      return;
+    }
+
+    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
+
+    var conversation = conversationBox
+        .query(DBConversationModel_.conversationId
+            .equals(actionModel.conversationId!))
+        .build()
+        .findUnique();
+
+    if (conversation == null ||
+        conversation.lastMessageDetails.target!.messageId ==
+            actionModel.messageId) {
+      return;
+    }
+    if (messageId == actionModel.messageId) {
+      return;
+    }
+
+    if (Get.isRegistered<IsmChatPageController>()) {
+      var controller = Get.find<IsmChatPageController>();
+      if (controller.conversation!.conversationId ==
+              actionModel.conversationId &&
+          controller.conversation!.lastMessageSentAt != actionModel.sentAt) {
+        await controller.getMessagesFromAPI(
+            conversationId: actionModel.conversationId ?? '',
+            lastMessageTimestamp: controller.messages.last.sentAt);
+        messageId = actionModel.messageId!;
+      }
+    }
+    await Get.find<IsmChatConversationsController>().getChatConversations();
+  }
+
   void _handleAdminRemoveAndAdd(IsmChatMqttActionModel actionModel) async {
     if (actionModel.userDetails?.userId ==
         _communicationConfig.userConfig.userId) {
@@ -620,6 +657,7 @@ class IsmChatMqttController extends GetxController {
         messageId = actionModel.messageId!;
       }
     }
+    await Get.find<IsmChatConversationsController>().getChatConversations();
   }
 
   void _handleCreateConversation(IsmChatMqttActionModel actionModel) async {

@@ -460,7 +460,10 @@ extension ModelConversion on IsmChatConversationModel {
       .contains(conversationId);
 
   Widget get sender {
-    if (!isGroup! || lastMessageDetails!.messageBody.isEmpty) {
+    if (!isGroup! ||
+        lastMessageDetails!.messageBody.isEmpty ||
+        [IsmChatCustomMessageType.memberLeave]
+            .contains(lastMessageDetails!.customType)) {
       return const SizedBox.shrink();
     }
     var senderName =
@@ -472,35 +475,42 @@ extension ModelConversion on IsmChatConversationModel {
   }
 
   Widget get readCheck {
-    if (!lastMessageDetails!.sentByMe ||
-        lastMessageDetails!.messageBody.isEmpty) {
+    try {
+      if (!lastMessageDetails!.sentByMe ||
+          lastMessageDetails!.messageBody.isEmpty ||
+          [IsmChatCustomMessageType.addMember]
+              .contains(lastMessageDetails!.customType)) {
+        return const SizedBox.shrink();
+      }
+      var deliveredToAll = false;
+      var readByAll = false;
+      if (!isGroup!) {
+        // this means not recieved by the user
+        if (lastMessageDetails!.deliverCount != 0) {
+          deliveredToAll = true;
+          // this means not read by the user
+          if (lastMessageDetails!.readCount != 0) {
+            readByAll = true;
+          }
+        }
+      } else {
+        if (membersCount == lastMessageDetails!.deliverCount) {
+          deliveredToAll = true;
+          if (membersCount == lastMessageDetails!.readCount) {
+            readByAll = true;
+          }
+        }
+      }
+
+      return Icon(
+        deliveredToAll ? Icons.done_all_rounded : Icons.done_rounded,
+        color: readByAll ? Colors.blue : Colors.grey,
+        size: 16,
+      );
+    } catch (e, st) {
+      IsmChatLog.error(e, st);
       return const SizedBox.shrink();
     }
-    var deliveredToAll = false;
-    var readByAll = false;
-    if (!isGroup!) {
-      // this means not recieved by the user
-      if (lastMessageDetails!.deliverCount != 0) {
-        deliveredToAll = true;
-        // this means not read by the user
-        if (lastMessageDetails!.readCount != 0) {
-          readByAll = true;
-        }
-      }
-    } else {
-      if (membersCount == lastMessageDetails!.deliverCount) {
-        deliveredToAll = true;
-        if (membersCount == lastMessageDetails!.readCount) {
-          readByAll = true;
-        }
-      }
-    }
-
-    return Icon(
-      deliveredToAll ? Icons.done_all_rounded : Icons.done_rounded,
-      color: readByAll ? Colors.blue : Colors.grey,
-      size: 16,
-    );
   }
 }
 
@@ -528,13 +538,13 @@ extension LastMessageBody on LastMessageDetails {
       case IsmChatCustomMessageType.removeMember:
         return '';
       case IsmChatCustomMessageType.addMember:
-        return '';
+        return 'Added ${(members ?? []).join(', ')}';
       case IsmChatCustomMessageType.addAdmin:
         return '';
       case IsmChatCustomMessageType.revokeAdmin:
         return '';
       case IsmChatCustomMessageType.memberLeave:
-        return '';
+        return '$senderName left';
       case IsmChatCustomMessageType.deletedForMe:
       case IsmChatCustomMessageType.deletedForEveryone:
       case IsmChatCustomMessageType.link:

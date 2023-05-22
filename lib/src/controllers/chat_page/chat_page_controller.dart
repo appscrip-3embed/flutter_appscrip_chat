@@ -621,6 +621,7 @@ class IsmChatPageController extends GetxController
         .getDBConversation(conversationId: conversation?.conversationId ?? '');
     if (chatConversation != null) {
       if (messages.isNotEmpty) {
+        IsmChatLog(messages.last);
         chatConversation.lastMessageDetails.target = LastMessageDetails(
           sentByMe: messages.last.sentByMe,
           showInConversation: true,
@@ -645,6 +646,9 @@ class IsmChatPageController extends GetxController
               : messages.last.deliveredToAll!
                   ? 1
                   : 0,
+          members:
+              messages.last.members?.map((e) => e.memberName ?? '').toList() ??
+                  [],
         );
       }
       chatConversation.unreadMessagesCount = 0;

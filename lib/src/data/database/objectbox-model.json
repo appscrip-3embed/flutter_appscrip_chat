@@ -191,7 +191,7 @@
     },
     {
       "id": "7:3601465766739318501",
-      "lastPropertyId": "13:2945155108077371716",
+      "lastPropertyId": "14:8693756828150268330",
       "name": "LastMessageDetails",
       "properties": [
         {
@@ -259,6 +259,11 @@
           "id": "13:2945155108077371716",
           "name": "sentByMe",
           "type": 1
+        },
+        {
+          "id": "14:8693756828150268330",
+          "name": "members",
+          "type": 30
         }
       ],
       "relations": []
