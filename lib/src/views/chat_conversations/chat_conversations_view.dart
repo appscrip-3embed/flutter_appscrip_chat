@@ -22,6 +22,7 @@ class IsmChatConversations extends StatefulWidget {
     this.profileImageUrl,
     this.subtitle,
     this.subtitleBuilder,
+    this.isSlidableEnable,
     super.key,
   });
 
@@ -46,9 +47,12 @@ class IsmChatConversations extends StatefulWidget {
   final Widget? Function(BuildContext, IsmChatConversationModel,String)? profileImageBuilder;
   final String Function(BuildContext, IsmChatConversationModel,String)? profileImageUrl;
   final Widget? Function(BuildContext, IsmChatConversationModel,String)? nameBuilder;
-  final String Function(BuildContext, IsmChatConversationModel,String)? name;
+  final String? Function(BuildContext, IsmChatConversationModel,String)? name;
   final Widget? Function(BuildContext, IsmChatConversationModel,String)? subtitleBuilder;
-  final String Function(BuildContext, IsmChatConversationModel,String)? subtitle;
+  final String? Function(BuildContext, IsmChatConversationModel,String)? subtitle;
+
+  final bool? Function(BuildContext, IsmChatConversationModel)?
+      isSlidableEnable;
 
   @override
   State<IsmChatConversations> createState() => _IsmChatConversationsState();
@@ -84,6 +88,7 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
             nameBuilder: widget.nameBuilder,
             subtitle: widget.subtitle,
             subtitleBuilder: widget.subtitleBuilder,
+            isSlidableEnable: widget.isSlidableEnable,
             
           ),
         ),
