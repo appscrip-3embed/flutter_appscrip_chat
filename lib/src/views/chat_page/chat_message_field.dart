@@ -55,7 +55,7 @@ class IsmChatMessageField extends StatelessWidget {
                       border: Border.all(
                           color: IsmChatConfig.chatTheme.primaryColor!),
                       borderRadius: BorderRadius.circular(IsmChatDimens.twenty),
-                      color: IsmChatConfig.chatTheme.backgroundColor,
+                      color: header?.backgroundColor ?? IsmChatConfig.chatTheme.backgroundColor,
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
