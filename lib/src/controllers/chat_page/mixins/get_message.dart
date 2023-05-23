@@ -53,9 +53,7 @@ mixin IsmChatPageGetMessageMixin {
     }
   }
 
-  Future<void> getMessageDeliverTime(
-    IsmChatMessageModel message,
-  ) async {
+  Future<void> getMessageDeliverTime(IsmChatMessageModel message) async {
     _controller.deliveredTime = '';
     var response = await _controller._viewModel.getMessageDeliverTime(
       conversationId: message.conversationId ?? '',
@@ -66,6 +64,8 @@ mixin IsmChatPageGetMessageMixin {
       return;
     }
     _controller.deliveredTime = (response.first.timestamp ?? 0).deliverTime;
+
+    IsmChatLog(_controller.deliveredTime);
   }
 
   Future<void> getMessageReadTime(IsmChatMessageModel message) async {
@@ -79,6 +79,8 @@ mixin IsmChatPageGetMessageMixin {
       return;
     }
     _controller.readTime = (response.first.timestamp ?? 0).deliverTime;
+
+    IsmChatLog(_controller.readTime);
   }
 
   Future<void> getConverstaionDetails(

@@ -133,10 +133,12 @@ class IsmChatApp extends StatelessWidget {
       isSlidableEnable;
 
   /// Call this function on SignOut to delete the data stored locally in the Local Database
-  static void logout() {
-    IsmChatConfig.objectBox.deleteChatLocalDb();
-    Get.delete<IsmChatConversationsController>(force: true);
-    Get.delete<IsmChatMqttController>(force: true);
+  static void logout() async {
+    await IsmChatConfig.objectBox.deleteChatLocalDb();
+    await Future.wait([
+      Get.delete<IsmChatConversationsController>(force: true),
+      Get.delete<IsmChatMqttController>(force: true),
+    ]);
   }
 
   /// Call this function on to delete chat the data stored locally in the Local Database

@@ -559,40 +559,38 @@ class IsmChatPageController extends GetxController
         mediaTime: message.sentAt,
       ));
     } else if (message.customType == IsmChatCustomMessageType.file) {
-
       var localPath = message.attachments?.first.mediaUrl;
       if (localPath == null) {
         return;
       }
-        try {
-          if(localPath.contains('https://')||localPath.contains('http://')){
-            final client = http.Client();
-            final request = await client.get(Uri.parse(localPath));
-            final bytes = request.bodyBytes;
-            final documentsDir =
-                (await path_provider.getApplicationDocumentsDirectory()).path;
-            localPath = '$documentsDir/${message.attachments?.first.name}';
-            if (!File(localPath).existsSync()) {
-              final file = File(localPath);
-              await file.writeAsBytes(bytes);
-              localPath = file.path;
-            }
-            await OpenFilex.open(localPath);
-          } else {
-            final documentsDir =
-                (await path_provider.getApplicationDocumentsDirectory()).path;
-            localPath = '$documentsDir/${message.attachments?.first.name}';
-            if (!File(localPath).existsSync()) {
-              final file = File(localPath);
-              await file.writeAsBytes(localPath as List<int>);
-              localPath = file.path;
-            }
-            await OpenFilex.open(localPath);
+      try {
+        if (localPath.contains('https://') || localPath.contains('http://')) {
+          final client = http.Client();
+          final request = await client.get(Uri.parse(localPath));
+          final bytes = request.bodyBytes;
+          final documentsDir =
+              (await path_provider.getApplicationDocumentsDirectory()).path;
+          localPath = '$documentsDir/${message.attachments?.first.name}';
+          if (!File(localPath).existsSync()) {
+            final file = File(localPath);
+            await file.writeAsBytes(bytes);
+            localPath = file.path;
           }
-
-        } catch (e) {
-          IsmChatLog.error('$e');
+          await OpenFilex.open(localPath);
+        } else {
+          final documentsDir =
+              (await path_provider.getApplicationDocumentsDirectory()).path;
+          localPath = '$documentsDir/${message.attachments?.first.name}';
+          if (!File(localPath).existsSync()) {
+            final file = File(localPath);
+            await file.writeAsBytes(localPath as List<int>);
+            localPath = file.path;
+          }
+          await OpenFilex.open(localPath);
         }
+      } catch (e) {
+        IsmChatLog.error('$e');
+      }
     }
   }
 
@@ -959,7 +957,9 @@ class IsmChatPageController extends GetxController
       [
         getMessageReadTime(message),
         getMessageDeliverTime(message),
-        Get.to(IsmChatMessageInfo(message: message))!,
+        // Get.to(IsmChatMessageInfo(message: message))!,
+        IsmChatUtility.openFullScreenBottomSheet(
+            IsmChatMessageInfo(message: message)),
       ],
     );
   }
@@ -1089,4 +1089,3 @@ class IsmChatPageController extends GetxController
     predictionList = response;
   }
 }
-

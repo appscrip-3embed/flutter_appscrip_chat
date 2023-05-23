@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -436,6 +437,10 @@ class IsmChatPageRepository {
       }
       var data = jsonDecode(response.data);
 
+      if (data['users'] == null) {
+        return null;
+      }
+
       return (data['users'] as List<dynamic>)
           .map((e) => UserDetails.fromMap(e as Map<String, dynamic>))
           .toList();
@@ -458,6 +463,10 @@ class IsmChatPageRepository {
         return null;
       }
       var data = jsonDecode(response.data);
+
+      if (data['users'] == null) {
+        return null;
+      }
 
       return (data['users'] as List<dynamic>)
           .map((e) => UserDetails.fromMap(e as Map<String, dynamic>))
