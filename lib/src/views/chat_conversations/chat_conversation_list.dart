@@ -33,6 +33,7 @@ class IsmChatConversationList extends StatefulWidget {
       this.subtitle,
       this.subtitleBuilder,
       this.profileImageUrl,
+      this.isSlidableEnable,
       this.allowDelete = false});
 
   final void Function(BuildContext, IsmChatConversationModel) onChatTap;
@@ -58,13 +59,17 @@ class IsmChatConversationList extends StatefulWidget {
   /// Provide it like you are passing itemBuilder for `ListView` or any constructor of [ListView]
   final Widget? Function(BuildContext, int)? itemBuilder;
 
-
-  final Widget? Function(BuildContext, IsmChatConversationModel,String)? profileImageBuilder;
-  final String Function(BuildContext, IsmChatConversationModel,String)? profileImageUrl;
-  final Widget? Function(BuildContext, IsmChatConversationModel,String)? nameBuilder;
-  final String Function(BuildContext, IsmChatConversationModel,String)? name;
-  final Widget? Function(BuildContext, IsmChatConversationModel,String)? subtitleBuilder;
-  final String Function(BuildContext, IsmChatConversationModel,String)? subtitle;
+  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
+      profileImageBuilder;
+  final String Function(BuildContext, IsmChatConversationModel, String)?
+      profileImageUrl;
+  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
+      nameBuilder;
+  final String? Function(BuildContext, IsmChatConversationModel, String)? name;
+  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
+      subtitleBuilder;
+  final String? Function(BuildContext, IsmChatConversationModel, String)?
+      subtitle;
 
   /// Provide this height parameter to set the maximum height for conversation list
   ///
@@ -77,6 +82,9 @@ class IsmChatConversationList extends StatefulWidget {
 
   final List<IsmChatConversationAction>? actions;
   final List<IsmChatConversationAction>? endActions;
+
+  final bool? Function(BuildContext, IsmChatConversationModel)?
+      isSlidableEnable;
 
   @override
   State<IsmChatConversationList> createState() =>
@@ -137,7 +145,9 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                       var conversation = controller.conversations[index];
                       return Slidable(
                         closeOnScroll: true,
-                        enabled: conversation.metaData?.isMatchId?.isNotEmpty ==  true ? true : false,
+                        enabled: widget.isSlidableEnable
+                                ?.call(context, conversation) ??
+                            true,
                         startActionPane:
                             widget.actions == null || widget.actions!.isEmpty
                                 ? null
@@ -147,7 +157,8 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                                     children: [
                                         ...widget.actions?.map(
                                               (e) => SlidableAction(
-                                                onPressed: (_) => e.onTap(conversation),
+                                                onPressed: (_) =>
+                                                    e.onTap(conversation),
                                                 flex: 1,
                                                 backgroundColor:
                                                     e.backgroundColor ??
@@ -173,7 +184,8 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                                 children: [
                                   ...widget.endActions?.map(
                                         (e) => SlidableAction(
-                                          onPressed: (_) => e.onTap(conversation),
+                                          onPressed: (_) =>
+                                              e.onTap(conversation),
                                           flex: 1,
                                           backgroundColor: e.backgroundColor ??
                                               IsmChatConfig
@@ -213,13 +225,13 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                             name: widget.name,
                             nameBuilder: widget.nameBuilder,
                             profileImageUrl: widget.profileImageUrl,
-                            subtitle: widget.subtitle,    
+                            subtitle: widget.subtitle,
                             onProfileWidget: widget.onProfileWidget,
                             conversation,
                             profileImageBuilder: widget.profileImageBuilder,
                             subtitleBuilder: !conversation.isSomeoneTyping
                                 ? widget.subtitleBuilder
-                                : (_, __,___) => Text(
+                                : (_, __, ___) => Text(
                                       conversation.typingUsers,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
@@ -228,7 +240,6 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                             onTap: () {
                               controller.navigateToMessages(conversation);
                               widget.onChatTap(_, conversation);
-
                             },
                           ),
                         ),

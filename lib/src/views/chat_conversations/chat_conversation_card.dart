@@ -20,14 +20,14 @@ class IsmChatConversationCard extends StatelessWidget {
   final Widget? onProfileWidget;
   final Widget? Function(BuildContext, IsmChatConversationModel, String)?
       profileImageBuilder;
-  final String Function(BuildContext, IsmChatConversationModel, String)?
+  final String? Function(BuildContext, IsmChatConversationModel, String)?
       profileImageUrl;
   final Widget? Function(BuildContext, IsmChatConversationModel, String)?
       nameBuilder;
-  final String Function(BuildContext, IsmChatConversationModel, String)? name;
+  final String? Function(BuildContext, IsmChatConversationModel, String)? name;
   final Widget? Function(BuildContext, IsmChatConversationModel, String)?
       subtitleBuilder;
-  final String Function(BuildContext, IsmChatConversationModel, String)?
+  final String? Function(BuildContext, IsmChatConversationModel, String)?
       subtitle;
 
   @override
