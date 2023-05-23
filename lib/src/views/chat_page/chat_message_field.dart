@@ -85,9 +85,18 @@ class IsmChatMessageField extends StatelessWidget {
                                     Text(
                                       controller.chatMessageModel?.sentByMe ??
                                               false
-                                          ? ismChatConversationController
-                                                  .userDetails?.userName ??
-                                              ''
+                                          ? IsmChatConfig
+                                                  .communicationConfig
+                                                  .userConfig
+                                                  .userName
+                                                  .isNotEmpty
+                                              ? IsmChatConfig
+                                                  .communicationConfig
+                                                  .userConfig
+                                                  .userName
+                                              : ismChatConversationController
+                                                      .userDetails?.userName ??
+                                                  ''
                                           : controller.conversation
                                                   ?.opponentDetails?.userName ??
                                               '',
@@ -216,17 +225,17 @@ class _MicOrSendButton extends StatelessWidget {
                                   .conversation?.opponentDetails?.userId ??
                               '');
                     },
-              onTap: (){
-                if(controller.showSendButton){
-                  if(!controller.conversation!.isChattingAllowed){
+              onTap: () {
+                if (controller.showSendButton) {
+                  if (!controller.conversation!.isChattingAllowed) {
                     controller.showDialogCheckBlockUnBlock();
                   } else {
                     controller.sendTextMessage(
                         conversationId:
-                        controller.conversation?.conversationId ?? '',
-                        userId: controller
-                            .conversation?.opponentDetails?.userId ??
-                            '');
+                            controller.conversation?.conversationId ?? '',
+                        userId:
+                            controller.conversation?.opponentDetails?.userId ??
+                                '');
                   }
                 }
               },
