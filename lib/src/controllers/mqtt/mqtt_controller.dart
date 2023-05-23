@@ -339,13 +339,13 @@ class IsmChatMqttController extends GetxController {
           sound: '',
           channel: 'message',
         );
-        // if (Platform.isAndroid) {
-        //   Get.snackbar(
-        //     message.chatName,
-        //     mqttMessage,
-        //     icon: const Icon(Icons.message),
-        //   );
-        // }
+        if (Platform.isAndroid) {
+          Get.snackbar(
+            message.chatName,
+            mqttMessage,
+            icon: const Icon(Icons.message),
+          );
+        }
       }
     } else {
       LocalNoticeService().cancelAllNotification();
@@ -356,13 +356,13 @@ class IsmChatMqttController extends GetxController {
         sound: '',
         channel: 'message',
       );
-      // if (Platform.isAndroid) {
-      //   Get.snackbar(
-      //     message.chatName,
-      //     mqttMessage,
-      //     icon: const Icon(Icons.message),
-      //   );
-      // }
+      if (Platform.isAndroid) {
+        Get.snackbar(
+          message.chatName,
+          mqttMessage,
+          icon: const Icon(Icons.message),
+        );
+      }
     }
   }
 
