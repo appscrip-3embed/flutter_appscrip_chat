@@ -168,7 +168,7 @@ class _IsmChatPageView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SafeArea(child: IsmChatMessageField())
+                   SafeArea(child: IsmChatMessageField(header: header,))
                   ],
                 ),
               ),

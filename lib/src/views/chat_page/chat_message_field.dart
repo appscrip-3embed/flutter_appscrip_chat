@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatMessageField extends StatelessWidget {
-  const IsmChatMessageField({super.key});
+  const IsmChatMessageField({super.key, required this.header});
+
+  final IsmChatHeader? header;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
@@ -101,7 +103,9 @@ class IsmChatMessageField extends StatelessWidget {
                                                       ?.userName
                                                       .capitalizeFirst ??
                                                   ''
-                                          : controller.conversation?.chatName
+                                          : header?.name?.call(context,
+                                                  controller.conversation!, controller.conversation!.chatName) ??
+                                              controller.conversation?.chatName
                                                   .capitalizeFirst ??
                                               '',
                                       style: IsmChatStyles.w600White14,
