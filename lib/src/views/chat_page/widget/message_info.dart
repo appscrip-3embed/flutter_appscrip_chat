@@ -186,7 +186,7 @@ class IsmChatMessageInfo extends StatelessWidget {
                                       size: IsmChatDimens.twenty,
                                     )
                                   : Text(
-                                      chatController.readTime,
+                                      chatController.deliveredTime,
                                       style: IsmChatStyles.w400Black12,
                                     )
                             ],

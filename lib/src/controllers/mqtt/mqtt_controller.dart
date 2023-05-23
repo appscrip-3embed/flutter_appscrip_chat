@@ -513,8 +513,11 @@ class IsmChatMqttController extends GetxController {
     if (allMessages == null) {
       return;
     }
-    allMessages
-        .removeWhere((e) => e.messageId! == actionModel.messageIds?.first);
+    if (actionModel.messageIds?.isNotEmpty == true) {
+      for (var x in actionModel.messageIds!) {
+        allMessages.removeWhere((e) => e.messageId! == x);
+      }
+    }
     await IsmChatConfig.objectBox
         .saveMessages(actionModel.conversationId!, allMessages);
     if (Get.isRegistered<IsmChatPageController>()) {

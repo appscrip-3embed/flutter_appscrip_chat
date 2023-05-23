@@ -65,7 +65,8 @@ mixin IsmChatPageGetMessageMixin {
     }
     _controller.deliveredTime = (response.first.timestamp ?? 0).deliverTime;
 
-    IsmChatLog(_controller.deliveredTime);
+    IsmChatLog.success(
+        'This is message deliver time - ${_controller.deliveredTime}');
   }
 
   Future<void> getMessageReadTime(IsmChatMessageModel message) async {
@@ -80,7 +81,7 @@ mixin IsmChatPageGetMessageMixin {
     }
     _controller.readTime = (response.first.timestamp ?? 0).deliverTime;
 
-    IsmChatLog(_controller.readTime);
+    IsmChatLog.success('This is message read time - ${_controller.readTime}');
   }
 
   Future<void> getConverstaionDetails(
