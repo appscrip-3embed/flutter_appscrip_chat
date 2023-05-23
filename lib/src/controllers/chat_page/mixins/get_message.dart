@@ -15,7 +15,6 @@ mixin IsmChatPageGetMessageMixin {
     if (_controller.messages.isEmpty) {
       return;
     }
-    _controller._scrollToBottom();
     _controller._generateIndexedMessageList();
   }
 

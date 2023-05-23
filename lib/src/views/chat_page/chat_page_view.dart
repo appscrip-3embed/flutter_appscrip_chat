@@ -92,8 +92,7 @@ class _IsmChatPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
-        builder: (controller) => 
-        Scaffold(
+        builder: (controller) => Scaffold(
           backgroundColor: IsmChatColors.whiteColor,
           resizeToAvoidBottomInset: true,
           appBar: controller.isMessageSeleted
@@ -136,7 +135,7 @@ class _IsmChatPageView extends StatelessWidget {
                           );
                           controller.canRefreshDetails = true;
                         },
-                  onBackTap: onBackTap,      
+                  onBackTap: onBackTap,
                   header: header,
                   height: height,
                 ),
@@ -156,14 +155,18 @@ class _IsmChatPageView extends StatelessWidget {
                           visible: controller.messages.isNotEmpty &&
                               controller.messages.length != 1,
                           replacement: const IsmChatNoMessage(),
-                          child: ListView.builder(
-                            controller: controller.messagesScrollController,
-                            shrinkWrap: true,
-                            keyboardDismissBehavior:
-                                ScrollViewKeyboardDismissBehavior.onDrag,
-                            padding: IsmChatDimens.edgeInsets4_8,
-                            itemCount: controller.messages.length,
-                            itemBuilder: (_, index) => IsmChatMessage(index),
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: ListView.builder(
+                              controller: controller.messagesScrollController,
+                              shrinkWrap: true,
+                              keyboardDismissBehavior:
+                                  ScrollViewKeyboardDismissBehavior.onDrag,
+                              padding: IsmChatDimens.edgeInsets4_8,
+                              reverse: true,
+                              itemCount: controller.messages.length,
+                              itemBuilder: (_, index) => IsmChatMessage(index),
+                            ),
                           ),
                         ),
                       ),

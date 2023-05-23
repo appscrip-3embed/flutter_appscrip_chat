@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:focused_menu/focused_menu.dart';
@@ -11,7 +9,8 @@ import 'package:swipe_to/swipe_to.dart';
 class IsmChatMessage extends StatelessWidget {
   IsmChatMessage(this.index, {super.key})
       : controller = Get.find<IsmChatPageController>(),
-        message = Get.find<IsmChatPageController>().messages[index];
+        message =
+            Get.find<IsmChatPageController>().messages.reversed.toList()[index];
 
   final IsmChatMessageModel message;
   final int index;

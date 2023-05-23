@@ -240,12 +240,8 @@ class IsmChatPageController extends GetxController
     }
     scrollListener();
     onGrouEligibleUserListener();
-    messageFieldFocusNode.addListener(_scrollToBottom);
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
-    });
-    _messages.listen((p0) {
-      _scrollToBottom();
     });
   }
 
@@ -390,9 +386,9 @@ class IsmChatPageController extends GetxController
       }
       if (messagesScrollController.position.maxScrollExtent <=
           messagesScrollController.offset) {
-        showDownSideButton = false;
-      } else {
         showDownSideButton = true;
+      } else {
+        showDownSideButton = false;
       }
     });
   }
@@ -402,7 +398,7 @@ class IsmChatPageController extends GetxController
       return;
     }
     await messagesScrollController.animateTo(
-      messagesScrollController.position.maxScrollExtent,
+      0,
       duration: IsmChatConfig.animationDuration,
       curve: Curves.fastOutSlowIn,
     );
@@ -668,13 +664,6 @@ class IsmChatPageController extends GetxController
       IsmChatConfig.objectBox.chatConversationBox.put(chatConversation);
       await Get.find<IsmChatConversationsController>().getConversationsFromDB();
     }
-  }
-
-  void _scrollToBottom() async {
-    await Future.delayed(
-      const Duration(milliseconds: 500),
-      () async => await scrollDown(),
-    );
   }
 
   Future<void> cropImage(File file) async {
