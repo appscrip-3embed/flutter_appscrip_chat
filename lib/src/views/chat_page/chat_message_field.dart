@@ -103,8 +103,11 @@ class IsmChatMessageField extends StatelessWidget {
                                                       ?.userName
                                                       .capitalizeFirst ??
                                                   ''
-                                          : header?.name?.call(context,
-                                                  controller.conversation!, controller.conversation!.chatName) ??
+                                          : header?.name?.call(
+                                                  context,
+                                                  controller.conversation!,
+                                                  controller.conversation!
+                                                      .chatName) ??
                                               controller.conversation?.chatName
                                                   .capitalizeFirst ??
                                               '',
