@@ -1,7 +1,7 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
-class IsmChatConversationCard extends StatelessWidget {
+class IsmChatConversationCard extends StatefulWidget {
   const IsmChatConversationCard(
     this.conversation, {
     this.profileImageBuilder,
@@ -31,55 +31,67 @@ class IsmChatConversationCard extends StatelessWidget {
       subtitle;
 
   @override
+  State<IsmChatConversationCard> createState() =>
+      _IsmChatConversationCardState();
+}
+
+class _IsmChatConversationCardState extends State<IsmChatConversationCard>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) => IsmChatTapHandler(
-        onTap: onTap,
+        onTap: widget.onTap,
         child: SizedBox(
           child: ListTile(
             dense: true,
             leading: Stack(
               alignment: Alignment.bottomLeft,
               children: [
-                profileImageBuilder?.call(
-                        context, conversation, conversation.profileUrl) ??
+                widget.profileImageBuilder?.call(context, widget.conversation,
+                        widget.conversation.profileUrl) ??
                     IsmChatImage.profile(
-                      profileImageUrl?.call(
-                              context, conversation, conversation.profileUrl) ??
-                          conversation.profileUrl,
-                      name: conversation.chatName,
+                      widget.profileImageUrl?.call(context, widget.conversation,
+                              widget.conversation.profileUrl) ??
+                          widget.conversation.profileUrl,
+                      name: widget.conversation.chatName,
                     ),
 
                 // Todo
                 Positioned(
                   top: IsmChatDimens.twentyFour,
-                  child: onProfileWidget == null
+                  child: widget.onProfileWidget == null
                       ? IsmChatDimens.box0
-                      : conversation.metaData?.isMatchId?.isNotEmpty == true
-                          ? onProfileWidget!
+                      : widget.conversation.metaData?.isMatchId?.isNotEmpty ==
+                              true
+                          ? widget.onProfileWidget!
                           : IsmChatDimens.box0,
                 )
               ],
             ),
-            title: nameBuilder?.call(
-                    context, conversation, conversation.chatName) ??
+            title: widget.nameBuilder?.call(context, widget.conversation,
+                    widget.conversation.chatName) ??
                 Text(
-                  name?.call(context, conversation, conversation.chatName) ??
-                      conversation.chatName,
+                  widget.name?.call(context, widget.conversation,
+                          widget.conversation.chatName) ??
+                      widget.conversation.chatName,
                   style: IsmChatStyles.w600Black14,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-            subtitle: subtitleBuilder?.call(context, conversation,
-                    conversation.lastMessageDetails?.body ?? '') ??
+            subtitle: widget.subtitleBuilder?.call(context, widget.conversation,
+                    widget.conversation.lastMessageDetails?.body ?? '') ??
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    conversation.readCheck,
-                    conversation.sender,
-                    conversation.lastMessageDetails!.icon,
+                    widget.conversation.readCheck,
+                    widget.conversation.sender,
+                    widget.conversation.lastMessageDetails!.icon,
                     IsmChatDimens.boxWidth2,
                     Flexible(
                       child: Text(
-                        conversation.lastMessageDetails!.messageBody,
+                        widget.conversation.lastMessageDetails!.messageBody,
                         style: IsmChatStyles.w400Black12,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -94,12 +106,12 @@ class IsmChatConversationCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  conversation.lastMessageDetails!.sentAt
+                  widget.conversation.lastMessageDetails!.sentAt
                       .toLastMessageTimeString(),
                   style: IsmChatStyles.w400Black10,
                 ),
-                if (conversation.unreadMessagesCount != null &&
-                    conversation.unreadMessagesCount != 0)
+                if (widget.conversation.unreadMessagesCount != null &&
+                    widget.conversation.unreadMessagesCount != 0)
                   Container(
                     height: IsmChatDimens.twenty,
                     width: IsmChatDimens.twenty,
@@ -109,7 +121,7 @@ class IsmChatConversationCard extends StatelessWidget {
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      conversation.unreadMessagesCount.toString(),
+                      widget.conversation.unreadMessagesCount.toString(),
                       style: IsmChatStyles.w700White10,
                     ),
                   )

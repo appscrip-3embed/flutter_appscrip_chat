@@ -140,6 +140,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                 itemCount: controller.conversations.length,
                 controller: controller.conversationScrollController,
                 separatorBuilder: (_, __) => IsmChatDimens.boxHeight8,
+                addAutomaticKeepAlives: true,
                 itemBuilder: widget.itemBuilder ??
                     (_, index) {
                       var conversation = controller.conversations[index];
