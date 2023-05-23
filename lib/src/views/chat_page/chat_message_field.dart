@@ -11,9 +11,7 @@ class IsmChatMessageField extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
         builder: (controller) {
-          var ismChatConversationController =
-              Get.find<IsmChatConversationsController>();
-
+      
           var messageBody = controller.chatMessageModel?.customType ==
                   IsmChatCustomMessageType.location
               ? 'Location'
@@ -87,22 +85,7 @@ class IsmChatMessageField extends StatelessWidget {
                                     Text(
                                       controller.chatMessageModel?.sentByMe ??
                                               false
-                                          ? IsmChatConfig
-                                                  .communicationConfig
-                                                  .userConfig
-                                                  .userName
-                                                  .isNotEmpty
-                                              ? IsmChatConfig
-                                                      .communicationConfig
-                                                      .userConfig
-                                                      .userName
-                                                      .capitalizeFirst ??
-                                                  ''
-                                              : ismChatConversationController
-                                                      .userDetails
-                                                      ?.userName
-                                                      .capitalizeFirst ??
-                                                  ''
+                                          ? IsmChatStrings.you
                                           : header?.name?.call(
                                                   context,
                                                   controller.conversation!,
@@ -148,7 +131,7 @@ class IsmChatMessageField extends StatelessWidget {
                                   isDense: true,
                                   filled: true,
                                   fillColor:
-                                      IsmChatConfig.chatTheme.backgroundColor,
+                                      header?.backgroundColor ?? IsmChatConfig.chatTheme.backgroundColor,
                                   // prefixIcon: IconButton(
                                   //   color: IsmChatConfig.chatTheme.primaryColor,
                                   //   icon: const Icon(Icons.emoji_emotions_rounded),

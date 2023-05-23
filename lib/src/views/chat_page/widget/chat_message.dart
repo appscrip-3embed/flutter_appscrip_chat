@@ -126,12 +126,15 @@ class _Message extends StatelessWidget {
                   : () {
                       controller.isreplying = true;
                       controller.chatMessageModel = message;
+                     
                     },
               onRightSwipe: showMessageInCenter || message.sentByMe
                   ? null
                   : () {
                       controller.isreplying = true;
                       controller.chatMessageModel = message;
+                    
+
                     },
               child: FocusedMenuHolder(
                 openWithTap: showMessageInCenter ? true : false,

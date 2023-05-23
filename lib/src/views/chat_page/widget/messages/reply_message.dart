@@ -74,9 +74,13 @@ class _ReplyMessage extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        message.metaData?.parentMessageInitiator ?? false
-                            ? IsmChatStrings.you
-                            : controller.conversation?.chatName ?? '',
+                        message.sentByMe
+                            ? message.metaData?.parentMessageInitiator ?? false
+                                ? IsmChatStrings.you
+                                : controller.conversation?.chatName ?? ''
+                            : message.metaData?.parentMessageInitiator ?? false
+                                ? controller.conversation?.chatName ?? ''
+                                : IsmChatStrings.you,
                         style: IsmChatStyles.w500Black14.copyWith(
                           color:
                               message.metaData?.parentMessageInitiator ?? false
