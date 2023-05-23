@@ -91,14 +91,18 @@ class IsmChatMessageField extends StatelessWidget {
                                                   .userName
                                                   .isNotEmpty
                                               ? IsmChatConfig
-                                                  .communicationConfig
-                                                  .userConfig
-                                                  .userName
-                                              : ismChatConversationController
-                                                      .userDetails?.userName ??
+                                                      .communicationConfig
+                                                      .userConfig
+                                                      .userName
+                                                      .capitalizeFirst ??
                                                   ''
-                                          : controller.conversation
-                                                  ?.opponentDetails?.userName ??
+                                              : ismChatConversationController
+                                                      .userDetails
+                                                      ?.userName
+                                                      .capitalizeFirst ??
+                                                  ''
+                                          : controller.conversation?.chatName
+                                                  .capitalizeFirst ??
                                               '',
                                       style: IsmChatStyles.w600White14,
                                     ),
