@@ -15,7 +15,6 @@ mixin IsmChatPageGetMessageMixin {
     if (_controller.messages.isEmpty) {
       return;
     }
-    _controller._scrollToBottom();
     _controller._generateIndexedMessageList();
   }
 
@@ -53,9 +52,7 @@ mixin IsmChatPageGetMessageMixin {
     }
   }
 
-  Future<void> getMessageDeliverTime(
-    IsmChatMessageModel message,
-  ) async {
+  Future<void> getMessageDeliverTime(IsmChatMessageModel message) async {
     _controller.deliveredTime = '';
     var response = await _controller._viewModel.getMessageDeliverTime(
       conversationId: message.conversationId ?? '',

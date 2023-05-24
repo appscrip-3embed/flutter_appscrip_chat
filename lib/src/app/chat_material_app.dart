@@ -27,6 +27,7 @@ class IsmChatApp extends StatelessWidget {
       this.endActions,
       this.onProfileWidget,
       this.isSlidableEnable,
+      this.placeHolderForConversation,
       this.allowDelete = false}) {
     assert(IsmChatConfig.isInitialized,
         'ChatObjectBox is not initialized\nYou are getting this error because the IsmChatObjectBox class is not initialized, to initialize ChatObjectBox class call AppscripChatComponent.initialize() before your runApp()');
@@ -124,25 +125,38 @@ class IsmChatApp extends StatelessWidget {
 
   final bool allowDelete;
 
-  final Widget? onProfileWidget;
+  final Widget? Function(BuildContext, IsmChatConversationModel)?
+      onProfileWidget;
 
   final List<IsmChatConversationAction>? actions;
   final List<IsmChatConversationAction>? endActions;
 
   final bool? Function(BuildContext, IsmChatConversationModel)?
       isSlidableEnable;
+  final Widget? placeHolderForConversation;
 
   /// Call this function on SignOut to delete the data stored locally in the Local Database
-  static void logout() {
-    IsmChatConfig.objectBox.deleteChatLocalDb();
-    Get.delete<IsmChatConversationsController>(force: true);
-    Get.delete<IsmChatMqttController>(force: true);
+  static void logout() async {
+    await IsmChatConfig.objectBox.deleteChatLocalDb();
+    await Future.wait([
+      Get.delete<IsmChatConversationsController>(force: true),
+      Get.delete<IsmChatMqttController>(force: true),
+    ]);
   }
 
   /// Call this function on to delete chat the data stored locally in the Local Database
-  static Future<void> deleteChat(String conversationId) async {
-    await Get.find<IsmChatConversationsController>().deleteChat(conversationId);
-  }
+  ///
+  /// [deleteFromServer] - is a `boolean` parameter which signifies whether or not to delete the chat from server
+  ///
+  /// The chat will be deleted locally in all cases
+  static Future<void> deleteChat(
+    String conversationId, {
+    bool deleteFromServer = true,
+  }) async =>
+      await Get.find<IsmChatConversationsController>().deleteChat(
+        conversationId,
+        deleteFromServer: deleteFromServer,
+      );
 
   static void initializeMqtt(IsmChatCommunicationConfig communicationConfig) {
     IsmChatConfig.communicationConfig = communicationConfig;
@@ -251,5 +265,6 @@ class IsmChatApp extends StatelessWidget {
         subtitle: subtitle,
         subtitleBuilder: subtitleBuilder,
         isSlidableEnable: isSlidableEnable,
+        emptyListPlaceholder: placeHolderForConversation,
       );
 }

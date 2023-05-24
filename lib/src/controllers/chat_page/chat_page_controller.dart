@@ -240,12 +240,8 @@ class IsmChatPageController extends GetxController
     }
     scrollListener();
     onGrouEligibleUserListener();
-    messageFieldFocusNode.addListener(_scrollToBottom);
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
-    });
-    _messages.listen((p0) {
-      _scrollToBottom();
     });
   }
 
@@ -385,14 +381,13 @@ class IsmChatPageController extends GetxController
   void scrollListener() {
     messagesScrollController.addListener(() {
       if (messagesScrollController.offset * 0.7 ==
-          messagesScrollController.position.minScrollExtent) {
+          messagesScrollController.position.maxScrollExtent) {
         getMessagesFromAPI(forPagination: true, lastMessageTimestamp: 0);
       }
-      if (messagesScrollController.position.maxScrollExtent <=
-          messagesScrollController.offset) {
-        showDownSideButton = false;
-      } else {
+      if (Get.height * 0.3 < messagesScrollController.offset) {
         showDownSideButton = true;
+      } else {
+        showDownSideButton = false;
       }
     });
   }
@@ -402,7 +397,7 @@ class IsmChatPageController extends GetxController
       return;
     }
     await messagesScrollController.animateTo(
-      messagesScrollController.position.maxScrollExtent,
+      0,
       duration: IsmChatConfig.animationDuration,
       curve: Curves.fastOutSlowIn,
     );
@@ -559,40 +554,38 @@ class IsmChatPageController extends GetxController
         mediaTime: message.sentAt,
       ));
     } else if (message.customType == IsmChatCustomMessageType.file) {
-
       var localPath = message.attachments?.first.mediaUrl;
       if (localPath == null) {
         return;
       }
-        try {
-          if(localPath.contains('https://')||localPath.contains('http://')){
-            final client = http.Client();
-            final request = await client.get(Uri.parse(localPath));
-            final bytes = request.bodyBytes;
-            final documentsDir =
-                (await path_provider.getApplicationDocumentsDirectory()).path;
-            localPath = '$documentsDir/${message.attachments?.first.name}';
-            if (!File(localPath).existsSync()) {
-              final file = File(localPath);
-              await file.writeAsBytes(bytes);
-              localPath = file.path;
-            }
-            await OpenFilex.open(localPath);
-          } else {
-            final documentsDir =
-                (await path_provider.getApplicationDocumentsDirectory()).path;
-            localPath = '$documentsDir/${message.attachments?.first.name}';
-            if (!File(localPath).existsSync()) {
-              final file = File(localPath);
-              await file.writeAsBytes(localPath as List<int>);
-              localPath = file.path;
-            }
-            await OpenFilex.open(localPath);
+      try {
+        if (localPath.contains('https://') || localPath.contains('http://')) {
+          final client = http.Client();
+          final request = await client.get(Uri.parse(localPath));
+          final bytes = request.bodyBytes;
+          final documentsDir =
+              (await path_provider.getApplicationDocumentsDirectory()).path;
+          localPath = '$documentsDir/${message.attachments?.first.name}';
+          if (!File(localPath).existsSync()) {
+            final file = File(localPath);
+            await file.writeAsBytes(bytes);
+            localPath = file.path;
           }
-
-        } catch (e) {
-          IsmChatLog.error('$e');
+          await OpenFilex.open(localPath);
+        } else {
+          final documentsDir =
+              (await path_provider.getApplicationDocumentsDirectory()).path;
+          localPath = '$documentsDir/${message.attachments?.first.name}';
+          if (!File(localPath).existsSync()) {
+            final file = File(localPath);
+            await file.writeAsBytes(localPath as List<int>);
+            localPath = file.path;
+          }
+          await OpenFilex.open(localPath);
         }
+      } catch (e) {
+        IsmChatLog.error('$e');
+      }
     }
   }
 
@@ -670,13 +663,6 @@ class IsmChatPageController extends GetxController
       IsmChatConfig.objectBox.chatConversationBox.put(chatConversation);
       await Get.find<IsmChatConversationsController>().getConversationsFromDB();
     }
-  }
-
-  void _scrollToBottom() async {
-    await Future.delayed(
-      const Duration(milliseconds: 500),
-      () async => await scrollDown(),
-    );
   }
 
   Future<void> cropImage(File file) async {
@@ -919,6 +905,11 @@ class IsmChatPageController extends GetxController
             () => deleteMessageForEveryone(messages),
             () => deleteMessageForMe(messages),
           ],
+          onCancel: () {
+            Get.back<void>();
+            selectedMessage.clear();
+            isMessageSeleted = false;
+          },
         ),
       );
     } else {
@@ -930,10 +921,14 @@ class IsmChatPageController extends GetxController
           callbackActions: [
             () => deleteMessageForMe(messages),
           ],
+          onCancel: () {
+            Get.back<void>();
+            selectedMessage.clear();
+            isMessageSeleted = false;
+          },
         ),
       );
     }
-    isMessageSeleted = false;
   }
 
   Future<void> readMessage({
@@ -959,7 +954,9 @@ class IsmChatPageController extends GetxController
       [
         getMessageReadTime(message),
         getMessageDeliverTime(message),
-        Get.to(IsmChatMessageInfo(message: message))!,
+        // Get.to(IsmChatMessageInfo(message: message))!,
+        IsmChatUtility.openFullScreenBottomSheet(
+            IsmChatMessageInfo(message: message)),
       ],
     );
   }
@@ -1089,4 +1086,3 @@ class IsmChatPageController extends GetxController
     predictionList = response;
   }
 }
-

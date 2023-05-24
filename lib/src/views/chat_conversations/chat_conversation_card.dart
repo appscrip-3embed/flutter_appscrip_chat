@@ -1,7 +1,7 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
-class IsmChatConversationCard extends StatelessWidget {
+class IsmChatConversationCard extends StatefulWidget {
   const IsmChatConversationCard(
     this.conversation, {
     this.profileImageBuilder,
@@ -17,7 +17,7 @@ class IsmChatConversationCard extends StatelessWidget {
 
   final IsmChatConversationModel conversation;
   final VoidCallback? onTap;
-  final Widget? onProfileWidget;
+   final Widget? Function(BuildContext, IsmChatConversationModel)? onProfileWidget;
   final Widget? Function(BuildContext, IsmChatConversationModel, String)?
       profileImageBuilder;
   final String? Function(BuildContext, IsmChatConversationModel, String)?
@@ -31,91 +31,102 @@ class IsmChatConversationCard extends StatelessWidget {
       subtitle;
 
   @override
-  Widget build(BuildContext context) => IsmChatTapHandler(
-        onTap: onTap,
-        child: SizedBox(
-          child: ListTile(
-            dense: true,
-            leading: Stack(
-              alignment: Alignment.bottomLeft,
-              children: [
-                profileImageBuilder?.call(
-                        context, conversation, conversation.profileUrl) ??
-                    IsmChatImage.profile(
-                      profileImageUrl?.call(
-                              context, conversation, conversation.profileUrl) ??
-                          conversation.profileUrl,
-                      name: conversation.chatName,
-                    ),
+  State<IsmChatConversationCard> createState() =>
+      _IsmChatConversationCardState();
+}
 
-                // Todo
-                Positioned(
-                  top: IsmChatDimens.twentyFour,
-                  child: onProfileWidget == null
-                      ? IsmChatDimens.box0
-                      : conversation.metaData?.isMatchId?.isNotEmpty == true
-                          ? onProfileWidget!
-                          : IsmChatDimens.box0,
-                )
-              ],
-            ),
-            title: nameBuilder?.call(
-                    context, conversation, conversation.chatName) ??
-                Text(
-                  name?.call(context, conversation, conversation.chatName) ??
-                      conversation.chatName,
-                  style: IsmChatStyles.w600Black14,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-            subtitle: subtitleBuilder?.call(context, conversation,
-                    conversation.lastMessageDetails?.body ?? '') ??
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    conversation.readCheck,
-                    conversation.sender,
-                    conversation.lastMessageDetails!.icon,
-                    IsmChatDimens.boxWidth2,
-                    Flexible(
-                      child: Text(
-                        conversation.lastMessageDetails!.messageBody,
-                        style: IsmChatStyles.w400Black12,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-            // conversation.lastMessageDetails!.body
-            //     .lastMessageType(conversation.lastMessageDetails!),
-            trailing: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  conversation.lastMessageDetails!.sentAt
-                      .toLastMessageTimeString(),
-                  style: IsmChatStyles.w400Black10,
-                ),
-                if (conversation.unreadMessagesCount != null &&
-                    conversation.unreadMessagesCount != 0)
-                  Container(
-                    height: IsmChatDimens.twenty,
-                    width: IsmChatDimens.twenty,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: IsmChatConfig.chatTheme.primaryColor,
-                    ),
-                    alignment: Alignment.center,
+class _IsmChatConversationCardState extends State<IsmChatConversationCard>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return IsmChatTapHandler(
+      onTap: widget.onTap,
+      child: SizedBox(
+        child: ListTile(
+          dense: true,
+          leading: Stack(
+            alignment: Alignment.bottomLeft,
+            children: [
+              widget.profileImageBuilder?.call(context, widget.conversation,
+                      widget.conversation.profileUrl) ??
+                  IsmChatImage.profile(
+                    widget.profileImageUrl?.call(context, widget.conversation,
+                            widget.conversation.profileUrl) ??
+                        widget.conversation.profileUrl,
+                    name: widget.conversation.chatName,
+                  ),
+
+              // Todo
+              Positioned(
+                top: IsmChatDimens.twentyEight,
+                child: widget.onProfileWidget?.call(context ,widget.conversation) ?? IsmChatDimens.box0
+                    ,
+              )
+            ],
+          ),
+          title: widget.nameBuilder?.call(
+                  context, widget.conversation, widget.conversation.chatName) ??
+              Text(
+                widget.name?.call(context, widget.conversation,
+                        widget.conversation.chatName) ??
+                    widget.conversation.chatName,
+                style: IsmChatStyles.w600Black14,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+          subtitle: widget.subtitleBuilder?.call(context, widget.conversation,
+                  widget.conversation.lastMessageDetails?.body ?? '') ??
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  widget.conversation.readCheck,
+                  widget.conversation.sender,
+                  widget.conversation.lastMessageDetails!.icon,
+                  IsmChatDimens.boxWidth2,
+                  Flexible(
                     child: Text(
-                      conversation.unreadMessagesCount.toString(),
-                      style: IsmChatStyles.w700White10,
+                      widget.conversation.lastMessageDetails!.messageBody,
+                      style: IsmChatStyles.w400Black12,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  )
-              ],
-            ),
+                  ),
+                ],
+              ),
+          // conversation.lastMessageDetails!.body
+          //     .lastMessageType(conversation.lastMessageDetails!),
+          trailing: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                widget.conversation.lastMessageDetails!.sentAt
+                    .toLastMessageTimeString(),
+                style: IsmChatStyles.w400Black10,
+              ),
+              if (widget.conversation.unreadMessagesCount != null &&
+                  widget.conversation.unreadMessagesCount != 0)
+                Container(
+                  height: IsmChatDimens.twenty,
+                  width: IsmChatDimens.twenty,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: IsmChatConfig.chatTheme.primaryColor,
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    widget.conversation.unreadMessagesCount.toString(),
+                    style: IsmChatStyles.w700White10,
+                  ),
+                )
+            ],
           ),
         ),
-      );
+      ),
+    );
+  }
 }

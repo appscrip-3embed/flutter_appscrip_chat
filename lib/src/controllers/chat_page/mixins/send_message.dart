@@ -7,7 +7,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
 
   Future<String> createConversation({
     required List<String> userId,
-     IsmChatMetaData? metaData,
+    IsmChatMetaData? metaData,
     bool isGroup = false,
     bool isLoading = true,
   }) async {
@@ -136,7 +136,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversationId);
     if (chatConversationResponse == null) {
-      conversationId = await createConversation(userId: [userId],metaData: _controller.conversation?.metaData);
+      conversationId = await createConversation(
+          userId: [userId], metaData: _controller.conversation?.metaData);
     }
     IsmChatMessageModel? audioMessage;
     String? nameWithExtension;
@@ -208,7 +209,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await ismChatObjectBox.addForwardMessage(audioMessage);
     }
     var notificationTitle =
-        conversationController.userDetails?.userName ?? 'User';
+       IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+            ? IsmChatConfig.communicationConfig.userConfig.userName
+            : conversationController.userDetails?.userName ?? '';
     await ismPostMediaUrl(
       forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
       isNetWorkUrl: isNetWorkUrl ?? false,
@@ -253,7 +256,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         bytes = file.readAsBytesSync();
       }
       documentMessage = message;
-
     } else {
       final result = await FilePicker.platform.pickFiles(
           allowMultiple: true,
@@ -266,7 +268,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         final chatConversationResponse = await ismChatObjectBox
             .getDBConversation(conversationId: conversationId);
         if (chatConversationResponse == null) {
-          conversationId = await createConversation(userId: [userId], metaData: _controller.conversation?.metaData);
+          conversationId = await createConversation(
+              userId: [userId], metaData: _controller.conversation?.metaData);
         }
         for (var x in result!.files) {
           bytes = x.bytes;
@@ -310,7 +313,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await ismChatObjectBox.addForwardMessage(documentMessage!);
     }
     var notificationTitle =
-        conversationController.userDetails?.userName ?? 'User';
+        IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+            ? IsmChatConfig.communicationConfig.userConfig.userName
+            : conversationController.userDetails?.userName ?? '';
     await ismPostMediaUrl(
       forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
       isNetWorkUrl: isNetWorkUrl ?? false,
@@ -340,7 +345,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversationId);
     if (chatConversationResponse == null) {
-      conversationId = await createConversation(userId: [userId], metaData: _controller.conversation?.metaData);
+      conversationId = await createConversation(
+          userId: [userId], metaData: _controller.conversation?.metaData);
     }
     IsmChatMessageModel? videoMessage;
     String? nameWithExtension;
@@ -436,7 +442,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await ismChatObjectBox.addForwardMessage(videoMessage!);
     }
     var notificationTitle =
-        conversationController.userDetails?.userName ?? 'User';
+        IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+            ? IsmChatConfig.communicationConfig.userConfig.userName
+            : conversationController.userDetails?.userName ?? '';
 
     await ismPostMediaUrl(
       forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
@@ -468,7 +476,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversationId);
     if (chatConversationResponse == null) {
-      conversationId = await createConversation(userId: [userId], metaData: _controller.conversation?.metaData);
+      conversationId = await createConversation(
+          userId: [userId], metaData: _controller.conversation?.metaData);
     }
     IsmChatMessageModel? imageMessage;
     String? nameWithExtension;
@@ -540,7 +549,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await ismChatObjectBox.addForwardMessage(imageMessage);
     }
     var notificationTitle =
-        conversationController.userDetails?.userName ?? 'User';
+       IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+            ? IsmChatConfig.communicationConfig.userConfig.userName
+            : conversationController.userDetails?.userName ?? '';
     await ismPostMediaUrl(
       forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
       isNetWorkUrl: isNetWorkUrl ?? false,
@@ -572,7 +583,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversationId);
     if (chatConversationResponse == null) {
-      conversationId = await createConversation(userId: [userId], metaData: _controller.conversation?.metaData);
+      conversationId = await createConversation(
+          userId: [userId], metaData: _controller.conversation?.metaData);
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatMessageModel(
@@ -603,7 +615,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await ismChatObjectBox.addForwardMessage(textMessage);
     }
     var notificationTitle =
-        conversationController.userDetails?.userName ?? 'User';
+       IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+            ? IsmChatConfig.communicationConfig.userConfig.userName
+            : conversationController.userDetails?.userName ?? '';
     sendMessage(
         metaData: textMessage.metaData,
         forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
@@ -628,7 +642,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     final chatConversationResponse = await ismChatObjectBox.getDBConversation(
         conversationId: conversationId);
     if (chatConversationResponse == null) {
-      conversationId = await createConversation(userId: [userId],metaData: _controller.conversation?.metaData);
+      conversationId = await createConversation(
+          userId: [userId], metaData: _controller.conversation?.metaData);
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatMessageModel(
@@ -671,7 +686,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await ismChatObjectBox.addForwardMessage(textMessage);
     }
     var notificationTitle =
-        conversationController.userDetails?.userName ?? 'User';
+        IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+            ? IsmChatConfig.communicationConfig.userConfig.userName
+            : conversationController.userDetails?.userName ?? '';
     sendMessage(
         metaData: textMessage.metaData,
         forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,

@@ -163,11 +163,11 @@ extension DateConvertor on int {
     var timestamp = toDate();
     late DateFormat dateFormat;
     if (now.difference(timestamp) > const Duration(days: 365)) {
-      dateFormat = DateFormat('DD MMM yyyy, HH:mm aa');
+      dateFormat = DateFormat('DD MMM yyyy, h:mm aa');
     } else if (now.difference(timestamp) > const Duration(days: 7)) {
-      dateFormat = DateFormat('DD MMM, HH:mm aa');
+      dateFormat = DateFormat('DD MMM, h:mm aa');
     } else {
-      dateFormat = DateFormat('E, HH:mm aa');
+      dateFormat = DateFormat('E h:mm a');
     }
     return dateFormat.format(timestamp);
   }

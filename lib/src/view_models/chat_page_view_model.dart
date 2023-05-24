@@ -36,12 +36,12 @@ class IsmChatPageViewModel {
             IsmChatActionEvents.addAdmin.name,
           ],
         ].contains(e.action));
-        if(Get.find<IsmChatPageController>().messages.isNotEmpty){
-           messages.removeWhere((e) =>
-        e.messageId ==
-        Get.find<IsmChatPageController>().messages.last.messageId);
-        }
-   
+    if (Get.find<IsmChatPageController>().messages.isNotEmpty) {
+      messages.removeWhere((e) =>
+          e.messageId ==
+          Get.find<IsmChatPageController>().messages.last.messageId);
+    }
+
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
     var conversation = conversationBox
         .query(
@@ -267,7 +267,6 @@ class IsmChatPageViewModel {
         isGroup: false,
       );
       return responseMessage;
-
     }
     return null;
   }
@@ -504,7 +503,7 @@ class IsmChatPageViewModel {
       List<IsmChatMessageModel> messages) {
     var indexedMap = <String, int>{};
     var i = 0;
-    for (var x in messages) {
+    for (var x in messages.reversed) {
       if (![
         IsmChatCustomMessageType.date,
         IsmChatCustomMessageType.block,

@@ -214,17 +214,22 @@ class IsmChatConversationsController extends GetxController {
   void navigateToMessages(IsmChatConversationModel conversation) =>
       currentConversation = conversation;
 
-  Future<void> deleteChat(String? conversationId) async {
+  Future<void> deleteChat(
+    String? conversationId, {
+    bool deleteFromServer = true,
+  }) async {
     if (conversationId == null || conversationId.isEmpty) {
       return;
     }
+    if (deleteFromServer) {
+      var response = await _viewModel.deleteChat(conversationId);
 
-    var response = await _viewModel.deleteChat(conversationId);
-
-    if (response?.hasError ?? true) {
-      return;
+      if (response?.hasError ?? true) {
+        return;
+      }
     }
     await IsmChatConfig.objectBox.removeConversation(conversationId);
+
     await getConversationsFromDB();
     await getChatConversations();
   }

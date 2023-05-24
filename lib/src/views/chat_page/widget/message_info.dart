@@ -21,15 +21,18 @@ class IsmChatMessageInfo extends StatelessWidget {
           child: Scaffold(
             backgroundColor: IsmChatColors.whiteColor,
             appBar: AppBar(
-              elevation: 1,
+              elevation: 0,
+              leading: IconButton(
+                onPressed: Get.back,
+                icon: const Icon(
+                  Icons.arrow_back_rounded,
+                  color: IsmChatColors.whiteColor,
+                ),
+              ),
               backgroundColor: IsmChatConfig.chatTheme.primaryColor,
               titleSpacing: 1,
-              title: Padding(
-                  padding: const EdgeInsets.only(right: 55.0),
-                  child: Center(
-                    child:
-                        Text('Message Info', style: IsmChatStyles.w600White18),
-                  )),
+              title: Text('Message Info', style: IsmChatStyles.w600White18),
+              centerTitle: true,
             ),
             body: Container(
               margin: IsmChatDimens.edgeInsets16,
@@ -56,135 +59,142 @@ class IsmChatMessageInfo extends StatelessWidget {
                   ),
                   IsmChatDimens.boxHeight16,
                   UnconstrainedBox(
-                      alignment: message.sentByMe
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
-                      child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: message.sentByMe
-                              ? CrossAxisAlignment.end
-                              : CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                                padding: IsmChatDimens.edgeInsets4,
-                                constraints: BoxConstraints(
-                                  maxWidth: context.width * .8,
-                                  minWidth: context.width * .1,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: message.sentByMe
-                                      ? IsmChatConfig.chatTheme.primaryColor
-                                      : IsmChatConfig.chatTheme.backgroundColor,
-                                  borderRadius: BorderRadius.only(
-                                    topRight:
-                                        Radius.circular(IsmChatDimens.twelve),
-                                    topLeft: message.sentByMe
-                                        ? Radius.circular(IsmChatDimens.twelve)
-                                        : Radius.circular(IsmChatDimens.four),
-                                    bottomLeft:
-                                        Radius.circular(IsmChatDimens.twelve),
-                                    bottomRight: message.sentByMe
-                                        ? Radius.circular(IsmChatDimens.four)
-                                        : Radius.circular(IsmChatDimens.twelve),
-                                  ),
-                                ),
-                                child:
-                                    message.customType!.messageType(message)),
-                            Padding(
-                              padding: IsmChatDimens.edgeInsets0_4,
-                              child: Row(
-                                children: [
-                                  Text(
-                                    message.sentAt.toTimeString(),
-                                    style: IsmChatStyles.w400Grey10,
-                                  ),
-                                  if (message.sentByMe) ...[
-                                    IsmChatDimens.boxWidth2,
-                                    Icon(
-                                      message.messageId!.isEmpty
-                                          ? Icons.watch_later_rounded
-                                          : message.deliveredToAll!
-                                              ? Icons.done_all_rounded
-                                              : Icons.done_rounded,
-                                      color: message.messageId!.isEmpty
-                                          ? Colors.grey
-                                          : message.readByAll!
-                                              ? Colors.blue
-                                              : Colors.grey,
-                                      size: IsmChatDimens.forteen,
-                                    ),
-                                  ]
-                                ],
+                    alignment: message.sentByMe
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: message.sentByMe
+                          ? CrossAxisAlignment.end
+                          : CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            padding: IsmChatDimens.edgeInsets4,
+                            constraints: BoxConstraints(
+                              maxWidth: context.width * .8,
+                              minWidth: context.width * .1,
+                            ),
+                            decoration: BoxDecoration(
+                              color: message.sentByMe
+                                  ? IsmChatConfig.chatTheme.primaryColor
+                                  : IsmChatConfig.chatTheme.backgroundColor,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(IsmChatDimens.twelve),
+                                topLeft: message.sentByMe
+                                    ? Radius.circular(IsmChatDimens.twelve)
+                                    : Radius.circular(IsmChatDimens.four),
+                                bottomLeft:
+                                    Radius.circular(IsmChatDimens.twelve),
+                                bottomRight: message.sentByMe
+                                    ? Radius.circular(IsmChatDimens.four)
+                                    : Radius.circular(IsmChatDimens.twelve),
                               ),
                             ),
-                          ])),
+                            child: message.customType!.messageType(message)),
+                        Padding(
+                          padding: IsmChatDimens.edgeInsets0_4,
+                          child: Row(
+                            children: [
+                              Text(
+                                message.sentAt.toTimeString(),
+                                style: IsmChatStyles.w400Grey10,
+                              ),
+                              if (message.sentByMe) ...[
+                                IsmChatDimens.boxWidth2,
+                                Icon(
+                                  message.messageId!.isEmpty
+                                      ? Icons.watch_later_rounded
+                                      : message.deliveredToAll!
+                                          ? Icons.done_all_rounded
+                                          : Icons.done_rounded,
+                                  color: message.messageId!.isEmpty
+                                      ? Colors.grey
+                                      : message.readByAll!
+                                          ? Colors.blue
+                                          : Colors.grey,
+                                  size: IsmChatDimens.forteen,
+                                ),
+                              ]
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   IsmChatDimens.boxHeight16,
                   Card(
-                      elevation: 1,
-                      child: Padding(
-                          padding: IsmChatDimens.edgeInsets10,
-                          child: Column(children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Icon(
-                                      Icons.done_all,
-                                      color: Colors.blue,
+                    elevation: 1,
+                    child: Padding(
+                      padding: IsmChatDimens.edgeInsets10,
+                      child: Column(
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Icon(
+                                    Icons.done_all,
+                                    color: Colors.blue,
+                                    size: IsmChatDimens.twenty,
+                                  ),
+                                  IsmChatDimens.boxWidth14,
+                                  Text('Read', style: IsmChatStyles.w400Black12)
+                                ],
+                              ),
+                              chatController.readTime.isEmpty
+                                  ? Icon(
+                                      Icons.remove,
                                       size: IsmChatDimens.twenty,
+                                    )
+                                  : Text(
+                                      chatController.readTime,
+                                      style: IsmChatStyles.w400Black12,
                                     ),
-                                    IsmChatDimens.boxWidth14,
-                                    Text('Read',
-                                        style: IsmChatStyles.w400Black12)
-                                  ],
-                                ),
-                                chatController.readTime.isEmpty
-                                    ? Icon(
-                                        Icons.remove,
-                                        size: IsmChatDimens.twenty,
-                                      )
-                                    : Text(chatController.readTime,
-                                        style: IsmChatStyles.w400Black12)
-                              ],
-                            ),
-                            IsmChatDimens.boxHeight8,
-                            const Divider(
-                              thickness: 0.1,
-                              color: Colors.grey,
-                            ),
-                            IsmChatDimens.boxHeight8,
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Icon(
-                                      Icons.done_all,
-                                      color: Colors.grey,
+                            ],
+                          ),
+                          IsmChatDimens.boxHeight8,
+                          const Divider(
+                            thickness: 0.1,
+                            color: Colors.grey,
+                          ),
+                          IsmChatDimens.boxHeight8,
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Icon(
+                                    Icons.done_all,
+                                    color: Colors.grey,
+                                    size: IsmChatDimens.twenty,
+                                  ),
+                                  IsmChatDimens.boxWidth8,
+                                  Text(
+                                    'Delivered',
+                                    style: IsmChatStyles.w400Black12,
+                                  ),
+                                ],
+                              ),
+                              chatController.deliveredTime.isEmpty
+                                  ? Icon(
+                                      Icons.remove,
                                       size: IsmChatDimens.twenty,
-                                    ),
-                                    IsmChatDimens.boxWidth8,
-                                    Text('Delivered',
-                                        style: IsmChatStyles.w400Black12),
-                                  ],
-                                ),
-                                chatController.deliveredTime.isEmpty
-                                    ? Icon(
-                                        Icons.remove,
-                                        size: IsmChatDimens.twenty,
-                                      )
-                                    : Text(
-                                        chatController.readTime,
-                                        style: IsmChatStyles.w400Black12,
-                                      )
-                              ],
-                            ),
-                          ])))
+                                    )
+                                  : Text(
+                                      chatController.deliveredTime,
+                                      style: IsmChatStyles.w400Black12,
+                                    )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

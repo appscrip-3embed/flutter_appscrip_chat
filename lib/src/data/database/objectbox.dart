@@ -53,7 +53,7 @@ class IsmChatObjectBox {
   }
 
   /// delete chat object box
-  void deleteChatLocalDb() async {
+  Future<void> deleteChatLocalDb() async {
     userDetailsBox.removeAll();
     chatConversationBox.removeAll();
     pendingMessageBox.removeAll();
