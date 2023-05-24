@@ -240,14 +240,16 @@ class IsmChatPageController extends GetxController
     }
     scrollListener();
     onGrouEligibleUserListener();
-    messageFieldFocusNode.addListener(_scrollToBottom);
+    messageFieldFocusNode.addListener(() {
+      if (_messages.isNotEmpty) {
+        _scrollToBottom();
+      }
+    });
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
     });
     _messages.listen((p0) {
-      if (_messages.isNotEmpty) {
-        _scrollToBottom();
-      }
+      _scrollToBottom();
     });
   }
 
