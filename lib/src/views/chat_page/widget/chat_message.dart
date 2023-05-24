@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:focused_menu/focused_menu.dart';
@@ -8,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:swipe_to/swipe_to.dart';
 
-class IsmChatMessage extends StatelessWidget {
+class IsmChatMessage extends StatefulWidget {
   IsmChatMessage(this.index, {super.key})
       : controller = Get.find<IsmChatPageController>(),
         message =
@@ -19,7 +17,17 @@ class IsmChatMessage extends StatelessWidget {
   final IsmChatPageController controller;
 
   @override
+  State<IsmChatMessage> createState() => _IsmChatMessageState();
+}
+
+class _IsmChatMessageState extends State<IsmChatMessage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     var showMessageInCenter = [
       IsmChatCustomMessageType.date,
       IsmChatCustomMessageType.block,
@@ -30,23 +38,23 @@ class IsmChatMessage extends StatelessWidget {
       IsmChatCustomMessageType.addAdmin,
       IsmChatCustomMessageType.revokeAdmin,
       IsmChatCustomMessageType.memberLeave,
-    ].contains(message.customType!);
-    var isGroup = controller.conversation!.isGroup ?? false;
+    ].contains(widget.message.customType!);
+    var isGroup = widget.controller.conversation!.isGroup ?? false;
 
     return IsmChatTapHandler(
       onTap: showMessageInCenter
           ? null
-          : () => controller.onMessageSelect(message),
+          : () => widget.controller.onMessageSelect(widget.message),
       child: Container(
         padding: IsmChatDimens.edgeInsets4_0,
-        color: controller.selectedMessage.contains(message)
+        color: widget.controller.selectedMessage.contains(widget.message)
             ? IsmChatConfig.chatTheme.primaryColor!.withOpacity(.2)
             : null,
         child: UnconstrainedBox(
           clipBehavior: Clip.antiAlias,
           alignment: showMessageInCenter
               ? Alignment.center
-              : message.sentByMe
+              : widget.message.sentByMe
                   ? Alignment.centerRight
                   : Alignment.centerLeft,
           child: Padding(
@@ -56,17 +64,19 @@ class IsmChatMessage extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (isGroup && !showMessageInCenter && !message.sentByMe) ...[
+                if (isGroup &&
+                    !showMessageInCenter &&
+                    !widget.message.sentByMe) ...[
                   IsmChatImage.profile(
-                    message.senderInfo?.profileUrl ?? '',
-                    name: message.senderInfo?.userName ?? '',
+                    widget.message.senderInfo?.profileUrl ?? '',
+                    name: widget.message.senderInfo?.userName ?? '',
                     dimensions: 40,
                   )
                 ],
                 _Message(
-                  message: message,
+                  message: widget.message,
                   showMessageInCenter: showMessageInCenter,
-                  index: index,
+                  index: widget.index,
                 ),
               ],
             ),
@@ -128,15 +138,12 @@ class _Message extends StatelessWidget {
                   : () {
                       controller.isreplying = true;
                       controller.chatMessageModel = message;
-
                     },
               onRightSwipe: showMessageInCenter || message.sentByMe
                   ? null
                   : () {
                       controller.isreplying = true;
                       controller.chatMessageModel = message;
-
-
                     },
               child: FocusedMenuHolder(
                 openWithTap: showMessageInCenter ? true : false,

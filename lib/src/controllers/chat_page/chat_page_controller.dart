@@ -381,11 +381,10 @@ class IsmChatPageController extends GetxController
   void scrollListener() {
     messagesScrollController.addListener(() {
       if (messagesScrollController.offset * 0.7 ==
-          messagesScrollController.position.minScrollExtent) {
+          messagesScrollController.position.maxScrollExtent) {
         getMessagesFromAPI(forPagination: true, lastMessageTimestamp: 0);
       }
-      if (messagesScrollController.position.maxScrollExtent <=
-          messagesScrollController.offset) {
+      if (Get.height * 0.3 < messagesScrollController.offset) {
         showDownSideButton = true;
       } else {
         showDownSideButton = false;
@@ -930,7 +929,6 @@ class IsmChatPageController extends GetxController
         ),
       );
     }
-
   }
 
   Future<void> readMessage({

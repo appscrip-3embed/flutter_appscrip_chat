@@ -41,93 +41,96 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
   bool get wantKeepAlive => true;
 
   @override
-  Widget build(BuildContext context) => IsmChatTapHandler(
-        onTap: widget.onTap,
-        child: SizedBox(
-          child: ListTile(
-            dense: true,
-            leading: Stack(
-              alignment: Alignment.bottomLeft,
-              children: [
-                widget.profileImageBuilder?.call(context, widget.conversation,
-                        widget.conversation.profileUrl) ??
-                    IsmChatImage.profile(
-                      widget.profileImageUrl?.call(context, widget.conversation,
-                              widget.conversation.profileUrl) ??
-                          widget.conversation.profileUrl,
-                      name: widget.conversation.chatName,
-                    ),
+  Widget build(BuildContext context) {
+    super.build(context);
+    return IsmChatTapHandler(
+      onTap: widget.onTap,
+      child: SizedBox(
+        child: ListTile(
+          dense: true,
+          leading: Stack(
+            alignment: Alignment.bottomLeft,
+            children: [
+              widget.profileImageBuilder?.call(context, widget.conversation,
+                      widget.conversation.profileUrl) ??
+                  IsmChatImage.profile(
+                    widget.profileImageUrl?.call(context, widget.conversation,
+                            widget.conversation.profileUrl) ??
+                        widget.conversation.profileUrl,
+                    name: widget.conversation.chatName,
+                  ),
 
-                // Todo
-                Positioned(
-                  top: IsmChatDimens.twentyFour,
-                  child: widget.onProfileWidget == null
-                      ? IsmChatDimens.box0
-                      : widget.conversation.metaData?.isMatchId?.isNotEmpty ==
-                              true
-                          ? widget.onProfileWidget!
-                          : IsmChatDimens.box0,
-                )
-              ],
-            ),
-            title: widget.nameBuilder?.call(context, widget.conversation,
-                    widget.conversation.chatName) ??
-                Text(
-                  widget.name?.call(context, widget.conversation,
-                          widget.conversation.chatName) ??
-                      widget.conversation.chatName,
-                  style: IsmChatStyles.w600Black14,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-            subtitle: widget.subtitleBuilder?.call(context, widget.conversation,
-                    widget.conversation.lastMessageDetails?.body ?? '') ??
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    widget.conversation.readCheck,
-                    widget.conversation.sender,
-                    widget.conversation.lastMessageDetails!.icon,
-                    IsmChatDimens.boxWidth2,
-                    Flexible(
-                      child: Text(
-                        widget.conversation.lastMessageDetails!.messageBody,
-                        style: IsmChatStyles.w400Black12,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-            // conversation.lastMessageDetails!.body
-            //     .lastMessageType(conversation.lastMessageDetails!),
-            trailing: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  widget.conversation.lastMessageDetails!.sentAt
-                      .toLastMessageTimeString(),
-                  style: IsmChatStyles.w400Black10,
-                ),
-                if (widget.conversation.unreadMessagesCount != null &&
-                    widget.conversation.unreadMessagesCount != 0)
-                  Container(
-                    height: IsmChatDimens.twenty,
-                    width: IsmChatDimens.twenty,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: IsmChatConfig.chatTheme.primaryColor,
-                    ),
-                    alignment: Alignment.center,
+              // Todo
+              Positioned(
+                top: IsmChatDimens.twentyFour,
+                child: widget.onProfileWidget == null
+                    ? IsmChatDimens.box0
+                    : widget.conversation.metaData?.isMatchId?.isNotEmpty ==
+                            true
+                        ? widget.onProfileWidget!
+                        : IsmChatDimens.box0,
+              )
+            ],
+          ),
+          title: widget.nameBuilder?.call(
+                  context, widget.conversation, widget.conversation.chatName) ??
+              Text(
+                widget.name?.call(context, widget.conversation,
+                        widget.conversation.chatName) ??
+                    widget.conversation.chatName,
+                style: IsmChatStyles.w600Black14,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+          subtitle: widget.subtitleBuilder?.call(context, widget.conversation,
+                  widget.conversation.lastMessageDetails?.body ?? '') ??
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  widget.conversation.readCheck,
+                  widget.conversation.sender,
+                  widget.conversation.lastMessageDetails!.icon,
+                  IsmChatDimens.boxWidth2,
+                  Flexible(
                     child: Text(
-                      widget.conversation.unreadMessagesCount.toString(),
-                      style: IsmChatStyles.w700White10,
+                      widget.conversation.lastMessageDetails!.messageBody,
+                      style: IsmChatStyles.w400Black12,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  )
-              ],
-            ),
+                  ),
+                ],
+              ),
+          // conversation.lastMessageDetails!.body
+          //     .lastMessageType(conversation.lastMessageDetails!),
+          trailing: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                widget.conversation.lastMessageDetails!.sentAt
+                    .toLastMessageTimeString(),
+                style: IsmChatStyles.w400Black10,
+              ),
+              if (widget.conversation.unreadMessagesCount != null &&
+                  widget.conversation.unreadMessagesCount != 0)
+                Container(
+                  height: IsmChatDimens.twenty,
+                  width: IsmChatDimens.twenty,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: IsmChatConfig.chatTheme.primaryColor,
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    widget.conversation.unreadMessagesCount.toString(),
+                    style: IsmChatStyles.w700White10,
+                  ),
+                )
+            ],
           ),
         ),
-      );
+      ),
+    );
+  }
 }
