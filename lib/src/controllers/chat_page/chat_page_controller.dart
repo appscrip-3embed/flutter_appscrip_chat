@@ -245,7 +245,9 @@ class IsmChatPageController extends GetxController
       showSendButton = chatInputController.text.isNotEmpty;
     });
     _messages.listen((p0) {
-      _scrollToBottom();
+      if (_messages.isNotEmpty) {
+        _scrollToBottom();
+      }
     });
   }
 
