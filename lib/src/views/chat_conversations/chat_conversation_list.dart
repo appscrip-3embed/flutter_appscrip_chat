@@ -34,6 +34,7 @@ class IsmChatConversationList extends StatefulWidget {
       this.subtitleBuilder,
       this.profileImageUrl,
       this.isSlidableEnable,
+      this.placeHolderForConversation,
       this.allowDelete = false});
 
   final void Function(BuildContext, IsmChatConversationModel) onChatTap;
@@ -85,6 +86,7 @@ class IsmChatConversationList extends StatefulWidget {
 
   final bool? Function(BuildContext, IsmChatConversationModel)?
       isSlidableEnable;
+  final Widget? placeHolderForConversation;    
 
   @override
   State<IsmChatConversationList> createState() =>
@@ -110,7 +112,8 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
           }
           if (controller.conversations.isEmpty) {
             return Center(
-              child: Text(
+              child: widget.placeHolderForConversation ??
+               Text(
                 IsmChatStrings.noConversation,
                 style: IsmChatStyles.w600Black20.copyWith(
                   color: IsmChatConfig.chatTheme.primaryColor,

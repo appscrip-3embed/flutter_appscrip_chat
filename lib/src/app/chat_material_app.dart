@@ -27,6 +27,7 @@ class IsmChatApp extends StatelessWidget {
       this.endActions,
       this.onProfileWidget,
       this.isSlidableEnable,
+      this.placeHolderForConversation,
       this.allowDelete = false}) {
     assert(IsmChatConfig.isInitialized,
         'ChatObjectBox is not initialized\nYou are getting this error because the IsmChatObjectBox class is not initialized, to initialize ChatObjectBox class call AppscripChatComponent.initialize() before your runApp()');
@@ -131,6 +132,7 @@ class IsmChatApp extends StatelessWidget {
 
   final bool? Function(BuildContext, IsmChatConversationModel)?
       isSlidableEnable;
+   final Widget? placeHolderForConversation;       
 
   /// Call this function on SignOut to delete the data stored locally in the Local Database
   static void logout() async {
@@ -253,5 +255,6 @@ class IsmChatApp extends StatelessWidget {
         subtitle: subtitle,
         subtitleBuilder: subtitleBuilder,
         isSlidableEnable: isSlidableEnable,
+        placeHolderForConversation: placeHolderForConversation,
       );
 }
