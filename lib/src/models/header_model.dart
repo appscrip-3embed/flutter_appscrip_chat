@@ -16,6 +16,7 @@ class   IsmChatHeader {
     this.nameBuilder,
     this.profileImageBuilder,
     this.profileImageUrl,
+    this.elevation
 
   });
 
@@ -36,6 +37,7 @@ final Widget? Function(BuildContext, IsmChatConversationModel, String)?
   final Widget? bottom;
   final Widget? onProfileWidget;
    final void Function(IsmChatConversationModel)? bottomOnTap;
+   final double? elevation;
 
 
 }

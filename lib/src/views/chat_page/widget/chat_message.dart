@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:focused_menu/focused_menu.dart';
@@ -126,12 +128,15 @@ class _Message extends StatelessWidget {
                   : () {
                       controller.isreplying = true;
                       controller.chatMessageModel = message;
+
                     },
               onRightSwipe: showMessageInCenter || message.sentByMe
                   ? null
                   : () {
                       controller.isreplying = true;
                       controller.chatMessageModel = message;
+
+
                     },
               child: FocusedMenuHolder(
                 openWithTap: showMessageInCenter ? true : false,

@@ -906,6 +906,11 @@ class IsmChatPageController extends GetxController
             () => deleteMessageForEveryone(messages),
             () => deleteMessageForMe(messages),
           ],
+          onCancel: () {
+            Get.back<void>();
+            selectedMessage.clear();
+            isMessageSeleted = false;
+          },
         ),
       );
     } else {
@@ -917,10 +922,15 @@ class IsmChatPageController extends GetxController
           callbackActions: [
             () => deleteMessageForMe(messages),
           ],
+          onCancel: () {
+            Get.back<void>();
+            selectedMessage.clear();
+            isMessageSeleted = false;
+          },
         ),
       );
     }
-    isMessageSeleted = false;
+
   }
 
   Future<void> readMessage({

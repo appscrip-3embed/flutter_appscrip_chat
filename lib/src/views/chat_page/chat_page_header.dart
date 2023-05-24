@@ -51,6 +51,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
             titleSpacing: IsmChatDimens.four,
             centerTitle: false,
             shape: header?.shape,
+            elevation: header?.elevation,
             title: IsmChatTapHandler(
               onTap: onTap,
               child: Row(

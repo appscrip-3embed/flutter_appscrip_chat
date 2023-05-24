@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatMessageField extends StatelessWidget {
-  const IsmChatMessageField({super.key});
+  const IsmChatMessageField({super.key, required this.header});
+
+  final IsmChatHeader? header;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
         builder: (controller) {
-          var ismChatConversationController =
-              Get.find<IsmChatConversationsController>();
-
+      
           var messageBody = controller.chatMessageModel?.customType ==
                   IsmChatCustomMessageType.location
               ? 'Location'
@@ -55,7 +55,7 @@ class IsmChatMessageField extends StatelessWidget {
                       border: Border.all(
                           color: IsmChatConfig.chatTheme.primaryColor!),
                       borderRadius: BorderRadius.circular(IsmChatDimens.twenty),
-                      color: IsmChatConfig.chatTheme.backgroundColor,
+                      color: header?.backgroundColor ?? IsmChatConfig.chatTheme.backgroundColor,
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -85,11 +85,14 @@ class IsmChatMessageField extends StatelessWidget {
                                     Text(
                                       controller.chatMessageModel?.sentByMe ??
                                               false
-                                          ? ismChatConversationController
-                                                  .userDetails?.userName ??
-                                              ''
-                                          : controller.conversation
-                                                  ?.opponentDetails?.userName ??
+                                          ? IsmChatStrings.you
+                                          : header?.name?.call(
+                                                  context,
+                                                  controller.conversation!,
+                                                  controller.conversation!
+                                                      .chatName) ??
+                                              controller.conversation?.chatName
+                                                  .capitalizeFirst ??
                                               '',
                                       style: IsmChatStyles.w600White14,
                                     ),
@@ -128,7 +131,7 @@ class IsmChatMessageField extends StatelessWidget {
                                   isDense: true,
                                   filled: true,
                                   fillColor:
-                                      IsmChatConfig.chatTheme.backgroundColor,
+                                      header?.backgroundColor ?? IsmChatConfig.chatTheme.backgroundColor,
                                   // prefixIcon: IconButton(
                                   //   color: IsmChatConfig.chatTheme.primaryColor,
                                   //   icon: const Icon(Icons.emoji_emotions_rounded),
@@ -216,17 +219,17 @@ class _MicOrSendButton extends StatelessWidget {
                                   .conversation?.opponentDetails?.userId ??
                               '');
                     },
-              onTap: (){
-                if(controller.showSendButton){
-                  if(!controller.conversation!.isChattingAllowed){
+              onTap: () {
+                if (controller.showSendButton) {
+                  if (!controller.conversation!.isChattingAllowed) {
                     controller.showDialogCheckBlockUnBlock();
                   } else {
                     controller.sendTextMessage(
                         conversationId:
-                        controller.conversation?.conversationId ?? '',
-                        userId: controller
-                            .conversation?.opponentDetails?.userId ??
-                            '');
+                            controller.conversation?.conversationId ?? '',
+                        userId:
+                            controller.conversation?.opponentDetails?.userId ??
+                                '');
                   }
                 }
               },

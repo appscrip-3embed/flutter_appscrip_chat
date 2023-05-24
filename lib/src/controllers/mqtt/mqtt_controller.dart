@@ -73,10 +73,14 @@ class IsmChatMqttController extends GetxController {
       IsmChatLog.error('EXAMPLE::NoConnectionException - $e');
       // await unSubscribe();
       // await disconnect();
+      // initializeMqttClient();
+      // connectClient();
     } on SocketException catch (e) {
       IsmChatLog.error('EXAMPLE::SocketException - $e');
       // await unSubscribe();
       // await disconnect();
+      // initializeMqttClient();
+      // connectClient();
     }
   }
 
@@ -513,8 +517,11 @@ class IsmChatMqttController extends GetxController {
     if (allMessages == null) {
       return;
     }
-    allMessages
-        .removeWhere((e) => e.messageId! == actionModel.messageIds?.first);
+    if (actionModel.messageIds?.isNotEmpty == true) {
+      for (var x in actionModel.messageIds!) {
+        allMessages.removeWhere((e) => e.messageId! == x);
+      }
+    }
     await IsmChatConfig.objectBox
         .saveMessages(actionModel.conversationId!, allMessages);
     if (Get.isRegistered<IsmChatPageController>()) {
@@ -568,19 +575,20 @@ class IsmChatMqttController extends GetxController {
       return;
     }
 
-    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
+    // var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
 
-    var conversation = conversationBox
-        .query(DBConversationModel_.conversationId
-            .equals(actionModel.conversationId!))
-        .build()
-        .findUnique();
+    // var conversation = conversationBox
+    //     .query(DBConversationModel_.conversationId
+    //         .equals(actionModel.conversationId!))
+    //     .build()
+    //     .findUnique();
 
-    if (conversation == null ||
-        conversation.lastMessageDetails.target!.messageId ==
-            actionModel.messageId) {
-      return;
-    }
+    // if (conversation == null ||
+    //     conversation.lastMessageDetails.target!.messageId ==
+    //         actionModel.messageId) {
+    //   return;
+    // }
+
     if (messageId == actionModel.messageId) {
       return;
     }
@@ -596,6 +604,7 @@ class IsmChatMqttController extends GetxController {
         messageId = actionModel.messageId!;
       }
     }
+
     await Get.find<IsmChatConversationsController>().getChatConversations();
   }
 
@@ -678,6 +687,7 @@ class IsmChatMqttController extends GetxController {
         _communicationConfig.userConfig.userId) {
       return;
     }
+
     var ismChatConversationController =
         Get.find<IsmChatConversationsController>();
     await ismChatConversationController.getChatConversations();

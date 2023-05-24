@@ -121,7 +121,7 @@ class _IsmChatPageView extends StatelessWidget {
                         controller.showDialogForDeleteMultipleMessage(
                             messageSenderSide, controller.selectedMessage);
                       },
-                      icon: const Icon(Icons.delete_rounded),
+                      icon: const Icon(Icons.delete_rounded,color: IsmChatColors.whiteColor,),
                     ),
                   ],
                 )
@@ -171,7 +171,7 @@ class _IsmChatPageView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SafeArea(child: IsmChatMessageField())
+                   SafeArea(child: IsmChatMessageField(header: header,))
                   ],
                 ),
               ),
