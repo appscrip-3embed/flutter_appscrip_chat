@@ -1,7 +1,7 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
-class   IsmChatHeader {
+class IsmChatHeader {
   IsmChatHeader({
     this.backgroundColor,
     this.iconColor,
@@ -16,28 +16,26 @@ class   IsmChatHeader {
     this.nameBuilder,
     this.profileImageBuilder,
     this.profileImageUrl,
-    this.elevation
 
+    this.elevation,
   });
 
   final Color? backgroundColor;
   final Color? iconColor;
-final Widget? Function(BuildContext, IsmChatConversationModel, String)?
+  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
       profileImageBuilder;
-  final String Function(BuildContext, IsmChatConversationModel, String)?
+  final String? Function(BuildContext, IsmChatConversationModel, String)?
       profileImageUrl;
   final Widget? Function(BuildContext, IsmChatConversationModel, String)?
       nameBuilder;
-  final String Function(BuildContext, IsmChatConversationModel, String)? name;
- 
+  final String? Function(BuildContext, IsmChatConversationModel, String)? name;
+
   final TextStyle? titleStyle;
   final TextStyle? subtitleStyle;
   final List<IsmChatPopItem>? popupItems;
   final ShapeBorder? shape;
   final Widget? bottom;
-  final Widget? onProfileWidget;
-   final void Function(IsmChatConversationModel)? bottomOnTap;
-   final double? elevation;
-
-
+  final Widget? Function(BuildContext, IsmChatConversationModel)? onProfileWidget;
+  final void Function(IsmChatConversationModel)? bottomOnTap;
+  final double? elevation;
 }

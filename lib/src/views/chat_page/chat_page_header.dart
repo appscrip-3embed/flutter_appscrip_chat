@@ -81,13 +81,9 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                           ),
                       Positioned(
                         top: IsmChatDimens.twenty,
-                        child: header?.onProfileWidget == null
-                            ? IsmChatDimens.box0
-                            : controller.conversation?.metaData?.isMatchId
-                                        ?.isNotEmpty ==
-                                    true
-                                ? header!.onProfileWidget!
-                                : IsmChatDimens.box0,
+                        child: header?.onProfileWidget
+                                ?.call(context, controller.conversation!) ??
+                            IsmChatDimens.box0,
                       )
                     ],
                   ),
@@ -201,9 +197,9 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                         ],
                       ),
                     ),
-                  if (controller
-                          .conversation?.metaData?.isMatchId?.isNotEmpty ==
-                      true)
+                  if (header?.onProfileWidget
+                          ?.call(context, controller.conversation!) !=
+                      null)
                     ...(header?.popupItems ?? []).map(
                       (e) => PopupMenuItem(
                         value: header!.popupItems!.indexOf(e) + 3,

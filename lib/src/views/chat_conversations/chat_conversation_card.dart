@@ -17,7 +17,7 @@ class IsmChatConversationCard extends StatefulWidget {
 
   final IsmChatConversationModel conversation;
   final VoidCallback? onTap;
-  final Widget? onProfileWidget;
+   final Widget? Function(BuildContext, IsmChatConversationModel)? onProfileWidget;
   final Widget? Function(BuildContext, IsmChatConversationModel, String)?
       profileImageBuilder;
   final String? Function(BuildContext, IsmChatConversationModel, String)?
@@ -62,13 +62,9 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
 
               // Todo
               Positioned(
-                top: IsmChatDimens.twentyFour,
-                child: widget.onProfileWidget == null
-                    ? IsmChatDimens.box0
-                    : widget.conversation.metaData?.isMatchId?.isNotEmpty ==
-                            true
-                        ? widget.onProfileWidget!
-                        : IsmChatDimens.box0,
+                top: IsmChatDimens.twentyEight,
+                child: widget.onProfileWidget?.call(context ,widget.conversation) ?? IsmChatDimens.box0
+                    ,
               )
             ],
           ),

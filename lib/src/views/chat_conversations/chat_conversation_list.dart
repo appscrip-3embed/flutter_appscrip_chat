@@ -79,7 +79,7 @@ class IsmChatConversationList extends StatefulWidget {
 
   final bool allowDelete;
 
-  final Widget? onProfileWidget;
+  final Widget? Function(BuildContext, IsmChatConversationModel)? onProfileWidget;
 
   final List<IsmChatConversationAction>? actions;
   final List<IsmChatConversationAction>? endActions;
