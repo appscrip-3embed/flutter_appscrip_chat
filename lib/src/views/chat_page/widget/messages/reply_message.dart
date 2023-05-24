@@ -77,9 +77,17 @@ class _ReplyMessage extends StatelessWidget {
                         message.sentByMe
                             ? message.metaData?.parentMessageInitiator ?? false
                                 ? IsmChatStrings.you
-                                : controller.conversation?.chatName ?? ''
+                                : IsmChatConfig.communicationConfig.userConfig
+                                        .userName.isNotEmpty
+                                    ? IsmChatConfig
+                                        .communicationConfig.userConfig.userName
+                                    : controller.conversation?.chatName ?? ''
                             : message.metaData?.parentMessageInitiator ?? false
-                                ? controller.conversation?.chatName ?? ''
+                                ? IsmChatConfig.communicationConfig.userConfig
+                                        .userName.isNotEmpty
+                                    ? IsmChatConfig
+                                        .communicationConfig.userConfig.userName
+                                    : controller.conversation?.chatName ?? ''
                                 : IsmChatStrings.you,
                         style: IsmChatStyles.w500Black14.copyWith(
                           color:
