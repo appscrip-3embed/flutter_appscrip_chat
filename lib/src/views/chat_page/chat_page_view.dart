@@ -10,6 +10,7 @@ class IsmChatPageView extends StatefulWidget {
     this.height,
     this.header,
     this.onBackTap,
+    this.emptyChatPlaceholder,
     super.key,
   });
 
@@ -17,6 +18,7 @@ class IsmChatPageView extends StatefulWidget {
   final VoidCallback? onBackTap;
   final double? height;
   final IsmChatHeader? header;
+  final Widget? emptyChatPlaceholder;
 
   @override
   State<IsmChatPageView> createState() => _IsmChatPageViewState();
@@ -66,6 +68,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                   onBackTap: widget.onBackTap,
                   header: widget.header,
                   height: widget.height,
+                  emptyChatPlaceholder: widget.emptyChatPlaceholder,
                 ),
               )
             : _IsmChatPageView(
@@ -73,6 +76,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                 onBackTap: widget.onBackTap,
                 header: widget.header,
                 height: widget.height,
+                emptyChatPlaceholder: widget.emptyChatPlaceholder,
               ),
       );
 }
@@ -83,12 +87,14 @@ class _IsmChatPageView extends StatelessWidget {
     this.onBackTap,
     this.height,
     this.header,
+    this.emptyChatPlaceholder,
   });
 
   final void Function(IsmChatConversationModel)? onTitleTap;
   final VoidCallback? onBackTap;
   final double? height;
   final IsmChatHeader? header;
+  final Widget? emptyChatPlaceholder;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
@@ -157,7 +163,8 @@ class _IsmChatPageView extends StatelessWidget {
                         child: Visibility(
                           visible: controller.messages.isNotEmpty &&
                               controller.messages.length != 1,
-                          replacement: const IsmChatNoMessage(),
+                          replacement:
+                              emptyChatPlaceholder ?? const IsmChatNoMessage(),
                           child: Align(
                             alignment: Alignment.topCenter,
                             child: ListView.builder(

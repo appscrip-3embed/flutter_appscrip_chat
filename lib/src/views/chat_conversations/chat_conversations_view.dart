@@ -23,7 +23,7 @@ class IsmChatConversations extends StatefulWidget {
     this.subtitle,
     this.subtitleBuilder,
     this.isSlidableEnable,
-    this.placeHolderForConversation,
+    this.emptyListPlaceholder,
     super.key,
   });
 
@@ -40,22 +40,23 @@ class IsmChatConversations extends StatefulWidget {
 
   final bool allowDelete;
 
-  final Widget? Function(BuildContext, IsmChatConversationModel)? onProfileWidget;
+  final Widget? Function(BuildContext, IsmChatConversationModel)?
+      onProfileWidget;
 
   final List<IsmChatConversationAction>? actions;
   final List<IsmChatConversationAction>? endActions;
 
-  final Widget? Function(BuildContext, IsmChatConversationModel,String)? profileImageBuilder;
-  final String Function(BuildContext, IsmChatConversationModel,String)? profileImageUrl;
-  final Widget? Function(BuildContext, IsmChatConversationModel,String)? nameBuilder;
-  final String? Function(BuildContext, IsmChatConversationModel,String)? name;
-  final Widget? Function(BuildContext, IsmChatConversationModel,String)? subtitleBuilder;
-  final String? Function(BuildContext, IsmChatConversationModel,String)? subtitle;
+  final ConversationWidgetCallback? profileImageBuilder;
+  final ConversationStringCallback? profileImageUrl;
+  final ConversationWidgetCallback? nameBuilder;
+  final ConversationStringCallback? name;
+  final ConversationWidgetCallback? subtitleBuilder;
+  final ConversationStringCallback? subtitle;
 
   final bool? Function(BuildContext, IsmChatConversationModel)?
       isSlidableEnable;
 
-   final Widget? placeHolderForConversation;       
+  final Widget? emptyListPlaceholder;
 
   @override
   State<IsmChatConversations> createState() => _IsmChatConversationsState();
@@ -65,7 +66,7 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
   @override
   void initState() {
     super.initState();
-    if(!Get.isRegistered<IsmChatMqttController>()){
+    if (!Get.isRegistered<IsmChatMqttController>()) {
       IsmChatMqttBinding().dependencies();
     }
   }
@@ -83,7 +84,7 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
             onChatTap: widget.onChatTap,
             allowDelete: widget.allowDelete,
             actions: widget.actions,
-            endActions:widget.endActions,
+            endActions: widget.endActions,
             onProfileWidget: widget.onProfileWidget,
             profileImageBuilder: widget.profileImageBuilder,
             profileImageUrl: widget.profileImageUrl,
@@ -92,8 +93,7 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
             subtitle: widget.subtitle,
             subtitleBuilder: widget.subtitleBuilder,
             isSlidableEnable: widget.isSlidableEnable,
-            placeHolderForConversation: widget.placeHolderForConversation,
-            
+            emptyListPlaceholder: widget.emptyListPlaceholder,
           ),
         ),
         floatingActionButton: widget.showCreateChatIcon

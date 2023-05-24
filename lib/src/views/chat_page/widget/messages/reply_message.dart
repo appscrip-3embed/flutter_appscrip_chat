@@ -18,8 +18,8 @@ class IsmChatReplyMessage extends StatelessWidget {
               alignment: message.sentByMe
                   ? Alignment.centerRight
                   : Alignment.centerLeft,
-              constraints: const BoxConstraints(
-                minHeight: 36,
+              constraints: BoxConstraints(
+                minHeight: IsmChatDimens.twentyFour,
               ),
               padding: IsmChatDimens.edgeInsets4_0,
               child: Text(
@@ -47,7 +47,7 @@ class _ReplyMessage extends StatelessWidget {
           borderRadius: BorderRadius.circular(IsmChatDimens.eight),
           child: Container(
             constraints: BoxConstraints(
-              minHeight: IsmChatDimens.thirtyTwo,
+              minHeight: IsmChatDimens.twentyEight,
             ),
             decoration: BoxDecoration(
               color: (message.sentByMe
@@ -60,7 +60,7 @@ class _ReplyMessage extends StatelessWidget {
               children: [
                 SizedBox(
                   width: IsmChatDimens.four,
-                  height: IsmChatDimens.forty,
+                  height: IsmChatDimens.fifty,
                   child: ColoredBox(
                     color: message.metaData?.parentMessageInitiator ?? false
                         ? IsmChatColors.yellowColor
@@ -74,21 +74,11 @@ class _ReplyMessage extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        message.sentByMe
-                            ? message.metaData?.parentMessageInitiator ?? false
-                                ? IsmChatStrings.you
-                                : IsmChatConfig.communicationConfig.userConfig
-                                        .userName.isNotEmpty
-                                    ? IsmChatConfig
-                                        .communicationConfig.userConfig.userName
-                                    : controller.conversation?.chatName ?? ''
-                            : message.metaData?.parentMessageInitiator ?? false
-                                ? IsmChatConfig.communicationConfig.userConfig
-                                        .userName.isNotEmpty
-                                    ? IsmChatConfig
-                                        .communicationConfig.userConfig.userName
-                                    : controller.conversation?.chatName ?? ''
-                                : IsmChatStrings.you,
+                        message.sentByMe &&
+                                (message.metaData?.parentMessageInitiator ??
+                                    false)
+                            ? IsmChatStrings.you
+                            : controller.conversation!.replyName,
                         style: IsmChatStyles.w500Black14.copyWith(
                           color:
                               message.metaData?.parentMessageInitiator ?? false
@@ -96,8 +86,10 @@ class _ReplyMessage extends StatelessWidget {
                                   : IsmChatColors.blueColor,
                         ),
                       ),
-                      SizedBox(
-                        width: IsmChatDimens.percentWidth(0.7),
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: Get.width * 0.7,
+                        ),
                         child: Text(
                           message.metaData?.parentMessageBody ?? '',
                           maxLines: 1,

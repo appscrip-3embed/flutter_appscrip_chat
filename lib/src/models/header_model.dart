@@ -16,26 +16,22 @@ class IsmChatHeader {
     this.nameBuilder,
     this.profileImageBuilder,
     this.profileImageUrl,
-
     this.elevation,
   });
 
   final Color? backgroundColor;
   final Color? iconColor;
-  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
-      profileImageBuilder;
-  final String? Function(BuildContext, IsmChatConversationModel, String)?
-      profileImageUrl;
-  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
-      nameBuilder;
-  final String? Function(BuildContext, IsmChatConversationModel, String)? name;
+  final ConversationWidgetCallback? profileImageBuilder;
+  final ConversationStringCallback? profileImageUrl;
+  final ConversationWidgetCallback? nameBuilder;
+  final ConversationStringCallback? name;
 
   final TextStyle? titleStyle;
   final TextStyle? subtitleStyle;
   final List<IsmChatPopItem>? popupItems;
   final ShapeBorder? shape;
   final Widget? bottom;
-  final Widget? Function(BuildContext, IsmChatConversationModel)? onProfileWidget;
+  final ConversationWidgetCallback? onProfileWidget;
   final void Function(IsmChatConversationModel)? bottomOnTap;
   final double? elevation;
 }

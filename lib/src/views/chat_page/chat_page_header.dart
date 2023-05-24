@@ -81,8 +81,10 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                           ),
                       Positioned(
                         top: IsmChatDimens.twenty,
-                        child: header?.onProfileWidget
-                                ?.call(context, controller.conversation!) ??
+                        child: header?.onProfileWidget?.call(
+                                context,
+                                controller.conversation!,
+                                controller.conversation!.profileUrl) ??
                             IsmChatDimens.box0,
                       )
                     ],
@@ -197,8 +199,10 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                         ],
                       ),
                     ),
-                  if (header?.onProfileWidget
-                          ?.call(context, controller.conversation!) !=
+                  if (header?.onProfileWidget?.call(
+                          context,
+                          controller.conversation!,
+                          controller.conversation!.profileUrl) !=
                       null)
                     ...(header?.popupItems ?? []).map(
                       (e) => PopupMenuItem(

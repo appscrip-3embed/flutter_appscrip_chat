@@ -265,6 +265,6 @@ class IsmChatApp extends StatelessWidget {
         subtitle: subtitle,
         subtitleBuilder: subtitleBuilder,
         isSlidableEnable: isSlidableEnable,
-        placeHolderForConversation: placeHolderForConversation,
+        emptyListPlaceholder: placeHolderForConversation,
       );
 }

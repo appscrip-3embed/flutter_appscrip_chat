@@ -23,7 +23,7 @@ class IsmChatMessage extends StatefulWidget {
 class _IsmChatMessageState extends State<IsmChatMessage>
     with AutomaticKeepAliveClientMixin {
   @override
-  bool get wantKeepAlive => true;
+  bool get wantKeepAlive => mounted;
 
   @override
   Widget build(BuildContext context) {
@@ -136,12 +136,14 @@ class _Message extends StatelessWidget {
               onLeftSwipe: showMessageInCenter || !message.sentByMe
                   ? null
                   : () {
+                      // this works for my messages
                       controller.isreplying = true;
                       controller.chatMessageModel = message;
                     },
               onRightSwipe: showMessageInCenter || message.sentByMe
                   ? null
                   : () {
+                      // this works for opponent message
                       controller.isreplying = true;
                       controller.chatMessageModel = message;
                     },

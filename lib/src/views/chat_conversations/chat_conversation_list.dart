@@ -18,24 +18,25 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 ///
 /// Certain properties can be modified as per requirement. You can read about each of them by hovering over the property
 class IsmChatConversationList extends StatefulWidget {
-  const IsmChatConversationList(
-      {super.key,
-      required this.onChatTap,
-      this.childBuilder,
-      this.itemBuilder,
-      this.profileImageBuilder,
-      this.height,
-      this.actions,
-      this.endActions,
-      this.onProfileWidget,
-      this.name,
-      this.nameBuilder,
-      this.subtitle,
-      this.subtitleBuilder,
-      this.profileImageUrl,
-      this.isSlidableEnable,
-      this.placeHolderForConversation,
-      this.allowDelete = false});
+  const IsmChatConversationList({
+    super.key,
+    required this.onChatTap,
+    this.childBuilder,
+    this.itemBuilder,
+    this.profileImageBuilder,
+    this.height,
+    this.actions,
+    this.endActions,
+    this.onProfileWidget,
+    this.name,
+    this.nameBuilder,
+    this.subtitle,
+    this.subtitleBuilder,
+    this.profileImageUrl,
+    this.isSlidableEnable,
+    this.emptyListPlaceholder,
+    this.allowDelete = false,
+  });
 
   final void Function(BuildContext, IsmChatConversationModel) onChatTap;
 
@@ -60,17 +61,12 @@ class IsmChatConversationList extends StatefulWidget {
   /// Provide it like you are passing itemBuilder for `ListView` or any constructor of [ListView]
   final Widget? Function(BuildContext, int)? itemBuilder;
 
-  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
-      profileImageBuilder;
-  final String Function(BuildContext, IsmChatConversationModel, String)?
-      profileImageUrl;
-  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
-      nameBuilder;
-  final String? Function(BuildContext, IsmChatConversationModel, String)? name;
-  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
-      subtitleBuilder;
-  final String? Function(BuildContext, IsmChatConversationModel, String)?
-      subtitle;
+  final ConversationWidgetCallback? profileImageBuilder;
+  final ConversationStringCallback? profileImageUrl;
+  final ConversationWidgetCallback? nameBuilder;
+  final ConversationStringCallback? name;
+  final ConversationWidgetCallback? subtitleBuilder;
+  final ConversationStringCallback? subtitle;
 
   /// Provide this height parameter to set the maximum height for conversation list
   ///
@@ -79,14 +75,15 @@ class IsmChatConversationList extends StatefulWidget {
 
   final bool allowDelete;
 
-  final Widget? Function(BuildContext, IsmChatConversationModel)? onProfileWidget;
+  final Widget? Function(BuildContext, IsmChatConversationModel)?
+      onProfileWidget;
 
   final List<IsmChatConversationAction>? actions;
   final List<IsmChatConversationAction>? endActions;
 
   final bool? Function(BuildContext, IsmChatConversationModel)?
       isSlidableEnable;
-  final Widget? placeHolderForConversation;
+  final Widget? emptyListPlaceholder;
 
   @override
   State<IsmChatConversationList> createState() =>
@@ -121,7 +118,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                 controller.getChatConversations(origin: ApiCallOrigin.referesh);
               },
               child: Center(
-                child: widget.placeHolderForConversation ??
+                child: widget.emptyListPlaceholder ??
                     Text(
                       IsmChatStrings.noConversation,
                       style: IsmChatStyles.w600Black20.copyWith(
