@@ -51,6 +51,10 @@ class IsmChatPageController extends GetxController
 
   final textEditingController = TextEditingController();
 
+  final RxBool _showEmojiBoard = false.obs;
+  bool get showEmojiBoard => _showEmojiBoard.value;
+  set showEmojiBoard(bool value) => _showEmojiBoard.value = value;
+
   final RxBool _isMessagesLoading = true.obs;
   bool get isMessagesLoading => _isMessagesLoading.value;
   set isMessagesLoading(bool value) => _isMessagesLoading.value = value;
@@ -280,6 +284,20 @@ class IsmChatPageController extends GetxController
     ifTimerMounted();
   }
 
+  toggleEmojiBoard([
+    bool? showEmoji,
+    bool focusKeyboard = true,
+  ]) {
+    if (showEmoji ?? showEmojiBoard) {
+      if (focusKeyboard) {
+        messageFieldFocusNode.requestFocus();
+      }
+    } else {
+      IsmChatUtility.dismissKeyBoard();
+    }
+    showEmojiBoard = showEmoji ?? !showEmojiBoard;
+  }
+
   /// This function will be used in [Add participants Screen] to Select or Unselect users
   void onGrouEligibleUserTap(int index) {
     groupEligibleUser[index].isUserSelected =
@@ -384,6 +402,7 @@ class IsmChatPageController extends GetxController
           messagesScrollController.position.maxScrollExtent) {
         getMessagesFromAPI(forPagination: true, lastMessageTimestamp: 0);
       }
+      toggleEmojiBoard(false, false);
       if (Get.height * 0.3 < messagesScrollController.offset) {
         showDownSideButton = true;
       } else {

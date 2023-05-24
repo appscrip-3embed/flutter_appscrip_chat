@@ -183,9 +183,12 @@ class _IsmChatPageView extends StatelessWidget {
                       ),
                     ),
                     SafeArea(
-                        child: IsmChatMessageField(
-                      header: header,
-                    ))
+                      child: IsmChatMessageField(header: header),
+                    ),
+                    Offstage(
+                      offstage: !controller.showEmojiBoard,
+                      child: const EmojiBoard(),
+                    ),
                   ],
                 ),
               ),
