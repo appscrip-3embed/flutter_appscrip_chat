@@ -86,7 +86,7 @@ class IsmChatConversationList extends StatefulWidget {
 
   final bool? Function(BuildContext, IsmChatConversationModel)?
       isSlidableEnable;
-  final Widget? placeHolderForConversation;    
+  final Widget? placeHolderForConversation;
 
   @override
   State<IsmChatConversationList> createState() =>
@@ -111,20 +111,31 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
             return const IsmChatLoadingDialog();
           }
           if (controller.conversations.isEmpty) {
-            return Center(
-              child: widget.placeHolderForConversation ??
-               Text(
-                IsmChatStrings.noConversation,
-                style: IsmChatStyles.w600Black20.copyWith(
-                  color: IsmChatConfig.chatTheme.primaryColor,
-                ),
-                textAlign: TextAlign.center,
+            return SmartRefresher(
+              physics: const ClampingScrollPhysics(),
+              controller: controller.refreshController,
+              enablePullDown: true,
+              enablePullUp: true,
+              onRefresh: () {
+                controller.conversationPage = 0;
+                controller.getChatConversations(origin: ApiCallOrigin.referesh);
+              },
+              child: Center(
+                child: widget.placeHolderForConversation ??
+                    Text(
+                      IsmChatStrings.noConversation,
+                      style: IsmChatStyles.w600Black20.copyWith(
+                        color: IsmChatConfig.chatTheme.primaryColor,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
               ),
             );
           }
           return SizedBox(
             height: widget.height ?? Get.height,
             child: SmartRefresher(
+              physics: const ClampingScrollPhysics(),
               controller: controller.refreshController,
               enablePullDown: true,
               enablePullUp: true,
