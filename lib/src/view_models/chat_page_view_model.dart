@@ -83,7 +83,7 @@ class IsmChatPageViewModel {
     SendMessageType sendMessageType = SendMessageType.pendingMessage,
     String? parentMessageId,
     IsmChatMetaData? metaData,
-    List<Map<String, dynamic>>? mentionedUsers,
+    List<Map<String,dynamic>>? mentionedUsers,
     Map<String, dynamic>? events,
     String? customType,
     List<Map<String, dynamic>>? attachments,

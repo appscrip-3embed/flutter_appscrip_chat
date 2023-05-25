@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:329637739332878047",
-      "lastPropertyId": "15:3457791717510155134",
+      "lastPropertyId": "17:5334335391531537992",
       "name": "UserDetails",
       "properties": [
         {
@@ -78,6 +78,16 @@
           "id": "15:3457791717510155134",
           "name": "userDBMetadata",
           "type": 9
+        },
+        {
+          "id": "16:5031166342498126963",
+          "name": "wordCount",
+          "type": 6
+        },
+        {
+          "id": "17:5334335391531537992",
+          "name": "order",
+          "type": 6
         }
       ],
       "relations": []

@@ -19,6 +19,7 @@ class IsmChatDimens {
   static final double eight = 8.sp;
   static final double ten = 10.sp;
   static final double twelve = 12.sp;
+  static final double tharteen = 13.sp;
   static final double forteen = 14.sp;
   static final double sixteen = 16.sp;
   static final double eighteen = 18.sp;

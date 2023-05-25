@@ -11,7 +11,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
           var controller = Get.find<IsmChatPageController>();
           await controller.getConverstaionDetails(
             conversationId: controller.conversation!.conversationId!,
-            includeMembers: true,
+            includeMembers: controller.conversation!.isGroup  == true? true : false,
             isLoading: false,
           );
         },

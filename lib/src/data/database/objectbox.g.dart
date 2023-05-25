@@ -29,7 +29,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(1, 329637739332878047),
       name: 'UserDetails',
-      lastPropertyId: const IdUid(15, 3457791717510155134),
+      lastPropertyId: const IdUid(17, 5334335391531537992),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -101,6 +101,16 @@ final _entities = <ModelEntity>[
             id: const IdUid(15, 3457791717510155134),
             name: 'userDBMetadata',
             type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(16, 5031166342498126963),
+            name: 'wordCount',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(17, 5334335391531537992),
+            name: 'order',
+            type: 6,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -609,7 +619,7 @@ ModelDefinition getObjectBoxModel() {
               ? null
               : fbb.writeString(object.memberName!);
           final userDBMetadataOffset = fbb.writeString(object.userDBMetadata);
-          fbb.startTable(16);
+          fbb.startTable(18);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, userProfileImageUrlOffset);
           fbb.addOffset(2, userNameOffset);
@@ -624,6 +634,8 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(11, memberNameOffset);
           fbb.addBool(12, object.isAdmin);
           fbb.addOffset(14, userDBMetadataOffset);
+          fbb.addInt64(15, object.wordCount);
+          fbb.addInt64(16, object.order);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -652,6 +664,8 @@ ModelDefinition getObjectBoxModel() {
               language: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 22),
               timestamp: const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 24),
               memberName: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 26),
+              order: const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 36),
+              wordCount: const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 34),
               isAdmin: const fb.BoolReader().vTableGet(buffer, rootOffset, 28, false))
             ..userDBMetadata = const fb.StringReader(asciiOptimization: true).vTableGet(buffer, rootOffset, 32, '');
 
@@ -1127,6 +1141,14 @@ class UserDetails_ {
   /// see [UserDetails.userDBMetadata]
   static final userDBMetadata =
       QueryStringProperty<UserDetails>(_entities[0].properties[13]);
+
+  /// see [UserDetails.wordCount]
+  static final wordCount =
+      QueryIntegerProperty<UserDetails>(_entities[0].properties[14]);
+
+  /// see [UserDetails.order]
+  static final order =
+      QueryIntegerProperty<UserDetails>(_entities[0].properties[15]);
 }
 
 /// [AttachmentModel] entity fields to define ObjectBox queries.
