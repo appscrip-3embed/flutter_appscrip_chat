@@ -161,7 +161,6 @@ class IsmChatMessageField extends StatelessWidget {
                                     controller.showMentionsUserList(_);
                                   }
                                 },
-                                onTap: () => controller.toggleEmojiBoard(false),
                               ),
                             ),
                             const _AttachmentIcon()

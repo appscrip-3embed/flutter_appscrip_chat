@@ -98,6 +98,11 @@ class IsmChatPageController extends GetxController
   List<UserDetails> get groupMembers => _groupMembers;
   set groupMembers(List<UserDetails> value) => _groupMembers.value = value;
 
+  final RxList<UserDetails> _mentionSuggestions = <UserDetails>[].obs;
+  List<UserDetails> get mentionSuggestions => _mentionSuggestions;
+  set mentionSuggestions(List<UserDetails> value) =>
+      _mentionSuggestions.value = value;
+
   final RxList<IsmChatMessageModel> _mediaList = <IsmChatMessageModel>[].obs;
   List<IsmChatMessageModel> get mediaList => _mediaList;
   set mediaList(List<IsmChatMessageModel> value) => _mediaList.value = value;
@@ -294,12 +299,22 @@ class IsmChatPageController extends GetxController
   }
 
   showMentionsUserList(String value) async {
-    showMentionUserList = value.split(' ').last.startsWith('@') &&
-        value.split(' ').last.endsWith('@');
+    showMentionUserList = value.split(' ').last.contains('@');
+
+    if (!showMentionUserList) {
+      mentionSuggestions.clear();
+      return;
+    }
+    var query = value.split('@').last;
+    mentionSuggestions = groupMembers
+        .where((e) => e.userName.toLowerCase().contains(query.toLowerCase()))
+        .toList();
   }
 
   updateMentionUser(String value) {
-    var updatedText = '${chatInputController.text}${value.capitalizeFirst} ';
+    var tempList = chatInputController.text.split('@');
+    var remainingText = tempList.sublist(0, tempList.length - 1).join('@');
+    var updatedText = '@$remainingText${value.capitalizeFirst} ';
     showMentionUserList = false;
     chatInputController.value = chatInputController.value.copyWith(
       text: updatedText,
@@ -319,7 +334,7 @@ class IsmChatPageController extends GetxController
             .contains(value.replaceAll(RegExp('@'), '').toLowerCase()));
         if (isMember.isNotEmpty) {
           userMentionedList.add({
-            'wordCount': isMember.first.userName.length,
+            'wordCount': isMember.first.userName.split(' ').length,
             'userId': isMember.first.userId,
             'order': key
           });

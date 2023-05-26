@@ -149,7 +149,7 @@ class _IsmChatPageView extends StatelessWidget {
                   height: height,
                 ),
           body: Stack(
-            fit: StackFit.passthrough,
+            alignment: Alignment.bottomRight,
             children: [
               SizedBox(
                 height: MediaQuery.of(context).size.height,
@@ -161,32 +161,39 @@ class _IsmChatPageView extends StatelessWidget {
                       child: Visibility(
                         visible: !controller.isMessagesLoading,
                         replacement: const IsmChatLoadingDialog(),
-                        child: Visibility(
-                          visible: controller.messages.isNotEmpty &&
-                              controller.messages.length != 1,
-                          replacement:
-                              emptyChatPlaceholder ?? const IsmChatNoMessage(),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: ListView.builder(
-                              controller: controller.messagesScrollController,
-                              shrinkWrap: true,
-                              keyboardDismissBehavior:
-                                  ScrollViewKeyboardDismissBehavior.onDrag,
-                              padding: IsmChatDimens.edgeInsets4_8,
-                              reverse: true,
-                              addAutomaticKeepAlives: true,
-                              itemCount: controller.messages.length,
-                              itemBuilder: (_, index) => IsmChatMessage(index),
+                        child: Stack(
+                          alignment: Alignment.bottomLeft,
+                          children: [
+                            Visibility(
+                              visible: controller.messages.isNotEmpty &&
+                                  controller.messages.length != 1,
+                              replacement: emptyChatPlaceholder ??
+                                  const IsmChatNoMessage(),
+                              child: Align(
+                                alignment: Alignment.topCenter,
+                                child: ListView.builder(
+                                  controller:
+                                      controller.messagesScrollController,
+                                  shrinkWrap: true,
+                                  keyboardDismissBehavior:
+                                      ScrollViewKeyboardDismissBehavior.onDrag,
+                                  padding: IsmChatDimens.edgeInsets4_8,
+                                  reverse: true,
+                                  addAutomaticKeepAlives: true,
+                                  itemCount: controller.messages.length,
+                                  itemBuilder: (_, index) =>
+                                      IsmChatMessage(index),
+                                ),
+                              ),
                             ),
-                          ),
+                            Obx(
+                              () => controller.showMentionUserList
+                                  ? const MentionUserList()
+                                  : const SizedBox.shrink(),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                    Obx(
-                      () => !controller.showMentionUserList
-                          ? const SizedBox.shrink()
-                          : const MentionUserList(),
                     ),
                     SafeArea(
                       child: IsmChatMessageField(header: header),

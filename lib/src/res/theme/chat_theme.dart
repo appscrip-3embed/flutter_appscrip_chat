@@ -7,11 +7,13 @@ class IsmChatThemeData with Diagnosticable {
     IsmChatListThemeData? chatListTheme,
     Color? primaryColor,
     Color? backgroundColor,
+    Color? mentionColor,
     FloatingActionButtonThemeData? floatingActionButtonTheme,
     IconThemeData? iconTheme,
   })  : primaryColor = primaryColor ?? IsmChatThemeData.light().primaryColor,
         backgroundColor =
             backgroundColor ?? IsmChatThemeData.light().backgroundColor,
+        mentionColor = mentionColor ?? IsmChatThemeData.light().mentionColor,
         floatingActionButtonTheme = floatingActionButtonTheme ??
             IsmChatThemeData.light().floatingActionButtonTheme,
         iconTheme = iconTheme ?? IsmChatThemeData.light().iconTheme,
@@ -23,6 +25,7 @@ class IsmChatThemeData with Diagnosticable {
         chatListTheme: const IsmChatListThemeData.light(),
         primaryColor: IsmChatColors.primaryColorLight,
         backgroundColor: IsmChatColors.backgroundColorLight,
+        mentionColor: IsmChatColors.yellowColor,
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: IsmChatColors.primaryColorLight,
           foregroundColor: IsmChatColors.whiteColor,
@@ -35,6 +38,7 @@ class IsmChatThemeData with Diagnosticable {
   factory IsmChatThemeData.dark() => IsmChatThemeData(
         chatListTheme: const IsmChatListThemeData.dark(),
         primaryColor: IsmChatColors.primaryColorDark,
+        mentionColor: IsmChatColors.yellowColor,
         backgroundColor: IsmChatColors.backgroundColorDark,
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: IsmChatColors.primaryColorDark,
@@ -48,6 +52,8 @@ class IsmChatThemeData with Diagnosticable {
   final Color? primaryColor;
 
   final Color? backgroundColor;
+
+  final Color? mentionColor;
 
   final IsmChatListThemeData? chatListTheme;
 
