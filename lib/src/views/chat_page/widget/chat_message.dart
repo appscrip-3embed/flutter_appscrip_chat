@@ -138,14 +138,19 @@ class _Message extends StatelessWidget {
                   : () {
                       // this works for my messages
                       controller.isreplying = true;
-                      controller.chatMessageModel = message;
+                      controller.chatMessageModel =
+                          controller.messages.reversed.toList()[index];
+                       controller.messageFieldFocusNode.requestFocus();   
+                          
                     },
               onRightSwipe: showMessageInCenter || message.sentByMe
                   ? null
                   : () {
                       // this works for opponent message
                       controller.isreplying = true;
-                      controller.chatMessageModel = message;
+                      controller.chatMessageModel =
+                          controller.messages.reversed.toList()[index];
+                      controller.messageFieldFocusNode.requestFocus();    
                     },
               child: FocusedMenuHolder(
                 openWithTap: showMessageInCenter ? true : false,

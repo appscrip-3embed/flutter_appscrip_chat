@@ -223,11 +223,7 @@ class IsmChatPageController extends GetxController
 
   List<Map<String, dynamic>> userMentionedList = [];
 
-  // final _mentionedList = <MentionUserModel>[].obs;
-  // List<MentionUserModel> get mentionedList => _mentionedList;
-  // set mentionedList(List<MentionUserModel> value) {
-  //   _mentionedList.value = value;
-  // }
+  
 
   @override
   void onInit() async {

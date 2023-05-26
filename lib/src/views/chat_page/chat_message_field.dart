@@ -131,7 +131,6 @@ class IsmChatMessageField extends StatelessWidget {
                                 controller: controller.chatInputController,
                                 cursorColor:
                                     IsmChatConfig.chatTheme.primaryColor,
-                                  
                                 decoration: InputDecoration(
                                   isDense: true,
                                   filled: true,
@@ -158,14 +157,11 @@ class IsmChatMessageField extends StatelessWidget {
                                           ?.isNotEmpty ??
                                       false) {
                                     controller.notifyTyping();
-                                    
+
                                     controller.showMentionsUserList(_);
-                                   
-                                  
                                   }
-                                  
                                 },
-                                onTap: ()=> controller.toggleEmojiBoard(false),
+                                onTap: () => controller.toggleEmojiBoard(false),
                               ),
                             ),
                             const _AttachmentIcon()
@@ -260,7 +256,8 @@ class _MicOrSendButton extends StatelessWidget {
                   if (!controller.conversation!.isChattingAllowed) {
                     controller.showDialogCheckBlockUnBlock();
                   } else {
-                    controller.getMentionedUserList(controller.chatInputController.text.trim());
+                    controller.getMentionedUserList(
+                        controller.chatInputController.text.trim());
                     controller.sendTextMessage(
                         conversationId:
                             controller.conversation?.conversationId ?? '',
