@@ -221,7 +221,7 @@ class IsmChatPageController extends GetxController
     _groupEligibleUser.value = value;
   }
 
-  List<Map<String,dynamic>> userMentionedList = [];
+  List<Map<String, dynamic>> userMentionedList = [];
 
   // final _mentionedList = <MentionUserModel>[].obs;
   // List<MentionUserModel> get mentionedList => _mentionedList;
@@ -302,7 +302,6 @@ class IsmChatPageController extends GetxController
         value.split(' ').last.endsWith('@');
   }
 
-
   updateMentionUser(String value) {
     var updatedText = '${chatInputController.text}${value.capitalizeFirst} ';
     showMentionUserList = false;
@@ -312,7 +311,6 @@ class IsmChatPageController extends GetxController
         offset: updatedText.length,
       ),
     );
-    
   }
 
   getMentionedUserList(String value) {
@@ -1117,6 +1115,8 @@ class IsmChatPageController extends GetxController
       await IsmChatConfig.objectBox
           .removePendingMessage(conversation!.conversationId!, pendingMessges);
       await getMessagesFromDB(conversation!.conversationId!);
+      selectedMessage.clear();
+      isMessageSeleted = false;
     }
   }
 
@@ -1131,6 +1131,8 @@ class IsmChatPageController extends GetxController
       await IsmChatConfig.objectBox
           .removePendingMessage(conversation!.conversationId!, pendingMessges);
       await getMessagesFromDB(conversation!.conversationId!);
+      selectedMessage.clear();
+      isMessageSeleted = false;
     }
   }
 
