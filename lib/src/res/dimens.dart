@@ -90,6 +90,8 @@ class IsmChatDimens {
       EdgeInsets.only(left: sixteen, right: ten, bottom: eight);
 
   static final EdgeInsets edgeInsets16 = EdgeInsets.all(sixteen);
+  static final EdgeInsets edgeInsets16_8 =
+      EdgeInsets.symmetric(horizontal: sixteen, vertical: eight);
 
   static final EdgeInsets edgeInsets24_0 =
       EdgeInsets.symmetric(horizontal: twentyFour);

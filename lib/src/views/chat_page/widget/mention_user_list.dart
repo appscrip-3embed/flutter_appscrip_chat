@@ -11,40 +11,63 @@ class MentionUserList extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
         builder: (controller) => AnimatedContainer(
-           curve: Curves.bounceIn,
-          alignment: Alignment.bottomLeft,
+          curve: Curves.easeInOut,
           duration: IsmChatConfig.animationDuration,
+          margin: IsmChatDimens.edgeInsetsLeft10,
           decoration: BoxDecoration(
-            border: Border.all(color: IsmChatConfig.chatTheme.backgroundColor!),
-            borderRadius: BorderRadius.circular(IsmChatDimens.ten),
+            border: Border.all(color: IsmChatConfig.chatTheme.primaryColor!),
+            borderRadius: BorderRadius.circular(IsmChatDimens.sixteen),
             color: IsmChatColors.whiteColor,
           ),
-          height: IsmChatDimens.percentHeight(.3),
-          width: IsmChatDimens.percentWidth(.6),
-          child: ListView.separated(
-            shrinkWrap: true,
-            separatorBuilder: (_, index) => IsmChatDimens.box0,
-            itemCount: controller.groupMembers.length,
-            itemBuilder: (_, index) {
-              var member = controller.groupMembers[index];
-              return IsmChatTapHandler(
-                onTap: () {
-                  controller.updateMentionUser(member.userName);
-                },
-                child: ListTile(
-                  dense: true,
-                  title: Text(
-                    member.userName.capitalizeFirst ?? '',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: IsmChatStyles.w600Black13,
-                  ),
-                  leading: IsmChatImage.profile(member.profileUrl,
-                      dimensions: IsmChatDimens.thirtyTwo),
-                ),
-              );
-            },
+          height: controller.mentionSuggestions.isEmpty
+              ? IsmChatDimens.percentHeight(0.08)
+              : controller.mentionSuggestions.take(4).length *
+                  IsmChatDimens.percentHeight(0.07),
+          width: IsmChatDimens.percentWidth(.8),
+          constraints: BoxConstraints(
+            minHeight: IsmChatDimens.percentHeight(0.08),
           ),
+          child: controller.mentionSuggestions.isEmpty
+              ? const _NoSuggestions()
+              : ListView.separated(
+                  shrinkWrap: true,
+                  padding: IsmChatDimens.edgeInsets0_4,
+                  separatorBuilder: (_, index) => IsmChatDimens.box0,
+                  itemCount: controller.mentionSuggestions.length,
+                  itemBuilder: (_, index) {
+                    var member = controller.mentionSuggestions[index];
+                    return IsmChatTapHandler(
+                      onTap: () {
+                        controller.updateMentionUser(member.userName);
+                      },
+                      child: ListTile(
+                        dense: true,
+                        horizontalTitleGap: IsmChatDimens.four,
+                        title: Text(
+                          member.userName.capitalizeFirst ?? '',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: IsmChatStyles.w600Black13,
+                        ),
+                        leading: IsmChatImage.profile(
+                          member.profileUrl,
+                          dimensions: IsmChatDimens.thirtyTwo,
+                        ),
+                      ),
+                    );
+                  },
+                ),
         ),
+      );
+}
+
+class _NoSuggestions extends StatelessWidget {
+  const _NoSuggestions();
+
+  @override
+  Widget build(BuildContext context) => ListTile(
+        horizontalTitleGap: IsmChatDimens.four,
+        leading: const Icon(Icons.no_accounts_rounded),
+        title: const Text('No match found'),
       );
 }

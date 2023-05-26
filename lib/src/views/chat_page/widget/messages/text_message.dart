@@ -15,11 +15,30 @@ class IsmChatTextMessage extends StatelessWidget {
             minHeight: 36,
           ),
           padding: IsmChatDimens.edgeInsets4,
-          child: Text(
-            message.body,
-            style: message.sentByMe
-                ? IsmChatStyles.w500White14
-                : IsmChatStyles.w500Black14,
+          child: RichText(
+            text: TextSpan(
+              style: message.sentByMe
+                  ? IsmChatStyles.w500White14
+                  : IsmChatStyles.w500Black14,
+              children: message.body
+                  .split(' ')
+                  .map(
+                    (e) => TextSpan(
+                      text: '$e ',
+                      style: (message.sentByMe
+                              ? IsmChatStyles.w500White14
+                              : IsmChatStyles.w500Black14)
+                          .copyWith(
+                        color: e.contains('@')
+                            ? message.sentByMe
+                                ? IsmChatConfig.chatTheme.mentionColor
+                                : IsmChatConfig.chatTheme.primaryColor
+                            : null,
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
             softWrap: true,
             maxLines: null,
           ),

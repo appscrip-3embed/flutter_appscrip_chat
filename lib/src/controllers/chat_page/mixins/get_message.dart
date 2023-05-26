@@ -101,6 +101,8 @@ mixin IsmChatPageGetMessageMixin {
           .toList();
       if (data.members != null) {
         _controller.groupMembers = data.members!;
+        _controller.groupMembers.sort((a, b) =>
+            a.userName.toLowerCase().compareTo(b.userName.toLowerCase()));
       }
       _controller.update();
     }
