@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -30,11 +32,10 @@ class IsmChatPageViewModel {
           IsmChatActionEvents.clearConversation.name,
           if (!isGroup) IsmChatActionEvents.conversationCreated.name,
           IsmChatActionEvents.deleteConversationLocally.name,
-          if (![e.memberId, e.userId].any((e) =>
-              e == IsmChatConfig.communicationConfig.userConfig.userId)) ...[
-            IsmChatActionEvents.revokeAdmin.name,
+          if(e.memberId != IsmChatConfig.communicationConfig.userConfig.userId) ...[
+            IsmChatActionEvents.removeAdmin.name,
             IsmChatActionEvents.addAdmin.name,
-          ],
+          ]
         ].contains(e.action));
     if (Get.find<IsmChatPageController>().messages.isNotEmpty) {
       messages.removeWhere((e) =>
@@ -83,7 +84,7 @@ class IsmChatPageViewModel {
     SendMessageType sendMessageType = SendMessageType.pendingMessage,
     String? parentMessageId,
     IsmChatMetaData? metaData,
-    List<Map<String,dynamic>>? mentionedUsers,
+    List<Map<String, dynamic>>? mentionedUsers,
     Map<String, dynamic>? events,
     String? customType,
     List<Map<String, dynamic>>? attachments,

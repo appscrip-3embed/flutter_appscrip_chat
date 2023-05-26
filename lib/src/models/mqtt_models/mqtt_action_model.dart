@@ -48,21 +48,28 @@ class IsmChatMqttActionModel {
             : null,
         sentAt: map['sentAt'] as int,
         lastMessageSentAt: map['lastMessageSentAt'] as int?,
+        initiatorId: map['initiatorId'] as String? ?? '',
+        initiatorName: map['initiatorName'] as String? ?? '',
+        memberId: map['memberId'] as String? ?? '',
+        memberName: map['memberName'] as String? ?? '',
         action: IsmChatActionEvents.fromName(map['action'] as String),
       );
 
-  const IsmChatMqttActionModel({
-    this.conversationId,
-    this.userDetails,
-    this.opponentDetails,
-    this.initiatorDetails,
-    this.conversationDetails,
-    this.messageId,
-    this.messageIds,
-    this.lastMessageSentAt,
-    required this.sentAt,
-    required this.action,
-  });
+  const IsmChatMqttActionModel(
+      {this.conversationId,
+      this.userDetails,
+      this.opponentDetails,
+      this.initiatorDetails,
+      this.conversationDetails,
+      this.messageId,
+      this.messageIds,
+      this.lastMessageSentAt,
+      required this.sentAt,
+      required this.action,
+      this.initiatorId,
+      this.initiatorName,
+      this.memberId,
+      this.memberName});
   final String? conversationId;
   final IsmChatMqttUserModel? userDetails;
   final IsmChatMqttUserModel? opponentDetails;
@@ -73,23 +80,33 @@ class IsmChatMqttActionModel {
   final String? messageId;
   final List<String>? messageIds;
   final IsmChatActionEvents action;
+  final String? memberId;
+  final String? memberName;
+  final String? initiatorName;
+  final String? initiatorId;
 
-  IsmChatMqttActionModel copyWith({
-    String? conversationId,
-    IsmChatMqttUserModel? userDetails,
-    IsmChatMqttUserModel? opponentDetails,
-    IsmChatMqttUserModel? initiatorDetails,
-    int? sentAt,
-    IsmChatActionEvents? action,
-  }) =>
+  IsmChatMqttActionModel copyWith(
+          {String? conversationId,
+          IsmChatMqttUserModel? userDetails,
+          IsmChatMqttUserModel? opponentDetails,
+          IsmChatMqttUserModel? initiatorDetails,
+          int? sentAt,
+          IsmChatActionEvents? action,
+          String? memberId,
+          String? memberName,
+          String? initiatorName,
+          String? initiatorId}) =>
       IsmChatMqttActionModel(
-        conversationId: conversationId ?? this.conversationId,
-        userDetails: userDetails ?? this.userDetails,
-        opponentDetails: opponentDetails ?? this.opponentDetails,
-        initiatorDetails: initiatorDetails ?? this.initiatorDetails,
-        sentAt: sentAt ?? this.sentAt,
-        action: action ?? this.action,
-      );
+          conversationId: conversationId ?? this.conversationId,
+          userDetails: userDetails ?? this.userDetails,
+          opponentDetails: opponentDetails ?? this.opponentDetails,
+          initiatorDetails: initiatorDetails ?? this.initiatorDetails,
+          sentAt: sentAt ?? this.sentAt,
+          action: action ?? this.action,
+          memberId: memberId ?? this.memberId,
+          memberName: memberName ?? this.memberName,
+          initiatorName: initiatorName ?? this.initiatorName,
+          initiatorId: initiatorId ?? this.initiatorId);
 
   Map<String, dynamic> toMap() => <String, dynamic>{
         'conversationId': conversationId,
@@ -98,13 +115,17 @@ class IsmChatMqttActionModel {
         'initiatorDetails': initiatorDetails?.toMap(),
         'sentAt': sentAt,
         'action': action.name,
+        'memberId': memberId,
+        'memberName': memberName,
+        'initiatorName': initiatorName,
+        'initiatorId': initiatorId
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'MqttActionModel(conversationId: $conversationId, messageId: $messageId, messageIds: $messageIds, userDetails: $userDetails, opponentDetails: $opponentDetails, initiatorDetails: $initiatorDetails, sentAt: $sentAt, action: $action)';
+      'MqttActionModel(conversationId: $conversationId, messageId: $messageId, messageIds: $messageIds, userDetails: $userDetails, opponentDetails: $opponentDetails, initiatorDetails: $initiatorDetails, sentAt: $sentAt, action: $action, memberId : $memberId, memberName : $memberName, initiatorName : $initiatorName , initiatorId : $initiatorId)';
 
   @override
   bool operator ==(covariant IsmChatMqttActionModel other) {
@@ -115,6 +136,10 @@ class IsmChatMqttActionModel {
         other.opponentDetails == opponentDetails &&
         other.initiatorDetails == initiatorDetails &&
         other.sentAt == sentAt &&
+        other.memberId == memberId &&
+        other.memberName == memberName &&
+        other.initiatorId == initiatorId &&
+        other.initiatorName == initiatorName &&
         other.action == action;
   }
 
@@ -125,5 +150,9 @@ class IsmChatMqttActionModel {
       opponentDetails.hashCode ^
       initiatorDetails.hashCode ^
       sentAt.hashCode ^
+      memberId.hashCode ^
+      memberName.hashCode ^
+      initiatorId.hashCode ^
+      initiatorName.hashCode ^
       action.hashCode;
 }

@@ -148,7 +148,7 @@ class IsmChatMqttController extends GetxController {
       var payload = jsonDecode(
               MqttPublishPayload.bytesToStringAsString(recMess.payload.message))
           as Map<String, dynamic>;
-
+      IsmChatLog(payload);
       if (payload['action'] != null) {
         var actionModel = IsmChatMqttActionModel.fromMap(payload);
         IsmChatLog(actionModel);
@@ -241,7 +241,7 @@ class IsmChatMqttController extends GetxController {
       case IsmChatActionEvents.removeMember:
         _handleGroupRemoveAndAddUser(actionModel);
         break;
-      case IsmChatActionEvents.revokeAdmin:
+      case IsmChatActionEvents.removeAdmin:
       case IsmChatActionEvents.addAdmin:
         _handleAdminRemoveAndAdd(actionModel);
         break;
@@ -535,19 +535,7 @@ class IsmChatMqttController extends GetxController {
         _communicationConfig.userConfig.userId) {
       return;
     }
-    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
 
-    var conversation = conversationBox
-        .query(DBConversationModel_.conversationId
-            .equals(actionModel.conversationId!))
-        .build()
-        .findUnique();
-
-    if (conversation == null ||
-        conversation.lastMessageDetails.target!.messageId ==
-            actionModel.messageId) {
-      return;
-    }
     if (messageId == actionModel.messageId) {
       return;
     }
@@ -561,7 +549,7 @@ class IsmChatMqttController extends GetxController {
         await controller.getMessagesFromAPI(
             conversationId: actionModel.conversationId ?? '',
             lastMessageTimestamp: controller.messages.last.sentAt);
-        messageId = actionModel.messageId!;
+        messageId = actionModel.messageId ?? '';
       }
     }
     var conversationController = Get.find<IsmChatConversationsController>();
@@ -575,20 +563,6 @@ class IsmChatMqttController extends GetxController {
       return;
     }
 
-    // var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
-
-    // var conversation = conversationBox
-    //     .query(DBConversationModel_.conversationId
-    //         .equals(actionModel.conversationId!))
-    //     .build()
-    //     .findUnique();
-
-    // if (conversation == null ||
-    //     conversation.lastMessageDetails.target!.messageId ==
-    //         actionModel.messageId) {
-    //   return;
-    // }
-
     if (messageId == actionModel.messageId) {
       return;
     }
@@ -601,7 +575,7 @@ class IsmChatMqttController extends GetxController {
         await controller.getMessagesFromAPI(
             conversationId: actionModel.conversationId ?? '',
             lastMessageTimestamp: controller.messages.last.sentAt);
-        messageId = actionModel.messageId!;
+        messageId = actionModel.messageId ?? '';
       }
     }
 
@@ -614,19 +588,6 @@ class IsmChatMqttController extends GetxController {
       return;
     }
 
-    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
-
-    var conversation = conversationBox
-        .query(DBConversationModel_.conversationId
-            .equals(actionModel.conversationId!))
-        .build()
-        .findUnique();
-
-    if (conversation == null ||
-        conversation.lastMessageDetails.target!.messageId ==
-            actionModel.messageId) {
-      return;
-    }
     if (messageId == actionModel.messageId) {
       return;
     }
@@ -639,7 +600,7 @@ class IsmChatMqttController extends GetxController {
         await controller.getMessagesFromAPI(
             conversationId: actionModel.conversationId ?? '',
             lastMessageTimestamp: controller.messages.last.sentAt);
-        messageId = actionModel.messageId!;
+        messageId = actionModel.sentAt.toString();
       }
     }
     await Get.find<IsmChatConversationsController>().getChatConversations();
@@ -651,19 +612,6 @@ class IsmChatMqttController extends GetxController {
       return;
     }
 
-    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
-
-    var conversation = conversationBox
-        .query(DBConversationModel_.conversationId
-            .equals(actionModel.conversationId!))
-        .build()
-        .findUnique();
-
-    if (conversation == null ||
-        conversation.lastMessageDetails.target!.messageId ==
-            actionModel.messageId) {
-      return;
-    }
     if (messageId == actionModel.messageId) {
       return;
     }
@@ -672,14 +620,19 @@ class IsmChatMqttController extends GetxController {
       var controller = Get.find<IsmChatPageController>();
       if (controller.conversation!.conversationId ==
               actionModel.conversationId &&
+          actionModel.memberId ==
+              IsmChatConfig.communicationConfig.userConfig.userId &&
           controller.conversation!.lastMessageSentAt != actionModel.sentAt) {
         await controller.getMessagesFromAPI(
             conversationId: actionModel.conversationId ?? '',
             lastMessageTimestamp: controller.messages.last.sentAt);
-        messageId = actionModel.messageId!;
+        messageId = actionModel.sentAt.toString();
       }
     }
-    await Get.find<IsmChatConversationsController>().getChatConversations();
+    if (actionModel.memberId ==
+        IsmChatConfig.communicationConfig.userConfig.userId) {
+      await Get.find<IsmChatConversationsController>().getChatConversations();
+    }
   }
 
   void _handleCreateConversation(IsmChatMqttActionModel actionModel) async {
