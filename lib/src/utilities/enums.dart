@@ -49,7 +49,7 @@ enum IsmChatCustomMessageType {
   removeMember(15),
   addMember(16),
   addAdmin(17),
-  revokeAdmin(18),
+  removeAdmin(18),
   memberLeave(19),
   date(100);
 
@@ -92,7 +92,7 @@ enum IsmChatCustomMessageType {
       case 17:
         return IsmChatCustomMessageType.addAdmin;
       case 18:
-        return IsmChatCustomMessageType.revokeAdmin;
+        return IsmChatCustomMessageType.removeAdmin;
       case 19:
         return IsmChatCustomMessageType.memberLeave;
       case 100:
@@ -121,7 +121,7 @@ enum IsmChatCustomMessageType {
       'membersAdd': IsmChatCustomMessageType.addMember,
       'addMember': IsmChatCustomMessageType.addMember,
       'addAdmin': IsmChatCustomMessageType.addAdmin,
-      'revokeAdmin': IsmChatCustomMessageType.revokeAdmin,
+      'revokeAdmin': IsmChatCustomMessageType.removeAdmin,
       'memberLeave': IsmChatCustomMessageType.memberLeave,
     };
 
@@ -190,8 +190,8 @@ enum IsmChatCustomMessageType {
         return null;
       case IsmChatActionEvents.deleteConversationLocally:
         return null;
-      case IsmChatActionEvents.revokeAdmin:
-        return IsmChatCustomMessageType.revokeAdmin;
+      case IsmChatActionEvents.removeAdmin:
+        return IsmChatCustomMessageType.removeAdmin;
       case IsmChatActionEvents.addAdmin:
         return IsmChatCustomMessageType.addAdmin;
       case IsmChatActionEvents.userBlock:
@@ -308,7 +308,7 @@ enum IsmChatActionEvents {
   clearConversation,
   removeMember,
   addMember,
-  revokeAdmin,
+  removeAdmin,
   addAdmin,
   memberLeave,
   deleteConversationLocally;
@@ -344,7 +344,7 @@ enum IsmChatActionEvents {
       case 'membersAdd':
         return IsmChatActionEvents.addMember;
       case 'removeAdmin':
-        return IsmChatActionEvents.revokeAdmin;
+        return IsmChatActionEvents.removeAdmin;
       case 'addAdmin':
         return IsmChatActionEvents.addAdmin;
       case 'memberLeave':

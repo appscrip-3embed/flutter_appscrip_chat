@@ -51,6 +51,10 @@ class IsmChatPageController extends GetxController
 
   final textEditingController = TextEditingController();
 
+  final RxBool _showEmojiBoard = false.obs;
+  bool get showEmojiBoard => _showEmojiBoard.value;
+  set showEmojiBoard(bool value) => _showEmojiBoard.value = value;
+
   final RxBool _isMessagesLoading = true.obs;
   bool get isMessagesLoading => _isMessagesLoading.value;
   set isMessagesLoading(bool value) => _isMessagesLoading.value = value;
@@ -161,6 +165,10 @@ class IsmChatPageController extends GetxController
   bool get showDownSideButton => _showDownSideButton.value;
   set showDownSideButton(bool value) => _showDownSideButton.value = value;
 
+  final RxBool _showMentionUserList = false.obs;
+  bool get showMentionUserList => _showMentionUserList.value;
+  set showMentionUserList(bool value) => _showMentionUserList.value = value;
+
   /// Keep track of all the auto scroll indices by their respective message's id to allow animating to them.
   final _autoScrollIndexById = <String, int>{}.obs;
   Map<String, int> get indexedMessageList => _autoScrollIndexById;
@@ -213,6 +221,10 @@ class IsmChatPageController extends GetxController
     _groupEligibleUser.value = value;
   }
 
+  List<Map<String, dynamic>> userMentionedList = [];
+
+  
+
   @override
   void onInit() async {
     super.onInit();
@@ -224,7 +236,8 @@ class IsmChatPageController extends GetxController
         await Future.wait([
           getMessagesFromAPI(),
           getConverstaionDetails(
-              conversationId: conversation?.conversationId ?? ''),
+              conversationId: conversation?.conversationId ?? '',
+              includeMembers: conversation?.isGroup == true ? true : false),
         ]);
         await readAllMessages(
           conversationId: conversation?.conversationId ?? '',
@@ -278,6 +291,55 @@ class IsmChatPageController extends GetxController
     messagesScrollController.dispose();
     groupEligibleUserScrollController.dispose();
     ifTimerMounted();
+  }
+
+  showMentionsUserList(String value) async {
+    showMentionUserList = value.split(' ').last.startsWith('@') &&
+        value.split(' ').last.endsWith('@');
+  }
+
+  updateMentionUser(String value) {
+    var updatedText = '${chatInputController.text}${value.capitalizeFirst} ';
+    showMentionUserList = false;
+    chatInputController.value = chatInputController.value.copyWith(
+      text: updatedText,
+      selection: TextSelection.collapsed(
+        offset: updatedText.length,
+      ),
+    );
+  }
+
+  getMentionedUserList(String value) {
+    var mentionedList =
+        value.split(' ').where((e) => e.startsWith('@')).toList();
+    mentionedList.asMap().forEach(
+      (key, value) {
+        var isMember = groupMembers.where((e) => e.userName
+            .toLowerCase()
+            .contains(value.replaceAll(RegExp('@'), '').toLowerCase()));
+        if (isMember.isNotEmpty) {
+          userMentionedList.add({
+            'wordCount': isMember.first.userName.length,
+            'userId': isMember.first.userId,
+            'order': key
+          });
+        }
+      },
+    );
+  }
+
+  toggleEmojiBoard([
+    bool? showEmoji,
+    bool focusKeyboard = true,
+  ]) {
+    if (showEmoji ?? showEmojiBoard) {
+      if (focusKeyboard) {
+        messageFieldFocusNode.requestFocus();
+      }
+    } else {
+      IsmChatUtility.dismissKeyBoard();
+    }
+    showEmojiBoard = showEmoji ?? !showEmojiBoard;
   }
 
   /// This function will be used in [Add participants Screen] to Select or Unselect users
@@ -384,6 +446,7 @@ class IsmChatPageController extends GetxController
           messagesScrollController.position.maxScrollExtent) {
         getMessagesFromAPI(forPagination: true, lastMessageTimestamp: 0);
       }
+      toggleEmojiBoard(false, false);
       if (Get.height * 0.3 < messagesScrollController.offset) {
         showDownSideButton = true;
       } else {
@@ -971,7 +1034,8 @@ class IsmChatPageController extends GetxController
         }
         if (canRefreshDetails) {
           getConverstaionDetails(
-              conversationId: conversation?.conversationId ?? '');
+              conversationId: conversation?.conversationId ?? '',
+              includeMembers: conversation?.isGroup == true ? true : false);
         }
       },
     );
@@ -1047,6 +1111,8 @@ class IsmChatPageController extends GetxController
       await IsmChatConfig.objectBox
           .removePendingMessage(conversation!.conversationId!, pendingMessges);
       await getMessagesFromDB(conversation!.conversationId!);
+      selectedMessage.clear();
+      isMessageSeleted = false;
     }
   }
 
@@ -1061,6 +1127,8 @@ class IsmChatPageController extends GetxController
       await IsmChatConfig.objectBox
           .removePendingMessage(conversation!.conversationId!, pendingMessges);
       await getMessagesFromDB(conversation!.conversationId!);
+      selectedMessage.clear();
+      isMessageSeleted = false;
     }
   }
 

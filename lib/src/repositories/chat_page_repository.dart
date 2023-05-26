@@ -77,7 +77,8 @@ class IsmChatPageRepository {
         'customType': customType,
         'attachments': attachments,
         'notificationBody': notificationBody,
-        'notificationTitle': notificationTitle
+        'notificationTitle': notificationTitle,
+        if (mentionedUsers?.isNotEmpty == true) 'mentionedUsers': mentionedUsers
       };
       var response = await _apiWrapper.post(
         IsmChatAPI.sendMessage,

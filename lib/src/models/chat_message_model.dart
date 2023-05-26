@@ -76,7 +76,13 @@ class IsmChatMessageModel {
       memberId: map['memberId'] as String?,
       memberName: map['memberName'] as String?,
       sentByMe: true,
-      mentionedUsers: map['mentionedUsers'],
+      mentionedUsers: map['mentionedUsers'] == null
+          ? []
+          :(map['mentionedUsers'] as List)
+              .map(
+                (e) => UserDetails.fromMap(e as Map<String, dynamic>),
+              )
+              .toList(),
       initiatorId: map['initiatorId'] as String? ?? '',
       initiatorName: map['initiatorName'] as String? ?? '',
       members: map['members'] == null
@@ -139,7 +145,7 @@ class IsmChatMessageModel {
       adminCount: 0,
       messageType: IsmChatMessageType.normal,
       sentByMe: true,
-      mentionedUsers: null,
+      mentionedUsers: [],
       initiatorId: '',
       initiatorName: '',
       members: []);
@@ -222,7 +228,7 @@ class IsmChatMessageModel {
   List<UserDetails>? members;
   int? adminCount;
   IsmChatMessageType? messageType;
-  dynamic mentionedUsers;
+  List<UserDetails>? mentionedUsers;
   IsmChatCustomMessageType? customType;
   bool sentByMe;
   String? memberId;
@@ -274,7 +280,7 @@ class IsmChatMessageModel {
     int? adminCount,
     IsmChatMessageType? messageType,
     bool? sentByMe,
-    dynamic mentionedUsers,
+    List<UserDetails>? mentionedUsers,
     List<UserDetails>? members,
     String? memberId,
     String? memberName,
@@ -358,7 +364,7 @@ class IsmChatMessageModel {
         'adminCount': adminCount,
         'messageType': messageType?.value,
         'sentByMe': sentByMe,
-        'mentionedUsers': mentionedUsers,
+        'mentionedUsers': mentionedUsers?.map((e) => e.toMap()).toList(),
         'initiatorId': initiatorId,
         'initiatorName': initiatorName,
         'members': members?.map((e) => e.toMap()).toList(),
@@ -411,7 +417,7 @@ class IsmChatMessageModel {
         other.messageId == messageId &&
         other.deviceId == deviceId &&
         other.messageType == messageType &&
-        other.mentionedUsers == mentionedUsers &&
+        listEquals(other.mentionedUsers, mentionedUsers) &&
         other.sentByMe == sentByMe &&
         other.initiatorName == initiatorName &&
         other.memberId == memberId &&

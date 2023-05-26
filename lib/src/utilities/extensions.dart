@@ -243,7 +243,7 @@ extension ChildWidget on IsmChatCustomMessageType {
       case IsmChatCustomMessageType.addAdmin:
         return IsmChatAddRevokeAdmin(message);
 
-      case IsmChatCustomMessageType.revokeAdmin:
+      case IsmChatCustomMessageType.removeAdmin:
         return IsmChatAddRevokeAdmin(message, isAdded: false);
       case IsmChatCustomMessageType.memberLeave:
         return IsmChatAddRemoveMember(message, didLeft: true);
@@ -541,7 +541,7 @@ extension LastMessageBody on LastMessageDetails {
         return 'Added ${(members ?? []).join(', ')}';
       case IsmChatCustomMessageType.addAdmin:
         return '';
-      case IsmChatCustomMessageType.revokeAdmin:
+      case IsmChatCustomMessageType.removeAdmin:
         return '';
       case IsmChatCustomMessageType.memberLeave:
         return '$senderName left';
@@ -598,7 +598,7 @@ extension LastMessageBody on LastMessageDetails {
         break;
       case IsmChatCustomMessageType.removeMember:
       case IsmChatCustomMessageType.addAdmin:
-      case IsmChatCustomMessageType.revokeAdmin:
+      case IsmChatCustomMessageType.removeAdmin:
       case IsmChatCustomMessageType.deletedForMe:
       case IsmChatCustomMessageType.deletedForEveryone:
       case IsmChatCustomMessageType.date:

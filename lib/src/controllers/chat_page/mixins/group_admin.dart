@@ -152,7 +152,7 @@ mixin IsmChatGroupAdminMixin {
         includeMembers: true,
         isLoading: false,
       );
-      await _controller.getMessagesFromAPI();
+      // await _controller.getMessagesFromAPI();
     }
   }
 
@@ -172,6 +172,6 @@ mixin IsmChatGroupAdminMixin {
       includeMembers: true,
       isLoading: false,
     );
-    await _controller.getMessagesFromAPI();
+    // await _controller.getMessagesFromAPI();
   }
 }

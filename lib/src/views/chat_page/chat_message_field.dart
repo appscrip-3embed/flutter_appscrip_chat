@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,7 +12,6 @@ class IsmChatMessageField extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
         builder: (controller) {
-      
           var messageBody = controller.chatMessageModel?.customType ==
                   IsmChatCustomMessageType.location
               ? 'Location'
@@ -49,13 +49,14 @@ class IsmChatMessageField extends StatelessWidget {
               ] else ...[
                 Expanded(
                   child: Container(
-                    margin: IsmChatDimens.edgeInsets8
-                        .copyWith(top: IsmChatDimens.four),
+                    margin: IsmChatDimens.edgeInsets4
+                        .copyWith(bottom: IsmChatDimens.eight),
                     decoration: BoxDecoration(
                       border: Border.all(
                           color: IsmChatConfig.chatTheme.primaryColor!),
                       borderRadius: BorderRadius.circular(IsmChatDimens.twenty),
-                      color: header?.backgroundColor ?? IsmChatConfig.chatTheme.backgroundColor,
+                      color: header?.backgroundColor ??
+                          IsmChatConfig.chatTheme.backgroundColor,
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -96,10 +97,13 @@ class IsmChatMessageField extends StatelessWidget {
                                               '',
                                       style: IsmChatStyles.w600White14,
                                     ),
-                                    SizedBox(
-                                      width: IsmChatDimens.percentWidth(.68),
+                                    ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                        maxWidth: Get.width * 0.7,
+                                      ),
                                       child: Text(
                                         messageBody,
+                                        maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
@@ -130,13 +134,10 @@ class IsmChatMessageField extends StatelessWidget {
                                 decoration: InputDecoration(
                                   isDense: true,
                                   filled: true,
-                                  fillColor:
-                                      header?.backgroundColor ?? IsmChatConfig.chatTheme.backgroundColor,
-                                  // prefixIcon: IconButton(
-                                  //   color: IsmChatConfig.chatTheme.primaryColor,
-                                  //   icon: const Icon(Icons.emoji_emotions_rounded),
-                                  //   onPressed: () {},
-                                  // ),
+                                  fillColor: header?.backgroundColor ??
+                                      IsmChatConfig.chatTheme.backgroundColor,
+                                  contentPadding: IsmChatDimens.edgeInsets4,
+                                  prefixIcon: const _EmojiButton(),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(
                                         IsmChatDimens.twenty),
@@ -156,8 +157,11 @@ class IsmChatMessageField extends StatelessWidget {
                                           ?.isNotEmpty ??
                                       false) {
                                     controller.notifyTyping();
+
+                                    controller.showMentionsUserList(_);
                                   }
                                 },
+                                onTap: () => controller.toggleEmojiBoard(false),
                               ),
                             ),
                             const _AttachmentIcon()
@@ -169,10 +173,38 @@ class IsmChatMessageField extends StatelessWidget {
                 ),
               ],
               const _MicOrSendButton(),
-              IsmChatDimens.boxWidth8,
+              IsmChatDimens.boxWidth4,
             ],
           );
         },
+      );
+}
+
+class _EmojiButton extends StatelessWidget {
+  const _EmojiButton();
+
+  @override
+  Widget build(BuildContext context) => GetX<IsmChatPageController>(
+        builder: (controller) => IconButton(
+          color: IsmChatConfig.chatTheme.primaryColor,
+          icon: AnimatedSwitcher(
+            duration: IsmChatConfig.animationDuration,
+            transitionBuilder: (child, animation) => ScaleTransition(
+              scale: animation,
+              child: child,
+            ),
+            child: controller.showEmojiBoard
+                ? Icon(
+                    Icons.keyboard_rounded,
+                    key: UniqueKey(),
+                  )
+                : Icon(
+                    Icons.emoji_emotions_rounded,
+                    key: UniqueKey(),
+                  ),
+          ),
+          onPressed: controller.toggleEmojiBoard,
+        ),
       );
 }
 
@@ -224,6 +256,8 @@ class _MicOrSendButton extends StatelessWidget {
                   if (!controller.conversation!.isChattingAllowed) {
                     controller.showDialogCheckBlockUnBlock();
                   } else {
+                    controller.getMentionedUserList(
+                        controller.chatInputController.text.trim());
                     controller.sendTextMessage(
                         conversationId:
                             controller.conversation?.conversationId ?? '',

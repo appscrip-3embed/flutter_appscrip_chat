@@ -149,12 +149,13 @@ class _IsmChatPageView extends StatelessWidget {
                   height: height,
                 ),
           body: Stack(
-            alignment: Alignment.bottomRight,
+            fit: StackFit.passthrough,
             children: [
               SizedBox(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
                       child: Visibility(
@@ -182,10 +183,18 @@ class _IsmChatPageView extends StatelessWidget {
                         ),
                       ),
                     ),
+                    Obx(
+                      () => !controller.showMentionUserList
+                          ? const SizedBox.shrink()
+                          : const MentionUserList(),
+                    ),
                     SafeArea(
-                        child: IsmChatMessageField(
-                      header: header,
-                    ))
+                      child: IsmChatMessageField(header: header),
+                    ),
+                    Offstage(
+                      offstage: !controller.showEmojiBoard,
+                      child: const EmojiBoard(),
+                    ),
                   ],
                 ),
               ),

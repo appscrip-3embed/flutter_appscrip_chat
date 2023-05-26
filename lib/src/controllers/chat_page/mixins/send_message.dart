@@ -72,7 +72,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     bool showInConversation = true,
     String? parentMessageId,
     IsmChatMetaData? metaData,
-    List<Map<String, dynamic>>? mentionedUsers,
+    List<Map<String,dynamic>>? mentionedUsers,
     Map<String, dynamic>? events,
     String? customType,
     List<Map<String, dynamic>>? attachments,
@@ -93,7 +93,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       notificationBody: notificationBody,
       notificationTitle: notificationTitle,
       body: IsmChatUtility.encodePayload(body),
-      // messageModel: messageModel,
       createdAt: createdAt,
     );
     if (isMessageSent && !forwardMessgeForMulitpleUser) {
@@ -209,7 +208,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await ismChatObjectBox.addForwardMessage(audioMessage);
     }
     var notificationTitle =
-       IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+        IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
             ? IsmChatConfig.communicationConfig.userConfig.userName
             : conversationController.userDetails?.userName ?? '';
     await ismPostMediaUrl(
@@ -549,7 +548,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await ismChatObjectBox.addForwardMessage(imageMessage);
     }
     var notificationTitle =
-       IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+        IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
             ? IsmChatConfig.communicationConfig.userConfig.userName
             : conversationController.userDetails?.userName ?? '';
     await ismPostMediaUrl(
@@ -615,7 +614,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await ismChatObjectBox.addForwardMessage(textMessage);
     }
     var notificationTitle =
-       IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+        IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
             ? IsmChatConfig.communicationConfig.userConfig.userName
             : conversationController.userDetails?.userName ?? '';
     sendMessage(
@@ -667,12 +666,14 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       readByAll: false,
       sentAt: sentAt,
       sentByMe: true,
+  
       metaData: IsmChatMetaData(
-          parentMessageBody:
-              _controller.isreplying ? _controller.chatMessageModel?.body : '',
-          parentMessageInitiator: _controller.isreplying
-              ? _controller.chatMessageModel?.sentByMe
-              : null),
+        parentMessageBody:
+            _controller.isreplying ? _controller.chatMessageModel?.body : '',
+        parentMessageInitiator: _controller.isreplying
+            ? _controller.chatMessageModel?.sentByMe
+            : null,
+      ),
     );
 
     if (!forwardMessgeForMulitpleUser) {
@@ -701,7 +702,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         conversationId: textMessage.conversationId ?? '',
         messageType: textMessage.messageType?.value ?? 0,
         notificationBody: textMessage.body,
-        notificationTitle: notificationTitle);
+        notificationTitle: notificationTitle,
+        mentionedUsers:_controller.userMentionedList);
   }
 
   Future<void> ismPostMediaUrl(

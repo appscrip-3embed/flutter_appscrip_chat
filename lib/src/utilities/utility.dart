@@ -12,7 +12,9 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 class IsmChatUtility {
   const IsmChatUtility._();
 
-  // static bool isLoaderOpen = Get.isDialogOpen ?? false;
+  static void dismissKeyBoard() {
+    FocusScope.of(Get.context!).unfocus();
+  }
 
   /// Show loader
   static void showLoader() async {

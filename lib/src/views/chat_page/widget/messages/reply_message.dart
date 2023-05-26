@@ -43,66 +43,67 @@ class _ReplyMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
-        builder: (controller) => ClipRRect(
-          borderRadius: BorderRadius.circular(IsmChatDimens.eight),
-          child: Container(
-            constraints: BoxConstraints(
-              minHeight: IsmChatDimens.twentyEight,
-            ),
-            decoration: BoxDecoration(
-              color: (message.sentByMe
-                      ? IsmChatColors.whiteColor
-                      : IsmChatColors.greyColor)
-                  .withOpacity(0.2),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                SizedBox(
-                  width: IsmChatDimens.four,
-                  height: IsmChatDimens.fifty,
-                  child: ColoredBox(
-                    color: message.metaData?.parentMessageInitiator ?? false
-                        ? IsmChatColors.yellowColor
-                        : IsmChatColors.blueColor,
+        builder: (controller) {
+          var replyingMyMessage = message.sentByMe ==
+              (message.metaData?.parentMessageInitiator ?? false);
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(IsmChatDimens.eight),
+            child: Container(
+              constraints: BoxConstraints(
+                minHeight: IsmChatDimens.twentyEight,
+              ),
+              decoration: BoxDecoration(
+                color: (message.sentByMe
+                        ? IsmChatColors.whiteColor
+                        : IsmChatColors.greyColor)
+                    .withOpacity(0.2),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  SizedBox(
+                    width: IsmChatDimens.four,
+                    height: IsmChatDimens.fifty,
+                    child: ColoredBox(
+                      color: replyingMyMessage
+                          ? IsmChatColors.yellowColor
+                          : IsmChatColors.blueColor,
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: IsmChatDimens.edgeInsets4,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        message.sentByMe &&
-                                (message.metaData?.parentMessageInitiator ??
-                                    false)
-                            ? IsmChatStrings.you
-                            : controller.conversation!.replyName,
-                        style: IsmChatStyles.w500Black14.copyWith(
-                          color:
-                              message.metaData?.parentMessageInitiator ?? false
-                                  ? IsmChatColors.yellowColor
-                                  : IsmChatColors.blueColor,
+                  Padding(
+                    padding: IsmChatDimens.edgeInsets4,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          replyingMyMessage
+                              ? IsmChatStrings.you
+                              : controller.conversation!.replyName,
+                          style: IsmChatStyles.w500Black14.copyWith(
+                            color: replyingMyMessage
+                                ? IsmChatColors.yellowColor
+                                : IsmChatColors.blueColor,
+                          ),
                         ),
-                      ),
-                      ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: Get.width * 0.7,
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: Get.width * 0.7,
+                          ),
+                          child: Text(
+                            message.metaData?.parentMessageBody ?? '',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                        child: Text(
-                          message.metaData?.parentMessageBody ?? '',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                IsmChatDimens.boxWidth8,
-              ],
+                  IsmChatDimens.boxWidth8,
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       );
 }
