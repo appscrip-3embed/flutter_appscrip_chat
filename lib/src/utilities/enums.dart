@@ -392,3 +392,74 @@ enum IsmChatSheetAttachmentType {
   String toString() =>
       '${name[0].toUpperCase()}${name.substring(1).toLowerCase()}';
 }
+
+enum IsmChatEmoji {
+  yes(
+    value: 'yes',
+    emojiKeyword: 'Thumbs Up',
+  ),
+  surprised(
+    value: 'surprised',
+    emojiKeyword: 'Astonished Face',
+  ),
+  cryingWithLaughter(
+    value: 'crying_with_laughter',
+    emojiKeyword: 'Face With Tears of Joy',
+  ),
+  crying(
+    value: 'crying',
+    emojiKeyword: 'Face With Tears of Joy',
+  ),
+  heart(
+    value: 'heart',
+    emojiKeyword: 'Red Heart',
+  ),
+  sarcastic(
+    value: 'sarcastic',
+    emojiKeyword: 'Smirking Face',
+  ),
+  rock(
+    value: 'rock',
+    emojiKeyword: '',
+  ),
+  facepal(
+    value: 'facepal',
+    emojiKeyword: '',
+  ),
+  star(
+    value: 'star',
+    emojiKeyword: '',
+  ),
+  no(
+    value: 'no',
+    emojiKeyword: '',
+  ),
+  bowing(
+    value: 'bowing',
+    emojiKeyword: '',
+  ),
+  party(
+    value: 'party',
+    emojiKeyword: '',
+  ),
+  highFive(
+    value: 'high_five',
+    emojiKeyword: '',
+  ),
+  talkingTooMuch(
+    value: 'talking_too_much',
+    emojiKeyword: '',
+  ),
+  dancing(
+    value: 'dancing',
+    emojiKeyword: '',
+  );
+
+  const IsmChatEmoji({
+    required this.value,
+    required this.emojiKeyword,
+  });
+
+  final String value;
+  final String emojiKeyword;
+}

@@ -15,6 +15,7 @@ export 'meta_data_model.dart';
 export 'mqtt_models/mqtt_models.dart';
 export 'popup_item_model.dart';
 export 'presigned_url_model.dart';
+export 'reaction_model.dart';
 export 'response_model.dart';
 export 'selected_forward_user_model.dart';
 export 'typing_model.dart';

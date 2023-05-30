@@ -560,6 +560,24 @@ class IsmChatPageRepository {
     }
   }
 
+
+  Future<void> addReacton({
+   required Reaction reaction
+  }) async {
+    try {
+      var response = await _apiWrapper.post(
+        IsmChatAPI.addReacton,
+        payload: reaction.toMap(),
+        headers: IsmChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return;
+      }
+    } catch (e, st) {
+      IsmChatLog.error('Add reaction  $e', st);
+    }
+  }
+
   Future<List<IsmChatPrediction>?> getLocation({
     required String latitude,
     required String longitude,

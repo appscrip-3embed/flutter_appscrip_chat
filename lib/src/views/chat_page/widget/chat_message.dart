@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
@@ -116,7 +117,7 @@ class _Message extends StatelessWidget {
                 child: Padding(
                   padding: IsmChatDimens.edgeInsetsL2,
                   child: Text(
-                    message.senderInfo?.userName ?? 'User',
+                    message.senderInfo?.userName ?? '',
                     style: IsmChatStyles.w400Black10,
                     softWrap: true,
                     overflow: TextOverflow.ellipsis,
@@ -189,36 +190,59 @@ class _Message extends StatelessWidget {
                     controller: controller.messagesScrollController,
                     index: index,
                     key: Key('scroll-${message.messageId}'),
-                    child: Container(
-                      padding: IsmChatDimens.edgeInsets4,
-                      constraints: showMessageInCenter
-                          ? BoxConstraints(
-                              maxWidth: context.width * .85,
-                              minWidth: context.width * .1,
-                            )
-                          : BoxConstraints(
-                              maxWidth: context.width * .8,
-                              minWidth: context.width * .1,
-                            ),
-                      decoration: showMessageInCenter
-                          ? null
-                          : BoxDecoration(
-                              color: message.sentByMe
-                                  ? IsmChatConfig.chatTheme.primaryColor
-                                  : IsmChatConfig.chatTheme.backgroundColor,
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(IsmChatDimens.twelve),
-                                topLeft: message.sentByMe
-                                    ? Radius.circular(IsmChatDimens.twelve)
-                                    : Radius.circular(IsmChatDimens.four),
-                                bottomLeft:
-                                    Radius.circular(IsmChatDimens.twelve),
-                                bottomRight: message.sentByMe
-                                    ? Radius.circular(IsmChatDimens.four)
-                                    : Radius.circular(IsmChatDimens.twelve),
-                              ),
-                            ),
-                      child: message.customType!.messageType(message),
+                    child: Row(
+                      children: [
+                        if (!showMessageInCenter && message.sentByMe)
+                          IconButton(
+                            onPressed: () async {
+// Search for related emoticons based on keywords
+                              final filterEmojiEntities =
+                                  await EmojiPickerUtils()
+                                      .searchEmoji('wow', defaultEmojiSet);
+                              IsmChatLog.error(filterEmojiEntities);        
+                            },
+                            icon: const Icon(
+                                Icons.sentiment_satisfied_alt_outlined),
+                          ),
+                        Container(
+                          padding: IsmChatDimens.edgeInsets4,
+                          constraints: showMessageInCenter
+                              ? BoxConstraints(
+                                  maxWidth: context.width * .85,
+                                  minWidth: context.width * .1,
+                                )
+                              : BoxConstraints(
+                                  maxWidth: context.width * .8,
+                                  minWidth: context.width * .1,
+                                ),
+                          decoration: showMessageInCenter
+                              ? null
+                              : BoxDecoration(
+                                  color: message.sentByMe
+                                      ? IsmChatConfig.chatTheme.primaryColor
+                                      : IsmChatConfig.chatTheme.backgroundColor,
+                                  borderRadius: BorderRadius.only(
+                                    topRight:
+                                        Radius.circular(IsmChatDimens.twelve),
+                                    topLeft: message.sentByMe
+                                        ? Radius.circular(IsmChatDimens.twelve)
+                                        : Radius.circular(IsmChatDimens.four),
+                                    bottomLeft:
+                                        Radius.circular(IsmChatDimens.twelve),
+                                    bottomRight: message.sentByMe
+                                        ? Radius.circular(IsmChatDimens.four)
+                                        : Radius.circular(IsmChatDimens.twelve),
+                                  ),
+                                ),
+                          child: message.customType!.messageType(message),
+                        ),
+                        if (!showMessageInCenter && !message.sentByMe)
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                                Icons.sentiment_satisfied_alt_outlined),
+                          ),
+                      ],
                     ),
                   ),
                 ),

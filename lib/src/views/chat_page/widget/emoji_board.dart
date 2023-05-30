@@ -1,3 +1,4 @@
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/controllers/controllers.dart';
 import 'package:appscrip_chat_component/src/res/res.dart';
 import 'package:appscrip_chat_component/src/utilities/config/chat_config.dart';
@@ -28,6 +29,9 @@ class EmojiBoard extends StatelessWidget {
               skinToneIndicatorColor: IsmChatConfig.chatTheme.primaryColor!,
               backspaceColor: IsmChatConfig.chatTheme.primaryColor!,
             ),
+            onEmojiSelected: (_, emoji) {
+              IsmChatLog(emoji);
+            },
             onBackspacePressed: () {
               controller.chatInputController.text = controller
                   .chatInputController.text

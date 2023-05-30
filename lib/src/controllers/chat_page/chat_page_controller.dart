@@ -629,7 +629,7 @@ class IsmChatPageController extends GetxController
           .where((item) => [
                 IsmChatCustomMessageType.image,
                 IsmChatCustomMessageType.video
-              ].contains(message.customType))
+              ].contains(item.customType))
           .toList();
       var selectedMediaIndex = mediaList.indexOf(message);
       await Get.to<void>(IsmMediaPreview(

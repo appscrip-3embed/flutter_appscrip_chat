@@ -517,4 +517,9 @@ class IsmChatPageViewModel {
     }
     return indexedMap;
   }
+
+
+  Future<void> addReacton({
+   required Reaction reaction
+  }) async => await  _repository.addReacton(reaction: reaction);
 }
