@@ -8,6 +8,10 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
+extension NullCheck<T> on Iterable<T>? {
+  bool get isNullOrEmpty => this == null || this!.isEmpty;
+}
+
 extension MatchString on String {
   bool didMatch(String other) => toLowerCase().contains(other.toLowerCase());
 
@@ -613,5 +617,45 @@ extension LastMessageBody on LastMessageDetails {
       );
     }
     return const SizedBox.shrink();
+  }
+}
+
+extension MentionMessage on IsmChatMessageModel {
+  List<LocalMention> get mentionList {
+    try {
+      var splitMessages = body.split('@');
+      var messageList = <LocalMention>[];
+      messageList.add(
+        LocalMention(
+          text: splitMessages.first,
+          isMentioned: false,
+        ),
+      );
+      var length = mentionedUsers!.length;
+      var splitLength = splitMessages.length;
+      for (var i = 0; i < length; i++) {
+        var mention = mentionedUsers![i];
+        messageList.add(
+          LocalMention(
+            text: '@${mention.userName.capitalizeFirst}',
+            isMentioned: true,
+          ),
+        );
+        if (splitLength < length || i < length - 1) {
+          messageList.add(
+            LocalMention(
+              text: splitMessages[i + 1]
+                  .split(mention.userName.capitalizeFirst!)
+                  .last,
+              isMentioned: false,
+            ),
+          );
+        }
+      }
+      return messageList;
+    } catch (e, st) {
+      IsmChatLog.error(e, st);
+      return [];
+    }
   }
 }

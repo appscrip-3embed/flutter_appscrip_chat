@@ -226,7 +226,7 @@ class IsmChatPageController extends GetxController
     _groupEligibleUser.value = value;
   }
 
-  List<Map<String, dynamic>> userMentionedList = [];
+  List<MentionModel> userMentionedList = [];
 
   
 
@@ -299,6 +299,9 @@ class IsmChatPageController extends GetxController
   }
 
   showMentionsUserList(String value) async {
+    if (!conversation!.isGroup!) {
+      return;
+    }
     showMentionUserList = value.split(' ').last.contains('@');
 
     if (!showMentionUserList) {
@@ -314,7 +317,7 @@ class IsmChatPageController extends GetxController
   updateMentionUser(String value) {
     var tempList = chatInputController.text.split('@');
     var remainingText = tempList.sublist(0, tempList.length - 1).join('@');
-    var updatedText = '@$remainingText${value.capitalizeFirst} ';
+    var updatedText = '$remainingText@${value.capitalizeFirst} ';
     showMentionUserList = false;
     chatInputController.value = chatInputController.value.copyWith(
       text: updatedText,
@@ -324,23 +327,28 @@ class IsmChatPageController extends GetxController
     );
   }
 
-  getMentionedUserList(String value) {
-    var mentionedList =
-        value.split(' ').where((e) => e.startsWith('@')).toList();
+  Future<void> getMentionedUserList(String data) async {
+    userMentionedList.clear();
+    var mentionedList = data.split('@').toList();
+    IsmChatLog.info(mentionedList.asMap());
     mentionedList.asMap().forEach(
       (key, value) {
-        var isMember = groupMembers.where((e) => e.userName
-            .toLowerCase()
-            .contains(value.replaceAll(RegExp('@'), '').toLowerCase()));
+        var isMember = groupMembers.where(
+          (e) => value.toLowerCase().contains(
+                e.userName.toLowerCase(),
+              ),
+        );
         if (isMember.isNotEmpty) {
-          userMentionedList.add({
-            'wordCount': isMember.first.userName.split(' ').length,
-            'userId': isMember.first.userId,
-            'order': key
-          });
+          IsmChatLog(isMember.first.userName);
+          userMentionedList.add(MentionModel(
+            wordCount: isMember.first.userName.split(' ').length,
+            userId: isMember.first.userId,
+            order: key,
+          ));
         }
       },
     );
+    IsmChatLog.success(userMentionedList);
   }
 
   toggleEmojiBoard([

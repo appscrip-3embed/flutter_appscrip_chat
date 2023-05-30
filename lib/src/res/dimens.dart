@@ -40,7 +40,7 @@ class IsmChatDimens {
 
   static final double twoHundredFifty = 250.sp;
 
-  static final double inputFieldHeight = 48.sp;
+  static final double inputFieldHeight = 40.sp;
   static final double appBarHeight = 56.sp;
   static final double appBarElevation = 8.sp;
 
