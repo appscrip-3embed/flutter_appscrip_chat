@@ -261,6 +261,11 @@ class IsmChatPageController extends GetxController
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
     });
+    messageFieldFocusNode.addListener(() {
+      if(messageFieldFocusNode.hasFocus){
+       showEmojiBoard = false;
+      }
+    });
   }
 
   ifTimerMounted() {

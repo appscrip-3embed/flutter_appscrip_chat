@@ -408,7 +408,7 @@ enum IsmChatEmoji {
   ),
   crying(
     value: 'crying',
-    emojiKeyword: 'Face With Tears of Joy',
+    emojiKeyword: 'Loudly Crying Face',
   ),
   heart(
     value: 'heart',
@@ -420,39 +420,39 @@ enum IsmChatEmoji {
   ),
   rock(
     value: 'rock',
-    emojiKeyword: '',
+    emojiKeyword: 'Love-You Gesture',
   ),
   facepal(
     value: 'facepal',
-    emojiKeyword: '',
+    emojiKeyword: 'Man Facepalming',
   ),
   star(
     value: 'star',
-    emojiKeyword: '',
+    emojiKeyword: 'Star',
   ),
   no(
     value: 'no',
-    emojiKeyword: '',
+    emojiKeyword: 'Thumbs Down',
   ),
   bowing(
     value: 'bowing',
-    emojiKeyword: '',
+    emojiKeyword: 'Man Bowing',
   ),
   party(
     value: 'party',
-    emojiKeyword: '',
+    emojiKeyword: 'Partying Face',
   ),
   highFive(
     value: 'high_five',
-    emojiKeyword: '',
+    emojiKeyword: 'Folded Hands',
   ),
   talkingTooMuch(
     value: 'talking_too_much',
-    emojiKeyword: '',
+    emojiKeyword: 'Woozy Face',
   ),
   dancing(
     value: 'dancing',
-    emojiKeyword: '',
+    emojiKeyword: 'Man Dancing',
   );
 
   const IsmChatEmoji({

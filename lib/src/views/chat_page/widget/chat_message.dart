@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
@@ -193,55 +192,13 @@ class _Message extends StatelessWidget {
                     child: Row(
                       children: [
                         if (!showMessageInCenter && message.sentByMe)
-                          IconButton(
-                            onPressed: () async {
-// Search for related emoticons based on keywords
-                              final filterEmojiEntities =
-                                  await EmojiPickerUtils()
-                                      .searchEmoji('wow', defaultEmojiSet);
-                              IsmChatLog.error(filterEmojiEntities);        
-                            },
-                            icon: const Icon(
-                                Icons.sentiment_satisfied_alt_outlined),
-                          ),
-                        Container(
-                          padding: IsmChatDimens.edgeInsets4,
-                          constraints: showMessageInCenter
-                              ? BoxConstraints(
-                                  maxWidth: context.width * .85,
-                                  minWidth: context.width * .1,
-                                )
-                              : BoxConstraints(
-                                  maxWidth: context.width * .8,
-                                  minWidth: context.width * .1,
-                                ),
-                          decoration: showMessageInCenter
-                              ? null
-                              : BoxDecoration(
-                                  color: message.sentByMe
-                                      ? IsmChatConfig.chatTheme.primaryColor
-                                      : IsmChatConfig.chatTheme.backgroundColor,
-                                  borderRadius: BorderRadius.only(
-                                    topRight:
-                                        Radius.circular(IsmChatDimens.twelve),
-                                    topLeft: message.sentByMe
-                                        ? Radius.circular(IsmChatDimens.twelve)
-                                        : Radius.circular(IsmChatDimens.four),
-                                    bottomLeft:
-                                        Radius.circular(IsmChatDimens.twelve),
-                                    bottomRight: message.sentByMe
-                                        ? Radius.circular(IsmChatDimens.four)
-                                        : Radius.circular(IsmChatDimens.twelve),
-                                  ),
-                                ),
-                          child: message.customType!.messageType(message),
+                          const _ReactionButton(),
+                        MessageBubble(
+                          message: message,
+                          showMessageInCenter: showMessageInCenter,
                         ),
                         if (!showMessageInCenter && !message.sentByMe)
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                                Icons.sentiment_satisfied_alt_outlined),
-                          ),
+                          const _ReactionButton(),
                       ],
                     ),
                   ),
@@ -279,6 +236,42 @@ class _Message extends StatelessWidget {
               ),
             ],
           ],
+        ),
+      );
+}
+
+class _ReactionButton extends StatelessWidget {
+  const _ReactionButton();
+
+  void showOverlay(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      OverlayEntry? entry;
+      final overlay = Overlay.of(context);
+      final renderBox = context.findRenderObject() as RenderBox;
+      final size = renderBox.size;
+      final offset = renderBox.localToGlobal(Offset.zero);
+      entry = OverlayEntry(
+        builder: (context) => Positioned(
+            bottom: offset.dx,
+            left: offset.dy,
+            width: size.width,
+            child: buildOverlay()),
+      );
+      overlay.insert(entry);
+    });
+  }
+
+  Widget buildOverlay() => Material(
+        elevation: 8,
+        child: Column(children: const [Text('rahul'), Text('saryam')]),
+      );
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+        onPressed: () => showOverlay(context),
+        icon: Icon(
+          Icons.sentiment_satisfied_alt_outlined,
+          color: IsmChatColors.greyColor.withOpacity(0.5),
         ),
       );
 }
