@@ -518,8 +518,15 @@ class IsmChatPageViewModel {
     return indexedMap;
   }
 
+  Future<IsmChatResponseModel?> addReacton(
+          {required Reaction reaction}) async =>
+      await _repository.addReacton(reaction: reaction);
 
-  Future<void> addReacton({
-   required Reaction reaction
-  }) async => await  _repository.addReacton(reaction: reaction);
+  Future<IsmChatResponseModel?> deleteReacton(
+          {required Reaction reaction}) async =>
+      await _repository.deleteReacton(reaction: reaction);
+
+  Future<IsmChatResponseModel?> getReacton(
+          {required Reaction reaction}) async =>
+      await _repository.getReacton(reaction: reaction);
 }
