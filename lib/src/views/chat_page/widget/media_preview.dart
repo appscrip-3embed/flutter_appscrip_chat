@@ -71,7 +71,6 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
             ],
           ),
           centerTitle: false,
-          // leadi,
           leading: InkWell(
             child: Icon(
               Icons.adaptive.arrow_back,
@@ -98,7 +97,7 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
                               '',
                           isNetworkImage: widget.messageData[index].attachments!
                               .first.mediaUrl!.isValidUrl,
-                              radius: 0,
+                          radius: 0,
                         )),
                       )
                     : VideoViewPage(

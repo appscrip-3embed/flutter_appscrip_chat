@@ -70,6 +70,8 @@ class IsmChatStrings {
   static const String noMedia = 'No Media';
   static const String media = 'Media';
   static const String addParticioants = 'Add participants';
+  static const String addDescription = 'Add group description';
+  static const String groupInfo = 'Group Info';
 
   static const String areYouSure = 'Are you sure?';
   static const String assignAdmin = 'Assign group admin';

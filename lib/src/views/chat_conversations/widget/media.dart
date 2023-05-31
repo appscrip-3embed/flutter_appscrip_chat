@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,6 +14,7 @@ class IsmMedia extends StatelessWidget {
               IsmChatStrings.media,
               style: IsmChatStyles.w600Black18,
             ),
+            centerTitle: GetPlatform.isAndroid ? true : false,
           ),
           body: SafeArea(
             child: Padding(

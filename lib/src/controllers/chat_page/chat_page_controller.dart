@@ -672,6 +672,10 @@ class IsmChatPageController extends GetxController
       } catch (e) {
         IsmChatLog.error('$e');
       }
+    } else if (message.customType == IsmChatCustomMessageType.audio) {
+      await Get.dialog(IsmChatAudioPlayer(
+        message: message,
+      ));
     }
   }
 
@@ -1176,4 +1180,7 @@ class IsmChatPageController extends GetxController
     }
     predictionList = response;
   }
+
+  Future<void> deleteReacton({required Reaction reaction}) async =>
+      _controller._viewModel.deleteReacton(reaction: reaction);
 }
