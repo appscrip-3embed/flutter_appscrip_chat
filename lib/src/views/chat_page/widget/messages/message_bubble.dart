@@ -67,7 +67,12 @@ class MessageBubble extends StatelessWidget {
               if (message.messageType == IsmChatMessageType.reply) {
                 controller.scrollToMessage(message.parentMessageId ?? '');
               } else {
-                controller.tapForMediaPreview(message);
+                if ([
+                  IsmChatCustomMessageType.image,
+                  IsmChatCustomMessageType.video
+                ].contains(message.customType)) {
+                  controller.tapForMediaPreview(message);
+                }
               }
             },
             child: AutoScrollTag(
