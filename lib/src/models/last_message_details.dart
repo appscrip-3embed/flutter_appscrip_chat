@@ -37,10 +37,10 @@ class LastMessageDetails {
         sentByMe: true,
         members: map['members'] != null
             ? (map['members'] as List)
-                .map((e) => e['memberName'] as String)
+                .map((e) => e['memberName'] as String? ?? '')
                 .toList()
             : <String>[],
-        reactionType: map['reactionType'] as String);
+        reactionType: map['reactionType'] as String? ?? '');
     return details.copyWith(
       sentByMe: details.senderId.isNotEmpty
           ? details.senderId ==
