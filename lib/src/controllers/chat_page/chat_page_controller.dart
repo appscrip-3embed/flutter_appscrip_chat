@@ -1217,5 +1217,5 @@ class IsmChatPageController extends GetxController
   }
 
   Future<void> deleteReacton({required Reaction reaction}) async =>
-      _controller._viewModel.deleteReacton(reaction: reaction);
+      _viewModel.deleteReacton(reaction: reaction);
 }

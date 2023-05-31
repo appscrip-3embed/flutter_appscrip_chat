@@ -48,6 +48,5 @@ class IsmChatAPI {
   static const String typingIndicator = '$chatIndicator/typing';
   static const String deliveredIndicator = '$chatIndicator/delivered';
   static const String readIndicator = '$chatIndicator/read';
-  static const String addReacton = '/chat/reaction';
-
+  static const String addReacton = '$baseUrl/chat/reaction';
 }

@@ -560,10 +560,7 @@ class IsmChatPageRepository {
     }
   }
 
-
-  Future<void> addReacton({
-   required Reaction reaction
-  }) async {
+  Future<IsmChatResponseModel?> addReacton({required Reaction reaction}) async {
     try {
       var response = await _apiWrapper.post(
         IsmChatAPI.addReacton,
@@ -571,10 +568,46 @@ class IsmChatPageRepository {
         headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
-        return;
+        return null;
       }
+      return response;
     } catch (e, st) {
       IsmChatLog.error('Add reaction  $e', st);
+      return null;
+    }
+  }
+
+  Future<IsmChatResponseModel?> getReacton({required Reaction reaction}) async {
+    try {
+      var response = await _apiWrapper.get(
+        '${IsmChatAPI.sendMessage}/${reaction.reactionType}?conversationId=${reaction.conversationId}&messageId=${reaction.messageId}',
+        headers: IsmChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return null;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Add reaction  $e', st);
+      return null;
+    }
+  }
+
+  Future<IsmChatResponseModel?> deleteReacton(
+      {required Reaction reaction}) async {
+    try {
+      var response = await _apiWrapper.delete(
+        '${IsmChatAPI.sendMessage}/${reaction.reactionType}?conversationId=${reaction.conversationId}&messageId=${reaction.messageId}',
+        payload: null,
+        headers: IsmChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return null;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Add reaction  $e', st);
+      return null;
     }
   }
 

@@ -884,9 +884,11 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       _controller._viewModel
           .updatePresignedUrl(bytes: bytes, presignedUrl: presignedUrl);
 
-
-
-  Future<void> addReacton({
-   required Reaction reaction
-  }) async => _controller._viewModel.addReacton(reaction: reaction);
+  Future<void> addReacton({required Reaction reaction}) async {
+    if (reaction.messageId.isEmpty) {
+      return;
+    }
+    await _controller._viewModel.addReacton(reaction: reaction);
+    return;
+  }
 }

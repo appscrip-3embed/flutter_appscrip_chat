@@ -136,13 +136,15 @@ class _Message extends StatelessWidget {
             ],
             Row(
               children: [
-                if (!showMessageInCenter && message.sentByMe) ReactionButton(),
+                if (!showMessageInCenter && message.sentByMe)
+                  ReactionButton(message),
                 MessageBubble(
                   showMessageInCenter: showMessageInCenter,
                   message: message,
                   index: index,
                 ),
-                if (!showMessageInCenter && !message.sentByMe) ReactionButton(),
+                if (!showMessageInCenter && !message.sentByMe)
+                  ReactionButton(message),
               ],
             ),
             if (!showMessageInCenter) ...[

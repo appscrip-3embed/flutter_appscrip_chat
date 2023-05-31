@@ -1,5 +1,7 @@
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:flutter/material.dart';
 
 enum IsmChatMessageType {
   normal(0),
@@ -455,6 +457,12 @@ enum IsmChatEmoji {
     emojiKeyword: 'Man Dancing',
   );
 
+  factory IsmChatEmoji.fromMap(String value) =>
+      IsmChatEmoji.values.firstWhere((e) => e.value == value);
+
+  factory IsmChatEmoji.fromEmoji(Emoji emoji) =>
+      IsmChatEmoji.values.firstWhere((e) => e.emojiKeyword == emoji.name);
+
   const IsmChatEmoji({
     required this.value,
     required this.emojiKeyword,
@@ -462,4 +470,8 @@ enum IsmChatEmoji {
 
   final String value;
   final String emojiKeyword;
+
+  @override
+  String toString() =>
+      'IsmChatEmoji(value: $value, emojiKeyword: $emojiKeyword)';
 }
