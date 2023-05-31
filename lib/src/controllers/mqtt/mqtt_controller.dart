@@ -245,6 +245,12 @@ class IsmChatMqttController extends GetxController {
       case IsmChatActionEvents.addAdmin:
         _handleAdminRemoveAndAdd(actionModel);
         break;
+      case IsmChatActionEvents.reactionAdd:
+        // TODO: Handle this case.
+        break;
+      case IsmChatActionEvents.reactionRemove:
+        // TODO: Handle this case.
+        break;
     }
   }
 

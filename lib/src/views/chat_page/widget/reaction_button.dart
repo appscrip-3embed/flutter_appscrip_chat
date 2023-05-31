@@ -17,7 +17,7 @@ class ReactionButton extends StatelessWidget {
       final offset = renderBox.localToGlobal(Offset.zero);
       _controller.entry = OverlayEntry(
         builder: (context) => Positioned(
-          bottom: offset.dx + IsmChatDimens.eight,
+          top: offset.dy + renderBox.size.height,
           left: Get.width * 0.05,
           width: Get.width * 0.9,
           child: _ReactionGrid(message),
@@ -30,6 +30,7 @@ class ReactionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IconButton(
         onPressed: () {
+          _controller.closeOverlay();
           _showOverlay(context);
         },
         icon: Icon(

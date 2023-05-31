@@ -181,39 +181,3 @@ class _Message extends StatelessWidget {
         ),
       );
 }
-
-class _ReactionButton extends StatelessWidget {
-  const _ReactionButton();
-
-  void showOverlay(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      OverlayEntry? entry;
-      final overlay = Overlay.of(context);
-      final renderBox = context.findRenderObject() as RenderBox;
-      final size = renderBox.size;
-      final offset = renderBox.localToGlobal(Offset.zero);
-      entry = OverlayEntry(
-        builder: (context) => Positioned(
-            bottom: offset.dx,
-            left: offset.dy,
-            width: size.width,
-            child: buildOverlay()),
-      );
-      overlay.insert(entry);
-    });
-  }
-
-  Widget buildOverlay() => Material(
-        elevation: 8,
-        child: Column(children: const [Text('rahul'), Text('saryam')]),
-      );
-
-  @override
-  Widget build(BuildContext context) => IconButton(
-        onPressed: () => showOverlay(context),
-        icon: Icon(
-          Icons.sentiment_satisfied_alt_outlined,
-          color: IsmChatColors.greyColor.withOpacity(0.5),
-        ),
-      );
-}

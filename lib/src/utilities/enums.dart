@@ -315,7 +315,8 @@ enum IsmChatActionEvents {
   addAdmin,
   memberLeave,
   deleteConversationLocally,
-  reactionAdd;
+  reactionAdd,
+  reactionRemove;
 
   factory IsmChatActionEvents.fromName(String name) {
     switch (name) {
@@ -355,6 +356,8 @@ enum IsmChatActionEvents {
         return IsmChatActionEvents.memberLeave;
       case 'reactionAdd':
         return IsmChatActionEvents.reactionAdd;
+      case 'reactionRemove':
+        return IsmChatActionEvents.reactionRemove;
       default:
         return IsmChatActionEvents.typingEvent;
     }
