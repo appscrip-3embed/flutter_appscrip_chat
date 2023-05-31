@@ -1,10 +1,6 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
-import 'package:focused_menu/focused_menu.dart';
-import 'package:focused_menu/modals.dart';
 import 'package:get/get.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:swipe_to/swipe_to.dart';
 
 class IsmChatMessage extends StatefulWidget {
   IsmChatMessage(this.index, {super.key})
@@ -25,10 +21,13 @@ class _IsmChatMessageState extends State<IsmChatMessage>
   @override
   bool get wantKeepAlive => mounted;
 
+  late bool showMessageInCenter;
+  late bool isGroup;
+
   @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    var showMessageInCenter = [
+  void initState() {
+    super.initState();
+    showMessageInCenter = [
       IsmChatCustomMessageType.date,
       IsmChatCustomMessageType.block,
       IsmChatCustomMessageType.unblock,
@@ -39,12 +38,19 @@ class _IsmChatMessageState extends State<IsmChatMessage>
       IsmChatCustomMessageType.removeAdmin,
       IsmChatCustomMessageType.memberLeave,
     ].contains(widget.message.customType!);
-    var isGroup = widget.controller.conversation!.isGroup ?? false;
+    isGroup = widget.controller.conversation!.isGroup ?? false;
+  }
 
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
     return IsmChatTapHandler(
-      onTap: showMessageInCenter
-          ? null
-          : () => widget.controller.onMessageSelect(widget.message),
+      onTap: () {
+        widget.controller.closeOverlay();
+        if (!showMessageInCenter) {
+          widget.controller.onMessageSelect(widget.message);
+        }
+      },
       child: Container(
         padding: IsmChatDimens.edgeInsets4_0,
         color: widget.controller.selectedMessage.contains(widget.message)
@@ -128,82 +134,16 @@ class _Message extends StatelessWidget {
               ),
               IsmChatDimens.boxHeight2,
             ],
-            SwipeTo(
-              offsetDx: showMessageInCenter ? 0 : 0.8,
-              animationDuration: IsmChatConstants.swipeDuration,
-              iconColor: IsmChatConfig.chatTheme.primaryColor,
-              iconSize: 24,
-              onLeftSwipe: showMessageInCenter || !message.sentByMe
-                  ? null
-                  : () {
-                      // this works for my messages
-                      controller.isreplying = true;
-                      controller.chatMessageModel =
-                          controller.messages.reversed.toList()[index];
-                       controller.messageFieldFocusNode.requestFocus();   
-                          
-                    },
-              onRightSwipe: showMessageInCenter || message.sentByMe
-                  ? null
-                  : () {
-                      // this works for opponent message
-                      controller.isreplying = true;
-                      controller.chatMessageModel =
-                          controller.messages.reversed.toList()[index];
-                      controller.messageFieldFocusNode.requestFocus();    
-                    },
-              child: FocusedMenuHolder(
-                openWithTap: showMessageInCenter ? true : false,
-                menuWidth: 170,
-                menuOffset: IsmChatDimens.twenty,
-                blurSize: 3,
-                animateMenuItems: false,
-                blurBackgroundColor: Colors.grey,
-                onPressed: () {},
-                menuItems: IsmChatFocusMenuType.values
-                    .where((e) => e == IsmChatFocusMenuType.info
-                        ? message.sentByMe
-                        : true)
-                    .toList()
-                    .map(
-                      (e) => FocusedMenuItem(
-                        title: Text(
-                          e.toString(),
-                          style: IsmChatStyles.w400Black12,
-                        ),
-                        onPressed: () =>
-                            controller.onMenuItemSelected(e, message),
-                        trailingIcon: Icon(e.icon),
-                      ),
-                    )
-                    .toList(),
-                child: IsmChatTapHandler(
-                  onTap: () async {
-                    if (message.messageType == IsmChatMessageType.reply) {
-                      controller.scrollToMessage(message.parentMessageId ?? '');
-                    } else {
-                      controller.tapForMediaPreview(message);
-                    }
-                  },
-                  child: AutoScrollTag(
-                    controller: controller.messagesScrollController,
-                    index: index,
-                    key: Key('scroll-${message.messageId}'),
-                    child: Row(
-                      children: [
-                        if (!showMessageInCenter && message.sentByMe)
-                          const _ReactionButton(),
-                        MessageBubble(
-                          message: message,
-                          showMessageInCenter: showMessageInCenter,
-                        ),
-                        if (!showMessageInCenter && !message.sentByMe)
-                          const _ReactionButton(),
-                      ],
-                    ),
-                  ),
+            Row(
+              children: [
+                if (!showMessageInCenter && message.sentByMe) ReactionButton(),
+                MessageBubble(
+                  showMessageInCenter: showMessageInCenter,
+                  message: message,
+                  index: index,
                 ),
-              ),
+                if (!showMessageInCenter && !message.sentByMe) ReactionButton(),
+              ],
             ),
             if (!showMessageInCenter) ...[
               IsmChatDimens.boxHeight2,
@@ -236,42 +176,6 @@ class _Message extends StatelessWidget {
               ),
             ],
           ],
-        ),
-      );
-}
-
-class _ReactionButton extends StatelessWidget {
-  const _ReactionButton();
-
-  void showOverlay(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      OverlayEntry? entry;
-      final overlay = Overlay.of(context);
-      final renderBox = context.findRenderObject() as RenderBox;
-      final size = renderBox.size;
-      final offset = renderBox.localToGlobal(Offset.zero);
-      entry = OverlayEntry(
-        builder: (context) => Positioned(
-            bottom: offset.dx,
-            left: offset.dy,
-            width: size.width,
-            child: buildOverlay()),
-      );
-      overlay.insert(entry);
-    });
-  }
-
-  Widget buildOverlay() => Material(
-        elevation: 8,
-        child: Column(children: const [Text('rahul'), Text('saryam')]),
-      );
-
-  @override
-  Widget build(BuildContext context) => IconButton(
-        onPressed: () => showOverlay(context),
-        icon: Icon(
-          Icons.sentiment_satisfied_alt_outlined,
-          color: IsmChatColors.greyColor.withOpacity(0.5),
         ),
       );
 }

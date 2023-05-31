@@ -6,6 +6,7 @@ import 'dart:math';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:camera/camera.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -50,6 +51,12 @@ class IsmChatPageController extends GetxController
   var groupEligibleUserScrollController = AutoScrollController();
 
   final textEditingController = TextEditingController();
+
+  OverlayState? overlay;
+
+  OverlayEntry? entry;
+
+  var layerLink = LayerLink();
 
   final RxBool _showEmojiBoard = false.obs;
   bool get showEmojiBoard => _showEmojiBoard.value;
@@ -228,11 +235,18 @@ class IsmChatPageController extends GetxController
 
   List<MentionModel> userMentionedList = [];
 
-  
+  List<Emoji> reactions = [];
+
+  // final _mentionedList = <MentionUserModel>[].obs;
+  // List<MentionUserModel> get mentionedList => _mentionedList;
+  // set mentionedList(List<MentionUserModel> value) {
+  //   _mentionedList.value = value;
+  // }
 
   @override
   void onInit() async {
     super.onInit();
+    _generateReactionList();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
       await Future.delayed(Duration.zero);
@@ -262,8 +276,8 @@ class IsmChatPageController extends GetxController
       showSendButton = chatInputController.text.isNotEmpty;
     });
     messageFieldFocusNode.addListener(() {
-      if(messageFieldFocusNode.hasFocus){
-       showEmojiBoard = false;
+      if (messageFieldFocusNode.hasFocus) {
+        showEmojiBoard = false;
       }
     });
   }
@@ -301,6 +315,16 @@ class IsmChatPageController extends GetxController
     messagesScrollController.dispose();
     groupEligibleUserScrollController.dispose();
     ifTimerMounted();
+  }
+
+  _generateReactionList() async {
+    reactions = await Future.wait(
+      IsmChatEmoji.values.map(
+        (e) async => (await EmojiPickerUtils()
+                .searchEmoji(e.emojiKeyword, defaultEmojiSet))
+            .first,
+      ),
+    );
   }
 
   showMentionsUserList(String value) async {
@@ -468,8 +492,14 @@ class IsmChatPageController extends GetxController
     }
   }
 
+  void closeOverlay() {
+    entry?.remove();
+    entry = null;
+  }
+
   void scrollListener() {
     messagesScrollController.addListener(() {
+      closeOverlay();
       if (messagesScrollController.offset * 0.7 ==
           messagesScrollController.position.maxScrollExtent) {
         getMessagesFromAPI(forPagination: true, lastMessageTimestamp: 0);

@@ -29,9 +29,6 @@ class EmojiBoard extends StatelessWidget {
               skinToneIndicatorColor: IsmChatConfig.chatTheme.primaryColor!,
               backspaceColor: IsmChatConfig.chatTheme.primaryColor!,
             ),
-            onEmojiSelected: (_, emoji) {
-              IsmChatLog(emoji);
-            },
             onBackspacePressed: () {
               controller.chatInputController.text = controller
                   .chatInputController.text
