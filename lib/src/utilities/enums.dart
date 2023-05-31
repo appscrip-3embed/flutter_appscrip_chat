@@ -1,7 +1,6 @@
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
-import 'package:flutter/material.dart';
 
 enum IsmChatMessageType {
   normal(0),
@@ -53,6 +52,7 @@ enum IsmChatCustomMessageType {
   addAdmin(17),
   removeAdmin(18),
   memberLeave(19),
+
   date(100);
 
   const IsmChatCustomMessageType(this.value);
@@ -211,6 +211,7 @@ enum IsmChatCustomMessageType {
       case IsmChatActionEvents.memberLeave:
         return IsmChatCustomMessageType.memberLeave;
     }
+    return null;
   }
 
   final int value;
@@ -313,7 +314,8 @@ enum IsmChatActionEvents {
   removeAdmin,
   addAdmin,
   memberLeave,
-  deleteConversationLocally;
+  deleteConversationLocally,
+  reactionAdd;
 
   factory IsmChatActionEvents.fromName(String name) {
     switch (name) {
@@ -351,6 +353,8 @@ enum IsmChatActionEvents {
         return IsmChatActionEvents.addAdmin;
       case 'memberLeave':
         return IsmChatActionEvents.memberLeave;
+      case 'reactionAdd':
+        return IsmChatActionEvents.reactionAdd;
       default:
         return IsmChatActionEvents.typingEvent;
     }

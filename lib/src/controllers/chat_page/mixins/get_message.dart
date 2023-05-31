@@ -107,4 +107,7 @@ mixin IsmChatPageGetMessageMixin {
       _controller.update();
     }
   }
+
+  Future<void> getReacton({required Reaction reaction}) async =>
+      _controller._viewModel.getReacton(reaction: reaction);
 }
