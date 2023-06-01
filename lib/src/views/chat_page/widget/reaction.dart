@@ -25,7 +25,7 @@ class ImsChatReaction extends StatelessWidget {
                 .firstWhere((e) => e.name == reactionValue.emojiKeyword);
             return Container(
               margin: IsmChatDimens.edgeInsetsR4,
-              width: IsmChatDimens.thirty,
+              width: IsmChatDimens.twentyEight,
               decoration: BoxDecoration(
                   boxShadow: const [BoxShadow(color: Colors.black)],
                   borderRadius: BorderRadius.all(
@@ -34,7 +34,7 @@ class ImsChatReaction extends StatelessWidget {
                   color: IsmChatColors.whiteColor),
               child: EmojiCell.fromConfig(
                 emoji: reaction,
-                emojiSize: IsmChatDimens.twenty,
+                emojiSize: IsmChatDimens.eighteen,
                 onEmojiSelected: (_, emoji) async {
                   await Get.bottomSheet(
                     ImsChatShowUserReaction(

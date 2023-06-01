@@ -30,14 +30,17 @@ class _MessageBubbleState extends State<MessageBubble> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var overlay = Overlay.of(context);
       final renderBox = context.findRenderObject() as RenderBox;
-      final offset = renderBox.localToGlobal(Offset.zero);
+
       entry = OverlayEntry(
         builder: (context) => Positioned(
-          width: renderBox.size.width,
+          width: Get.width * .37,
           child: CompositedTransformFollower(
+            targetAnchor: widget.message.sentByMe
+                ? Alignment.topLeft
+                : Alignment.topRight,
             link: layerLink,
             showWhenUnlinked: false,
-            offset: Offset(0, renderBox.size.height),
+            offset: Offset(-10, renderBox.size.height - 10),
             child: ImsChatReaction(
               message: widget.message,
             ),
