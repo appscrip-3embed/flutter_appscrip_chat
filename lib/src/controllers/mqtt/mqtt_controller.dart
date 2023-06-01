@@ -151,7 +151,7 @@ class IsmChatMqttController extends GetxController {
       IsmChatLog(payload);
       if (payload['action'] != null) {
         var actionModel = IsmChatMqttActionModel.fromMap(payload);
-        IsmChatLog(actionModel);
+        IsmChatLog(actionModel.reactionType);
         _handleAction(actionModel);
       } else {
         var message = IsmChatMessageModel.fromMap(payload);
@@ -246,10 +246,11 @@ class IsmChatMqttController extends GetxController {
         _handleAdminRemoveAndAdd(actionModel);
         break;
       case IsmChatActionEvents.reactionAdd:
-        // TODO: Handle this case.
+        _handleAddReaction(actionModel);
         break;
       case IsmChatActionEvents.reactionRemove:
-        // TODO: Handle this case.
+        _handleRemoveReaction(actionModel);
+
         break;
     }
   }
@@ -650,5 +651,89 @@ class IsmChatMqttController extends GetxController {
     var ismChatConversationController =
         Get.find<IsmChatConversationsController>();
     await ismChatConversationController.getChatConversations();
+  }
+
+  void _handleAddReaction(IsmChatMqttActionModel actionModel) async {
+    if (actionModel.userDetails?.userId ==
+        _communicationConfig.userConfig.userId) {
+      return;
+    }
+
+    if (messageId == actionModel.messageId) {
+      return;
+    }
+
+    if (Get.isRegistered<IsmChatPageController>()) {
+      var controller = Get.find<IsmChatPageController>();
+      if (controller.conversation!.conversationId ==
+          actionModel.conversationId) {
+        var allMessages = await IsmChatConfig.objectBox
+            .getMessages(actionModel.conversationId);
+        if (allMessages == null) {
+          return;
+        }
+
+        var message = allMessages
+            .where((e) => e.messageId == actionModel.messageId)
+            .first;
+
+        message.reactions?.addAll({
+          actionModel.reactionType ?? '': [
+            Get.find<IsmChatConversationsController>().userDetails?.userId ?? ''
+          ]
+        });
+
+        var messageIndex =
+            allMessages.indexWhere((e) => e.messageId == actionModel.messageId);
+
+        allMessages[messageIndex] = message;
+
+        await IsmChatConfig.objectBox
+            .saveMessages(actionModel.conversationId ?? '', allMessages);
+        await Get.find<IsmChatPageController>()
+            .getMessagesFromDB(actionModel.conversationId ?? '');
+        messageId = actionModel.messageId!;
+      }
+    }
+    await Get.find<IsmChatConversationsController>().getChatConversations();
+  }
+
+  void _handleRemoveReaction(IsmChatMqttActionModel actionModel) async {
+    if (actionModel.userDetails?.userId ==
+        _communicationConfig.userConfig.userId) {
+      return;
+    }
+
+    if (messageId == actionModel.messageId) {
+      return;
+    }
+
+    if (Get.isRegistered<IsmChatPageController>()) {
+      var controller = Get.find<IsmChatPageController>();
+      if (controller.conversation!.conversationId ==
+          actionModel.conversationId) {
+        var allMessages = await IsmChatConfig.objectBox
+            .getMessages(actionModel.conversationId);
+        if (allMessages == null) {
+          return;
+        }
+        var message = allMessages
+            .where((e) => e.messageId == actionModel.messageId)
+            .first;
+        var reactionMap = message.reactions;
+        reactionMap
+            ?.removeWhere((key, value) => key == actionModel.reactionType);
+        message.reactions = reactionMap;
+        var messageIndex =
+            allMessages.indexWhere((e) => e.messageId == actionModel.messageId);
+        allMessages[messageIndex] = message;
+        await IsmChatConfig.objectBox
+            .saveMessages(actionModel.conversationId ?? '', allMessages);
+        await Get.find<IsmChatPageController>()
+            .getMessagesFromDB(actionModel.conversationId ?? '');
+        messageId = actionModel.messageId!;
+      }
+    }
+    await Get.find<IsmChatConversationsController>().getChatConversations();
   }
 }
