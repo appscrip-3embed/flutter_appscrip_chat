@@ -563,7 +563,7 @@ class IsmChatPageRepository {
   Future<IsmChatResponseModel?> addReacton({required Reaction reaction}) async {
     try {
       var response = await _apiWrapper.post(
-        IsmChatAPI.addReacton,
+        IsmChatAPI.reacton,
         payload: reaction.toMap(),
         headers: IsmChatUtility.tokenCommonHeader(),
       );
@@ -577,18 +577,27 @@ class IsmChatPageRepository {
     }
   }
 
-  Future<IsmChatResponseModel?> getReacton({required Reaction reaction}) async {
+  Future<List<UserDetails>?> getReacton({required Reaction reaction}) async {
     try {
       var response = await _apiWrapper.get(
-        '${IsmChatAPI.sendMessage}/${reaction.reactionType}?conversationId=${reaction.conversationId}&messageId=${reaction.messageId}',
+        '${IsmChatAPI.reacton}/${reaction.reactionType.value}?conversationId=${reaction.conversationId}&messageId=${reaction.messageId}',
         headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
         return null;
       }
-      return response;
+
+      var data = jsonDecode(response.data);
+
+      if (data['reactions'] == null) {
+        return null;
+      }
+
+      return (data['reactions'] as List<dynamic>)
+          .map((e) => UserDetails.fromMap(e as Map<String, dynamic>))
+          .toList();
     } catch (e, st) {
-      IsmChatLog.error('Add reaction  $e', st);
+      IsmChatLog.error('get user reaction  $e', st);
       return null;
     }
   }
@@ -597,7 +606,7 @@ class IsmChatPageRepository {
       {required Reaction reaction}) async {
     try {
       var response = await _apiWrapper.delete(
-        '${IsmChatAPI.sendMessage}/${reaction.reactionType}?conversationId=${reaction.conversationId}&messageId=${reaction.messageId}',
+        '${IsmChatAPI.reacton}/${reaction.reactionType.value}?conversationId=${reaction.conversationId}&messageId=${reaction.messageId}',
         payload: null,
         headers: IsmChatUtility.tokenCommonHeader(),
       );
@@ -606,7 +615,7 @@ class IsmChatPageRepository {
       }
       return response;
     } catch (e, st) {
-      IsmChatLog.error('Add reaction  $e', st);
+      IsmChatLog.error('delete reaction  $e', st);
       return null;
     }
   }

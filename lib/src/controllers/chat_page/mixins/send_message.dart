@@ -889,6 +889,5 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       return;
     }
     await _controller._viewModel.addReacton(reaction: reaction);
-    return;
   }
 }

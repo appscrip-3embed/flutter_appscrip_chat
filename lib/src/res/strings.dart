@@ -77,6 +77,7 @@ class IsmChatStrings {
   static const String assignAdmin = 'Assign group admin';
   static const String exit = 'Exit anyway';
   static const String tapInfo = 'Tap to more info';
+  static const String removeReaction = 'Tap to remove reaction';
   static const String youAreOnlyAdmin =
       "You're the only admin of the group, make a group admin or a random person will be assigned as group admin";
 }

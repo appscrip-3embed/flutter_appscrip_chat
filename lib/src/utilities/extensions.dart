@@ -556,7 +556,7 @@ extension LastMessageBody on LastMessageDetails {
       case IsmChatCustomMessageType.date:
       case IsmChatCustomMessageType.text:
       default:
-        return body;
+        return reactionType?.isNotEmpty == true ? 'Racted on mesage' : body;
     }
   }
 

@@ -15,6 +15,7 @@ mixin IsmChatPageGetMessageMixin {
     if (_controller.messages.isEmpty) {
       return;
     }
+
     _controller._generateIndexedMessageList();
   }
 
@@ -108,6 +109,8 @@ mixin IsmChatPageGetMessageMixin {
     }
   }
 
-  Future<void> getReacton({required Reaction reaction}) async =>
-      _controller._viewModel.getReacton(reaction: reaction);
+  Future<void> getReacton({required Reaction reaction}) async {
+    var response = await _controller._viewModel.getReacton(reaction: reaction);
+    _controller.userReactionList = response ?? [];
+  }
 }

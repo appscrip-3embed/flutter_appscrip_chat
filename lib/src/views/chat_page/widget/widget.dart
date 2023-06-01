@@ -12,4 +12,6 @@ export 'media_preview.dart';
 export 'mention_user_list.dart';
 export 'message_info.dart';
 export 'messages/messages.dart';
+export 'reaction.dart';
 export 'reaction_button.dart';
+export 'show_user_reaction.dart';

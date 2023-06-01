@@ -520,15 +520,67 @@ class IsmChatPageViewModel {
     return indexedMap;
   }
 
-  Future<IsmChatResponseModel?> addReacton(
-          {required Reaction reaction}) async =>
-      await _repository.addReacton(reaction: reaction);
+  Future<void> addReacton({required Reaction reaction}) async {
+    var response = await _repository.addReacton(reaction: reaction);
+    if (response == null || response.hasError) {
+      return;
+    }
 
-  Future<IsmChatResponseModel?> deleteReacton(
-          {required Reaction reaction}) async =>
-      await _repository.deleteReacton(reaction: reaction);
+    var allMessages =
+        await IsmChatConfig.objectBox.getMessages(reaction.conversationId);
+    if (allMessages == null) {
+      return;
+    }
 
-  Future<IsmChatResponseModel?> getReacton(
-          {required Reaction reaction}) async =>
+    var message =
+        allMessages.where((e) => e.messageId == reaction.messageId).first;
+
+    message.reactions?.addAll({
+      reaction.reactionType.value: [
+        Get.find<IsmChatConversationsController>().userDetails?.userId ?? ''
+      ]
+    });
+
+    var messageIndex =
+        allMessages.indexWhere((e) => e.messageId == reaction.messageId);
+
+    allMessages[messageIndex] = message;
+
+    await IsmChatConfig.objectBox
+        .saveMessages(reaction.conversationId, allMessages);
+    await Get.find<IsmChatPageController>()
+        .getMessagesFromDB(reaction.conversationId);
+  }
+
+  Future<void> deleteReacton({required Reaction reaction}) async {
+    var response = await _repository.deleteReacton(reaction: reaction);
+    if (response == null || response.hasError) {
+      return;
+    }
+
+    var allMessages =
+        await IsmChatConfig.objectBox.getMessages(reaction.conversationId);
+    if (allMessages == null) {
+      return;
+    }
+
+    var message =
+        allMessages.where((e) => e.messageId == reaction.messageId).first;
+    var reactionMap = message.reactions;
+    reactionMap
+        ?.removeWhere((key, value) => key == reaction.reactionType.value);
+    message.reactions = reactionMap;
+    var messageIndex =
+        allMessages.indexWhere((e) => e.messageId == reaction.messageId);
+
+    allMessages[messageIndex] = message;
+
+    await IsmChatConfig.objectBox
+        .saveMessages(reaction.conversationId, allMessages);
+    await Get.find<IsmChatPageController>()
+        .getMessagesFromDB(reaction.conversationId);
+  }
+
+  Future<List<UserDetails>?> getReacton({required Reaction reaction}) async =>
       await _repository.getReacton(reaction: reaction);
 }

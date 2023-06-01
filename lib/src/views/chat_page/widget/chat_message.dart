@@ -44,6 +44,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
     return IsmChatTapHandler(
       onTap: () {
         widget.controller.closeOverlay();

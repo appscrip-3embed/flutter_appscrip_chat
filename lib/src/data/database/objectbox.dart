@@ -199,6 +199,7 @@ class IsmChatObjectBox {
     if (conversation != null) {
       conversation.messages =
           messages.isEmpty ? [] : messages.map((e) => e.toJson()).toList();
+
       if (messages.isEmpty) {
         conversation.lastMessageDetails.target =
             conversation.lastMessageDetails.target!.copyWith(

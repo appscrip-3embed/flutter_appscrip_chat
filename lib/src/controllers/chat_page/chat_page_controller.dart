@@ -237,11 +237,11 @@ class IsmChatPageController extends GetxController
 
   List<Emoji> reactions = [];
 
-  // final _mentionedList = <MentionUserModel>[].obs;
-  // List<MentionUserModel> get mentionedList => _mentionedList;
-  // set mentionedList(List<MentionUserModel> value) {
-  //   _mentionedList.value = value;
-  // }
+  final _userReactionList = <UserDetails>[].obs;
+  List<UserDetails> get userReactionList => _userReactionList;
+  set userReactionList(List<UserDetails> value) {
+    _userReactionList.value = value;
+  }
 
   @override
   void onInit() async {

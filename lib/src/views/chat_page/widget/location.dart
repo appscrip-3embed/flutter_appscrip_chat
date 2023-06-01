@@ -91,6 +91,7 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                       ),
                 onPressed: () {
                   controller.isSearchSelect = !controller.isSearchSelect;
+                  controller.textEditingController.clear();
                 },
               ),
               IconButton(
@@ -99,6 +100,11 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                   color: IsmChatColors.whiteColor,
                 ),
                 onPressed: () async {
+                  if (controller.textEditingController.text.isNotEmpty) {
+                    controller.isSearchSelect = !controller.isSearchSelect;
+                    controller.textEditingController.clear();
+                  }
+
                   await ismChatPageController.getLocation(
                       latitude: latLng!.latitude.toString(),
                       longitude: latLng!.longitude.toString());
@@ -121,7 +127,8 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                           controller: controller.textEditingController,
                           textInputAction: TextInputAction.search,
                           autofocus: true,
-                          style: IsmChatStyles.w400Grey10,
+                          cursorColor: IsmChatColors.whiteColor,
+                          style: IsmChatStyles.w500White16,
                           decoration: InputDecoration(
                             hintText: 'Search',
                             hintStyle: IsmChatStyles.w600Black16,
