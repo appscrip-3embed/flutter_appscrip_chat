@@ -537,7 +537,8 @@ class IsmChatPageViewModel {
 
     message.reactions?.addAll({
       reaction.reactionType.value: [
-        Get.find<IsmChatConversationsController>().userDetails?.userId ?? ''
+        Get.find<IsmChatConversationsController>().userDetails?.userId ??
+            IsmChatConfig.communicationConfig.userConfig.userId
       ]
     });
 

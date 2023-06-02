@@ -187,7 +187,7 @@ class _Message extends StatelessWidget {
             if (message.reactions?.isNotEmpty == true)
               Positioned(
                   left: message.sentByMe ? 50 : null,
-                  right: message.sentByMe ? null : -50,
+                  right: message.sentByMe ? null : 40,
                   child: SizedBox(
                     width: IsmChatDimens.fifty,
                     child: ImsChatReaction(

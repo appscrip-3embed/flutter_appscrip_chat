@@ -150,6 +150,7 @@ class IsmChatMqttController extends GetxController {
           as Map<String, dynamic>;
       IsmChatLog(payload);
       if (payload['action'] != null) {
+        IsmChatLog.error(payload);
         var actionModel = IsmChatMqttActionModel.fromMap(payload);
         IsmChatLog(actionModel.reactionType);
         _handleAction(actionModel);
@@ -465,7 +466,7 @@ class IsmChatMqttController extends GetxController {
     }
   }
 
-  void _handleMultipleMessageRead(IsmChatMqttActionModel actionModel) {
+  void _handleMultipleMessageRead(IsmChatMqttActionModel actionModel) async {
     if (actionModel.userDetails!.userId ==
         _communicationConfig.userConfig.userId) {
       return;
@@ -507,10 +508,13 @@ class IsmChatMqttController extends GetxController {
     );
     conversationBox.put(conversation);
     if (Get.isRegistered<IsmChatPageController>()) {
-      Get.find<IsmChatPageController>()
-          .getMessagesFromDB(actionModel.conversationId!);
+      var controller = Get.find<IsmChatPageController>();
+      if (controller.conversation!.conversationId ==
+          actionModel.conversationId) {
+        await controller.getMessagesFromDB(actionModel.conversationId!);
+      }
     }
-    Get.find<IsmChatConversationsController>().getConversationsFromDB();
+    await Get.find<IsmChatConversationsController>().getConversationsFromDB();
   }
 
   void _handleMessageDelelteForEveryOne(
@@ -532,8 +536,11 @@ class IsmChatMqttController extends GetxController {
     await IsmChatConfig.objectBox
         .saveMessages(actionModel.conversationId!, allMessages);
     if (Get.isRegistered<IsmChatPageController>()) {
-      await Get.find<IsmChatPageController>()
-          .getMessagesFromDB(actionModel.conversationId!);
+      var controller = Get.find<IsmChatPageController>();
+      if (controller.conversation!.conversationId ==
+          actionModel.conversationId) {
+        await controller.getMessagesFromDB(actionModel.conversationId!);
+      }
     }
   }
 
@@ -679,7 +686,7 @@ class IsmChatMqttController extends GetxController {
 
         message.reactions?.addAll({
           actionModel.reactionType ?? '': [
-            Get.find<IsmChatConversationsController>().userDetails?.userId ?? ''
+            actionModel.userDetails?.userId ?? ''
           ]
         });
 
@@ -704,10 +711,6 @@ class IsmChatMqttController extends GetxController {
       return;
     }
 
-    if (messageId == actionModel.messageId) {
-      return;
-    }
-
     if (Get.isRegistered<IsmChatPageController>()) {
       var controller = Get.find<IsmChatPageController>();
       if (controller.conversation!.conversationId ==
@@ -717,21 +720,25 @@ class IsmChatMqttController extends GetxController {
         if (allMessages == null) {
           return;
         }
+
         var message = allMessages
             .where((e) => e.messageId == actionModel.messageId)
             .first;
         var reactionMap = message.reactions;
+        IsmChatLog.error(reactionMap);
         reactionMap
             ?.removeWhere((key, value) => key == actionModel.reactionType);
+
         message.reactions = reactionMap;
+        IsmChatLog.error(message.reactions);
         var messageIndex =
             allMessages.indexWhere((e) => e.messageId == actionModel.messageId);
         allMessages[messageIndex] = message;
+
         await IsmChatConfig.objectBox
             .saveMessages(actionModel.conversationId ?? '', allMessages);
         await Get.find<IsmChatPageController>()
             .getMessagesFromDB(actionModel.conversationId ?? '');
-        messageId = actionModel.messageId!;
       }
     }
     await Get.find<IsmChatConversationsController>().getChatConversations();
