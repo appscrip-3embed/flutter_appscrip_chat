@@ -60,7 +60,7 @@ class IsmChatImageEditView extends StatelessWidget {
           ),
           body: Image.file(
             controller.imagePath!,
-            fit: BoxFit.cover,
+            fit: BoxFit.contain,
             height: IsmChatDimens.percentHeight(1),
             width: IsmChatDimens.percentWidth(1),
             alignment: Alignment.center,

@@ -117,26 +117,51 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                       style: header?.subtitleStyle ??
                                           IsmChatStyles.w400White12,
                                     )
-                                  : controller.conversation?.opponentDetails
-                                              ?.online ??
-                                          false
-                                      ? Text(
-                                          IsmChatStrings.online,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: header?.subtitleStyle ??
-                                              IsmChatStyles.w400White12,
+                                  : controller.conversation!.isGroup == true
+                                      ? SizedBox(
+                                          width:
+                                              IsmChatDimens.percentWidth(.55),
+                                          child: Text(
+                                            controller.conversation?.members
+                                                            ?.isEmpty ==
+                                                        true ||
+                                                    controller.conversation
+                                                            ?.members ==
+                                                        null
+                                                ? IsmChatStrings.tapInfo
+                                                : controller
+                                                        .conversation?.members!
+                                                        .map((e) => e.userName)
+                                                        .join(', ') ??
+                                                    '',
+                                            style: header?.subtitleStyle ??
+                                                IsmChatStyles.w400White12,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
                                         )
-                                      : Text(
-                                          controller.conversation
-                                                  ?.opponentDetails?.lastSeen
-                                                  .toCurrentTimeStirng() ??
-                                              '',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: header?.subtitleStyle ??
-                                              IsmChatStyles.w400White12,
-                                        ),
+                                      : controller.conversation?.opponentDetails
+                                                  ?.online ??
+                                              false
+                                          ? Text(
+                                              IsmChatStrings.online,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: header?.subtitleStyle ??
+                                                  IsmChatStyles.w400White12,
+                                            )
+                                          : Text(
+                                              controller
+                                                      .conversation
+                                                      ?.opponentDetails
+                                                      ?.lastSeen
+                                                      .toCurrentTimeStirng() ??
+                                                  '',
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: header?.subtitleStyle ??
+                                                  IsmChatStyles.w400White12,
+                                            ),
                             ),
                     ],
                   ),

@@ -131,6 +131,8 @@ class IsmChatMessageField extends StatelessWidget {
                                 controller: controller.chatInputController,
                                 cursorColor:
                                     IsmChatConfig.chatTheme.primaryColor,
+                                textCapitalization:
+                                    TextCapitalization.sentences,
                                 decoration: InputDecoration(
                                   isDense: true,
                                   filled: true,
@@ -250,12 +252,12 @@ class _MicOrSendButton extends StatelessWidget {
                                   .conversation?.opponentDetails?.userId ??
                               '');
                     },
-              onTap: () {
+              onTap: () async {
                 if (controller.showSendButton) {
                   if (!controller.conversation!.isChattingAllowed) {
                     controller.showDialogCheckBlockUnBlock();
                   } else {
-                    controller.getMentionedUserList(
+                    await controller.getMentionedUserList(
                         controller.chatInputController.text.trim());
                     controller.sendTextMessage(
                         conversationId:

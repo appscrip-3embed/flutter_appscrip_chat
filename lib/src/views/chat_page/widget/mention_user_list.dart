@@ -20,15 +20,14 @@ class MentionUserList extends StatelessWidget {
             color: IsmChatColors.whiteColor,
           ),
           height: controller.mentionSuggestions.isEmpty
-              ? IsmChatDimens.percentHeight(0.08)
+              ? IsmChatDimens.zero
+              // ? IsmChatDimens.percentHeight(0.08)
               : controller.mentionSuggestions.take(4).length *
                   IsmChatDimens.percentHeight(0.07),
           width: IsmChatDimens.percentWidth(.8),
-          constraints: BoxConstraints(
-            minHeight: IsmChatDimens.percentHeight(0.08),
-          ),
           child: controller.mentionSuggestions.isEmpty
-              ? const _NoSuggestions()
+              ? const SizedBox.shrink()
+              // ? const _NoSuggestions()
               : ListView.separated(
                   shrinkWrap: true,
                   padding: IsmChatDimens.edgeInsets0_4,

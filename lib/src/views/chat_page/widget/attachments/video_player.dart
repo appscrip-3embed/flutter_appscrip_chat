@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -113,7 +112,7 @@ class VideoViewPageState extends State<VideoViewPage> {
                               _videoDuration(
                                 value.position,
                               ),
-                              style: IsmChatStyles.w600White18,
+                              style: IsmChatStyles.w600White14,
                             )),
                     Expanded(
                       child: SizedBox(
@@ -128,7 +127,7 @@ class VideoViewPageState extends State<VideoViewPage> {
                     ),
                     Text(
                       _videoDuration(_controller.value.duration),
-                      style: IsmChatStyles.w600White18,
+                      style: IsmChatStyles.w600White14,
                     )
                   ],
                 ),

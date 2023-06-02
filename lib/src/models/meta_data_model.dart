@@ -145,7 +145,7 @@ class IsmChatMetaData {
   String toJson() => json.encode(toMap());
 
   factory IsmChatMetaData.fromJson(String? source) {
-    if(source?.isEmpty ==  true || source == null){
+    if (source?.isEmpty == true || source == null) {
       return IsmChatMetaData();
     }
     return IsmChatMetaData.fromMap(jsonDecode(source) as Map<String, dynamic>);

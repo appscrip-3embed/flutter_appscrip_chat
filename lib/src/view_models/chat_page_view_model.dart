@@ -28,10 +28,18 @@ class IsmChatPageViewModel {
       return null;
     }
 
+    var x = messages.lastWhere((e) => [
+          IsmChatActionEvents.reactionAdd.name,
+          IsmChatActionEvents.reactionRemove.name
+        ].contains(e.action));
+    IsmChatLog.error(x);
+
     messages.removeWhere((e) => [
           IsmChatActionEvents.clearConversation.name,
           if (!isGroup) IsmChatActionEvents.conversationCreated.name,
           IsmChatActionEvents.deleteConversationLocally.name,
+          IsmChatActionEvents.reactionAdd.name,
+          IsmChatActionEvents.reactionRemove.name,
           if(e.memberId != IsmChatConfig.communicationConfig.userConfig.userId) ...[
             IsmChatActionEvents.removeAdmin.name,
             IsmChatActionEvents.addAdmin.name,
@@ -517,4 +525,89 @@ class IsmChatPageViewModel {
     }
     return indexedMap;
   }
+
+  Future<void> addReacton({required Reaction reaction}) async {
+    var response = await _repository.addReacton(reaction: reaction);
+
+    if (response == null || response.hasError) {
+      return;
+    }
+
+    var allMessages =
+        await IsmChatConfig.objectBox.getMessages(reaction.conversationId);
+    if (allMessages == null) {
+      return;
+    }
+
+    var message =
+        allMessages.where((e) => e.messageId == reaction.messageId).first;
+    var isEmoji = false;
+    for (var x in message.reactions ?? <MessageReactionModel>[]) {
+      if (x.emojiKey == reaction.reactionType.value) {
+        x.userIds.add(IsmChatConfig.communicationConfig.userConfig.userId);
+        isEmoji = true;
+      }
+    }
+    if (isEmoji == false) {
+      message.reactions?.add(
+        MessageReactionModel(
+          emojiKey: reaction.reactionType.value,
+          userIds: [IsmChatConfig.communicationConfig.userConfig.userId],
+        ),
+      );
+    }
+
+    var messageIndex =
+        allMessages.indexWhere((e) => e.messageId == reaction.messageId);
+
+    allMessages[messageIndex] = message;
+
+    await IsmChatConfig.objectBox
+        .saveMessages(reaction.conversationId, allMessages);
+    await Get.find<IsmChatPageController>()
+        .getMessagesFromDB(reaction.conversationId);
+  }
+
+  Future<void> deleteReacton({required Reaction reaction}) async {
+    var response = await _repository.deleteReacton(reaction: reaction);
+    if (response == null || response.hasError) {
+      return;
+    }
+
+    var allMessages =
+        await IsmChatConfig.objectBox.getMessages(reaction.conversationId);
+    if (allMessages == null) {
+      return;
+    }
+
+    var message =
+        allMessages.where((e) => e.messageId == reaction.messageId).first;
+    var reactionMap = message.reactions;
+    var isEmoji = false;
+    for (var x in reactionMap ?? <MessageReactionModel>[]) {
+      if (x.emojiKey == reaction.reactionType.value && x.userIds.length > 1) {
+        x.userIds.remove(IsmChatConfig.communicationConfig.userConfig.userId);
+        x.userIds.toSet().toList();
+        isEmoji = true;
+      }
+    }
+    if (isEmoji == false) {
+      reactionMap
+          ?.removeWhere((e) => e.emojiKey == reaction.reactionType.value);
+    }
+
+    message.reactions = reactionMap;
+    var messageIndex =
+        allMessages.indexWhere((e) => e.messageId == reaction.messageId);
+
+    allMessages[messageIndex] = message;
+
+    await IsmChatConfig.objectBox
+        .saveMessages(reaction.conversationId, allMessages);
+    await Get.find<IsmChatPageController>()
+        .getMessagesFromDB(reaction.conversationId);
+  }
+
+  Future<List<UserDetails>?> getReacton({required Reaction reaction}) async =>
+      await _repository.getReacton(reaction: reaction);
 }

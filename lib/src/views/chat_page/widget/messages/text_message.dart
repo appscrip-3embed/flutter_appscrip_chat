@@ -17,27 +17,29 @@ class IsmChatTextMessage extends StatelessWidget {
           padding: IsmChatDimens.edgeInsets4,
           child: RichText(
             text: TextSpan(
+              text: message.mentionedUsers.isNullOrEmpty ? message.body : null,
               style: message.sentByMe
                   ? IsmChatStyles.w500White14
                   : IsmChatStyles.w500Black14,
-              children: message.body
-                  .split(' ')
-                  .map(
-                    (e) => TextSpan(
-                      text: '$e ',
-                      style: (message.sentByMe
-                              ? IsmChatStyles.w500White14
-                              : IsmChatStyles.w500Black14)
-                          .copyWith(
-                        color: e.contains('@')
-                            ? message.sentByMe
-                                ? IsmChatConfig.chatTheme.mentionColor
-                                : IsmChatConfig.chatTheme.primaryColor
-                            : null,
-                      ),
-                    ),
-                  )
-                  .toList(),
+              children: message.mentionedUsers.isNullOrEmpty
+                  ? null
+                  : message.mentionList
+                      .map(
+                        (e) => TextSpan(
+                          text: e.text,
+                          style: (message.sentByMe
+                                  ? IsmChatStyles.w500White14
+                                  : IsmChatStyles.w500Black14)
+                              .copyWith(
+                            color: e.isMentioned
+                                ? message.sentByMe
+                                    ? IsmChatConfig.chatTheme.mentionColor
+                                    : IsmChatConfig.chatTheme.primaryColor
+                                : null,
+                          ),
+                        ),
+                      )
+                      .toList(),
             ),
             softWrap: true,
             maxLines: null,

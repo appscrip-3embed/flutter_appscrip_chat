@@ -151,7 +151,7 @@ class IsmChatMqttController extends GetxController {
       IsmChatLog(payload);
       if (payload['action'] != null) {
         var actionModel = IsmChatMqttActionModel.fromMap(payload);
-        IsmChatLog(actionModel);
+        IsmChatLog(actionModel.reactionType);
         _handleAction(actionModel);
       } else {
         var message = IsmChatMessageModel.fromMap(payload);
@@ -244,6 +244,13 @@ class IsmChatMqttController extends GetxController {
       case IsmChatActionEvents.removeAdmin:
       case IsmChatActionEvents.addAdmin:
         _handleAdminRemoveAndAdd(actionModel);
+        break;
+      case IsmChatActionEvents.reactionAdd:
+        _handleAddReaction(actionModel);
+        break;
+      case IsmChatActionEvents.reactionRemove:
+        _handleRemoveReaction(actionModel);
+
         break;
     }
   }
@@ -458,7 +465,7 @@ class IsmChatMqttController extends GetxController {
     }
   }
 
-  void _handleMultipleMessageRead(IsmChatMqttActionModel actionModel) {
+  void _handleMultipleMessageRead(IsmChatMqttActionModel actionModel) async {
     if (actionModel.userDetails!.userId ==
         _communicationConfig.userConfig.userId) {
       return;
@@ -500,10 +507,13 @@ class IsmChatMqttController extends GetxController {
     );
     conversationBox.put(conversation);
     if (Get.isRegistered<IsmChatPageController>()) {
-      Get.find<IsmChatPageController>()
-          .getMessagesFromDB(actionModel.conversationId!);
+      var controller = Get.find<IsmChatPageController>();
+      if (controller.conversation!.conversationId ==
+          actionModel.conversationId) {
+        await controller.getMessagesFromDB(actionModel.conversationId!);
+      }
     }
-    Get.find<IsmChatConversationsController>().getConversationsFromDB();
+    await Get.find<IsmChatConversationsController>().getConversationsFromDB();
   }
 
   void _handleMessageDelelteForEveryOne(
@@ -525,8 +535,11 @@ class IsmChatMqttController extends GetxController {
     await IsmChatConfig.objectBox
         .saveMessages(actionModel.conversationId!, allMessages);
     if (Get.isRegistered<IsmChatPageController>()) {
-      await Get.find<IsmChatPageController>()
-          .getMessagesFromDB(actionModel.conversationId!);
+      var controller = Get.find<IsmChatPageController>();
+      if (controller.conversation!.conversationId ==
+          actionModel.conversationId) {
+        await controller.getMessagesFromDB(actionModel.conversationId!);
+      }
     }
   }
 
@@ -644,5 +657,109 @@ class IsmChatMqttController extends GetxController {
     var ismChatConversationController =
         Get.find<IsmChatConversationsController>();
     await ismChatConversationController.getChatConversations();
+  }
+
+  void _handleAddReaction(IsmChatMqttActionModel actionModel) async {
+    if (actionModel.userDetails?.userId ==
+        _communicationConfig.userConfig.userId) {
+      return;
+    }
+
+    if (Get.isRegistered<IsmChatPageController>()) {
+      var controller = Get.find<IsmChatPageController>();
+      if (controller.conversation!.conversationId ==
+          actionModel.conversationId) {
+        var allMessages = await IsmChatConfig.objectBox
+            .getMessages(actionModel.conversationId);
+        if (allMessages == null) {
+          return;
+        }
+
+        var message = allMessages
+            .where((e) => e.messageId == actionModel.messageId)
+            .first;
+
+        var isEmoji = false;
+
+        for (var x in message.reactions ?? <MessageReactionModel>[]) {
+          if (x.emojiKey == actionModel.reactionType) {
+            x.userIds.add(actionModel.userDetails?.userId ?? '');
+            x.userIds.toSet().toList();
+            isEmoji = true;
+
+            break;
+          }
+        }
+        if (isEmoji == false) {
+          message.reactions?.add(
+            MessageReactionModel(
+              emojiKey: actionModel.reactionType ?? '',
+              userIds: [actionModel.userDetails?.userId ?? ''],
+            ),
+          );
+        }
+        IsmChatLog.error(message.reactions);
+
+        var messageIndex =
+            allMessages.indexWhere((e) => e.messageId == actionModel.messageId);
+
+        allMessages[messageIndex] = message;
+
+        await IsmChatConfig.objectBox
+            .saveMessages(actionModel.conversationId ?? '', allMessages);
+        await Get.find<IsmChatPageController>()
+            .getMessagesFromDB(actionModel.conversationId ?? '');
+      }
+    }
+    await Get.find<IsmChatConversationsController>().getChatConversations();
+  }
+
+  void _handleRemoveReaction(IsmChatMqttActionModel actionModel) async {
+    if (actionModel.userDetails?.userId ==
+        _communicationConfig.userConfig.userId) {
+      return;
+    }
+
+    if (Get.isRegistered<IsmChatPageController>()) {
+      var controller = Get.find<IsmChatPageController>();
+      if (controller.conversation!.conversationId ==
+          actionModel.conversationId) {
+        var allMessages = await IsmChatConfig.objectBox
+            .getMessages(actionModel.conversationId);
+        if (allMessages == null) {
+          return;
+        }
+
+        var message = allMessages
+            .where((e) => e.messageId == actionModel.messageId)
+            .first;
+        var reactionMap = message.reactions;
+        var isEmoji = false;
+        for (var x in reactionMap ?? <MessageReactionModel>[]) {
+          if (x.emojiKey == actionModel.reactionType && x.userIds.length > 1) {
+            x.userIds.remove(actionModel.userDetails?.userId ?? '');
+            x.userIds.toSet().toList();
+            isEmoji = true;
+          }
+        }
+
+        if (isEmoji == false) {
+          reactionMap
+              ?.removeWhere((e) => e.emojiKey == actionModel.reactionType);
+        }
+
+        message.reactions = reactionMap;
+
+        var messageIndex =
+            allMessages.indexWhere((e) => e.messageId == actionModel.messageId);
+        allMessages[messageIndex] = message;
+
+        await IsmChatConfig.objectBox
+            .saveMessages(actionModel.conversationId ?? '', allMessages);
+        await Get.find<IsmChatPageController>()
+            .getMessagesFromDB(actionModel.conversationId ?? '');
+      }
+    }
+    await Get.find<IsmChatConversationsController>().getChatConversations();
   }
 }

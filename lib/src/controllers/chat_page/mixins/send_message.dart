@@ -72,7 +72,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     bool showInConversation = true,
     String? parentMessageId,
     IsmChatMetaData? metaData,
-    List<Map<String,dynamic>>? mentionedUsers,
+    List<Map<String, dynamic>>? mentionedUsers,
     Map<String, dynamic>? events,
     String? customType,
     List<Map<String, dynamic>>? attachments,
@@ -666,7 +666,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       readByAll: false,
       sentAt: sentAt,
       sentByMe: true,
-  
       metaData: IsmChatMetaData(
         parentMessageBody:
             _controller.isreplying ? _controller.chatMessageModel?.body : '',
@@ -674,6 +673,21 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             ? _controller.chatMessageModel?.sentByMe
             : null,
       ),
+      mentionedUsers: _controller.userMentionedList
+          .map(
+            (e) => UserDetails(
+              userProfileImageUrl: '',
+              userName: _controller.groupMembers
+                  .where((m) => m.userId == e.userId)
+                  .first
+                  .userName,
+              userIdentifier: '',
+              userId: e.userId,
+              online: false,
+              lastSeen: 0,
+            ),
+          )
+          .toList(),
     );
 
     if (!forwardMessgeForMulitpleUser) {
@@ -691,19 +705,21 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             ? IsmChatConfig.communicationConfig.userConfig.userName
             : conversationController.userDetails?.userName ?? '';
     sendMessage(
-        metaData: textMessage.metaData,
-        forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
-        sendMessageType: sendMessageType,
-        deviceId: _controller._deviceConfig.deviceId!,
-        body: textMessage.body,
-        customType: textMessage.customType!.name,
-        createdAt: sentAt,
-        parentMessageId: textMessage.parentMessageId,
-        conversationId: textMessage.conversationId ?? '',
-        messageType: textMessage.messageType?.value ?? 0,
-        notificationBody: textMessage.body,
-        notificationTitle: notificationTitle,
-        mentionedUsers:_controller.userMentionedList);
+      metaData: textMessage.metaData,
+      forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
+      sendMessageType: sendMessageType,
+      deviceId: _controller._deviceConfig.deviceId!,
+      body: textMessage.body,
+      customType: textMessage.customType!.name,
+      createdAt: sentAt,
+      parentMessageId: textMessage.parentMessageId,
+      conversationId: textMessage.conversationId ?? '',
+      messageType: textMessage.messageType?.value ?? 0,
+      notificationBody: textMessage.body,
+      notificationTitle: notificationTitle,
+      mentionedUsers:
+          _controller.userMentionedList.map((e) => e.toMap()).toList(),
+    );
   }
 
   Future<void> ismPostMediaUrl(
@@ -867,4 +883,11 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           {String? presignedUrl, Uint8List? bytes}) async =>
       _controller._viewModel
           .updatePresignedUrl(bytes: bytes, presignedUrl: presignedUrl);
+
+  Future<void> addReacton({required Reaction reaction}) async {
+    if (reaction.messageId.isEmpty) {
+      return;
+    }
+    await _controller._viewModel.addReacton(reaction: reaction);
+  }
 }

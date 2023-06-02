@@ -148,91 +148,95 @@ class _IsmChatPageView extends StatelessWidget {
                   header: header,
                   height: height,
                 ),
-          body: Stack(
-            alignment: Alignment.bottomRight,
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Visibility(
-                        visible: !controller.isMessagesLoading,
-                        replacement: const IsmChatLoadingDialog(),
-                        child: Stack(
-                          alignment: Alignment.bottomLeft,
-                          children: [
-                            Visibility(
-                              visible: controller.messages.isNotEmpty &&
-                                  controller.messages.length != 1,
-                              replacement: emptyChatPlaceholder ??
-                                  const IsmChatNoMessage(),
-                              child: Align(
-                                alignment: Alignment.topCenter,
-                                child: ListView.builder(
-                                  controller:
-                                      controller.messagesScrollController,
-                                  shrinkWrap: true,
-                                  keyboardDismissBehavior:
-                                      ScrollViewKeyboardDismissBehavior.onDrag,
-                                  padding: IsmChatDimens.edgeInsets4_8,
-                                  reverse: true,
-                                  addAutomaticKeepAlives: true,
-                                  itemCount: controller.messages.length,
-                                  itemBuilder: (_, index) =>
-                                      IsmChatMessage(index),
+          body: IsmChatTapHandler(
+            onTap: controller.closeOverlay,
+            child: Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Visibility(
+                          visible: !controller.isMessagesLoading,
+                          replacement: const IsmChatLoadingDialog(),
+                          child: Stack(
+                            alignment: Alignment.bottomLeft,
+                            children: [
+                              Visibility(
+                                visible: controller.messages.isNotEmpty &&
+                                    controller.messages.length != 1,
+                                replacement: emptyChatPlaceholder ??
+                                    const IsmChatNoMessage(),
+                                child: Align(
+                                  alignment: Alignment.topCenter,
+                                  child: ListView.builder(
+                                    controller:
+                                        controller.messagesScrollController,
+                                    shrinkWrap: true,
+                                    keyboardDismissBehavior:
+                                        ScrollViewKeyboardDismissBehavior
+                                            .onDrag,
+                                    padding: IsmChatDimens.edgeInsets4_8,
+                                    reverse: true,
+                                    addAutomaticKeepAlives: true,
+                                    itemCount: controller.messages.length,
+                                    itemBuilder: (_, index) =>
+                                        IsmChatMessage(index),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Obx(
-                              () => controller.showMentionUserList
-                                  ? const MentionUserList()
-                                  : const SizedBox.shrink(),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SafeArea(
-                      child: IsmChatMessageField(header: header),
-                    ),
-                    Offstage(
-                      offstage: !controller.showEmojiBoard,
-                      child: const EmojiBoard(),
-                    ),
-                  ],
-                ),
-              ),
-              Obx(
-                () => !controller.showDownSideButton
-                    ? const SizedBox.shrink()
-                    : Positioned(
-                        bottom: IsmChatDimens.ninty,
-                        right: IsmChatDimens.eight,
-                        child: IsmChatTapHandler(
-                          onTap: controller.scrollDown,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: IsmChatConfig.chatTheme.backgroundColor!
-                                  .withOpacity(0.5),
-                              border: Border.all(
-                                color: IsmChatConfig.chatTheme.primaryColor!,
-                                width: 1.5,
+                              Obx(
+                                () => controller.showMentionUserList
+                                    ? const MentionUserList()
+                                    : const SizedBox.shrink(),
                               ),
-                              shape: BoxShape.circle,
-                            ),
-                            padding: IsmChatDimens.edgeInsets8,
-                            child: Icon(
-                              Icons.expand_more_rounded,
-                              color: IsmChatConfig.chatTheme.primaryColor,
-                            ),
+                            ],
                           ),
                         ),
                       ),
-              ),
-            ],
+                      SafeArea(
+                        child: IsmChatMessageField(header: header),
+                      ),
+                      Offstage(
+                        offstage: !controller.showEmojiBoard,
+                        child: const EmojiBoard(),
+                      ),
+                    ],
+                  ),
+                ),
+                Obx(
+                  () => !controller.showDownSideButton
+                      ? const SizedBox.shrink()
+                      : Positioned(
+                          bottom: IsmChatDimens.ninty,
+                          right: IsmChatDimens.eight,
+                          child: IsmChatTapHandler(
+                            onTap: controller.scrollDown,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: IsmChatConfig.chatTheme.backgroundColor!
+                                    .withOpacity(0.5),
+                                border: Border.all(
+                                  color: IsmChatConfig.chatTheme.primaryColor!,
+                                  width: 1.5,
+                                ),
+                                shape: BoxShape.circle,
+                              ),
+                              padding: IsmChatDimens.edgeInsets8,
+                              child: Icon(
+                                Icons.expand_more_rounded,
+                                color: IsmChatConfig.chatTheme.primaryColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                ),
+              ],
+            ),
           ),
         ),
       );

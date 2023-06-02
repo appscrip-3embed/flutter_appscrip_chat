@@ -13,6 +13,7 @@ class IsmChatImage extends StatelessWidget {
     this.dimensions,
     this.isNetworkImage = true,
     super.key,
+    this.radius,
   })  : _name = name ?? 'U',
         _isProfileImage = false;
 
@@ -22,6 +23,7 @@ class IsmChatImage extends StatelessWidget {
     this.dimensions = 48,
     this.isNetworkImage = true,
     super.key,
+    this.radius
   })  : _name = name ?? 'U',
         _isProfileImage = true,
         assert(dimensions != null, 'Dimensions cannot be null');
@@ -30,6 +32,7 @@ class IsmChatImage extends StatelessWidget {
   final String? name;
   final double? dimensions;
   final bool isNetworkImage;
+  final double? radius;
 
   final String _name;
   final bool _isProfileImage;
@@ -40,7 +43,7 @@ class IsmChatImage extends StatelessWidget {
         child: ClipRRect(
           borderRadius: _isProfileImage
               ? BorderRadius.circular(dimensions! / 2)
-              : BorderRadius.circular(IsmChatDimens.eight),
+              : BorderRadius.circular(radius ?? IsmChatDimens.eight),
           child: isNetworkImage
               ? _NetworkImage(
                   imageUrl: imageUrl,

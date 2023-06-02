@@ -560,6 +560,73 @@ class IsmChatPageRepository {
     }
   }
 
+  Future<IsmChatResponseModel?> addReacton({required Reaction reaction}) async {
+    try {
+      var response = await _apiWrapper.post(
+        IsmChatAPI.reacton,
+        payload: reaction.toMap(),
+        headers: IsmChatUtility.tokenCommonHeader(),
+      );
+
+      if (response.hasError && response.errorCode == 404) {
+        await IsmChatUtility.showErrorDialog(
+            'You have alreaday added reaction ');
+        return null;
+      }
+      if (response.hasError) {
+        return null;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Add reaction  $e', st);
+
+      return null;
+    }
+  }
+
+  Future<List<UserDetails>?> getReacton({required Reaction reaction}) async {
+    try {
+      var response = await _apiWrapper.get(
+        '${IsmChatAPI.reacton}/${reaction.reactionType.value}?conversationId=${reaction.conversationId}&messageId=${reaction.messageId}&limit=20&skip=0',
+        headers: IsmChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return null;
+      }
+
+      var data = jsonDecode(response.data);
+
+      if (data['reactions'] == null) {
+        return null;
+      }
+
+      return (data['reactions'] as List<dynamic>)
+          .map((e) => UserDetails.fromMap(e as Map<String, dynamic>))
+          .toList();
+    } catch (e, st) {
+      IsmChatLog.error('get user reaction  $e', st);
+      return null;
+    }
+  }
+
+  Future<IsmChatResponseModel?> deleteReacton(
+      {required Reaction reaction}) async {
+    try {
+      var response = await _apiWrapper.delete(
+        '${IsmChatAPI.reacton}/${reaction.reactionType.value}?conversationId=${reaction.conversationId}&messageId=${reaction.messageId}',
+        payload: null,
+        headers: IsmChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return null;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('delete reaction  $e', st);
+      return null;
+    }
+  }
+
   Future<List<IsmChatPrediction>?> getLocation({
     required String latitude,
     required String longitude,

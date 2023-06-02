@@ -1,5 +1,6 @@
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 
 enum IsmChatMessageType {
   normal(0),
@@ -51,6 +52,7 @@ enum IsmChatCustomMessageType {
   addAdmin(17),
   removeAdmin(18),
   memberLeave(19),
+
   date(100);
 
   const IsmChatCustomMessageType(this.value);
@@ -209,6 +211,7 @@ enum IsmChatCustomMessageType {
       case IsmChatActionEvents.memberLeave:
         return IsmChatCustomMessageType.memberLeave;
     }
+    return null;
   }
 
   final int value;
@@ -311,7 +314,9 @@ enum IsmChatActionEvents {
   removeAdmin,
   addAdmin,
   memberLeave,
-  deleteConversationLocally;
+  deleteConversationLocally,
+  reactionAdd,
+  reactionRemove;
 
   factory IsmChatActionEvents.fromName(String name) {
     switch (name) {
@@ -349,6 +354,10 @@ enum IsmChatActionEvents {
         return IsmChatActionEvents.addAdmin;
       case 'memberLeave':
         return IsmChatActionEvents.memberLeave;
+      case 'reactionAdd':
+        return IsmChatActionEvents.reactionAdd;
+      case 'reactionRemove':
+        return IsmChatActionEvents.reactionRemove;
       default:
         return IsmChatActionEvents.typingEvent;
     }
@@ -391,4 +400,85 @@ enum IsmChatSheetAttachmentType {
   @override
   String toString() =>
       '${name[0].toUpperCase()}${name.substring(1).toLowerCase()}';
+}
+
+enum IsmChatEmoji {
+  yes(
+    value: 'yes',
+    emojiKeyword: 'Thumbs Up',
+  ),
+  surprised(
+    value: 'surprised',
+    emojiKeyword: 'Astonished Face',
+  ),
+  cryingWithLaughter(
+    value: 'crying_with_laughter',
+    emojiKeyword: 'Face With Tears of Joy',
+  ),
+  crying(
+    value: 'crying',
+    emojiKeyword: 'Loudly Crying Face',
+  ),
+  heart(
+    value: 'heart',
+    emojiKeyword: 'Red Heart',
+  ),
+  sarcastic(
+    value: 'sarcastic',
+    emojiKeyword: 'Smirking Face',
+  ),
+  rock(
+    value: 'rock',
+    emojiKeyword: 'Love-You Gesture',
+  ),
+  facepal(
+    value: 'facepalm',
+    emojiKeyword: 'Man Facepalming',
+  ),
+  star(
+    value: 'star',
+    emojiKeyword: 'Star-Struck',
+  ),
+  no(
+    value: 'no',
+    emojiKeyword: 'Thumbs Down',
+  ),
+  bowing(
+    value: 'bowing',
+    emojiKeyword: 'Man Bowing',
+  ),
+  party(
+    value: 'party',
+    emojiKeyword: 'Partying Face',
+  ),
+  highFive(
+    value: 'high_five',
+    emojiKeyword: 'Folded Hands',
+  ),
+  talkingTooMuch(
+    value: 'talking_too_much',
+    emojiKeyword: 'Woozy Face',
+  ),
+  dancing(
+    value: 'dancing',
+    emojiKeyword: 'Man Dancing',
+  );
+
+  factory IsmChatEmoji.fromMap(String value) =>
+      IsmChatEmoji.values.firstWhere((e) => e.value == value);
+
+  factory IsmChatEmoji.fromEmoji(Emoji emoji) =>
+      IsmChatEmoji.values.firstWhere((e) => e.emojiKeyword == emoji.name);
+
+  const IsmChatEmoji({
+    required this.value,
+    required this.emojiKeyword,
+  });
+
+  final String value;
+  final String emojiKeyword;
+
+  @override
+  String toString() =>
+      'IsmChatEmoji(value: $value, emojiKeyword: $emojiKeyword)';
 }

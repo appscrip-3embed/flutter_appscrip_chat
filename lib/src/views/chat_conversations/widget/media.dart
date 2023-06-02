@@ -1,6 +1,4 @@
-import 'package:appscrip_chat_component/src/controllers/controllers.dart';
-import 'package:appscrip_chat_component/src/utilities/utilities.dart';
-import 'package:appscrip_chat_component/src/views/chat_page/chat_page.dart';
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,6 +9,13 @@ class IsmMedia extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
         builder: (controller) => Scaffold(
+          appBar: AppBar(
+            title: Text(
+              IsmChatStrings.media,
+              style: IsmChatStyles.w600Black18,
+            ),
+            centerTitle: GetPlatform.isAndroid ? true : false,
+          ),
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.only(left: 8.0, right: 8.0),

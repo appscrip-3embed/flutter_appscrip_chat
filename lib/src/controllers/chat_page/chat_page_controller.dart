@@ -6,6 +6,7 @@ import 'dart:math';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:camera/camera.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -50,6 +51,12 @@ class IsmChatPageController extends GetxController
   var groupEligibleUserScrollController = AutoScrollController();
 
   final textEditingController = TextEditingController();
+
+  OverlayState? overlay;
+
+  OverlayEntry? entry;
+
+  var layerLink = LayerLink();
 
   final RxBool _showEmojiBoard = false.obs;
   bool get showEmojiBoard => _showEmojiBoard.value;
@@ -226,13 +233,20 @@ class IsmChatPageController extends GetxController
     _groupEligibleUser.value = value;
   }
 
-  List<Map<String, dynamic>> userMentionedList = [];
+  List<MentionModel> userMentionedList = [];
 
-  
+  List<Emoji> reactions = [];
+
+  final _userReactionList = <UserDetails>[].obs;
+  List<UserDetails> get userReactionList => _userReactionList;
+  set userReactionList(List<UserDetails> value) {
+    _userReactionList.value = value;
+  }
 
   @override
   void onInit() async {
     super.onInit();
+    _generateReactionList();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
       await Future.delayed(Duration.zero);
@@ -260,6 +274,11 @@ class IsmChatPageController extends GetxController
     onGrouEligibleUserListener();
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
+    });
+    messageFieldFocusNode.addListener(() {
+      if (messageFieldFocusNode.hasFocus) {
+        showEmojiBoard = false;
+      }
     });
   }
 
@@ -298,7 +317,20 @@ class IsmChatPageController extends GetxController
     ifTimerMounted();
   }
 
+  _generateReactionList() async {
+    reactions = await Future.wait(
+      IsmChatEmoji.values.map(
+        (e) async => (await EmojiPickerUtils()
+                .searchEmoji(e.emojiKeyword, defaultEmojiSet))
+            .first,
+      ),
+    );
+  }
+
   showMentionsUserList(String value) async {
+    if (!conversation!.isGroup!) {
+      return;
+    }
     showMentionUserList = value.split(' ').last.contains('@');
 
     if (!showMentionUserList) {
@@ -314,7 +346,7 @@ class IsmChatPageController extends GetxController
   updateMentionUser(String value) {
     var tempList = chatInputController.text.split('@');
     var remainingText = tempList.sublist(0, tempList.length - 1).join('@');
-    var updatedText = '@$remainingText${value.capitalizeFirst} ';
+    var updatedText = '$remainingText@${value.capitalizeFirst} ';
     showMentionUserList = false;
     chatInputController.value = chatInputController.value.copyWith(
       text: updatedText,
@@ -324,23 +356,44 @@ class IsmChatPageController extends GetxController
     );
   }
 
-  getMentionedUserList(String value) {
-    var mentionedList =
-        value.split(' ').where((e) => e.startsWith('@')).toList();
+  showReactionUser(
+      {required IsmChatMessageModel message,
+      required String reactionType}) async {
+    userReactionList.clear();
+    await Get.bottomSheet(
+      ImsChatShowUserReaction(
+        message: message,
+        reactionType: reactionType,
+      ),
+      isDismissible: true,
+      isScrollControlled: true,
+      ignoreSafeArea: true,
+      enableDrag: true,
+    );
+  }
+
+  Future<void> getMentionedUserList(String data) async {
+    userMentionedList.clear();
+    var mentionedList = data.split('@').toList();
+    IsmChatLog.info(mentionedList.asMap());
     mentionedList.asMap().forEach(
       (key, value) {
-        var isMember = groupMembers.where((e) => e.userName
-            .toLowerCase()
-            .contains(value.replaceAll(RegExp('@'), '').toLowerCase()));
+        var isMember = groupMembers.where(
+          (e) => value.toLowerCase().contains(
+                e.userName.toLowerCase(),
+              ),
+        );
         if (isMember.isNotEmpty) {
-          userMentionedList.add({
-            'wordCount': isMember.first.userName.split(' ').length,
-            'userId': isMember.first.userId,
-            'order': key
-          });
+          IsmChatLog(isMember.first.userName);
+          userMentionedList.add(MentionModel(
+            wordCount: isMember.first.userName.split(' ').length,
+            userId: isMember.first.userId,
+            order: key,
+          ));
         }
       },
     );
+    IsmChatLog.success(userMentionedList);
   }
 
   toggleEmojiBoard([
@@ -455,8 +508,14 @@ class IsmChatPageController extends GetxController
     }
   }
 
+  void closeOverlay() {
+    entry?.remove();
+    entry = null;
+  }
+
   void scrollListener() {
     messagesScrollController.addListener(() {
+      closeOverlay();
       if (messagesScrollController.offset * 0.7 ==
           messagesScrollController.position.maxScrollExtent) {
         getMessagesFromAPI(forPagination: true, lastMessageTimestamp: 0);
@@ -621,7 +680,7 @@ class IsmChatPageController extends GetxController
           .where((item) => [
                 IsmChatCustomMessageType.image,
                 IsmChatCustomMessageType.video
-              ].contains(message.customType))
+              ].contains(item.customType))
           .toList();
       var selectedMediaIndex = mediaList.indexOf(message);
       await Get.to<void>(IsmMediaPreview(
@@ -664,6 +723,10 @@ class IsmChatPageController extends GetxController
       } catch (e) {
         IsmChatLog.error('$e');
       }
+    } else if (message.customType == IsmChatCustomMessageType.audio) {
+      await Get.dialog(IsmChatAudioPlayer(
+        message: message,
+      ));
     }
   }
 
@@ -1168,4 +1231,7 @@ class IsmChatPageController extends GetxController
     }
     predictionList = response;
   }
+
+  Future<void> deleteReacton({required Reaction reaction}) async =>
+      _viewModel.deleteReacton(reaction: reaction);
 }

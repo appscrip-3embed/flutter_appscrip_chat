@@ -70,7 +70,7 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
               )
             ],
           ),
-          // leadi,
+          centerTitle: false,
           leading: InkWell(
             child: Icon(
               Icons.adaptive.arrow_back,
@@ -89,7 +89,7 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
                 widget.messageData[index].customType ==
                         IsmChatCustomMessageType.image
                     ? FittedBox(
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                         child: InteractiveViewer(
                             child: IsmChatImage(
                           widget.messageData[index].attachments?.first
@@ -97,6 +97,7 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
                               '',
                           isNetworkImage: widget.messageData[index].attachments!
                               .first.mediaUrl!.isValidUrl,
+                          radius: 0,
                         )),
                       )
                     : VideoViewPage(

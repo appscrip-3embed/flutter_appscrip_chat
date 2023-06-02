@@ -28,6 +28,8 @@ class IsmChatDimens {
   static final double twentySeven = 27.sp;
   static final double twentyEight = 28.sp;
   static final double thirtyTwo = 32.sp;
+  static final double thirty = 30.sp;
+
   static final double forty = 40.sp;
   static final double fifty = 50.sp;
   static final double sixty = 60.sp;
@@ -40,7 +42,7 @@ class IsmChatDimens {
 
   static final double twoHundredFifty = 250.sp;
 
-  static final double inputFieldHeight = 48.sp;
+  static final double inputFieldHeight = 40.sp;
   static final double appBarHeight = 56.sp;
   static final double appBarElevation = 8.sp;
 
@@ -64,10 +66,13 @@ class IsmChatDimens {
 
   static final EdgeInsets edgeInsets6 = EdgeInsets.all(six);
   static final EdgeInsets edgeInsets4 = EdgeInsets.all(four);
+  static final EdgeInsets edgeInsets5 = EdgeInsets.all(five);
+
   static final EdgeInsets edgeInsets0 = EdgeInsets.all(zero);
 
   static final EdgeInsets edgeInsetsL2 = EdgeInsets.only(left: two);
   static final EdgeInsets edgeInsetsR4 = EdgeInsets.only(right: four);
+
   static final EdgeInsets edgeInsetsL4 = EdgeInsets.only(left: four);
 
   static final EdgeInsets edgeInsets2_0 = EdgeInsets.symmetric(horizontal: two);
@@ -78,6 +83,8 @@ class IsmChatDimens {
       EdgeInsets.symmetric(horizontal: four, vertical: eight);
   static final EdgeInsets edgeInsets8_4 =
       EdgeInsets.symmetric(horizontal: eight, vertical: four);
+  static final EdgeInsets edgeInsets8_0 =
+      EdgeInsets.symmetric(horizontal: eight, vertical: zero);
   static final EdgeInsets edgeInsets8 = EdgeInsets.all(eight);
   static final EdgeInsets edgeInsets10 = EdgeInsets.all(ten);
   static EdgeInsets edgeInsetsHorizontal10 =

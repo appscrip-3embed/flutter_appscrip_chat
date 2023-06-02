@@ -11,7 +11,8 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
           var controller = Get.find<IsmChatPageController>();
           await controller.getConverstaionDetails(
             conversationId: controller.conversation!.conversationId!,
-            includeMembers: controller.conversation!.isGroup  == true? true : false,
+            includeMembers:
+                controller.conversation!.isGroup == true ? true : false,
             isLoading: false,
           );
         },
@@ -19,7 +20,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
           backgroundColor: IsmChatColors.whiteColor,
           appBar: IsmChatAppBar(
             title: controller.conversation?.isGroup ?? false
-                ? 'Group Info'
+                ? IsmChatStrings.groupInfo
                 : controller.conversation!.chatName,
             action: [
               if (controller.conversation?.isGroup ?? false)
@@ -96,14 +97,13 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                   ],
                   Column(
                     mainAxisSize: MainAxisSize.max,
-                    // mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (controller.conversation?.isGroup ?? false) ...[
                         Padding(
                           padding: IsmChatDimens.edgeInsets10,
                           child: Text(
-                            'Add group description',
+                            IsmChatStrings.addDescription,
                             style: IsmChatStyles.w400Grey14,
                           ),
                         ),
@@ -117,7 +117,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                         children: [
                           IsmChatDimens.boxWidth14,
                           Text(
-                            'Media',
+                            IsmChatStrings.media,
                             style: IsmChatStyles.w400Black16,
                           ),
                           const Spacer(),
@@ -145,16 +145,17 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                             style: IsmChatStyles.w500Black16,
                           ),
                         ),
-                     if(controller.conversation!.usersOwnDetails
-                                            ?.isAdmin ?? false)   IconButton(
-                          onPressed: () =>
-                              IsmChatUtility.openFullScreenBottomSheet(
-                                  const IsmChatGroupEligibleUser()),
-                          icon: Icon(
-                            Icons.group_add_outlined,
-                            color: IsmChatConfig.chatTheme.primaryColor,
-                          ),
-                        )
+                        if (controller.conversation!.usersOwnDetails?.isAdmin ??
+                            false)
+                          IconButton(
+                            onPressed: () =>
+                                IsmChatUtility.openFullScreenBottomSheet(
+                                    const IsmChatGroupEligibleUser()),
+                            icon: Icon(
+                              Icons.group_add_outlined,
+                              color: IsmChatConfig.chatTheme.primaryColor,
+                            ),
+                          )
                       ],
                     ),
                     IsmChatInputField(
@@ -291,7 +292,7 @@ class _MediaList extends StatelessWidget {
                   var iconData =
                       media.customType == IsmChatCustomMessageType.audio
                           ? Icons.audio_file_rounded
-                          : Icons.description_rounded;  
+                          : Icons.description_rounded;
                   return GestureDetector(
                     onTap: () => controller.tapForMediaPreview(media),
                     child: ConversationMediaWidget(
