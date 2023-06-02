@@ -109,75 +109,91 @@ class _Message extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
         padding: IsmChatDimens.edgeInsetsL4,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: message.sentByMe
-              ? CrossAxisAlignment.end
-              : CrossAxisAlignment.start,
+        child: Stack(
+          alignment:
+              message.sentByMe ? Alignment.bottomLeft : Alignment.bottomRight,
           children: [
-            if (!showMessageInCenter &&
-                (controller.conversation!.isGroup ?? false) &&
-                !message.sentByMe) ...[
-              SizedBox(
-                width: IsmChatDimens.percentWidth(0.4),
-                child: Padding(
-                  padding: IsmChatDimens.edgeInsetsL2,
-                  child: Text(
-                    message.senderInfo?.userName ?? '',
-                    style: IsmChatStyles.w400Black10,
-                    softWrap: true,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign:
-                        message.sentByMe ? TextAlign.end : TextAlign.start,
-                    maxLines: 1,
-                  ),
-                ),
-              ),
-              IsmChatDimens.boxHeight2,
-            ],
-            Row(
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: message.sentByMe
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
               children: [
-                if (!showMessageInCenter && message.sentByMe)
-                  ReactionButton(message),
-                MessageBubble(
-                  showMessageInCenter: showMessageInCenter,
-                  message: message,
-                  index: index,
+                if (!showMessageInCenter &&
+                    (controller.conversation!.isGroup ?? false) &&
+                    !message.sentByMe) ...[
+                  SizedBox(
+                    width: IsmChatDimens.percentWidth(0.4),
+                    child: Padding(
+                      padding: IsmChatDimens.edgeInsetsL2,
+                      child: Text(
+                        message.senderInfo?.userName ?? '',
+                        style: IsmChatStyles.w400Black10,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign:
+                            message.sentByMe ? TextAlign.end : TextAlign.start,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ),
+                  IsmChatDimens.boxHeight2,
+                ],
+                Row(
+                  children: [
+                    if (!showMessageInCenter && message.sentByMe)
+                      ReactionButton(message),
+                    MessageBubble(
+                      showMessageInCenter: showMessageInCenter,
+                      message: message,
+                      index: index,
+                    ),
+                    if (!showMessageInCenter && !message.sentByMe)
+                      ReactionButton(message),
+                  ],
                 ),
-                if (!showMessageInCenter && !message.sentByMe)
-                  ReactionButton(message),
+                if (!showMessageInCenter) ...[
+                  IsmChatDimens.boxHeight2,
+                  Row(
+                    mainAxisAlignment: message.sentByMe
+                        ? MainAxisAlignment.end
+                        : MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        message.sentAt.toTimeString(),
+                        style: IsmChatStyles.w400Grey10,
+                      ),
+                      if (message.sentByMe) ...[
+                        IsmChatDimens.boxWidth2,
+                        Icon(
+                          message.messageId!.isEmpty
+                              ? Icons.watch_later_outlined
+                              : message.deliveredToAll!
+                                  ? Icons.done_all_rounded
+                                  : Icons.done_rounded,
+                          color: message.messageId!.isEmpty
+                              ? Colors.grey
+                              : message.readByAll!
+                                  ? Colors.blue
+                                  : Colors.grey,
+                          size: IsmChatDimens.forteen,
+                        ),
+                      ],
+                    ],
+                  ),
+                ],
               ],
             ),
-            if (!showMessageInCenter) ...[
-              IsmChatDimens.boxHeight2,
-              Row(
-                mainAxisAlignment: message.sentByMe
-                    ? MainAxisAlignment.end
-                    : MainAxisAlignment.start,
-                children: [
-                  Text(
-                    message.sentAt.toTimeString(),
-                    style: IsmChatStyles.w400Grey10,
-                  ),
-                  if (message.sentByMe) ...[
-                    IsmChatDimens.boxWidth2,
-                    Icon(
-                      message.messageId!.isEmpty
-                          ? Icons.watch_later_outlined
-                          : message.deliveredToAll!
-                              ? Icons.done_all_rounded
-                              : Icons.done_rounded,
-                      color: message.messageId!.isEmpty
-                          ? Colors.grey
-                          : message.readByAll!
-                              ? Colors.blue
-                              : Colors.grey,
-                      size: IsmChatDimens.forteen,
+            if (message.reactions?.isNotEmpty == true)
+              Positioned(
+                  left: message.sentByMe ? 50 : null,
+                  right: message.sentByMe ? null : -50,
+                  child: SizedBox(
+                    width: IsmChatDimens.fifty,
+                    child: ImsChatReaction(
+                      message: message,
                     ),
-                  ],
-                ],
-              ),
-            ],
+                  ))
           ],
         ),
       );

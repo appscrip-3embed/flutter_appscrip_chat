@@ -11,10 +11,7 @@ class ImsChatReaction extends StatelessWidget {
   final IsmChatPageController _controller;
 
   @override
-  Widget build(BuildContext context) => Material(
-      color: Colors.transparent,
-      borderOnForeground: false,
-      child: SingleChildScrollView(
+  Widget build(BuildContext context) => SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           children: List.generate(message.reactions?.length ?? 0, (index) {
@@ -56,5 +53,5 @@ class ImsChatReaction extends StatelessWidget {
             );
           }),
         ),
-      ));
+      );
 }
