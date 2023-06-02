@@ -356,6 +356,22 @@ class IsmChatPageController extends GetxController
     );
   }
 
+  showReactionUser(
+      {required IsmChatMessageModel message,
+      required String reactionType}) async {
+    userReactionList.clear();
+    await Get.bottomSheet(
+      ImsChatShowUserReaction(
+        message: message,
+        reactionType: reactionType,
+      ),
+      isDismissible: true,
+      isScrollControlled: true,
+      ignoreSafeArea: true,
+      enableDrag: true,
+    );
+  }
+
   Future<void> getMentionedUserList(String data) async {
     userMentionedList.clear();
     var mentionedList = data.split('@').toList();

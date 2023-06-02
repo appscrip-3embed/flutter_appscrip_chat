@@ -24,9 +24,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
   late bool showMessageInCenter;
   late bool isGroup;
 
-  @override
-  void initState() {
-    super.initState();
+  _updateWidget() {
     showMessageInCenter = [
       IsmChatCustomMessageType.date,
       IsmChatCustomMessageType.block,
@@ -42,9 +40,20 @@ class _IsmChatMessageState extends State<IsmChatMessage>
   }
 
   @override
+  void initState() {
+    _updateWidget();
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant IsmChatMessage oldWidget) {
+    _updateWidget();
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
-
     return IsmChatTapHandler(
       onTap: () {
         widget.controller.closeOverlay();
@@ -110,8 +119,9 @@ class _Message extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
         padding: IsmChatDimens.edgeInsetsL4,
         child: Stack(
-          alignment:
-              message.sentByMe ? Alignment.bottomLeft : Alignment.bottomRight,
+          clipBehavior: Clip.none,
+          // alignment:
+          //     message.sentByMe ? Alignment.bottomLeft : Alignment.bottomRight,
           children: [
             Column(
               mainAxisSize: MainAxisSize.min,
@@ -186,14 +196,13 @@ class _Message extends StatelessWidget {
             ),
             if (message.reactions?.isNotEmpty == true)
               Positioned(
-                  left: message.sentByMe ? 50 : null,
-                  right: message.sentByMe ? null : 40,
-                  child: SizedBox(
-                    width: IsmChatDimens.fifty,
-                    child: ImsChatReaction(
-                      message: message,
-                    ),
-                  ))
+                right: message.sentByMe ? -10 : null,
+                left: message.sentByMe ? null : -10,
+                bottom: 0,
+                child: ImsChatReaction(
+                  message: message,
+                ),
+              ),
           ],
         ),
       );

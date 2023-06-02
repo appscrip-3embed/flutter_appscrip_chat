@@ -150,7 +150,6 @@ class IsmChatMqttController extends GetxController {
           as Map<String, dynamic>;
       IsmChatLog(payload);
       if (payload['action'] != null) {
-        IsmChatLog.error(payload);
         var actionModel = IsmChatMqttActionModel.fromMap(payload);
         IsmChatLog(actionModel.reactionType);
         _handleAction(actionModel);
@@ -666,10 +665,6 @@ class IsmChatMqttController extends GetxController {
       return;
     }
 
-    if (messageId == actionModel.messageId) {
-      return;
-    }
-
     if (Get.isRegistered<IsmChatPageController>()) {
       var controller = Get.find<IsmChatPageController>();
       if (controller.conversation!.conversationId ==
@@ -684,11 +679,26 @@ class IsmChatMqttController extends GetxController {
             .where((e) => e.messageId == actionModel.messageId)
             .first;
 
-        message.reactions?.addAll({
-          actionModel.reactionType ?? '': [
-            actionModel.userDetails?.userId ?? ''
-          ]
-        });
+        var isEmoji = false;
+
+        for (var x in message.reactions ?? <MessageReactionModel>[]) {
+          if (x.emojiKey == actionModel.reactionType) {
+            x.userIds.add(actionModel.userDetails?.userId ?? '');
+            x.userIds.toSet().toList();
+            isEmoji = true;
+
+            break;
+          }
+        }
+        if (isEmoji == false) {
+          message.reactions?.add(
+            MessageReactionModel(
+              emojiKey: actionModel.reactionType ?? '',
+              userIds: [actionModel.userDetails?.userId ?? ''],
+            ),
+          );
+        }
+        IsmChatLog.error(message.reactions);
 
         var messageIndex =
             allMessages.indexWhere((e) => e.messageId == actionModel.messageId);
@@ -699,7 +709,6 @@ class IsmChatMqttController extends GetxController {
             .saveMessages(actionModel.conversationId ?? '', allMessages);
         await Get.find<IsmChatPageController>()
             .getMessagesFromDB(actionModel.conversationId ?? '');
-        messageId = actionModel.messageId!;
       }
     }
     await Get.find<IsmChatConversationsController>().getChatConversations();
@@ -725,12 +734,22 @@ class IsmChatMqttController extends GetxController {
             .where((e) => e.messageId == actionModel.messageId)
             .first;
         var reactionMap = message.reactions;
-        IsmChatLog.error(reactionMap);
-        reactionMap
-            ?.removeWhere((key, value) => key == actionModel.reactionType);
+        var isEmoji = false;
+        for (var x in reactionMap ?? <MessageReactionModel>[]) {
+          if (x.emojiKey == actionModel.reactionType && x.userIds.length > 1) {
+            x.userIds.remove(actionModel.userDetails?.userId ?? '');
+            x.userIds.toSet().toList();
+            isEmoji = true;
+          }
+        }
+
+        if (isEmoji == false) {
+          reactionMap
+              ?.removeWhere((e) => e.emojiKey == actionModel.reactionType);
+        }
 
         message.reactions = reactionMap;
-        IsmChatLog.error(message.reactions);
+
         var messageIndex =
             allMessages.indexWhere((e) => e.messageId == actionModel.messageId);
         allMessages[messageIndex] = message;

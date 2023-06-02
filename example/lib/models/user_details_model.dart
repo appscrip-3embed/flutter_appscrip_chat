@@ -12,10 +12,8 @@ class UserDetailsModel {
 
   String? email;
 
-  UserDetailsModel({
-    this.id,
-    this.userId,
-    this.userToken,
-    this.email,
-  });
+  String? userName;
+
+  UserDetailsModel(
+      {this.id, this.userId, this.userToken, this.email, this.userName});
 }

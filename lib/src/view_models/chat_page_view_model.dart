@@ -28,6 +28,12 @@ class IsmChatPageViewModel {
       return null;
     }
 
+    var x = messages.lastWhere((e) => [
+          IsmChatActionEvents.reactionAdd.name,
+          IsmChatActionEvents.reactionRemove.name
+        ].contains(e.action));
+    IsmChatLog.error(x);
+
     messages.removeWhere((e) => [
           IsmChatActionEvents.clearConversation.name,
           if (!isGroup) IsmChatActionEvents.conversationCreated.name,
@@ -522,6 +528,7 @@ class IsmChatPageViewModel {
 
   Future<void> addReacton({required Reaction reaction}) async {
     var response = await _repository.addReacton(reaction: reaction);
+
     if (response == null || response.hasError) {
       return;
     }
@@ -534,13 +541,21 @@ class IsmChatPageViewModel {
 
     var message =
         allMessages.where((e) => e.messageId == reaction.messageId).first;
-
-    message.reactions?.addAll({
-      reaction.reactionType.value: [
-        Get.find<IsmChatConversationsController>().userDetails?.userId ??
-            IsmChatConfig.communicationConfig.userConfig.userId
-      ]
-    });
+    var isEmoji = false;
+    for (var x in message.reactions ?? <MessageReactionModel>[]) {
+      if (x.emojiKey == reaction.reactionType.value) {
+        x.userIds.add(IsmChatConfig.communicationConfig.userConfig.userId);
+        isEmoji = true;
+      }
+    }
+    if (isEmoji == false) {
+      message.reactions?.add(
+        MessageReactionModel(
+          emojiKey: reaction.reactionType.value,
+          userIds: [IsmChatConfig.communicationConfig.userConfig.userId],
+        ),
+      );
+    }
 
     var messageIndex =
         allMessages.indexWhere((e) => e.messageId == reaction.messageId);
@@ -568,8 +583,19 @@ class IsmChatPageViewModel {
     var message =
         allMessages.where((e) => e.messageId == reaction.messageId).first;
     var reactionMap = message.reactions;
-    reactionMap
-        ?.removeWhere((key, value) => key == reaction.reactionType.value);
+    var isEmoji = false;
+    for (var x in reactionMap ?? <MessageReactionModel>[]) {
+      if (x.emojiKey == reaction.reactionType.value && x.userIds.length > 1) {
+        x.userIds.remove(IsmChatConfig.communicationConfig.userConfig.userId);
+        x.userIds.toSet().toList();
+        isEmoji = true;
+      }
+    }
+    if (isEmoji == false) {
+      reactionMap
+          ?.removeWhere((e) => e.emojiKey == reaction.reactionType.value);
+    }
+
     message.reactions = reactionMap;
     var messageIndex =
         allMessages.indexWhere((e) => e.messageId == reaction.messageId);

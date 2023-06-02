@@ -432,12 +432,12 @@ enum IsmChatEmoji {
     emojiKeyword: 'Love-You Gesture',
   ),
   facepal(
-    value: 'facepal',
+    value: 'facepalm',
     emojiKeyword: 'Man Facepalming',
   ),
   star(
     value: 'star',
-    emojiKeyword: 'Star',
+    emojiKeyword: 'Star-Struck',
   ),
   no(
     value: 'no',

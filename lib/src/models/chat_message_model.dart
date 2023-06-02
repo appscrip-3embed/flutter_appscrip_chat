@@ -92,7 +92,20 @@ class IsmChatMessageModel {
                   (e) => UserDetails.fromMap(e as Map<String, dynamic>),
                 ),
               ),
-        reactions: map['reactions'] as Map<String, dynamic>? ?? {});
+        reactions: (map['reactions'].runtimeType == List)
+            ? (map['reactions'] as List)
+                .map((e) => MessageReactionModel.fromJson(e as String))
+                .toList()
+            : (map['reactions'] as Map<String, dynamic>?)
+                ?.keys
+                .map(
+                  (e) => MessageReactionModel(
+                    emojiKey: e,
+                    userIds:
+                        (map['reactions'][e] as List<dynamic>).cast<String>(),
+                  ),
+                )
+                .toList());
     return model.copyWith(
       customType: model.customType != null &&
               model.customType != IsmChatCustomMessageType.text
@@ -149,7 +162,7 @@ class IsmChatMessageModel {
       initiatorId: '',
       initiatorName: '',
       members: [],
-      reactions: {});
+      reactions: null);
 
   IsmChatMessageModel({
     required this.body,
@@ -235,7 +248,7 @@ class IsmChatMessageModel {
   bool sentByMe;
   String? memberId;
   String? memberName;
-  Map<String, dynamic>? reactions;
+  List<MessageReactionModel>? reactions;
 
   String get chatName => conversationTitle ?? senderInfo?.userName ?? '';
 
@@ -287,7 +300,7 @@ class IsmChatMessageModel {
     List<UserDetails>? members,
     String? memberId,
     String? memberName,
-    Map<String, dynamic>? reactions,
+    List<MessageReactionModel>? reactions,
   }) =>
       IsmChatMessageModel(
           body: body ?? this.body,

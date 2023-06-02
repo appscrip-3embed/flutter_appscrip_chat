@@ -11,6 +11,7 @@ export 'last_read_model.dart';
 export 'local_mention.dart';
 export 'location_models/location_models.dart';
 export 'mention.dart';
+export 'message_reaction.dart';
 export 'meta_data_model.dart';
 export 'mqtt_models/mqtt_models.dart';
 export 'popup_item_model.dart';

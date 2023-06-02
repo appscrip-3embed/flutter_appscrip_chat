@@ -567,12 +567,19 @@ class IsmChatPageRepository {
         payload: reaction.toMap(),
         headers: IsmChatUtility.tokenCommonHeader(),
       );
+
+      if (response.hasError && response.errorCode == 404) {
+        await IsmChatUtility.showErrorDialog(
+            'You have alreaday added reaction ');
+        return null;
+      }
       if (response.hasError) {
         return null;
       }
       return response;
     } catch (e, st) {
       IsmChatLog.error('Add reaction  $e', st);
+
       return null;
     }
   }
@@ -580,7 +587,7 @@ class IsmChatPageRepository {
   Future<List<UserDetails>?> getReacton({required Reaction reaction}) async {
     try {
       var response = await _apiWrapper.get(
-        '${IsmChatAPI.reacton}/${reaction.reactionType.value}?conversationId=${reaction.conversationId}&messageId=${reaction.messageId}',
+        '${IsmChatAPI.reacton}/${reaction.reactionType.value}?conversationId=${reaction.conversationId}&messageId=${reaction.messageId}&limit=20&skip=0',
         headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
