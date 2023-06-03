@@ -84,6 +84,9 @@ class MessageBubble extends StatelessWidget {
               index: index,
               key: Key('scroll-${message.messageId}'),
               child: Container(
+                margin: message.reactions?.isNotEmpty == true
+                    ? IsmChatDimens.edgeInsetsB25
+                    : null,
                 // padding: IsmChatDimens.edgeInsets4,
                 constraints: showMessageInCenter
                     ? BoxConstraints(
@@ -92,7 +95,7 @@ class MessageBubble extends StatelessWidget {
                       )
                     : BoxConstraints(
                         maxWidth: context.width * .8,
-                        minWidth: context.width * .1,
+                        minWidth: context.width * .25,
                       ),
                 decoration: showMessageInCenter
                     ? null
@@ -114,14 +117,13 @@ class MessageBubble extends StatelessWidget {
                 child: Stack(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10, right: 60, top: 5, bottom: 20),
+                      padding: IsmChatDimens.edgeInsets5_5_5_18,
                       child: message.customType!.messageType(message),
                     ),
                     if (!showMessageInCenter)
                       Positioned(
-                        bottom: 4,
-                        right: 10,
+                        bottom: IsmChatDimens.four,
+                        right: IsmChatDimens.ten,
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: message.sentByMe
