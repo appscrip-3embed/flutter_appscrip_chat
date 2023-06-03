@@ -36,12 +36,12 @@ class ImsChatReaction extends StatelessWidget {
               .firstWhere((e) => e.name == reactionValue.emojiKeyword);
           return IsmChatTapHandler(
             onTap: () => _controller.showReactionUser(
-                message: message, reactionType: reactionName ?? ''),
+                message: message, reactionType: reactionName ?? '', index: 0),
             child: Container(
               alignment: Alignment.center,
               margin: IsmChatDimens.edgeInsetsR4,
               width: IsmChatDimens.forty,
-              height: IsmChatDimens.thirtyTwo,
+              height: IsmChatDimens.twentyFour,
               padding:
                   showCount && index == 2 ? IsmChatDimens.edgeInsets4 : null,
               decoration: BoxDecoration(
@@ -61,6 +61,7 @@ class ImsChatReaction extends StatelessWidget {
                           emojiSize: IsmChatDimens.eighteen,
                           onEmojiSelected: (_, emoji) {
                             _controller.showReactionUser(
+                                index: index,
                                 message: message,
                                 reactionType: reactionName ?? '');
                           },

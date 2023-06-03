@@ -5,11 +5,15 @@ import 'package:get/get.dart';
 
 class ImsChatShowUserReaction extends StatefulWidget {
   ImsChatShowUserReaction(
-      {super.key, required this.reactionType, required this.message})
+      {super.key,
+      required this.reactionType,
+      required this.message,
+      required this.index})
       : _controller = Get.find<IsmChatPageController>();
 
   final IsmChatMessageModel message;
   final String reactionType;
+  final int index;
   final IsmChatPageController _controller;
 
   @override
@@ -27,8 +31,9 @@ class _ImsChatShowUserReactionState extends State<ImsChatShowUserReaction>
     super.initState();
     _tabController = TabController(
         length: widget.message.reactions?.length ?? 0, vsync: this);
-    _tabController.animateTo(0);
-    ismChatEmoji = getIsmChatEmoji(message: widget.message, index: 0);
+    _tabController.animateTo(widget.index);
+    ismChatEmoji =
+        getIsmChatEmoji(message: widget.message, index: widget.index);
   }
 
   IsmChatEmoji getIsmChatEmoji(

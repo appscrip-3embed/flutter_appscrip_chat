@@ -358,12 +358,14 @@ class IsmChatPageController extends GetxController
 
   showReactionUser(
       {required IsmChatMessageModel message,
-      required String reactionType}) async {
+      required String reactionType,
+      required int index}) async {
     userReactionList.clear();
     await Get.bottomSheet(
       ImsChatShowUserReaction(
         message: message,
         reactionType: reactionType,
+        index: index,
       ),
       isDismissible: true,
       isScrollControlled: true,

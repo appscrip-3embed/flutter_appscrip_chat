@@ -120,8 +120,6 @@ class _Message extends StatelessWidget {
         padding: IsmChatDimens.edgeInsetsL4,
         child: Stack(
           clipBehavior: Clip.none,
-          // alignment:
-          //     message.sentByMe ? Alignment.bottomLeft : Alignment.bottomRight,
           children: [
             Column(
               mainAxisSize: MainAxisSize.min,
@@ -162,43 +160,43 @@ class _Message extends StatelessWidget {
                       ReactionButton(message),
                   ],
                 ),
-                if (!showMessageInCenter) ...[
-                  IsmChatDimens.boxHeight2,
-                  Row(
-                    mainAxisAlignment: message.sentByMe
-                        ? MainAxisAlignment.end
-                        : MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        message.sentAt.toTimeString(),
-                        style: IsmChatStyles.w400Grey10,
-                      ),
-                      if (message.sentByMe) ...[
-                        IsmChatDimens.boxWidth2,
-                        Icon(
-                          message.messageId!.isEmpty
-                              ? Icons.watch_later_outlined
-                              : message.deliveredToAll!
-                                  ? Icons.done_all_rounded
-                                  : Icons.done_rounded,
-                          color: message.messageId!.isEmpty
-                              ? Colors.grey
-                              : message.readByAll!
-                                  ? Colors.blue
-                                  : Colors.grey,
-                          size: IsmChatDimens.forteen,
-                        ),
-                      ],
-                    ],
-                  ),
-                ],
+                // if (!showMessageInCenter) ...[
+                //   IsmChatDimens.boxHeight2,
+                //   Row(
+                //     mainAxisAlignment: message.sentByMe
+                //         ? MainAxisAlignment.end
+                //         : MainAxisAlignment.start,
+                //     children: [
+                //       Text(
+                //         message.sentAt.toTimeString(),
+                //         style: IsmChatStyles.w400Grey10,
+                //       ),
+                //       if (message.sentByMe) ...[
+                //         IsmChatDimens.boxWidth2,
+                //         Icon(
+                //           message.messageId!.isEmpty
+                //               ? Icons.watch_later_outlined
+                //               : message.deliveredToAll!
+                //                   ? Icons.done_all_rounded
+                //                   : Icons.done_rounded,
+                //           color: message.messageId!.isEmpty
+                //               ? Colors.grey
+                //               : message.readByAll!
+                //                   ? Colors.blue
+                //                   : Colors.grey,
+                //           size: IsmChatDimens.forteen,
+                //         ),
+                //       ],
+                //     ],
+                //   ),
+                // ],
               ],
             ),
             if (message.reactions?.isNotEmpty == true)
               Positioned(
-                right: message.sentByMe ? -10 : null,
-                left: message.sentByMe ? null : -10,
-                bottom: 0,
+                right: message.sentByMe ? 0 : null,
+                left: message.sentByMe ? null : 0,
+                bottom: -24,
                 child: ImsChatReaction(
                   message: message,
                 ),

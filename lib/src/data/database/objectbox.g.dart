@@ -225,7 +225,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(7, 3601465766739318501),
       name: 'LastMessageDetails',
-      lastPropertyId: const IdUid(15, 5287680276580267203),
+      lastPropertyId: const IdUid(16, 960767097846536496),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -301,6 +301,11 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(15, 5287680276580267203),
             name: 'reactionType',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(16, 960767097846536496),
+            name: 'action',
             type: 9,
             flags: 0)
       ],
@@ -826,7 +831,9 @@ ModelDefinition getObjectBoxModel() {
           final reactionTypeOffset = object.reactionType == null
               ? null
               : fbb.writeString(object.reactionType!);
-          fbb.startTable(16);
+          final actionOffset =
+              object.action == null ? null : fbb.writeString(object.action!);
+          fbb.startTable(17);
           fbb.addInt64(0, object.id);
           fbb.addBool(1, object.showInConversation);
           fbb.addInt64(2, object.sentAt);
@@ -842,6 +849,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addBool(12, object.sentByMe);
           fbb.addOffset(13, membersOffset);
           fbb.addOffset(14, reactionTypeOffset);
+          fbb.addOffset(15, actionOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -873,7 +881,8 @@ ModelDefinition getObjectBoxModel() {
                   const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0),
               sentByMe: const fb.BoolReader().vTableGet(buffer, rootOffset, 28, false),
               members: const fb.ListReader<String>(fb.StringReader(asciiOptimization: true), lazy: false).vTableGetNullable(buffer, rootOffset, 30),
-              reactionType: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 32))
+              reactionType: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 32),
+              action: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 34))
             ..dbCustomType = const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 20);
 
           return object;
@@ -1295,6 +1304,10 @@ class LastMessageDetails_ {
   /// see [LastMessageDetails.reactionType]
   static final reactionType =
       QueryStringProperty<LastMessageDetails>(_entities[4].properties[14]);
+
+  /// see [LastMessageDetails.action]
+  static final action =
+      QueryStringProperty<LastMessageDetails>(_entities[4].properties[15]);
 }
 
 /// [PendingMessageModel] entity fields to define ObjectBox queries.

@@ -556,7 +556,11 @@ extension LastMessageBody on LastMessageDetails {
       case IsmChatCustomMessageType.date:
       case IsmChatCustomMessageType.text:
       default:
-        return reactionType?.isNotEmpty == true ? 'Racted on mesage' : body;
+        return reactionType?.isNotEmpty == true
+            ? sentByMe
+                ? 'You ${action == IsmChatActionEvents.reactionAdd.name ? 'reacted' : 'removed'}  ${reactionType?.reactionString} to a message'
+                : '${action == IsmChatActionEvents.reactionAdd.name ? 'Reacted' : 'Removed'}  ${reactionType?.reactionString} to a message'
+            : body;
     }
   }
 
@@ -617,6 +621,16 @@ extension LastMessageBody on LastMessageDetails {
       );
     }
     return const SizedBox.shrink();
+  }
+}
+
+extension ReactionLastMessgae on String {
+  String get reactionString {
+    var reactionValue = IsmChatEmoji.values.firstWhere((e) => e.value == this);
+    var reaction = Get.find<IsmChatConversationsController>()
+        .reactions
+        .firstWhere((e) => e.name == reactionValue.emojiKeyword);
+    return reaction.emoji;
   }
 }
 

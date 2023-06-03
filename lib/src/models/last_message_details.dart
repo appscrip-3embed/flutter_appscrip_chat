@@ -40,7 +40,8 @@ class LastMessageDetails {
                 .map((e) => e['memberName'] as String? ?? '')
                 .toList()
             : <String>[],
-        reactionType: map['reactionType'] as String? ?? '');
+        reactionType: map['reactionType'] as String? ?? '',
+        action: map['action'] as String? ?? '');
     return details.copyWith(
       sentByMe: details.senderId.isNotEmpty
           ? details.senderId ==
@@ -49,22 +50,24 @@ class LastMessageDetails {
     );
   }
 
-  LastMessageDetails(
-      {this.id = 0,
-      required this.showInConversation,
-      required this.sentAt,
-      required this.senderName,
-      this.senderId = '',
-      required this.messageType,
-      required this.messageId,
-      required this.conversationId,
-      required this.body,
-      this.deliverCount = 0,
-      this.readCount = 0,
-      required this.sentByMe,
-      this.customType,
-      this.members,
-      this.reactionType});
+  LastMessageDetails({
+    this.id = 0,
+    required this.showInConversation,
+    required this.sentAt,
+    required this.senderName,
+    this.senderId = '',
+    required this.messageType,
+    required this.messageId,
+    required this.conversationId,
+    required this.body,
+    this.deliverCount = 0,
+    this.readCount = 0,
+    required this.sentByMe,
+    this.customType,
+    this.members,
+    this.reactionType,
+    this.action,
+  });
   int id;
   final bool showInConversation;
   final int sentAt;
@@ -79,6 +82,7 @@ class LastMessageDetails {
   final bool sentByMe;
   final List<String>? members;
   final String? reactionType;
+  final String? action;
   @Transient()
   IsmChatCustomMessageType? customType;
 
@@ -102,23 +106,24 @@ class LastMessageDetails {
     IsmChatCustomMessageType? customType,
     List<String>? members,
     String? reactionType,
+    String? action,
   }) =>
       LastMessageDetails(
-        showInConversation: showInConversation ?? this.showInConversation,
-        sentAt: sentAt ?? this.sentAt,
-        senderName: senderName ?? this.senderName,
-        senderId: senderId ?? this.senderId,
-        messageType: messageType ?? this.messageType,
-        messageId: messageId ?? this.messageId,
-        conversationId: conversationId ?? this.conversationId,
-        body: body ?? this.body,
-        customType: customType ?? this.customType,
-        deliverCount: deliverCount ?? this.deliverCount,
-        readCount: readCount ?? this.readCount,
-        sentByMe: sentByMe ?? this.sentByMe,
-        members: members ?? this.members,
-        reactionType: reactionType ?? this.reactionType,
-      );
+          showInConversation: showInConversation ?? this.showInConversation,
+          sentAt: sentAt ?? this.sentAt,
+          senderName: senderName ?? this.senderName,
+          senderId: senderId ?? this.senderId,
+          messageType: messageType ?? this.messageType,
+          messageId: messageId ?? this.messageId,
+          conversationId: conversationId ?? this.conversationId,
+          body: body ?? this.body,
+          customType: customType ?? this.customType,
+          deliverCount: deliverCount ?? this.deliverCount,
+          readCount: readCount ?? this.readCount,
+          sentByMe: sentByMe ?? this.sentByMe,
+          members: members ?? this.members,
+          reactionType: reactionType ?? this.reactionType,
+          action: action ?? this.action);
 
   Map<String, dynamic> toMap() => <String, dynamic>{
         'showInConversation': showInConversation,
@@ -135,13 +140,14 @@ class LastMessageDetails {
         'sentByMe': sentByMe,
         'members': members,
         'reactionType': reactionType,
+        'action': action
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'LastMessageDetails(showInConversation: $showInConversation, sentAt: $sentAt, senderName: $senderName, senderId: $senderId, messageType: $messageType, messageId: $messageId, conversationId: $conversationId, body: $body, customType: $customType, deliverCount: $deliverCount, readCount: $readCount, sentByMe: $sentByMe, members: $members,  reactionType : $reactionType,)';
+      'LastMessageDetails(showInConversation: $showInConversation, sentAt: $sentAt, senderName: $senderName, senderId: $senderId, messageType: $messageType, messageId: $messageId, conversationId: $conversationId, body: $body, customType: $customType, deliverCount: $deliverCount, readCount: $readCount, sentByMe: $sentByMe, members: $members,  reactionType : $reactionType, action : $action)';
 
   @override
   bool operator ==(covariant LastMessageDetails other) {
@@ -160,7 +166,8 @@ class LastMessageDetails {
         other.sentByMe == sentByMe &&
         other.members == members &&
         other.customType == customType &&
-        other.reactionType == reactionType;
+        other.reactionType == reactionType &&
+        other.action == action;
   }
 
   @override
@@ -178,5 +185,6 @@ class LastMessageDetails {
       sentByMe.hashCode ^
       members.hashCode ^
       customType.hashCode ^
-      reactionType.hashCode;
+      reactionType.hashCode ^
+      action.hashCode;
 }

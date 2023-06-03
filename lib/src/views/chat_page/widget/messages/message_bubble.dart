@@ -44,8 +44,12 @@ class MessageBubble extends StatelessWidget {
           menuWidth: 170,
           menuOffset: IsmChatDimens.twenty,
           blurSize: 3,
-          animateMenuItems: false,
-          blurBackgroundColor: Colors.grey,
+          animateMenuItems: true,
+          menuBoxDecoration: BoxDecoration(
+              color: IsmChatConfig.chatTheme.primaryColor,
+              borderRadius: BorderRadius.circular(IsmChatDimens.forteen)),
+          duration: const Duration(milliseconds: 100),
+          blurBackgroundColor: IsmChatColors.greyColor,
           onPressed: () {},
           menuItems: IsmChatFocusMenuType.values
               .where((e) =>
@@ -80,7 +84,7 @@ class MessageBubble extends StatelessWidget {
               index: index,
               key: Key('scroll-${message.messageId}'),
               child: Container(
-                padding: IsmChatDimens.edgeInsets4,
+                // padding: IsmChatDimens.edgeInsets4,
                 constraints: showMessageInCenter
                     ? BoxConstraints(
                         maxWidth: context.width * .85,
@@ -107,7 +111,50 @@ class MessageBubble extends StatelessWidget {
                               : Radius.circular(IsmChatDimens.twelve),
                         ),
                       ),
-                child: message.customType!.messageType(message),
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 10, right: 60, top: 5, bottom: 20),
+                      child: message.customType!.messageType(message),
+                    ),
+                    if (!showMessageInCenter)
+                      Positioned(
+                        bottom: 4,
+                        right: 10,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: message.sentByMe
+                              ? MainAxisAlignment.end
+                              : MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              message.sentAt.toTimeString(),
+                              style: message.sentByMe
+                                  ? IsmChatStyles.w400White10
+                                  : IsmChatStyles.w400Grey10,
+                            ),
+                            if (message.sentByMe) ...[
+                              IsmChatDimens.boxWidth2,
+                              Icon(
+                                message.messageId!.isEmpty
+                                    ? Icons.watch_later_outlined
+                                    : message.deliveredToAll!
+                                        ? Icons.done_all_rounded
+                                        : Icons.done_rounded,
+                                color: message.messageId!.isEmpty
+                                    ? Colors.white
+                                    : message.readByAll!
+                                        ? Colors.blue
+                                        : Colors.white,
+                                size: IsmChatDimens.forteen,
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           ),
