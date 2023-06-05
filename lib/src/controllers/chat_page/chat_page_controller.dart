@@ -510,6 +510,23 @@ class IsmChatPageController extends GetxController
     }
   }
 
+  void showOverlay(BuildContext context, IsmChatMessageModel message) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      overlay = Overlay.of(context);
+      final renderBox = context.findRenderObject() as RenderBox;
+      final offset = renderBox.localToGlobal(Offset.zero);
+      entry = OverlayEntry(
+        builder: (context) => Positioned(
+          top: offset.dy + renderBox.size.height,
+          left: Get.width * 0.05,
+          width: Get.width * 0.9,
+          child: ReactionGrid(message),
+        ),
+      );
+      overlay!.insert(entry!);
+    });
+  }
+
   void closeOverlay() {
     entry?.remove();
     entry = null;

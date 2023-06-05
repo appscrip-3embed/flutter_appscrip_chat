@@ -1,6 +1,7 @@
 name: appscrip_chat_component
 description: A new Flutter plugin project.
 version: 1.0.0
+publish_to: none
 homepage: https://github.com/appscrip-3embed/flutter_appscrip_chat.git
 
 environment:
@@ -26,7 +27,10 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   fluttertoast: ^8.2.1
-  focused_menu: ^1.0.5
+  focused_menu: 
+    git:
+      url: https://github.com/retroportalstudio/focused_menu.git
+      ref: 8bba0ca
   geocode: ^1.0.2
   geocoding: ^2.1.0
   geolocator: ^9.0.2

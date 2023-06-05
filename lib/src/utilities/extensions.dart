@@ -556,11 +556,12 @@ extension LastMessageBody on LastMessageDetails {
       case IsmChatCustomMessageType.date:
       case IsmChatCustomMessageType.text:
       default:
-        return reactionType?.isNotEmpty == true
-            ? sentByMe
-                ? 'You ${action == IsmChatActionEvents.reactionAdd.name ? 'reacted' : 'removed'}  ${reactionType?.reactionString} to a message'
-                : '${action == IsmChatActionEvents.reactionAdd.name ? 'Reacted' : 'Removed'}  ${reactionType?.reactionString} to a message'
-            : body;
+        return body;
+      // reactionType?.isNotEmpty == true
+      //     ? sentByMe
+      //         ? 'You ${action == IsmChatActionEvents.reactionAdd.name ? 'reacted' : 'removed'}  ${reactionType?.reactionString} to a message'
+      //         : '${action == IsmChatActionEvents.reactionAdd.name ? 'Reacted' : 'Removed'}  ${reactionType?.reactionString} to a message'
+      //     : body;
     }
   }
 

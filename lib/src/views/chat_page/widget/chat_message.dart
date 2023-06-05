@@ -160,36 +160,6 @@ class _Message extends StatelessWidget {
                       ReactionButton(message),
                   ],
                 ),
-                // if (!showMessageInCenter) ...[
-                //   IsmChatDimens.boxHeight2,
-                //   Row(
-                //     mainAxisAlignment: message.sentByMe
-                //         ? MainAxisAlignment.end
-                //         : MainAxisAlignment.start,
-                //     children: [
-                //       Text(
-                //         message.sentAt.toTimeString(),
-                //         style: IsmChatStyles.w400Grey10,
-                //       ),
-                //       if (message.sentByMe) ...[
-                //         IsmChatDimens.boxWidth2,
-                //         Icon(
-                //           message.messageId!.isEmpty
-                //               ? Icons.watch_later_outlined
-                //               : message.deliveredToAll!
-                //                   ? Icons.done_all_rounded
-                //                   : Icons.done_rounded,
-                //           color: message.messageId!.isEmpty
-                //               ? Colors.grey
-                //               : message.readByAll!
-                //                   ? Colors.blue
-                //                   : Colors.grey,
-                //           size: IsmChatDimens.forteen,
-                //         ),
-                //       ],
-                //     ],
-                //   ),
-                // ],
               ],
             ),
             if (message.reactions?.isNotEmpty == true)

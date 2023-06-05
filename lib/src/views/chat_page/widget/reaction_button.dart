@@ -20,7 +20,7 @@ class ReactionButton extends StatelessWidget {
           top: offset.dy + renderBox.size.height,
           left: Get.width * 0.05,
           width: Get.width * 0.9,
-          child: _ReactionGrid(message),
+          child: ReactionGrid(message),
         ),
       );
       _controller.overlay!.insert(_controller.entry!);
@@ -40,8 +40,9 @@ class ReactionButton extends StatelessWidget {
       );
 }
 
-class _ReactionGrid extends StatelessWidget {
-  _ReactionGrid(this.message) : _controller = Get.find<IsmChatPageController>();
+class ReactionGrid extends StatelessWidget {
+  ReactionGrid(this.message, {super.key})
+      : _controller = Get.find<IsmChatPageController>();
 
   final IsmChatMessageModel message;
   final IsmChatPageController _controller;

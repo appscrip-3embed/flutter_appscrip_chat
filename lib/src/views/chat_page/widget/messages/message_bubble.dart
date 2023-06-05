@@ -1,7 +1,6 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:focused_menu/focused_menu.dart';
-import 'package:focused_menu/modals.dart';
 import 'package:get/get.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:swipe_to/swipe_to.dart';
@@ -42,7 +41,6 @@ class MessageBubble extends StatelessWidget {
         child: FocusedMenuHolder(
           openWithTap: showMessageInCenter ? true : false,
           menuWidth: 170,
-          menuOffset: IsmChatDimens.twenty,
           blurSize: 3,
           animateMenuItems: true,
           menuBoxDecoration: BoxDecoration(
@@ -50,6 +48,10 @@ class MessageBubble extends StatelessWidget {
               borderRadius: BorderRadius.circular(IsmChatDimens.forteen)),
           duration: const Duration(milliseconds: 100),
           blurBackgroundColor: IsmChatColors.greyColor,
+          onOpened: () {
+            controller.showOverlay(context, message);
+          },
+          onClosed: controller.closeOverlay,
           onPressed: () {},
           menuItems: IsmChatFocusMenuType.values
               .where((e) =>
@@ -62,7 +64,7 @@ class MessageBubble extends StatelessWidget {
                     style: IsmChatStyles.w400Black12,
                   ),
                   onPressed: () => controller.onMenuItemSelected(e, message),
-                  trailingIcon: Icon(e.icon),
+                  trailing: Icon(e.icon),
                 ),
               )
               .toList(),
@@ -84,10 +86,11 @@ class MessageBubble extends StatelessWidget {
               index: index,
               key: Key('scroll-${message.messageId}'),
               child: Container(
-                margin: message.reactions?.isNotEmpty == true
+                margin: message.reactions?.isNotEmpty == true &&
+                        !showMessageInCenter
                     ? IsmChatDimens.edgeInsetsB25
                     : null,
-                // padding: IsmChatDimens.edgeInsets4,
+                padding: showMessageInCenter ? IsmChatDimens.edgeInsets4 : null,
                 constraints: showMessageInCenter
                     ? BoxConstraints(
                         maxWidth: context.width * .85,
@@ -117,7 +120,9 @@ class MessageBubble extends StatelessWidget {
                 child: Stack(
                   children: [
                     Padding(
-                      padding: IsmChatDimens.edgeInsets5_5_5_18,
+                      padding: !showMessageInCenter
+                          ? IsmChatDimens.edgeInsets5_5_5_20
+                          : IsmChatDimens.edgeInsets0,
                       child: message.customType!.messageType(message),
                     ),
                     if (!showMessageInCenter)
