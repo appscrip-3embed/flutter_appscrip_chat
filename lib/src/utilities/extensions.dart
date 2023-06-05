@@ -673,4 +673,20 @@ extension MentionMessage on IsmChatMessageModel {
       return [];
     }
   }
+
+  List<IsmChatFocusMenuType> get focusMenuList {
+    var menu = [...IsmChatFocusMenuType.values];
+    if (!sentByMe) {
+      menu.remove(IsmChatFocusMenuType.info);
+    }
+    if ([
+      IsmChatCustomMessageType.video,
+      IsmChatCustomMessageType.image,
+      IsmChatCustomMessageType.audio,
+      IsmChatCustomMessageType.file
+    ].contains(customType)) {
+      menu.remove(IsmChatFocusMenuType.copy);
+    }
+    return menu;
+  }
 }

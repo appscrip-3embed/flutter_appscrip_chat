@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class IsmChatFocusMenu extends StatelessWidget {
   const IsmChatFocusMenu(
@@ -33,7 +34,7 @@ class IsmChatFocusMenu extends StatelessWidget {
                   ),
                   child: Container(
                     color:
-                        (blurBackgroundColor ?? Colors.black).withOpacity(0.7),
+                        (blurBackgroundColor ?? Colors.black).withOpacity(0.5),
                   ),
                 ),
               ),
@@ -45,10 +46,8 @@ class IsmChatFocusMenu extends StatelessWidget {
                       ? CrossAxisAlignment.end
                       : CrossAxisAlignment.start,
                   children: [
-                    FocusAnimationBuilder(
+                    _FocusAnimationBuilder(
                       animation: animation,
-                      axis: Axis.horizontal,
-                      axisAlignment: 0,
                       child: ReactionGrid(message),
                     ),
                     IsmChatDimens.boxHeight8,
@@ -60,11 +59,68 @@ class IsmChatFocusMenu extends StatelessWidget {
                       ),
                     ),
                     IsmChatDimens.boxHeight8,
-                    FocusAnimationBuilder(
+                    _FocusAnimationBuilder(
                       animation: animation,
-                      axis: Axis.horizontal,
-                      axisAlignment: 0,
-                      child: ReactionGrid(message),
+                      child: Container(
+                        width: IsmChatDimens.oneHundredSeventy,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(IsmChatDimens.sixteen),
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: GetBuilder<IsmChatPageController>(
+                            builder: (controller) => ListView.builder(
+                                  itemCount: message.focusMenuList.length,
+                                  shrinkWrap: true,
+                                  itemBuilder: (_, index) {
+                                    var item = message.focusMenuList[index];
+                                    return IsmChatTapHandler(
+                                      onTap: () {
+                                        Get.back();
+                                        controller.onMenuItemSelected(
+                                          item,
+                                          message,
+                                        );
+                                      },
+                                      child: Container(
+                                        height: IsmChatDimens.forty,
+                                        padding: IsmChatDimens.edgeInsets16_0,
+                                        decoration: BoxDecoration(
+                                          color: item ==
+                                                  IsmChatFocusMenuType.delete
+                                              ? IsmChatColors.redColor
+                                              : IsmChatConfig
+                                                  .chatTheme.backgroundColor,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              item.toString(),
+                                              style: IsmChatStyles.w400Black12
+                                                  .copyWith(
+                                                color: item ==
+                                                        IsmChatFocusMenuType
+                                                            .delete
+                                                    ? IsmChatColors.whiteColor
+                                                    : null,
+                                              ),
+                                            ),
+                                            const Spacer(),
+                                            Icon(
+                                              item.icon,
+                                              color: item ==
+                                                      IsmChatFocusMenuType
+                                                          .delete
+                                                  ? IsmChatColors.whiteColor
+                                                  : null,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                )),
+                      ),
                     ),
                   ],
                 ),
@@ -75,17 +131,12 @@ class IsmChatFocusMenu extends StatelessWidget {
       );
 }
 
-class FocusAnimationBuilder extends StatelessWidget {
-  const FocusAnimationBuilder({
+class _FocusAnimationBuilder extends StatelessWidget {
+  const _FocusAnimationBuilder({
     required this.animation,
-    required this.axis,
-    required this.axisAlignment,
     required this.child,
-    super.key,
   });
 
-  final Axis axis;
-  final double axisAlignment;
   final Animation<double> animation;
   final Widget child;
 

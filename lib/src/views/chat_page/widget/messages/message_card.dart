@@ -26,16 +26,14 @@ class MessageCard extends StatelessWidget {
         onLeftSwipe: showMessageInCenter || !message.sentByMe
             ? null
             : () {
-                controller.isreplying = true;
-                controller.chatMessageModel =
-                    controller.messages.reversed.toList()[index];
+                controller
+                    .onReplyTap(controller.messages.reversed.toList()[index]);
               },
         onRightSwipe: showMessageInCenter || message.sentByMe
             ? null
             : () {
-                controller.isreplying = true;
-                controller.chatMessageModel =
-                    controller.messages.reversed.toList()[index];
+                controller
+                    .onReplyTap(controller.messages.reversed.toList()[index]);
               },
         child: IsmChatTapHandler(
           onTap: () async {

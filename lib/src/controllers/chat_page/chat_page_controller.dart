@@ -452,6 +452,12 @@ class IsmChatPageController extends GetxController
     }
   }
 
+  void onReplyTap(IsmChatMessageModel message) {
+    isreplying = true;
+    chatMessageModel = message;
+    messageFieldFocusNode.requestFocus();
+  }
+
   void onMenuItemSelected(
     IsmChatFocusMenuType menuType,
     IsmChatMessageModel message,
@@ -461,8 +467,7 @@ class IsmChatPageController extends GetxController
         await getMessageInformation(message);
         break;
       case IsmChatFocusMenuType.reply:
-        isreplying = true;
-        chatMessageModel = message;
+        onReplyTap(message);
         break;
       case IsmChatFocusMenuType.forward:
         var chatConversationController =
