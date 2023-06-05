@@ -556,12 +556,11 @@ extension LastMessageBody on LastMessageDetails {
       case IsmChatCustomMessageType.date:
       case IsmChatCustomMessageType.text:
       default:
-        return body;
-      // reactionType?.isNotEmpty == true
-      //     ? sentByMe
-      //         ? 'You ${action == IsmChatActionEvents.reactionAdd.name ? 'reacted' : 'removed'}  ${reactionType?.reactionString} to a message'
-      //         : '${action == IsmChatActionEvents.reactionAdd.name ? 'Reacted' : 'Removed'}  ${reactionType?.reactionString} to a message'
-      //     : body;
+        return reactionType?.isNotEmpty == true
+            ? sentByMe
+                ? 'You ${action == IsmChatActionEvents.reactionAdd.name ? 'reacted' : 'removed'}  ${reactionType?.reactionString} to a message'
+                : '${action == IsmChatActionEvents.reactionAdd.name ? 'Reacted' : 'Removed'}  ${reactionType?.reactionString} to a message'
+            : body;
     }
   }
 
@@ -628,9 +627,11 @@ extension LastMessageBody on LastMessageDetails {
 extension ReactionLastMessgae on String {
   String get reactionString {
     var reactionValue = IsmChatEmoji.values.firstWhere((e) => e.value == this);
+
     var reaction = Get.find<IsmChatConversationsController>()
         .reactions
         .firstWhere((e) => e.name == reactionValue.emojiKeyword);
+
     return reaction.emoji;
   }
 }

@@ -75,6 +75,7 @@ class IsmChatConversationsController extends GetxController {
   onInit() async {
     super.onInit();
     var users = IsmChatConfig.objectBox.userDetailsBox.getAll();
+    _generateReactionList();
     if (users.isNotEmpty) {
       userDetails = users.first;
     } else {
@@ -83,7 +84,6 @@ class IsmChatConversationsController extends GetxController {
     await getConversationsFromDB();
     await getChatConversations();
     userListScrollListener();
-    _generateReactionList();
   }
 
   @override

@@ -41,6 +41,7 @@ class LastMessageDetails {
                 .toList()
             : <String>[],
         reactionType: map['reactionType'] as String? ?? '',
+        userId: map['userId'] as String? ?? '',
         action: map['action'] as String? ?? '');
     return details.copyWith(
       sentByMe: details.senderId.isNotEmpty
@@ -66,6 +67,7 @@ class LastMessageDetails {
     this.customType,
     this.members,
     this.reactionType,
+    this.userId,
     this.action,
   });
   int id;
@@ -83,6 +85,7 @@ class LastMessageDetails {
   final List<String>? members;
   final String? reactionType;
   final String? action;
+  final String? userId;
   @Transient()
   IsmChatCustomMessageType? customType;
 

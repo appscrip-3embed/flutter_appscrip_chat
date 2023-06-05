@@ -237,6 +237,8 @@ class IsmChatPageController extends GetxController
     _userReactionList.value = value;
   }
 
+  bool didReactedLast = false;
+
   @override
   void onInit() async {
     super.onInit();
@@ -788,43 +790,49 @@ class IsmChatPageController extends GetxController
   }
 
   Future<void> updateLastMessage() async {
-    var chatConversation = await IsmChatConfig.objectBox
-        .getDBConversation(conversationId: conversation?.conversationId ?? '');
-    if (chatConversation != null) {
-      if (messages.isNotEmpty) {
-        IsmChatLog(messages.last);
-        chatConversation.lastMessageDetails.target = LastMessageDetails(
-          sentByMe: messages.last.sentByMe,
-          showInConversation: true,
-          sentAt: messages.last.sentAt,
-          senderName: messages.last.chatName,
-          messageType: messages.last.messageType?.value ?? 0,
-          messageId: messages.last.messageId ?? '',
-          conversationId: messages.last.conversationId ?? '',
-          body: messages.last.body,
-          customType: messages.last.customType,
-          readCount: chatConversation.isGroup!
-              ? messages.last.readByAll!
-                  ? chatConversation.membersCount!
-                  : messages.last.lastReadAt!.length
-              : messages.last.readByAll!
-                  ? 1
-                  : 0,
-          deliverCount: chatConversation.isGroup!
-              ? messages.last.deliveredToAll!
-                  ? chatConversation.membersCount!
-                  : 0
-              : messages.last.deliveredToAll!
-                  ? 1
-                  : 0,
-          members:
-              messages.last.members?.map((e) => e.memberName ?? '').toList() ??
-                  [],
-        );
+    var ismChatConversationController =
+        Get.find<IsmChatConversationsController>();
+    if (!didReactedLast) {
+      var chatConversation = await IsmChatConfig.objectBox.getDBConversation(
+          conversationId: conversation?.conversationId ?? '');
+      if (chatConversation != null) {
+        if (messages.isNotEmpty) {
+          chatConversation.lastMessageDetails.target = LastMessageDetails(
+            sentByMe: messages.last.sentByMe,
+            showInConversation: true,
+            sentAt: messages.last.sentAt,
+            senderName: messages.last.chatName,
+            messageType: messages.last.messageType?.value ?? 0,
+            messageId: messages.last.messageId ?? '',
+            conversationId: messages.last.conversationId ?? '',
+            body: messages.last.body,
+            customType: messages.last.customType,
+            readCount: chatConversation.isGroup!
+                ? messages.last.readByAll!
+                    ? chatConversation.membersCount!
+                    : messages.last.lastReadAt!.length
+                : messages.last.readByAll!
+                    ? 1
+                    : 0,
+            deliverCount: chatConversation.isGroup!
+                ? messages.last.deliveredToAll!
+                    ? chatConversation.membersCount!
+                    : 0
+                : messages.last.deliveredToAll!
+                    ? 1
+                    : 0,
+            members: messages.last.members
+                    ?.map((e) => e.memberName ?? '')
+                    .toList() ??
+                [],
+          );
+        }
+        chatConversation.unreadMessagesCount = 0;
+        IsmChatConfig.objectBox.chatConversationBox.put(chatConversation);
+        await ismChatConversationController.getConversationsFromDB();
       }
-      chatConversation.unreadMessagesCount = 0;
-      IsmChatConfig.objectBox.chatConversationBox.put(chatConversation);
-      await Get.find<IsmChatConversationsController>().getConversationsFromDB();
+    } else {
+      await ismChatConversationController.getChatConversations();
     }
   }
 

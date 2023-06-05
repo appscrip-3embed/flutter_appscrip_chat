@@ -96,6 +96,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       createdAt: createdAt,
     );
     if (isMessageSent && !forwardMessgeForMulitpleUser) {
+      _controller.didReactedLast = false;
       await _controller.getMessagesFromDB(conversationId);
     }
   }

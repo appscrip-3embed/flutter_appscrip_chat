@@ -3,7 +3,7 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ImsChatReaction extends StatelessWidget {
+class ImsChatReaction extends StatefulWidget {
   ImsChatReaction({super.key, required this.message})
       : _controller = Get.find<IsmChatPageController>();
 
@@ -11,74 +11,93 @@ class ImsChatReaction extends StatelessWidget {
   final IsmChatPageController _controller;
 
   @override
-  Widget build(BuildContext context) {
-    message.reactions
+  State<ImsChatReaction> createState() => _ImsChatReactionState();
+}
+
+class _ImsChatReactionState extends State<ImsChatReaction> {
+  int reactionLength = 0;
+  bool showCount = false;
+  @override
+  void initState() {
+    _checkReactionCount();
+    super.initState();
+  }
+
+  _checkReactionCount() {
+    widget.message.reactions
         ?.removeWhere((e) => e.emojiKey.isNotEmpty && e.userIds.isEmpty);
-    var reactionLength = message.reactions?.length ?? 0;
-    var showCount = false;
+    reactionLength = widget.message.reactions?.length ?? 0;
     if (reactionLength > 3) {
       showCount = true;
       reactionLength = reactionLength - 2;
     } else {
       showCount = false;
     }
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: List.generate(showCount ? 3 : message.reactions?.length ?? 0,
-            (index) {
-          var reactionName = message.reactions?[index].emojiKey;
-          var reactionValue =
-              IsmChatEmoji.values.firstWhere((e) => e.value == reactionName);
-          var reaction = _controller.reactions
-              .firstWhere((e) => e.name == reactionValue.emojiKeyword);
-          return IsmChatTapHandler(
-            onTap: () => _controller.showReactionUser(
-                message: message, reactionType: reactionName ?? '', index: 0),
-            child: Container(
-              alignment: Alignment.center,
-              margin: IsmChatDimens.edgeInsetsR4,
-              width: IsmChatDimens.forty,
-              height: IsmChatDimens.twentyFour,
-              padding:
-                  showCount && index == 2 ? IsmChatDimens.edgeInsets4 : null,
-              decoration: BoxDecoration(
-                  boxShadow: const [BoxShadow(color: Colors.black)],
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(IsmChatDimens.fifty),
-                  ),
-                  color: IsmChatColors.whiteColor),
-              child: showCount && index == 2
-                  ? Text('+ $reactionLength')
-                  : Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        EmojiCell.fromConfig(
-                          emoji: reaction,
-                          emojiSize: IsmChatDimens.eighteen,
-                          onEmojiSelected: (_, emoji) {
-                            _controller.showReactionUser(
-                                index: index,
-                                message: message,
-                                reactionType: reactionName ?? '');
-                          },
-                          config: Config(
-                            emojiSizeMax: IsmChatDimens.twentyFour,
-                            bgColor: IsmChatConfig.chatTheme.backgroundColor!,
-                            indicatorColor:
-                                IsmChatConfig.chatTheme.primaryColor!,
-                          ),
-                        ),
-                        Text('${message.reactions?[index].userIds.length}')
-                      ],
-                    ),
-            ),
-          );
-        }),
-      ),
-    );
   }
+
+  @override
+  Widget build(BuildContext context) => SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: List.generate(
+              showCount ? 3 : widget.message.reactions?.length ?? 0, (index) {
+            var reactionName = widget.message.reactions?[index].emojiKey;
+            var reactionValue =
+                IsmChatEmoji.values.firstWhere((e) => e.value == reactionName);
+            var reaction = widget._controller.reactions
+                .firstWhere((e) => e.name == reactionValue.emojiKeyword);
+            return InkWell(
+              onTap: () {
+                widget._controller.showReactionUser(
+                    message: widget.message,
+                    reactionType: reactionName ?? '',
+                    index: 0);
+              },
+              // behavior: HitTestBehavior.opaque,
+              child: Container(
+                alignment: Alignment.center,
+                margin: IsmChatDimens.edgeInsetsR4,
+                width: IsmChatDimens.forty,
+                height: IsmChatDimens.twentyFour,
+                padding:
+                    showCount && index == 2 ? IsmChatDimens.edgeInsets4 : null,
+                decoration: BoxDecoration(
+                    boxShadow: const [BoxShadow(color: Colors.black)],
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(IsmChatDimens.fifty),
+                    ),
+                    color: IsmChatColors.whiteColor),
+                child: showCount && index == 2
+                    ? Text('+ $reactionLength')
+                    : Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          EmojiCell.fromConfig(
+                            emoji: reaction,
+                            emojiSize: IsmChatDimens.eighteen,
+                            onEmojiSelected: (_, emoji) {
+                              widget._controller.showReactionUser(
+                                  index: index,
+                                  message: widget.message,
+                                  reactionType: reactionName ?? '');
+                            },
+                            config: Config(
+                              emojiSizeMax: IsmChatDimens.twentyFour,
+                              bgColor: IsmChatConfig.chatTheme.backgroundColor!,
+                              indicatorColor:
+                                  IsmChatConfig.chatTheme.primaryColor!,
+                            ),
+                          ),
+                          Text(
+                              '${widget.message.reactions?[index].userIds.length}')
+                        ],
+                      ),
+              ),
+            );
+          }),
+        ),
+      );
 }

@@ -158,7 +158,7 @@ class _Message extends StatelessWidget {
               Positioned(
                 right: message.sentByMe ? 0 : null,
                 left: message.sentByMe ? null : 0,
-                bottom: 6,
+                bottom: IsmChatDimens.six,
                 child: ImsChatReaction(
                   message: message,
                 ),

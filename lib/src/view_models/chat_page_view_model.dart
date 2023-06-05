@@ -557,8 +557,9 @@ class IsmChatPageViewModel {
 
     await IsmChatConfig.objectBox
         .saveMessages(reaction.conversationId, allMessages);
-    await Get.find<IsmChatPageController>()
-        .getMessagesFromDB(reaction.conversationId);
+    var controller = Get.find<IsmChatPageController>();
+    controller.didReactedLast = true;
+    await controller.getMessagesFromDB(reaction.conversationId);
   }
 
   Future<void> deleteReacton({required Reaction reaction}) async {
@@ -597,8 +598,9 @@ class IsmChatPageViewModel {
 
     await IsmChatConfig.objectBox
         .saveMessages(reaction.conversationId, allMessages);
-    await Get.find<IsmChatPageController>()
-        .getMessagesFromDB(reaction.conversationId);
+    var controller = Get.find<IsmChatPageController>();
+    controller.didReactedLast = true;
+    await controller.getMessagesFromDB(reaction.conversationId);
   }
 
   Future<List<UserDetails>?> getReacton({required Reaction reaction}) async =>

@@ -5,18 +5,20 @@ class IsmChatTapHandler extends StatelessWidget {
     super.key,
     this.onTap,
     this.onLongPress,
+    this.behavior,
     required this.child,
   });
 
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
+  final HitTestBehavior? behavior;
   final Widget child;
 
   @override
   Widget build(BuildContext context) => GestureDetector(
         onTap: onTap,
         onLongPress: onLongPress,
-        behavior: HitTestBehavior.opaque,
+        behavior: behavior ?? HitTestBehavior.translucent,
         // splashColor: Colors.transparent,
         // hoverColor: Colors.transparent,
         // focusColor: Colors.transparent,
