@@ -200,7 +200,7 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                                   .listOfAssetsPath[controller.assetsIndex]
                                   .mediaUrl
                                   .toString()),
-                              fit: BoxFit.cover,
+                              fit: BoxFit.contain,
                             ),
                           )
                         : VideoViewPage(

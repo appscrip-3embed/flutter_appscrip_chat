@@ -52,12 +52,6 @@ class IsmChatPageController extends GetxController
 
   final textEditingController = TextEditingController();
 
-  OverlayState? overlay;
-
-  OverlayEntry? entry;
-
-  var layerLink = LayerLink();
-
   final RxBool _showEmojiBoard = false.obs;
   bool get showEmojiBoard => _showEmojiBoard.value;
   set showEmojiBoard(bool value) => _showEmojiBoard.value = value;
@@ -243,6 +237,8 @@ class IsmChatPageController extends GetxController
     _userReactionList.value = value;
   }
 
+  bool didReactedLast = false;
+
   @override
   void onInit() async {
     super.onInit();
@@ -358,12 +354,14 @@ class IsmChatPageController extends GetxController
 
   showReactionUser(
       {required IsmChatMessageModel message,
-      required String reactionType}) async {
+      required String reactionType,
+      required int index}) async {
     userReactionList.clear();
     await Get.bottomSheet(
       ImsChatShowUserReaction(
         message: message,
         reactionType: reactionType,
+        index: index,
       ),
       isDismissible: true,
       isScrollControlled: true,
@@ -456,6 +454,12 @@ class IsmChatPageController extends GetxController
     }
   }
 
+  void onReplyTap(IsmChatMessageModel message) {
+    isreplying = true;
+    chatMessageModel = message;
+    messageFieldFocusNode.requestFocus();
+  }
+
   void onMenuItemSelected(
     IsmChatFocusMenuType menuType,
     IsmChatMessageModel message,
@@ -465,8 +469,7 @@ class IsmChatPageController extends GetxController
         await getMessageInformation(message);
         break;
       case IsmChatFocusMenuType.reply:
-        isreplying = true;
-        chatMessageModel = message;
+        onReplyTap(message);
         break;
       case IsmChatFocusMenuType.forward:
         var chatConversationController =
@@ -508,14 +511,35 @@ class IsmChatPageController extends GetxController
     }
   }
 
-  void closeOverlay() {
-    entry?.remove();
-    entry = null;
+  Future<void> showOverlay(
+    BuildContext context,
+    IsmChatMessageModel message,
+  ) async {
+    await Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (_, animation, secondary) {
+          animation = Tween<double>(begin: 0, end: 1).animate(
+            CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeInOutCubic,
+            ),
+          );
+          return IsmChatFocusMenu(
+            message,
+            animation: animation,
+          );
+        },
+        fullscreenDialog: true,
+        opaque: false,
+        transitionDuration: IsmChatConstants.transitionDuration,
+        reverseTransitionDuration: IsmChatConstants.transitionDuration,
+      ),
+    );
   }
 
   void scrollListener() {
     messagesScrollController.addListener(() {
-      closeOverlay();
       if (messagesScrollController.offset * 0.7 ==
           messagesScrollController.position.maxScrollExtent) {
         getMessagesFromAPI(forPagination: true, lastMessageTimestamp: 0);
@@ -766,43 +790,49 @@ class IsmChatPageController extends GetxController
   }
 
   Future<void> updateLastMessage() async {
-    var chatConversation = await IsmChatConfig.objectBox
-        .getDBConversation(conversationId: conversation?.conversationId ?? '');
-    if (chatConversation != null) {
-      if (messages.isNotEmpty) {
-        IsmChatLog(messages.last);
-        chatConversation.lastMessageDetails.target = LastMessageDetails(
-          sentByMe: messages.last.sentByMe,
-          showInConversation: true,
-          sentAt: messages.last.sentAt,
-          senderName: messages.last.chatName,
-          messageType: messages.last.messageType?.value ?? 0,
-          messageId: messages.last.messageId ?? '',
-          conversationId: messages.last.conversationId ?? '',
-          body: messages.last.body,
-          customType: messages.last.customType,
-          readCount: chatConversation.isGroup!
-              ? messages.last.readByAll!
-                  ? chatConversation.membersCount!
-                  : messages.last.lastReadAt!.length
-              : messages.last.readByAll!
-                  ? 1
-                  : 0,
-          deliverCount: chatConversation.isGroup!
-              ? messages.last.deliveredToAll!
-                  ? chatConversation.membersCount!
-                  : 0
-              : messages.last.deliveredToAll!
-                  ? 1
-                  : 0,
-          members:
-              messages.last.members?.map((e) => e.memberName ?? '').toList() ??
-                  [],
-        );
+    var ismChatConversationController =
+        Get.find<IsmChatConversationsController>();
+    if (!didReactedLast) {
+      var chatConversation = await IsmChatConfig.objectBox.getDBConversation(
+          conversationId: conversation?.conversationId ?? '');
+      if (chatConversation != null) {
+        if (messages.isNotEmpty) {
+          chatConversation.lastMessageDetails.target = LastMessageDetails(
+            sentByMe: messages.last.sentByMe,
+            showInConversation: true,
+            sentAt: messages.last.sentAt,
+            senderName: messages.last.chatName,
+            messageType: messages.last.messageType?.value ?? 0,
+            messageId: messages.last.messageId ?? '',
+            conversationId: messages.last.conversationId ?? '',
+            body: messages.last.body,
+            customType: messages.last.customType,
+            readCount: chatConversation.isGroup!
+                ? messages.last.readByAll!
+                    ? chatConversation.membersCount!
+                    : messages.last.lastReadAt!.length
+                : messages.last.readByAll!
+                    ? 1
+                    : 0,
+            deliverCount: chatConversation.isGroup!
+                ? messages.last.deliveredToAll!
+                    ? chatConversation.membersCount!
+                    : 0
+                : messages.last.deliveredToAll!
+                    ? 1
+                    : 0,
+            members: messages.last.members
+                    ?.map((e) => e.memberName ?? '')
+                    .toList() ??
+                [],
+          );
+        }
+        chatConversation.unreadMessagesCount = 0;
+        IsmChatConfig.objectBox.chatConversationBox.put(chatConversation);
+        await ismChatConversationController.getConversationsFromDB();
       }
-      chatConversation.unreadMessagesCount = 0;
-      IsmChatConfig.objectBox.chatConversationBox.put(chatConversation);
-      await Get.find<IsmChatConversationsController>().getConversationsFromDB();
+    } else {
+      await ismChatConversationController.getChatConversations();
     }
   }
 

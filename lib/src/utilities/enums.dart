@@ -376,11 +376,11 @@ enum ApiCallOrigin {
 
 enum IsmChatFocusMenuType {
   info,
+  copy,
+  selectMessage,
   reply,
   forward,
-  copy,
-  delete,
-  selectMessage;
+  delete;
 
   @override
   String toString() => this == IsmChatFocusMenuType.selectMessage

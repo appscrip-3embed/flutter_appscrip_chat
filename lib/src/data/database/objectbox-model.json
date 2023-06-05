@@ -201,7 +201,7 @@
     },
     {
       "id": "7:3601465766739318501",
-      "lastPropertyId": "15:5287680276580267203",
+      "lastPropertyId": "16:960767097846536496",
       "name": "LastMessageDetails",
       "properties": [
         {
@@ -278,6 +278,11 @@
         {
           "id": "15:5287680276580267203",
           "name": "reactionType",
+          "type": 9
+        },
+        {
+          "id": "16:960767097846536496",
+          "name": "action",
           "type": 9
         }
       ],

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -28,19 +26,14 @@ class IsmChatPageViewModel {
       return null;
     }
 
-    var x = messages.lastWhere((e) => [
-          IsmChatActionEvents.reactionAdd.name,
-          IsmChatActionEvents.reactionRemove.name
-        ].contains(e.action));
-    IsmChatLog.error(x);
-
     messages.removeWhere((e) => [
           IsmChatActionEvents.clearConversation.name,
           if (!isGroup) IsmChatActionEvents.conversationCreated.name,
           IsmChatActionEvents.deleteConversationLocally.name,
           IsmChatActionEvents.reactionAdd.name,
           IsmChatActionEvents.reactionRemove.name,
-          if(e.memberId != IsmChatConfig.communicationConfig.userConfig.userId) ...[
+          if (e.memberId !=
+              IsmChatConfig.communicationConfig.userConfig.userId) ...[
             IsmChatActionEvents.removeAdmin.name,
             IsmChatActionEvents.addAdmin.name,
           ]
@@ -564,8 +557,9 @@ class IsmChatPageViewModel {
 
     await IsmChatConfig.objectBox
         .saveMessages(reaction.conversationId, allMessages);
-    await Get.find<IsmChatPageController>()
-        .getMessagesFromDB(reaction.conversationId);
+    var controller = Get.find<IsmChatPageController>();
+    controller.didReactedLast = true;
+    await controller.getMessagesFromDB(reaction.conversationId);
   }
 
   Future<void> deleteReacton({required Reaction reaction}) async {
@@ -604,8 +598,9 @@ class IsmChatPageViewModel {
 
     await IsmChatConfig.objectBox
         .saveMessages(reaction.conversationId, allMessages);
-    await Get.find<IsmChatPageController>()
-        .getMessagesFromDB(reaction.conversationId);
+    var controller = Get.find<IsmChatPageController>();
+    controller.didReactedLast = true;
+    await controller.getMessagesFromDB(reaction.conversationId);
   }
 
   Future<List<UserDetails>?> getReacton({required Reaction reaction}) async =>

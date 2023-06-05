@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -68,10 +69,13 @@ class IsmChatConversationsController extends GetxController {
     _profileImage.value = value;
   }
 
+  List<Emoji> reactions = [];
+
   @override
   onInit() async {
     super.onInit();
     var users = IsmChatConfig.objectBox.userDetailsBox.getAll();
+    _generateReactionList();
     if (users.isNotEmpty) {
       userDetails = users.first;
     } else {
@@ -87,6 +91,16 @@ class IsmChatConversationsController extends GetxController {
     userListScrollController.dispose();
     conversationScrollController.dispose();
     super.onClose();
+  }
+
+  _generateReactionList() async {
+    reactions = await Future.wait(
+      IsmChatEmoji.values.map(
+        (e) async => (await EmojiPickerUtils()
+                .searchEmoji(e.emojiKeyword, defaultEmojiSet))
+            .first,
+      ),
+    );
   }
 
   /// This function will be used in [Forward Screen] to Select or Unselect users

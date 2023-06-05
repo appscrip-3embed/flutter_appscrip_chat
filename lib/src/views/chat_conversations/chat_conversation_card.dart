@@ -17,7 +17,8 @@ class IsmChatConversationCard extends StatefulWidget {
 
   final IsmChatConversationModel conversation;
   final VoidCallback? onTap;
-   final Widget? Function(BuildContext, IsmChatConversationModel)? onProfileWidget;
+  final Widget? Function(BuildContext, IsmChatConversationModel)?
+      onProfileWidget;
   final Widget? Function(BuildContext, IsmChatConversationModel, String)?
       profileImageBuilder;
   final String? Function(BuildContext, IsmChatConversationModel, String)?
@@ -63,8 +64,9 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
               // Todo
               Positioned(
                 top: IsmChatDimens.twentyEight,
-                child: widget.onProfileWidget?.call(context ,widget.conversation) ?? IsmChatDimens.box0
-                    ,
+                child: widget.onProfileWidget
+                        ?.call(context, widget.conversation) ??
+                    IsmChatDimens.box0,
               )
             ],
           ),
@@ -83,10 +85,14 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  widget.conversation.readCheck,
-                  widget.conversation.sender,
-                  widget.conversation.lastMessageDetails!.icon,
-                  IsmChatDimens.boxWidth2,
+                  if (widget.conversation.lastMessageDetails?.reactionType
+                          ?.isEmpty ==
+                      true) ...[
+                    widget.conversation.readCheck,
+                    widget.conversation.sender,
+                    widget.conversation.lastMessageDetails!.icon,
+                    IsmChatDimens.boxWidth2,
+                  ],
                   Flexible(
                     child: Text(
                       widget.conversation.lastMessageDetails!.messageBody,
@@ -97,8 +103,6 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
                   ),
                 ],
               ),
-          // conversation.lastMessageDetails!.body
-          //     .lastMessageType(conversation.lastMessageDetails!),
           trailing: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.end,

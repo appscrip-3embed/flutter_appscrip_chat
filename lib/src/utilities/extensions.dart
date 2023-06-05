@@ -556,7 +556,11 @@ extension LastMessageBody on LastMessageDetails {
       case IsmChatCustomMessageType.date:
       case IsmChatCustomMessageType.text:
       default:
-        return reactionType?.isNotEmpty == true ? 'Racted on mesage' : body;
+        return reactionType?.isNotEmpty == true
+            ? sentByMe
+                ? 'You ${action == IsmChatActionEvents.reactionAdd.name ? 'reacted' : 'removed'}  ${reactionType?.reactionString} to a message'
+                : '${action == IsmChatActionEvents.reactionAdd.name ? 'Reacted' : 'Removed'}  ${reactionType?.reactionString} to a message'
+            : body;
     }
   }
 
@@ -620,6 +624,18 @@ extension LastMessageBody on LastMessageDetails {
   }
 }
 
+extension ReactionLastMessgae on String {
+  String get reactionString {
+    var reactionValue = IsmChatEmoji.values.firstWhere((e) => e.value == this);
+
+    var reaction = Get.find<IsmChatConversationsController>()
+        .reactions
+        .firstWhere((e) => e.name == reactionValue.emojiKeyword);
+
+    return reaction.emoji;
+  }
+}
+
 extension MentionMessage on IsmChatMessageModel {
   List<LocalMention> get mentionList {
     try {
@@ -657,5 +673,21 @@ extension MentionMessage on IsmChatMessageModel {
       IsmChatLog.error(e, st);
       return [];
     }
+  }
+
+  List<IsmChatFocusMenuType> get focusMenuList {
+    var menu = [...IsmChatFocusMenuType.values];
+    if (!sentByMe) {
+      menu.remove(IsmChatFocusMenuType.info);
+    }
+    if ([
+      IsmChatCustomMessageType.video,
+      IsmChatCustomMessageType.image,
+      IsmChatCustomMessageType.audio,
+      IsmChatCustomMessageType.file
+    ].contains(customType)) {
+      menu.remove(IsmChatFocusMenuType.copy);
+    }
+    return menu;
   }
 }
