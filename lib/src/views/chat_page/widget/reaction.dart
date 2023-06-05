@@ -36,6 +36,12 @@ class _ImsChatReactionState extends State<ImsChatReaction> {
   }
 
   @override
+  void didUpdateWidget(covariant ImsChatReaction oldWidget) {
+    _checkReactionCount();
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) => SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
