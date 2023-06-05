@@ -52,12 +52,6 @@ class IsmChatPageController extends GetxController
 
   final textEditingController = TextEditingController();
 
-  OverlayState? overlay;
-
-  OverlayEntry? entry;
-
-  var layerLink = LayerLink();
-
   final RxBool _showEmojiBoard = false.obs;
   bool get showEmojiBoard => _showEmojiBoard.value;
   set showEmojiBoard(bool value) => _showEmojiBoard.value = value;
@@ -510,31 +504,35 @@ class IsmChatPageController extends GetxController
     }
   }
 
-  void showOverlay(BuildContext context, IsmChatMessageModel message) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      overlay = Overlay.of(context);
-      final renderBox = context.findRenderObject() as RenderBox;
-      final offset = renderBox.localToGlobal(Offset.zero);
-      entry = OverlayEntry(
-        builder: (context) => Positioned(
-          top: offset.dy + renderBox.size.height,
-          left: Get.width * 0.05,
-          width: Get.width * 0.9,
-          child: ReactionGrid(message),
-        ),
-      );
-      overlay!.insert(entry!);
-    });
-  }
-
-  void closeOverlay() {
-    entry?.remove();
-    entry = null;
+  Future<void> showOverlay(
+    BuildContext context,
+    IsmChatMessageModel message,
+  ) async {
+    await Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (_, animation, secondary) {
+          animation = Tween<double>(begin: 0, end: 1).animate(
+            CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeInOutCubic,
+            ),
+          );
+          return IsmChatFocusMenu(
+            message,
+            animation: animation,
+          );
+        },
+        fullscreenDialog: true,
+        opaque: false,
+        transitionDuration: IsmChatConstants.transitionDuration,
+        reverseTransitionDuration: IsmChatConstants.transitionDuration,
+      ),
+    );
   }
 
   void scrollListener() {
     messagesScrollController.addListener(() {
-      closeOverlay();
       if (messagesScrollController.offset * 0.7 ==
           messagesScrollController.position.maxScrollExtent) {
         getMessagesFromAPI(forPagination: true, lastMessageTimestamp: 0);

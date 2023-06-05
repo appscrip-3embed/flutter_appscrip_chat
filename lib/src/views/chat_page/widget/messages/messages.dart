@@ -11,6 +11,7 @@ export 'image_message.dart';
 export 'link_message.dart';
 export 'location_message.dart';
 export 'message_bubble.dart';
+export 'message_card.dart';
 export 'reply_message.dart';
 export 'text_message.dart';
 export 'video_message.dart';

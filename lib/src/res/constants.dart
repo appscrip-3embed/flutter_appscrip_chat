@@ -16,6 +16,7 @@ class IsmChatAssets {
 class IsmChatConstants {
   const IsmChatConstants._();
 
+  static const Duration transitionDuration = Duration(milliseconds: 300);
   static const Duration swipeDuration = Duration(milliseconds: 300);
   static const Duration bottomSheetDuration = Duration(milliseconds: 200);
 

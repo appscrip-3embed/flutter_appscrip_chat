@@ -4,13 +4,11 @@ import 'package:get/get.dart';
 
 class IsmChatMessage extends StatefulWidget {
   IsmChatMessage(this.index, {super.key})
-      : controller = Get.find<IsmChatPageController>(),
-        message =
+      : message =
             Get.find<IsmChatPageController>().messages.reversed.toList()[index];
 
   final IsmChatMessageModel message;
   final int index;
-  final IsmChatPageController controller;
 
   @override
   State<IsmChatMessage> createState() => _IsmChatMessageState();
@@ -20,6 +18,8 @@ class _IsmChatMessageState extends State<IsmChatMessage>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => mounted;
+
+  var controller = Get.find<IsmChatPageController>();
 
   late bool showMessageInCenter;
   late bool isGroup;
@@ -36,7 +36,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
       IsmChatCustomMessageType.removeAdmin,
       IsmChatCustomMessageType.memberLeave,
     ].contains(widget.message.customType!);
-    isGroup = widget.controller.conversation!.isGroup ?? false;
+    isGroup = controller.conversation!.isGroup ?? false;
   }
 
   @override
@@ -55,15 +55,15 @@ class _IsmChatMessageState extends State<IsmChatMessage>
   Widget build(BuildContext context) {
     super.build(context);
     return IsmChatTapHandler(
+      onLongPress: () => controller.showOverlay(context, widget.message),
       onTap: () {
-        widget.controller.closeOverlay();
         if (!showMessageInCenter) {
-          widget.controller.onMessageSelect(widget.message);
+          controller.onMessageSelect(widget.message);
         }
       },
       child: Container(
         padding: IsmChatDimens.edgeInsets4_0,
-        color: widget.controller.selectedMessage.contains(widget.message)
+        color: controller.selectedMessage.contains(widget.message)
             ? IsmChatConfig.chatTheme.primaryColor!.withOpacity(.2)
             : null,
         child: UnconstrainedBox(
@@ -147,18 +147,10 @@ class _Message extends StatelessWidget {
                   ),
                   IsmChatDimens.boxHeight2,
                 ],
-                Row(
-                  children: [
-                    if (!showMessageInCenter && message.sentByMe)
-                      ReactionButton(message),
-                    MessageBubble(
-                      showMessageInCenter: showMessageInCenter,
-                      message: message,
-                      index: index,
-                    ),
-                    if (!showMessageInCenter && !message.sentByMe)
-                      ReactionButton(message),
-                  ],
+                MessageCard(
+                  showMessageInCenter: showMessageInCenter,
+                  message: message,
+                  index: index,
                 ),
               ],
             ),

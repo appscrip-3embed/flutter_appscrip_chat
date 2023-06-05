@@ -5,6 +5,7 @@ export 'chat_message.dart';
 export 'conversation_info.dart';
 export 'conversation_media_widget.dart';
 export 'emoji_board.dart';
+export 'focus_menu.dart';
 export 'group_admin_dialog.dart';
 export 'group_eligiable_user.dart';
 export 'location.dart';

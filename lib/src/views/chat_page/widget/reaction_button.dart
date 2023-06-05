@@ -3,43 +3,6 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ReactionButton extends StatelessWidget {
-  ReactionButton(this.message, {super.key})
-      : _controller = Get.find<IsmChatPageController>();
-
-  final IsmChatMessageModel message;
-  final IsmChatPageController _controller;
-
-  void _showOverlay(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _controller.overlay = Overlay.of(context);
-      final renderBox = context.findRenderObject() as RenderBox;
-      final offset = renderBox.localToGlobal(Offset.zero);
-      _controller.entry = OverlayEntry(
-        builder: (context) => Positioned(
-          top: offset.dy + renderBox.size.height,
-          left: Get.width * 0.05,
-          width: Get.width * 0.9,
-          child: ReactionGrid(message),
-        ),
-      );
-      _controller.overlay!.insert(_controller.entry!);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) => IconButton(
-        onPressed: () {
-          _controller.closeOverlay();
-          _showOverlay(context);
-        },
-        icon: Icon(
-          Icons.sentiment_satisfied_alt_outlined,
-          color: IsmChatColors.greyColor.withOpacity(0.5),
-        ),
-      );
-}
-
 class ReactionGrid extends StatelessWidget {
   ReactionGrid(this.message, {super.key})
       : _controller = Get.find<IsmChatPageController>();
@@ -74,7 +37,6 @@ class ReactionGrid extends StatelessWidget {
                       conversationId: _controller.conversation!.conversationId!,
                     ),
                   );
-                  _controller.closeOverlay();
                 },
                 config: Config(
                   emojiSizeMax: IsmChatDimens.twentyFour,
