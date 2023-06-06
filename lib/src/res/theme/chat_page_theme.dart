@@ -8,6 +8,8 @@ class IsmChatPageThemeData {
     this.selfMessageTheme,
     this.opponentMessageTheme,
     this.constraints,
+    this.unreadCheckColor,
+    this.readCheckColor,
   });
 
   final double? profileImageSize;
@@ -15,4 +17,6 @@ class IsmChatPageThemeData {
   final IsmChatMessageThemeData? selfMessageTheme;
   final IsmChatMessageThemeData? opponentMessageTheme;
   final BoxConstraints? constraints;
+  final Color? unreadCheckColor;
+  final Color? readCheckColor;
 }

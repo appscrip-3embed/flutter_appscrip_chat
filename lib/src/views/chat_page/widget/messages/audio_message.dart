@@ -14,11 +14,21 @@ class IsmChatAudioMessage extends StatelessWidget {
       audioSrc: url,
       played: false,
       me: message.sentByMe,
-      meBgColor: IsmChatConfig.chatTheme.primaryColor!,
-      mePlayIconColor: IsmChatConfig.chatTheme.primaryColor!,
-      contactBgColor: IsmChatConfig.chatTheme.backgroundColor!,
-      contactPlayIconColor: IsmChatConfig.chatTheme.backgroundColor!,
-      contactFgColor: IsmChatConfig.chatTheme.primaryColor!,
+      meBgColor: IsmChatConfig
+              .chatTheme.chatPageTheme?.selfMessageTheme?.backgroundColor ??
+          IsmChatConfig.chatTheme.primaryColor!,
+      mePlayIconColor: IsmChatConfig
+              .chatTheme.chatPageTheme?.selfMessageTheme?.backgroundColor ??
+          IsmChatConfig.chatTheme.primaryColor!,
+      contactBgColor: IsmChatConfig
+              .chatTheme.chatPageTheme?.opponentMessageTheme?.backgroundColor ??
+          IsmChatConfig.chatTheme.backgroundColor!,
+      contactPlayIconColor: IsmChatConfig
+              .chatTheme.chatPageTheme?.opponentMessageTheme?.backgroundColor ??
+          IsmChatConfig.chatTheme.backgroundColor!,
+      contactFgColor: IsmChatConfig
+              .chatTheme.chatPageTheme?.selfMessageTheme?.backgroundColor ??
+          IsmChatConfig.chatTheme.primaryColor!,
       onPlay: () {},
     );
   }

@@ -39,9 +39,7 @@ class IsmChatFileMessage extends StatelessWidget {
               Container(
                 height: context.width * 0.15,
                 width: double.maxFinite,
-                color: (message.sentByMe
-                    ? IsmChatConfig.chatTheme.primaryColor
-                    : IsmChatConfig.chatTheme.backgroundColor)!,
+                color: message.backgroundColor,
                 child: Container(
                   color: (message.sentByMe
                           ? IsmChatColors.whiteColor
@@ -64,9 +62,12 @@ class IsmChatFileMessage extends StatelessWidget {
                       Flexible(
                         child: Text(
                           message.attachments?.first.name ?? '',
-                          style: message.sentByMe
-                              ? IsmChatStyles.w400White12
-                              : IsmChatStyles.w400Black12,
+                          style: (message.sentByMe
+                                  ? IsmChatStyles.w400White12
+                                  : IsmChatStyles.w400Black12)
+                              .copyWith(
+                            color: message.style.color,
+                          ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),

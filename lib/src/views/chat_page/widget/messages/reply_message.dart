@@ -24,9 +24,7 @@ class IsmChatReplyMessage extends StatelessWidget {
               padding: IsmChatDimens.edgeInsets4_0,
               child: Text(
                 message.body,
-                style: message.sentByMe
-                    ? IsmChatStyles.w500White14
-                    : IsmChatStyles.w500Black14,
+                style: message.style,
                 softWrap: true,
                 maxLines: null,
               ),

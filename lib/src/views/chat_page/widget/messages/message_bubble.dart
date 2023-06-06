@@ -31,13 +31,7 @@ class MessageBubble extends StatelessWidget {
         decoration: showMessageInCenter
             ? null
             : BoxDecoration(
-                color: message.sentByMe
-                    ? IsmChatConfig.chatTheme.chatPageTheme?.selfMessageTheme
-                            ?.backgroundColor ??
-                        IsmChatConfig.chatTheme.primaryColor
-                    : IsmChatConfig.chatTheme.chatPageTheme
-                            ?.opponentMessageTheme?.backgroundColor ??
-                        IsmChatConfig.chatTheme.backgroundColor,
+                color: message.backgroundColor,
                 borderRadius: message.sentByMe
                     ? IsmChatConfig.chatTheme.chatPageTheme?.selfMessageTheme
                             ?.borderRadius ??
@@ -70,9 +64,12 @@ class MessageBubble extends StatelessWidget {
                   children: [
                     Text(
                       message.sentAt.toTimeString(),
-                      style: message.sentByMe
-                          ? IsmChatStyles.w400White10
-                          : IsmChatStyles.w400Grey10,
+                      style: (message.sentByMe
+                              ? IsmChatStyles.w400White10
+                              : IsmChatStyles.w400Grey10)
+                          .copyWith(
+                        color: message.style.color,
+                      ),
                     ),
                     if (message.sentByMe) ...[
                       IsmChatDimens.boxWidth2,
@@ -85,8 +82,12 @@ class MessageBubble extends StatelessWidget {
                         color: message.messageId!.isEmpty
                             ? Colors.white
                             : message.readByAll!
-                                ? Colors.blue
-                                : Colors.white,
+                                ? IsmChatConfig.chatTheme.chatPageTheme
+                                        ?.readCheckColor ??
+                                    Colors.blue
+                                : IsmChatConfig.chatTheme.chatPageTheme
+                                        ?.unreadCheckColor ??
+                                    Colors.white,
                         size: IsmChatDimens.forteen,
                       ),
                     ],

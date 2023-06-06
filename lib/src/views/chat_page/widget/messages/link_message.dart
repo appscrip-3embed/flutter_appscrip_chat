@@ -28,25 +28,32 @@ class IsmChatLinkMessage extends StatelessWidget {
             showGraphic: true,
             backgroundColor: Colors.transparent,
             removeElevation: true,
-            bodyStyle: message.sentByMe
-                ? IsmChatStyles.w400White12
-                : IsmChatStyles.w400Black12,
-            titleStyle: message.sentByMe
-                ? IsmChatStyles.w500White14
-                : IsmChatStyles.w500Black14,
+            bodyStyle: (message.sentByMe
+                    ? IsmChatStyles.w400White12
+                    : IsmChatStyles.w400Black12)
+                .copyWith(
+              color: message.style.color,
+            ),
+            titleStyle: message.style,
             bodyTextOverflow: TextOverflow.ellipsis,
             cacheDuration: const Duration(minutes: 5),
             errorWidget: Text(
               IsmChatStrings.errorLoadingPreview,
-              style: message.sentByMe
-                  ? IsmChatStyles.w400White12
-                  : IsmChatStyles.w400Black12,
+              style: (message.sentByMe
+                      ? IsmChatStyles.w400White12
+                      : IsmChatStyles.w400Black12)
+                  .copyWith(
+                color: message.style.color,
+              ),
             ),
             placeholderWidget: Text(
               'Loading preview...',
-              style: message.sentByMe
-                  ? IsmChatStyles.w400White12
-                  : IsmChatStyles.w400Black12,
+              style: (message.sentByMe
+                      ? IsmChatStyles.w400White12
+                      : IsmChatStyles.w400Black12)
+                  .copyWith(
+                color: message.style.color,
+              ),
             ),
           ),
         ),
