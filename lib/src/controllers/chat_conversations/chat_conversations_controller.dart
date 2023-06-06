@@ -74,8 +74,8 @@ class IsmChatConversationsController extends GetxController {
   @override
   onInit() async {
     super.onInit();
+    await _generateReactionList();
     var users = IsmChatConfig.objectBox.userDetailsBox.getAll();
-    _generateReactionList();
     if (users.isNotEmpty) {
       userDetails = users.first;
     } else {
@@ -93,7 +93,7 @@ class IsmChatConversationsController extends GetxController {
     super.onClose();
   }
 
-  _generateReactionList() async {
+  Future<void> _generateReactionList() async {
     reactions = await Future.wait(
       IsmChatEmoji.values.map(
         (e) async => (await EmojiPickerUtils()
