@@ -348,16 +348,14 @@ class IsmChatPageRepository {
     }
   }
 
-  Future<IsmChatResponseModel?> blockUser({
-    required String opponentId,
-  }) async {
+  Future<IsmChatResponseModel?> blockUser(
+      {required String opponentId, bool isLoading = false}) async {
     try {
       final payload = {'opponentId': opponentId};
-      var response = await _apiWrapper.post(
-        IsmChatAPI.blockUser,
-        payload: payload,
-        headers: IsmChatUtility.tokenCommonHeader(),
-      );
+      var response = await _apiWrapper.post(IsmChatAPI.blockUser,
+          payload: payload,
+          headers: IsmChatUtility.tokenCommonHeader(),
+          showLoader: isLoading);
       if (response.hasError) {
         return null;
       }

@@ -999,11 +999,13 @@ class IsmChatPageController extends GetxController
                   opponentId: conversation?.opponentDetails!.userId ?? '',
                   lastMessageTimeStamp: lastMessageTimsStamp,
                   includeMembers: includeMembers,
+                  isLoading: true,
                 )
               : blockUser(
                   opponentId: conversation?.opponentDetails!.userId ?? '',
                   lastMessageTimeStamp: lastMessageTimsStamp,
                   includeMembers: includeMembers,
+                  isLoading: true,
                 );
         },
       ],
@@ -1019,7 +1021,8 @@ class IsmChatPageController extends GetxController
           callbackActions: [
             () => unblockUser(
                 opponentId: conversation?.opponentDetails?.userId ?? '',
-                lastMessageTimeStamp: messages.last.sentAt),
+                lastMessageTimeStamp: messages.last.sentAt,
+                isLoading: true),
           ],
         ),
       );
@@ -1149,16 +1152,18 @@ class IsmChatPageController extends GetxController
     );
   }
 
-  Future<void> blockUser({
-    required String opponentId,
-    required int lastMessageTimeStamp,
-    bool includeMembers = false,
-  }) async {
+  Future<void> blockUser(
+      {required String opponentId,
+      required int lastMessageTimeStamp,
+      bool includeMembers = false,
+      bool isLoading = false}) async {
     var data = await _viewModel.blockUser(
         opponentId: opponentId,
         lastMessageTimeStamp: lastMessageTimeStamp,
-        conversationId: conversation?.conversationId ?? '');
+        conversationId: conversation?.conversationId ?? '',
+        isLoading: isLoading);
     if (data != null) {
+      IsmChatUtility.showToast(IsmChatStrings.blockedSuccessfully);
       await Future.wait([
         Get.find<IsmChatConversationsController>().getBlockUser(),
         getConverstaionDetails(
@@ -1170,13 +1175,15 @@ class IsmChatPageController extends GetxController
     }
   }
 
-  Future<void> unblockUser({
-    required String opponentId,
-    required int lastMessageTimeStamp,
-    bool includeMembers = false,
-  }) async {
+  Future<void> unblockUser(
+      {required String opponentId,
+      required int lastMessageTimeStamp,
+      bool includeMembers = false,
+      bool isLoading = false}) async {
     var isBlocked = await _conversationController.unblockUser(
-        opponentId: opponentId, isLoading: true);
+      opponentId: opponentId,
+      isLoading: isLoading,
+    );
     if (!isBlocked) {
       return;
     }

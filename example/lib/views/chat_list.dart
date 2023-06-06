@@ -42,6 +42,9 @@ class ChatList extends GetView<ChatListController> {
         onCreateChatTap: RouteManagement.goToUserList,
         enableGroupChat: true,
         allowDelete: true,
+        emptyConversationPlaceholder:
+            const IsmChatEmptyView(text: 'Create conversation'),
+
         // isSlidableEnable: (_, conversation) {
         //   return conversation.metaData!.isMatchId!.isNotEmpty ? false : true;
         // },

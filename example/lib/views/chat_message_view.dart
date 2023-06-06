@@ -9,8 +9,15 @@ class ChatMessageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const IsmChatPageView(
-      
+    return IsmChatPageView(
+      emptyChatPlaceholder: IsmChatEmptyView(
+        icon: Icon(
+          Icons.chat_outlined,
+          size: IsmChatDimens.fifty,
+          color: IsmChatColors.greyColor,
+        ),
+        text: 'No Messages',
+      ),
     );
   }
 }

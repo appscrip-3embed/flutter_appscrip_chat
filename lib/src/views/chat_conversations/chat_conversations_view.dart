@@ -23,7 +23,7 @@ class IsmChatConversations extends StatefulWidget {
     this.subtitle,
     this.subtitleBuilder,
     this.isSlidableEnable,
-    this.emptyListPlaceholder,
+    this.emptyConversationPlaceholder,
     super.key,
   });
 
@@ -56,7 +56,7 @@ class IsmChatConversations extends StatefulWidget {
   final bool? Function(BuildContext, IsmChatConversationModel)?
       isSlidableEnable;
 
-  final Widget? emptyListPlaceholder;
+  final Widget? emptyConversationPlaceholder;
 
   @override
   State<IsmChatConversations> createState() => _IsmChatConversationsState();
@@ -93,7 +93,7 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
             subtitle: widget.subtitle,
             subtitleBuilder: widget.subtitleBuilder,
             isSlidableEnable: widget.isSlidableEnable,
-            emptyListPlaceholder: widget.emptyListPlaceholder,
+            emptyConversationPlaceholder: widget.emptyConversationPlaceholder,
           ),
         ),
         floatingActionButton: widget.showCreateChatIcon

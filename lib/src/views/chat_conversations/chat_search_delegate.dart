@@ -9,7 +9,7 @@ class IsmChatSearchDelegate extends SearchDelegate<void> {
   final void Function(BuildContext, IsmChatConversationModel) onChatTap;
   @override
   List<Widget> buildActions(BuildContext context) => [
-        if (query.isNotEmpty)
+        if (query.trim().isNotEmpty)
           IconButton(
             icon: const Icon(Icons.clear_rounded),
             onPressed: () {
@@ -44,13 +44,17 @@ class IsmChatSearchDelegate extends SearchDelegate<void> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    _controller.onSearch(query);
+    _controller.onSearch(query.trim());
     return Obx(
       () => _controller.suggestions.isEmpty
           ? Center(
-              child: Text(
-                IsmChatStrings.noMatch,
-                style: IsmChatStyles.w600Black20,
+              child: SizedBox(
+                width: IsmChatDimens.percentWidth(.6),
+                child: Text(
+                  IsmChatStrings.noMatch,
+                  style: IsmChatStyles.w600Black20,
+                  textAlign: TextAlign.center,
+                ),
               ),
             )
           : ListView.builder(
@@ -63,9 +67,8 @@ class IsmChatSearchDelegate extends SearchDelegate<void> {
                     onChatTap(_, conversation);
                   },
                   child: IsmChatConversationCard(
-                  
                     _controller.suggestions[index],
-                    nameBuilder: (_,__, name) {
+                    nameBuilder: (_, __, name) {
                       if (!name.didMatch(query)) {
                         return null;
                       }
@@ -91,7 +94,7 @@ class IsmChatSearchDelegate extends SearchDelegate<void> {
                         ),
                       );
                     },
-                    subtitleBuilder: (_,__, msg) {
+                    subtitleBuilder: (_, __, msg) {
                       if (!msg.didMatch(query)) {
                         return null;
                       }
