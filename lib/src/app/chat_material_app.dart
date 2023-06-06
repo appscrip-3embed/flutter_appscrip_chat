@@ -137,7 +137,7 @@ class IsmChatApp extends StatelessWidget {
   final Widget? emptyConversationPlaceholder;
 
   /// Call this function for Get Conversation List When on click
-  static void getChatConversation() async {
+  static Future<void> getChatConversation() async {
     await Get.find<IsmChatConversationsController>().getChatConversations();
   }
 
