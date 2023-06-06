@@ -34,7 +34,7 @@ class IsmChatConversationList extends StatefulWidget {
     this.subtitleBuilder,
     this.profileImageUrl,
     this.isSlidableEnable,
-    this.emptyListPlaceholder,
+    this.emptyConversationPlaceholder,
     this.allowDelete = false,
   });
 
@@ -83,7 +83,7 @@ class IsmChatConversationList extends StatefulWidget {
 
   final bool? Function(BuildContext, IsmChatConversationModel)?
       isSlidableEnable;
-  final Widget? emptyListPlaceholder;
+  final Widget? emptyConversationPlaceholder;
 
   @override
   State<IsmChatConversationList> createState() =>
@@ -118,13 +118,10 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                 controller.getChatConversations(origin: ApiCallOrigin.referesh);
               },
               child: Center(
-                child: widget.emptyListPlaceholder ??
-                    Text(
-                      IsmChatStrings.noConversation,
-                      style: IsmChatStyles.w600Black20.copyWith(
-                        color: IsmChatConfig.chatTheme.primaryColor,
-                      ),
-                      textAlign: TextAlign.center,
+                child: widget.emptyConversationPlaceholder ??
+                    const IsmChatEmptyView(
+                      icon: Icon(Icons.chat_outlined),
+                      text: IsmChatStrings.noConversation,
                     ),
               ),
             );

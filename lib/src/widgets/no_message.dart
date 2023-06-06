@@ -1,18 +1,42 @@
-import 'package:appscrip_chat_component/src/res/res.dart';
-import 'package:appscrip_chat_component/src/widgets/widgets.dart';
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
-class IsmChatNoMessage extends StatelessWidget {
-  const IsmChatNoMessage({super.key});
+class IsmChatEmptyView extends StatelessWidget {
+  const IsmChatEmptyView({
+    super.key,
+    required this.text,
+    this.icon,
+  });
+
+  final Widget? icon;
+  final String text;
 
   @override
   Widget build(BuildContext context) => Center(
         child: Padding(
-          padding: IsmChatDimens.edgeInsets16,
-          child: const IsmIconAndText(
-            icon: Icons.chat_outlined,
-            text: IsmChatStrings.noMessages,
-          ),
-        ),
+            padding: IsmChatDimens.edgeInsets16,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (icon != null) ...[
+                  icon!,
+                  IsmChatDimens.boxHeight16,
+                ],
+                Text(
+                  text,
+                  style: IsmChatStyles.w600Black20.copyWith(
+                    color: IsmChatConfig.chatTheme.primaryColor,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            )
+
+            // const IsmIconAndText(
+            //   icon: Icons.chat_outlined,
+            //   text: IsmChatStrings.noMessages,
+            // ),
+            ),
       );
 }

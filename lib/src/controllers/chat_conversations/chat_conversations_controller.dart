@@ -325,7 +325,7 @@ class IsmChatConversationsController extends GetxController {
   }
 
   void onSearch(String query) {
-    if (query.isEmpty) {
+    if (query.trim().isEmpty) {
       suggestions = conversations;
     } else {
       suggestions = conversations

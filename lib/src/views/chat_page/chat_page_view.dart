@@ -168,7 +168,10 @@ class _IsmChatPageView extends StatelessWidget {
                               visible: controller.messages.isNotEmpty &&
                                   controller.messages.length != 1,
                               replacement: emptyChatPlaceholder ??
-                                  const IsmChatNoMessage(),
+                                  const IsmChatEmptyView(
+                                    icon: Icon(Icons.chat_outlined),
+                                    text: IsmChatStrings.noMessages,
+                                  ),
                               child: Align(
                                 alignment: Alignment.topCenter,
                                 child: ListView.builder(

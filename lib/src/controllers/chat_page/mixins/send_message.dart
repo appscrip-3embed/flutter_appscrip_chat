@@ -303,32 +303,34 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         }
       }
     }
-    if (!forwardMessgeForMulitpleUser) {
-      _controller.messages.add(documentMessage!);
-    }
+    if (documentMessage != null) {
+      if (!forwardMessgeForMulitpleUser) {
+        _controller.messages.add(documentMessage);
+      }
 
-    if (sendMessageType == SendMessageType.pendingMessage) {
-      await ismChatObjectBox.addPendingMessage(documentMessage!);
-    } else {
-      await ismChatObjectBox.addForwardMessage(documentMessage!);
+      if (sendMessageType == SendMessageType.pendingMessage) {
+        await ismChatObjectBox.addPendingMessage(documentMessage);
+      } else {
+        await ismChatObjectBox.addForwardMessage(documentMessage);
+      }
+      var notificationTitle =
+          IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+              ? IsmChatConfig.communicationConfig.userConfig.userName
+              : conversationController.userDetails?.userName ?? '';
+      await ismPostMediaUrl(
+        forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
+        isNetWorkUrl: isNetWorkUrl ?? false,
+        imageAndFile: true,
+        bytes: bytes,
+        createdAt: sentAt,
+        ismChatChatMessageModel: documentMessage,
+        mediaId: sentAt.toString(),
+        mediaType: IsmChatAttachmentType.file.value,
+        nameWithExtension: nameWithExtension ?? '',
+        notificationBody: 'Sent you an Document',
+        notificationTitle: notificationTitle,
+      );
     }
-    var notificationTitle =
-        IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-            ? IsmChatConfig.communicationConfig.userConfig.userName
-            : conversationController.userDetails?.userName ?? '';
-    await ismPostMediaUrl(
-      forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
-      isNetWorkUrl: isNetWorkUrl ?? false,
-      imageAndFile: true,
-      bytes: bytes,
-      createdAt: sentAt,
-      ismChatChatMessageModel: documentMessage,
-      mediaId: sentAt.toString(),
-      mediaType: IsmChatAttachmentType.file.value,
-      nameWithExtension: nameWithExtension ?? '',
-      notificationBody: 'Sent you an Document',
-      notificationTitle: notificationTitle,
-    );
   }
 
   Future<void> sendVideo({

@@ -255,22 +255,15 @@ class IsmChatPageViewModel {
           includeMembers: includeMembers,
           isLoading: isLoading);
 
-  Future<List<IsmChatMessageModel>?> blockUser(
+  Future<IsmChatResponseModel?> blockUser(
       {required String opponentId,
       required int lastMessageTimeStamp,
-      required String conversationId}) async {
+      required String conversationId,
+      bool isLoading = false}) async {
     var response = await _repository.blockUser(
-      opponentId: opponentId,
-    );
-    if (!response!.hasError) {
-      var responseMessage = await getChatMessages(
-        conversationId: conversationId,
-        lastMessageTimestamp: lastMessageTimeStamp,
-        isGroup: false,
-      );
-      return responseMessage;
-    }
-    return null;
+        opponentId: opponentId, isLoading: isLoading);
+
+    return response;
   }
 
   /// Add members to a conversation
