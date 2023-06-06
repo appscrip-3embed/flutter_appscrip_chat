@@ -23,26 +23,32 @@ class MessageBubble extends StatelessWidget {
                 maxWidth: context.width * .85,
                 minWidth: context.width * .1,
               )
-            : BoxConstraints(
-                maxWidth: context.width * .8,
-                minWidth: context.width * .25,
-              ),
+            : IsmChatConfig.chatTheme.chatPageTheme?.constraints ??
+                BoxConstraints(
+                  maxWidth: context.width * .8,
+                  minWidth: context.width * .25,
+                ),
         decoration: showMessageInCenter
             ? null
             : BoxDecoration(
                 color: message.sentByMe
-                    ? IsmChatConfig.chatTheme.primaryColor
-                    : IsmChatConfig.chatTheme.backgroundColor,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(IsmChatDimens.twelve),
-                  topLeft: message.sentByMe
-                      ? Radius.circular(IsmChatDimens.twelve)
-                      : Radius.circular(IsmChatDimens.four),
-                  bottomLeft: Radius.circular(IsmChatDimens.twelve),
-                  bottomRight: message.sentByMe
-                      ? Radius.circular(IsmChatDimens.four)
-                      : Radius.circular(IsmChatDimens.twelve),
-                ),
+                    ? IsmChatConfig.chatTheme.chatPageTheme?.selfMessageTheme
+                            ?.backgroundColor ??
+                        IsmChatConfig.chatTheme.primaryColor
+                    : IsmChatConfig.chatTheme.chatPageTheme
+                            ?.opponentMessageTheme?.backgroundColor ??
+                        IsmChatConfig.chatTheme.backgroundColor,
+                borderRadius: message.sentByMe
+                    ? IsmChatConfig.chatTheme.chatPageTheme?.selfMessageTheme
+                            ?.borderRadius ??
+                        BorderRadius.circular(IsmChatDimens.twelve).copyWith(
+                          bottomRight: Radius.circular(IsmChatDimens.four),
+                        )
+                    : IsmChatConfig.chatTheme.chatPageTheme
+                            ?.opponentMessageTheme?.borderRadius ??
+                        BorderRadius.circular(IsmChatDimens.twelve).copyWith(
+                          topLeft: Radius.circular(IsmChatDimens.four),
+                        ),
               ),
         child: Stack(
           children: [

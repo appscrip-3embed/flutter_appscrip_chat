@@ -1,0 +1,18 @@
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:flutter/material.dart';
+
+class IsmChatPageThemeData {
+  IsmChatPageThemeData({
+    this.profileImageSize,
+    this.messageSelectionColor,
+    this.selfMessageTheme,
+    this.opponentMessageTheme,
+    this.constraints,
+  });
+
+  final double? profileImageSize;
+  final Color? messageSelectionColor;
+  final IsmChatMessageThemeData? selfMessageTheme;
+  final IsmChatMessageThemeData? opponentMessageTheme;
+  final BoxConstraints? constraints;
+}

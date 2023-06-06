@@ -10,6 +10,7 @@ class IsmChatThemeData with Diagnosticable {
     Color? mentionColor,
     FloatingActionButtonThemeData? floatingActionButtonTheme,
     IconThemeData? iconTheme,
+    IsmChatPageThemeData? chatPageTheme,
   })  : primaryColor = primaryColor ?? IsmChatThemeData.light().primaryColor,
         backgroundColor =
             backgroundColor ?? IsmChatThemeData.light().backgroundColor,
@@ -17,7 +18,8 @@ class IsmChatThemeData with Diagnosticable {
         floatingActionButtonTheme = floatingActionButtonTheme ??
             IsmChatThemeData.light().floatingActionButtonTheme,
         iconTheme = iconTheme ?? IsmChatThemeData.light().iconTheme,
-        chatListTheme = chatListTheme ?? IsmChatThemeData.light().chatListTheme;
+        chatListTheme = chatListTheme ?? IsmChatThemeData.light().chatListTheme,
+        chatPageTheme = chatPageTheme ?? IsmChatThemeData.light().chatPageTheme;
 
   factory IsmChatThemeData.fallback() => IsmChatThemeData.light();
 
@@ -33,21 +35,48 @@ class IsmChatThemeData with Diagnosticable {
         iconTheme: const IconThemeData(
           color: IsmChatColors.primaryColorLight,
         ),
+        chatPageTheme: IsmChatPageThemeData(
+          profileImageSize: IsmChatDimens.forty,
+          messageSelectionColor: IsmChatColors.primaryColorLight,
+          selfMessageTheme: IsmChatMessageThemeData(
+            backgroundColor: IsmChatColors.primaryColorLight,
+            textStyle: IsmChatStyles.w500White14,
+            textColor: IsmChatColors.whiteColor,
+          ),
+          opponentMessageTheme: IsmChatMessageThemeData(
+            backgroundColor: IsmChatColors.backgroundColorLight,
+            textStyle: IsmChatStyles.w500Black14,
+            textColor: IsmChatColors.textColor,
+          ),
+        ),
       );
 
   factory IsmChatThemeData.dark() => IsmChatThemeData(
-        chatListTheme: const IsmChatListThemeData.dark(),
-        primaryColor: IsmChatColors.primaryColorDark,
-        mentionColor: IsmChatColors.yellowColor,
-        backgroundColor: IsmChatColors.backgroundColorDark,
-        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      chatListTheme: const IsmChatListThemeData.dark(),
+      primaryColor: IsmChatColors.primaryColorDark,
+      mentionColor: IsmChatColors.yellowColor,
+      backgroundColor: IsmChatColors.backgroundColorDark,
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: IsmChatColors.primaryColorDark,
+        foregroundColor: IsmChatColors.whiteColor,
+      ),
+      iconTheme: const IconThemeData(
+        color: IsmChatColors.primaryColorDark,
+      ),
+      chatPageTheme: IsmChatPageThemeData(
+        profileImageSize: IsmChatDimens.forty,
+        messageSelectionColor: IsmChatColors.primaryColorDark,
+        selfMessageTheme: IsmChatMessageThemeData(
           backgroundColor: IsmChatColors.primaryColorDark,
-          foregroundColor: IsmChatColors.whiteColor,
+          textStyle: IsmChatStyles.w500White14,
+          textColor: IsmChatColors.primaryColorLight,
         ),
-        iconTheme: const IconThemeData(
-          color: IsmChatColors.primaryColorDark,
+        opponentMessageTheme: IsmChatMessageThemeData(
+          backgroundColor: IsmChatColors.backgroundColorDark,
+          textStyle: IsmChatStyles.w500Black14,
+          textColor: IsmChatColors.whiteColor,
         ),
-      );
+      ));
 
   final Color? primaryColor;
 
@@ -60,4 +89,6 @@ class IsmChatThemeData with Diagnosticable {
   final FloatingActionButtonThemeData? floatingActionButtonTheme;
 
   final IconThemeData? iconTheme;
+
+  final IsmChatPageThemeData? chatPageTheme;
 }
