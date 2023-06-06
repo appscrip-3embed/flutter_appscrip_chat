@@ -10,12 +10,14 @@ class MessageCard extends StatelessWidget {
     required this.showMessageInCenter,
     required this.message,
     required this.index,
-  }) : controller = Get.find<IsmChatPageController>();
+  })  : controller = Get.find<IsmChatPageController>(),
+        canReply = IsmChatConfig.features.contains(IsmChatFeature.reply);
 
   final bool showMessageInCenter;
   final IsmChatMessageModel message;
   final IsmChatPageController controller;
   final int index;
+  final bool canReply;
 
   @override
   Widget build(BuildContext context) => SwipeTo(
@@ -25,16 +27,20 @@ class MessageCard extends StatelessWidget {
         iconSize: 24,
         onLeftSwipe: showMessageInCenter || !message.sentByMe
             ? null
-            : () {
-                controller
-                    .onReplyTap(controller.messages.reversed.toList()[index]);
-              },
+            : !canReply
+                ? null
+                : () {
+                    controller.onReplyTap(
+                        controller.messages.reversed.toList()[index]);
+                  },
         onRightSwipe: showMessageInCenter || message.sentByMe
             ? null
-            : () {
-                controller
-                    .onReplyTap(controller.messages.reversed.toList()[index]);
-              },
+            : !canReply
+                ? null
+                : () {
+                    controller.onReplyTap(
+                        controller.messages.reversed.toList()[index]);
+                  },
         child: IsmChatTapHandler(
           onTap: () async {
             if (message.messageType == IsmChatMessageType.reply) {

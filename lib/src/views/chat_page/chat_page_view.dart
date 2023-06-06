@@ -5,15 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatPageView extends StatefulWidget {
-  const IsmChatPageView({
+  IsmChatPageView({
     this.onTitleTap,
     this.height,
     this.header,
     this.onBackTap,
     this.emptyChatPlaceholder,
     this.attachments = IsmChatAttachmentType.values,
+    this.features = IsmChatFeature.values,
     super.key,
-  });
+  }) {
+    IsmChatConfig.features = features;
+  }
 
   final void Function(IsmChatConversationModel)? onTitleTap;
   final VoidCallback? onBackTap;
@@ -26,6 +29,12 @@ class IsmChatPageView extends StatefulWidget {
   ///
   /// Defaults to all
   final List<IsmChatAttachmentType> attachments;
+
+  /// It it an optional parameter which take List of `IsmChatFeature` which is an enum.
+  /// Pass in the types of features that you want to allow.
+  ///
+  /// Defaults to all
+  final List<IsmChatFeature> features;
 
   @override
   State<IsmChatPageView> createState() => _IsmChatPageViewState();

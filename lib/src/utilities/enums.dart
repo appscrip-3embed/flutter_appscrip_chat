@@ -210,8 +210,11 @@ enum IsmChatCustomMessageType {
         return IsmChatCustomMessageType.addMember;
       case IsmChatActionEvents.memberLeave:
         return IsmChatCustomMessageType.memberLeave;
+      case IsmChatActionEvents.reactionAdd:
+      case IsmChatActionEvents.reactionRemove:
+      default:
+        return null;
     }
-    return null;
   }
 
   final int value;
@@ -482,4 +485,10 @@ enum IsmChatEmoji {
   @override
   String toString() =>
       'IsmChatEmoji(value: $value, emojiKeyword: $emojiKeyword)';
+}
+
+enum IsmChatFeature {
+  reply,
+  forward,
+  reaction;
 }

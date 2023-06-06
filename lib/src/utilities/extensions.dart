@@ -688,6 +688,12 @@ extension MentionMessage on IsmChatMessageModel {
     ].contains(customType)) {
       menu.remove(IsmChatFocusMenuType.copy);
     }
+    if (!IsmChatConfig.features.contains(IsmChatFeature.reply)) {
+      menu.remove(IsmChatFocusMenuType.reply);
+    }
+    if (!IsmChatConfig.features.contains(IsmChatFeature.forward)) {
+      menu.remove(IsmChatFocusMenuType.forward);
+    }
     return menu;
   }
 }
