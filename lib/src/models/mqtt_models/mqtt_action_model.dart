@@ -52,31 +52,28 @@ class IsmChatMqttActionModel {
         initiatorName: map['initiatorName'] as String? ?? '',
         memberId: map['memberId'] as String? ?? '',
         memberName: map['memberName'] as String? ?? '',
-        action: IsmChatActionEvents.fromName(map['action'] as String ?? ''),
+        action: IsmChatActionEvents.fromName(map['action'] as String? ?? ''),
         reactionType: map['reactionType'] as String? ?? '',
         reactionsCount: map['reactionsCount'] as int? ?? 0,
-
       );
 
-
-  const IsmChatMqttActionModel({
-    this.conversationId,
-    this.userDetails,
-    this.opponentDetails,
-    this.initiatorDetails,
-    this.conversationDetails,
-    this.messageId,
-    this.messageIds,
-    this.lastMessageSentAt,
-    required this.sentAt,
-    required this.action,
-    this.reactionType,
-    this.reactionsCount,
-    this.initiatorId,
-    this.initiatorName,
-    this.memberId,
-    this.memberName
-  });
+  const IsmChatMqttActionModel(
+      {this.conversationId,
+      this.userDetails,
+      this.opponentDetails,
+      this.initiatorDetails,
+      this.conversationDetails,
+      this.messageId,
+      this.messageIds,
+      this.lastMessageSentAt,
+      required this.sentAt,
+      required this.action,
+      this.reactionType,
+      this.reactionsCount,
+      this.initiatorId,
+      this.initiatorName,
+      this.memberId,
+      this.memberName});
   final String? conversationId;
   final IsmChatMqttUserModel? userDetails;
   final IsmChatMqttUserModel? opponentDetails;

@@ -29,6 +29,9 @@ class IsmChatMqttController extends GetxController {
   List<IsmChatTypingModel> get typingUsers => _typingUsers;
   set typingUsers(List<IsmChatTypingModel> value) => _typingUsers.value = value;
 
+  var actionStreamController =
+      StreamController<Map<String, dynamic>>.broadcast();
+
   final RxString _userId = ''.obs;
   String get userId => _userId.value;
   set userId(String value) => _userId.value = value;
@@ -151,8 +154,8 @@ class IsmChatMqttController extends GetxController {
       IsmChatLog(payload);
       if (payload['action'] != null) {
         var actionModel = IsmChatMqttActionModel.fromMap(payload);
-        IsmChatLog(actionModel.reactionType);
         _handleAction(actionModel);
+        actionStreamController.add(payload);
       } else {
         var message = IsmChatMessageModel.fromMap(payload);
         _handleLocalNotification(message);
