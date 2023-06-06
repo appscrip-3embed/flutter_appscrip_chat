@@ -64,6 +64,34 @@ class IsmChatConversationsViewModel {
     return IsmChatUserListModel(users: data, pageToken: response.pageToken);
   }
 
+  Future<IsmChatUserListModel?> getNonBlockUserList(
+      {int sort = 1,
+      int skip = 0,
+      int limit = 20,
+      String searchTag = '',
+      String? opponentId,
+      bool isLoading = false}) async {
+    var response = await _repository.getNonBlockUserList(
+      sort: sort,
+      skip: skip,
+      limit: limit,
+      searchTag: searchTag,
+      isLoading: isLoading,
+    );
+
+    if (response == null) {
+      return null;
+    }
+    var data = [...response.users];
+    data.removeWhere(
+        (e) => e.userId == IsmChatConfig.communicationConfig.userConfig.userId);
+
+    if (opponentId != null) {
+      data.removeWhere((e) => e.userId == opponentId);
+    }
+    return IsmChatUserListModel(users: data, pageToken: response.pageToken);
+  }
+
   Future<IsmChatResponseModel?> deleteChat(String conversationId) async =>
       await _repository.deleteChat(conversationId);
 
@@ -127,4 +155,9 @@ class IsmChatConversationsViewModel {
         presignedUrl: presignedUrl,
         file: file,
       );
+
+  Future<IsmChatResponseModel?> getChatConversationUnreadCount({
+    bool isLoading = false,
+  }) async =>
+      await _repository.getChatConversationUnreadCount(isLoading: isLoading);
 }

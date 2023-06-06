@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/services.dart';
 
@@ -28,6 +29,35 @@ class IsmChatConversationsRepository {
       return user;
     } catch (e, st) {
       IsmChatLog.error('GetUserList $e', st);
+      return null;
+    }
+  }
+
+  Future<IsmChatUserListModel?> getNonBlockUserList({
+    int sort = 1,
+    int skip = 0,
+    int limit = 20,
+    String searchTag = '',
+    bool isLoading = false,
+  }) async {
+    try {
+      String? url;
+      if (searchTag.isNotEmpty) {
+        url =
+            '${IsmChatAPI.nonblockUser}?sort=$sort&skip=$skip&limit=$limit&searchTag=$searchTag';
+      } else {
+        url = '${IsmChatAPI.nonblockUser}?sort=$sort&skip=$skip&limit=$limit';
+      }
+      var response = await _apiWrapper.get(url,
+          headers: IsmChatUtility.commonHeader(), showLoader: isLoading);
+      if (response.hasError) {
+        return null;
+      }
+      var data = jsonDecode(response.data) as Map<String, dynamic>;
+      var user = IsmChatUserListModel.fromMap(data);
+      return user;
+    } catch (e, st) {
+      IsmChatLog.error('Get non block UserList $e', st);
       return null;
     }
   }
@@ -208,6 +238,25 @@ class IsmChatConversationsRepository {
         payload: file,
         headers: {},
         forAwsUpload: true,
+        showLoader: isLoading,
+      );
+
+      if (response.hasError) {
+        return response;
+      }
+      return response;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<IsmChatResponseModel?> getChatConversationUnreadCount({
+    bool isLoading = false,
+  }) async {
+    try {
+      var response = await _apiWrapper.get(
+        '',
+        headers: IsmChatUtility.tokenCommonHeader(),
         showLoader: isLoading,
       );
 

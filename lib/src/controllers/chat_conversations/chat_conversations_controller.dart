@@ -218,6 +218,37 @@ class IsmChatConversationsController extends GetxController {
     usersPageToken = response.pageToken;
   }
 
+  Future<void> getNonBlockUserList(
+      {int sort = 1,
+      int skip = 0,
+      int limit = 20,
+      String searchTag = '',
+      String? opponentId,
+      bool isLoading = false}) async {
+    var response = await _viewModel.getNonBlockUserList(
+      sort: sort,
+      skip: skip,
+      limit: limit,
+      searchTag: searchTag,
+      opponentId: opponentId,
+      isLoading: isLoading,
+    );
+    if (response == null) {
+      return;
+    }
+
+    var users = response.users;
+    users.sort((a, b) => a.userName.compareTo(b.userName));
+
+    forwardedList.addAll(List.from(users)
+        .map((e) => SelectedForwardUser(
+              isUserSelected: false,
+              userDetails: e as UserDetails,
+              isBlocked: blockUsers.map((e) => e.userId).contains(e.userId),
+            ))
+        .toList());
+  }
+
   Future<void> clearAllMessages(String? conversationId) async {
     if (conversationId == null || conversationId.isEmpty) {
       return;
@@ -347,5 +378,11 @@ class IsmChatConversationsController extends GetxController {
       conversationId: conversationId,
       messageId: messageId,
     );
+  }
+
+  Future<void> getChatConversationUnreadCount({
+    bool isLoading = false,
+  }) async {
+    await _viewModel.getChatConversationUnreadCount(isLoading: isLoading);
   }
 }
