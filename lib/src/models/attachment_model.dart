@@ -24,8 +24,8 @@ class AttachmentModel {
         mediaId: map['mediaId'] as String,
         extension: map['extension'] as String,
         attachmentType: map['attachmentType'] == null
-            ? IsmChatAttachmentType.image
-            : IsmChatAttachmentType.fromMap(map['attachmentType'] as int),
+            ? IsmChatMediaType.image
+            : IsmChatMediaType.fromMap(map['attachmentType'] as int),
       );
 
   AttachmentModel({
@@ -49,7 +49,7 @@ class AttachmentModel {
   String? mediaId;
   String? extension;
   @Transient()
-  IsmChatAttachmentType? attachmentType;
+  IsmChatMediaType? attachmentType;
 
   int? get attachmentIndex => attachmentType?.index;
 
@@ -57,10 +57,10 @@ class AttachmentModel {
     if (value == null) {
       attachmentType = null;
     }
-    if (value! < 0 || value >= IsmChatAttachmentType.values.length) {
-      attachmentType = IsmChatAttachmentType.file;
+    if (value! < 0 || value >= IsmChatMediaType.values.length) {
+      attachmentType = IsmChatMediaType.file;
     }
-    attachmentType = IsmChatAttachmentType.values[value];
+    attachmentType = IsmChatMediaType.values[value];
   }
 
   AttachmentModel copyWith({
@@ -71,7 +71,7 @@ class AttachmentModel {
     String? mediaUrl,
     String? mediaId,
     String? extension,
-    IsmChatAttachmentType? attachmentType,
+    IsmChatMediaType? attachmentType,
   }) =>
       AttachmentModel(
         thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,

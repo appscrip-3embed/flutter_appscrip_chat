@@ -271,26 +271,27 @@ enum IsmChatConversationType {
       '${name[0].toUpperCase()}${name.substring(1).toLowerCase()}';
 }
 
-enum IsmChatAttachmentType {
+/// [IsmChatMediaType] is an `Enum` used for passing different type of media to and from API
+enum IsmChatMediaType {
   image(0),
   video(1),
   audio(2),
   file(3);
 
-  const IsmChatAttachmentType(this.value);
+  const IsmChatMediaType(this.value);
 
-  factory IsmChatAttachmentType.fromMap(int value) {
+  factory IsmChatMediaType.fromMap(int value) {
     switch (value) {
       case 0:
-        return IsmChatAttachmentType.image;
+        return IsmChatMediaType.image;
       case 1:
-        return IsmChatAttachmentType.video;
+        return IsmChatMediaType.video;
       case 2:
-        return IsmChatAttachmentType.audio;
+        return IsmChatMediaType.audio;
       case 3:
-        return IsmChatAttachmentType.file;
+        return IsmChatMediaType.file;
       default:
-        return IsmChatAttachmentType.image;
+        return IsmChatMediaType.image;
     }
   }
 
@@ -388,13 +389,13 @@ enum IsmChatFocusMenuType {
       : '${name[0].toUpperCase()}${name.substring(1).toLowerCase()}';
 }
 
-enum IsmChatSheetAttachmentType {
+enum IsmChatAttachmentType {
   camera(1),
   gallery(2),
   document(3),
   location(4);
 
-  const IsmChatSheetAttachmentType(this.value);
+  const IsmChatAttachmentType(this.value);
   final int value;
 
   @override

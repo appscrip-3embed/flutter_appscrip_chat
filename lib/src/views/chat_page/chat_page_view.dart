@@ -11,6 +11,7 @@ class IsmChatPageView extends StatefulWidget {
     this.header,
     this.onBackTap,
     this.emptyChatPlaceholder,
+    this.attachments = IsmChatAttachmentType.values,
     super.key,
   });
 
@@ -19,6 +20,12 @@ class IsmChatPageView extends StatefulWidget {
   final double? height;
   final IsmChatHeader? header;
   final Widget? emptyChatPlaceholder;
+
+  /// It it an optional parameter which take List of `IsmChatAttachmentType` which is an enum.
+  /// Pass in the types of attachments that you want to allow.
+  ///
+  /// Defaults to all
+  final List<IsmChatAttachmentType> attachments;
 
   @override
   State<IsmChatPageView> createState() => _IsmChatPageViewState();
@@ -69,6 +76,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                   header: widget.header,
                   height: widget.height,
                   emptyChatPlaceholder: widget.emptyChatPlaceholder,
+                  attachments: widget.attachments,
                 ),
               )
             : _IsmChatPageView(
@@ -77,6 +85,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                 header: widget.header,
                 height: widget.height,
                 emptyChatPlaceholder: widget.emptyChatPlaceholder,
+                attachments: widget.attachments,
               ),
       );
 }
@@ -88,6 +97,7 @@ class _IsmChatPageView extends StatelessWidget {
     this.height,
     this.header,
     this.emptyChatPlaceholder,
+    this.attachments = IsmChatAttachmentType.values,
   });
 
   final void Function(IsmChatConversationModel)? onTitleTap;
@@ -95,6 +105,7 @@ class _IsmChatPageView extends StatelessWidget {
   final double? height;
   final IsmChatHeader? header;
   final Widget? emptyChatPlaceholder;
+  final List<IsmChatAttachmentType> attachments;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
@@ -199,7 +210,10 @@ class _IsmChatPageView extends StatelessWidget {
                       ),
                     ),
                     SafeArea(
-                      child: IsmChatMessageField(header: header),
+                      child: IsmChatMessageField(
+                        header: header,
+                        attachments: attachments,
+                      ),
                     ),
                     Offstage(
                       offstage: !controller.showEmojiBoard,
