@@ -80,7 +80,8 @@ class MessageBubble extends StatelessWidget {
                                 ? Icons.done_all_rounded
                                 : Icons.done_rounded,
                         color: message.messageId!.isEmpty
-                            ? Colors.white
+                            ? IsmChatConfig.chatTheme.chatPageTheme
+                            ?.unreadCheckColor ?? Colors.white
                             : message.readByAll!
                                 ? IsmChatConfig.chatTheme.chatPageTheme
                                         ?.readCheckColor ??
