@@ -10,6 +10,7 @@ class IsmChatThemeData with Diagnosticable {
     Color? mentionColor,
     FloatingActionButtonThemeData? floatingActionButtonTheme,
     IconThemeData? iconTheme,
+    this.chatPageTheme,
   })  : primaryColor = primaryColor ?? IsmChatThemeData.light().primaryColor,
         backgroundColor =
             backgroundColor ?? IsmChatThemeData.light().backgroundColor,
@@ -60,4 +61,6 @@ class IsmChatThemeData with Diagnosticable {
   final FloatingActionButtonThemeData? floatingActionButtonTheme;
 
   final IconThemeData? iconTheme;
+
+  final IsmChatPageThemeData? chatPageTheme;
 }

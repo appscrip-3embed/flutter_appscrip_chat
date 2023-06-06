@@ -195,25 +195,25 @@ class IsmChatPageController extends GetxController
       label: 'Camera',
       backgroundColor: Colors.blueAccent,
       icon: Icons.camera_alt_rounded,
-      attachmentType: IsmChatSheetAttachmentType.camera,
+      attachmentType: IsmChatAttachmentType.camera,
     ),
     const IsmChatBottomSheetAttachmentModel(
       label: 'Gallery',
       backgroundColor: Colors.purpleAccent,
       icon: Icons.photo_rounded,
-      attachmentType: IsmChatSheetAttachmentType.gallery,
+      attachmentType: IsmChatAttachmentType.gallery,
     ),
     const IsmChatBottomSheetAttachmentModel(
       label: 'Documents',
       backgroundColor: Colors.pinkAccent,
       icon: Icons.description_rounded,
-      attachmentType: IsmChatSheetAttachmentType.document,
+      attachmentType: IsmChatAttachmentType.document,
     ),
     const IsmChatBottomSheetAttachmentModel(
       label: 'Location',
       backgroundColor: Colors.greenAccent,
       icon: Icons.location_on_rounded,
-      attachmentType: IsmChatSheetAttachmentType.location,
+      attachmentType: IsmChatAttachmentType.location,
     ),
   ];
 
@@ -430,25 +430,25 @@ class IsmChatPageController extends GetxController
   }
 
   void onBottomAttachmentTapped(
-    IsmChatSheetAttachmentType attachmentType,
+    IsmChatAttachmentType attachmentType,
   ) async {
     Get.back<void>();
     switch (attachmentType) {
-      case IsmChatSheetAttachmentType.camera:
+      case IsmChatAttachmentType.camera:
         await initializeCamera();
         await Get.to<void>(const IsmChatCameraView());
         break;
-      case IsmChatSheetAttachmentType.gallery:
+      case IsmChatAttachmentType.gallery:
         listOfAssetsPath.clear();
         await Get.to<void>(const IsmChatMediaiAssetsPage());
         break;
-      case IsmChatSheetAttachmentType.document:
+      case IsmChatAttachmentType.document:
         sendDocument(
           conversationId: conversation?.conversationId ?? '',
           userId: conversation?.opponentDetails?.userId ?? '',
         );
         break;
-      case IsmChatSheetAttachmentType.location:
+      case IsmChatAttachmentType.location:
         await Get.to<void>(const IsmChatLocationWidget());
         break;
     }

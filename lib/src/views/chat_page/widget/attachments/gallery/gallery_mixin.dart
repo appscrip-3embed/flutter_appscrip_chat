@@ -48,7 +48,7 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
             .contains(file!.path.split('.').last)) {
           ismChatPageController.listOfAssetsPath.add(AttachmentModel(
               mediaUrl: file.path.toString(),
-              attachmentType: IsmChatAttachmentType.image));
+              attachmentType: IsmChatMediaType.image));
         } else {
           var thumbTempPath = await VideoCompress.getFileThumbnail(
               file.path.toString(),
@@ -57,7 +57,7 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
           ismChatPageController.listOfAssetsPath.add(AttachmentModel(
               thumbnailUrl: thumbTempPath.path,
               mediaUrl: file.path.toString(),
-              attachmentType: IsmChatAttachmentType.video));
+              attachmentType: IsmChatMediaType.video));
         }
       }
     } else {
@@ -243,7 +243,7 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                                   child: IsmChatImage(
                                     controller.listOfAssetsPath[index]
                                                 .attachmentType ==
-                                            IsmChatAttachmentType.video
+                                            IsmChatMediaType.video
                                         ? controller.listOfAssetsPath[index]
                                             .thumbnailUrl
                                             .toString()
@@ -255,7 +255,7 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                                 ),
                                 if (controller.listOfAssetsPath[index]
                                         .attachmentType ==
-                                    IsmChatAttachmentType.video)
+                                    IsmChatMediaType.video)
                                   Container(
                                     alignment: Alignment.center,
                                     width: IsmChatDimens.thirtyTwo,

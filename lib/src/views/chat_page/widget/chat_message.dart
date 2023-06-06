@@ -64,7 +64,9 @@ class _IsmChatMessageState extends State<IsmChatMessage>
       child: Container(
         padding: IsmChatDimens.edgeInsets4_0,
         color: controller.selectedMessage.contains(widget.message)
-            ? IsmChatConfig.chatTheme.primaryColor!.withOpacity(.2)
+            ? (IsmChatConfig.chatTheme.chatPageTheme?.messageSelectionColor ??
+                    IsmChatConfig.chatTheme.primaryColor!)
+                .withOpacity(.2)
             : null,
         child: UnconstrainedBox(
           clipBehavior: Clip.antiAlias,
@@ -86,7 +88,9 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                   IsmChatImage.profile(
                     widget.message.senderInfo?.profileUrl ?? '',
                     name: widget.message.senderInfo?.userName ?? '',
-                    dimensions: 40,
+                    dimensions: IsmChatConfig
+                            .chatTheme.chatPageTheme?.profileImageSize ??
+                        40,
                   )
                 ],
                 _Message(

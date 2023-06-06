@@ -105,7 +105,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     if (_controller.listOfAssetsPath.isNotEmpty) {
       for (var media in _controller.listOfAssetsPath) {
         //TODO: remove await from here
-        if (media.attachmentType == IsmChatAttachmentType.image) {
+        if (media.attachmentType == IsmChatMediaType.image) {
           _controller.imagePath = File(media.mediaUrl!);
           await sendImage(
               conversationId: _controller.conversation?.conversationId ?? '',
@@ -178,7 +178,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         customType: IsmChatCustomMessageType.audio,
         attachments: [
           AttachmentModel(
-            attachmentType: IsmChatAttachmentType.audio,
+            attachmentType: IsmChatMediaType.audio,
             thumbnailUrl: path,
             size: double.parse(bytes.length.toString()),
             name: nameWithExtension,
@@ -220,7 +220,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       createdAt: sentAt,
       ismChatChatMessageModel: audioMessage,
       mediaId: sentAt.toString(),
-      mediaType: IsmChatAttachmentType.audio.value,
+      mediaType: IsmChatMediaType.audio.value,
       nameWithExtension: nameWithExtension ?? '',
       notificationBody: 'Sent you an Audio',
       notificationTitle: notificationTitle,
@@ -281,7 +281,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             customType: IsmChatCustomMessageType.file,
             attachments: [
               AttachmentModel(
-                  attachmentType: IsmChatAttachmentType.file,
+                  attachmentType: IsmChatMediaType.file,
                   thumbnailUrl: x.path,
                   size: double.parse(x.bytes!.length.toString()),
                   name: nameWithExtension,
@@ -325,7 +325,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         createdAt: sentAt,
         ismChatChatMessageModel: documentMessage,
         mediaId: sentAt.toString(),
-        mediaType: IsmChatAttachmentType.file.value,
+        mediaType: IsmChatMediaType.file.value,
         nameWithExtension: nameWithExtension ?? '',
         notificationBody: 'Sent you an Document',
         notificationTitle: notificationTitle,
@@ -409,7 +409,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           customType: IsmChatCustomMessageType.video,
           attachments: [
             AttachmentModel(
-                attachmentType: IsmChatAttachmentType.video,
+                attachmentType: IsmChatMediaType.video,
                 thumbnailUrl: thumbnailFile.path,
                 size: double.parse(bytes.length.toString()),
                 name: nameWithExtension,
@@ -456,13 +456,13 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       createdAt: sentAt,
       ismChatChatMessageModel: videoMessage,
       mediaId: mediaId ?? '',
-      mediaType: IsmChatAttachmentType.video.value,
+      mediaType: IsmChatMediaType.video.value,
       nameWithExtension: nameWithExtension ?? '',
       notificationBody: 'Sent you an Video',
       thumbnailNameWithExtension: thumbnailNameWithExtension,
       thumbnailMediaId: thumbnailMediaId,
       thumbnailBytes: thumbnailBytes,
-      thumbanilMediaType: IsmChatAttachmentType.image.value,
+      thumbanilMediaType: IsmChatMediaType.image.value,
       notificationTitle: notificationTitle,
     );
   }
@@ -521,7 +521,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         customType: IsmChatCustomMessageType.image,
         attachments: [
           AttachmentModel(
-              attachmentType: IsmChatAttachmentType.image,
+              attachmentType: IsmChatMediaType.image,
               thumbnailUrl: compressedFile.path,
               size: double.parse(bytes.length.toString()),
               name: nameWithExtension,
@@ -562,7 +562,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       createdAt: sentAt,
       ismChatChatMessageModel: imageMessage,
       mediaId: mediaId ?? '',
-      mediaType: IsmChatAttachmentType.image.value,
+      mediaType: IsmChatMediaType.image.value,
       nameWithExtension: nameWithExtension ?? '',
       notificationBody: 'Sent you an Image',
       imageAndFile: true,

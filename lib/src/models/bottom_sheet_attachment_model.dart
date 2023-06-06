@@ -12,5 +12,5 @@ class IsmChatBottomSheetAttachmentModel {
   final String label;
   final Color backgroundColor;
   final IconData icon;
-  final IsmChatSheetAttachmentType attachmentType;
+  final IsmChatAttachmentType attachmentType;
 }

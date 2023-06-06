@@ -48,6 +48,7 @@ class IsmChatApp extends StatelessWidget {
     IsmChatConfig.loadingDialog = loadingDialog;
     if (communicationConfig != null) {
       IsmChatConfig.communicationConfig = communicationConfig!;
+      IsmChatConfig.configInitilized = true;
     }
 
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
@@ -135,6 +136,11 @@ class IsmChatApp extends StatelessWidget {
       isSlidableEnable;
   final Widget? emptyConversationPlaceholder;
 
+  /// Call this function for Get Conversation List When on click
+  static void getChatConversation() async {
+    await Get.find<IsmChatConversationsController>().getChatConversations();
+  }
+
   /// Call this function on SignOut to delete the data stored locally in the Local Database
   static void logout() async {
     await IsmChatConfig.objectBox.deleteChatLocalDb();
@@ -164,6 +170,14 @@ class IsmChatApp extends StatelessWidget {
     if (!Get.isRegistered<IsmChatMqttController>()) {
       IsmChatMqttBinding().dependencies();
     }
+  }
+
+  static void addListener(Function(Map<String, dynamic>) listener) {
+    assert(IsmChatConfig.configInitilized,
+        '''MQTT Controller must be initialized before adding listener.
+    Either call IsmChatApp.initializeMqtt() or add listener after IsmChatApp is called''');
+    var mqttController = Get.find<IsmChatMqttController>();
+    mqttController.actionStreamController.stream.listen(listener);
   }
 
   // static Future<void> deleteChat();

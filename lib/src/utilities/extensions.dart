@@ -556,10 +556,11 @@ extension LastMessageBody on LastMessageDetails {
       case IsmChatCustomMessageType.date:
       case IsmChatCustomMessageType.text:
       default:
+        var isReacted = action == IsmChatActionEvents.reactionAdd.name;
         return reactionType?.isNotEmpty == true
             ? sentByMe
-                ? 'You ${action == IsmChatActionEvents.reactionAdd.name ? 'reacted' : 'removed'}  ${reactionType?.reactionString} to a message'
-                : '${action == IsmChatActionEvents.reactionAdd.name ? 'Reacted' : 'Removed'}  ${reactionType?.reactionString} to a message'
+                ? 'You ${isReacted ? 'reacted' : 'removed'} ${reactionType?.reactionString} ${isReacted ? 'to' : 'from'} a message'
+                : '${isReacted ? 'Reacted' : 'Removed'} ${reactionType?.reactionString} ${isReacted ? 'to' : 'from'} a message'
             : body;
     }
   }
@@ -688,6 +689,36 @@ extension MentionMessage on IsmChatMessageModel {
     ].contains(customType)) {
       menu.remove(IsmChatFocusMenuType.copy);
     }
+    if (!IsmChatConfig.features.contains(IsmChatFeature.reply)) {
+      menu.remove(IsmChatFocusMenuType.reply);
+    }
+    if (!IsmChatConfig.features.contains(IsmChatFeature.forward)) {
+      menu.remove(IsmChatFocusMenuType.forward);
+    }
     return menu;
+  }
+
+  TextStyle get style {
+    var theme = IsmChatConfig.chatTheme.chatPageTheme;
+    if (sentByMe) {
+      return (theme?.selfMessageTheme?.textStyle ?? IsmChatStyles.w500White14)
+          .copyWith(
+        color: theme?.selfMessageTheme?.textColor,
+      );
+    }
+    return (theme?.opponentMessageTheme?.textStyle ?? IsmChatStyles.w500Black14)
+        .copyWith(
+      color: theme?.opponentMessageTheme?.textColor,
+    );
+  }
+
+  Color? get backgroundColor {
+    var theme = IsmChatConfig.chatTheme.chatPageTheme;
+    if (sentByMe) {
+      return theme?.selfMessageTheme?.backgroundColor ??
+          IsmChatConfig.chatTheme.primaryColor;
+    }
+    return theme?.opponentMessageTheme?.backgroundColor ??
+        IsmChatConfig.chatTheme.backgroundColor;
   }
 }

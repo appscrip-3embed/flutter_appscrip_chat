@@ -5,9 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatMessageField extends StatelessWidget {
-  const IsmChatMessageField({super.key, required this.header});
+  const IsmChatMessageField({
+    super.key,
+    required this.header,
+    this.attachments = IsmChatAttachmentType.values,
+  });
 
   final IsmChatHeader? header;
+  final List<IsmChatAttachmentType> attachments;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
@@ -62,64 +67,9 @@ class IsmChatMessageField extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         if (controller.isreplying)
-                          Container(
-                            margin: IsmChatDimens.edgeInsets4.copyWith(
-                              bottom: IsmChatDimens.zero,
-                            ),
-                            padding: IsmChatDimens.edgeInsets8,
-                            width: Get.width,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(
-                                IsmChatDimens.sixteen,
-                              ),
-                              color: IsmChatConfig.chatTheme.primaryColor!
-                                  .withOpacity(.5),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      controller.chatMessageModel?.sentByMe ??
-                                              false
-                                          ? IsmChatStrings.you
-                                          : header?.name?.call(
-                                                  context,
-                                                  controller.conversation!,
-                                                  controller.conversation!
-                                                      .chatName) ??
-                                              controller.conversation?.chatName
-                                                  .capitalizeFirst ??
-                                              '',
-                                      style: IsmChatStyles.w600White14,
-                                    ),
-                                    ConstrainedBox(
-                                      constraints: BoxConstraints(
-                                        maxWidth: Get.width * 0.7,
-                                      ),
-                                      child: Text(
-                                        messageBody,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                IsmChatTapHandler(
-                                  onTap: () {
-                                    controller.isreplying = false;
-                                  },
-                                  child: Icon(
-                                    Icons.close_rounded,
-                                    size: IsmChatDimens.sixteen,
-                                  ),
-                                ),
-                              ],
-                            ),
+                          _ReplyMessage(
+                            header: header,
+                            messageBody: messageBody,
                           ),
                         Row(
                           children: [
@@ -165,7 +115,8 @@ class IsmChatMessageField extends StatelessWidget {
                                 },
                               ),
                             ),
-                            const _AttachmentIcon()
+                            if (attachments.isNotEmpty)
+                              _AttachmentIcon(attachments)
                           ],
                         ),
                       ],
@@ -178,6 +129,72 @@ class IsmChatMessageField extends StatelessWidget {
             ],
           );
         },
+      );
+}
+
+class _ReplyMessage extends StatelessWidget {
+  _ReplyMessage({
+    required this.header,
+    required this.messageBody,
+  }) : controller = Get.find<IsmChatPageController>();
+
+  final IsmChatHeader? header;
+  final String messageBody;
+  final IsmChatPageController controller;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        margin: IsmChatDimens.edgeInsets4.copyWith(
+          bottom: IsmChatDimens.zero,
+        ),
+        padding: IsmChatDimens.edgeInsets8,
+        width: Get.width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(
+            IsmChatDimens.sixteen,
+          ),
+          color: IsmChatConfig.chatTheme.primaryColor!.withOpacity(.5),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  controller.chatMessageModel?.sentByMe ?? false
+                      ? IsmChatStrings.you
+                      : header?.name?.call(context, controller.conversation!,
+                              controller.conversation!.chatName) ??
+                          controller.conversation?.chatName.capitalizeFirst ??
+                          '',
+                  style: IsmChatStyles.w600White14,
+                ),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: Get.width * 0.7,
+                  ),
+                  child: Text(
+                    messageBody,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+            IsmChatTapHandler(
+              onTap: () {
+                controller.isreplying = false;
+              },
+              child: Icon(
+                Icons.close_rounded,
+                size: IsmChatDimens.sixteen,
+              ),
+            ),
+          ],
+        ),
       );
 }
 
@@ -299,7 +316,9 @@ class _MicOrSendButton extends StatelessWidget {
 }
 
 class _AttachmentIcon extends GetView<IsmChatPageController> {
-  const _AttachmentIcon();
+  const _AttachmentIcon(this.attachments);
+
+  final List<IsmChatAttachmentType> attachments;
 
   @override
   Widget build(BuildContext context) => IconButton(
@@ -308,7 +327,7 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
             controller.showDialogCheckBlockUnBlock();
           } else {
             await Get.bottomSheet(
-              const IsmChatAttachmentCard(),
+              IsmChatAttachmentCard(attachments),
               enterBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
               exitBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
               elevation: 0,

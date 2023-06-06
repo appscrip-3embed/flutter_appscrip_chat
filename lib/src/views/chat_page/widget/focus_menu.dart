@@ -5,18 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatFocusMenu extends StatelessWidget {
-  const IsmChatFocusMenu(
+  IsmChatFocusMenu(
     this.message, {
     super.key,
     required this.animation,
     this.blur,
     this.blurBackgroundColor,
-  });
+  }) : canReact = IsmChatConfig.features.contains(IsmChatFeature.reaction);
 
   final double? blur;
   final Color? blurBackgroundColor;
   final IsmChatMessageModel message;
   final Animation<double> animation;
+  final bool canReact;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -46,10 +47,11 @@ class IsmChatFocusMenu extends StatelessWidget {
                       ? CrossAxisAlignment.end
                       : CrossAxisAlignment.start,
                   children: [
-                    _FocusAnimationBuilder(
-                      animation: animation,
-                      child: ReactionGrid(message),
-                    ),
+                    if (canReact)
+                      _FocusAnimationBuilder(
+                        animation: animation,
+                        child: ReactionGrid(message),
+                      ),
                     IsmChatDimens.boxHeight8,
                     Hero(
                       tag: message,

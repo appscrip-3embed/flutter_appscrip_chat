@@ -18,19 +18,14 @@ class IsmChatTextMessage extends StatelessWidget {
           child: RichText(
             text: TextSpan(
               text: message.mentionedUsers.isNullOrEmpty ? message.body : null,
-              style: message.sentByMe
-                  ? IsmChatStyles.w500White14
-                  : IsmChatStyles.w500Black14,
+              style: message.style,
               children: message.mentionedUsers.isNullOrEmpty
                   ? null
                   : message.mentionList
                       .map(
                         (e) => TextSpan(
                           text: e.text,
-                          style: (message.sentByMe
-                                  ? IsmChatStyles.w500White14
-                                  : IsmChatStyles.w500Black14)
-                              .copyWith(
+                          style: (message.style).copyWith(
                             color: e.isMentioned
                                 ? message.sentByMe
                                     ? IsmChatConfig.chatTheme.mentionColor

@@ -75,9 +75,7 @@ class _IsmChatLocationMessageState extends State<IsmChatLocationMessage> {
               padding: IsmChatDimens.edgeInsets4_0,
               child: Text(
                 widget.message.metaData?.locationAddress ?? '',
-                style: widget.message.sentByMe
-                    ? IsmChatStyles.w600White16
-                    : IsmChatStyles.w600Black16,
+                style: widget.message.style,
               ),
             ),
             FutureBuilder<List<Placemark>>(
@@ -106,9 +104,12 @@ class _IsmChatLocationMessageState extends State<IsmChatLocationMessage> {
                     addressDetails.toAddress(),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
-                    style: widget.message.sentByMe
-                        ? IsmChatStyles.w400White12
-                        : IsmChatStyles.w400Black12,
+                    style: (widget.message.sentByMe
+                            ? IsmChatStyles.w400White12
+                            : IsmChatStyles.w400Black12)
+                        .copyWith(
+                      color: widget.message.style.color,
+                    ),
                   ),
                 );
               },
