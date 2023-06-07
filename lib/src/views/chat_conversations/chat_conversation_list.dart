@@ -110,7 +110,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
           if (controller.conversations.isEmpty) {
             return SmartRefresher(
               physics: const ClampingScrollPhysics(),
-              controller: controller.refreshController,
+              controller: controller.refreshControllerOnEmptyList,
               enablePullDown: true,
               enablePullUp: true,
               onRefresh: () {

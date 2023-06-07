@@ -41,6 +41,13 @@ class IsmChatConversationsController extends GetxController {
     initialLoadStatus: LoadStatus.idle,
   );
 
+
+  /// Refresh Controller on Empty List
+  final refreshControllerOnEmptyList = RefreshController(
+    initialRefresh: false,
+    initialLoadStatus: LoadStatus.idle,
+  );
+
   var userListScrollController = ScrollController();
 
   var conversationScrollController = ScrollController();
@@ -322,8 +329,12 @@ class IsmChatConversationsController extends GetxController {
       refreshController.refreshCompleted(
         resetFooterState: true,
       );
+      refreshControllerOnEmptyList.refreshCompleted(
+        resetFooterState: true,
+      );
     } else if (origin == ApiCallOrigin.loadMore) {
       refreshController.loadComplete();
+      refreshControllerOnEmptyList.loadComplete();
     }
 
     if (conversations.isEmpty) {
