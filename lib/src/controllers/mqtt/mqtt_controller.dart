@@ -255,6 +255,9 @@ class IsmChatMqttController extends GetxController {
         _handleRemoveReaction(actionModel);
 
         break;
+      case IsmChatActionEvents.conversationDetailsUpdated:
+        // TODO: Handle this case.
+        break;
     }
   }
 

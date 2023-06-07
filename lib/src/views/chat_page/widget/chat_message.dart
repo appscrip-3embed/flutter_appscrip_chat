@@ -55,7 +55,11 @@ class _IsmChatMessageState extends State<IsmChatMessage>
   Widget build(BuildContext context) {
     super.build(context);
     return IsmChatTapHandler(
-      onLongPress: () => controller.showOverlay(context, widget.message),
+      onLongPress: () {
+        if (!showMessageInCenter) {
+          controller.showOverlay(context, widget.message);
+        }
+      },
       onTap: () {
         if (!showMessageInCenter) {
           controller.onMessageSelect(widget.message);

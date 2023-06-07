@@ -27,12 +27,14 @@ class IsmChatForwardView extends StatelessWidget {
           var chatConversationController =
               Get.find<IsmChatConversationsController>();
           chatConversationController.forwardedList.clear();
-          chatConversationController.usersPageToken = '';
-          chatConversationController.getUserList(
-              opponentId: conversation.opponentDetails?.userId);
+          chatConversationController.hasMore = true;
+          chatConversationController.isLoadingUsers = false;
+          chatConversationController.getNonBlockUserList(
+            opponentId: conversation.opponentDetails?.userId,
+          );
         },
         builder: (controller) => Scaffold(
-           backgroundColor: IsmChatColors.whiteColor,
+          backgroundColor: IsmChatColors.whiteColor,
           appBar: IsmChatAppBar(
             title:
                 'Forward to...  ${controller.forwardedList.selectedUsers.isEmpty ? '' : controller.forwardedList.selectedUsers.length}',
@@ -47,37 +49,54 @@ class IsmChatForwardView extends StatelessWidget {
                           controller: controller.userListScrollController,
                           padding: IsmChatDimens.edgeInsets0_10,
                           shrinkWrap: true,
-                          itemCount: controller.forwardedList.length,
+                          itemCount: controller.forwardedList.length + 1,
                           separatorBuilder: (_, __) => IsmChatDimens.boxHeight4,
                           itemBuilder: (_, index) {
-                            var conversation =
-                                controller.forwardedList[index].userDetails;
-                            return IsmChatTapHandler(
-                              onTap: () => controller.onForwardUserTap(index),
-                              child: Container(
-                                color: controller
-                                        .forwardedList[index].isUserSelected
-                                    ? IsmChatConfig.chatTheme.primaryColor!
-                                        .withOpacity(.2)
-                                    : null,
-                                child: ListTile(
-                                  dense: true,
-                                  leading: IsmChatImage.profile(
-                                    conversation.userProfileImageUrl,
-                                  ),
-                                  title: Text(
-                                    conversation.userName,
-                                    style: IsmChatStyles.w600Black14,
-                                  ),
-                                  subtitle: Text(
-                                    conversation.userIdentifier,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: IsmChatStyles.w400Black12,
+                            if (index < controller.forwardedList.length) {
+                              var conversation =
+                                  controller.forwardedList[index].userDetails;
+                              return IsmChatTapHandler(
+                                onTap: () => controller.onForwardUserTap(index),
+                                child: Container(
+                                  color: controller
+                                          .forwardedList[index].isUserSelected
+                                      ? IsmChatConfig.chatTheme.primaryColor!
+                                          .withOpacity(.2)
+                                      : null,
+                                  child: ListTile(
+                                    dense: true,
+                                    leading: IsmChatImage.profile(
+                                      conversation.userProfileImageUrl,
+                                    ),
+                                    title: Text(
+                                      conversation.userName,
+                                      style: IsmChatStyles.w600Black14,
+                                    ),
+                                    subtitle: Text(
+                                      conversation.userIdentifier,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: IsmChatStyles.w400Black12,
+                                    ),
+                                    trailing: Text(conversation.lastSeen
+                                        .toLastMessageTimeString()),
                                   ),
                                 ),
-                              ),
-                            );
+                              );
+                            } else {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: IsmChatDimens.thirtyTwo),
+                                child: Center(
+                                  child: controller.hasMore
+                                      ? const CircularProgressIndicator()
+                                      : Text(
+                                          'No more user to load',
+                                          style: IsmChatStyles.w600Black16,
+                                        ),
+                                ),
+                              );
+                            }
                           },
                         ),
                       ),

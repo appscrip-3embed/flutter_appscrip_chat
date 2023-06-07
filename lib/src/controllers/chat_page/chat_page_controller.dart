@@ -1170,7 +1170,7 @@ class IsmChatPageController extends GetxController
           conversationId: conversation?.conversationId ?? '',
           includeMembers: includeMembers,
         ),
-        getMessagesFromDB(conversation?.conversationId ?? ''),
+        getMessagesFromAPI()
       ]);
     }
   }

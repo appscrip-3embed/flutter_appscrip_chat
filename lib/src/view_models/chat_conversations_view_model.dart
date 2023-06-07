@@ -64,13 +64,14 @@ class IsmChatConversationsViewModel {
     return IsmChatUserListModel(users: data, pageToken: response.pageToken);
   }
 
-  Future<IsmChatUserListModel?> getNonBlockUserList(
-      {int sort = 1,
-      int skip = 0,
-      int limit = 20,
-      String searchTag = '',
-      String? opponentId,
-      bool isLoading = false}) async {
+  Future<IsmChatUserListModel?> getNonBlockUserList({
+    int sort = 1,
+    int skip = 0,
+    int limit = 20,
+    String searchTag = '',
+    String? opponentId,
+    bool isLoading = false,
+  }) async {
     var response = await _repository.getNonBlockUserList(
       sort: sort,
       skip: skip,
@@ -164,6 +165,10 @@ class IsmChatConversationsViewModel {
   Future<IsmChatResponseModel?> updateConversation({
     required String conversationId,
     required IsmChatMetaData metaData,
-    bool isLoading =false,
-  }) async => await _repository.updateConversation(conversationId : conversationId ,metaData :metaData, isLoading : isLoading);
+    bool isLoading = false,
+  }) async =>
+      await _repository.updateConversation(
+          conversationId: conversationId,
+          metaData: metaData,
+          isLoading: isLoading);
 }
