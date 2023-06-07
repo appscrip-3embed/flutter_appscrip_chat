@@ -95,7 +95,8 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
                   ],
                   Flexible(
                     child: Text(
-                      widget.conversation.lastMessageDetails!.messageBody,
+                      widget.conversation.lastMessageDetails?.messageBody ??
+                      '',
                       style: IsmChatStyles.w400Black12,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

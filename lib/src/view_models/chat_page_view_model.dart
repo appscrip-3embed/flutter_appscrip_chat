@@ -32,6 +32,7 @@ class IsmChatPageViewModel {
           IsmChatActionEvents.deleteConversationLocally.name,
           IsmChatActionEvents.reactionAdd.name,
           IsmChatActionEvents.reactionRemove.name,
+          IsmChatActionEvents.conversationDetailsUpdated.name,
           if (e.memberId !=
               IsmChatConfig.communicationConfig.userConfig.userId) ...[
             IsmChatActionEvents.removeAdmin.name,

@@ -136,6 +136,15 @@ class IsmChatApp extends StatelessWidget {
       isSlidableEnable;
   final Widget? emptyConversationPlaceholder;
 
+  /// Call this function for Get all Conversation List
+  static Future<List<IsmChatConversationModel>> getAllConversation() async => IsmChatConfig.objectBox.getAllConversations();
+
+  /// Call this function for update conversation Details in meta data
+  static Future<void> updateConversation ({required String conversationId, required IsmChatMetaData metaData }) async =>
+  await Get.find<IsmChatConversationsController>().updateConversation(conversationId: conversationId, metaData: metaData);
+
+
+
   /// Call this function for Get Conversation List When on click
   static Future<void> getChatConversation() async {
     await Get.find<IsmChatConversationsController>().getChatConversations();
@@ -257,15 +266,9 @@ class IsmChatApp extends StatelessWidget {
     (onNavigateToChat ?? IsmChatConfig.onChatTap)
         .call(Get.context!, conversation);
 
-    var conversations = IsmChatConfig.objectBox.getAllConversations();
-    var isConversation = conversations.where((e) => e.conversationId == conversation.conversationId).toList();
-    if(isConversation.isNotEmpty){
-      var conversation = isConversation.first;
-      if((conversation.metaData?.isMatchId == null ||  conversation.metaData?.isMatchId?.isEmpty ==  true) && conversation.metaData?.userId == null ||  conversation.metaData?.userId?.isEmpty ==  true){
-      await  controller.updateConversation(conversationId: conversationId, metaData: metaData!);
-      }
-    }
   }
+
+
 
   static final RxBool _isMqttConnected = false.obs;
   static bool get isMqttConnected => _isMqttConnected.value;
