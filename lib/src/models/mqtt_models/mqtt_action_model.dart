@@ -9,45 +9,44 @@ class IsmChatMqttActionModel {
 
   factory IsmChatMqttActionModel.fromMap(Map<String, dynamic> map) =>
       IsmChatMqttActionModel(
-        conversationId: map['conversationId'] != null
-            ? map['conversationId'] as String
-            : null,
-        messageId: map['messageId'] as String?,
+        conversationId: map['conversationId'] as String? ?? '',
+        messageId: map['messageId'] as String? ?? '',
         messageIds: map['messageIds'] != null
             ? List<String>.from((map['messageIds'] as List<dynamic>)
                 .map<dynamic>((dynamic x) => x))
             : [],
         userDetails: map['userId'] != null
             ? IsmChatMqttUserModel(
-                userId: map['userId'] as String,
-                userName:
-                    map['userName'] != null ? map['userName'] as String : '',
-                userIdentifier: map['userIdentifier'] as String?,
-                profileImageUrl: map['userProfileImageUrl'] as String?,
+                userId: map['userId'] as String? ?? '',
+                userName: map['userName'] as String? ?? '',
+                userIdentifier: map['userIdentifier'] as String? ?? '',
+                profileImageUrl: map['userProfileImageUrl'] as String? ?? '',
               )
             : null,
         opponentDetails: map['opponentId'] != null
             ? IsmChatMqttUserModel(
-                userId: map['opponentId'] as String,
-                userName: map['opponentName'] as String,
-                userIdentifier: map['opponentIdentifier'] as String?,
-                profileImageUrl: map['opponentProfileImageUrl'] as String?,
+                userId: map['opponentId'] as String? ?? '',
+                userName: map['opponentName'] as String? ?? '',
+                userIdentifier: map['opponentIdentifier'] as String? ?? '',
+                profileImageUrl:
+                    map['opponentProfileImageUrl'] as String? ?? '',
               )
             : null,
         initiatorDetails: map['initiatorId'] != null
             ? IsmChatMqttUserModel(
-                userId: map['initiatorId'] as String,
-                userName: map['initiatorName'] as String,
-                userIdentifier: map['initiatorIdentifier'] as String?,
-                profileImageUrl: map['initiatorProfileImageUrl'] as String?,
+                userId: map['initiatorId'] as String? ?? '',
+                userName: map['initiatorName'] as String? ?? '',
+                userIdentifier: map['initiatorIdentifier'] as String? ?? '',
+                profileImageUrl:
+                    map['initiatorProfileImageUrl'] as String? ?? '',
               )
             : null,
         conversationDetails: map['conversationDetails'] != null
             ? IsmChatConversationModel.fromMap(
                 map['conversationDetails'] as Map<String, dynamic>)
             : null,
-        sentAt: map['sentAt'] as int,
-        lastMessageSentAt: map['lastMessageSentAt'] as int?,
+        sentAt: map['sentAt'] as int? ?? 0,
+        lastMessageSentAt: map['lastMessageSentAt'] as int? ?? 0,
         initiatorId: map['initiatorId'] as String? ?? '',
         initiatorName: map['initiatorName'] as String? ?? '',
         memberId: map['memberId'] as String? ?? '',
