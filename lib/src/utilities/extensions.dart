@@ -192,7 +192,7 @@ extension DateFormats on DateTime {
 
 extension ChildWidget on IsmChatCustomMessageType {
   Widget messageType(IsmChatMessageModel message) {
-    IsmChatLog.error('rahulsaryam $this == $message');
+   
     switch (this) {
       case IsmChatCustomMessageType.text:
         return IsmChatTextMessage(message);
