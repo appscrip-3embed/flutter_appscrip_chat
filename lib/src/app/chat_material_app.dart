@@ -180,14 +180,6 @@ class IsmChatApp extends StatelessWidget {
     mqttController.actionStreamController.stream.listen(listener);
   }
 
-  /// This function can be used for get all conversation from database
-  static Future<void> getAllConversation()
-    async => IsmChatConfig.objectBox.getAllConversations();
-
-
-  // static Future<void> updateConversationWithMetaData(){
-  //
-  // }
 
 
 
