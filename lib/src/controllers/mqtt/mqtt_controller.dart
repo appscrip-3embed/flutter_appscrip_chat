@@ -323,23 +323,23 @@ class IsmChatMqttController extends GetxController {
 
     String? mqttMessage;
     if (message.customType == IsmChatCustomMessageType.image) {
-      mqttMessage = message.body;
+      mqttMessage = message.notificationBody;
     } else if (message.customType == IsmChatCustomMessageType.video) {
-      mqttMessage = message.body;
+      mqttMessage = message.notificationBody;
     } else if (message.customType == IsmChatCustomMessageType.file) {
-      mqttMessage = message.body;
+      mqttMessage = message.notificationBody;
     } else if (message.customType == IsmChatCustomMessageType.audio) {
-      mqttMessage = message.body;
+      mqttMessage = message.notificationBody;
     } else if (message.customType == IsmChatCustomMessageType.location) {
-      mqttMessage = 'Location';
+      mqttMessage = message.notificationBody;
     } else if (message.customType == IsmChatCustomMessageType.reply) {
-      mqttMessage = message.body;
+      mqttMessage = message.notificationBody;
     } else if (message.customType == IsmChatCustomMessageType.forward) {
-      mqttMessage = message.body;
+      mqttMessage = message.notificationBody;
     } else if (message.customType == IsmChatCustomMessageType.link) {
-      mqttMessage = message.body;
+      mqttMessage = message.notificationBody;
     } else {
-      mqttMessage = message.body;
+      mqttMessage = message.notificationBody;
     }
     if (Get.isRegistered<IsmChatPageController>()) {
       var chatController = Get.find<IsmChatPageController>();
@@ -347,16 +347,16 @@ class IsmChatMqttController extends GetxController {
           message.conversationId) {
         LocalNoticeService().cancelAllNotification();
         LocalNoticeService().addNotification(
-          message.chatName, // Add the  sender user name here
-          mqttMessage, // MessageName
+          message.notificationTitle ?? '', // Add the  sender user name here
+          mqttMessage ?? '', // MessageName
           DateTime.now().millisecondsSinceEpoch + 1 * 1000,
           sound: '',
           channel: 'message',
         );
         if (Platform.isAndroid) {
           Get.snackbar(
-            message.chatName,
-            mqttMessage,
+            message.notificationTitle ?? '',
+            mqttMessage ?? '',
             icon: const Icon(Icons.message),
           );
         }
@@ -364,16 +364,16 @@ class IsmChatMqttController extends GetxController {
     } else {
       LocalNoticeService().cancelAllNotification();
       LocalNoticeService().addNotification(
-        message.chatName, // Add the  sender user name here
-        mqttMessage, // MessageName
+        message.notificationTitle ?? '',
+        mqttMessage ?? '',
         DateTime.now().millisecondsSinceEpoch + 1 * 1000,
         sound: '',
         channel: 'message',
       );
       if (Platform.isAndroid) {
         Get.snackbar(
-          message.chatName,
-          mqttMessage,
+          message.notificationTitle ?? '',
+          mqttMessage ?? '',
           icon: const Icon(Icons.message),
         );
       }

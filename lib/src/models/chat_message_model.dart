@@ -92,6 +92,8 @@ class IsmChatMessageModel {
                   (e) => UserDetails.fromMap(e as Map<String, dynamic>),
                 ),
               ),
+      notificationTitle : map['notificationTitle'] as String? ?? '',
+      notificationBody : map['notificationBody'] as String? ?? '',
         reactions: (map['reactions'].runtimeType == List)
             ? (map['reactions'] as List)
                 .map((e) => MessageReactionModel.fromJson(e as String))
@@ -105,7 +107,9 @@ class IsmChatMessageModel {
                         (map['reactions'][e] as List<dynamic>).cast<String>(),
                   ),
                 )
-                .toList());
+                .toList(),
+
+    );
     return model.copyWith(
       customType: model.customType != null &&
               model.customType != IsmChatCustomMessageType.text
@@ -162,7 +166,10 @@ class IsmChatMessageModel {
       initiatorId: '',
       initiatorName: '',
       members: [],
-      reactions: null);
+      reactions: null,
+    notificationBody: '',
+    notificationTitle: '',
+  );
 
   IsmChatMessageModel({
     required this.body,
@@ -206,6 +213,8 @@ class IsmChatMessageModel {
     this.memberId,
     this.memberName,
     this.reactions,
+    this.notificationBody,
+    this.notificationTitle
   });
 
   String body;
@@ -249,6 +258,8 @@ class IsmChatMessageModel {
   String? memberId;
   String? memberName;
   List<MessageReactionModel>? reactions;
+  String? notificationBody;
+      String? notificationTitle;
 
   String get chatName => conversationTitle ?? senderInfo?.userName ?? '';
 
@@ -301,6 +312,8 @@ class IsmChatMessageModel {
     String? memberId,
     String? memberName,
     List<MessageReactionModel>? reactions,
+    String? notificationBody,
+    String? notificationTitle,
   }) =>
       IsmChatMessageModel(
           body: body ?? this.body,
@@ -345,7 +358,10 @@ class IsmChatMessageModel {
           members: members ?? this.members,
           memberId: memberId ?? this.memberId,
           memberName: memberName ?? this.memberName,
-          reactions: reactions ?? this.reactions);
+          reactions: reactions ?? this.reactions,
+        notificationBody: notificationBody ??  this.notificationBody,
+        notificationTitle : notificationTitle ??  this.notificationTitle,
+      );
 
   Map<String, dynamic> toMap() => {
         'body': IsmChatUtility.encodePayload(body),
@@ -388,7 +404,9 @@ class IsmChatMessageModel {
         'members': members?.map((e) => e.toMap()).toList(),
         'memberId': memberId,
         'memberName': memberName,
-        'reactions': reactions
+        'reactions': reactions,
+    'notificationBody': notificationBody ,
+    'notificationTitle' : notificationTitle ,
       };
 
   String toJson() => json.encode(toMap());
