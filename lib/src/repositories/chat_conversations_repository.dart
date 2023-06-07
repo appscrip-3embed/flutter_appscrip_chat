@@ -44,9 +44,9 @@ class IsmChatConversationsRepository {
       String? url;
       if (searchTag.isNotEmpty) {
         url =
-            '${IsmChatAPI.nonblockUser}?sort=$sort&skip=$skip&limit=$limit&searchTag=$searchTag';
+            '${IsmChatAPI.nonBlockUser}?sort=$sort&skip=$skip&limit=$limit&searchTag=$searchTag';
       } else {
-        url = '${IsmChatAPI.nonblockUser}?sort=$sort&skip=$skip&limit=$limit';
+        url = '${IsmChatAPI.nonBlockUser}?sort=$sort&skip=$skip&limit=$limit';
       }
       var response = await _apiWrapper.get(url,
           headers: IsmChatUtility.commonHeader(), showLoader: isLoading);
@@ -255,7 +255,33 @@ class IsmChatConversationsRepository {
   }) async {
     try {
       var response = await _apiWrapper.get(
-        '',
+        IsmChatAPI.conversationUnreadCount,
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading,
+      );
+
+      if (response.hasError) {
+        return response;
+      }
+      return response;
+    } catch (e) {
+      return null;
+    }
+  }
+
+
+  Future<IsmChatResponseModel?> updateConversation({
+    required String conversationId,
+    required IsmChatMetaData metaData,
+    bool isLoading =false,
+  })  async {
+    try {
+      var response = await _apiWrapper.patch(
+        IsmChatAPI.conversationDetails,
+        payload: {
+          'conversationId' : conversationId,
+          'metaData' : metaData.toMap()
+        },
         headers: IsmChatUtility.tokenCommonHeader(),
         showLoader: isLoading,
       );

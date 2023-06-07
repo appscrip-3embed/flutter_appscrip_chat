@@ -179,8 +179,8 @@ class IsmChatConversationsController extends GetxController {
   void userListScrollListener() {
     userListScrollController.addListener(
       () {
-        if (userListScrollController.offset >=
-            userListScrollController.position.maxScrollExtent) {
+        if (
+            userListScrollController.position.maxScrollExtent == userListScrollController.offset) {
           if (usersPageToken.isNotEmpty) {
             getUserList();
           }
@@ -384,5 +384,14 @@ class IsmChatConversationsController extends GetxController {
     bool isLoading = false,
   }) async {
     await _viewModel.getChatConversationUnreadCount(isLoading: isLoading);
+  }
+
+
+  Future<void> updateConversation({
+    required String conversationId,
+    required IsmChatMetaData metaData,
+   bool isLoading =false,
+}) async {
+    await _viewModel.updateConversation(conversationId : conversationId ,metaData :metaData, isLoading : isLoading);
   }
 }

@@ -160,4 +160,10 @@ class IsmChatConversationsViewModel {
     bool isLoading = false,
   }) async =>
       await _repository.getChatConversationUnreadCount(isLoading: isLoading);
+
+  Future<IsmChatResponseModel?> updateConversation({
+    required String conversationId,
+    required IsmChatMetaData metaData,
+    bool isLoading =false,
+  }) async => await _repository.updateConversation(conversationId : conversationId ,metaData :metaData, isLoading : isLoading);
 }

@@ -16,6 +16,8 @@ class IsmChatAPI {
   static const String chatConversationDelete = '$chatConversation/local';
   static const String getChatConversations = '$baseUrl/chat/conversations';
   static const String conversationDetails = '$chatConversation/details';
+  static const String conversationUnreadCount = '${chatConversation}s/unread/count';
+
   static const String conversationMembers = '$chatConversation/members';
   static const String eligibleMembers = '$chatConversation/eligible/members';
   static const String leaveConversation = '$chatConversation/leave';
@@ -25,7 +27,7 @@ class IsmChatAPI {
 
   static const String blockUser = '$user/block';
   static const String unblockUser = '$user/unblock';
-  static const String nonblockUser = '$user/nonblock';
+  static const String nonBlockUser = '$user/nonblock';
 
   static const String _profilePic = '$user/presignedurl';
   static const String updateProfilePic = '$_profilePic/update';

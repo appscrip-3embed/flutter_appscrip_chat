@@ -180,7 +180,18 @@ class IsmChatApp extends StatelessWidget {
     mqttController.actionStreamController.stream.listen(listener);
   }
 
-  // static Future<void> deleteChat();
+  /// This function can be used for get all conversation from database
+  static Future<void> getAllConversation()
+    async => IsmChatConfig.objectBox.getAllConversations();
+
+
+  // static Future<void> updateConversationWithMetaData(){
+  //
+  // }
+
+
+
+
 
   /// This function can be used to directly go to chatting page and start chatting from anywhere in the app
   ///
@@ -253,6 +264,15 @@ class IsmChatApp extends StatelessWidget {
 
     (onNavigateToChat ?? IsmChatConfig.onChatTap)
         .call(Get.context!, conversation);
+
+    var conversations = IsmChatConfig.objectBox.getAllConversations();
+    var isConversation = conversations.where((e) => e.conversationId == conversation.conversationId).toList();
+    if(isConversation.isNotEmpty){
+      var conversation = isConversation.first;
+      if((conversation.metaData?.isMatchId == null ||  conversation.metaData?.isMatchId?.isEmpty ==  true) && conversation.metaData?.userId == null ||  conversation.metaData?.userId?.isEmpty ==  true){
+      await  controller.updateConversation(conversationId: conversationId, metaData: metaData!);
+      }
+    }
   }
 
   static final RxBool _isMqttConnected = false.obs;
