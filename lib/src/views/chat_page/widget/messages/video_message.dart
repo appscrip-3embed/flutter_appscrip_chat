@@ -12,7 +12,8 @@ class IsmChatVideoMessage extends StatelessWidget {
         children: [
           IsmChatImage(
             message.attachments?.first.thumbnailUrl ?? '',
-            isNetworkImage: message.attachments!.first.mediaUrl!.isValidUrl,
+            isNetworkImage:
+                message.attachments?.first.mediaUrl?.isValidUrl ?? false,
           ),
           Icon(
             Icons.play_circle,

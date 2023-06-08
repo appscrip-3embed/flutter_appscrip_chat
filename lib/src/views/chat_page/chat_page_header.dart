@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -45,6 +47,8 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                 if (onBackTap != null) {
                   onBackTap!.call();
                 }
+                unawaited(Get.find<IsmChatConversationsController>()
+                    .getChatConversationUnreadCount());
               },
               child: const Icon(Icons.arrow_back_rounded),
             ),

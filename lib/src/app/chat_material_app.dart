@@ -137,13 +137,15 @@ class IsmChatApp extends StatelessWidget {
   final Widget? emptyConversationPlaceholder;
 
   /// Call this function for Get all Conversation List
-  static Future<List<IsmChatConversationModel>> getAllConversation() async => IsmChatConfig.objectBox.getAllConversations();
+  static Future<List<IsmChatConversationModel>> getAllConversation() async =>
+      IsmChatConfig.objectBox.getAllConversations();
 
   /// Call this function for update conversation Details in meta data
-  static Future<void> updateConversation ({required String conversationId, required IsmChatMetaData metaData }) async =>
-  await Get.find<IsmChatConversationsController>().updateConversation(conversationId: conversationId, metaData: metaData);
-
-
+  static Future<void> updateConversation(
+          {required String conversationId,
+          required IsmChatMetaData metaData}) async =>
+      await Get.find<IsmChatConversationsController>().updateConversation(
+          conversationId: conversationId, metaData: metaData);
 
   /// Call this function for Get Conversation List When on click
   static Future<void> getChatConversation() async {
@@ -188,11 +190,6 @@ class IsmChatApp extends StatelessWidget {
     var mqttController = Get.find<IsmChatMqttController>();
     mqttController.actionStreamController.stream.listen(listener);
   }
-
-
-
-
-
 
   /// This function can be used to directly go to chatting page and start chatting from anywhere in the app
   ///
@@ -265,10 +262,13 @@ class IsmChatApp extends StatelessWidget {
 
     (onNavigateToChat ?? IsmChatConfig.onChatTap)
         .call(Get.context!, conversation);
-
   }
 
-
+  static final RxString _unReadConversationMessages = ''.obs;
+  static String get unReadConversationMessages =>
+      _unReadConversationMessages.value;
+  static set unReadConversationMessages(String value) =>
+      _unReadConversationMessages.value = value;
 
   static final RxBool _isMqttConnected = false.obs;
   static bool get isMqttConnected => _isMqttConnected.value;

@@ -52,7 +52,8 @@ class IsmChatCreateConversationView extends StatelessWidget {
                         shrinkWrap: true,
                         keyboardDismissBehavior:
                             ScrollViewKeyboardDismissBehavior.onDrag,
-                        itemCount: controller.forwardedList.length + 1,
+                        itemCount: controller.forwardedList.length +
+                            (controller.hasMore ? 1 : 0),
                         separatorBuilder: (_, __) => IsmChatDimens.boxHeight8,
                         itemBuilder: (_, index) {
                           if (index < controller.forwardedList.length) {
@@ -150,10 +151,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                               child: Center(
                                 child: controller.hasMore
                                     ? const CircularProgressIndicator()
-                                    : Text(
-                                        'No more user to load',
-                                        style: IsmChatStyles.w600Black16,
-                                      ),
+                                    : const SizedBox.shrink(),
                               ),
                             );
                           }

@@ -256,7 +256,9 @@ class IsmChatPageController extends GetxController
         ]);
         await readAllMessages(
           conversationId: conversation?.conversationId ?? '',
-          timestamp: conversation?.lastMessageSentAt ?? 0,
+          timestamp: messages.isNotEmpty
+              ? messages.last.sentAt
+              : conversation?.lastMessageSentAt ?? 0,
         );
         checkUserStatus();
       } else {
