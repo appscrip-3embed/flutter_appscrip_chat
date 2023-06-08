@@ -206,16 +206,16 @@ class IsmChatApp extends StatelessWidget {
   static Future<void> chatFromOutside({
     String profileImageUrl = '',
     required String name,
-    required String email,
+    String? email,
     required String userId,
     IsmChatMetaData? metaData,
     void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
     Duration duration = const Duration(milliseconds: 500),
   }) async {
     assert(
-      [name, email, userId].every((e) => e.isNotEmpty),
+      [name,userId].every((e) => e.isNotEmpty),
       '''Input Error: Please make sure that all required fields are filled out.
-      Name, email, and userId cannot be empty.''',
+      Name, and userId cannot be empty.''',
     );
 
     await Future.delayed(const Duration(milliseconds: 100));
@@ -236,7 +236,7 @@ class IsmChatApp extends StatelessWidget {
       var userDetails = UserDetails(
           userProfileImageUrl: profileImageUrl,
           userName: name,
-          userIdentifier: email,
+          userIdentifier: email ?? '',
           userId: userId,
           online: false,
           lastSeen: 0,

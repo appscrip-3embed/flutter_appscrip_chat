@@ -3,10 +3,10 @@ class IsmChatUserConfig {
     required this.userToken,
     required this.userId,
     required this.userName,
-    required this.userEmail,
+    this.userEmail,
   });
   final String userToken;
   final String userId;
   final String userName;
-  final String userEmail;
+  final String? userEmail;
 }
