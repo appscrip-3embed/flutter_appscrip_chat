@@ -154,13 +154,17 @@ class IsmChatMqttController extends GetxController {
       IsmChatLog(payload);
       if (payload['action'] != null) {
         var action = payload['action'];
-        if(['publishingStopped', 'messagePublished', 'meetingCreated','meetingEndedDueToNoUserPublishing'].contains(action)){
+        if ([
+          'publishingStopped',
+          'messagePublished',
+          'meetingCreated',
+          'meetingEndedDueToNoUserPublishing'
+        ].contains(action)) {
           actionStreamController.add(payload);
         } else {
           var actionModel = IsmChatMqttActionModel.fromMap(payload);
           _handleAction(actionModel);
         }
-
       } else {
         var message = IsmChatMessageModel.fromMap(payload);
         _handleLocalNotification(message);
@@ -406,7 +410,7 @@ class IsmChatMqttController extends GetxController {
     );
   }
 
-  void _handleMessageDelivered(IsmChatMqttActionModel actionModel) async{
+  void _handleMessageDelivered(IsmChatMqttActionModel actionModel) async {
     if (actionModel.userDetails!.userId ==
         _communicationConfig.userConfig.userId) {
       return;
@@ -431,16 +435,17 @@ class IsmChatMqttController extends GetxController {
         );
         conversationBox.put(conversation);
         if (Get.isRegistered<IsmChatPageController>()) {
-         await Get.find<IsmChatPageController>()
+          await Get.find<IsmChatPageController>()
               .getMessagesFromDB(actionModel.conversationId!);
         }
 
-        unawaited(Get.find<IsmChatConversationsController>().getConversationsFromDB()); 
+        unawaited(Get.find<IsmChatConversationsController>()
+            .getConversationsFromDB());
       }
     }
   }
 
-  void _handleMessageRead(IsmChatMqttActionModel actionModel)  async{
+  void _handleMessageRead(IsmChatMqttActionModel actionModel) async {
     if (actionModel.userDetails!.userId ==
         _communicationConfig.userConfig.userId) {
       return;
@@ -468,11 +473,11 @@ class IsmChatMqttController extends GetxController {
               : 1,
         );
         if (Get.isRegistered<IsmChatPageController>()) {
-         await Get.find<IsmChatPageController>()
+          await Get.find<IsmChatPageController>()
               .getMessagesFromDB(actionModel.conversationId!);
         }
-        unawaited( Get.find<IsmChatConversationsController>().getConversationsFromDB())
-       
+        unawaited(Get.find<IsmChatConversationsController>()
+            .getConversationsFromDB());
       }
     }
   }
