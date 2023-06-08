@@ -406,7 +406,7 @@ class IsmChatMqttController extends GetxController {
     );
   }
 
-  void _handleMessageDelivered(IsmChatMqttActionModel actionModel) {
+  void _handleMessageDelivered(IsmChatMqttActionModel actionModel) async{
     if (actionModel.userDetails!.userId ==
         _communicationConfig.userConfig.userId) {
       return;
@@ -431,16 +431,16 @@ class IsmChatMqttController extends GetxController {
         );
         conversationBox.put(conversation);
         if (Get.isRegistered<IsmChatPageController>()) {
-          Get.find<IsmChatPageController>()
+         await Get.find<IsmChatPageController>()
               .getMessagesFromDB(actionModel.conversationId!);
         }
 
-        Get.find<IsmChatConversationsController>().getConversationsFromDB();
+        unawaited(Get.find<IsmChatConversationsController>().getConversationsFromDB()); 
       }
     }
   }
 
-  void _handleMessageRead(IsmChatMqttActionModel actionModel) {
+  void _handleMessageRead(IsmChatMqttActionModel actionModel)  async{
     if (actionModel.userDetails!.userId ==
         _communicationConfig.userConfig.userId) {
       return;
@@ -468,10 +468,11 @@ class IsmChatMqttController extends GetxController {
               : 1,
         );
         if (Get.isRegistered<IsmChatPageController>()) {
-          Get.find<IsmChatPageController>()
+         await Get.find<IsmChatPageController>()
               .getMessagesFromDB(actionModel.conversationId!);
         }
-        Get.find<IsmChatConversationsController>().getConversationsFromDB();
+        unawaited( Get.find<IsmChatConversationsController>().getConversationsFromDB())
+       
       }
     }
   }
