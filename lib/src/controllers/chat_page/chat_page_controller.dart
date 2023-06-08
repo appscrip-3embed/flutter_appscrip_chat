@@ -827,6 +827,7 @@ class IsmChatPageController extends GetxController
                     ?.map((e) => e.memberName ?? '')
                     .toList() ??
                 [],
+            reactionType: '',
           );
         }
         chatConversation.unreadMessagesCount = 0;

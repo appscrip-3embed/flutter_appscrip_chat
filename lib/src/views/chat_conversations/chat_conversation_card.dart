@@ -88,15 +88,15 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
                   if (widget.conversation.lastMessageDetails?.reactionType
                           ?.isEmpty ==
                       true) ...[
-                    widget.conversation.readCheck,
+                    if (!widget.conversation.isGroup!)
+                      widget.conversation.readCheck,
                     widget.conversation.sender,
                     widget.conversation.lastMessageDetails!.icon,
                     IsmChatDimens.boxWidth2,
                   ],
                   Flexible(
                     child: Text(
-                      widget.conversation.lastMessageDetails?.messageBody ??
-                      '',
+                      widget.conversation.lastMessageDetails?.messageBody ?? '',
                       style: IsmChatStyles.w400Black12,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
