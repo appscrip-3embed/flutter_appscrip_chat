@@ -17,14 +17,13 @@ class IsmChatImage extends StatelessWidget {
   })  : _name = name ?? 'U',
         _isProfileImage = false;
 
-  const IsmChatImage.profile(
-    this.imageUrl, {
-    this.name,
-    this.dimensions = 48,
-    this.isNetworkImage = true,
-    super.key,
-    this.radius
-  })  : _name = name ?? 'U',
+  const IsmChatImage.profile(this.imageUrl,
+      {this.name,
+      this.dimensions = 48,
+      this.isNetworkImage = true,
+      super.key,
+      this.radius})
+      : _name = name ?? 'U',
         _isProfileImage = true,
         assert(dimensions != null, 'Dimensions cannot be null');
 
@@ -83,13 +82,23 @@ class _NetworkImage extends StatelessWidget {
         fit: BoxFit.cover,
         alignment: Alignment.center,
         cacheKey: imageUrl,
-        imageBuilder: (_, image) => Container(
-          decoration: BoxDecoration(
-            shape: _isProfileImage ? BoxShape.circle : BoxShape.rectangle,
-            color: IsmChatConfig.chatTheme.backgroundColor!,
-            image: DecorationImage(image: image, fit: BoxFit.cover),
-          ),
-        ),
+        imageBuilder: (_, image) {
+          try {
+            if (imageUrl.isEmpty) {
+              _ErrorImage(isProfileImage: _isProfileImage, name: _name);
+            }
+            return Container(
+              decoration: BoxDecoration(
+                shape: _isProfileImage ? BoxShape.circle : BoxShape.rectangle,
+                color: IsmChatConfig.chatTheme.backgroundColor!,
+                image: DecorationImage(image: image, fit: BoxFit.cover),
+              ),
+            );
+          } catch (e, st) {
+            IsmChatLog.error(e, st);
+            return _ErrorImage(isProfileImage: _isProfileImage, name: _name);
+          }
+        },
         placeholder: (context, url) => Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
@@ -111,32 +120,46 @@ class _NetworkImage extends StatelessWidget {
         ),
         errorWidget: (context, url, error) {
           IsmChatLog.error('ImageError - $url\n$error');
-          return Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: IsmChatConfig.chatTheme.primaryColor!.withOpacity(0.2),
-              shape: _isProfileImage ? BoxShape.circle : BoxShape.rectangle,
-            ),
-            child: _isProfileImage
-                ? Text(
-                    _name[0],
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                      color: IsmChatConfig.chatTheme.primaryColor,
-                    ),
-                  )
-                : Container(
-                    decoration: BoxDecoration(
-                      color: IsmChatColors.greyColor.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(IsmChatDimens.eight),
-                    ),
-                    alignment: Alignment.center,
-                    child: const Text(
-                      IsmChatStrings.errorLoadingImage,
-                    ),
-                  ),
-          );
+          return _ErrorImage(isProfileImage: _isProfileImage, name: _name);
         },
+      );
+}
+
+class _ErrorImage extends StatelessWidget {
+  const _ErrorImage({
+    required bool isProfileImage,
+    required String name,
+  })  : _isProfileImage = isProfileImage,
+        _name = name;
+
+  final bool _isProfileImage;
+  final String _name;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: IsmChatConfig.chatTheme.primaryColor!.withOpacity(0.2),
+          shape: _isProfileImage ? BoxShape.circle : BoxShape.rectangle,
+        ),
+        child: _isProfileImage
+            ? Text(
+                _name[0],
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                  color: IsmChatConfig.chatTheme.primaryColor,
+                ),
+              )
+            : Container(
+                decoration: BoxDecoration(
+                  color: IsmChatColors.greyColor.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(IsmChatDimens.eight),
+                ),
+                alignment: Alignment.center,
+                child: const Text(
+                  IsmChatStrings.errorLoadingImage,
+                ),
+              ),
       );
 }

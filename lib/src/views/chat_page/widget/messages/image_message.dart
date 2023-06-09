@@ -9,8 +9,8 @@ class IsmChatImageMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IsmChatImage(
         message.attachments?.first.mediaUrl ?? '',
-        isNetworkImage: message.attachments?.isNotEmpty ?? false
-            ? message.attachments!.first.mediaUrl!.isValidUrl
+        isNetworkImage: message.attachments?.isNotEmpty ?? true
+            ? message.attachments?.first.mediaUrl?.isValidUrl ?? true
             : false,
       );
 }

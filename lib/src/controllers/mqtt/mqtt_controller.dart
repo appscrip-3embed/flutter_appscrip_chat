@@ -153,9 +153,18 @@ class IsmChatMqttController extends GetxController {
           as Map<String, dynamic>;
       IsmChatLog(payload);
       if (payload['action'] != null) {
-        var actionModel = IsmChatMqttActionModel.fromMap(payload);
-        _handleAction(actionModel);
-        actionStreamController.add(payload);
+        var action = payload['action'];
+        if ([
+          'publishingStopped',
+          'messagePublished',
+          'meetingCreated',
+          'meetingEndedDueToNoUserPublishing'
+        ].contains(action)) {
+          actionStreamController.add(payload);
+        } else {
+          var actionModel = IsmChatMqttActionModel.fromMap(payload);
+          _handleAction(actionModel);
+        }
       } else {
         var message = IsmChatMessageModel.fromMap(payload);
         _handleLocalNotification(message);
@@ -255,6 +264,9 @@ class IsmChatMqttController extends GetxController {
         _handleRemoveReaction(actionModel);
 
         break;
+      case IsmChatActionEvents.conversationDetailsUpdated:
+        // TODO: Handle this case.
+        break;
     }
   }
 
@@ -323,23 +335,23 @@ class IsmChatMqttController extends GetxController {
 
     String? mqttMessage;
     if (message.customType == IsmChatCustomMessageType.image) {
-      mqttMessage = message.body;
+      mqttMessage = message.notificationBody;
     } else if (message.customType == IsmChatCustomMessageType.video) {
-      mqttMessage = message.body;
+      mqttMessage = message.notificationBody;
     } else if (message.customType == IsmChatCustomMessageType.file) {
-      mqttMessage = message.body;
+      mqttMessage = message.notificationBody;
     } else if (message.customType == IsmChatCustomMessageType.audio) {
-      mqttMessage = message.body;
+      mqttMessage = message.notificationBody;
     } else if (message.customType == IsmChatCustomMessageType.location) {
-      mqttMessage = 'Location';
+      mqttMessage = message.notificationBody;
     } else if (message.customType == IsmChatCustomMessageType.reply) {
-      mqttMessage = message.body;
+      mqttMessage = message.notificationBody;
     } else if (message.customType == IsmChatCustomMessageType.forward) {
-      mqttMessage = message.body;
+      mqttMessage = message.notificationBody;
     } else if (message.customType == IsmChatCustomMessageType.link) {
-      mqttMessage = message.body;
+      mqttMessage = message.notificationBody;
     } else {
-      mqttMessage = message.body;
+      mqttMessage = message.notificationBody;
     }
     if (Get.isRegistered<IsmChatPageController>()) {
       var chatController = Get.find<IsmChatPageController>();
@@ -347,16 +359,16 @@ class IsmChatMqttController extends GetxController {
           message.conversationId) {
         LocalNoticeService().cancelAllNotification();
         LocalNoticeService().addNotification(
-          message.chatName, // Add the  sender user name here
-          mqttMessage, // MessageName
+          message.notificationTitle ?? '', // Add the  sender user name here
+          mqttMessage ?? '', // MessageName
           DateTime.now().millisecondsSinceEpoch + 1 * 1000,
           sound: '',
           channel: 'message',
         );
         if (Platform.isAndroid) {
           Get.snackbar(
-            message.chatName,
-            mqttMessage,
+            message.notificationTitle ?? '',
+            mqttMessage ?? '',
             icon: const Icon(Icons.message),
           );
         }
@@ -364,16 +376,16 @@ class IsmChatMqttController extends GetxController {
     } else {
       LocalNoticeService().cancelAllNotification();
       LocalNoticeService().addNotification(
-        message.chatName, // Add the  sender user name here
-        mqttMessage, // MessageName
+        message.notificationTitle ?? '',
+        mqttMessage ?? '',
         DateTime.now().millisecondsSinceEpoch + 1 * 1000,
         sound: '',
         channel: 'message',
       );
       if (Platform.isAndroid) {
         Get.snackbar(
-          message.chatName,
-          mqttMessage,
+          message.notificationTitle ?? '',
+          mqttMessage ?? '',
           icon: const Icon(Icons.message),
         );
       }
@@ -398,7 +410,7 @@ class IsmChatMqttController extends GetxController {
     );
   }
 
-  void _handleMessageDelivered(IsmChatMqttActionModel actionModel) {
+  void _handleMessageDelivered(IsmChatMqttActionModel actionModel) async {
     if (actionModel.userDetails!.userId ==
         _communicationConfig.userConfig.userId) {
       return;
@@ -423,16 +435,17 @@ class IsmChatMqttController extends GetxController {
         );
         conversationBox.put(conversation);
         if (Get.isRegistered<IsmChatPageController>()) {
-          Get.find<IsmChatPageController>()
+          await Get.find<IsmChatPageController>()
               .getMessagesFromDB(actionModel.conversationId!);
         }
 
-        Get.find<IsmChatConversationsController>().getConversationsFromDB();
+        unawaited(Get.find<IsmChatConversationsController>()
+            .getConversationsFromDB());
       }
     }
   }
 
-  void _handleMessageRead(IsmChatMqttActionModel actionModel) {
+  void _handleMessageRead(IsmChatMqttActionModel actionModel) async {
     if (actionModel.userDetails!.userId ==
         _communicationConfig.userConfig.userId) {
       return;
@@ -460,10 +473,11 @@ class IsmChatMqttController extends GetxController {
               : 1,
         );
         if (Get.isRegistered<IsmChatPageController>()) {
-          Get.find<IsmChatPageController>()
+          await Get.find<IsmChatPageController>()
               .getMessagesFromDB(actionModel.conversationId!);
         }
-        Get.find<IsmChatConversationsController>().getConversationsFromDB();
+        unawaited(Get.find<IsmChatConversationsController>()
+            .getConversationsFromDB());
       }
     }
   }

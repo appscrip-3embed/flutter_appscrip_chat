@@ -117,6 +117,9 @@ extension DateConvertor on int {
   }
 
   String toLastMessageTimeString() {
+    if (this == 0 || this == -1) {
+      return '';
+    }
     final timeStamp = toDate().removeTime();
     final now = DateTime.now().removeTime();
     if (now.day == timeStamp.day) {
@@ -145,6 +148,9 @@ extension DateConvertor on int {
   }
 
   String toMessageDateString() {
+    if (this == 0 || this == -1) {
+      return '';
+    }
     var now = DateTime.now();
     var date = toDate();
     if (now.isSameDay(date)) {
@@ -163,16 +169,20 @@ extension DateConvertor on int {
   }
 
   String get deliverTime {
+    if (this == 0 || this == -1) {
+      return '';
+    }
     var now = DateTime.now();
     var timestamp = toDate();
     late DateFormat dateFormat;
     if (now.difference(timestamp) > const Duration(days: 365)) {
-      dateFormat = DateFormat('DD MMM yyyy, h:mm aa');
+      dateFormat = DateFormat('EEEE, MMM d, yyyy');
     } else if (now.difference(timestamp) > const Duration(days: 7)) {
-      dateFormat = DateFormat('DD MMM, h:mm aa');
+      dateFormat = DateFormat('E, d MMM yyyy, h:mm aa');
     } else {
-      dateFormat = DateFormat('E h:mm a');
+      dateFormat = DateFormat('EEEE h:mm aa');
     }
+
     return dateFormat.format(timestamp);
   }
 }
@@ -490,17 +500,17 @@ extension ModelConversion on IsmChatConversationModel {
       var readByAll = false;
       if (!isGroup!) {
         // this means not recieved by the user
-        if (lastMessageDetails!.deliverCount != 0) {
+        if (lastMessageDetails?.deliverCount != 0) {
           deliveredToAll = true;
           // this means not read by the user
-          if (lastMessageDetails!.readCount != 0) {
+          if (lastMessageDetails?.readCount != 0) {
             readByAll = true;
           }
         }
       } else {
-        if (membersCount == lastMessageDetails!.deliverCount) {
+        if (membersCount == lastMessageDetails?.deliverCount) {
           deliveredToAll = true;
-          if (membersCount == lastMessageDetails!.readCount) {
+          if (membersCount == lastMessageDetails?.readCount) {
             readByAll = true;
           }
         }

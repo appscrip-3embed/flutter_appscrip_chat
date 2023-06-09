@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
@@ -41,6 +42,12 @@ class IsmChatConversationsController extends GetxController {
     initialLoadStatus: LoadStatus.idle,
   );
 
+  /// Refresh Controller on Empty List
+  final refreshControllerOnEmptyList = RefreshController(
+    initialRefresh: false,
+    initialLoadStatus: LoadStatus.idle,
+  );
+
   var userListScrollController = ScrollController();
 
   var conversationScrollController = ScrollController();
@@ -61,13 +68,19 @@ class IsmChatConversationsController extends GetxController {
   List<UserDetails> get blockUsers => _blockUsers;
   set blockUsers(List<UserDetails> value) => _blockUsers.value = value;
 
-  String usersPageToken = '';
-
   final RxString _profileImage = ''.obs;
   String get profileImage => _profileImage.value;
   set profileImage(String value) {
     _profileImage.value = value;
   }
+
+  final RxBool _hasMore = true.obs;
+  bool get hasMore => _hasMore.value;
+  set hasMore(bool value) => _hasMore.value = value;
+
+  final RxBool _isLoadingUsers = false.obs;
+  bool get isLoadingUsers => _isLoadingUsers.value;
+  set isLoadingUsers(bool value) => _isLoadingUsers.value = value;
 
   List<Emoji> reactions = [];
 
@@ -84,6 +97,7 @@ class IsmChatConversationsController extends GetxController {
     await getConversationsFromDB();
     await getChatConversations();
     userListScrollListener();
+    await getChatConversationUnreadCount();
   }
 
   @override
@@ -179,11 +193,10 @@ class IsmChatConversationsController extends GetxController {
   void userListScrollListener() {
     userListScrollController.addListener(
       () {
-        if (userListScrollController.offset >=
-            userListScrollController.position.maxScrollExtent) {
-          if (usersPageToken.isNotEmpty) {
-            getUserList();
-          }
+        if (userListScrollController.position.maxScrollExtent ==
+            userListScrollController.offset) {
+          getNonBlockUserList(
+              opponentId: IsmChatConfig.communicationConfig.userConfig.userId);
         }
       },
     );
@@ -192,54 +205,36 @@ class IsmChatConversationsController extends GetxController {
   /// This will be used to fetch all the users associated with the current user
   ///
   /// Will be used for Create chat and/or Forward message
-  Future<void> getUserList({
+  Future<void> getNonBlockUserList({
+    int sort = 1,
+    int skip = 0,
+    int limit = 20,
+    String searchTag = '',
     String? opponentId,
-    int count = 20,
+    bool isLoading = false,
   }) async {
-    var response = await _viewModel.getUserList(
-      count: count,
-      pageToken: usersPageToken,
-      opponentId: opponentId,
-    );
-    if (response == null) {
-      return;
-    }
+    if (isLoadingUsers) return;
 
-    var users = response.users;
-    users.sort((a, b) => a.userName.compareTo(b.userName));
-
-    forwardedList.addAll(List.from(users)
-        .map((e) => SelectedForwardUser(
-              isUserSelected: false,
-              userDetails: e as UserDetails,
-              isBlocked: blockUsers.map((e) => e.userId).contains(e.userId),
-            ))
-        .toList());
-    usersPageToken = response.pageToken;
-  }
-
-  Future<void> getNonBlockUserList(
-      {int sort = 1,
-      int skip = 0,
-      int limit = 20,
-      String searchTag = '',
-      String? opponentId,
-      bool isLoading = false}) async {
+    isLoadingUsers = true;
     var response = await _viewModel.getNonBlockUserList(
       sort: sort,
-      skip: skip,
+      skip: forwardedList.isEmpty ? 0 : forwardedList.length.pagination(),
       limit: limit,
       searchTag: searchTag,
-      opponentId: opponentId,
       isLoading: isLoading,
     );
     if (response == null) {
       return;
     }
-
     var users = response.users;
     users.sort((a, b) => a.userName.compareTo(b.userName));
 
+    if (users.length < limit) {
+      hasMore = false;
+    }
+    if (opponentId != null) {
+      users.removeWhere((e) => e.userId == opponentId);
+    }
     forwardedList.addAll(List.from(users)
         .map((e) => SelectedForwardUser(
               isUserSelected: false,
@@ -247,6 +242,7 @@ class IsmChatConversationsController extends GetxController {
               isBlocked: blockUsers.map((e) => e.userId).contains(e.userId),
             ))
         .toList());
+    isLoadingUsers = false;
   }
 
   Future<void> clearAllMessages(String? conversationId) async {
@@ -322,8 +318,12 @@ class IsmChatConversationsController extends GetxController {
       refreshController.refreshCompleted(
         resetFooterState: true,
       );
+      refreshControllerOnEmptyList.refreshCompleted(
+        resetFooterState: true,
+      );
     } else if (origin == ApiCallOrigin.loadMore) {
       refreshController.loadComplete();
+      refreshControllerOnEmptyList.loadComplete();
     }
 
     if (conversations.isEmpty) {
@@ -383,6 +383,23 @@ class IsmChatConversationsController extends GetxController {
   Future<void> getChatConversationUnreadCount({
     bool isLoading = false,
   }) async {
-    await _viewModel.getChatConversationUnreadCount(isLoading: isLoading);
+    var response =
+        await _viewModel.getChatConversationUnreadCount(isLoading: isLoading);
+    if (response == null) {
+      return;
+    }
+    IsmChatApp.unReadConversationMessages =
+        jsonDecode(response.data)['count'].toString();
+  }
+
+  Future<void> updateConversation({
+    required String conversationId,
+    required IsmChatMetaData metaData,
+    bool isLoading = false,
+  }) async {
+    await _viewModel.updateConversation(
+        conversationId: conversationId,
+        metaData: metaData,
+        isLoading: isLoading);
   }
 }

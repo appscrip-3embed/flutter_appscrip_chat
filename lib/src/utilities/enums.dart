@@ -320,7 +320,8 @@ enum IsmChatActionEvents {
   memberLeave,
   deleteConversationLocally,
   reactionAdd,
-  reactionRemove;
+  reactionRemove,
+  conversationDetailsUpdated;
 
   factory IsmChatActionEvents.fromName(String name) {
     switch (name) {
@@ -362,6 +363,8 @@ enum IsmChatActionEvents {
         return IsmChatActionEvents.reactionAdd;
       case 'reactionRemove':
         return IsmChatActionEvents.reactionRemove;
+      case 'conversationDetailsUpdated':
+        return IsmChatActionEvents.conversationDetailsUpdated;
       default:
         return IsmChatActionEvents.typingEvent;
     }

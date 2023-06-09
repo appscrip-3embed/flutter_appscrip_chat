@@ -237,6 +237,10 @@ class IsmChatPageController extends GetxController
     _userReactionList.value = value;
   }
 
+  final RxBool _isLoadingMessages = false.obs;
+  bool get isLoadingMessages => _isLoadingMessages.value;
+  set isLoadingMessages(bool value) => _isLoadingMessages.value = value;
+
   bool didReactedLast = false;
 
   @override
@@ -256,7 +260,9 @@ class IsmChatPageController extends GetxController
         ]);
         await readAllMessages(
           conversationId: conversation?.conversationId ?? '',
-          timestamp: conversation?.lastMessageSentAt ?? 0,
+          timestamp: messages.isNotEmpty
+              ? messages.last.sentAt
+              : conversation?.lastMessageSentAt ?? 0,
         );
         checkUserStatus();
       } else {
@@ -540,8 +546,8 @@ class IsmChatPageController extends GetxController
 
   void scrollListener() {
     messagesScrollController.addListener(() {
-      if (messagesScrollController.offset * 0.7 ==
-          messagesScrollController.position.maxScrollExtent) {
+      if (messagesScrollController.offset >
+          0.8 * messagesScrollController.position.maxScrollExtent) {
         getMessagesFromAPI(forPagination: true, lastMessageTimestamp: 0);
       }
       toggleEmojiBoard(false, false);
@@ -825,6 +831,7 @@ class IsmChatPageController extends GetxController
                     ?.map((e) => e.memberName ?? '')
                     .toList() ??
                 [],
+            reactionType: '',
           );
         }
         chatConversation.unreadMessagesCount = 0;
@@ -1170,7 +1177,7 @@ class IsmChatPageController extends GetxController
           conversationId: conversation?.conversationId ?? '',
           includeMembers: includeMembers,
         ),
-        getMessagesFromDB(conversation?.conversationId ?? ''),
+        getMessagesFromAPI()
       ]);
     }
   }

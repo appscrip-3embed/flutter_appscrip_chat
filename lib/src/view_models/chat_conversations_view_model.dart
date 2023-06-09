@@ -64,13 +64,13 @@ class IsmChatConversationsViewModel {
     return IsmChatUserListModel(users: data, pageToken: response.pageToken);
   }
 
-  Future<IsmChatUserListModel?> getNonBlockUserList(
-      {int sort = 1,
-      int skip = 0,
-      int limit = 20,
-      String searchTag = '',
-      String? opponentId,
-      bool isLoading = false}) async {
+  Future<IsmChatUserListModel?> getNonBlockUserList({
+    int sort = 1,
+    int skip = 0,
+    int limit = 20,
+    String searchTag = '',
+    bool isLoading = false,
+  }) async {
     var response = await _repository.getNonBlockUserList(
       sort: sort,
       skip: skip,
@@ -85,10 +85,6 @@ class IsmChatConversationsViewModel {
     var data = [...response.users];
     data.removeWhere(
         (e) => e.userId == IsmChatConfig.communicationConfig.userConfig.userId);
-
-    if (opponentId != null) {
-      data.removeWhere((e) => e.userId == opponentId);
-    }
     return IsmChatUserListModel(users: data, pageToken: response.pageToken);
   }
 
@@ -160,4 +156,14 @@ class IsmChatConversationsViewModel {
     bool isLoading = false,
   }) async =>
       await _repository.getChatConversationUnreadCount(isLoading: isLoading);
+
+  Future<IsmChatResponseModel?> updateConversation({
+    required String conversationId,
+    required IsmChatMetaData metaData,
+    bool isLoading = false,
+  }) async =>
+      await _repository.updateConversation(
+          conversationId: conversationId,
+          metaData: metaData,
+          isLoading: isLoading);
 }

@@ -136,6 +136,17 @@ class IsmChatApp extends StatelessWidget {
       isSlidableEnable;
   final Widget? emptyConversationPlaceholder;
 
+  /// Call this function for Get all Conversation List
+  static Future<List<IsmChatConversationModel>> getAllConversation() async =>
+      IsmChatConfig.objectBox.getAllConversations();
+
+  /// Call this function for update conversation Details in meta data
+  static Future<void> updateConversation(
+          {required String conversationId,
+          required IsmChatMetaData metaData}) async =>
+      await Get.find<IsmChatConversationsController>().updateConversation(
+          conversationId: conversationId, metaData: metaData);
+
   /// Call this function for Get Conversation List When on click
   static Future<void> getChatConversation() async {
     await Get.find<IsmChatConversationsController>().getChatConversations();
@@ -180,8 +191,6 @@ class IsmChatApp extends StatelessWidget {
     mqttController.actionStreamController.stream.listen(listener);
   }
 
-  // static Future<void> deleteChat();
-
   /// This function can be used to directly go to chatting page and start chatting from anywhere in the app
   ///
   /// Follow the following steps :-
@@ -197,16 +206,16 @@ class IsmChatApp extends StatelessWidget {
   static Future<void> chatFromOutside({
     String profileImageUrl = '',
     required String name,
-    required String email,
+    String? email,
     required String userId,
     IsmChatMetaData? metaData,
     void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
     Duration duration = const Duration(milliseconds: 500),
   }) async {
     assert(
-      [name, email, userId].every((e) => e.isNotEmpty),
+      [name,userId].every((e) => e.isNotEmpty),
       '''Input Error: Please make sure that all required fields are filled out.
-      Name, email, and userId cannot be empty.''',
+      Name, and userId cannot be empty.''',
     );
 
     await Future.delayed(const Duration(milliseconds: 100));
@@ -227,7 +236,7 @@ class IsmChatApp extends StatelessWidget {
       var userDetails = UserDetails(
           userProfileImageUrl: profileImageUrl,
           userName: name,
-          userIdentifier: email,
+          userIdentifier: email ?? '',
           userId: userId,
           online: false,
           lastSeen: 0,
@@ -254,6 +263,12 @@ class IsmChatApp extends StatelessWidget {
     (onNavigateToChat ?? IsmChatConfig.onChatTap)
         .call(Get.context!, conversation);
   }
+
+  static final RxString _unReadConversationMessages = ''.obs;
+  static String get unReadConversationMessages =>
+      _unReadConversationMessages.value;
+  static set unReadConversationMessages(String value) =>
+      _unReadConversationMessages.value = value;
 
   static final RxBool _isMqttConnected = false.obs;
   static bool get isMqttConnected => _isMqttConnected.value;
