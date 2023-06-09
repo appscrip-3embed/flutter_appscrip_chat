@@ -369,6 +369,52 @@ enum IsmChatActionEvents {
         return IsmChatActionEvents.typingEvent;
     }
   }
+
+  @override
+  String toString() {
+    switch (this) {
+      case IsmChatActionEvents.typingEvent:
+        return 'typingEvent';
+      case IsmChatActionEvents.conversationCreated:
+        return 'conversationCreated';
+      case IsmChatActionEvents.messageDelivered:
+        return 'messageDelivered';
+      case IsmChatActionEvents.messageRead:
+        return 'messageRead';
+      case IsmChatActionEvents.messagesDeleteForAll:
+        return 'messagesDeleteForAll';
+      case IsmChatActionEvents.multipleMessagesRead:
+        return 'multipleMessagesRead';
+      case IsmChatActionEvents.userBlock:
+        return 'userBlock';
+      case IsmChatActionEvents.userBlockConversation:
+        return 'userBlockConversation';
+      case IsmChatActionEvents.userUnblock:
+        return 'userUnblock';
+      case IsmChatActionEvents.userUnblockConversation:
+        return 'userUnblockConversation';
+      case IsmChatActionEvents.clearConversation:
+        return 'clearConversation';
+      case IsmChatActionEvents.deleteConversationLocally:
+        return 'deleteConversationLocally';
+      case IsmChatActionEvents.removeMember:
+        return 'membersRemove';
+      case IsmChatActionEvents.addMember:
+        return 'membersAdd';
+      case IsmChatActionEvents.removeAdmin:
+        return 'removeAdmin';
+      case IsmChatActionEvents.addAdmin:
+        return 'addAdmin';
+      case IsmChatActionEvents.memberLeave:
+        return 'memberLeave';
+      case IsmChatActionEvents.reactionAdd:
+        return 'reactionAdd';
+      case IsmChatActionEvents.reactionRemove:
+        return 'reactionRemove';
+      case IsmChatActionEvents.conversationDetailsUpdated:
+        return 'conversationDetailsUpdated';
+    }
+  }
 }
 
 enum SendMessageType {
