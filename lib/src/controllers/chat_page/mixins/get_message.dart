@@ -24,6 +24,8 @@ mixin IsmChatPageGetMessageMixin {
     bool forPagination = false,
     int? lastMessageTimestamp,
   }) async {
+    if (_controller.isLoadingMessages) return;
+    _controller.isLoadingMessages = true;
     if (_controller.messages.isEmpty) {
       _controller.isMessagesLoading = true;
     }
@@ -51,6 +53,7 @@ mixin IsmChatPageGetMessageMixin {
     if (data != null) {
       await getMessagesFromDB(conversationID);
     }
+    _controller.isLoadingMessages = false;
   }
 
   Future<void> getMessageDeliverTime(IsmChatMessageModel message) async {

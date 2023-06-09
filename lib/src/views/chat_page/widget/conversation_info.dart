@@ -287,8 +287,8 @@ class _MediaList extends StatelessWidget {
                 itemBuilder: (_, index) {
                   var media = controller.mediaList[index];
                   var url = media.customType == IsmChatCustomMessageType.image
-                      ? media.attachments!.first.mediaUrl!
-                      : media.attachments!.first.thumbnailUrl!;
+                      ? media.attachments?.first.mediaUrl ?? ''
+                      : media.attachments?.first.thumbnailUrl ?? '';
                   var iconData =
                       media.customType == IsmChatCustomMessageType.audio
                           ? Icons.audio_file_rounded
