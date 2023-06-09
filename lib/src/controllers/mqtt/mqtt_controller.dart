@@ -154,17 +154,13 @@ class IsmChatMqttController extends GetxController {
       IsmChatLog(payload);
       if (payload['action'] != null) {
         var action = payload['action'];
-        if ([
-          'publishingStopped',
-          'messagePublished',
-          'meetingCreated',
-          'meetingEndedDueToNoUserPublishing'
-        ].contains(action)) {
-          actionStreamController.add(payload);
-        } else {
+        if (IsmChatActionEvents.values
+            .map((e) => e.toString())
+            .contains(action)) {
           var actionModel = IsmChatMqttActionModel.fromMap(payload);
           _handleAction(actionModel);
         }
+        actionStreamController.add(payload);
       } else {
         var message = IsmChatMessageModel.fromMap(payload);
         _handleLocalNotification(message);

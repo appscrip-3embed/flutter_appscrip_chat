@@ -34,7 +34,7 @@ class ChatList extends GetView<ChatListController> {
             projectId: Constants.projectId,
           ),
         ),
-        showAppBar: true,
+        // showAppBar: false,
         onSignOut: controller.onSignOut,
         onChatTap: (_, __) => RouteManagement.goToChatMessages(),
         showCreateChatIcon: true,
