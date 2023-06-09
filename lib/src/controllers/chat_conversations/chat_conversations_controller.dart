@@ -383,13 +383,8 @@ class IsmChatConversationsController extends GetxController {
   Future<void> getChatConversationUnreadCount({
     bool isLoading = false,
   }) async {
-    var response =
-        await _viewModel.getChatConversationUnreadCount(isLoading: isLoading);
-    if (response == null) {
-      return;
-    }
-    IsmChatApp.unReadConversationMessages =
-        jsonDecode(response.data)['count'].toString();
+    await Get.find<IsmChatMqttController>()
+        .getChatConversationUnreadCount(isLoading: isLoading);
   }
 
   Future<void> updateConversation({
