@@ -254,24 +254,7 @@ class IsmChatConversationsRepository {
     }
   }
 
-  Future<IsmChatResponseModel?> getChatConversationUnreadCount({
-    bool isLoading = false,
-  }) async {
-    try {
-      var response = await _apiWrapper.get(
-        IsmChatAPI.conversationUnreadCount,
-        headers: IsmChatUtility.tokenCommonHeader(),
-        showLoader: isLoading,
-      );
 
-      if (response.hasError) {
-        return response;
-      }
-      return response;
-    } catch (e) {
-      return null;
-    }
-  }
 
   Future<IsmChatResponseModel?> updateConversation({
     required String conversationId,

@@ -152,10 +152,7 @@ class IsmChatConversationsViewModel {
         file: file,
       );
 
-  Future<IsmChatResponseModel?> getChatConversationUnreadCount({
-    bool isLoading = false,
-  }) async =>
-      await _repository.getChatConversationUnreadCount(isLoading: isLoading);
+
 
   Future<IsmChatResponseModel?> updateConversation({
     required String conversationId,

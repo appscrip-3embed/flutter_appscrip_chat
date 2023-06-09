@@ -10,6 +10,8 @@ import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
 class IsmChatMqttController extends GetxController {
+  IsmChatMqttController(this._viewModel);
+  final IsmChatMqttViewModel _viewModel;
   late MqttServerClient client;
 
   final deviceInfo = DeviceInfoPlugin();
@@ -165,6 +167,7 @@ class IsmChatMqttController extends GetxController {
         var message = IsmChatMessageModel.fromMap(payload);
         _handleLocalNotification(message);
         _handleMessage(message);
+        _handleConversationCount(message);
       }
     });
   }
@@ -774,5 +777,31 @@ class IsmChatMqttController extends GetxController {
       }
     }
     await Get.find<IsmChatConversationsController>().getChatConversations();
+  }
+
+  _handleConversationCount(IsmChatMessageModel message){
+  if (message.senderInfo!.userId == _communicationConfig.userConfig.userId) {
+    return;
+  }
+
+  if(Get.isRegistered<IsmChatPageController>()){
+    return;
+  }
+  if(Get.isRegistered<IsmChatConversationsController>()){
+    Get.find<IsmChatConversationsController>().getChatConversationUnreadCount();
+  }
+  }
+
+
+  Future<void> getChatConversationUnreadCount({
+    bool isLoading = false,
+  }) async {
+    var response =
+    await _viewModel.getChatConversationUnreadCount(isLoading: isLoading);
+    if (response == null) {
+      return;
+    }
+    IsmChatApp.unReadConversationMessages =
+        jsonDecode(response.data)['count'].toString();
   }
 }
