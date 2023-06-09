@@ -51,6 +51,7 @@ class IsmChatMqttController extends GetxController {
         '/${_communicationConfig.projectConfig.accountId}/${_communicationConfig.projectConfig.projectId}/Status/${_communicationConfig.userConfig.userId}';
     initializeMqttClient();
     connectClient();
+    unawaited(getChatConversationUnreadCount()) ;
   }
 
   Future<void> _getDeviceId() async {
@@ -779,25 +780,18 @@ class IsmChatMqttController extends GetxController {
     await Get.find<IsmChatConversationsController>().getChatConversations();
   }
 
-  _handleConversationCount(IsmChatMessageModel message){
-  if (message.senderInfo!.userId == _communicationConfig.userConfig.userId) {
-    return;
+  _handleConversationCount(IsmChatMessageModel message) {
+    if (message.senderInfo!.userId == _communicationConfig.userConfig.userId) {
+      return;
+    }
+    getChatConversationUnreadCount();
   }
-
-  if(Get.isRegistered<IsmChatPageController>()){
-    return;
-  }
-  if(Get.isRegistered<IsmChatConversationsController>()){
-    Get.find<IsmChatConversationsController>().getChatConversationUnreadCount();
-  }
-  }
-
 
   Future<void> getChatConversationUnreadCount({
     bool isLoading = false,
   }) async {
     var response =
-    await _viewModel.getChatConversationUnreadCount(isLoading: isLoading);
+        await _viewModel.getChatConversationUnreadCount(isLoading: isLoading);
     if (response == null) {
       return;
     }
