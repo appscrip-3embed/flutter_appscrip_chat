@@ -126,6 +126,7 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
                   child: Text(
                     widget.conversation.unreadMessagesCount.toString(),
                     style: IsmChatStyles.w700White10,
+                    textAlign: TextAlign.center,
                   ),
                 )
             ],

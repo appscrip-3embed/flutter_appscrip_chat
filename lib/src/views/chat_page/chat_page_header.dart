@@ -47,8 +47,6 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                 if (onBackTap != null) {
                   onBackTap!.call();
                 }
-                unawaited(Get.find<IsmChatConversationsController>()
-                    .getChatConversationUnreadCount());
               },
               child: const Icon(Icons.arrow_back_rounded),
             ),

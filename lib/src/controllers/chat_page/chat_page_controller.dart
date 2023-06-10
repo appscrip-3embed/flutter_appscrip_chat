@@ -261,7 +261,7 @@ class IsmChatPageController extends GetxController
         await readAllMessages(
           conversationId: conversation?.conversationId ?? '',
           timestamp: messages.isNotEmpty
-              ? messages.last.sentAt
+              ? DateTime.now().millisecondsSinceEpoch
               : conversation?.lastMessageSentAt ?? 0,
         );
         checkUserStatus();
@@ -834,6 +834,10 @@ class IsmChatPageController extends GetxController
             reactionType: '',
           );
         }
+        IsmChatApp.unReadConversationMessages =
+            (int.parse(IsmChatApp.unReadConversationMessages) -
+                    chatConversation.unreadMessagesCount!)
+                .toString();
         chatConversation.unreadMessagesCount = 0;
         IsmChatConfig.objectBox.chatConversationBox.put(chatConversation);
         await ismChatConversationController.getConversationsFromDB();

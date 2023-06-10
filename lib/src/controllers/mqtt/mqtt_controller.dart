@@ -41,6 +41,7 @@ class IsmChatMqttController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    IsmChatApp.unReadConversationMessages = '';
     await _getDeviceId();
     _communicationConfig = IsmChatConfig.communicationConfig;
     userId = _communicationConfig.userConfig.userId;
@@ -51,7 +52,7 @@ class IsmChatMqttController extends GetxController {
         '/${_communicationConfig.projectConfig.accountId}/${_communicationConfig.projectConfig.projectId}/Status/${_communicationConfig.userConfig.userId}';
     initializeMqttClient();
     connectClient();
-    unawaited(getChatConversationUnreadCount()) ;
+    unawaited(getChatUnreadMessgesCount());
   }
 
   Future<void> _getDeviceId() async {
@@ -154,7 +155,7 @@ class IsmChatMqttController extends GetxController {
       var payload = jsonDecode(
               MqttPublishPayload.bytesToStringAsString(recMess.payload.message))
           as Map<String, dynamic>;
-      IsmChatLog(payload);
+      IsmChatLog('Mqtt event $payload');
       if (payload['action'] != null) {
         var action = payload['action'];
         if (IsmChatActionEvents.values
@@ -168,7 +169,7 @@ class IsmChatMqttController extends GetxController {
         var message = IsmChatMessageModel.fromMap(payload);
         _handleLocalNotification(message);
         _handleMessage(message);
-        _handleConversationCount(message);
+        _handleUnreadMessages(message);
       }
     });
   }
@@ -271,10 +272,12 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleMessage(IsmChatMessageModel message) async {
+    await Future.delayed(const Duration(milliseconds: 10));
     var conversationController = Get.find<IsmChatConversationsController>();
     if (message.senderInfo!.userId == _communicationConfig.userConfig.userId) {
       return;
     }
+
     var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
 
     var conversation = conversationBox
@@ -282,6 +285,10 @@ class IsmChatMqttController extends GetxController {
             DBConversationModel_.conversationId.equals(message.conversationId!))
         .build()
         .findUnique();
+
+    IsmChatLog.error(conversation);
+    IsmChatLog.error(
+        '${conversation?.lastMessageDetails.target!.messageId} == ${message.messageId}');
 
     if (conversation == null ||
         conversation.lastMessageDetails.target!.messageId ==
@@ -302,6 +309,7 @@ class IsmChatMqttController extends GetxController {
       body: message.body,
       customType: message.customType,
     );
+
     conversation.unreadMessagesCount = conversation.unreadMessagesCount! + 1;
     conversation.messages.add(message.toJson());
     conversationBox.put(conversation);
@@ -330,6 +338,10 @@ class IsmChatMqttController extends GetxController {
 
   void _handleLocalNotification(IsmChatMessageModel message) {
     if (message.senderInfo!.userId == _communicationConfig.userConfig.userId) {
+      return;
+    }
+
+    if (messageId == message.messageId) {
       return;
     }
 
@@ -372,6 +384,7 @@ class IsmChatMqttController extends GetxController {
             icon: const Icon(Icons.message),
           );
         }
+        messageId = message.messageId!;
       }
     } else {
       LocalNoticeService().cancelAllNotification();
@@ -389,6 +402,7 @@ class IsmChatMqttController extends GetxController {
           icon: const Icon(Icons.message),
         );
       }
+      messageId = message.messageId!;
     }
   }
 
@@ -780,22 +794,21 @@ class IsmChatMqttController extends GetxController {
     await Get.find<IsmChatConversationsController>().getChatConversations();
   }
 
-  _handleConversationCount(IsmChatMessageModel message) {
+  void _handleUnreadMessages(IsmChatMessageModel message) async {
     if (message.senderInfo!.userId == _communicationConfig.userConfig.userId) {
       return;
     }
-    getChatConversationUnreadCount();
+    await getChatUnreadMessgesCount();
   }
 
-  Future<void> getChatConversationUnreadCount({
+  Future<void> getChatUnreadMessgesCount({
+    int skip = 0,
+    int limit = 20,
     bool isLoading = false,
   }) async {
     var response =
-        await _viewModel.getChatConversationUnreadCount(isLoading: isLoading);
-    if (response == null) {
-      return;
-    }
-    IsmChatApp.unReadConversationMessages =
-        jsonDecode(response.data)['count'].toString();
+        await _viewModel.getChatConversations(skip: skip, limit: limit);
+
+    IsmChatApp.unReadConversationMessages = response.toString();
   }
 }

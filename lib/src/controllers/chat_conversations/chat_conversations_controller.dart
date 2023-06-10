@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
@@ -87,6 +86,7 @@ class IsmChatConversationsController extends GetxController {
   @override
   onInit() async {
     super.onInit();
+    IsmChatApp.unReadConversationMessages = '';
     await _generateReactionList();
     var users = IsmChatConfig.objectBox.userDetailsBox.getAll();
     if (users.isNotEmpty) {
@@ -97,7 +97,6 @@ class IsmChatConversationsController extends GetxController {
     await getConversationsFromDB();
     await getChatConversations();
     userListScrollListener();
-    await getChatConversationUnreadCount();
   }
 
   @override
@@ -378,13 +377,6 @@ class IsmChatConversationsController extends GetxController {
       conversationId: conversationId,
       messageId: messageId,
     );
-  }
-
-  Future<void> getChatConversationUnreadCount({
-    bool isLoading = false,
-  }) async {
-    await Get.find<IsmChatMqttController>()
-        .getChatConversationUnreadCount(isLoading: isLoading);
   }
 
   Future<void> updateConversation({

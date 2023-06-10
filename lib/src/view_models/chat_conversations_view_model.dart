@@ -33,9 +33,24 @@ class IsmChatConversationsViewModel {
       dbConversationModel.opponentDetails.target = conversation.opponentDetails;
       dbConversationModel.lastMessageDetails.target =
           conversation.lastMessageDetails;
+
+      if (conversation.lastMessageDetails?.action ==
+          IsmChatActionEvents.conversationCreated.name) {
+        dbConversationModel.unreadMessagesCount = 0;
+      }
       dbConversationModel.config.target = conversation.config;
       dbConversationModel.metaData = conversation.metaData;
       await IsmChatConfig.objectBox.createAndUpdateDB(dbConversationModel);
+
+      if (IsmChatApp.unReadConversationMessages.isEmpty) {
+        IsmChatApp.unReadConversationMessages =
+            conversation.unreadMessagesCount!.toInt().toString();
+      } else {
+        IsmChatApp.unReadConversationMessages =
+            (int.parse(IsmChatApp.unReadConversationMessages) +
+                    conversation.unreadMessagesCount!.toInt())
+                .toString();
+      }
     }
 
     return conversations;
@@ -151,8 +166,6 @@ class IsmChatConversationsViewModel {
         presignedUrl: presignedUrl,
         file: file,
       );
-
-
 
   Future<IsmChatResponseModel?> updateConversation({
     required String conversationId,
