@@ -546,8 +546,8 @@ class IsmChatPageController extends GetxController
 
   void scrollListener() {
     messagesScrollController.addListener(() {
-      if (messagesScrollController.offset >
-          0.8 * messagesScrollController.position.maxScrollExtent) {
+      if (messagesScrollController.offset.toInt() ==
+          messagesScrollController.position.maxScrollExtent.toInt()) {
         getMessagesFromAPI(forPagination: true, lastMessageTimestamp: 0);
       }
       toggleEmojiBoard(false, false);

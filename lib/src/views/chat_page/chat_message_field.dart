@@ -113,6 +113,12 @@ class IsmChatMessageField extends StatelessWidget {
                                     controller.showMentionsUserList(_);
                                   }
                                 },
+                                // onTap: () {
+                                //   controller.messageFieldFocusNode
+                                //       .requestFocus();
+                                //   FocusManager.instance.primaryFocus!
+                                //       .requestFocus();
+                                // },
                               ),
                             ),
                             if (attachments.isNotEmpty)
