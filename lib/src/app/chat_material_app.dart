@@ -264,6 +264,40 @@ class IsmChatApp extends StatelessWidget {
         .call(Get.context!, conversation);
   }
 
+
+
+  /// This function can be used to directly go to chatting page and start chatting from anywhere in the app
+  ///
+  /// Follow the following steps :-
+  /// 1. Navigate to the Screen/View where `IsmChatApp` is used as the root widget for `Chat` module
+  /// 2. Call this function by providing all the required data (must add `await` keyword as this is a Future)
+  ///
+  /// * `ismChatConversation` - Conversation of the user coming from backend APIs (`Required`)
+  /// * `duration` - The duration for which the loading dialog will be displayed, this is to make sure all the controllers and variables are initialized before executing any statement and/or calling the APIs for data. (default `Duration(milliseconds: 500)`)
+  /// * `onNavigateToChat` - This function will be executed to navigate to the specific chat screen of the selected user. If not provided, the `onChatTap` callback will be used which is passed to `IsmChatApp`.
+  static Future<void> chatFromOutsideWithConversation({
+    required IsmChatConversationModel ismChatConversation,
+    void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
+    Duration duration = const Duration(milliseconds: 500),
+  }) async {
+
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    IsmChatUtility.showLoader();
+
+    await Future.delayed(duration);
+
+    IsmChatUtility.closeLoader();
+
+    if (!Get.isRegistered<IsmChatConversationsController>()) {
+      IsmChatConversationsBinding().dependencies();
+    }
+    var controller = Get.find<IsmChatConversationsController>();
+    controller.navigateToMessages(ismChatConversation);
+    (onNavigateToChat ?? IsmChatConfig.onChatTap)
+        .call(Get.context!, ismChatConversation);
+  }
+
   static final RxString _unReadConversationMessages = ''.obs;
   static String get unReadConversationMessages =>
       _unReadConversationMessages.value;
