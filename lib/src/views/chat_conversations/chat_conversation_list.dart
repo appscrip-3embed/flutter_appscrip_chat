@@ -135,13 +135,14 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
               enablePullUp: true,
               onRefresh: () {
                 controller.conversationPage = 0;
-                IsmChatApp.unReadConversationMessages = '';
                 controller.getChatConversations(origin: ApiCallOrigin.referesh);
+                Get.find<IsmChatMqttController>().getChatConversationsUnreadCount();
               },
               onLoading: () {
                 controller.getChatConversations(
                     noOfConvesation: controller.conversationPage,
                     origin: ApiCallOrigin.loadMore);
+
               },
               child: ListView.separated(
                 padding: IsmChatDimens.edgeInsets0_10,

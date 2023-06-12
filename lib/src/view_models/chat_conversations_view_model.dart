@@ -16,7 +16,6 @@ class IsmChatConversationsViewModel {
     if (conversations == null || conversations.isEmpty) {
       return [];
     }
-
     var dbConversations = IsmChatConfig.objectBox.chatConversationBox.getAll();
 
     for (var conversation in conversations) {
@@ -42,15 +41,6 @@ class IsmChatConversationsViewModel {
       dbConversationModel.metaData = conversation.metaData;
       await IsmChatConfig.objectBox.createAndUpdateDB(dbConversationModel);
 
-      if (IsmChatApp.unReadConversationMessages.isEmpty) {
-        IsmChatApp.unReadConversationMessages =
-            conversation.unreadMessagesCount!.toInt().toString();
-      } else {
-        IsmChatApp.unReadConversationMessages =
-            (int.parse(IsmChatApp.unReadConversationMessages) +
-                    conversation.unreadMessagesCount!.toInt())
-                .toString();
-      }
     }
 
     return conversations;

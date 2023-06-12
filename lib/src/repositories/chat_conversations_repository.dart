@@ -87,6 +87,7 @@ class IsmChatConversationsRepository {
         (a, b) => a.lastMessageDetails!.sentAt
             .compareTo(b.lastMessageDetails!.sentAt),
       );
+      listData.removeWhere((e) => e.opponentDetails?.userId.isEmpty == true && e.opponentDetails?.userName.isEmpty == true);
       return listData;
     } catch (e, st) {
       IsmChatLog.error('GetChatConversations $e', st);

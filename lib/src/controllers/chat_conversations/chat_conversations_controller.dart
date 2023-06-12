@@ -86,7 +86,7 @@ class IsmChatConversationsController extends GetxController {
   @override
   onInit() async {
     super.onInit();
-    IsmChatApp.unReadConversationMessages = '';
+
     await _generateReactionList();
     var users = IsmChatConfig.objectBox.userDetailsBox.getAll();
     if (users.isNotEmpty) {
@@ -97,6 +97,7 @@ class IsmChatConversationsController extends GetxController {
     await getConversationsFromDB();
     await getChatConversations();
     userListScrollListener();
+    await Get.find<IsmChatMqttController>().getChatConversationsUnreadCount();
   }
 
   @override

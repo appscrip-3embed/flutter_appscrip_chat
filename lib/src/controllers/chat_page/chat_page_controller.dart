@@ -834,10 +834,7 @@ class IsmChatPageController extends GetxController
             reactionType: '',
           );
         }
-        IsmChatApp.unReadConversationMessages =
-            (int.parse(IsmChatApp.unReadConversationMessages) -
-                    chatConversation.unreadMessagesCount!)
-                .toString();
+
         chatConversation.unreadMessagesCount = 0;
         IsmChatConfig.objectBox.chatConversationBox.put(chatConversation);
         await ismChatConversationController.getConversationsFromDB();
@@ -845,6 +842,8 @@ class IsmChatPageController extends GetxController
     } else {
       await ismChatConversationController.getChatConversations();
     }
+    unawaited(Get.find<IsmChatMqttController>().getChatConversationsUnreadCount())
+   ;
   }
 
   Future<void> cropImage(File file) async {
