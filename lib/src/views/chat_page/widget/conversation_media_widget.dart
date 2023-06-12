@@ -28,7 +28,7 @@ class ConversationMediaWidget extends StatelessWidget {
         child: [IsmChatCustomMessageType.audio, IsmChatCustomMessageType.file]
                 .contains(media.customType)
             ? Icon(
-                iconData,
+          iconData,
                 color: IsmChatConfig.chatTheme.primaryColor,
               )
             : IsmChatImage(

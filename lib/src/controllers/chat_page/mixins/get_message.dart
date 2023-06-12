@@ -99,7 +99,7 @@ mixin IsmChatPageGetMessageMixin {
           .where((e) => [
                 IsmChatCustomMessageType.image,
                 IsmChatCustomMessageType.video,
-                IsmChatCustomMessageType.audio,
+                // IsmChatCustomMessageType.audio,
                 IsmChatCustomMessageType.file,
               ].contains(e.customType))
           .toList();
