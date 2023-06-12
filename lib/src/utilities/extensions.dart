@@ -492,6 +492,8 @@ extension ModelConversion on IsmChatConversationModel {
     try {
       if (!lastMessageDetails!.sentByMe ||
           lastMessageDetails!.messageBody.isEmpty ||
+          lastMessageDetails!.customType == IsmChatCustomMessageType.unblock ||
+          lastMessageDetails!.customType == IsmChatCustomMessageType.block ||
           [IsmChatCustomMessageType.addMember]
               .contains(lastMessageDetails!.customType)) {
         return const SizedBox.shrink();

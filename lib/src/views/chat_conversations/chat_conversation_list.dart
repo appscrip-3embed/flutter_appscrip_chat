@@ -190,7 +190,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> {
                             ? null
                             : ActionPane(
                                 extentRatio: 0.3,
-                                motion: const ScrollMotion(),
+                                motion: const StretchMotion(),
                                 children: [
                                   ...widget.endActions?.map(
                                         (e) => SlidableAction(

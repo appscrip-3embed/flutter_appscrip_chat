@@ -12,6 +12,7 @@ class IsmChatDimens {
 
   static final double zero = 0.sp;
   static final double two = 2.sp;
+  static final double three = 3.sp;
   static final double four = 4.sp;
   static final double five = 5.sp;
   static final double six = 6.sp;

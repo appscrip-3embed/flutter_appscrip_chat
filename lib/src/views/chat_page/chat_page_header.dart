@@ -50,7 +50,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
               },
               child: const Icon(Icons.arrow_back_rounded),
             ),
-            titleSpacing: IsmChatDimens.four,
+            titleSpacing: IsmChatDimens.two,
             centerTitle: false,
             shape: header?.shape,
             elevation: header?.elevation,
@@ -152,18 +152,20 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                               style: header?.subtitleStyle ??
                                                   IsmChatStyles.w400White12,
                                             )
-                                          : Text(
-                                              controller
-                                                      .conversation
-                                                      ?.opponentDetails
-                                                      ?.lastSeen
-                                                      .toCurrentTimeStirng() ??
-                                                  '',
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: header?.subtitleStyle ??
-                                                  IsmChatStyles.w400White12,
-                                            ),
+                                          : Flexible(
+                                            child: Text(
+                                                controller
+                                                        .conversation
+                                                        ?.opponentDetails
+                                                        ?.lastSeen
+                                                        .toCurrentTimeStirng() ??
+                                                    '',
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: header?.subtitleStyle ??
+                                                    IsmChatStyles.w400White12,
+                                              ),
+                                          ),
                             ),
                     ],
                   ),

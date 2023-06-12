@@ -146,7 +146,7 @@ class SignupView extends StatelessWidget {
                           child: Stack(
                             children: [
                               Tooltip(
-                                message: 'Enter emial first',
+                                message: 'Enter email first',
                                 triggerMode: controller.isEmailValid
                                     ? null
                                     : TooltipTriggerMode.tap,
