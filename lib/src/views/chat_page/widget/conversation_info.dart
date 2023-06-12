@@ -123,8 +123,9 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                           const Spacer(),
                           IconButton(
                             onPressed: () {
-                              IsmChatUtility.openFullScreenBottomSheet(
-                                  const IsmMedia());
+                              IsmChatUtility.openFullScreenBottomSheet(IsmMedia(
+                                mediaList: controller.mediaList,
+                              ));
                             },
                             icon: const Icon(Icons.arrow_forward_rounded),
                           ),

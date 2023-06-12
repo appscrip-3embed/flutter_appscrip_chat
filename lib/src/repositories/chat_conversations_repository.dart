@@ -87,7 +87,10 @@ class IsmChatConversationsRepository {
         (a, b) => a.lastMessageDetails!.sentAt
             .compareTo(b.lastMessageDetails!.sentAt),
       );
-      listData.removeWhere((e) => e.opponentDetails?.userId.isEmpty == true && e.opponentDetails?.userName.isEmpty == true);
+      listData.removeWhere((e) =>
+          e.opponentDetails?.userId.isEmpty == true &&
+          e.opponentDetails?.userName.isEmpty == true &&
+          e.isGroup == false);
       return listData;
     } catch (e, st) {
       IsmChatLog.error('GetChatConversations $e', st);
@@ -254,8 +257,6 @@ class IsmChatConversationsRepository {
       return null;
     }
   }
-
-
 
   Future<IsmChatResponseModel?> updateConversation({
     required String conversationId,
