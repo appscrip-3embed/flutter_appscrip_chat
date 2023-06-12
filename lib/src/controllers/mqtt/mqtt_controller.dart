@@ -169,7 +169,7 @@ class IsmChatMqttController extends GetxController {
         var message = IsmChatMessageModel.fromMap(payload);
         _handleLocalNotification(message);
         _handleMessage(message);
-        _handleUnreadMessages(message);
+
       }
     });
   }
@@ -286,9 +286,7 @@ class IsmChatMqttController extends GetxController {
         .build()
         .findUnique();
 
-    IsmChatLog.error(conversation);
-    IsmChatLog.error(
-        '${conversation?.lastMessageDetails.target!.messageId} == ${message.messageId}');
+
 
     if (conversation == null ||
         conversation.lastMessageDetails.target!.messageId ==
@@ -318,6 +316,7 @@ class IsmChatMqttController extends GetxController {
       conversationId: message.conversationId!,
       messageId: message.messageId!,
     );
+    _handleUnreadMessages(message);
 
     // To handle messages in chatList
     if (!Get.isRegistered<IsmChatPageController>()) {
