@@ -806,9 +806,7 @@ class IsmChatMqttController extends GetxController {
   }) async {
     var response =
         await _viewModel.getChatConversationsUnreadCount(isLoading: isLoading);
-    if (response != null) {
-      var unReadCount = jsonDecode(response.data);
-      IsmChatApp.unReadConversationMessages = unReadCount['count'].toString();
+      IsmChatApp.unReadConversationMessages = response;
     }
   }
-}
+

@@ -5,7 +5,7 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 class IsmChatMqttRepository {
   final _apiWrapper = IsmChatApiWrapper();
 
-  Future<IsmChatResponseModel?> getChatConversationsUnreadCount({
+  Future<String?> getChatConversationsUnreadCount({
     bool isLoading = false,
   }) async {
     try {
@@ -16,7 +16,9 @@ class IsmChatMqttRepository {
       if (response.hasError) {
         return null;
       }
-      return response;
+      var unReadCount = jsonDecode(response.data);
+      var count = unReadCount['count'].toString();
+      return count;
     } catch (e, st) {
       IsmChatLog.error('Get Conversations unread $e', st);
       return null;
