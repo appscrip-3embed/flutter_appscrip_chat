@@ -11,7 +11,7 @@ class LastMessageDetails {
   factory LastMessageDetails.fromMap(Map<String, dynamic> map) {
     var details = LastMessageDetails(
         showInConversation: map['showInConversation'] as bool? ?? false,
-        sentAt: map['sentAt'] as int,
+        sentAt: map['sentAt'] as int? ?? 0,
         senderName: map['senderName'] as String? ??
             map['userName'] as String? ??
             map['initiatorName'] as String? ??
