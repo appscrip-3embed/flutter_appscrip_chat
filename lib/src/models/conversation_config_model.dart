@@ -9,9 +9,9 @@ class ConversationConfigModel {
 
   factory ConversationConfigModel.fromMap(Map<String, dynamic> map) =>
       ConversationConfigModel(
-        typingEvents: map['typingEvents'] as bool,
-        readEvents: map['readEvents'] as bool,
-        pushNotifications: map['pushNotifications'] as bool,
+        typingEvents: map['typingEvents'] as bool? ?? false,
+        readEvents: map['readEvents'] as bool? ?? false,
+        pushNotifications: map['pushNotifications'] as bool? ?? false,
       );
 
    ConversationConfigModel({

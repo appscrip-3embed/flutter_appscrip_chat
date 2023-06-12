@@ -5,9 +5,9 @@ class MentionModel {
       MentionModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   factory MentionModel.fromMap(Map<String, dynamic> map) => MentionModel(
-        userId: map['userId'] as String,
-        wordCount: map['wordCount'] as int,
-        order: map['order'] as int,
+        userId: map['userId'] as String? ?? '',
+        wordCount: map['wordCount'] as int? ?? 0,
+        order: map['order'] as int? ?? 0,
       );
 
   const MentionModel({
