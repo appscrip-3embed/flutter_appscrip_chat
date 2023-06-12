@@ -6,8 +6,8 @@ class IsmChatLastReadAt {
 
   factory IsmChatLastReadAt.fromMap(Map<String, dynamic> map) =>
       IsmChatLastReadAt(
-        userId: map['userId'] as String,
-        readAt: map['readAt'] as int,
+        userId: map['userId'] as String? ?? '',
+        readAt: map['readAt'] as int? ?? 0,
       );
 
   const IsmChatLastReadAt({

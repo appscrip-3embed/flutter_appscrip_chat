@@ -36,8 +36,8 @@ class IsmChatConversationModel {
         createdByUserName: map['createdByUserName'] as String? ?? '',
         conversationType: IsmChatConversationType.fromValue(
             map['conversationType'] as int? ?? 1),
-        conversationTitle: map['conversationTitle'] as String?,
-        conversationImageUrl: map['conversationImageUrl'] as String?,
+        conversationTitle: map['conversationTitle'] as String? ?? '',
+        conversationImageUrl: map['conversationImageUrl'] as String? ?? '',
         conversationId: map['conversationId'] as String? ?? '',
         config: ConversationConfigModel.fromMap(
             map['config'] as Map<String, dynamic>),
