@@ -169,7 +169,6 @@ class IsmChatMqttController extends GetxController {
         var message = IsmChatMessageModel.fromMap(payload);
         _handleLocalNotification(message);
         _handleMessage(message);
-
       }
     });
   }
@@ -285,8 +284,6 @@ class IsmChatMqttController extends GetxController {
             DBConversationModel_.conversationId.equals(message.conversationId!))
         .build()
         .findUnique();
-
-
 
     if (conversation == null ||
         conversation.lastMessageDetails.target!.messageId ==
@@ -710,17 +707,16 @@ class IsmChatMqttController extends GetxController {
             .first;
 
         var isEmoji = false;
-
         for (var x in message.reactions ?? <MessageReactionModel>[]) {
           if (x.emojiKey == actionModel.reactionType) {
             x.userIds.add(actionModel.userDetails?.userId ?? '');
             x.userIds.toSet().toList();
             isEmoji = true;
-
             break;
           }
         }
         if (isEmoji == false) {
+          message.reactions ??= [];
           message.reactions?.add(
             MessageReactionModel(
               emojiKey: actionModel.reactionType ?? '',
@@ -728,7 +724,6 @@ class IsmChatMqttController extends GetxController {
             ),
           );
         }
-        IsmChatLog.error(message.reactions);
 
         var messageIndex =
             allMessages.indexWhere((e) => e.messageId == actionModel.messageId);
@@ -805,7 +800,6 @@ class IsmChatMqttController extends GetxController {
   }) async {
     var response =
         await _viewModel.getChatConversationsUnreadCount(isLoading: isLoading);
-      IsmChatApp.unReadConversationMessages = response;
-    }
+    IsmChatApp.unReadConversationMessages = response;
   }
-
+}
