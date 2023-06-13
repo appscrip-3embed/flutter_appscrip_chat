@@ -771,7 +771,7 @@ class IsmChatPageController extends GetxController
       Get.back(); // to Chat Page
       Get.back(); // to Conversation Page
       await Future.wait([
-        IsmChatConfig.objectBox
+        IsmChatConfig.dbWrapper
             .removeConversation(conversation!.conversationId!),
         _conversationController.getChatConversations(),
       ]);
@@ -876,50 +876,52 @@ class IsmChatPageController extends GetxController
     var ismChatConversationController =
         Get.find<IsmChatConversationsController>();
     if (!didReactedLast) {
-      var chatConversation = await IsmChatConfig.objectBox.getDBConversation(
-          conversationId: conversation?.conversationId ?? '');
+      var chatConversation = await IsmChatConfig.dbWrapper
+          .getConversation(conversationId: conversation?.conversationId ?? '');
       if (chatConversation != null) {
         if (messages.isNotEmpty &&
             messages.last.customType != IsmChatCustomMessageType.removeMember) {
-          chatConversation.lastMessageDetails.target = LastMessageDetails(
-            sentByMe: messages.last.sentByMe,
-            showInConversation: true,
-            sentAt: messages.last.sentAt,
-            senderName: [
+          chatConversation = chatConversation.copyWith(
+              lastMessageDetails: LastMessageDetails(
+                sentByMe: messages.last.sentByMe,
+                showInConversation: true,
+                sentAt: messages.last.sentAt,
+                senderName: [
               IsmChatCustomMessageType.removeAdmin,
               IsmChatCustomMessageType.addAdmin
             ].contains(messages.last.customType)
                 ? messages.last.initiatorName ?? ''
                 : messages.last.chatName,
-            messageType: messages.last.messageType?.value ?? 0,
-            messageId: messages.last.messageId ?? '',
-            conversationId: messages.last.conversationId ?? '',
-            body: messages.last.body,
-            customType: messages.last.customType,
-            readCount: chatConversation.isGroup!
-                ? messages.last.readByAll!
-                    ? chatConversation.membersCount!
-                    : messages.last.lastReadAt!.length
-                : messages.last.readByAll!
-                    ? 1
-                    : 0,
-            deliverCount: chatConversation.isGroup!
-                ? messages.last.deliveredToAll!
-                    ? chatConversation.membersCount!
-                    : 0
-                : messages.last.deliveredToAll!
-                    ? 1
-                    : 0,
-            members: messages.last.members
-                    ?.map((e) => e.memberName ?? '')
-                    .toList() ??
-                [],
-            reactionType: '',
-          );
+                messageType: messages.last.messageType?.value ?? 0,
+                messageId: messages.last.messageId ?? '',
+                conversationId: messages.last.conversationId ?? '',
+                body: messages.last.body,
+                customType: messages.last.customType,
+                readCount: chatConversation.isGroup!
+                    ? messages.last.readByAll!
+                        ? chatConversation.membersCount!
+                        : messages.last.lastReadAt!.length
+                    : messages.last.readByAll!
+                        ? 1
+                        : 0,
+                deliverCount: chatConversation.isGroup!
+                    ? messages.last.deliveredToAll!
+                        ? chatConversation.membersCount!
+                        : 0
+                    : messages.last.deliveredToAll!
+                        ? 1
+                        : 0,
+                members: messages.last.members
+                        ?.map((e) => e.memberName ?? '')
+                        .toList() ??
+                    [],
+                reactionType: '',
+              ),
+              unreadMessagesCount: 0);
         }
-        chatConversation.unreadMessagesCount = 0;
 
-        IsmChatConfig.objectBox.chatConversationBox.put(chatConversation);
+        await IsmChatConfig.dbWrapper
+            .saveConversation(conversation: chatConversation);
         await ismChatConversationController.getConversationsFromDB();
       }
     } else {
@@ -1365,7 +1367,7 @@ class IsmChatPageController extends GetxController
     selectedMessage.clear();
     pendingMessges.where((e) => e.messageId == '').toList();
     if (pendingMessges.isNotEmpty) {
-      await IsmChatConfig.objectBox
+      await IsmChatConfig.dbWrapper
           .removePendingMessage(conversation!.conversationId!, pendingMessges);
       await getMessagesFromDB(conversation!.conversationId!);
       selectedMessage.clear();
@@ -1382,7 +1384,7 @@ class IsmChatPageController extends GetxController
     selectedMessage.clear();
     pendingMessges.where((e) => e.messageId == '').toList();
     if (pendingMessges.isNotEmpty) {
-      await IsmChatConfig.objectBox
+      await IsmChatConfig.dbWrapper
           .removePendingMessage(conversation!.conversationId!, pendingMessges);
       await getMessagesFromDB(conversation!.conversationId!);
       selectedMessage.clear();

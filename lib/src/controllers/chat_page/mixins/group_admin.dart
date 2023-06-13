@@ -38,14 +38,15 @@ mixin IsmChatGroupAdminMixin {
     if (response?.hasError ?? true) {
       return;
     } else {
-      _controller.conversation?.conversationTitle = conversationTitle;
+      _controller.conversation?.copyWith(conversationTitle: conversationTitle);
+
       for (var i = 0;
           i < _ismChatConversationsController.conversations.length;
           i++) {
         if (_ismChatConversationsController.conversations[i].conversationId ==
             conversationId) {
-          _ismChatConversationsController.conversations[i].conversationTitle =
-              conversationTitle;
+          _ismChatConversationsController.conversations[i]
+              .copyWith(conversationTitle: conversationTitle);
           await _ismChatConversationsController.getChatConversations();
           break;
         }
@@ -69,7 +70,9 @@ mixin IsmChatGroupAdminMixin {
     if (response?.hasError ?? true) {
       return;
     } else {
-      _controller.conversation?.conversationImageUrl = conversationImageUrl;
+      _controller.conversation
+          ?.copyWith(conversationImageUrl: conversationImageUrl);
+
       await _ismChatConversationsController.getChatConversations();
       _controller.update();
       _ismChatConversationsController.update();

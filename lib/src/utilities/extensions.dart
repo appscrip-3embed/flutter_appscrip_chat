@@ -481,19 +481,6 @@ extension ModelConversion on IsmChatConversationModel {
   IsmChatMqttController get _mqttController =>
       Get.find<IsmChatMqttController>();
 
-  DBConversationModel convertToDbModel(List<String>? messages) =>
-      DBConversationModel(
-        conversationId: conversationId,
-        conversationImageUrl: conversationImageUrl,
-        conversationTitle: conversationTitle,
-        isGroup: isGroup,
-        lastMessageSentAt: lastMessageSentAt,
-        messagingDisabled: messagingDisabled,
-        membersCount: membersCount,
-        unreadMessagesCount: unreadMessagesCount,
-        messages: messages ?? [],
-      );
-
   String get typingUsers {
     var users = _mqttController.typingUsers
         .where(

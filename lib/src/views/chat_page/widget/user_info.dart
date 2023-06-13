@@ -165,6 +165,7 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
                                   : chatPageController.blockUser(
                                       opponentId: widget.user.userId,
                                       lastMessageTimeStamp: 0,
+
                                     );
                             },
                           ],

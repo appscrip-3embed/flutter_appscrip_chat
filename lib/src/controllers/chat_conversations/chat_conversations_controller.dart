@@ -99,9 +99,9 @@ class IsmChatConversationsController extends GetxController {
     super.onInit();
 
     await _generateReactionList();
-    var users = IsmChatConfig.objectBox.userDetailsBox.getAll();
+    var users = await IsmChatConfig.dbWrapper.userDetailsBox.getAllValues();
     if (users.isNotEmpty) {
-      userDetails = users.first;
+      // userDetails = users.first;
     } else {
       await getUserData();
     }
@@ -306,13 +306,14 @@ class IsmChatConversationsController extends GetxController {
         return;
       }
     }
-    await IsmChatConfig.objectBox.removeConversation(conversationId);
+    await IsmChatConfig.dbWrapper.removeConversation(conversationId);
+
     await getConversationsFromDB();
     await getChatConversations();
   }
 
   Future<void> getConversationsFromDB() async {
-    var dbConversations = IsmChatConfig.objectBox.getAllConversations();
+    var dbConversations = await IsmChatConfig.dbWrapper.getAllConversations();
     if (dbConversations.isEmpty) {
       return;
     }

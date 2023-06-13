@@ -550,3 +550,9 @@ enum IsmChatFeature {
   forward,
   reaction;
 }
+
+enum IsmChatDbBox {
+  main,
+  pending,
+  forward;
+}

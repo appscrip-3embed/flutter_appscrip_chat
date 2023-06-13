@@ -300,15 +300,15 @@ class IsmChatForwardView extends StatelessWidget {
                                     lastMessageSentAt: 0,
                                     membersCount: 0,
                                   );
-                                  ismChatConversation.conversationId =
-                                      controller
-                                          .getConversationId(controller
-                                              .forwardedList
-                                              .selectedUsers
-                                              .first
-                                              .userDetails
-                                              .userId)
-                                          .toString();
+                                  ismChatConversation =
+                                      ismChatConversation.copyWith(
+                                    conversationId:
+                                        controller.getConversationId(
+                                      controller.forwardedList.selectedUsers
+                                          .first.userDetails.userId,
+                                    ),
+                                  );
+
                                   Get.back<void>();
                                   controller
                                       .navigateToMessages(ismChatConversation);

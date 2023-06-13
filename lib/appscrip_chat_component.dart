@@ -20,7 +20,7 @@ class AppscripChatComponent {
       ChatComponentPlatform.instance.getPlatformVersion();
 
   static Future<void> initialize() async {
-    IsmChatConfig.objectBox = await IsmChatDBWrapper.create();
+    IsmChatConfig.dbWrapper = await IsmChatDBWrapper.create();
     IsmChatConfig.isInitialized = true;
   }
 }

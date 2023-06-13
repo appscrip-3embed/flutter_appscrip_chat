@@ -47,19 +47,13 @@ class IsmChatPageViewModel {
           Get.find<IsmChatPageController>().messages.last.messageId);
     }
 
-    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
-    var conversation = conversationBox
-        .query(
-          DBConversationModel_.conversationId.equals(conversationId),
-        )
-        .build()
-        .findUnique();
+    var conversation = await IsmChatConfig.dbWrapper
+        .getConversation(conversationId: conversationId);
 
     if (conversation != null) {
-      conversation.messages.addAll(messages.map((e) => e.toJson()).toList());
-      conversationBox.put(
-        conversation,
-      );
+      conversation.messages?.addAll(messages);
+      await IsmChatConfig.dbWrapper
+          .saveConversation(conversation: conversation);
     }
 
     return messages;
@@ -113,77 +107,70 @@ class IsmChatPageViewModel {
       if (messageId == null || messageId.isEmpty) {
         return false;
       }
+      var dbBox = IsmChatConfig.dbWrapper;
       if (sendMessageType == SendMessageType.pendingMessage) {
-        var pendingMessgeBox = IsmChatConfig.objectBox.pendingMessageBox;
-        var chatConversationBox = IsmChatConfig.objectBox.chatConversationBox;
-        final pendingQuery = pendingMessgeBox
-            .query(PendingMessageModel_.conversationId.equals(conversationId))
-            .build();
-        final chatPendingMessages = pendingQuery.findUnique();
+        final chatPendingMessages = await dbBox.getConversation(
+            conversationId: conversationId, dbBox: IsmChatDbBox.pending);
         if (chatPendingMessages == null) {
           return false;
         }
         // Todo update messgae with url for audio
-        for (var x = 0; x < chatPendingMessages.messages.length; x++) {
-          var pendingMessage =
-              IsmChatMessageModel.fromJson(chatPendingMessages.messages[x]);
+        for (var x = 0; x < chatPendingMessages.messages!.length; x++) {
+          var pendingMessage = chatPendingMessages.messages![x];
           if (pendingMessage.messageId!.isNotEmpty ||
               pendingMessage.sentAt != createdAt) {
             continue;
           }
           pendingMessage.messageId = messageId;
           pendingMessage.deliveredToAll = false;
-          chatPendingMessages.messages.removeAt(x);
-          pendingMessgeBox.put(chatPendingMessages);
-
-          if (chatPendingMessages.messages.isEmpty) {
-            pendingMessgeBox.remove(chatPendingMessages.id);
+          chatPendingMessages.messages?.removeAt(x);
+          await dbBox.saveConversation(
+              conversation: chatPendingMessages, dbBox: IsmChatDbBox.pending);
+          if (chatPendingMessages.messages!.isEmpty) {
+            await dbBox.pendingMessageBox
+                .delete(chatPendingMessages.conversationId!);
           }
-
-          final query = chatConversationBox
-              .query(DBConversationModel_.conversationId.equals(conversationId))
-              .build();
-          final conversationModel = query.findUnique();
+          final conversationModel =
+              await dbBox.getConversation(conversationId: conversationId);
           if (conversationModel != null) {
-            conversationModel.messages.add(pendingMessage.toJson());
+            conversationModel.messages?.add(pendingMessage);
           }
-          chatConversationBox.put(conversationModel!, mode: PutMode.update);
+          await dbBox.saveConversation(conversation: conversationModel!);
           return true;
         }
       } else {
-        var forwardMessgeBox = IsmChatConfig.objectBox.forwardMessageBox;
-        var chatConversationBox = IsmChatConfig.objectBox.chatConversationBox;
-        final chatForwardMessages = forwardMessgeBox
-            .query(ForwardMessageModel_.conversationId.equals(conversationId))
-            .build()
-            .findUnique();
+        final chatForwardMessages = await dbBox.getConversation(
+            conversationId: conversationId, dbBox: IsmChatDbBox.forward);
 
         if (chatForwardMessages == null) {
           return false;
         }
-        for (var x = 0; x < chatForwardMessages.messages.length; x++) {
-          var pendingMessage =
-              IsmChatMessageModel.fromJson(chatForwardMessages.messages[x]);
+        for (var x = 0; x < chatForwardMessages.messages!.length; x++) {
+          var pendingMessage = chatForwardMessages.messages![x];
           if (pendingMessage.messageId!.isNotEmpty ||
               pendingMessage.sentAt != createdAt) {
             continue;
           }
           pendingMessage.messageId = messageId;
           pendingMessage.deliveredToAll = false;
-          chatForwardMessages.messages.removeAt(x);
-          forwardMessgeBox.put(chatForwardMessages);
-          if (chatForwardMessages.messages.isEmpty) {
-            forwardMessgeBox.remove(chatForwardMessages.id);
+          chatForwardMessages.messages?.removeAt(x);
+          await dbBox.saveConversation(
+              conversation: chatForwardMessages, dbBox: IsmChatDbBox.forward);
+
+          if (chatForwardMessages.messages!.isEmpty) {
+            await dbBox.forwardMessageBox
+                .delete(chatForwardMessages.conversationId!);
           }
 
-          final query = chatConversationBox
-              .query(DBConversationModel_.conversationId.equals(conversationId))
-              .build();
-          final conversationModel = query.findUnique();
+          final conversationModel = await dbBox.getConversation(
+            conversationId: conversationId,
+          );
           if (conversationModel != null) {
-            conversationModel.messages.add(pendingMessage.toJson());
+            conversationModel.messages?.add(pendingMessage);
           }
-          chatConversationBox.put(conversationModel!, mode: PutMode.update);
+          await dbBox.saveConversation(
+            conversation: conversationModel!,
+          );
           return true;
         }
       }
@@ -404,7 +391,7 @@ class IsmChatPageViewModel {
         return;
       }
     }
-    var allMessages = await IsmChatConfig.objectBox.getMessages(conversationId);
+    var allMessages = await IsmChatConfig.dbWrapper.getMessage(conversationId);
     if (allMessages == null) {
       return;
     }
@@ -424,8 +411,14 @@ class IsmChatPageViewModel {
         },
       );
     }
+    var conversation = await IsmChatConfig.dbWrapper
+        .getConversation(conversationId: conversationId);
+    if (conversation != null) {
+      conversation.copyWith(messages: allMessages);
+      await IsmChatConfig.dbWrapper
+          .saveConversation(conversation: conversation);
+    }
 
-    await IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
     await Get.find<IsmChatPageController>().getMessagesFromDB(conversationId);
   }
 
@@ -444,7 +437,7 @@ class IsmChatPageViewModel {
     if (response == null || response.hasError) {
       return;
     }
-    var allMessages = await IsmChatConfig.objectBox.getMessages(conversationId);
+    var allMessages = await IsmChatConfig.dbWrapper.getMessage(conversationId);
     if (allMessages == null) {
       return;
     }
@@ -458,22 +451,24 @@ class IsmChatPageViewModel {
       }
       // allMessages.removeWhere((e) => e.messageId == x.messageId);
     }
-    await IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
+    var conversation = await IsmChatConfig.dbWrapper
+        .getConversation(conversationId: conversationId);
+    if (conversation != null) {
+      conversation.copyWith(messages: allMessages);
+      await IsmChatConfig.dbWrapper
+          .saveConversation(conversation: conversation);
+    }
     await Get.find<IsmChatPageController>().getMessagesFromDB(conversationId);
   }
 
-  Future<void> clearAllMessages(
-      {required String conversationId, bool fromServer = true}) async {
-    if (fromServer) {
-      var response = await _repository.clearAllMessages(
-        conversationId: conversationId,
-      );
-      if (!response!.hasError) {
-        await IsmChatConfig.objectBox
-            .clearAllMessage(conversationId: conversationId);
-      }
-    } else {
-      await IsmChatConfig.objectBox
+  Future<void> clearAllMessages({
+    required String conversationId,
+  }) async {
+    var response = await _repository.clearAllMessages(
+      conversationId: conversationId,
+    );
+    if (!response!.hasError) {
+      await IsmChatConfig.dbWrapper
           .clearAllMessage(conversationId: conversationId);
     }
   }
@@ -549,7 +544,7 @@ class IsmChatPageViewModel {
     }
 
     var allMessages =
-        await IsmChatConfig.objectBox.getMessages(reaction.conversationId);
+        await IsmChatConfig.dbWrapper.getMessage(reaction.conversationId);
     if (allMessages == null) {
       return;
     }
@@ -567,6 +562,7 @@ class IsmChatPageViewModel {
     }
     if (isEmoji == false) {
       message.reactions ??= [];
+
       message.reactions?.add(
         MessageReactionModel(
           emojiKey: reaction.reactionType.value,
@@ -580,8 +576,13 @@ class IsmChatPageViewModel {
 
     allMessages[messageIndex] = message;
 
-    await IsmChatConfig.objectBox
-        .saveMessages(reaction.conversationId, allMessages);
+    var conversation = await IsmChatConfig.dbWrapper
+        .getConversation(conversationId: reaction.conversationId);
+    if (conversation != null) {
+      conversation.copyWith(messages: allMessages);
+      await IsmChatConfig.dbWrapper
+          .saveConversation(conversation: conversation);
+    }
     var controller = Get.find<IsmChatPageController>();
     controller.didReactedLast = true;
     await controller.getMessagesFromDB(reaction.conversationId);
@@ -594,7 +595,7 @@ class IsmChatPageViewModel {
     }
 
     var allMessages =
-        await IsmChatConfig.objectBox.getMessages(reaction.conversationId);
+        await IsmChatConfig.dbWrapper.getMessage(reaction.conversationId);
     if (allMessages == null) {
       return;
     }
@@ -621,8 +622,13 @@ class IsmChatPageViewModel {
 
     allMessages[messageIndex] = message;
 
-    await IsmChatConfig.objectBox
-        .saveMessages(reaction.conversationId, allMessages);
+    var conversation = await IsmChatConfig.dbWrapper
+        .getConversation(conversationId: reaction.conversationId);
+    if (conversation != null) {
+      conversation.copyWith(messages: allMessages);
+      await IsmChatConfig.dbWrapper
+          .saveConversation(conversation: conversation);
+    }
     var controller = Get.find<IsmChatPageController>();
     controller.didReactedLast = true;
     await controller.getMessagesFromDB(reaction.conversationId);

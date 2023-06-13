@@ -138,7 +138,7 @@ class IsmChatApp extends StatelessWidget {
 
   /// Call this function for Get all Conversation List
   static Future<List<IsmChatConversationModel>> getAllConversation() async =>
-      IsmChatConfig.objectBox.getAllConversations();
+      IsmChatConfig.dbWrapper.getAllConversations();
 
   /// Call this function for update conversation Details in meta data
   static Future<void> updateConversation(
@@ -154,7 +154,7 @@ class IsmChatApp extends StatelessWidget {
 
   /// Call this function on SignOut to delete the data stored locally in the Local Database
   static void logout() async {
-    await IsmChatConfig.objectBox.deleteChatLocalDb();
+    await IsmChatConfig.dbWrapper.deleteChatLocalDb();
     await Future.wait([
       Get.delete<IsmChatConversationsController>(force: true),
       Get.delete<IsmChatMqttController>(force: true),

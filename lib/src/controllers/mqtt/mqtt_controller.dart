@@ -278,38 +278,32 @@ class IsmChatMqttController extends GetxController {
     if (message.senderInfo!.userId == _communicationConfig.userConfig.userId) {
       return;
     }
-
-    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
-
-    var conversation = conversationBox
-        .query(
-            DBConversationModel_.conversationId.equals(message.conversationId!))
-        .build()
-        .findUnique();
+    var conversation = await IsmChatConfig.dbWrapper
+        .getConversation(conversationId: message.conversationId);
 
     if (conversation == null ||
-        conversation.lastMessageDetails.target!.messageId ==
-            message.messageId) {
+        conversation.lastMessageDetails?.messageId == message.messageId) {
       return;
     }
 
     // To handle and show last message & unread count in conversation list
-    conversation.lastMessageDetails.target =
-        conversation.lastMessageDetails.target!.copyWith(
-      sentByMe: message.sentByMe,
-      showInConversation: true,
-      sentAt: message.sentAt,
-      senderName: message.senderInfo!.userName,
-      messageType: message.messageType?.value ?? 0,
-      messageId: message.messageId!,
-      conversationId: message.conversationId!,
-      body: message.body,
-      customType: message.customType,
-    );
+    conversation.copyWith(
+        unreadMessagesCount: conversation.unreadMessagesCount! + 1,
+        lastMessageDetails: conversation.lastMessageDetails?.copyWith(
+          sentByMe: message.sentByMe,
+          showInConversation: true,
+          sentAt: message.sentAt,
+          senderName: message.senderInfo!.userName,
+          messageType: message.messageType?.value ?? 0,
+          messageId: message.messageId!,
+          conversationId: message.conversationId!,
+          body: message.body,
+          customType: message.customType,
+        ));
 
-    conversation.unreadMessagesCount = conversation.unreadMessagesCount! + 1;
-    conversation.messages.add(message.toJson());
-    conversationBox.put(conversation);
+    conversation.messages?.add(message);
+
+    await IsmChatConfig.dbWrapper.saveConversation(conversation: conversation);
     unawaited(conversationController.getConversationsFromDB());
     await conversationController.pingMessageDelivered(
       conversationId: message.conversationId!,
@@ -427,16 +421,11 @@ class IsmChatMqttController extends GetxController {
         _communicationConfig.userConfig.userId) {
       return;
     }
-    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
-    var conversation = conversationBox
-        .query(DBConversationModel_.conversationId
-            .equals(actionModel.conversationId!))
-        .build()
-        .findUnique();
-    if (conversation != null) {
-      var lastMessage =
-          IsmChatMessageModel.fromJson(conversation.messages.last);
+    var conversation = await IsmChatConfig.dbWrapper
+        .getConversation(conversationId: actionModel.conversationId);
 
+    if (conversation != null) {
+      var lastMessage = conversation.messages!.last;
       if (lastMessage.messageId == actionModel.messageId) {
         var isDelivered = lastMessage.deliveredTo
             ?.any((e) => e.userId == actionModel.userDetails?.userId);
@@ -476,15 +465,11 @@ class IsmChatMqttController extends GetxController {
         _communicationConfig.userConfig.userId) {
       return;
     }
-    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
-    var conversation = conversationBox
-        .query(DBConversationModel_.conversationId
-            .equals(actionModel.conversationId!))
-        .build()
-        .findUnique();
+    var conversation = await IsmChatConfig.dbWrapper
+        .getConversation(conversationId: actionModel.conversationId!);
+
     if (conversation != null) {
-      var lastMessage =
-          IsmChatMessageModel.fromJson(conversation.messages.last);
+      var lastMessage = conversation.messages!.last;
       if (lastMessage.messageId == actionModel.messageId) {
         var isDelivered = lastMessage.readBy
             ?.any((e) => e.userId == actionModel.userDetails?.userId);
@@ -506,7 +491,8 @@ class IsmChatMqttController extends GetxController {
             conversation.lastMessageDetails.target!.copyWith(
           readCount: lastMessage.readBy?.length,
         );
-        conversationBox.put(conversation);
+        await IsmChatConfig.dbWrapper
+            .saveConversation(conversation: conversation);
         if (Get.isRegistered<IsmChatPageController>()) {
           await Get.find<IsmChatPageController>()
               .getMessagesFromDB(actionModel.conversationId!);
@@ -522,23 +508,17 @@ class IsmChatMqttController extends GetxController {
         _communicationConfig.userConfig.userId) {
       return;
     }
-    var conversationBox = IsmChatConfig.objectBox.chatConversationBox;
-    var conversation = conversationBox
-        .query(DBConversationModel_.conversationId
-            .equals(actionModel.conversationId!))
-        .build()
-        .findUnique();
+    var conversation = await IsmChatConfig.dbWrapper
+        .getConversation(conversationId: actionModel.conversationId!);
 
     if (conversation == null) {
       return;
     }
-    var allMessages =
-        conversation.messages.map(IsmChatMessageModel.fromJson).toList();
-
-    var modifiedMessages = <String>[];
-    for (var message in allMessages) {
-      if (message.deliveredToAll! && message.readByAll!) {
-        modifiedMessages.add(message.toJson());
+    var allMessages = conversation.messages;
+    var modifiedMessages = <IsmChatMessageModel>[];
+    for (var message in allMessages ?? <IsmChatMessageModel>[]) {
+      if (message.deliveredToAll == true && message.readByAll == true) {
+        modifiedMessages.add(message);
       } else {
         var isDelivered = message.deliveredTo
             ?.any((e) => e.userId == actionModel.userDetails?.userId);
@@ -578,17 +558,21 @@ class IsmChatMqttController extends GetxController {
               : false,
         );
 
-        modifiedMessages.add(modified.toJson());
+        modifiedMessages.add(modified);
       }
     }
-    conversation.messages = modifiedMessages;
-    var lastMessage = IsmChatMessageModel.fromJson(conversation.messages.last);
-    conversation.lastMessageDetails.target =
-        conversation.lastMessageDetails.target!.copyWith(
-      deliverCount: lastMessage.deliveredTo?.length,
-      readCount: lastMessage.readBy?.length,
-    );
-    conversationBox.put(conversation);
+    conversation.copyWith(
+        messages: modifiedMessages,
+        lastMessageDetails: conversation.lastMessageDetails?.copyWith(
+          deliverCount: conversation.isGroup!
+              ? conversation.lastMessageDetails!.deliverCount + 1
+              : 1,
+          readCount: conversation.isGroup!
+              ? conversation.lastMessageDetails!.readCount + 1
+              : 1,
+        ));
+
+    await IsmChatConfig.dbWrapper.saveConversation(conversation: conversation);
     if (Get.isRegistered<IsmChatPageController>()) {
       var controller = Get.find<IsmChatPageController>();
       if (controller.conversation!.conversationId ==
@@ -606,7 +590,7 @@ class IsmChatMqttController extends GetxController {
       return;
     }
     var allMessages =
-        await IsmChatConfig.objectBox.getMessages(actionModel.conversationId!);
+        await IsmChatConfig.dbWrapper.getMessage(actionModel.conversationId!);
     if (allMessages == null) {
       return;
     }
@@ -620,8 +604,15 @@ class IsmChatMqttController extends GetxController {
         //  allMessages.removeWhere((e) => e.messageId! == x);
       }
     }
-    await IsmChatConfig.objectBox
-        .saveMessages(actionModel.conversationId!, allMessages);
+
+    var conversation = await IsmChatConfig.dbWrapper
+        .getConversation(conversationId: actionModel.conversationId);
+    if (conversation != null) {
+      conversation.copyWith(messages: allMessages);
+      await IsmChatConfig.dbWrapper
+          .saveConversation(conversation: conversation);
+    }
+
     if (Get.isRegistered<IsmChatPageController>()) {
       var controller = Get.find<IsmChatPageController>();
       if (controller.conversation!.conversationId ==
@@ -832,8 +823,8 @@ class IsmChatMqttController extends GetxController {
       var controller = Get.find<IsmChatPageController>();
       if (controller.conversation!.conversationId ==
           actionModel.conversationId) {
-        var allMessages = await IsmChatConfig.objectBox
-            .getMessages(actionModel.conversationId);
+        var allMessages = await IsmChatConfig.dbWrapper
+            .getMessage(actionModel.conversationId!);
         if (allMessages == null) {
           return;
         }
@@ -865,11 +856,15 @@ class IsmChatMqttController extends GetxController {
             allMessages.indexWhere((e) => e.messageId == actionModel.messageId);
 
         allMessages[messageIndex] = message;
-
-        await IsmChatConfig.objectBox
-            .saveMessages(actionModel.conversationId ?? '', allMessages);
-        await Get.find<IsmChatPageController>()
-            .getMessagesFromDB(actionModel.conversationId ?? '');
+        var conversation = await IsmChatConfig.dbWrapper
+            .getConversation(conversationId: actionModel.conversationId);
+        if (conversation != null) {
+          conversation.copyWith(messages: allMessages);
+          await IsmChatConfig.dbWrapper
+              .saveConversation(conversation: conversation);
+          await Get.find<IsmChatPageController>()
+              .getMessagesFromDB(actionModel.conversationId ?? '');
+        }
       }
     }
     await Get.find<IsmChatConversationsController>().getChatConversations();
@@ -885,8 +880,8 @@ class IsmChatMqttController extends GetxController {
       var controller = Get.find<IsmChatPageController>();
       if (controller.conversation!.conversationId ==
           actionModel.conversationId) {
-        var allMessages = await IsmChatConfig.objectBox
-            .getMessages(actionModel.conversationId);
+        var allMessages = await IsmChatConfig.dbWrapper
+            .getMessage(actionModel.conversationId!);
         if (allMessages == null) {
           return;
         }
@@ -915,10 +910,15 @@ class IsmChatMqttController extends GetxController {
             allMessages.indexWhere((e) => e.messageId == actionModel.messageId);
         allMessages[messageIndex] = message;
 
-        await IsmChatConfig.objectBox
-            .saveMessages(actionModel.conversationId ?? '', allMessages);
-        await Get.find<IsmChatPageController>()
-            .getMessagesFromDB(actionModel.conversationId ?? '');
+        var conversation = await IsmChatConfig.dbWrapper
+            .getConversation(conversationId: actionModel.conversationId);
+        if (conversation != null) {
+          conversation.copyWith(messages: allMessages);
+          await IsmChatConfig.dbWrapper
+              .saveConversation(conversation: conversation);
+          await Get.find<IsmChatPageController>()
+              .getMessagesFromDB(actionModel.conversationId ?? '');
+        }
       }
     }
     await Get.find<IsmChatConversationsController>().getChatConversations();

@@ -233,11 +233,14 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                           lastMessageSentAt: 0,
                                           membersCount: 1,
                                         );
-                                        ismChatConversation.conversationId =
-                                            controller
-                                                .getConversationId(
-                                                    user.userDetails.userId)
-                                                .toString();
+                                        ismChatConversation =
+                                            ismChatConversation.copyWith(
+                                          conversationId:
+                                              controller.getConversationId(
+                                            user.userDetails.userId,
+                                          ),
+                                        );
+
                                         Get.back<void>();
                                         controller.navigateToMessages(
                                             ismChatConversation);
