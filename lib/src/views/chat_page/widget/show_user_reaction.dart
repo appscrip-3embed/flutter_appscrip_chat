@@ -58,7 +58,7 @@ class _ImsChatShowUserReactionState extends State<ImsChatShowUserReaction>
             height: IsmChatDimens.fifty,
             child: TabBar(
               controller: _tabController,
-              isScrollable: reactionLength > 6 ? true : false,
+              isScrollable: reactionLength > 5 ? true : false,
               tabs: List.generate(reactionLength, (index) {
                 var reactionValue =
                     getIsmChatEmoji(message: widget.message, index: index);
@@ -95,72 +95,64 @@ class _ImsChatShowUserReactionState extends State<ImsChatShowUserReaction>
           SizedBox(
             height: IsmChatDimens.percentHeight(.3),
             child: TabBarView(
-                controller: _tabController,
-                children: List.generate(
-                    reactionLength,
-                    (index) => ListView(
-                          children: List.generate(
-                            widget.message.reactions?[index].userIds.length ??
-                                0,
-                            (indexUserId) {
-                              var userId = widget.message.reactions?[index]
-                                  .userIds[indexUserId];
+              controller: _tabController,
+              children: List.generate(
+                reactionLength,
+                (index) => ListView(
+                  children: List.generate(
+                    widget.message.reactions?[index].userIds.length ?? 0,
+                    (indexUserId) {
+                      var userId =
+                          widget.message.reactions?[index].userIds[indexUserId];
 
-                              var showOwnUser = false;
-                              if (userId ==
-                                  IsmChatConfig
-                                      .communicationConfig.userConfig.userId) {
-                                showOwnUser = true;
-                              }
-                              return IsmChatTapHandler(
-                                onTap: () async {
-                                  Get.back();
-                                  if (showOwnUser) {
-                                    await widget._controller.deleteReacton(
-                                        reaction: Reaction(
-                                            reactionType: ismChatEmoji,
-                                            messageId:
-                                                widget.message.messageId ?? '',
-                                            conversationId:
-                                                widget.message.conversationId ??
-                                                    ''));
-                                  }
-                                },
-                                child: ListTile(
-                                  title: Text(showOwnUser
-                                      ? IsmChatConfig.communicationConfig
-                                              .userConfig.userName.isNotEmpty
-                                          ? IsmChatConfig.communicationConfig
-                                              .userConfig.userName
-                                          : Get.find<IsmChatConversationsController>()
-                                                  .userDetails
-                                                  ?.userName ??
-                                              ''
-                                      : widget._controller.conversation
-                                              ?.chatName ??
-                                          ''),
-                                  subtitle: showOwnUser
-                                      ? const Text(
-                                          IsmChatStrings.removeReaction)
-                                      : Text(widget
-                                              ._controller
-                                              .conversation
-                                              ?.opponentDetails
-                                              ?.userIdentifier ??
-                                          ''),
-                                  leading: IsmChatImage.profile(showOwnUser
-                                      ? Get.find<IsmChatConversationsController>()
-                                              .userDetails
-                                              ?.userProfileImageUrl ??
-                                          ''
-                                      : widget._controller.conversation
-                                              ?.profileUrl ??
-                                          ''),
-                                ),
-                              );
-                            },
-                          ),
-                        ))),
+                      var showOwnUser = false;
+                      if (userId ==
+                          IsmChatConfig.communicationConfig.userConfig.userId) {
+                        showOwnUser = true;
+                      }
+                      return IsmChatTapHandler(
+                        onTap: () async {
+                          Get.back();
+                          if (showOwnUser) {
+                            await widget._controller.deleteReacton(
+                                reaction: Reaction(
+                                    reactionType: ismChatEmoji,
+                                    messageId: widget.message.messageId ?? '',
+                                    conversationId:
+                                        widget.message.conversationId ?? ''));
+                          }
+                        },
+                        child: ListTile(
+                          title: Text(showOwnUser
+                              ? IsmChatConfig.communicationConfig.userConfig
+                                      .userName.isNotEmpty
+                                  ? IsmChatConfig
+                                      .communicationConfig.userConfig.userName
+                                  : Get.find<IsmChatConversationsController>()
+                                          .userDetails
+                                          ?.userName ??
+                                      ''
+                              : widget._controller.conversation?.chatName ??
+                                  ''),
+                          subtitle: showOwnUser
+                              ? const Text(IsmChatStrings.removeReaction)
+                              : Text(widget._controller.conversation
+                                      ?.opponentDetails?.userIdentifier ??
+                                  ''),
+                          leading: IsmChatImage.profile(showOwnUser
+                              ? Get.find<IsmChatConversationsController>()
+                                      .userDetails
+                                      ?.userProfileImageUrl ??
+                                  ''
+                              : widget._controller.conversation?.profileUrl ??
+                                  ''),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
           ),
           // SizedBox(
           //   width: IsmChatDimens.percentWidth(.5),

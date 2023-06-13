@@ -115,14 +115,18 @@ class IsmChatMetaData {
       };
 
   factory IsmChatMetaData.fromMap(Map<String, dynamic> map) => IsmChatMetaData(
-      country: map['country'] as String? ?? '',
-      parentMessageBody: map['parentMessageBody'] as String? ?? '',
-      locationAddress:
-          map['locationAddress'] as String?  ?? ''
-        ,
+      country: map['country'] != null ? map['country'] as String : null,
+      parentMessageBody: map['parentMessageBody'] != null
+          ? map['parentMessageBody'] as String
+          : null,
+      locationAddress: map['locationAddress'] != null
+          ? map['locationAddress'] as String
+          : null,
       profilePic:
-          map['profilePic'] as String? ?? '',
-      parentMessageInitiator: map['parentMessageInitiator'] as bool? ?? false,
+          map['profilePic'] != null ? map['profilePic'] as String : null,
+      parentMessageInitiator: map['parentMessageInitiator'] != null
+          ? map['parentMessageInitiator'] as bool
+          : null,
       firstName: map['firstName'] as String? ?? '',
       lastName: map['lastName'] as String? ?? '',
       userId: map['userId'] as String? ?? '',
