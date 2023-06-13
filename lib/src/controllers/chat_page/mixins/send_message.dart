@@ -54,7 +54,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           ?.copyWith(deliverCount: 0);
       dbConversationModel.config.target = _controller.conversation?.config;
       dbConversationModel.metaData = _controller.conversation?.metaData;
-      await IsmChatConfig.objectBox.createAndUpdateDB(dbConversationModel);
+      await IsmChatConfig.objectBox
+          .createAndUpdateConversation(dbConversationModel);
       return conversationId.toString();
     }
 

@@ -1,65 +1,78 @@
-import 'dart:io';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:get/get.dart';
-import 'package:path_provider/path_provider.dart';
-
-export 'package:objectbox/objectbox.dart';
+import 'package:hive/hive.dart';
 // import 'objectbox.g.dart'; // created by `flutter pub run build_runner build`
 
 /// Provides access to the ObjectBox Store throughout the presenter.
 ///
 /// Create this in the apps main function.
-class IsmChatObjectBox {
-  IsmChatObjectBox._create(this.store) {
-    userDetailsBox = Box<UserDetails>(store);
-    chatConversationBox = Box<DBConversationModel>(store);
-    pendingMessageBox = Box<PendingMessageModel>(store);
-    forwardMessageBox = Box<ForwardMessageModel>(store);
-  }
-
-  static late final String _dbPath;
+class IsmChatDBWrapper {
+  IsmChatDBWrapper._create(this.collection);
 
   /// The Store of this presenter.
-  late final Store store;
+  late final BoxCollection collection;
+
+  static const String _userBox = 'user';
+  static const String _conversationBox = 'conversation';
+  static const String _forwardBox = 'forward';
+  static const String _pendingBox = 'pending';
 
   /// A Box of user Details.
-  late final Box<UserDetails> userDetailsBox;
+  late final CollectionBox<Map> userDetailsBox;
 
   /// A Box of Pending message.
-  late final Box<PendingMessageModel> pendingMessageBox;
+  late final CollectionBox<Map> pendingMessageBox;
 
   /// A Box of Forward Message box.
-  late final Box<ForwardMessageModel> forwardMessageBox;
+  late final CollectionBox<Map> forwardMessageBox;
 
   /// A Box of Conversation model
-  late final Box<DBConversationModel> chatConversationBox;
+  late final CollectionBox<Map> chatConversationBox;
 
-  // static Query<UserMessage> query = noteBox.query(UserMessage_.conversationId.equals())
-
-  static Future<IsmChatObjectBox> _openStore() async {
-    // Future<Store> openStore() {...} is defined in the generated objectbox.g.dart.
-    final store = await openStore(directory: _dbPath);
-    IsmChatLog.success('[CREATED] - Objectbox databse at $_dbPath');
-    return IsmChatObjectBox._create(store);
+  Future<void> _createBox() async {
+    var boxes = await Future.wait([
+      collection.openBox<Map>(_userBox),
+      collection.openBox<Map>(_conversationBox),
+      collection.openBox<Map>(_pendingBox),
+      collection.openBox<Map>(_forwardBox),
+    ]);
+    userDetailsBox = boxes[0];
+    chatConversationBox = boxes[1];
+    pendingMessageBox = boxes[2];
+    forwardMessageBox = boxes[3];
   }
 
-  List<IsmChatConversationModel> getAllConversations() {
-    var conversations = chatConversationBox.getAll();
-    if (conversations.isEmpty) {
-      return [];
-    }
-    return conversations.map(IsmChatConversationModel.fromDB).toList();
+  /// Create an instance of ObjectBox to use throughout the presenter.
+  static Future<IsmChatDBWrapper> create([String? databaseName]) async {
+    // Future<Store> openStore() {...} is defined in the generated objectbox.g.dart.
+
+    var dbName = databaseName ?? IsmChatConfig.dbName;
+    final collection = await BoxCollection.open(
+      dbName,
+      {
+        _userBox,
+        _conversationBox,
+        _pendingBox,
+        _forwardBox,
+      },
+    );
+
+    var instance = IsmChatDBWrapper._create(collection);
+    await instance._createBox();
+    return instance;
   }
 
   /// delete chat object box
   Future<void> deleteChatLocalDb() async {
-    userDetailsBox.removeAll();
-    chatConversationBox.removeAll();
-    pendingMessageBox.removeAll();
-    forwardMessageBox.removeAll();
-    await Get.find<IsmChatMqttController>().unSubscribe();
-    await Get.find<IsmChatMqttController>().disconnect();
+    await Future.wait([
+      userDetailsBox.clear(),
+      chatConversationBox.clear(),
+      pendingMessageBox.clear(),
+      forwardMessageBox.clear(),
+      Get.find<IsmChatMqttController>().unSubscribe(),
+      Get.find<IsmChatMqttController>().disconnect(),
+    ]);
+
     IsmChatLog.success('[CLEARED] - All entries are removed from database');
   }
 
@@ -71,41 +84,110 @@ class IsmChatObjectBox {
     }
   }
 
+  Future<List<IsmChatConversationModel>> getAllConversations() async {
+    var keys = await chatConversationBox.getAllKeys();
+    var conversations = await chatConversationBox.getAll(keys);
+    if (conversations.isEmpty) {
+      return [];
+    }
+    return conversations
+        .where((element) => element != null)
+        .map(
+            (e) => IsmChatConversationModel.fromMap(e! as Map<String, dynamic>))
+        .toList();
+  }
+
+  Future<IsmChatConversationModel?> getConversation(
+    String? conversationId,
+  ) async {
+    if (conversationId == null || conversationId.trim().isEmpty) {
+      return null;
+    }
+    var map =
+        await chatConversationBox.get(conversationId) as Map<String, dynamic>?;
+    if (map == null) {
+      return null;
+    }
+    return IsmChatConversationModel.fromMap(map);
+  }
+
+  Future<bool> _saveConversation(
+    IsmChatConversationModel conversation,
+  ) async {
+    if (conversation.conversationId == null ||
+        conversation.conversationId!.trim().isEmpty) {
+      return false;
+    }
+
+    await chatConversationBox.put(
+      conversation.conversationId!,
+      conversation.toMap(),
+    );
+    return true;
+  }
+
+  Future<IsmChatMessageModel?> _getMessage(String? messageId,
+      [bool isPendingBox = true]) async {
+    if (messageId == null || messageId.trim().isEmpty) {
+      return null;
+    }
+    Map<String, dynamic>? map;
+    if (isPendingBox) {
+      map = await pendingMessageBox.get(messageId) as Map<String, dynamic>?;
+    } else {
+      map = await forwardMessageBox.get(messageId) as Map<String, dynamic>?;
+    }
+    if (map == null) {
+      return null;
+    }
+    return IsmChatMessageModel.fromMap(map);
+  }
+
+  Future<bool> _saveMessage(
+    IsmChatMessageModel message, [
+    bool isPendingBox = true,
+  ]) async {
+    if (message.messageId == null || message.messageId!.trim().isEmpty) {
+      return false;
+    }
+    if (isPendingBox) {
+      await pendingMessageBox.put(message.messageId!, message.toMap());
+    } else {
+      await forwardMessageBox.put(message.messageId!, message.toMap());
+    }
+    return true;
+  }
+
   /// Create Db with user
-  Future<void> createAndUpdateDB(DBConversationModel dbConversation) async {
+  Future<void> createAndUpdateConversation(
+    IsmChatConversationModel conversationModel,
+  ) async {
     try {
-      var resposne = chatConversationBox.getAll();
+      var resposne = await getAllConversations();
       if (resposne.isEmpty) {
-        chatConversationBox.put(dbConversation);
+        await chatConversationBox.put(
+          conversationModel.conversationId!,
+          conversationModel.toMap(),
+        );
       } else {
-        final query = chatConversationBox
-            .query(DBConversationModel_.conversationId
-                .equals(dbConversation.conversationId!))
-            .build();
-        final chatConversationResponse = query.findUnique();
-        if (chatConversationResponse != null) {
-          chatConversationResponse.conversationImageUrl =
-              dbConversation.conversationImageUrl;
-          chatConversationResponse.conversationTitle =
-              dbConversation.conversationTitle;
-          chatConversationResponse.isGroup = dbConversation.isGroup;
-          chatConversationResponse.membersCount = dbConversation.membersCount;
-          chatConversationResponse.lastMessageSentAt =
-              dbConversation.lastMessageSentAt;
-          chatConversationResponse.messagingDisabled =
-              dbConversation.messagingDisabled;
-          chatConversationResponse.unreadMessagesCount =
-              dbConversation.unreadMessagesCount;
-          chatConversationResponse.opponentDetails.target =
-              dbConversation.opponentDetails.target;
-          chatConversationResponse.lastMessageDetails.target =
-              dbConversation.lastMessageDetails.target;
-          chatConversationResponse.config.target = dbConversation.config.target;
-          chatConversationResponse.metaData = dbConversation.metaData;
-          chatConversationBox.put(chatConversationResponse);
-        } else {
-          chatConversationBox.put(dbConversation);
+        var conversation =
+            await getConversation(conversationModel.conversationId);
+        if (conversation == null) {
+          await _saveConversation(conversation!);
+          return;
         }
+        conversation = conversation.copyWith(
+          isGroup: conversationModel.isGroup,
+          membersCount: conversationModel.membersCount,
+          lastMessageDetails: conversationModel.lastMessageDetails,
+          messagingDisabled: conversationModel.messagingDisabled,
+          unreadMessagesCount: conversationModel.unreadMessagesCount,
+          opponentDetails: conversationModel.opponentDetails,
+          lastMessageSentAt: conversationModel.lastMessageSentAt,
+          config: conversationModel.config,
+          metaData: conversationModel.metaData,
+        );
+        await _saveConversation(conversation);
       }
     } catch (e, st) {
       IsmChatLog.error('$e \n$st');
@@ -114,20 +196,17 @@ class IsmChatObjectBox {
 
   /// Add pending Message
   Future<void> addPendingMessage(IsmChatMessageModel messageModel) async {
-    final query = pendingMessageBox
-        .query(PendingMessageModel_.conversationId
-            .equals(messageModel.conversationId ?? ''))
-        .build();
-    final chatPendingMessages = query.findUnique();
+    final chatPendingMessages =
+        await getConversation(messageModel.conversationId);
     if (chatPendingMessages != null) {
       chatPendingMessages.messages.add(messageModel.toJson());
-      pendingMessageBox.put(chatPendingMessages);
+      await pendingMessageBox.put(chatPendingMessages);
     } else {
       var pendingMessageModel = PendingMessageModel(
         conversationId: messageModel.conversationId ?? '',
         messages: [messageModel.toJson()],
       );
-      pendingMessageBox.put(pendingMessageModel);
+      await pendingMessageBox.put(pendingMessageModel);
     }
   }
 
@@ -140,12 +219,12 @@ class IsmChatObjectBox {
     final chatForwardMessages = query.findUnique();
     if (chatForwardMessages != null) {
       chatForwardMessages.messages.add(messageModel.toJson());
-      forwardMessageBox.put(chatForwardMessages);
+      await forwardMessageBox.put(chatForwardMessages);
     } else {
       var forwardMessageModel = ForwardMessageModel(
           conversationId: messageModel.conversationId ?? '',
           messages: [messageModel.toJson()]);
-      forwardMessageBox.put(forwardMessageModel);
+      await forwardMessageBox.put(forwardMessageModel);
     }
   }
 
@@ -220,8 +299,7 @@ class IsmChatObjectBox {
           body: '',
         );
       }
-
-      chatConversationBox.put(conversation);
+      await chatConversationBox.put(conversation);
       if (messages.isEmpty) {
         var conversationForPendingMessge = pendingMessageBox
             .query(PendingMessageModel_.conversationId.equals(conversationId))
@@ -256,7 +334,7 @@ class IsmChatObjectBox {
       }
       conversationForPendingMessge.messages =
           pendingMessages.map((e) => e.toJson()).toList();
-      pendingMessageBox.put(conversationForPendingMessge);
+      await pendingMessageBox.put(conversationForPendingMessge);
     }
     var conversationForForwardMessge = forwardMessageBox
         .query(ForwardMessageModel_.conversationId.equals(conversationId))
@@ -271,7 +349,7 @@ class IsmChatObjectBox {
       }
       conversationForForwardMessge.messages =
           forwardMessages.map((e) => e.toJson()).toList();
-      forwardMessageBox.put(conversationForForwardMessge);
+      await forwardMessageBox.put(conversationForForwardMessge);
     }
   }
 
@@ -296,23 +374,6 @@ class IsmChatObjectBox {
         .findUnique();
     if (conversationForForward != null) {
       forwardMessageBox.remove(conversationForForward.id);
-    }
-  }
-
-  /// Create an instance of ObjectBox to use throughout the presenter.
-  static Future<IsmChatObjectBox> create([String? databaseName]) async {
-    // Future<Store> openStore() {...} is defined in the generated objectbox.g.dart.
-    try {
-      var dbName = databaseName ?? IsmChatConfig.dbName;
-      var docDir = await getApplicationDocumentsDirectory();
-      _dbPath = '${docDir.path}/$dbName';
-      return await _openStore();
-    } on ObjectBoxException catch (e) {
-      IsmChatLog.error('[ERROR] - ObjectBox create : $e');
-      var directory = Directory(_dbPath);
-      await directory.delete(recursive: true);
-      IsmChatLog.info('[DELETED] - Database');
-      return await _openStore();
     }
   }
 }

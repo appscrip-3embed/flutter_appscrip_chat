@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/src/utilities/utilities.dart';
-import 'package:objectbox/objectbox.dart';
 
-@Entity()
 class LastMessageDetails {
   factory LastMessageDetails.fromJson(String source) =>
       LastMessageDetails.fromMap(json.decode(source) as Map<String, dynamic>);
@@ -86,13 +84,7 @@ class LastMessageDetails {
   final String? reactionType;
   final String? action;
   final String? userId;
-  @Transient()
-  IsmChatCustomMessageType? customType;
-
-  int? get dbCustomType => customType?.value;
-  set dbCustomType(int? type) {
-    customType = IsmChatCustomMessageType.fromValue(type ?? 1);
-  }
+  final IsmChatCustomMessageType? customType;
 
   LastMessageDetails copyWith({
     bool? showInConversation,

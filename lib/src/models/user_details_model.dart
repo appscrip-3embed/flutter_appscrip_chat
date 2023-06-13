@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/src/models/models.dart';
-import 'package:objectbox/objectbox.dart';
 
-@Entity()
 class UserDetails {
   factory UserDetails.fromJson(String source) =>
       UserDetails.fromMap(json.decode(source) as Map<String, dynamic>);
@@ -30,7 +28,6 @@ class UserDetails {
       isAdmin: map['isAdmin'] as bool? ?? false);
 
   UserDetails({
-    this.id = 0,
     required this.userProfileImageUrl,
     required this.userName,
     required this.userIdentifier,
@@ -49,15 +46,12 @@ class UserDetails {
     this.isAdmin = false,
   });
 
-  @Id()
-  int id;
   final String userProfileImageUrl;
   final String userName;
   final String userIdentifier;
   final String userId;
   final bool online;
-  @Transient()
-  IsmChatMetaData? metaData;
+  final IsmChatMetaData? metaData;
   final int lastSeen;
   final bool? visibility;
   final bool? notification;
@@ -69,12 +63,6 @@ class UserDetails {
   final bool isAdmin;
   final int? wordCount;
   final int? order;
-
-  String get userDBMetadata => metaData?.toJson() ?? '';
-
-  set userDBMetadata(String value) {
-    metaData = IsmChatMetaData.fromJson(value);
-  }
 
   String get profileUrl => metaData?.profilePic ?? userProfileImageUrl;
 

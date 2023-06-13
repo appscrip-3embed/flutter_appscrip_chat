@@ -12,7 +12,7 @@ class IsmChatConfig {
   static IsmChatThemeData? _chatLightTheme;
   static IsmChatThemeData? _chatDarkTheme;
   static Widget? loadingDialog;
-  static late IsmChatObjectBox objectBox;
+  static late IsmChatDBWrapper objectBox;
   static String dbName = IsmChatStrings.dbname;
   static bool isInitialized = false;
   static bool isGroupChatEnabled = false;

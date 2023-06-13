@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'package:objectbox/objectbox.dart';
 
-@Entity()
 class ConversationConfigModel {
   factory ConversationConfigModel.fromJson(String source) =>
       ConversationConfigModel.fromMap(
@@ -14,7 +12,7 @@ class ConversationConfigModel {
         pushNotifications: map['pushNotifications'] as bool? ?? false,
       );
 
-   ConversationConfigModel({
+  ConversationConfigModel({
     this.id = 0,
     required this.typingEvents,
     required this.readEvents,

@@ -39,7 +39,8 @@ class IsmChatConversationsViewModel {
       }
       dbConversationModel.config.target = conversation.config;
       dbConversationModel.metaData = conversation.metaData;
-      await IsmChatConfig.objectBox.createAndUpdateDB(dbConversationModel);
+      await IsmChatConfig.objectBox
+          .createAndUpdateConversation(dbConversationModel);
     }
 
     return conversations;

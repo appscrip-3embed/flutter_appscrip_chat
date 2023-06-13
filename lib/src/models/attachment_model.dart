@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/src/utilities/utilities.dart';
-import 'package:objectbox/objectbox.dart';
 
-@Entity()
 class AttachmentModel {
   factory AttachmentModel.fromJson(String source) =>
       AttachmentModel.fromMap(json.decode(source) as Map<String, dynamic>);
@@ -48,20 +46,7 @@ class AttachmentModel {
   String? mediaUrl;
   String? mediaId;
   String? extension;
-  @Transient()
-  IsmChatMediaType? attachmentType;
-
-  int? get attachmentIndex => attachmentType?.index;
-
-  set attachmentIndex(int? value) {
-    if (value == null) {
-      attachmentType = null;
-    }
-    if (value! < 0 || value >= IsmChatMediaType.values.length) {
-      attachmentType = IsmChatMediaType.file;
-    }
-    attachmentType = IsmChatMediaType.values[value];
-  }
+  final IsmChatMediaType? attachmentType;
 
   AttachmentModel copyWith({
     String? thumbnailUrl,
