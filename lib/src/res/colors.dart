@@ -26,4 +26,8 @@ class IsmChatColors {
   static const Color primaryColorDark = Color(0xFFC2A1F7);
 
   static const Color backgroundColorDark = Color(0xFF292929);
+
+  static const Color greyColorLight = Color(0xFFA8A8CE);
+
+  static const Color blueGreyColor = Color(0xFFF5F6FA);
 }

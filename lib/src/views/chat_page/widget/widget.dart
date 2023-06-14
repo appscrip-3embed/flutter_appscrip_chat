@@ -4,6 +4,7 @@ export 'audio_player.dart';
 export 'chat_message.dart';
 export 'conversation_info.dart';
 export 'conversation_media_widget.dart';
+export 'custom_conversation_info_audio_video_container.dart';
 export 'emoji_board.dart';
 export 'focus_menu.dart';
 export 'group_admin_dialog.dart';

@@ -12,7 +12,7 @@ class IsmMedia extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           elevation: IsmChatDimens.two,
-          title: Text(
+          title:  Text(
             IsmChatStrings.media,
             style: IsmChatStyles.w600Black18,
           ),
@@ -20,7 +20,7 @@ class IsmMedia extends StatelessWidget {
         ),
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+            padding: IsmChatDimens.edgeInsets16,
             child: mediaList.isEmpty
                 ? Center(
                     child: Text(
