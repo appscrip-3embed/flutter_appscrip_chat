@@ -12,7 +12,7 @@ class IsmMedia extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           elevation: IsmChatDimens.two,
-          title: Text(
+          title:  Text(
             IsmChatStrings.media,
             style: IsmChatStyles.w600Black18,
           ),
