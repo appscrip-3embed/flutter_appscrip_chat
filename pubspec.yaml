@@ -44,8 +44,6 @@ dependencies:
   intl: any
   link_preview_generator: ^1.2.0
   mqtt_client: ^9.8.0
-  # objectbox: ^1.7.2
-  # objectbox_flutter_libs: any
   open_filex: ^4.3.2
   path_provider: ^2.0.13
   permission_handler: ^10.2.0
@@ -66,11 +64,11 @@ dependencies:
   wechat_assets_picker: ^8.4.1
 
 dev_dependencies:
-  # build_runner: ^2.3.3
+ 
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
-  # objectbox_generator: any
+
 
 # objectbox:
 #   output_dir:

@@ -1,14 +1,15 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 // import 'objectbox.g.dart'; // created by `flutter pub run build_runner build`
 
 /// Provides access to the ObjectBox Store throughout the presenter.
 ///
 /// Create this in the apps main function.
 
-typedef IsmChatMessageBoxType = List<Map<String, dynamic>>;
-typedef IsmChatConversationTypeMap = Map<String, dynamic>;
+typedef IsmChatMessageBoxType = List<String>;
+typedef IsmChatConversationTypeMap = String;
 
 class IsmChatDBWrapper {
   IsmChatDBWrapper._create(this.collection);
@@ -48,8 +49,8 @@ class IsmChatDBWrapper {
     var boxes2 = data[1] as List<CollectionBox<IsmChatMessageBoxType>>;
     userDetailsBox = boxes[0];
     chatConversationBox = boxes[1];
-    pendingMessageBox = boxes2[2];
-    forwardMessageBox = boxes2[3];
+    pendingMessageBox = boxes2[0];
+    forwardMessageBox = boxes2[1];
   }
 
   /// Create an instance of ObjectBox to use throughout the presenter.
@@ -57,6 +58,7 @@ class IsmChatDBWrapper {
     // Future<Store> openStore() {...} is defined in the generated objectbox.g.dart.
 
     var dbName = databaseName ?? IsmChatConfig.dbName;
+    var directory = await getApplicationDocumentsDirectory();
     final collection = await BoxCollection.open(
       dbName,
       {
@@ -65,6 +67,7 @@ class IsmChatDBWrapper {
         _pendingBox,
         _forwardBox,
       },
+      path: directory.path,
     );
 
     var instance = IsmChatDBWrapper._create(collection);
@@ -101,12 +104,12 @@ class IsmChatDBWrapper {
   Future<List<IsmChatConversationModel>> getAllConversations() async {
     var keys = await chatConversationBox.getAllKeys();
     var conversations = await chatConversationBox.getAll(keys);
+
     if (conversations.isEmpty) {
       return [];
     }
     return conversations
-        .where((element) => element != null)
-        .map((e) => IsmChatConversationModel.fromMap(e!))
+        .map((e) => IsmChatConversationModel.fromJson(e!))
         .toList();
   }
 
@@ -117,8 +120,8 @@ class IsmChatDBWrapper {
     if (conversationId == null || conversationId.trim().isEmpty) {
       return null;
     }
-    Map<String, dynamic>? map;
-    List<Map<String, dynamic>>? listMap;
+    String? map;
+    List<String>? listMap;
     switch (dbBox) {
       case IsmChatDbBox.main:
         map = await chatConversationBox.get(conversationId);
@@ -134,14 +137,14 @@ class IsmChatDBWrapper {
       if (map == null) {
         return null;
       }
-      return IsmChatConversationModel.fromMap(map);
+      return IsmChatConversationModel.fromJson(map);
     }
     if (listMap == null || listMap.isEmpty) {
       return null;
     }
     var conversation = IsmChatConversationModel(
       conversationId: conversationId,
-      messages: listMap.map(IsmChatMessageModel.fromMap).toList(),
+      messages: listMap.map(IsmChatMessageModel.fromJson).toList(),
     );
     return conversation;
   }
@@ -157,7 +160,7 @@ class IsmChatDBWrapper {
     switch (dbBox) {
       case IsmChatDbBox.main:
         await chatConversationBox.put(
-                conversation.conversationId ?? '', conversation.toMap())
+                conversation.conversationId ?? '', conversation.toJson())
             as Map<String, dynamic>?;
         break;
       case IsmChatDbBox.pending:
@@ -165,14 +168,14 @@ class IsmChatDBWrapper {
             conversation.conversationId ?? '',
             conversation.messages?.isEmpty == true
                 ? []
-                : conversation.messages!.map((e) => e.toMap()).toList());
+                : conversation.messages!.map((e) => e.toJson()).toList());
         break;
       case IsmChatDbBox.forward:
         await forwardMessageBox.put(
             conversation.conversationId ?? '',
             conversation.messages?.isEmpty == true
                 ? []
-                : conversation.messages!.map((e) => e.toMap()).toList());
+                : conversation.messages!.map((e) => e.toJson()).toList());
         break;
     }
     return true;
@@ -268,13 +271,13 @@ class IsmChatDBWrapper {
       if (resposne.isEmpty) {
         await chatConversationBox.put(
           conversationModel.conversationId!,
-          conversationModel.toMap(),
+          conversationModel.toJson(),
         );
       } else {
         var conversation = await getConversation(
             conversationId: conversationModel.conversationId);
         if (conversation == null) {
-          await saveConversation(conversation: conversation!);
+          await saveConversation(conversation: conversationModel);
           return;
         }
         conversation = conversation.copyWith(

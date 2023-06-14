@@ -99,9 +99,11 @@ class IsmChatConversationsController extends GetxController {
     super.onInit();
 
     await _generateReactionList();
-    var users = await IsmChatConfig.dbWrapper.userDetailsBox.getAllValues();
-    if (users.isNotEmpty) {
-      // userDetails = users.first;
+    var users = await IsmChatConfig.dbWrapper.userDetailsBox
+        .get(IsmChatStrings.userData);
+    IsmChatLog.error('userDetails from db $users');
+    if (users != null) {
+      userDetails = UserDetails.fromMap(users as Map<String, dynamic>);
     } else {
       await getUserData();
     }
@@ -314,7 +316,7 @@ class IsmChatConversationsController extends GetxController {
 
   Future<void> getConversationsFromDB() async {
     var dbConversations = await IsmChatConfig.dbWrapper.getAllConversations();
-    if (dbConversations.isEmpty) {
+    if (dbConversations.isEmpty == true) {
       return;
     }
     conversations.clear();
@@ -385,10 +387,12 @@ class IsmChatConversationsController extends GetxController {
     }
   }
 
-  Future<dynamic> getUserData() async {
+  Future<void> getUserData() async {
     var user = await _viewModel.getUserData();
     if (user != null) {
       userDetails = user;
+      await IsmChatConfig.dbWrapper.userDetailsBox
+          .put(IsmChatStrings.userData, user.toJson());
     }
   }
 

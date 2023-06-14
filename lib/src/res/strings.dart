@@ -3,6 +3,7 @@ class IsmChatStrings {
 
   static const String name = 'Appscrip Chat Component';
   static const String dbname = 'appscrip_chat_component';
+  static const String userData = 'userData';
 
   static const String chats = 'Chats';
 

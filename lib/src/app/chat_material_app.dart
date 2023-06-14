@@ -137,7 +137,7 @@ class IsmChatApp extends StatelessWidget {
   final Widget? emptyConversationPlaceholder;
 
   /// Call this function for Get all Conversation List
-  static Future<List<IsmChatConversationModel>> getAllConversation() async =>
+  static Future<List<IsmChatConversationModel>?> getAllConversation() async =>
       IsmChatConfig.dbWrapper.getAllConversations();
 
   /// Call this function for update conversation Details in meta data

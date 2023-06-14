@@ -28,7 +28,10 @@ class LastMessageDetails {
             : 0,
         readCount: map['readBy'] != null ? (map['readBy'] as List).length : 0,
         customType: map['customType'] != null
-            ? IsmChatCustomMessageType.fromString(map['customType'] as String)
+            ? map['customType'].runtimeType == String
+                ? IsmChatCustomMessageType.fromString(
+                    map['customType'] as String)
+                : IsmChatCustomMessageType.fromValue(map['customType'] as int)
             : map['action'] != null
                 ? IsmChatCustomMessageType.fromAction(map['action'] as String)
                 : null,

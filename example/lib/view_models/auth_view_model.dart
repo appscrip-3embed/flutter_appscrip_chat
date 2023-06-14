@@ -31,7 +31,6 @@ class AuthViewModel extends GetxController {
       );
 
       objectBox.userDetailsBox.put(userDetails);
-
       return true;
     } catch (e, st) {
       AppLog.error('Login $e', st);
@@ -73,7 +72,7 @@ class AuthViewModel extends GetxController {
         forAwsApi: true,
         showLoader: isLoading,
       );
-     
+
       if (response.hasError) {
         return response;
       }

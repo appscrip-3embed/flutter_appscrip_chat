@@ -130,8 +130,6 @@ class IsmChatConversationsRepository {
 
       var data = jsonDecode(response.data) as Map<String, dynamic>;
       var user = UserDetails.fromMap(data);
-      await IsmChatConfig.dbWrapper.userDetailsBox
-          .put(user.userId, user.toMap());
       return user;
     } catch (e, st) {
       IsmChatLog.error('GetUserData $e', st);

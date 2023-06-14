@@ -23,8 +23,13 @@ class IsmChatConversationModel {
             : IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
         messagingDisabled: map['messagingDisabled'] as bool? ?? false,
         membersCount: map['membersCount'] as int? ?? 0,
-        lastReadAt: IsmChatLastReadAt.fromNetworkMap(
-            map['lastReadAt'] as Map<String, dynamic>? ?? {}),
+        lastReadAt: map['lastReadAt'].runtimeType == List
+            ? (map['lastReadAt'] as List)
+                .map(
+                    (e) => IsmChatLastReadAt.fromMap(e as Map<String, dynamic>))
+                .toList()
+            : IsmChatLastReadAt.fromNetworkMap(
+                map['lastReadAt'] as Map<String, dynamic>? ?? {}),
         lastMessageSentAt: map['lastMessageSentAt'] as int? ?? 0,
         lastMessageDetails: map['lastMessageDetails'] != null
             ? LastMessageDetails.fromMap(
@@ -201,23 +206,23 @@ class IsmChatConversationModel {
         'unreadMessagesCount': unreadMessagesCount,
         // 'searchableTags': searchableTags,
         'privateOneToOne': privateOneToOne,
-        'opponentDetails': opponentDetails!.toMap(),
-        'metaData': metaData!.toMap(),
+        'opponentDetails': opponentDetails?.toMap(),
+        'metaData': metaData?.toMap(),
         'messagingDisabled': messagingDisabled,
         'lastReadAt': lastReadAt?.map((x) => x.toMap()).toList(),
         'lastMessageSentAt': lastMessageSentAt,
-        'lastMessageDetails': lastMessageDetails,
+        'lastMessageDetails': lastMessageDetails?.toMap(),
         'isGroup': isGroup,
         'createdBy': createdBy,
         'createdByUserName': createdByUserName,
-        'conversationType': conversationType,
+        'conversationType': conversationType?.value,
         'conversationTitle': conversationTitle,
         'conversationImageUrl': conversationImageUrl,
         'conversationId': conversationId,
-        'config': config!.toMap(),
+        'config': config?.toMap(),
         'createdAt': createdAt,
         'members': members?.map((e) => e.toMap()).toList(),
-        'usersOwnDetails': usersOwnDetails!.toMap(),
+        'usersOwnDetails': usersOwnDetails?.toMap(),
         'messages': messages?.map((e) => e.toMap()).toList(),
       };
 
