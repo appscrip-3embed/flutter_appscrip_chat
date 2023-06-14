@@ -11,6 +11,8 @@ class IsmChatAssets {
   static const String pdfSvg = '$_svgBase/pdf.svg';
   static const String txtSvg = '$_svgBase/txt.svg';
   static const String xlsSvg = '$_svgBase/xls.svg';
+
+  static const String gallarySvg = '$_svgBase/gallary.svg';
 }
 
 class IsmChatConstants {

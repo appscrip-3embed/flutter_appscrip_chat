@@ -18,11 +18,14 @@ class IsmChatDimens {
   static final double six = 6.sp;
 
   static final double eight = 8.sp;
+  static final double nine = 9.sp;
   static final double ten = 10.sp;
   static final double twelve = 12.sp;
   static final double tharteen = 13.sp;
   static final double forteen = 14.sp;
+  static final double fifteen = 15.sp;
   static final double sixteen = 16.sp;
+  static final double seventeen = 17.sp;
   static final double eighteen = 18.sp;
   static final double twenty = 20.sp;
   static final double twentyFour = 24.sp;
@@ -35,17 +38,22 @@ class IsmChatDimens {
 
   static final double forty = 40.sp;
   static final double fifty = 50.sp;
+  static final double fiftyFive = 55.sp;
   static final double sixty = 60.sp;
+  static final double seventyEight = 78.sp;
 
   static final double eighty = 80.sp;
   static final double ninty = 90.sp;
 
   static final double hundred = 100.sp;
+  static final double hundredFourty = 140.sp;
   static final double oneHundredFifty = 150.sp;
   static final double oneHundredSeventy = 170.sp;
+  static final double hundredNintyThree = 193.sp;
   static final double twoHundred = 200.sp;
 
   static final double twoHundredFifty = 250.sp;
+  static final double threeHundredFourtyThree = 343.sp;
 
   static final double inputFieldHeight = 40.sp;
   static final double appBarHeight = 56.sp;
@@ -55,14 +63,18 @@ class IsmChatDimens {
 
   static final Widget boxHeight4 = SizedBox(height: four);
   static final Widget boxHeight2 = SizedBox(height: two);
+  static final Widget boxHeight5 = SizedBox(height: five);
 
   static final Widget boxHeight8 = SizedBox(height: eight);
   static final Widget boxHeight10 = SizedBox(height: ten);
   static final Widget boxHeight16 = SizedBox(height: sixteen);
+  static final Widget boxHeight20 = SizedBox(height: twenty);
+  static final Widget boxHeight24 = SizedBox(height: twentyFour);
   static final Widget boxHeight32 = SizedBox(height: thirtyTwo);
   static final Widget boxWidth2 = SizedBox(width: two);
   static final Widget boxWidth4 = SizedBox(width: four);
   static final Widget boxWidth8 = SizedBox(width: eight);
+  static final Widget boxWidth12 = SizedBox(width: twelve);
   static final Widget boxWidth14 = SizedBox(width: forteen);
   static final Widget boxWidth16 = SizedBox(width: sixteen);
   static final Widget boxWidth20 = SizedBox(width: twenty);
@@ -106,7 +118,12 @@ class IsmChatDimens {
   static final EdgeInsets edgeInsets16_0_19_8 =
       EdgeInsets.only(left: sixteen, right: ten, bottom: eight);
 
+  static final EdgeInsets edgeInsets25_0_25_0 =
+  EdgeInsets.only(left: twentyFive, right: twentyFive,);
+
   static final EdgeInsets edgeInsets16 = EdgeInsets.all(sixteen);
+  static final EdgeInsets edgeInsets16_0_16_0 = EdgeInsets.only(left:sixteen, right:sixteen);
+  static final EdgeInsets edgeInsets16_8_16_8 = EdgeInsets.only(left:sixteen,top: eight, right:sixteen, bottom: eight);
   static final EdgeInsets edgeInsets16_0 =
       EdgeInsets.symmetric(horizontal: sixteen, vertical: zero);
   static final EdgeInsets edgeInsets16_8 =
