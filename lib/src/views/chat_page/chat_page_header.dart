@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -153,7 +151,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                                   IsmChatStyles.w400White12,
                                             )
                                           : Flexible(
-                                            child: Text(
+                                              child: Text(
                                                 controller
                                                         .conversation
                                                         ?.opponentDetails
@@ -165,7 +163,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                                 style: header?.subtitleStyle ??
                                                     IsmChatStyles.w400White12,
                                               ),
-                                          ),
+                                            ),
                             ),
                     ],
                   ),

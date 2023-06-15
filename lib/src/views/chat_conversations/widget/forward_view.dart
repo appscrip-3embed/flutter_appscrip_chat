@@ -28,7 +28,6 @@ class IsmChatForwardView extends StatelessWidget {
         initState: (_) {
           chatConversationController.forwardedList.clear();
           chatConversationController.forwardedList.selectedUsers.clear();
-          chatConversationController.hasMore = true;
           chatConversationController.isLoadingUsers = false;
           chatConversationController.getNonBlockUserList(
             opponentId: conversation.opponentDetails?.userId,
@@ -46,14 +45,12 @@ class IsmChatForwardView extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ListView.separated(
-                        controller: controller.userListScrollController,
-                        padding: IsmChatDimens.edgeInsets0_10,
-                        shrinkWrap: true,
-                        itemCount: controller.forwardedList.length +
-                            (controller.hasMore ? 1 : 0),
-                        separatorBuilder: (_, __) => IsmChatDimens.boxHeight4,
-                        itemBuilder: (_, index) {
-                          if (index < controller.forwardedList.length) {
+                          controller: controller.userListScrollController,
+                          padding: IsmChatDimens.edgeInsets0_10,
+                          shrinkWrap: true,
+                          itemCount: controller.forwardedList.length,
+                          separatorBuilder: (_, __) => IsmChatDimens.boxHeight4,
+                          itemBuilder: (_, index) {
                             var conversation =
                                 controller.forwardedList[index].userDetails;
                             return IsmChatTapHandler(
@@ -84,19 +81,7 @@ class IsmChatForwardView extends StatelessWidget {
                                 ),
                               ),
                             );
-                          } else {
-                            return Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: IsmChatDimens.thirtyTwo),
-                              child: Center(
-                                child: controller.hasMore
-                                    ? const CircularProgressIndicator()
-                                    : const SizedBox.shrink(),
-                              ),
-                            );
-                          }
-                        },
-                      ),
+                          }),
                     ),
                     if (controller.forwardedList.selectedUsers.isNotEmpty)
                       Container(

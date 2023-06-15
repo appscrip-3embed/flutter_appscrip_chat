@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:azlistview/azlistview.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -72,10 +73,6 @@ class IsmChatConversationsController extends GetxController {
   set profileImage(String value) {
     _profileImage.value = value;
   }
-
-  final RxBool _hasMore = true.obs;
-  bool get hasMore => _hasMore.value;
-  set hasMore(bool value) => _hasMore.value = value;
 
   final RxBool _isLoadingUsers = false.obs;
   bool get isLoadingUsers => _isLoadingUsers.value;
@@ -214,7 +211,6 @@ class IsmChatConversationsController extends GetxController {
     bool isLoading = false,
   }) async {
     if (isLoadingUsers) return;
-
     isLoadingUsers = true;
     var response = await _viewModel.getNonBlockUserList(
       sort: sort,
@@ -229,9 +225,6 @@ class IsmChatConversationsController extends GetxController {
     var users = response.users;
     users.sort((a, b) => a.userName.compareTo(b.userName));
 
-    if (users.length < limit) {
-      hasMore = false;
-    }
     if (opponentId != null) {
       users.removeWhere((e) => e.userId == opponentId);
     }
@@ -243,6 +236,24 @@ class IsmChatConversationsController extends GetxController {
             ))
         .toList());
     isLoadingUsers = false;
+    _handleList(forwardedList);
+  }
+
+  void _handleList(List<SelectedForwardUser> list) {
+    if (list.isEmpty) return;
+    for (var i = 0, length = list.length; i < length; i++) {
+      var tag = list[i].userDetails.userName[0].toUpperCase();
+      if (RegExp('[A-Z]').hasMatch(tag)) {
+        list[i].tagIndex = tag;
+      } else {
+        list[i].tagIndex = '#';
+      }
+    }
+    // A-Z sort.
+    SuspensionUtil.sortListBySuspensionTag(forwardedList);
+
+    // show sus tag.
+    SuspensionUtil.setShowSuspensionStatus(forwardedList);
   }
 
   Future<void> clearAllMessages(String? conversationId) async {

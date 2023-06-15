@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_painter/image_painter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -33,10 +32,7 @@ class _ImagePainterWidgetState extends State<IsmChatImagePainterWidget> {
               Get.back<File>(result: widget.file);
             },
           ),
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: IsmChatColors.whiteColor,
-          ),
-          backgroundColor: IsmChatColors.blackColor,
+          backgroundColor: IsmChatConfig.chatTheme.primaryColor,
           actions: [
             InkWell(
               child: const Icon(
