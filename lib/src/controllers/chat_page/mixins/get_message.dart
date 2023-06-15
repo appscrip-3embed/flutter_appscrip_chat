@@ -93,23 +93,25 @@ mixin IsmChatPageGetMessageMixin {
         conversationId: conversationId,
         includeMembers: includeMembers,
         isLoading: isLoading);
-    if (data != null) {
-      _controller.conversation = data.copyWith(conversationId: conversationId);
-      _controller.mediaList = _controller.messages
-          .where((e) => [
-                IsmChatCustomMessageType.image,
-                IsmChatCustomMessageType.video,
-                // IsmChatCustomMessageType.audio,
-                IsmChatCustomMessageType.file,
-              ].contains(e.customType))
-          .toList();
-      if (data.members != null) {
-        _controller.groupMembers = data.members!;
-        _controller.groupMembers.sort((a, b) =>
-            a.userName.toLowerCase().compareTo(b.userName.toLowerCase()));
+    if (data != null && (_controller.conversation?.conversationId == conversationId)) {
+        _controller.conversation = data.copyWith(conversationId: conversationId);
+        _controller.mediaList = _controller.messages
+            .where((e) => [
+          IsmChatCustomMessageType.image,
+          IsmChatCustomMessageType.video,
+          // IsmChatCustomMessageType.audio,
+          IsmChatCustomMessageType.file,
+        ].contains(e.customType))
+            .toList();
+        if (data.members != null) {
+          _controller.groupMembers = data.members!;
+          _controller.groupMembers.sort((a, b) =>
+              a.userName.toLowerCase().compareTo(b.userName.toLowerCase()));
+        }
+        _controller.update();
+        IsmChatLog.success('Updated conversation');
       }
-      _controller.update();
-    }
+
   }
 
   Future<void> getReacton({required Reaction reaction}) async {

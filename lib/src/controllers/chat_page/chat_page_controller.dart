@@ -284,14 +284,7 @@ class IsmChatPageController extends GetxController
     });
   }
 
-  ifTimerMounted() {
-    final itimer = conversationDetailsApTimer == null
-        ? false
-        : conversationDetailsApTimer!.isActive;
-    if (itimer) {
-      conversationDetailsApTimer!.cancel();
-    }
-  }
+
 
   @override
   void onClose() {
@@ -842,6 +835,7 @@ class IsmChatPageController extends GetxController
     } else {
       await ismChatConversationController.getChatConversations();
     }
+   await Get.delete<IsmChatPageController>(force: true);
     unawaited(Get.find<IsmChatMqttController>().getChatConversationsUnreadCount())
    ;
   }
@@ -1160,6 +1154,15 @@ class IsmChatPageController extends GetxController
         }
       },
     );
+  }
+
+  ifTimerMounted() {
+    final isTimer = conversationDetailsApTimer == null
+        ? false
+        : conversationDetailsApTimer!.isActive;
+    if (isTimer) {
+      conversationDetailsApTimer!.cancel();
+    }
   }
 
   Future<void> blockUser(
