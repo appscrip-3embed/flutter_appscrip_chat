@@ -6,9 +6,9 @@ import 'package:get/get.dart';
 
 /// IsmMedia class is for showing the conversation media
 class IsmMedia extends StatefulWidget {
-  IsmMedia({Key? key, required this.mediaList}) : super(key: key);
+  const IsmMedia({Key? key, required this.mediaList}) : super(key: key);
 
-  List<IsmChatMessageModel> mediaList;
+  final List<IsmChatMessageModel> mediaList;
 
   @override
   State<IsmMedia> createState() => _IsmMediaState();
@@ -16,28 +16,28 @@ class IsmMedia extends StatefulWidget {
 
 class _IsmMediaState extends State<IsmMedia> {
 
-  List<IsmChatMessageModel> storeMedia = [];
+  List<Map<String, List<IsmChatMessageModel>>> storeWidgetMediaList = [];
 
   @override
   void initState(){
     var x = sortMessages(widget.mediaList);
-    sortMediaList(x);
+    storeWidgetMediaList =  sortMediaList(x);
     super.initState();
   }
 
   List<Map<String, List<IsmChatMessageModel>>> sortMediaList (List<IsmChatMessageModel> messages){
-    var storeMediaImageList = [];
+    var storeMediaImageList = <Map<String, List<IsmChatMessageModel>>>[];
     for (var x in messages) {
       if(x.customType == IsmChatCustomMessageType.date){
           storeMediaImageList.add({x.body : <IsmChatMessageModel>[]});
           continue;
       }
-        var z =storeMediaImageList.last as Map<String,List<dynamic>>;
+        var z =storeMediaImageList.last;
         z.forEach((key, value) {
             value.add(x);
         });
     }
-    return [];
+    return storeMediaImageList;
   }
 
   List<IsmChatMessageModel> sortMessages(List<IsmChatMessageModel> messages) {
@@ -99,35 +99,57 @@ class _IsmMediaState extends State<IsmMedia> {
                       style: IsmChatStyles.w600Black20,
                     ),
                   )
-                : GridView.builder(
-                    itemCount: widget.mediaList.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      mainAxisSpacing: 8,
-                      crossAxisSpacing: 8,
-                    ),
+                :
+                ListView.separated(
+                  physics: const ScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: storeWidgetMediaList.length,
+                    separatorBuilder:(_, index)=> IsmChatDimens.boxHeight10,
                     itemBuilder: (context, index) {
-                      var media = widget.mediaList[index];
-                      var url =
-                          media.customType == IsmChatCustomMessageType.image
-                              ? media.attachments!.first.mediaUrl!
-                              : media.attachments!.first.thumbnailUrl!;
-                      var iconData =
-                          media.customType == IsmChatCustomMessageType.audio
+                       var media  = storeWidgetMediaList[index];
+                       var value = media.values.toList().first;
+                       var key = media.keys.toString().replaceAll(RegExp(r'\(|\)'), '');
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                       Text(key, style: IsmChatStyles.w400Black14,),
+                    IsmChatDimens.boxHeight10,
+                    GridView.builder(
+                      physics: const ScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: value.length,
+                        gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          mainAxisSpacing: 2,
+                          crossAxisSpacing: 2,
+                        ),
+                        itemBuilder: (context, valueIndex) {
+
+                          // return Text('${value[valueIndex]}');
+                          var url =
+                          value[valueIndex].customType == IsmChatCustomMessageType.image
+                              ? value[valueIndex].attachments!.first.mediaUrl!
+                              : value[valueIndex].attachments!.first.thumbnailUrl!;
+                          var iconData =
+                          value[valueIndex].customType == IsmChatCustomMessageType.audio
                               ? Icons.audio_file_rounded
                               : Icons.description_rounded;
-                      return GestureDetector(
-                        onTap: () => Get.find<IsmChatPageController>()
-                            .tapForMediaPreview(media),
-                        child: ConversationMediaWidget(
-                          media: media,
-                          iconData: iconData,
-                          url: url,
-                        ),
-                      );
+                          return GestureDetector(
+                            onTap: () => Get.find<IsmChatPageController>()
+                                .tapForMediaPreview(value[valueIndex]),
+                            child: ConversationMediaWidget(
+                              media: value[valueIndex],
+                              iconData: iconData,
+                              url: url,
+                            ),
+                          );
+                        },
+                      ),
+                  ],
+                );
                     },
-                  ),
+                ),
           ),
         ),
       );

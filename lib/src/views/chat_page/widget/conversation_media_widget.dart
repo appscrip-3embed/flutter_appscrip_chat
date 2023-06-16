@@ -22,7 +22,7 @@ class ConversationMediaWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: IsmChatConfig.chatTheme.backgroundColor,
           borderRadius: BorderRadius.circular(
-            IsmChatDimens.twenty,
+            IsmChatDimens.ten,
           ),
         ),
         child: [IsmChatCustomMessageType.audio, IsmChatCustomMessageType.file]
