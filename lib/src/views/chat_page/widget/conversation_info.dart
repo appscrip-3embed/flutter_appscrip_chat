@@ -95,45 +95,46 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                       controller.conversation!.opponentDetails?.userIdentifier ?? '',
                       style: IsmChatStyles.w500GreyLight17,
                     ),
-                    if (controller.conversation!.isGroup ?? false) ...[] else ...[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          IsmChatDimens.boxHeight20,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              IsmChatDimens.boxWidth4,
-                              IsmChatConversationInfoAudioVideoContainer(title: IsmChatStrings.audio, pictureName: Icons.call,),
-                              IsmChatDimens.boxWidth12,
-                              IsmChatConversationInfoAudioVideoContainer(title: IsmChatStrings.video, pictureName: Icons.video_camera_front_outlined,),
-                              IsmChatDimens.boxWidth4,
-                            ],
-                          ),
-                          IsmChatDimens.boxHeight16,
-                          Container(
-                            padding: IsmChatDimens.edgeInsets16_8_16_8,
-                            width: IsmChatDimens.threeHundredFourtyThree,
-                            // height: IsmChatDimens.seventyEight,
-                            decoration: BoxDecoration(
-                              color: IsmChatColors.whiteColor,
-                              borderRadius: BorderRadius.circular(IsmChatDimens.nine),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(IsmChatStrings.loremIpsum, style: IsmChatStyles.w500Black14),
-                                IsmChatDimens.boxHeight4,
-                                Text(IsmChatStrings.demoDate, style: IsmChatStyles.w500GreyLight12),
-                              ],
-                            ),
-                          ),
-                          IsmChatDimens.boxHeight16,
-                        ],
-                      ),
-                    ],
+                    IsmChatDimens.boxHeight16,
+                    // if (controller.conversation!.isGroup ?? false) ...[] else ...[
+                    //   Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       IsmChatDimens.boxHeight20,
+                    //       Row(
+                    //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //         crossAxisAlignment: CrossAxisAlignment.center,
+                    //         children: [
+                    //           IsmChatDimens.boxWidth4,
+                    //           IsmChatConversationInfoAudioVideoContainer(title: IsmChatStrings.audio, pictureName: Icons.call,),
+                    //           IsmChatDimens.boxWidth12,
+                    //           IsmChatConversationInfoAudioVideoContainer(title: IsmChatStrings.video, pictureName: Icons.video_camera_front_outlined,),
+                    //           IsmChatDimens.boxWidth4,
+                    //         ],
+                    //       ),
+                    //       IsmChatDimens.boxHeight16,
+                    //       Container(
+                    //         padding: IsmChatDimens.edgeInsets16_8_16_8,
+                    //         width: IsmChatDimens.threeHundredFourtyThree,
+                    //         // height: IsmChatDimens.seventyEight,
+                    //         decoration: BoxDecoration(
+                    //           color: IsmChatColors.whiteColor,
+                    //           borderRadius: BorderRadius.circular(IsmChatDimens.nine),
+                    //         ),
+                    //         child: Column(
+                    //           mainAxisAlignment: MainAxisAlignment.center,
+                    //           crossAxisAlignment: CrossAxisAlignment.start,
+                    //           children: [
+                    //             Text(IsmChatStrings.loremIpsum, style: IsmChatStyles.w500Black14),
+                    //             IsmChatDimens.boxHeight4,
+                    //             Text(IsmChatStrings.demoDate, style: IsmChatStyles.w500GreyLight12),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //       IsmChatDimens.boxHeight16,
+                    //     ],
+                    //   ),
+                    // ],
                     if (controller.conversation?.isGroup ?? false) ...[
                       Text(
                         '${controller.conversation?.membersCount} ${IsmChatStrings.participants}',
