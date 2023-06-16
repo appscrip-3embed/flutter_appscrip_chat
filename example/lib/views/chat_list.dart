@@ -5,7 +5,7 @@ import 'package:chat_component_example/utilities/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ChatList extends GetView<ChatListController> {
+class ChatList extends StatelessWidget {
   const ChatList({super.key});
 
   static const String route = AppRoutes.chatList;
@@ -13,9 +13,10 @@ class ChatList extends GetView<ChatListController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IsmChatApp(
-        chatTheme: IsmChatThemeData(
-          primaryColor: AppColors.primaryColorLight,
+      body: GetBuilder<ChatListController>(builder: (controller) {
+        return IsmChatApp(
+          chatTheme:
+              IsmChatThemeData(primaryColor: AppColors.primaryColorLight,
           chatPageTheme: IsmChatPageThemeData(
             selfMessageTheme: IsmChatMessageThemeData(
               // backgroundColor: Colors.white,
@@ -26,46 +27,44 @@ class ChatList extends GetView<ChatListController> {
               borderColor: AppColors.primaryColorLight,
             ),
           ),
-        ),
-        communicationConfig: IsmChatCommunicationConfig(
-          userConfig: IsmChatUserConfig(
-              userToken: controller.userDetails?.userToken ?? '',
-              userId: controller.userDetails?.userId ?? '',
-              userName: controller.userDetails?.userName ?? '',
-              userEmail: controller.userDetails?.email ?? '',
-              userProfile: controller.userDetails?.userProfile ?? ''),
-          mqttConfig: const IsmChatMqttConfig(
-            hostName: Constants.hostname,
-            port: Constants.port,
+        ),communicationConfig: IsmChatCommunicationConfig(
+            userConfig: IsmChatUserConfig(
+                userToken: AppConfig.userDetail?.userToken ?? '',
+                userId: AppConfig.userDetail?.userId ?? '',
+                userName: AppConfig.userDetail?.userName ?? '',
+                userEmail: AppConfig.userDetail?.email ?? '',
+            userProfile: controller.userDetails?.userProfile ?? ''),mqttConfig: const IsmChatMqttConfig(
+              hostName: Constants.hostname,
+              port: Constants.port,
+            ),
+            projectConfig: const IsmChatProjectConfig(
+              accountId: Constants.accountId,
+              appSecret: Constants.appSecret,
+              userSecret: Constants.userSecret,
+              keySetId: Constants.keysetId,
+              licenseKey: Constants.licenseKey,
+              projectId: Constants.projectId,
+            ),
           ),
-          projectConfig: const IsmChatProjectConfig(
-            accountId: Constants.accountId,
-            appSecret: Constants.appSecret,
-            userSecret: Constants.userSecret,
-            keySetId: Constants.keysetId,
-            licenseKey: Constants.licenseKey,
-            projectId: Constants.projectId,
-          ),
-        ),
-        showAppBar: true,
-        onSignOut: controller.onSignOut,
-        onChatTap: (_, __) => RouteManagement.goToChatMessages(),
-        showCreateChatIcon: true,
-        onCreateChatTap: RouteManagement.goToUserList,
-        enableGroupChat: true,
-        allowDelete: true,
-        emptyConversationPlaceholder: const IsmChatEmptyView(
-          text: 'Create conversation',
+          showAppBar: true,
+          onSignOut: controller.onSignOut,
+          onChatTap: (_, __) => RouteManagement.goToChatMessages(),
+          showCreateChatIcon: true,
+          onCreateChatTap: RouteManagement.goToUserList,
+          enableGroupChat: true,
+          allowDelete: true,
+          emptyConversationPlaceholder:
+              const IsmChatEmptyView(text: 'Create conversation',
           icon: Icon(
             Icons.add_circle_outline_outlined,
             size: 70,
             color: AppColors.primaryColorLight,
-          ),
-        ),
-        // isSlidableEnable: (_, conversation) {
-        //   return conversation.metaData!.isMatchId!.isNotEmpty ? false : true;
-        // },
-      ),
+          ),),
+          // isSlidableEnable: (_, conversation) {
+          //   return conversation.metaData!.isMatchId!.isNotEmpty ? false : true;
+          // },
+        );
+      }),
     );
   }
 }

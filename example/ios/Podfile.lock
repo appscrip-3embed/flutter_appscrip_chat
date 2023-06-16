@@ -97,10 +97,6 @@ PODS:
   - libwebp/webp (1.2.4)
   - notification_permissions (0.4.4):
     - Flutter
-  - ObjectBox (1.8.1)
-  - objectbox_flutter_libs (0.0.1):
-    - Flutter
-    - ObjectBox (= 1.8.1)
   - open_filex (0.0.2):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -161,7 +157,6 @@ DEPENDENCIES:
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - just_audio (from `.symlinks/plugins/just_audio/ios`)
   - notification_permissions (from `.symlinks/plugins/notification_permissions/ios`)
-  - objectbox_flutter_libs (from `.symlinks/plugins/objectbox_flutter_libs/ios`)
   - open_filex (from `.symlinks/plugins/open_filex/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
@@ -184,7 +179,6 @@ SPEC REPOS:
     - FMDB
     - GoogleMaps
     - libwebp
-    - ObjectBox
     - SDWebImage
     - SwiftyGif
     - Toast
@@ -233,8 +227,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/just_audio/ios"
   notification_permissions:
     :path: ".symlinks/plugins/notification_permissions/ios"
-  objectbox_flutter_libs:
-    :path: ".symlinks/plugins/objectbox_flutter_libs/ios"
   open_filex:
     :path: ".symlinks/plugins/open_filex/ios"
   path_provider_foundation:
@@ -290,8 +282,6 @@ SPEC CHECKSUMS:
   just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
   libwebp: f62cb61d0a484ba548448a4bd52aabf150ff6eef
   notification_permissions: 825ea1bf2a52ab585c53fd7b5e8e96876d735d4b
-  ObjectBox: a7900d5335218cd437cbc080b7ccc38a5211f7b4
-  objectbox_flutter_libs: 61d74196d924fbc773da5f5757d1e9fab7b3cc78
   open_filex: 6e26e659846ec990262224a12ef1c528bb4edbe4
   path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
   permission_handler_apple: 8f116445eff3c0e7c65ad60f5fef5490aa94b4e4

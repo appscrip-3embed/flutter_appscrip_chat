@@ -263,7 +263,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     required String conversationId,
     required String userId,
   }) async {
-    var ismChatObjectBox = IsmChatConfig.dbWrapper;
     IsmChatMessageModel? documentMessage;
     String? nameWithExtension;
     Uint8List? bytes;

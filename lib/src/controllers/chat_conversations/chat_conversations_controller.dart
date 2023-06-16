@@ -101,9 +101,8 @@ class IsmChatConversationsController extends GetxController {
     await _generateReactionList();
     var users = await IsmChatConfig.dbWrapper.userDetailsBox
         .get(IsmChatStrings.userData);
-    IsmChatLog.error('userDetails from db $users');
     if (users != null) {
-      userDetails = UserDetails.fromMap(users as Map<String, dynamic>);
+      userDetails = UserDetails.fromJson(users);
     } else {
       await getUserData();
     }

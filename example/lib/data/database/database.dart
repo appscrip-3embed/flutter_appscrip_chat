@@ -1,1 +1,1 @@
-export 'objectbox.dart';
+export 'db_wrapper.dart';

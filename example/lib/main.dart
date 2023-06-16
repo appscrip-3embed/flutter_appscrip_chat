@@ -1,16 +1,18 @@
 import 'dart:async';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:chat_component_example/data/database/database.dart';
 import 'package:chat_component_example/res/res.dart';
-import 'package:chat_component_example/views/chat_list.dart';
-import 'package:chat_component_example/views/login_view.dart';
+import 'package:chat_component_example/utilities/utilities.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-late ObjectBox objectBox;
+import 'data/data.dart';
+import 'views/views.dart';
+
+DBWrapper? dbWrapper;
 
 void main() async {
   await initialize();
@@ -20,12 +22,18 @@ void main() async {
 Future<void> initialize() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  objectBox = await ObjectBox.create();
   var deviceConfig = Get.put(IsmChatDeviceConfig());
   deviceConfig.init();
-
-  await AppscripChatComponent.initialize();
-  await LocalNoticeService().setup();
+  if (!kIsWeb) {
+    dbWrapper = await DBWrapper.create();
+  }
+  await AppConfig.getUserData();
+  await Future.wait(
+    [
+      AppscripChatComponent.initialize(),
+      LocalNoticeService().setup(),
+    ],
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -62,9 +70,8 @@ class _MyAppState extends State<MyApp> {
         //     .copyWith(primaryColor: AppColors.primaryColorDark),
         debugShowCheckedModeBanner: false,
         translations: AppTranslations(),
-        initialRoute: objectBox.userDetailsBox.getAll().isNotEmpty
-            ? ChatList.route
-            : LoginView.route,
+        initialRoute:
+            AppConfig.userDetail != null ? ChatList.route : LoginView.route,
         getPages: AppPages.pages,
       ),
     );

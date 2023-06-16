@@ -30,7 +30,8 @@ class AuthViewModel extends GetxController {
         email: email,
       );
 
-      objectBox.userDetailsBox.put(userDetails);
+      dbWrapper?.userDetailsBox
+          .put(IsmChatStrings.userData, userDetails.toJson());
       return true;
     } catch (e, st) {
       AppLog.error('Login $e', st);
@@ -102,7 +103,8 @@ class AuthViewModel extends GetxController {
         userToken: data['userToken'],
         email: createUser['userIdentifier'],
       );
-      objectBox.userDetailsBox.put(userDetails);
+      dbWrapper?.userDetailsBox
+          .put(IsmChatStrings.userData, userDetails.toJson());
       return true;
     } catch (e, st) {
       AppLog.error('Sign up $e', st);

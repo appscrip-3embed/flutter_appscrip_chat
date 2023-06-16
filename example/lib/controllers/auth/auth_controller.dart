@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:chat_component_example/res/res.dart';
+import 'package:chat_component_example/utilities/utilities.dart';
 import 'package:chat_component_example/view_models/view_models.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -31,6 +33,7 @@ class AuthController extends GetxController {
       passwordController.text.trim(),
     );
     if (isLoggedIn) {
+      unawaited(AppConfig.getUserData());
       Get.offAllNamed(AppRoutes.chatList);
     }
   }
