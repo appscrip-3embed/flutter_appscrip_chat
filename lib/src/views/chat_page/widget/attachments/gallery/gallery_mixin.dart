@@ -94,12 +94,6 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
             child: Scaffold(
               appBar: AppBar(
                 backgroundColor: IsmChatConfig.chatTheme.primaryColor,
-                // systemOverlayStyle: const SystemUiOverlayStyle(
-                //   statusBarColor: IsmChatColors.blueColor,
-                //   statusBarIconBrightness:
-                //       Brightness.light, // For Android (dark icons)
-                //   statusBarBrightness: Brightness.light, // For iOS (dark icons)
-                // ),
                 leading: InkWell(
                   child: const Icon(
                     Icons.clear,
@@ -110,78 +104,90 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                     controller.listOfAssetsPath.clear();
                   },
                 ),
-                actions: const [
-                  // IsmChatUtility.imageTypeList.contains(controller
-                  //         .listOfAssetsPath[controller.assetsIndex].mediaUrl!
-                  //         .split('.')
-                  //         .last)
-                  //     ? Row(
-                  //         children: [
-                  //           InkWell(
-                  //             onTap: () {
-                  //               controller.listOfAssetsPath
-                  //                   .removeAt(controller.assetsIndex);
-                  //               controller.assetsIndex =
-                  //                   controller.listOfAssetsPath.length - 1;
-                  //               if (controller.listOfAssetsPath.isEmpty) {
-                  //                 controller.assetsIndex = 0;
-                  //                 Get.back<void>();
-                  //               }
-                  //             },
-                  //             child: Icon(
-                  //               Icons.delete_forever,
-                  //               size: IsmChatDimens.twentyFour,
-                  //               color: IsmChatColors.whiteColor,
-                  //             ),
-                  //           ),
-                  //           IsmChatDimens.boxWidth16,
-                  //           InkWell(
-                  //             onTap: () async {
-                  //               // await controller.ismCropImage();
-                  //             },
-                  //             child: Icon(
-                  //               Icons.crop,
-                  //               size: IsmChatDimens.twentyFour,
-                  //               color: IsmChatColors.whiteColor,
-                  //             ),
-                  //           ),
-                  //           IsmChatDimens.boxWidth16,
-                  //           Icon(
-                  //             Icons.emoji_emotions_outlined,
-                  //             size: IsmChatDimens.twentyFour,
-                  //             color: IsmChatColors.whiteColor,
-                  //           ),
-                  //           IsmChatDimens.boxWidth16,
-                  //           InkWell(
-                  //             onTap: () {
-                  //               // Get.to<void>(const IsmImagePainterWidget());
-                  //             },
-                  //             child: Icon(
-                  //               Icons.edit,
-                  //               size: IsmChatDimens.twentyFour,
-                  //               color: IsmChatColors.whiteColor,
-                  //             ),
-                  //           ),
-                  //         ],
-                  //       )
-                  //     : InkWell(
-                  //         onTap: () {
-                  //           controller.listOfAssetsPath
-                  //               .removeAt(controller.assetsIndex);
-                  //           controller.assetsIndex =
-                  //               controller.listOfAssetsPath.length - 1;
-                  //           if (controller.listOfAssetsPath.isEmpty) {
-                  //             controller.assetsIndex = 0;
-                  //             Get.back<void>();
-                  //           }
-                  //         },
-                  //         child: Icon(
-                  //           Icons.delete,
-                  //           color: IsmChatColors.whiteColor,
-                  //           size: IsmChatDimens.thirtyTwo,
-                  //         ),
-                  //       ),
-                  // IsmChatDimens.boxWidth20
+                actions: [
+                  IsmChatConstants.imageExtensions.contains(controller
+                          .listOfAssetsPath[controller.assetsIndex].mediaUrl!
+                          .split('.')
+                          .last)
+                      ? Row(
+                          children: [
+                            InkWell(
+                              onTap: () async {
+                                await controller.cropImage(File(controller
+                                    .listOfAssetsPath[controller.assetsIndex]
+                                    .mediaUrl!));
+                                controller.listOfAssetsPath[
+                                    controller
+                                        .assetsIndex] = controller
+                                    .listOfAssetsPath[controller.assetsIndex]
+                                    .copyWith(
+                                        mediaUrl: controller.imagePath?.path);
+                              },
+                              child: const Icon(
+                                Icons.crop,
+                                color: IsmChatColors.whiteColor,
+                              ),
+                            ),
+                            IsmChatDimens.boxWidth16,
+                            InkWell(
+                              onTap: () async {
+                                var mediaFile = await Get.to<File>(
+                                  IsmChatImagePainterWidget(
+                                    file: File(
+                                      controller
+                                          .listOfAssetsPath[
+                                              controller.assetsIndex]
+                                          .mediaUrl!,
+                                    ),
+                                  ),
+                                );
+                                controller.listOfAssetsPath[
+                                    controller
+                                        .assetsIndex] = controller
+                                    .listOfAssetsPath[controller.assetsIndex]
+                                    .copyWith(mediaUrl: mediaFile!.path);
+                              },
+                              child: const Icon(
+                                Icons.edit,
+                                color: IsmChatColors.whiteColor,
+                              ),
+                            ),
+                            IsmChatDimens.boxWidth16,
+                            InkWell(
+                              onTap: () {
+                                controller.listOfAssetsPath
+                                    .removeAt(controller.assetsIndex);
+                                controller.assetsIndex =
+                                    controller.listOfAssetsPath.length - 1;
+                                if (controller.listOfAssetsPath.isEmpty) {
+                                  controller.assetsIndex = 0;
+                                  Get.back<void>();
+                                }
+                              },
+                              child: const Icon(
+                                Icons.delete_forever,
+                                color: IsmChatColors.whiteColor,
+                              ),
+                            ),
+                          ],
+                        )
+                      : InkWell(
+                          onTap: () {
+                            controller.listOfAssetsPath
+                                .removeAt(controller.assetsIndex);
+                            controller.assetsIndex =
+                                controller.listOfAssetsPath.length - 1;
+                            if (controller.listOfAssetsPath.isEmpty) {
+                              controller.assetsIndex = 0;
+                              Get.back<void>();
+                            }
+                          },
+                          child: const Icon(
+                            Icons.delete,
+                            color: IsmChatColors.whiteColor,
+                          ),
+                        ),
+                  IsmChatDimens.boxWidth20
                 ],
               ),
               backgroundColor: IsmChatColors.blackColor,
@@ -221,59 +227,56 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                           shrinkWrap: true,
                           physics: const BouncingScrollPhysics(),
                           scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) => InkWell(
-                            onTap: () async {
-                              controller.assetsIndex = index;
-                            },
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Container(
-                                  height: IsmChatDimens.sixty,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(IsmChatDimens.ten)),
-                                      border: controller.assetsIndex == index
-                                          ? Border.all(
-                                              color: Get
-                                                  .theme.secondaryHeaderColor,
-                                              width: IsmChatDimens.two)
-                                          : null),
-                                  width: IsmChatDimens.sixty,
-                                  child: IsmChatImage(
-                                    controller.listOfAssetsPath[index]
-                                                .attachmentType ==
-                                            IsmChatMediaType.video
-                                        ? controller.listOfAssetsPath[index]
-                                            .thumbnailUrl
-                                            .toString()
-                                        : controller
-                                            .listOfAssetsPath[index].mediaUrl
-                                            .toString(),
-                                    isNetworkImage: false,
-                                  ),
-                                ),
-                                if (controller.listOfAssetsPath[index]
-                                        .attachmentType ==
-                                    IsmChatMediaType.video)
-                                  Container(
-                                    alignment: Alignment.center,
-                                    width: IsmChatDimens.thirtyTwo,
-                                    height: IsmChatDimens.thirtyTwo,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey),
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Icon(Icons.play_arrow,
-                                        color: Colors.black),
-                                  ),
-                              ],
-                            ),
-                          ),
                           separatorBuilder: (context, index) =>
                               IsmChatDimens.boxWidth8,
                           itemCount: controller.listOfAssetsPath.length,
+                          itemBuilder: (context, index) {
+                            var media = controller.listOfAssetsPath[index];
+                            return InkWell(
+                              onTap: () async {
+                                controller.assetsIndex = index;
+                              },
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Container(
+                                    height: IsmChatDimens.sixty,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(IsmChatDimens.ten)),
+                                        border: controller.assetsIndex == index
+                                            ? Border.all(
+                                                color: Get
+                                                    .theme.secondaryHeaderColor,
+                                                width: IsmChatDimens.two)
+                                            : null),
+                                    width: IsmChatDimens.sixty,
+                                    child: IsmChatImage(
+                                      media.attachmentType ==
+                                              IsmChatMediaType.video
+                                          ? media.thumbnailUrl.toString()
+                                          : media.mediaUrl.toString(),
+                                      isNetworkImage: false,
+                                    ),
+                                  ),
+                                  if (media.attachmentType ==
+                                      IsmChatMediaType.video)
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: IsmChatDimens.thirtyTwo,
+                                      height: IsmChatDimens.thirtyTwo,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey),
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: const Icon(Icons.play_arrow,
+                                          color: Colors.black),
+                                    ),
+                                ],
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),

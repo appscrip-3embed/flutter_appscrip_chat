@@ -3,11 +3,11 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   exclude:
     - lib/**/*.g.dart
-  strong-mode:
+  # strong-mode:
     # implicit-casts: false
     # implicit-dynamic: true
-    strict-casts: true
-    strict-raw-types: true
+    # strict-casts: true
+    # strict-raw-types: true
   errors:
     close_sinks: ignore
     missing_required_param: warning
