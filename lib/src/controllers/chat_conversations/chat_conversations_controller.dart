@@ -48,8 +48,6 @@ class IsmChatConversationsController extends GetxController {
     initialLoadStatus: LoadStatus.idle,
   );
 
-  var userListScrollController = ScrollController();
-
   var conversationScrollController = ScrollController();
 
   final RxInt _conversationPage = 0.obs;
@@ -93,15 +91,19 @@ class IsmChatConversationsController extends GetxController {
     }
     await getConversationsFromDB();
     await getChatConversations();
-    userListScrollListener();
     await Get.find<IsmChatMqttController>().getChatConversationsUnreadCount();
   }
 
   @override
   void onClose() {
-    userListScrollController.dispose();
     conversationScrollController.dispose();
     super.onClose();
+  }
+
+  @override
+  void dispose() {
+    conversationScrollController.dispose();
+    super.dispose();
   }
 
   Future<void> _generateReactionList() async {
@@ -185,18 +187,6 @@ class IsmChatConversationsController extends GetxController {
     var response = await _viewModel.updatePresignedUrl(
         isLoading: true, presignedUrl: presignedUrl, file: bytes);
     return response?.errorCode ?? 404;
-  }
-
-  void userListScrollListener() {
-    userListScrollController.addListener(
-      () {
-        if (userListScrollController.position.maxScrollExtent ==
-            userListScrollController.offset) {
-          getNonBlockUserList(
-              opponentId: IsmChatConfig.communicationConfig.userConfig.userId);
-        }
-      },
-    );
   }
 
   /// This will be used to fetch all the users associated with the current user

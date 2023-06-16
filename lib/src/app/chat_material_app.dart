@@ -213,7 +213,7 @@ class IsmChatApp extends StatelessWidget {
     Duration duration = const Duration(milliseconds: 500),
   }) async {
     assert(
-      [name,userId].every((e) => e.isNotEmpty),
+      [name, userId].every((e) => e.isNotEmpty),
       '''Input Error: Please make sure that all required fields are filled out.
       Name, and userId cannot be empty.''',
     );
@@ -245,26 +245,26 @@ class IsmChatApp extends StatelessWidget {
               firstName: name.split(' ').first,
               lastName: name.split(' ').last));
       conversation = IsmChatConversationModel(
-          messagingDisabled: false,
-          conversationImageUrl: profileImageUrl,
-          isGroup: false,
-          opponentDetails: userDetails,
-          unreadMessagesCount: 0,
-          lastMessageDetails: null,
-          lastMessageSentAt: 0,
-          membersCount: 1,
-          metaData: metaData);
+        messagingDisabled: false,
+        conversationImageUrl: profileImageUrl,
+        isGroup: false,
+        opponentDetails: userDetails,
+        unreadMessagesCount: 0,
+        lastMessageDetails: null,
+        lastMessageSentAt: 0,
+        membersCount: 1,
+        metaData: metaData,
+      );
     } else {
       conversation = controller.conversations
           .firstWhere((e) => e.conversationId == conversationId);
+      conversation = conversation.copyWith(metaData: metaData);
     }
     controller.navigateToMessages(conversation);
 
     (onNavigateToChat ?? IsmChatConfig.onChatTap)
         .call(Get.context!, conversation);
   }
-
-
 
   /// This function can be used to directly go to chatting page and start chatting from anywhere in the app
   ///
@@ -280,7 +280,6 @@ class IsmChatApp extends StatelessWidget {
     void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
     Duration duration = const Duration(milliseconds: 500),
   }) async {
-
     await Future.delayed(const Duration(milliseconds: 100));
 
     IsmChatUtility.showLoader();
