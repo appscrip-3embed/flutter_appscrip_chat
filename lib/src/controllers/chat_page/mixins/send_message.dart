@@ -105,6 +105,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
   }
 
   void sendPhotoAndVideo() async {
+    IsmChatLog.error('step1');
     if (_controller.listOfAssetsPath.isNotEmpty) {
       for (var media in _controller.listOfAssetsPath) {
         //TODO: remove await from here

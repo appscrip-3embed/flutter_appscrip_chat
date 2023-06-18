@@ -11,9 +11,13 @@ class IsmVideoTrimmerView extends StatefulWidget {
     Key? key,
     required this.file,
     required this.durationInSeconds,
+    this.index,
+    this.showButtonVolumnClose = true,
   }) : super(key: key);
   final File file;
   final double durationInSeconds;
+  final int? index;
+  final bool showButtonVolumnClose;
 
   @override
   State<IsmVideoTrimmerView> createState() => _VideoTrimmerViewState();
@@ -36,17 +40,30 @@ class _VideoTrimmerViewState extends State<IsmVideoTrimmerView> {
     loadVideo();
   }
 
-  void loadVideo() async {
+  loadVideo() async {
     await trimmer.loadVideo(videoFile: widget.file);
     trimmer.videoPlayerController?.addListener(checkVideo);
   }
 
-  void checkVideo() {
+  checkVideo() {
     if (trimmer.videoPlayerController?.value.isPlaying == false) {
       setState(() {
         playPausedAction = true;
       });
     }
+  }
+
+  saveTrimVideo(double startValue, double endValue) async {
+    await trimmer.saveTrimmedVideo(
+        startValue: startValue,
+        endValue: endValue,
+        onSave: (value) {
+          if (widget.index != null) {
+            IsmChatLog.error('trimpata $value');
+            var chatPageController = Get.find<IsmChatPageController>();
+            chatPageController.listOfAssetsPath[widget.index!].mediaUrl = value;
+          }
+        });
   }
 
   @override
@@ -62,56 +79,58 @@ class _VideoTrimmerViewState extends State<IsmVideoTrimmerView> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InkWell(
-                      onTap: () async {
-                        setState(() {
-                          if (isMuted) {
-                            trimmer.videoPlayerController!.setVolume(1.0);
-                          } else {
-                            trimmer.videoPlayerController!.setVolume(0.0);
-                          }
-                          isMuted = !isMuted;
-                        });
-                      },
-                      child: Container(
-                        width: IsmChatDimens.thirtyTwo,
-                        height: IsmChatDimens.thirtyTwo,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: IsmChatColors.whiteColor.withOpacity(.1),
-                        ),
-                        child: Icon(
-                          !isMuted ? Icons.volume_up_rounded : Icons.volume_off,
-                          color: IsmChatColors.whiteColor,
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () async {
-                        Get.back<void>();
-                      },
-                      child: Container(
-                        width: IsmChatDimens.thirtyTwo,
-                        height: IsmChatDimens.thirtyTwo,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: IsmChatColors.whiteColor.withOpacity(.1),
-                        ),
-                        child: const Icon(
-                          Icons.close,
-                          color: IsmChatColors.whiteColor,
+                if (widget.showButtonVolumnClose)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        onTap: () async {
+                          setState(() {
+                            if (isMuted) {
+                              trimmer.videoPlayerController!.setVolume(1.0);
+                            } else {
+                              trimmer.videoPlayerController!.setVolume(0.0);
+                            }
+                            isMuted = !isMuted;
+                          });
+                        },
+                        child: Container(
+                          width: IsmChatDimens.thirtyTwo,
+                          height: IsmChatDimens.thirtyTwo,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: IsmChatColors.whiteColor.withOpacity(.1),
+                          ),
+                          child: Icon(
+                            !isMuted
+                                ? Icons.volume_up_rounded
+                                : Icons.volume_off,
+                            color: IsmChatColors.whiteColor,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                      InkWell(
+                        onTap: () async {
+                          Get.back<void>();
+                        },
+                        child: Container(
+                          width: IsmChatDimens.thirtyTwo,
+                          height: IsmChatDimens.thirtyTwo,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: IsmChatColors.whiteColor.withOpacity(.1),
+                          ),
+                          child: const Icon(
+                            Icons.close,
+                            color: IsmChatColors.whiteColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 IsmChatDimens.boxHeight2,
                 SizedBox(
                   width: IsmChatDimens.percentWidth(.95),
-
                   child: TrimViewer(
                     showDuration: true,
                     durationStyle: DurationStyle.FORMAT_MM_SS,
@@ -143,7 +162,6 @@ class _VideoTrimmerViewState extends State<IsmVideoTrimmerView> {
                   startValue: startValue.value,
                   endValue: endValue.value,
                 );
-
                 isPlaying.value = playBackState;
                 setState(() {});
                 playPausedAction = true;
@@ -197,95 +215,6 @@ class _VideoTrimmerViewState extends State<IsmVideoTrimmerView> {
                 ),
               ),
             ),
-            // widget.isCaptionRequired
-            //     ? Align(
-            //         alignment: Alignment.bottomCenter,
-            //         child: Padding(
-            //           padding: IsmChatDimens.edgeInsets10.copyWith(
-            //             bottom: IsmChatDimens.eight,
-            //           ),
-            //           child: Row(
-            //             crossAxisAlignment: CrossAxisAlignment.center,
-            //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //             children: [
-            //               Container(
-            //                 width: IsmChatDimens.percentWidth(.85),
-            //                 height: IsmChatDimens.forty,
-            //                 decoration: BoxDecoration(
-            //                   color: IsmChatColors.whiteColor,
-            //                   borderRadius: BorderRadius.circular(
-            //                     IsmChatDimens.twenty,
-            //                   ),
-            //                 ),
-            //                 child: ClipRRect(
-            //                   borderRadius: BorderRadius.circular(
-            //                     IsmChatDimens.twenty,
-            //                   ),
-            //                   child: TextField(
-            //                     keyboardType: TextInputType.multiline,
-            //                     maxLines: null,
-            //                     controller: descriptionTEC,
-            //                     decoration: InputDecoration(
-            //                       contentPadding: IsmChatDimens.edgeInsets10,
-            //                       hintText: 'addACaption'.tr,
-            //                       hintStyle: IsmChatStyles.w400Black12.copyWith(
-            //                         color: IsmChatColors.greenColor,
-            //                       ),
-            //                     ),
-            //                   ),
-            //                 ),
-            //               ),
-            //               InkWell(
-            //                   onTap: () async {
-            //                     await trimmer.saveTrimmedVideo(
-            //                       startValue: startValue.value,
-            //                       endValue: endValue.value,
-            //                       onSave: (value) async {
-            //                         Get.back<VideoTrimmerClass>(
-            //                           result: VideoTrimmerClass(
-            //                             description: descriptionTEC.text,
-            //                             file: File('$value'),
-            //                           ),
-            //                         );
-            //                       },
-            //                     );
-            //                   },
-            //                   child: const Icon(Icons.share)
-            //                   // SvgPicture.asset(
-            //                   //   AssetConstants.whatsappShareSvg,
-            //                   // ),
-            //                   )
-            //             ],
-            //           ),
-            //         ),
-            //       )
-            //     : Align(
-            //         alignment: Alignment.bottomCenter,
-            //         child: Padding(
-            //             padding: IsmChatDimens.edgeInsets16.copyWith(
-            //               bottom: IsmChatDimens.hundred,
-            //             ),
-            //             child: ElevatedButton(
-            //                 onPressed: () {}, child: const Icon(Icons.done))
-            //             //  CustomButton(
-            //             //   title: TranslationUtil.continueWord,
-            //             //   onPress: () async {
-            //             //     await trimmer.saveTrimmedVideo(
-            //             //       startValue: startValue.value,
-            //             //       endValue: endValue.value,
-            //             //       onSave: (value) async {
-            //             //         Get.back<VideoTrimmerClass>(
-            //             //           result: VideoTrimmerClass(
-            //             //             description: descriptionTEC.text,
-            //             //             file: File('$value'),
-            //             //           ),
-            //             //         );
-            //             //       },
-            //             //     );
-            //             //   },
-            //             // ),
-            //             ),
-            //       ),
           ],
         ),
       );

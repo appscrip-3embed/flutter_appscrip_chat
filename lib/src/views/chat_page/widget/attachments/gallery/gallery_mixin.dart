@@ -54,6 +54,9 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
               file.path.toString(),
               quality: 50,
               position: -1);
+          // var videoCompressPath = await VideoCompress.compressVideo(
+          //     file.path.toString(),
+          //     quality: VideoQuality.MediumQuality);
           ismChatPageController.listOfAssetsPath.add(AttachmentModel(
               thumbnailUrl: thumbTempPath.path,
               mediaUrl: file.path.toString(),
@@ -209,13 +212,24 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                               fit: BoxFit.contain,
                             ),
                           )
-                        : VideoViewPage(
-                            showVideoPlaying: true,
-                            path: controller
-                                .listOfAssetsPath[controller.assetsIndex]
-                                .mediaUrl
-                                .toString(),
+                        : IsmVideoTrimmerView(
+                            index: controller.assetsIndex,
+                            file: File(
+                              controller
+                                  .listOfAssetsPath[controller.assetsIndex]
+                                  .mediaUrl
+                                  .toString(),
+                            ),
+                            durationInSeconds: 30,
+                            showButtonVolumnClose: false,
                           ),
+                    // VideoViewPage(
+                    //     showVideoPlaying: true,
+                    //     path: controller
+                    //         .listOfAssetsPath[controller.assetsIndex]
+                    //         .mediaUrl
+                    //         .toString(),
+                    //   ),
                     Positioned(
                       bottom: IsmChatDimens.ten,
                       child: Container(
