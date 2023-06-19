@@ -30,4 +30,6 @@ class IsmChatColors {
   static const Color greyColorLight = Color(0xFFA8A8CE);
 
   static const Color blueGreyColor = Color(0xFFF5F6FA);
+
+  static const Color darkBlueGreyColor = Color(0xFFEFF0FC);
 }

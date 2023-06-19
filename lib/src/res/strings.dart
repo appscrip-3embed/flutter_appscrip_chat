@@ -69,6 +69,8 @@ class IsmChatStrings {
   static const String createdOn = 'Created on';
   static const String by = 'by';
   static const String noMedia = 'No Media';
+  static const String noDocs = 'No Docs';
+  static const String noLinks = 'No Links';
   static const String media = 'Media';
   static const String addParticioants = 'Add participants';
   static const String addDescription = 'Add group description';
@@ -86,7 +88,7 @@ class IsmChatStrings {
   static const String video = 'video';
   static const String loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod';
   static const String demoDate = '25 Dec 2016';
-  static const String mediaLinksAndDocs= 'Media';
+  static const String mediaLinksAndDocs= 'Media, Links, and Docs';
   static const String links= 'Links';
   static const String docs= 'Docs';
 }

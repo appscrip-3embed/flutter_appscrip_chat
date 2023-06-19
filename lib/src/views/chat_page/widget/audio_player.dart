@@ -25,9 +25,9 @@ class IsmChatAudioPlayer extends StatelessWidget {
                 me: message.sentByMe,
                 meBgColor: IsmChatConfig.chatTheme.primaryColor!,
                 mePlayIconColor: IsmChatConfig.chatTheme.primaryColor!,
-                contactBgColor: IsmChatConfig.chatTheme.backgroundColor!,
-                contactPlayIconColor: IsmChatConfig.chatTheme.backgroundColor!,
-                contactFgColor: IsmChatConfig.chatTheme.primaryColor!,
+                contactBgColor: IsmChatConfig.chatTheme.primaryColor!,
+                contactPlayIconColor: IsmChatConfig.chatTheme.primaryColor!,
+                contactFgColor: IsmChatConfig.chatTheme.backgroundColor!,
                 onPlay: () {},
               ),
               IconButton(
