@@ -57,50 +57,6 @@ class IsmChatLinkMessage extends StatelessWidget {
             ),
           ),
         ),
-        // child: AnyLinkPreview.builder(
-        //   link: message.body,
-        //   itemBuilder: (_, metaData, imageProvider) => _LinkPreview(
-        //     sentByMe: message.sentByMe,
-        //     link: message.body,
-        //     child: Column(
-        //       crossAxisAlignment: CrossAxisAlignment.start,
-        //       mainAxisSize: MainAxisSize.min,
-        //       children: [
-        //         if (imageProvider != null) ...[
-        //           Container(
-        //             decoration: BoxDecoration(
-        //               image: DecorationImage(image: imageProvider),
-        //             ),
-        //           ),
-        //         ],
-        //         Text(
-        //           metaData.title ?? '',
-        //           style: message.sentByMe
-        //               ? ChatStyles.w500White14
-        //               : ChatStyles.w500Black14,
-        //         ),
-        //         Text(
-        //           metaData.desc ?? '',
-        //           style: message.sentByMe
-        //               ? ChatStyles.w400White12
-        //               : ChatStyles.w400Black12,
-        //           maxLines: 2,
-        //           overflow: TextOverflow.ellipsis,
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        //   errorWidget: _LinkPreview(
-        //     sentByMe: message.sentByMe,
-        //     link: message.body,
-        //     child: Text(
-        //       ChatStrings.errorLoadingPreview,
-        //       style: message.sentByMe
-        //           ? ChatStyles.w400White12
-        //           : ChatStyles.w400Black12,
-        //     ),
-        //   ),
-        // ),
       );
 }
 

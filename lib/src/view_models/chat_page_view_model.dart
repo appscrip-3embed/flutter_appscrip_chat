@@ -528,7 +528,7 @@ class IsmChatPageViewModel {
 
     var message =
         allMessages.where((e) => e.messageId == reaction.messageId).first;
-    IsmChatLog.error(message.reactions);
+
     var isEmoji = false;
     for (var x in message.reactions ?? <MessageReactionModel>[]) {
       if (x.emojiKey == reaction.reactionType.value) {
@@ -546,8 +546,6 @@ class IsmChatPageViewModel {
         ),
       );
     }
-    IsmChatLog.error('step3');
-    IsmChatLog.error(message.reactions);
 
     var messageIndex =
         allMessages.indexWhere((e) => e.messageId == reaction.messageId);
