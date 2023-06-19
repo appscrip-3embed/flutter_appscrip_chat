@@ -4,7 +4,7 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -99,13 +99,18 @@ class IsmChatConversationsController extends GetxController {
     super.onInit();
 
     await _generateReactionList();
-    var users = await IsmChatConfig.dbWrapper.userDetailsBox
-        .get(IsmChatStrings.userData);
-    if (users != null) {
-      userDetails = UserDetails.fromJson(users);
-    } else {
+    if (kIsWeb) {
       await getUserData();
+    } else {
+      var users = await IsmChatConfig.dbWrapper.userDetailsBox
+          .get(IsmChatStrings.userData);
+      if (users != null) {
+        userDetails = UserDetails.fromJson(users);
+      } else {
+        await getUserData();
+      }
     }
+
     await getConversationsFromDB();
     await getChatConversations();
     await Get.find<IsmChatMqttController>().getChatConversationsUnreadCount();

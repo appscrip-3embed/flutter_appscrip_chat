@@ -4,15 +4,16 @@ import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mqtt_client/mqtt_browser_client.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
 class IsmChatMqttController extends GetxController {
-  IsmChatMqttController(this._viewModel);
-  final IsmChatMqttViewModel _viewModel;
-  late MqttServerClient client;
+  MqttServerClient? client;
+  MqttBrowserClient? browserClient;
 
   final deviceInfo = DeviceInfoPlugin();
   late String deviceId;
@@ -59,22 +60,37 @@ class IsmChatMqttController extends GetxController {
     if (GetPlatform.isAndroid) {
       var androidDeviceInfo = await deviceInfo.androidInfo;
       deviceId = androidDeviceInfo.id;
-    } else {
+    } else if (GetPlatform.isIOS) {
       var iosDeviceInfo = await deviceInfo.iosInfo;
       deviceId = iosDeviceInfo.identifierForVendor!;
+    } else {
+      var webDeviceInfo = await deviceInfo.webBrowserInfo;
+      deviceId = webDeviceInfo.platform!;
     }
   }
 
   void connectClient() async {
     try {
-      var res = await client.connect(
-        _communicationConfig.username,
-        _communicationConfig.password,
-      );
-      IsmChatLog.info('MQTT Response ${res!.state}');
-      if (res.state == MqttConnectionState.connected) {
-        connectionState = IsmChatConnectionState.connected;
-        await subscribeTo();
+      if (kIsWeb) {
+        var res = await browserClient?.connect(
+          _communicationConfig.username,
+          _communicationConfig.password,
+        );
+        IsmChatLog.info('MQTT Response ${res!.state}');
+        if (res.state == MqttConnectionState.connected) {
+          connectionState = IsmChatConnectionState.connected;
+          await subscribeTo();
+        }
+      } else {
+        var res = await client?.connect(
+          _communicationConfig.username,
+          _communicationConfig.password,
+        );
+        IsmChatLog.info('MQTT Response ${res!.state}');
+        if (res.state == MqttConnectionState.connected) {
+          connectionState = IsmChatConnectionState.connected;
+          await subscribeTo();
+        }
       }
     } on NoConnectionException catch (e) {
       IsmChatLog.error('EXAMPLE::NoConnectionException - $e');
@@ -92,38 +108,72 @@ class IsmChatMqttController extends GetxController {
   }
 
   void initializeMqttClient() {
-    client = MqttServerClient(
-      'connections.isometrik.io',
-      '${_communicationConfig.userConfig.userId}$deviceId',
-    );
-    client.port = 2052;
-    client.keepAlivePeriod = 60;
-    client.onDisconnected = _onDisconnected;
-    client.onUnsubscribed = _onUnSubscribed;
-    client.onSubscribeFail = _onSubscribeFailed;
-    client.secure = false;
-    client.logging(on: true);
-    client.autoReconnect = true;
-    client.pongCallback = _pong;
-    client.setProtocolV311();
+    if (kIsWeb) {
+      browserClient = MqttBrowserClient(
+        'wss://connections.isometrik.io',
+        '${_communicationConfig.userConfig.userId}$deviceId',
+      );
+      browserClient?.websocketProtocols = [];
+      browserClient?.port = 2052;
+      browserClient?.keepAlivePeriod = 60;
+      browserClient?.onDisconnected = _onDisconnected;
+      browserClient?.onUnsubscribed = _onUnSubscribed;
+      browserClient?.onSubscribeFail = _onSubscribeFailed;
+      browserClient?.logging(on: true);
+      browserClient?.autoReconnect = true;
+      browserClient?.pongCallback = _pong;
+      browserClient?.setProtocolV311();
 
-    /// Add the successful connection callback
-    client.onConnected = _onConnected;
-    client.onSubscribed = _onSubscribed;
+      /// Add the successful connection callback
+      browserClient?.onConnected = _onConnected;
+      browserClient?.onSubscribed = _onSubscribed;
 
-    client.connectionMessage = MqttConnectMessage().startClean();
+      browserClient?.connectionMessage = MqttConnectMessage().startClean();
+    } else {
+      client = MqttServerClient(
+        'connections.isometrik.io',
+        '${_communicationConfig.userConfig.userId}$deviceId',
+      );
+      client?.port = 2052;
+      client?.keepAlivePeriod = 60;
+      client?.onDisconnected = _onDisconnected;
+      client?.onUnsubscribed = _onUnSubscribed;
+      client?.onSubscribeFail = _onSubscribeFailed;
+      client?.secure = false;
+      client?.logging(on: true);
+      client?.autoReconnect = true;
+      client?.pongCallback = _pong;
+      client?.setProtocolV311();
+
+      /// Add the successful connection callback
+      client?.onConnected = _onConnected;
+      client?.onSubscribed = _onSubscribed;
+
+      client?.connectionMessage = MqttConnectMessage().startClean();
+    }
   }
 
   /// function call for subscribe Topic
   Future<void> subscribeTo() async {
     try {
-      if (client.getSubscriptionsStatus(messageTopic) ==
-          MqttSubscriptionStatus.doesNotExist) {
-        client.subscribe(messageTopic, MqttQos.atMostOnce);
-      }
-      if (client.getSubscriptionsStatus(statusTopic) ==
-          MqttSubscriptionStatus.doesNotExist) {
-        client.subscribe(statusTopic, MqttQos.atMostOnce);
+      if (kIsWeb) {
+        if (browserClient?.getSubscriptionsStatus(messageTopic) ==
+            MqttSubscriptionStatus.doesNotExist) {
+          browserClient?.subscribe(messageTopic, MqttQos.atMostOnce);
+        }
+        if (browserClient?.getSubscriptionsStatus(statusTopic) ==
+            MqttSubscriptionStatus.doesNotExist) {
+          browserClient?.subscribe(statusTopic, MqttQos.atMostOnce);
+        }
+      } else {
+        if (client?.getSubscriptionsStatus(messageTopic) ==
+            MqttSubscriptionStatus.doesNotExist) {
+          client?.subscribe(messageTopic, MqttQos.atMostOnce);
+        }
+        if (client?.getSubscriptionsStatus(statusTopic) ==
+            MqttSubscriptionStatus.doesNotExist) {
+          client?.subscribe(statusTopic, MqttQos.atMostOnce);
+        }
       }
     } catch (e) {
       IsmChatLog.error('Subscribe Error - $e');
@@ -133,13 +183,15 @@ class IsmChatMqttController extends GetxController {
   /// function call for unsubscribe topic
   Future<void> unSubscribe() async {
     try {
-      if (client.getSubscriptionsStatus(messageTopic) ==
-          MqttSubscriptionStatus.active) {
-        client.unsubscribe(messageTopic);
-      }
-      if (client.getSubscriptionsStatus(statusTopic) ==
-          MqttSubscriptionStatus.active) {
-        client.unsubscribe(statusTopic);
+      if (kIsWeb) {
+        if (client?.getSubscriptionsStatus(messageTopic) ==
+            MqttSubscriptionStatus.active) {
+          client?.unsubscribe(messageTopic);
+        }
+        if (client?.getSubscriptionsStatus(statusTopic) ==
+            MqttSubscriptionStatus.active) {
+          client?.unsubscribe(statusTopic);
+        }
       }
     } catch (e) {
       IsmChatLog.error('Unsubscribe Error - $e');
@@ -149,47 +201,90 @@ class IsmChatMqttController extends GetxController {
   /// onConnected callback, it will be called when connection is established
   void _onConnected() {
     IsmChatApp.isMqttConnected = true;
-    client.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) async {
-      final recMess = c!.first.payload as MqttPublishMessage;
+    if (kIsWeb) {
+      browserClient?.updates!
+          .listen((List<MqttReceivedMessage<MqttMessage?>>? c) async {
+        final recMess = c!.first.payload as MqttPublishMessage;
 
-      var payload = jsonDecode(
-              MqttPublishPayload.bytesToStringAsString(recMess.payload.message))
-          as Map<String, dynamic>;
-      IsmChatLog('Mqtt event $payload');
-      if (payload['action'] != null) {
-        var action = payload['action'];
-        if (IsmChatActionEvents.values
-            .map((e) => e.toString())
-            .contains(action)) {
-          var actionModel = IsmChatMqttActionModel.fromMap(payload);
-          _handleAction(actionModel);
+        var payload = jsonDecode(MqttPublishPayload.bytesToStringAsString(
+            recMess.payload.message)) as Map<String, dynamic>;
+        IsmChatLog(payload);
+        if (payload['action'] != null) {
+          var action = payload['action'];
+          if ([
+            'publishingStopped',
+            'messagePublished',
+            'meetingCreated',
+            'meetingEndedDueToNoUserPublishing'
+          ].contains(action)) {
+            actionStreamController.add(payload);
+          } else {
+            var actionModel = IsmChatMqttActionModel.fromMap(payload);
+            _handleAction(actionModel);
+          }
+        } else {
+          var message = IsmChatMessageModel.fromMap(payload);
+          _handleLocalNotification(message);
+          _handleMessage(message);
         }
-        actionStreamController.add(payload);
-      } else {
-        var message = IsmChatMessageModel.fromMap(payload);
-        _handleLocalNotification(message);
-        _handleMessage(message);
-      }
-    });
+      });
+    } else {
+      client?.updates!
+          .listen((List<MqttReceivedMessage<MqttMessage?>>? c) async {
+        final recMess = c!.first.payload as MqttPublishMessage;
+
+        var payload = jsonDecode(MqttPublishPayload.bytesToStringAsString(
+            recMess.payload.message)) as Map<String, dynamic>;
+        IsmChatLog('Mqtt event $payload');
+        if (payload['action'] != null) {
+          var action = payload['action'];
+          if (IsmChatActionEvents.values
+            .map((e) => e.toString())
+          .contains(action)) {
+
+            var actionModel = IsmChatMqttActionModel.fromMap(payload);
+            _handleAction(actionModel);
+          }actionStreamController.add(payload);
+        } else {
+          var message = IsmChatMessageModel.fromMap(payload);
+          _handleLocalNotification(message);
+          _handleMessage(message);
+        }
+      });
+    }
   }
 
   /// onDisconnected callback, it will be called when connection is breaked
   void _onDisconnected() {
     IsmChatApp.isMqttConnected = false;
     connectionState = IsmChatConnectionState.disconnected;
-    if (client.connectionStatus!.returnCode ==
-        MqttConnectReturnCode.noneSpecified) {
-      IsmChatLog.success('MQTT Disconnected');
+    if (kIsWeb) {
+      if (browserClient?.connectionStatus!.returnCode ==
+          MqttConnectReturnCode.noneSpecified) {
+        IsmChatLog.success('MQTT Disconnected');
+      } else {
+        IsmChatLog.error('MQTT Disconnected');
+      }
     } else {
-      IsmChatLog.error('MQTT Disconnected');
+      if (client?.connectionStatus!.returnCode ==
+          MqttConnectReturnCode.noneSpecified) {
+        IsmChatLog.success('MQTT Disconnected');
+      } else {
+        IsmChatLog.error('MQTT Disconnected');
+      }
     }
   }
 
   /// function call for disconnect host
   Future<void> disconnect() async {
     IsmChatLog.success('Disconnected');
-    client.autoReconnect = false;
-    client.disconnect();
+    if (kIsWeb) {
+      browserClient?.autoReconnect = false;
+      browserClient?.disconnect();
+    } else {
+      client?.autoReconnect = false;
+      client?.disconnect();
+    }
   }
 
   /// onSubscribed callback, it will be called when connection successfully subscribes to certain topic

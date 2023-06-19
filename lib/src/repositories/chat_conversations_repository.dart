@@ -132,7 +132,7 @@ class IsmChatConversationsRepository {
       var user = UserDetails.fromMap(data);
       return user;
     } catch (e, st) {
-      IsmChatLog.error('GetUserData $e', st);
+      IsmChatLog.error('GetUserDataError $e', st);
       return null;
     }
   }
