@@ -157,6 +157,7 @@ class IsmChatDBWrapper {
         conversation.conversationId!.trim().isEmpty) {
       return false;
     }
+
     switch (dbBox) {
       case IsmChatDbBox.main:
         await chatConversationBox.put(
@@ -222,26 +223,23 @@ class IsmChatDBWrapper {
             message.conversationId!.trim().isEmpty)) {
       return;
     }
+
     switch (dbBox) {
       case IsmChatDbBox.main:
         var conversation = await getConversation(
             conversationId: message.conversationId, dbBox: dbBox);
-        if (conversation == null) {
-          conversation?.copyWith(
-              conversationId: message.conversationId, messages: [message]);
-          await saveConversation(conversation: conversation!, dbBox: dbBox);
-          return;
-        }
-        conversation.messages?.add(message);
-        await saveConversation(conversation: conversation, dbBox: dbBox);
+
+        conversation?.messages?.add(message);
+        await saveConversation(conversation: conversation!, dbBox: dbBox);
         break;
       case IsmChatDbBox.pending:
         var conversation = await getConversation(
             conversationId: message.conversationId, dbBox: dbBox);
         if (conversation == null) {
-          conversation?.copyWith(
+          var pendingConversation = IsmChatConversationModel(
               conversationId: message.conversationId, messages: [message]);
-          await saveConversation(conversation: conversation!, dbBox: dbBox);
+          await saveConversation(
+              conversation: pendingConversation, dbBox: dbBox);
           return;
         }
         conversation.messages?.add(message);
@@ -251,9 +249,10 @@ class IsmChatDBWrapper {
         var conversation = await getConversation(
             conversationId: message.conversationId, dbBox: dbBox);
         if (conversation == null) {
-          conversation?.copyWith(
+          var forwardConversation = IsmChatConversationModel(
               conversationId: message.conversationId, messages: [message]);
-          await saveConversation(conversation: conversation!, dbBox: dbBox);
+          await saveConversation(
+              conversation: forwardConversation, dbBox: dbBox);
           return;
         }
         conversation.messages?.add(message.toMap() as IsmChatMessageModel);
