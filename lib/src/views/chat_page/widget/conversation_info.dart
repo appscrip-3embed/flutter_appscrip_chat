@@ -171,7 +171,8 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                               InkWell(
                                 onTap: (){
                                   IsmChatUtility.openFullScreenBottomSheet(IsmMedia(
-                                    mediaList: controller.mediaList,
+                                    mediaList: controller.mediaList, mediaListLinks: controller.mediaListLinks,
+                                    mediaListDocs: controller.mediaListDocs,
                                   ));
                                 },
                                 child: Row(children: [
@@ -181,7 +182,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                   const Spacer(),
                                   Row(
                                     children: [
-                                      Text('${controller.mediaList.length}',style: IsmChatStyles.w500GreyLight17,),
+                                      Text('${controller.mediaList.length + controller.mediaListLinks.length + controller.mediaListDocs.length}',style: IsmChatStyles.w500GreyLight17,),
                                       IsmChatDimens.boxWidth4,
                                       Icon(Icons.arrow_forward_ios, color: IsmChatColors.greyColorLight,
                                         size: IsmChatDimens.fifteen,),

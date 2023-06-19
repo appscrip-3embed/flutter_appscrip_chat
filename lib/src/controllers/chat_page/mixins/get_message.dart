@@ -95,14 +95,31 @@ mixin IsmChatPageGetMessageMixin {
         isLoading: isLoading);
     if (data != null && (_controller.conversation?.conversationId == conversationId)) {
         _controller.conversation = data.copyWith(conversationId: conversationId);
+
+        // controller.medialist is storing media i.e. Image, Video and Audio. //
         _controller.mediaList = _controller.messages
             .where((e) => [
           IsmChatCustomMessageType.image,
           IsmChatCustomMessageType.video,
-          // IsmChatCustomMessageType.audio,
+          IsmChatCustomMessageType.audio,
+          // IsmChatCustomMessageType.file,
+        ].contains(e.customType))
+            .toList();
+
+        // controller.mediaListLinks is storing links //
+        _controller.mediaListLinks = _controller.messages
+            .where((e) => [
+          IsmChatCustomMessageType.link,
+        ].contains(e.customType))
+            .toList();
+
+        // controller.mediaListDocs is storing docs //
+        _controller.mediaListDocs = _controller.messages
+            .where((e) => [
           IsmChatCustomMessageType.file,
         ].contains(e.customType))
             .toList();
+
         if (data.members != null) {
           _controller.groupMembers = data.members!;
           _controller.groupMembers.sort((a, b) =>

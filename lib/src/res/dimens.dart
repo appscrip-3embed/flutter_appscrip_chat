@@ -11,6 +11,7 @@ class IsmChatDimens {
   static double percentWidth(double percentValue) => percentValue.sw;
 
   static final double zero = 0.sp;
+  static final double one = 1.sp;
   static final double two = 2.sp;
   static final double three = 3.sp;
   static final double four = 4.sp;

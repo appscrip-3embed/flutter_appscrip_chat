@@ -1,156 +1,137 @@
 import 'dart:developer';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/views/chat_conversations/widget/docs_view.dart';
+import 'package:appscrip_chat_component/src/views/chat_conversations/widget/links_view.dart';
+import 'package:appscrip_chat_component/src/views/chat_conversations/widget/media_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 /// IsmMedia class is for showing the conversation media
 class IsmMedia extends StatefulWidget {
-  const IsmMedia({Key? key, required this.mediaList}) : super(key: key);
+  const IsmMedia({Key? key, required this.mediaList, required this.mediaListLinks, required this.mediaListDocs}) : super(key: key);
 
   final List<IsmChatMessageModel> mediaList;
+  final List<IsmChatMessageModel> mediaListLinks;
+  final List<IsmChatMessageModel> mediaListDocs;
 
   @override
   State<IsmMedia> createState() => _IsmMediaState();
 }
 
-class _IsmMediaState extends State<IsmMedia> {
+class _IsmMediaState extends State<IsmMedia> with TickerProviderStateMixin {
 
   List<Map<String, List<IsmChatMessageModel>>> storeWidgetMediaList = [];
 
+  final chatPageController = Get.find<IsmChatPageController>();
+
+  TabController? _tabController;
+
   @override
   void initState(){
-    var x = sortMessages(widget.mediaList);
-    storeWidgetMediaList =  sortMediaList(x);
+    _tabController = TabController(vsync: this, length: 3);
+    _tabController?.addListener(_handleTabSelection);
     super.initState();
   }
 
-  List<Map<String, List<IsmChatMessageModel>>> sortMediaList (List<IsmChatMessageModel> messages){
-    var storeMediaImageList = <Map<String, List<IsmChatMessageModel>>>[];
-    for (var x in messages) {
-      if(x.customType == IsmChatCustomMessageType.date){
-          storeMediaImageList.add({x.body : <IsmChatMessageModel>[]});
-          continue;
-      }
-        var z =storeMediaImageList.last;
-        z.forEach((key, value) {
-            value.add(x);
-        });
-    }
-    return storeMediaImageList;
+  void _handleTabSelection() {
+    setState(() {
+    });
   }
 
-  List<IsmChatMessageModel> sortMessages(List<IsmChatMessageModel> messages) {
-    messages.sort((a, b) => a.sentAt.compareTo(b.sentAt));
+  Widget getTabBar() => TabBar(
+    overlayColor: MaterialStateProperty.resolveWith<Color?>(
+            (Set<MaterialState> states) => states.contains(MaterialState.focused) ? null : Colors.transparent
+    ),
+    dividerColor: Colors.transparent,
+    controller: _tabController,
+    labelColor: IsmChatColors.blackColor,
+    indicatorColor: Colors.transparent,
+    indicatorSize: TabBarIndicatorSize.tab,
+    indicatorPadding: IsmChatDimens.edgeInsets0,
+    indicatorWeight: double.minPositive,
+    labelPadding: IsmChatDimens.edgeInsets2_0,
+    labelStyle: IsmChatStyles.w600Black16,
+    splashBorderRadius: BorderRadius.zero,
+    isScrollable: true,
+    tabs: [
+      Row(
+        children: [
+          Container(
+              margin: IsmChatDimens.edgeInsets4,
+              height: IsmChatDimens.twentySeven,
+              width: IsmChatDimens.seventyEight,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(IsmChatDimens.six),
+                color: _tabController?.index == 0 ? IsmChatColors.whiteColor :  IsmChatColors.darkBlueGreyColor,
+              ),
+              child: const Tab(text: IsmChatStrings.media,)),
+          if(_tabController?.index == 2) Container(
+            height: IsmChatDimens.twenty,
+            width: IsmChatDimens.two,
+            color: IsmChatColors.greyColor.withOpacity(.1),
+          )
+        ],
+      ),
+      Container(
+          margin: IsmChatDimens.edgeInsets4,
+          height: IsmChatDimens.twentySeven,
+          width: IsmChatDimens.seventyEight,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(IsmChatDimens.six),
+            color: _tabController?.index == 1 ? IsmChatColors.whiteColor :  IsmChatColors.darkBlueGreyColor,
+          ),
+          child: const Tab(text: IsmChatStrings.links)),
+      Row(
+        children: [
+          if(_tabController?.index == 0) Container(
+            height: IsmChatDimens.twenty,
+            width: IsmChatDimens.two,
+            color: IsmChatColors.greyColor.withOpacity(.1),
+          ),
+          Container(
+              margin: IsmChatDimens.edgeInsets4,
+              height: IsmChatDimens.twentySeven,
+              width: IsmChatDimens.seventyEight,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(IsmChatDimens.six),
+                color: _tabController?.index == 2 ? IsmChatColors.whiteColor :  IsmChatColors.darkBlueGreyColor,
+              ),
+              child: const Tab(text: IsmChatStrings.docs)),
+        ],
+      ),
+    ],
+  );
 
-    return _parseMessagesWithDate(messages);
-  }
-
-  List<IsmChatMessageModel> _parseMessagesWithDate(
-      List<IsmChatMessageModel> messages,
-      ) {
-    var result = <List<IsmChatMessageModel>>[];
-    var list1 = <IsmChatMessageModel>[];
-    var allMessages = <IsmChatMessageModel>[];
-    for (var x = 0; x < messages.length; x++) {
-      if (x == 0) {
-        list1.add(messages[x]);
-      } else if (DateTime.fromMillisecondsSinceEpoch(messages[x - 1].sentAt)
-          .isSameDay(DateTime.fromMillisecondsSinceEpoch(messages[x].sentAt))) {
-        list1.add(messages[x]);
-      } else {
-        result.add([...list1]);
-        list1.clear();
-        list1.add(messages[x]);
-      }
-      if (x == messages.length - 1 && list1.isNotEmpty) {
-        result.add([...list1]);
-      }
-    }
-
-    for (var messages in result) {
-      allMessages.add(
-        IsmChatMessageModel.fromMonth(
-          messages.first.sentAt,
-        ),
-      );
-      allMessages.addAll(messages);
-    }
-    return allMessages;
-  }
+  Widget getTabBarView() => TabBarView(
+    controller: _tabController,
+    children: [
+      IsmMediaView(mediaList: widget.mediaList),
+      IsmLinksView(mediaListLinks: widget.mediaListLinks),
+      IsmDocsView(mediaListDocs: widget.mediaListDocs),
+    ],
+  );
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          elevation: IsmChatDimens.two,
-          title:  Text(
-            IsmChatStrings.media,
-            style: IsmChatStyles.w600Black18,
+  Widget build(BuildContext context) => DefaultTabController(
+    length: 3,
+    child: Scaffold(
+          appBar: AppBar(
+            surfaceTintColor: IsmChatColors.whiteColor,
+            elevation: IsmChatDimens.three,
+            shadowColor: Colors.grey,
+            title: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(IsmChatDimens.eight),
+                color: IsmChatColors.darkBlueGreyColor,
+              ),
+              child: getTabBar(),
+            ),
+            centerTitle: GetPlatform.isAndroid ? true : false,
           ),
-          centerTitle: GetPlatform.isAndroid ? true : false,
-        ),
-        body: SafeArea(
-          child: Padding(
-            padding: IsmChatDimens.edgeInsets10,
-            child: widget.mediaList.isEmpty
-                ? Center(
-                    child: Text(
-                      IsmChatStrings.noMedia,
-                      style: IsmChatStyles.w600Black20,
-                    ),
-                  )
-                :
-                ListView.separated(
-                  physics: const ScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: storeWidgetMediaList.length,
-                    separatorBuilder:(_, index)=> IsmChatDimens.boxHeight10,
-                    itemBuilder: (context, index) {
-                       var media  = storeWidgetMediaList[index];
-                       var value = media.values.toList().first;
-                       var key = media.keys.toString().replaceAll(RegExp(r'\(|\)'), '');
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                       Text(key, style: IsmChatStyles.w400Black14,),
-                    IsmChatDimens.boxHeight10,
-                    GridView.builder(
-                      physics: const ScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: value.length,
-                        gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          mainAxisSpacing: 2,
-                          crossAxisSpacing: 2,
-                        ),
-                        itemBuilder: (context, valueIndex) {
-
-                          // return Text('${value[valueIndex]}');
-                          var url =
-                          value[valueIndex].customType == IsmChatCustomMessageType.image
-                              ? value[valueIndex].attachments!.first.mediaUrl!
-                              : value[valueIndex].attachments!.first.thumbnailUrl!;
-                          var iconData =
-                          value[valueIndex].customType == IsmChatCustomMessageType.audio
-                              ? Icons.audio_file_rounded
-                              : Icons.description_rounded;
-                          return GestureDetector(
-                            onTap: () => Get.find<IsmChatPageController>()
-                                .tapForMediaPreview(value[valueIndex]),
-                            child: ConversationMediaWidget(
-                              media: value[valueIndex],
-                              iconData: iconData,
-                              url: url,
-                            ),
-                          );
-                        },
-                      ),
-                  ],
-                );
-                    },
-                ),
+          body: SafeArea(
+            child: getTabBarView(),
           ),
         ),
-      );
+  );
 }

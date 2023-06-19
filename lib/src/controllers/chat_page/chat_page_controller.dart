@@ -108,6 +108,14 @@ class IsmChatPageController extends GetxController
   List<IsmChatMessageModel> get mediaList => _mediaList;
   set mediaList(List<IsmChatMessageModel> value) => _mediaList.value = value;
 
+  final RxList<IsmChatMessageModel> _mediaListLinks = <IsmChatMessageModel>[].obs;
+  List<IsmChatMessageModel> get mediaListLinks => _mediaListLinks;
+  set mediaListLinks(List<IsmChatMessageModel> value) => _mediaListLinks.value = value;
+
+  final RxList<IsmChatMessageModel> _mediaListDocs = <IsmChatMessageModel>[].obs;
+  List<IsmChatMessageModel> get mediaListDocs => _mediaListDocs;
+  set mediaListDocs(List<IsmChatMessageModel> value) => _mediaListDocs.value = value;
+
   final Completer<GoogleMapController> googleMapCompleter =
       Completer<GoogleMapController>();
 
@@ -189,6 +197,59 @@ class IsmChatPageController extends GetxController
   List<IsmChatMessageModel> get selectedMessage => _selectedMessage;
   set selectedMessage(List<IsmChatMessageModel> value) =>
       _selectedMessage.value = value;
+
+  List<Map<String, List<IsmChatMessageModel>>> sortMediaList (List<IsmChatMessageModel> messages){
+    var storeMediaImageList = <Map<String, List<IsmChatMessageModel>>>[];
+    for (var x in messages) {
+      if(x.customType == IsmChatCustomMessageType.date){
+        storeMediaImageList.add({x.body : <IsmChatMessageModel>[]});
+        continue;
+      }
+      var z =storeMediaImageList.last;
+      z.forEach((key, value) {
+        value.add(x);
+      });
+    }
+    return storeMediaImageList;
+  }
+
+  List<IsmChatMessageModel> sortMessages(List<IsmChatMessageModel> messages) {
+    messages.sort((a, b) => a.sentAt.compareTo(b.sentAt));
+    return parseMessagesWithDate(messages);
+  }
+
+  List<IsmChatMessageModel> parseMessagesWithDate(
+      List<IsmChatMessageModel> messages,
+      ) {
+    var result = <List<IsmChatMessageModel>>[];
+    var list1 = <IsmChatMessageModel>[];
+    var allMessages = <IsmChatMessageModel>[];
+    for (var x = 0; x < messages.length; x++) {
+      if (x == 0) {
+        list1.add(messages[x]);
+      } else if (DateTime.fromMillisecondsSinceEpoch(messages[x - 1].sentAt)
+          .isSameDay(DateTime.fromMillisecondsSinceEpoch(messages[x].sentAt))) {
+        list1.add(messages[x]);
+      } else {
+        result.add([...list1]);
+        list1.clear();
+        list1.add(messages[x]);
+      }
+      if (x == messages.length - 1 && list1.isNotEmpty) {
+        result.add([...list1]);
+      }
+    }
+
+    for (var messages in result) {
+      allMessages.add(
+        IsmChatMessageModel.fromMonth(
+          messages.first.sentAt,
+        ),
+      );
+      allMessages.addAll(messages);
+    }
+    return allMessages;
+  }
 
   List<IsmChatBottomSheetAttachmentModel> attachments = [
     const IsmChatBottomSheetAttachmentModel(

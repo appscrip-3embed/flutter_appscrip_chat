@@ -137,19 +137,22 @@ class _LinkPreview extends StatelessWidget {
             IsmChatDimens.boxHeight4,
             Padding(
               padding: IsmChatDimens.edgeInsets4_0,
-              child: Text(
-                link,
-                style: (sentByMe
-                        ? IsmChatStyles.w500White14
-                        : IsmChatStyles.w500Black14)
-                    .copyWith(
-                  decoration: TextDecoration.underline,
-                  decorationColor: sentByMe
-                      ? IsmChatColors.whiteColor
-                      : IsmChatColors.greyColor,
+              child: FittedBox(
+                child: Text(
+                  link,
+                  style: (sentByMe
+                          ? IsmChatStyles.w400White14
+                          : IsmChatStyles.w400Black14)
+                      .copyWith(
+                    decoration: TextDecoration.underline,
+                    decorationColor: sentByMe
+                        ? IsmChatColors.whiteColor
+                        : IsmChatColors.greyColor,
+                  ),
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
                 ),
-                softWrap: true,
-                maxLines: null,
               ),
             ),
           ],
