@@ -32,6 +32,7 @@ class MessageBubble extends StatelessWidget {
             ? null
             : BoxDecoration(
                 color: message.backgroundColor,
+                border: Border.all(color: message.borderColor!),
                 borderRadius: message.sentByMe
                     ? IsmChatConfig.chatTheme.chatPageTheme?.selfMessageTheme
                             ?.borderRadius ??
@@ -81,7 +82,8 @@ class MessageBubble extends StatelessWidget {
                                 : Icons.done_rounded,
                         color: message.messageId!.isEmpty
                             ? IsmChatConfig.chatTheme.chatPageTheme
-                            ?.unreadCheckColor ?? Colors.white
+                                    ?.unreadCheckColor ??
+                                Colors.white
                             : message.readByAll!
                                 ? IsmChatConfig.chatTheme.chatPageTheme
                                         ?.readCheckColor ??

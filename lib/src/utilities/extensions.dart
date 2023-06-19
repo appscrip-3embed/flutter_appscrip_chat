@@ -182,7 +182,6 @@ extension DateConvertor on int {
   //     return dateFormat.format(date);
   // }
 
-
   String toMessageMonthString() {
     if (this == 0 || this == -1) {
       return '';
@@ -197,11 +196,11 @@ extension DateConvertor on int {
     //   if (now.day - date.day == 1) {
     //     return 'Yesterday';
     //   }
-      if (now.difference(date) < const Duration(days: 8)) {
-        return date.weekday.weekDayString;
-      }
-      return date.toDateString();
+    if (now.difference(date) < const Duration(days: 8)) {
+      return date.weekday.weekDayString;
     }
+    return date.toDateString();
+  }
   //   if (now.isSameMonth(date)) {
   //     return 'This Month';
   //   }
@@ -773,6 +772,16 @@ extension MentionMessage on IsmChatMessageModel {
           IsmChatConfig.chatTheme.primaryColor;
     }
     return theme?.opponentMessageTheme?.backgroundColor ??
+        IsmChatConfig.chatTheme.backgroundColor;
+  }
+
+  Color? get borderColor {
+    var theme = IsmChatConfig.chatTheme.chatPageTheme;
+    if (sentByMe) {
+      return theme?.selfMessageTheme?.borderColor ??
+          IsmChatConfig.chatTheme.primaryColor;
+    }
+    return theme?.opponentMessageTheme?.borderColor ??
         IsmChatConfig.chatTheme.backgroundColor;
   }
 }
