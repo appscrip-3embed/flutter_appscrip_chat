@@ -12,6 +12,7 @@ class AppConfig {
 
   static Future<void> getUserData() async {
     var data = await dbWrapper!.userDetailsBox.get(IsmChatStrings.userData);
+
     if (data == null) {
       return;
     }

@@ -26,8 +26,8 @@ Future<void> initialize() async {
   deviceConfig.init();
   if (!kIsWeb) {
     dbWrapper = await DBWrapper.create();
+    await AppConfig.getUserData();
   }
-  await AppConfig.getUserData();
   await Future.wait(
     [
       AppscripChatComponent.initialize(),
