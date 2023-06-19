@@ -20,8 +20,9 @@ class AppscripChatComponent {
   Future<String?> getPlatformVersion() =>
       ChatComponentPlatform.instance.getPlatformVersion();
 
-  static Future<void> initialize() async {
-    if (!kIsWeb) {
+  static Future<void> initialize({bool useDatabase = true}) async {
+    IsmChatConfig.useDatabase = !kIsWeb && useDatabase;
+    if (IsmChatConfig.useDatabase) {
       IsmChatConfig.dbWrapper = await IsmChatDBWrapper.create();
     }
     IsmChatConfig.isInitialized = true;

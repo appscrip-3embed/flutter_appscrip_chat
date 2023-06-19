@@ -42,7 +42,6 @@ class IsmChatMqttController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-
     await _getDeviceId();
     _communicationConfig = IsmChatConfig.communicationConfig;
     userId = _communicationConfig.userConfig.userId;
@@ -65,7 +64,7 @@ class IsmChatMqttController extends GetxController {
       deviceId = iosDeviceInfo.identifierForVendor!;
     } else {
       var webDeviceInfo = await deviceInfo.webBrowserInfo;
-      deviceId = webDeviceInfo.platform!;
+      deviceId = webDeviceInfo.product!;
     }
   }
 
@@ -93,6 +92,7 @@ class IsmChatMqttController extends GetxController {
         }
       }
     } on NoConnectionException catch (e) {
+      print('exception $e');
       IsmChatLog.error('EXAMPLE::NoConnectionException - $e');
       // await unSubscribe();
       // await disconnect();
@@ -110,10 +110,10 @@ class IsmChatMqttController extends GetxController {
   void initializeMqttClient() {
     if (kIsWeb) {
       browserClient = MqttBrowserClient(
-        'wss://connections.isometrik.io',
-        '${_communicationConfig.userConfig.userId}$deviceId',
+        'wss://connections.isometrik.io/mqtt',
+        '${_communicationConfig.userConfig.userId}${1234}',
       );
-      browserClient?.websocketProtocols = [];
+
       browserClient?.port = 2052;
       browserClient?.keepAlivePeriod = 60;
       browserClient?.onDisconnected = _onDisconnected;
@@ -122,13 +122,16 @@ class IsmChatMqttController extends GetxController {
       browserClient?.logging(on: true);
       browserClient?.autoReconnect = true;
       browserClient?.pongCallback = _pong;
+      browserClient?.resubscribeOnAutoReconnect = true;
       browserClient?.setProtocolV311();
 
       /// Add the successful connection callback
       browserClient?.onConnected = _onConnected;
       browserClient?.onSubscribed = _onSubscribed;
 
-      browserClient?.connectionMessage = MqttConnectMessage().startClean();
+      browserClient?.connectionMessage = MqttConnectMessage()
+          .withClientIdentifier(_communicationConfig.userConfig.userId)
+          .startClean();
     } else {
       client = MqttServerClient(
         'connections.isometrik.io',
@@ -143,6 +146,7 @@ class IsmChatMqttController extends GetxController {
       client?.logging(on: true);
       client?.autoReconnect = true;
       client?.pongCallback = _pong;
+
       client?.setProtocolV311();
 
       /// Add the successful connection callback
@@ -184,7 +188,16 @@ class IsmChatMqttController extends GetxController {
   Future<void> unSubscribe() async {
     try {
       if (kIsWeb) {
-        if (client?.getSubscriptionsStatus(messageTopic) ==
+        if (browserClient?.getSubscriptionsStatus(messageTopic) ==
+            MqttSubscriptionStatus.active) {
+          browserClient?.unsubscribe(messageTopic);
+        }
+        if (browserClient?.getSubscriptionsStatus(statusTopic) ==
+            MqttSubscriptionStatus.active) {
+          browserClient?.unsubscribe(statusTopic);
+        }
+      } else {
+        if (browserClient?.getSubscriptionsStatus(messageTopic) ==
             MqttSubscriptionStatus.active) {
           client?.unsubscribe(messageTopic);
         }
@@ -373,7 +386,7 @@ class IsmChatMqttController extends GetxController {
     if (message.senderInfo!.userId == _communicationConfig.userConfig.userId) {
       return;
     }
-    var conversation = await IsmChatConfig.dbWrapper
+    var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: message.conversationId);
 
     if (conversation == null ||
@@ -398,7 +411,7 @@ class IsmChatMqttController extends GetxController {
 
     conversation.messages?.add(message);
 
-    await IsmChatConfig.dbWrapper.saveConversation(conversation: conversation);
+    await IsmChatConfig.dbWrapper!.saveConversation(conversation: conversation);
     unawaited(conversationController.getConversationsFromDB());
     await conversationController.pingMessageDelivered(
       conversationId: message.conversationId!,
@@ -516,7 +529,7 @@ class IsmChatMqttController extends GetxController {
         _communicationConfig.userConfig.userId) {
       return;
     }
-    var conversation = await IsmChatConfig.dbWrapper
+    var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: actionModel.conversationId);
 
     if (conversation != null) {
@@ -545,6 +558,8 @@ class IsmChatMqttController extends GetxController {
           deliverCount: lastMessage.deliveredTo?.length,
         );
         conversationBox.put(conversation);
+        await IsmChatConfig.dbWrapper!
+            .saveConversation(conversation: conversation);
         if (Get.isRegistered<IsmChatPageController>()) {
           await Get.find<IsmChatPageController>()
               .getMessagesFromDB(actionModel.conversationId!);
@@ -560,7 +575,7 @@ class IsmChatMqttController extends GetxController {
         _communicationConfig.userConfig.userId) {
       return;
     }
-    var conversation = await IsmChatConfig.dbWrapper
+    var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: actionModel.conversationId!);
 
     if (conversation != null) {
@@ -586,7 +601,7 @@ class IsmChatMqttController extends GetxController {
             conversation.lastMessageDetails.target!.copyWith(
           readCount: lastMessage.readBy?.length,
         );
-        await IsmChatConfig.dbWrapper
+        await IsmChatConfig.dbWrapper!
             .saveConversation(conversation: conversation);
         if (Get.isRegistered<IsmChatPageController>()) {
           await Get.find<IsmChatPageController>()
@@ -603,7 +618,7 @@ class IsmChatMqttController extends GetxController {
         _communicationConfig.userConfig.userId) {
       return;
     }
-    var conversation = await IsmChatConfig.dbWrapper
+    var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: actionModel.conversationId!);
 
     if (conversation == null) {
@@ -667,7 +682,7 @@ class IsmChatMqttController extends GetxController {
               : 1,
         ));
 
-    await IsmChatConfig.dbWrapper.saveConversation(conversation: conversation);
+    await IsmChatConfig.dbWrapper!.saveConversation(conversation: conversation);
     if (Get.isRegistered<IsmChatPageController>()) {
       var controller = Get.find<IsmChatPageController>();
       if (controller.conversation!.conversationId ==
@@ -685,7 +700,7 @@ class IsmChatMqttController extends GetxController {
       return;
     }
     var allMessages =
-        await IsmChatConfig.dbWrapper.getMessage(actionModel.conversationId!);
+        await IsmChatConfig.dbWrapper!.getMessage(actionModel.conversationId!);
     if (allMessages == null) {
       return;
     }
@@ -700,11 +715,11 @@ class IsmChatMqttController extends GetxController {
       }
     }
 
-    var conversation = await IsmChatConfig.dbWrapper
+    var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: actionModel.conversationId);
     if (conversation != null) {
       conversation.copyWith(messages: allMessages);
-      await IsmChatConfig.dbWrapper
+      await IsmChatConfig.dbWrapper!
           .saveConversation(conversation: conversation);
     }
 
@@ -918,7 +933,7 @@ class IsmChatMqttController extends GetxController {
       var controller = Get.find<IsmChatPageController>();
       if (controller.conversation!.conversationId ==
           actionModel.conversationId) {
-        var allMessages = await IsmChatConfig.dbWrapper
+        var allMessages = await IsmChatConfig.dbWrapper!
             .getMessage(actionModel.conversationId!);
         if (allMessages == null) {
           return;
@@ -951,11 +966,11 @@ class IsmChatMqttController extends GetxController {
             allMessages.indexWhere((e) => e.messageId == actionModel.messageId);
 
         allMessages[messageIndex] = message;
-        var conversation = await IsmChatConfig.dbWrapper
+        var conversation = await IsmChatConfig.dbWrapper!
             .getConversation(conversationId: actionModel.conversationId);
         if (conversation != null) {
           conversation.copyWith(messages: allMessages);
-          await IsmChatConfig.dbWrapper
+          await IsmChatConfig.dbWrapper!
               .saveConversation(conversation: conversation);
           await Get.find<IsmChatPageController>()
               .getMessagesFromDB(actionModel.conversationId ?? '');
@@ -975,7 +990,7 @@ class IsmChatMqttController extends GetxController {
       var controller = Get.find<IsmChatPageController>();
       if (controller.conversation!.conversationId ==
           actionModel.conversationId) {
-        var allMessages = await IsmChatConfig.dbWrapper
+        var allMessages = await IsmChatConfig.dbWrapper!
             .getMessage(actionModel.conversationId!);
         if (allMessages == null) {
           return;
@@ -1005,11 +1020,11 @@ class IsmChatMqttController extends GetxController {
             allMessages.indexWhere((e) => e.messageId == actionModel.messageId);
         allMessages[messageIndex] = message;
 
-        var conversation = await IsmChatConfig.dbWrapper
+        var conversation = await IsmChatConfig.dbWrapper!
             .getConversation(conversationId: actionModel.conversationId);
         if (conversation != null) {
           conversation.copyWith(messages: allMessages);
-          await IsmChatConfig.dbWrapper
+          await IsmChatConfig.dbWrapper!
               .saveConversation(conversation: conversation);
           await Get.find<IsmChatPageController>()
               .getMessagesFromDB(actionModel.conversationId ?? '');

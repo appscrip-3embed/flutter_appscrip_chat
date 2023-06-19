@@ -47,15 +47,16 @@ class IsmChatPageViewModel {
           Get.find<IsmChatPageController>().messages.last.messageId);
     }
 
-    var conversation = await IsmChatConfig.dbWrapper
-        .getConversation(conversationId: conversationId);
+    if (IsmChatConfig.useDatabase) {
+      var conversation = await IsmChatConfig.dbWrapper!
+          .getConversation(conversationId: conversationId);
 
-    if (conversation != null) {
-      conversation.messages?.addAll(messages);
-      await IsmChatConfig.dbWrapper
-          .saveConversation(conversation: conversation);
+      if (conversation != null) {
+        conversation.messages?.addAll(messages);
+        await IsmChatConfig.dbWrapper!
+            .saveConversation(conversation: conversation);
+      }
     }
-
     return messages;
   }
 
@@ -109,7 +110,7 @@ class IsmChatPageViewModel {
       }
       var dbBox = IsmChatConfig.dbWrapper;
       if (sendMessageType == SendMessageType.pendingMessage) {
-        final chatPendingMessages = await dbBox.getConversation(
+        final chatPendingMessages = await dbBox!.getConversation(
             conversationId: conversationId, dbBox: IsmChatDbBox.pending);
         if (chatPendingMessages == null) {
           return false;
@@ -139,7 +140,7 @@ class IsmChatPageViewModel {
           return true;
         }
       } else {
-        final chatForwardMessages = await dbBox.getConversation(
+        final chatForwardMessages = await dbBox!.getConversation(
             conversationId: conversationId, dbBox: IsmChatDbBox.forward);
 
         if (chatForwardMessages == null) {
@@ -391,7 +392,7 @@ class IsmChatPageViewModel {
         return;
       }
     }
-    var allMessages = await IsmChatConfig.dbWrapper.getMessage(conversationId);
+    var allMessages = await IsmChatConfig.dbWrapper!.getMessage(conversationId);
     if (allMessages == null) {
       return;
     }
@@ -411,11 +412,11 @@ class IsmChatPageViewModel {
         },
       );
     }
-    var conversation = await IsmChatConfig.dbWrapper
+    var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (conversation != null) {
       conversation.copyWith(messages: allMessages);
-      await IsmChatConfig.dbWrapper
+      await IsmChatConfig.dbWrapper!
           .saveConversation(conversation: conversation);
     }
 
@@ -437,7 +438,7 @@ class IsmChatPageViewModel {
     if (response == null || response.hasError) {
       return;
     }
-    var allMessages = await IsmChatConfig.dbWrapper.getMessage(conversationId);
+    var allMessages = await IsmChatConfig.dbWrapper!.getMessage(conversationId);
     if (allMessages == null) {
       return;
     }
@@ -451,11 +452,11 @@ class IsmChatPageViewModel {
       }
       // allMessages.removeWhere((e) => e.messageId == x.messageId);
     }
-    var conversation = await IsmChatConfig.dbWrapper
+    var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (conversation != null) {
       conversation.copyWith(messages: allMessages);
-      await IsmChatConfig.dbWrapper
+      await IsmChatConfig.dbWrapper!
           .saveConversation(conversation: conversation);
     }
     await Get.find<IsmChatPageController>().getMessagesFromDB(conversationId);
@@ -468,7 +469,7 @@ class IsmChatPageViewModel {
       conversationId: conversationId,
     );
     if (!response!.hasError) {
-      await IsmChatConfig.dbWrapper
+      await IsmChatConfig.dbWrapper!
           .clearAllMessage(conversationId: conversationId);
     }
   }
@@ -544,7 +545,7 @@ class IsmChatPageViewModel {
     }
 
     var allMessages =
-        await IsmChatConfig.dbWrapper.getMessage(reaction.conversationId);
+        await IsmChatConfig.dbWrapper!.getMessage(reaction.conversationId);
     if (allMessages == null) {
       return;
     }
@@ -576,11 +577,11 @@ class IsmChatPageViewModel {
 
     allMessages[messageIndex] = message;
 
-    var conversation = await IsmChatConfig.dbWrapper
+    var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: reaction.conversationId);
     if (conversation != null) {
       conversation.copyWith(messages: allMessages);
-      await IsmChatConfig.dbWrapper
+      await IsmChatConfig.dbWrapper!
           .saveConversation(conversation: conversation);
     }
     var controller = Get.find<IsmChatPageController>();
@@ -595,7 +596,7 @@ class IsmChatPageViewModel {
     }
 
     var allMessages =
-        await IsmChatConfig.dbWrapper.getMessage(reaction.conversationId);
+        await IsmChatConfig.dbWrapper!.getMessage(reaction.conversationId);
     if (allMessages == null) {
       return;
     }
@@ -622,11 +623,11 @@ class IsmChatPageViewModel {
 
     allMessages[messageIndex] = message;
 
-    var conversation = await IsmChatConfig.dbWrapper
+    var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: reaction.conversationId);
     if (conversation != null) {
       conversation.copyWith(messages: allMessages);
-      await IsmChatConfig.dbWrapper
+      await IsmChatConfig.dbWrapper!
           .saveConversation(conversation: conversation);
     }
     var controller = Get.find<IsmChatPageController>();

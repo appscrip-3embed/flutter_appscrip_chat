@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -67,12 +65,12 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
   @override
   Widget build(BuildContext context) => WillPopScope(
         onWillPop: () async {
-          if (!Platform.isAndroid) {
+          if (!GetPlatform.isAndroid) {
             return false;
           }
           return await navigateBack();
         },
-        child: Platform.isIOS
+        child: GetPlatform.isIOS
             ? GestureDetector(
                 onHorizontalDragEnd: (details) {
                   if (details.velocity.pixelsPerSecond.dx > 50) {

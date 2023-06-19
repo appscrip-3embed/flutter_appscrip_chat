@@ -12,7 +12,8 @@ class IsmChatConfig {
   static IsmChatThemeData? _chatLightTheme;
   static IsmChatThemeData? _chatDarkTheme;
   static Widget? loadingDialog;
-  static late IsmChatDBWrapper dbWrapper;
+  static IsmChatDBWrapper? dbWrapper;
+  static bool useDatabase = false;
   static String dbName = IsmChatStrings.dbname;
   static bool isInitialized = false;
   static bool isGroupChatEnabled = false;

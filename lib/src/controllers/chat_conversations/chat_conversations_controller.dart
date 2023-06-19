@@ -99,21 +99,22 @@ class IsmChatConversationsController extends GetxController {
     super.onInit();
 
     await _generateReactionList();
-    if (kIsWeb) {
+    if (!IsmChatConfig.useDatabase) {
       await getUserData();
+      await getChatConversations();
     } else {
-      var users = await IsmChatConfig.dbWrapper.userDetailsBox
+      var users = await IsmChatConfig.dbWrapper!.userDetailsBox
           .get(IsmChatStrings.userData);
       if (users != null) {
         userDetails = UserDetails.fromJson(users);
       } else {
         await getUserData();
       }
+      await getConversationsFromDB();
+      await getChatConversations();
     }
-
-    await getConversationsFromDB();
-    await getChatConversations();
-    await Get.find<IsmChatMqttController>().getChatConversationsUnreadCount();
+    userListScrollListener();
+    await getChatConversationUnreadCount();
   }
 
   @override
@@ -312,14 +313,13 @@ class IsmChatConversationsController extends GetxController {
         return;
       }
     }
-    await IsmChatConfig.dbWrapper.removeConversation(conversationId);
-
+    await IsmChatConfig.dbWrapper?.removeConversation(conversationId);
     await getConversationsFromDB();
     await getChatConversations();
   }
 
   Future<void> getConversationsFromDB() async {
-    var dbConversations = await IsmChatConfig.dbWrapper.getAllConversations();
+    var dbConversations = await IsmChatConfig.dbWrapper!.getAllConversations();
     if (dbConversations.isEmpty == true) {
       return;
     }
@@ -379,7 +379,11 @@ class IsmChatConversationsController extends GetxController {
 
     unawaited(getBlockUser());
     conversationPage = conversationPage + 20;
-    await getConversationsFromDB();
+    if (IsmChatConfig.useDatabase) {
+      await getConversationsFromDB();
+    } else {
+      conversations = apiConversations;
+    }
   }
 
   Future<void> getBlockUser() async {
@@ -395,7 +399,7 @@ class IsmChatConversationsController extends GetxController {
     var user = await _viewModel.getUserData();
     if (user != null) {
       userDetails = user;
-      await IsmChatConfig.dbWrapper.userDetailsBox
+      await IsmChatConfig.dbWrapper?.userDetailsBox
           .put(IsmChatStrings.userData, user.toJson());
     }
   }

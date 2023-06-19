@@ -52,7 +52,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         metaData: _controller.conversation?.metaData,
       );
 
-      await IsmChatConfig.dbWrapper
+      await IsmChatConfig.dbWrapper!
           .createAndUpdateConversation(dbConversationModel);
       return conversationId.toString();
     }
@@ -160,7 +160,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     required String conversationId,
     required String userId,
   }) async {
-    final chatConversationResponse = await IsmChatConfig.dbWrapper
+    final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null) {
       conversationId = await createConversation(
@@ -231,10 +231,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       _controller.messages.add(audioMessage);
     }
     if (sendMessageType == SendMessageType.pendingMessage) {
-      await IsmChatConfig.dbWrapper
+      await IsmChatConfig.dbWrapper!
           .saveMessage(audioMessage, IsmChatDbBox.pending);
     } else {
-      await IsmChatConfig.dbWrapper
+      await IsmChatConfig.dbWrapper!
           .saveMessage(audioMessage, IsmChatDbBox.forward);
     }
     var notificationTitle =
@@ -292,7 +292,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           allowCompression: true,
           withData: true);
       if (result?.files.isNotEmpty ?? false) {
-        final chatConversationResponse = await IsmChatConfig.dbWrapper
+        final chatConversationResponse = await IsmChatConfig.dbWrapper!
             .getConversation(conversationId: conversationId);
         if (chatConversationResponse == null) {
           conversationId = await createConversation(
@@ -346,10 +346,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       }
 
       if (sendMessageType == SendMessageType.pendingMessage) {
-        await IsmChatConfig.dbWrapper
+        await IsmChatConfig.dbWrapper!
             .saveMessage(documentMessage, IsmChatDbBox.pending);
       } else {
-        await IsmChatConfig.dbWrapper
+        await IsmChatConfig.dbWrapper!
             .saveMessage(documentMessage, IsmChatDbBox.forward);
       }
       var notificationTitle =
@@ -382,7 +382,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     required String conversationId,
     required String userId,
   }) async {
-    final chatConversationResponse = await IsmChatConfig.dbWrapper
+    final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null) {
       conversationId = await createConversation(
@@ -477,10 +477,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
 
     if (sendMessageType == SendMessageType.pendingMessage) {
-      await IsmChatConfig.dbWrapper
+      await IsmChatConfig.dbWrapper!
           .saveMessage(videoMessage!, IsmChatDbBox.pending);
     } else {
-      await IsmChatConfig.dbWrapper
+      await IsmChatConfig.dbWrapper!
           .saveMessage(videoMessage!, IsmChatDbBox.forward);
     }
     var notificationTitle =
@@ -514,7 +514,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     required String conversationId,
     required String userId,
   }) async {
-    final chatConversationResponse = await IsmChatConfig.dbWrapper
+    final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null) {
       conversationId = await createConversation(
@@ -585,10 +585,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
 
     if (sendMessageType == SendMessageType.pendingMessage) {
-      await IsmChatConfig.dbWrapper
+      await IsmChatConfig.dbWrapper!
           .saveMessage(imageMessage, IsmChatDbBox.pending);
     } else {
-      await IsmChatConfig.dbWrapper
+      await IsmChatConfig.dbWrapper!
           .saveMessage(imageMessage, IsmChatDbBox.forward);
     }
     var notificationTitle =
@@ -623,7 +623,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     required String conversationId,
     required String userId,
   }) async {
-    final chatConversationResponse = await IsmChatConfig.dbWrapper
+    final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null) {
       conversationId = await createConversation(
@@ -657,10 +657,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
 
     if (sendMessageType == SendMessageType.pendingMessage) {
-      await IsmChatConfig.dbWrapper
+      await IsmChatConfig.dbWrapper!
           .saveMessage(textMessage, IsmChatDbBox.pending);
     } else {
-      await IsmChatConfig.dbWrapper
+      await IsmChatConfig.dbWrapper!
           .saveMessage(textMessage, IsmChatDbBox.forward);
     }
     var notificationTitle =
@@ -687,7 +687,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     required String conversationId,
     required String userId,
   }) async {
-    final chatConversationResponse = await IsmChatConfig.dbWrapper
+    final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null) {
       conversationId = await createConversation(
@@ -744,10 +744,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       _controller.chatInputController.clear();
     }
     if (sendMessageType == SendMessageType.pendingMessage) {
-      await IsmChatConfig.dbWrapper
+      await IsmChatConfig.dbWrapper!
           .saveMessage(textMessage, IsmChatDbBox.pending);
     } else {
-      await IsmChatConfig.dbWrapper
+      await IsmChatConfig.dbWrapper!
           .saveMessage(textMessage, IsmChatDbBox.forward);
     }
     var notificationTitle =

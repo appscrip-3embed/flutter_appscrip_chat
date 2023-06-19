@@ -355,7 +355,9 @@ class IsmChatPageController extends GetxController
       conversation = _conversationController.currentConversation!;
       await Future.delayed(Duration.zero);
       if (conversation!.conversationId?.isNotEmpty ?? false) {
-        await getMessagesFromDB(conversation?.conversationId ?? '');
+        if (IsmChatConfig.useDatabase) {
+          await getMessagesFromDB(conversation?.conversationId ?? '');
+        }
         await Future.wait([
           getMessagesFromAPI(),
           getConverstaionDetails(
@@ -771,7 +773,7 @@ class IsmChatPageController extends GetxController
       Get.back(); // to Chat Page
       Get.back(); // to Conversation Page
       await Future.wait([
-        IsmChatConfig.dbWrapper
+        IsmChatConfig.dbWrapper!
             .removeConversation(conversation!.conversationId!),
         _conversationController.getChatConversations(),
       ]);
@@ -876,7 +878,7 @@ class IsmChatPageController extends GetxController
     var ismChatConversationController =
         Get.find<IsmChatConversationsController>();
     if (!didReactedLast) {
-      var chatConversation = await IsmChatConfig.dbWrapper
+      var chatConversation = await IsmChatConfig.dbWrapper!
           .getConversation(conversationId: conversation?.conversationId ?? '');
       if (chatConversation != null) {
         if (messages.isNotEmpty &&
@@ -920,7 +922,7 @@ class IsmChatPageController extends GetxController
               unreadMessagesCount: 0);
         }
 
-        await IsmChatConfig.dbWrapper
+        await IsmChatConfig.dbWrapper!
             .saveConversation(conversation: chatConversation);
         await ismChatConversationController.getConversationsFromDB();
       }
@@ -1367,7 +1369,7 @@ class IsmChatPageController extends GetxController
     selectedMessage.clear();
     pendingMessges.where((e) => e.messageId == '').toList();
     if (pendingMessges.isNotEmpty) {
-      await IsmChatConfig.dbWrapper
+      await IsmChatConfig.dbWrapper!
           .removePendingMessage(conversation!.conversationId!, pendingMessges);
       await getMessagesFromDB(conversation!.conversationId!);
       selectedMessage.clear();
@@ -1384,7 +1386,7 @@ class IsmChatPageController extends GetxController
     selectedMessage.clear();
     pendingMessges.where((e) => e.messageId == '').toList();
     if (pendingMessges.isNotEmpty) {
-      await IsmChatConfig.dbWrapper
+      await IsmChatConfig.dbWrapper!
           .removePendingMessage(conversation!.conversationId!, pendingMessges);
       await getMessagesFromDB(conversation!.conversationId!);
       selectedMessage.clear();

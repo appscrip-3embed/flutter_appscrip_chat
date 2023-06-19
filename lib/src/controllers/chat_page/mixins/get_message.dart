@@ -5,7 +5,7 @@ mixin IsmChatPageGetMessageMixin {
 
   Future<void> getMessagesFromDB(String conversationId) async {
     _controller.messages.clear();
-    var messages = await IsmChatConfig.dbWrapper.getMessage(conversationId);
+    var messages = await IsmChatConfig.dbWrapper!.getMessage(conversationId);
     if (messages?.isEmpty ?? false || messages == null) {
       return;
     }
@@ -51,7 +51,11 @@ mixin IsmChatPageGetMessageMixin {
     }
 
     if (data != null) {
-      await getMessagesFromDB(conversationID);
+      if (IsmChatConfig.useDatabase) {
+        await getMessagesFromDB(conversationID);
+      } else {
+        _controller.messages = _controller._viewModel.sortMessages(data);
+      }
     }
     _controller.isLoadingMessages = false;
   }
