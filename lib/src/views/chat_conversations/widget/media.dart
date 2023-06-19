@@ -7,7 +7,7 @@ import 'package:appscrip_chat_component/src/views/chat_conversations/widget/medi
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-/// IsmMedia class is for showing the conversation media
+/// IsmMedia class is for showing the conversation media, audio, video, links, and docs
 class IsmMedia extends StatefulWidget {
   const IsmMedia({Key? key, required this.mediaList, required this.mediaListLinks, required this.mediaListDocs}) : super(key: key);
 
@@ -39,6 +39,7 @@ class _IsmMediaState extends State<IsmMedia> with TickerProviderStateMixin {
     });
   }
 
+  /// IsmMedia Tabbar to show media, links and docs
   Widget getTabBar() => TabBar(
     overlayColor: MaterialStateProperty.resolveWith<Color?>(
             (Set<MaterialState> states) => states.contains(MaterialState.focused) ? null : Colors.transparent
@@ -103,6 +104,7 @@ class _IsmMediaState extends State<IsmMedia> with TickerProviderStateMixin {
     ],
   );
 
+  /// IsmMedia Tabbar View for showing media page, links page and docs page
   Widget getTabBarView() => TabBarView(
     controller: _tabController,
     children: [

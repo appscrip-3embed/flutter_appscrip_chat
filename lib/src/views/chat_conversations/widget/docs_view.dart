@@ -1,11 +1,9 @@
-import 'dart:developer';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-/// IsmMedia class is for showing the conversation media
+/// IsmMedia class is for showing the conversation docs send and receive from both sides
 class IsmDocsView extends StatefulWidget {
   const IsmDocsView({Key? key, required this.mediaListDocs}) : super(key: key);
 

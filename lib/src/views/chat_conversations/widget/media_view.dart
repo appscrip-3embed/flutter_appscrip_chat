@@ -4,7 +4,7 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-/// IsmMedia class is for showing the conversation media
+/// IsmMedia class is for showing the conversation media i.e audio, image and video
 class IsmMediaView extends StatefulWidget {
   const IsmMediaView({Key? key, required this.mediaList}) : super(key: key);
 

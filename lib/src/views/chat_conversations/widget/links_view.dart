@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:link_preview_generator/link_preview_generator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// IsmMedia class is for showing the conversation media
+/// IsmMedia class is for showing the conversation links that is send and receive from both sides
 class IsmLinksView extends StatefulWidget {
   const IsmLinksView({Key? key, required this.mediaListLinks}) : super(key: key);
 

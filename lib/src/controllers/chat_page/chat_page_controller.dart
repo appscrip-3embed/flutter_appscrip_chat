@@ -104,14 +104,17 @@ class IsmChatPageController extends GetxController
   set mentionSuggestions(List<UserDetails> value) =>
       _mentionSuggestions.value = value;
 
+  // add media i.e. image, video and audio in ism_media page
   final RxList<IsmChatMessageModel> _mediaList = <IsmChatMessageModel>[].obs;
   List<IsmChatMessageModel> get mediaList => _mediaList;
   set mediaList(List<IsmChatMessageModel> value) => _mediaList.value = value;
 
+  // add links in ism_media page for showing send and receive links
   final RxList<IsmChatMessageModel> _mediaListLinks = <IsmChatMessageModel>[].obs;
   List<IsmChatMessageModel> get mediaListLinks => _mediaListLinks;
   set mediaListLinks(List<IsmChatMessageModel> value) => _mediaListLinks.value = value;
 
+  // add docs in ism_media page for showing send and receive docs
   final RxList<IsmChatMessageModel> _mediaListDocs = <IsmChatMessageModel>[].obs;
   List<IsmChatMessageModel> get mediaListDocs => _mediaListDocs;
   set mediaListDocs(List<IsmChatMessageModel> value) => _mediaListDocs.value = value;
