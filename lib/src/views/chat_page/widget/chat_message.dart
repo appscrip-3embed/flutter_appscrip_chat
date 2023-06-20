@@ -109,8 +109,8 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                     ),
                   )
                 ],
-                if (theme?.selfMessageTheme?.showProfile != null)
-                  if (theme?.selfMessageTheme?.showProfile == true &&
+                if (theme?.opponentMessageTheme?.showProfile != null)
+                  if (theme?.opponentMessageTheme?.showProfile == true &&
                       !isGroup &&
                       !showMessageInCenter &&
                       !widget.message.sentByMe) ...[
