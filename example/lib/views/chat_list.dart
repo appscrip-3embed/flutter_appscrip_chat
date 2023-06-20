@@ -18,9 +18,9 @@ class ChatList extends GetView<ChatListController> {
           primaryColor: AppColors.primaryColorLight,
           chatPageTheme: IsmChatPageThemeData(
             selfMessageTheme: IsmChatMessageThemeData(
-                // backgroundColor: Colors.white,
-                borderColor: Colors.grey,
-                showProfile: true),
+              // backgroundColor: Colors.white,
+              borderColor: Colors.grey,
+            ),
             opponentMessageTheme: IsmChatMessageThemeData(
               // backgroundColor: Colors.white,
               borderColor: AppColors.primaryColorLight,

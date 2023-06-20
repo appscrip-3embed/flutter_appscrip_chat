@@ -38,6 +38,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                 )),
           ),
           child: AppBar(
+            shadowColor: header?.shadowColors,
             surfaceTintColor:
                 header?.backgroundColor ?? IsmChatConfig.chatTheme.primaryColor,
             leading: IsmChatTapHandler(

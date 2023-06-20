@@ -115,7 +115,11 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                       !showMessageInCenter &&
                       !widget.message.sentByMe) ...[
                     IsmChatImage.profile(
-                      controller.conversation?.profileUrl ?? '',
+                      IsmChatConfig.communicationConfig.userConfig
+                                  .imageBaseUrl !=
+                              null
+                          ? '${IsmChatConfig.communicationConfig.userConfig.imageBaseUrl}/${controller.conversation?.profileUrl}'
+                          : controller.conversation?.profileUrl ?? '',
                       name: controller.conversation?.chatName,
                       dimensions: IsmChatConfig
                               .chatTheme.chatPageTheme?.profileImageSize ??
