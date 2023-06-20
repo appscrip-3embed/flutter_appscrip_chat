@@ -18,9 +18,9 @@ class ChatList extends GetView<ChatListController> {
           primaryColor: AppColors.primaryColorLight,
           chatPageTheme: IsmChatPageThemeData(
             selfMessageTheme: IsmChatMessageThemeData(
-              // backgroundColor: Colors.white,
-              borderColor: Colors.grey,
-            ),
+                // backgroundColor: Colors.white,
+                borderColor: Colors.grey,
+                showProfile: true),
             opponentMessageTheme: IsmChatMessageThemeData(
               // backgroundColor: Colors.white,
               borderColor: AppColors.primaryColorLight,
@@ -31,8 +31,9 @@ class ChatList extends GetView<ChatListController> {
           userConfig: IsmChatUserConfig(
               userToken: controller.userDetails?.userToken ?? '',
               userId: controller.userDetails?.userId ?? '',
-              userName: controller.userDetails?.userName ?? '',
-              userEmail: controller.userDetails?.email ?? ''),
+              userName: controller.userDetails?.userName ?? 'User',
+              userEmail: controller.userDetails?.email ?? '',
+              userProfile: controller.userDetails?.userProfile ?? ''),
           mqttConfig: const IsmChatMqttConfig(
             hostName: Constants.hostname,
             port: Constants.port,

@@ -54,6 +54,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    var theme = IsmChatConfig.chatTheme.chatPageTheme;
     return IsmChatTapHandler(
       onLongPress: showMessageInCenter
           ? null
@@ -80,7 +81,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                 ? IsmChatDimens.edgeInsets0
                 : IsmChatDimens.edgeInsets0_4,
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 if (isGroup &&
                     !showMessageInCenter &&
@@ -108,11 +109,42 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                     ),
                   )
                 ],
+                if (theme?.selfMessageTheme?.showProfile != null)
+                  if (theme?.selfMessageTheme?.showProfile == true &&
+                      !isGroup &&
+                      !showMessageInCenter &&
+                      !widget.message.sentByMe) ...[
+                    IsmChatImage.profile(
+                      controller.conversation?.profileUrl ?? '',
+                      name: controller.conversation?.chatName,
+                      dimensions: IsmChatConfig
+                              .chatTheme.chatPageTheme?.profileImageSize ??
+                          30,
+                    ),
+                    IsmChatDimens.boxWidth2,
+                  ],
                 _Message(
                   message: widget.message,
                   showMessageInCenter: showMessageInCenter,
                   index: widget.index,
                 ),
+                if (theme?.selfMessageTheme?.showProfile != null)
+                  if (theme?.selfMessageTheme?.showProfile == true &&
+                      !isGroup &&
+                      !showMessageInCenter &&
+                      widget.message.sentByMe) ...[
+                    IsmChatDimens.boxWidth4,
+                    IsmChatImage.profile(
+                      IsmChatConfig
+                              .communicationConfig.userConfig.userProfile ??
+                          '',
+                      name:
+                          IsmChatConfig.communicationConfig.userConfig.userName,
+                      dimensions: IsmChatConfig
+                              .chatTheme.chatPageTheme?.profileImageSize ??
+                          30,
+                    ),
+                  ]
               ],
             ),
           ),

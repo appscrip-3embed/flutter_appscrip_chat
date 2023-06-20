@@ -14,6 +14,14 @@ class UserDetailsModel {
 
   String? userName;
 
-  UserDetailsModel(
-      {this.id, this.userId, this.userToken, this.email, this.userName});
+  String? userProfile;
+
+  UserDetailsModel({
+    this.id,
+    this.userId,
+    this.userToken,
+    this.email,
+    this.userName,
+    this.userProfile,
+  });
 }
