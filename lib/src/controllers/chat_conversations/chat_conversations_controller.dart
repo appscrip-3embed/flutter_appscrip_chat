@@ -399,6 +399,7 @@ class IsmChatConversationsController extends GetxController {
     var user = await _viewModel.getUserData();
     if (user != null) {
       userDetails = user;
+
       await IsmChatConfig.dbWrapper?.userDetailsBox
           .put(IsmChatStrings.userData, user.toJson());
     }

@@ -12,12 +12,11 @@ class ChatList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: GetBuilder<ChatListController>(builder: (controller) {
-        return IsmChatApp(
-          chatTheme:
-              IsmChatThemeData(primaryColor: AppColors.primaryColorLight,
-          chatPageTheme: IsmChatPageThemeData(
+    return GetBuilder<ChatListController>(builder: (controller) {
+      return Scaffold(
+          body: IsmChatApp(
+        chatTheme: IsmChatThemeData(primaryColor: AppColors.primaryColorLight,
+        chatPageTheme: IsmChatPageThemeData(
             selfMessageTheme: IsmChatMessageThemeData(
               // backgroundColor: Colors.white,
               borderColor: Colors.grey,
@@ -60,11 +59,10 @@ class ChatList extends StatelessWidget {
             size: 70,
             color: AppColors.primaryColorLight,
           ),),
-          // isSlidableEnable: (_, conversation) {
-          //   return conversation.metaData!.isMatchId!.isNotEmpty ? false : true;
-          // },
-        );
-      }),
-    );
+        // isSlidableEnable: (_, conversation) {
+        //   return conversation.metaData!.isMatchId!.isNotEmpty ? false : true;
+        // },
+      ));
+    });
   }
 }

@@ -28,13 +28,14 @@ class AuthController extends GetxController {
   }
 
   Future<void> login() async {
-    var isLoggedIn = await _viewModel.login(
+    var data = await _viewModel.login(
       emailController.text.trim(),
       passwordController.text.trim(),
     );
-    if (isLoggedIn) {
+    if (data != null) {
       unawaited(AppConfig.getUserData());
-      Get.offAllNamed(AppRoutes.chatList);
+
+      Get.offAllNamed(AppRoutes.chatList, arguments: {'userData': data});
     }
   }
 

@@ -159,7 +159,12 @@ class IsmChatApp extends StatelessWidget {
 
   /// Call this function on SignOut to delete the data stored locally in the Local Database
   static void logout() async {
-    await IsmChatConfig.dbWrapper?.deleteChatLocalDb();
+    if (IsmChatConfig.useDatabase) {
+      await Get.find<IsmChatMqttController>().unSubscribe();
+      await Get.find<IsmChatMqttController>().disconnect();
+    } else {
+      await IsmChatConfig.dbWrapper?.deleteChatLocalDb();
+    }
     await Future.wait([
       Get.delete<IsmChatConversationsController>(force: true),
       Get.delete<IsmChatMqttController>(force: true),
@@ -235,6 +240,7 @@ class IsmChatApp extends StatelessWidget {
       IsmChatConversationsBinding().dependencies();
     }
     var controller = Get.find<IsmChatConversationsController>();
+    Get.put(IsmChatDeviceConfig()).init();
     var conversationId = controller.getConversationId(userId);
     late IsmChatConversationModel conversation;
     if (conversationId.isEmpty) {

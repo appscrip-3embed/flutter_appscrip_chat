@@ -1,9 +1,9 @@
 library appscrip_chat_component;
 
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/appscrip_chat_component_platform_interface.dart';
-import 'package:appscrip_chat_component/src/data/data.dart';
-import 'package:appscrip_chat_component/src/utilities/config/chat_config.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 
 export 'src/app/app.dart';
 export 'src/controllers/controllers.dart';
@@ -22,6 +22,7 @@ class AppscripChatComponent {
 
   static Future<void> initialize({bool useDatabase = true}) async {
     IsmChatConfig.useDatabase = !kIsWeb && useDatabase;
+    Get.put(IsmChatDeviceConfig()).init();
     if (IsmChatConfig.useDatabase) {
       IsmChatConfig.dbWrapper = await IsmChatDBWrapper.create();
     }
