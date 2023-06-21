@@ -23,17 +23,16 @@ class AuthViewModel extends GetxController {
       }
 
       var data = jsonDecode(response.data);
-
       var userDetails = UserDetailsModel(
         userId: data['userId'],
         userToken: data['userToken'],
         email: email,
       );
+
       if (IsmChatConfig.useDatabase) {
-        dbWrapper?.userDetailsBox
+        await dbWrapper?.userDetailsBox
             .put(IsmChatStrings.userData, userDetails.toJson());
       }
-
       return userDetails;
     } catch (e, st) {
       AppLog.error('Login $e', st);
@@ -85,7 +84,7 @@ class AuthViewModel extends GetxController {
     }
   }
 
-  Future<bool> postCreateUser(
+  Future<UserDetailsModel?> postCreateUser(
       {required bool isLoading,
       required Map<String, dynamic> createUser}) async {
     try {
@@ -96,7 +95,7 @@ class AuthViewModel extends GetxController {
         showLoader: isLoading,
       );
       if (response.hasError) {
-        return false;
+        return null;
       }
       var data = jsonDecode(response.data);
 
@@ -105,12 +104,14 @@ class AuthViewModel extends GetxController {
         userToken: data['userToken'],
         email: createUser['userIdentifier'],
       );
-      dbWrapper?.userDetailsBox
-          .put(IsmChatStrings.userData, userDetails.toJson());
-      return true;
+      if (IsmChatConfig.useDatabase) {
+        await dbWrapper?.userDetailsBox
+            .put(IsmChatStrings.userData, userDetails.toJson());
+      }
+      return userDetails;
     } catch (e, st) {
       AppLog.error('Sign up $e', st);
-      return false;
+      return null;
     }
   }
 }

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/res/res.dart';
 import 'package:chat_component_example/utilities/utilities.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,10 +23,10 @@ Future<void> initialize() async {
 
   var deviceConfig = Get.put(IsmChatDeviceConfig());
   deviceConfig.init();
-  if (!kIsWeb) {
-    dbWrapper = await DBWrapper.create();
-    await AppConfig.getUserData();
-  }
+
+  dbWrapper = await DBWrapper.create();
+  await AppConfig.getUserData();
+
   await Future.wait(
     [
       AppscripChatComponent.initialize(),

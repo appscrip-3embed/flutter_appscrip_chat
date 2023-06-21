@@ -2,7 +2,6 @@
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/main.dart';
-import 'package:flutter/foundation.dart';
 
 import '../models/models.dart';
 
@@ -12,7 +11,6 @@ class AppConfig {
   static UserDetailsModel? userDetail;
 
   static Future<void> getUserData() async {
-    if (kIsWeb) return;
     var data = await dbWrapper!.userDetailsBox.get(IsmChatStrings.userData);
     if (data == null) {
       return;

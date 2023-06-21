@@ -1,10 +1,7 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
-// import 'objectbox.g.dart'; // created by `flutter pub run build_runner build`
 
-/// Provides access to the ObjectBox Store throughout the presenter.
-///
 /// Create this in the apps main function.
 
 class DBWrapper {
@@ -24,10 +21,7 @@ class DBWrapper {
     userDetailsBox = boxes;
   }
 
-  /// Create an instance of ObjectBox to use throughout the presenter.
   static Future<DBWrapper> create([String? databaseName]) async {
-    // Future<Store> openStore() {...} is defined in the generated objectbox.g.dart.
-
     var dbName = databaseName ?? IsmChatConfig.dbName;
     var directory = await getApplicationDocumentsDirectory();
     final collection = await BoxCollection.open(

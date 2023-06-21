@@ -93,7 +93,7 @@ class IsmChatDBWrapper {
   Future<void> clearAllMessage({required String conversationId}) async {
     var conversation = await getConversation(conversationId: conversationId);
     if (conversation != null) {
-      conversation.copyWith(messages: []);
+      conversation = conversation.copyWith(messages: []);
       await saveConversation(conversation: conversation);
     }
     if (Get.isRegistered<IsmChatPageController>()) {
