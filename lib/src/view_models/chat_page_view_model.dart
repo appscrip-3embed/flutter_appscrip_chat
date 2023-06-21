@@ -110,6 +110,28 @@ class IsmChatPageViewModel {
       }
       var dbBox = IsmChatConfig.dbWrapper;
       if (sendMessageType == SendMessageType.pendingMessage) {
+        if (!IsmChatConfig.useDatabase) {
+          if (dbBox?.pendingMessages.isNotEmpty ?? false) {
+            var messages = dbBox!.pendingMessages[conversationId];
+            if (messages?.isNotEmpty == true) {
+              var message = messages!.firstWhere(
+                  (e) => e.messageId?.isEmpty == true && e.sentAt == createdAt);
+              var chatPageController = Get.find<IsmChatPageController>();
+              var messageIndex = chatPageController.messages.indexOf(message);
+              message.messageId = messageId;
+              message.deliveredToAll = false;
+              chatPageController.messages[messageIndex] = message;
+              messages.removeWhere(
+                  (e) => e.messageId == messageId && e.sentAt == createdAt);
+            }
+            messages = dbBox.pendingMessages[conversationId];
+            if (messages?.isEmpty == true) {
+              dbBox.pendingMessages.remove(conversationId);
+            }
+            return true;
+          }
+          return false;
+        }
         final chatPendingMessages = await dbBox!.getConversation(
             conversationId: conversationId, dbBox: IsmChatDbBox.pending);
         if (chatPendingMessages == null) {
@@ -140,9 +162,30 @@ class IsmChatPageViewModel {
           return true;
         }
       } else {
+        if (!IsmChatConfig.useDatabase) {
+          if (dbBox?.forwardMessages.isNotEmpty ?? false) {
+            var messages = dbBox!.forwardMessages[conversationId];
+            if (messages?.isNotEmpty == true) {
+              var message = messages!.firstWhere(
+                  (e) => e.messageId?.isEmpty == true && e.sentAt == createdAt);
+              var chatPageController = Get.find<IsmChatPageController>();
+              var messageIndex = chatPageController.messages.indexOf(message);
+              message.messageId = messageId;
+              message.deliveredToAll = false;
+              chatPageController.messages[messageIndex] = message;
+              messages.removeWhere(
+                  (e) => e.messageId == messageId && e.sentAt == createdAt);
+            }
+            messages = dbBox.forwardMessages[conversationId];
+            if (messages?.isEmpty == true) {
+              dbBox.forwardMessages.remove(conversationId);
+            }
+            return true;
+          }
+          return false;
+        }
         final chatForwardMessages = await dbBox!.getConversation(
             conversationId: conversationId, dbBox: IsmChatDbBox.forward);
-
         if (chatForwardMessages == null) {
           return false;
         }
@@ -392,6 +435,16 @@ class IsmChatPageViewModel {
         return;
       }
     }
+
+    if (IsmChatConfig.useDatabase) {
+      for (var x in messages) {
+        Get.find<IsmChatPageController>()
+            .messages
+            .removeWhere((e) => e.messageId == x.messageId);
+      }
+      return;
+    }
+
     var allMessages = await IsmChatConfig.dbWrapper!.getMessage(conversationId);
     if (allMessages == null) {
       return;
@@ -438,6 +491,15 @@ class IsmChatPageViewModel {
     if (response == null || response.hasError) {
       return;
     }
+    if (IsmChatConfig.useDatabase) {
+      for (var x in messages) {
+        Get.find<IsmChatPageController>()
+            .messages
+            .removeWhere((e) => e.messageId == x.messageId);
+      }
+      return;
+    }
+
     var allMessages = await IsmChatConfig.dbWrapper!.getMessage(conversationId);
     if (allMessages == null) {
       return;

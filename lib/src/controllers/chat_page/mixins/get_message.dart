@@ -4,18 +4,24 @@ mixin IsmChatPageGetMessageMixin {
   IsmChatPageController get _controller => Get.find<IsmChatPageController>();
 
   Future<void> getMessagesFromDB(String conversationId) async {
-    _controller.messages.clear();
-    var messages = await IsmChatConfig.dbWrapper!.getMessage(conversationId);
-    if (messages?.isEmpty ?? false || messages == null) {
-      return;
+    if (IsmChatConfig.useDatabase) {
+      _controller.messages.clear();
+      var messages = await IsmChatConfig.dbWrapper!.getMessage(conversationId);
+      if (messages?.isEmpty ?? false || messages == null) {
+        return;
+      }
+      _controller.messages = _controller._viewModel.sortMessages(messages!);
+    } else {
+      var messages = List<IsmChatMessageModel>.from(_controller.messages);
+      messages
+          .removeWhere((e) => e.customType == IsmChatCustomMessageType.date);
+      _controller.messages.clear();
+      _controller.messages = _controller._viewModel.sortMessages(messages);
     }
-
-    _controller.messages = _controller._viewModel.sortMessages(messages!);
     _controller.isMessagesLoading = false;
     if (_controller.messages.isEmpty) {
       return;
     }
-
     _controller._generateIndexedMessageList();
   }
 
@@ -23,6 +29,7 @@ mixin IsmChatPageGetMessageMixin {
     String conversationId = '',
     bool forPagination = false,
     int? lastMessageTimestamp,
+    bool? fromBlockUnblock,
   }) async {
     if (_controller.isLoadingMessages) return;
     _controller.isLoadingMessages = true;
@@ -54,10 +61,34 @@ mixin IsmChatPageGetMessageMixin {
       if (IsmChatConfig.useDatabase) {
         await getMessagesFromDB(conversationID);
       } else {
-        _controller.messages = _controller._viewModel.sortMessages(data);
+        if (fromBlockUnblock == null) {
+          if (_controller.messages.isEmpty) {
+            _controller.messages = _controller._viewModel.sortMessages(data);
+          } else {
+            _controller.messages
+                .addAll(_controller._viewModel.sortMessages(data));
+          }
+          await updateConversationMessage();
+        } else if (fromBlockUnblock) {
+          _controller.messages.add(data.first);
+          _controller.messages.removeWhere(
+              (e) => e.customType == IsmChatCustomMessageType.date);
+          _controller.messages =
+              _controller._viewModel.sortMessages(_controller.messages);
+          await updateConversationMessage();
+        }
       }
     }
     _controller.isLoadingMessages = false;
+  }
+
+  Future<void> updateConversationMessage() async {
+    var chatConersationController = Get.find<IsmChatConversationsController>();
+    var converstionIndex = chatConersationController.conversations.indexWhere(
+        (e) => e.conversationId == _controller.conversation?.conversationId);
+    chatConersationController.conversations[converstionIndex] =
+        chatConersationController.conversations[converstionIndex]
+            .copyWith(messages: _controller.messages);
   }
 
   Future<void> getMessageDeliverTime(IsmChatMessageModel message) async {

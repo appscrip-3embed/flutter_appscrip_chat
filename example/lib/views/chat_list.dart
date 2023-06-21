@@ -15,6 +15,7 @@ class ChatList extends StatelessWidget {
     return GetBuilder<ChatListController>(builder: (controller) {
       return Scaffold(
           body: IsmChatApp(
+        useDataBase: false,
         chatTheme: IsmChatThemeData(primaryColor: AppColors.primaryColorLight,
         chatPageTheme: IsmChatPageThemeData(
             selfMessageTheme: IsmChatMessageThemeData(

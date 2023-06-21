@@ -97,6 +97,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       body: IsmChatUtility.encodePayload(body),
       createdAt: createdAt,
     );
+
     if (isMessageSent && !forwardMessgeForMulitpleUser) {
       _controller.didReactedLast = false;
       await _controller.getMessagesFromDB(conversationId);
@@ -689,6 +690,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
+
     if (chatConversationResponse == null) {
       conversationId = await createConversation(
           userId: [userId], metaData: _controller.conversation?.metaData);
