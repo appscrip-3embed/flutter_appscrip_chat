@@ -308,19 +308,53 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                           },
                         ),
                       ),
-                      IsmChatDimens.boxHeight10,
-                      TextButton.icon(
-                        onPressed: controller.showDialogExitButton,
-                        icon: const Icon(
-                          Icons.logout_rounded,
-                          color: IsmChatColors.redColor,
+                      IsmChatDimens.boxHeight20,
+                      Container(
+                        padding: IsmChatDimens.edgeInsets16,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(IsmChatDimens.sixteen),
+                          color: IsmChatColors.whiteColor,
                         ),
-                        label: Text(
-                          IsmChatStrings.exitGroup,
-                          style: IsmChatStyles.w500Black16,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            InkWell(
+                              onTap: () async{
+                                await Get.dialog(
+                                  IsmChatAlertDialogBox(
+                                    title: IsmChatStrings.deleteAllMessage,
+                                    actionLabels: const [IsmChatStrings.clearChat],
+                                    callbackActions: [
+                                          () => controller
+                                          .clearAllMessages('${controller.conversation?.conversationId}'),
+                                    ],
+                                  ),
+                                );
+                                Get.back();
+                              },
+                              child: SizedBox(
+                                  height: IsmChatDimens.twenty,
+                                  child: Text(IsmChatStrings.clearChat, style: IsmChatStyles.w600red16,)),
+                            ),
+                            IsmChatDimens.boxHeight10,
+                            Divider(thickness: 1,color: IsmChatColors.greyColorLight.withOpacity(.3),),
+                            IsmChatDimens.boxHeight5,
+                            TextButton.icon(
+                              onPressed: controller.showDialogExitButton,
+                              icon: const Icon(
+                                Icons.logout_rounded,
+                                color: IsmChatColors.redColor,
+                              ),
+                              label: Text(
+                                IsmChatStrings.exitGroup,
+                                style: IsmChatStyles.w600red16,
+                              ),
+                            ),
+                            IsmChatDimens.boxHeight5,
+                          ],
                         ),
                       ),
-                      IsmChatDimens.boxHeight10,
+                      IsmChatDimens.boxHeight32,
                     ] else ...[
                       IsmChatDimens.boxHeight32,
                       Container(
