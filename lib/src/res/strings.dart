@@ -8,6 +8,8 @@ class IsmChatStrings {
 
   static const String you = 'You';
 
+  static const String all = 'All';
+
   static const String noConversation =
       "You don't seem to have talked to anyone, so let your buddies know you're thinking about them.";
   static const String noMatch = 'Oops! No Chat Conversation Found';
@@ -59,6 +61,7 @@ class IsmChatStrings {
   static const String deleteForMe = 'Delete for me';
   static const String deleteFromUser = 'Delete message from';
   static const String delete = 'Delete';
+  static const String more = 'More';
   static const String archive = 'Archive';
   static const String deleteChat = 'Delete chat';
   static const String createGroupAlert =

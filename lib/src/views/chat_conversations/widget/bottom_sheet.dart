@@ -7,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../appscrip_chat_component.dart';
+
 class IsmChatLogutBottomSheet extends StatelessWidget {
   const IsmChatLogutBottomSheet({required this.signOutTap, super.key});
 
@@ -43,7 +45,7 @@ class IsmChatLogutBottomSheet extends StatelessWidget {
 }
 
 class IsmChatClearConversationBottomSheet extends StatelessWidget {
-  const IsmChatClearConversationBottomSheet(this.conversation, {super.key});
+  IsmChatClearConversationBottomSheet(this.conversation, {super.key});
 
   final IsmChatConversationModel conversation;
 
@@ -52,6 +54,20 @@ class IsmChatClearConversationBottomSheet extends StatelessWidget {
       GetBuilder<IsmChatConversationsController>(
         builder: (controller) => CupertinoActionSheet(
           actions: [
+            // if (conversation.isGroup == true)
+            //   CupertinoActionSheetAction(
+            //     onPressed: (){
+            //       // await IsmChatUtility.openFullScreenBottomSheet(
+            //       //   const IsmChatConverstaionInfoView(),
+            //       // );
+            //     },
+            //     isDestructiveAction: true,
+            //     child: Text(
+            //       IsmChatStrings.groupInfo,
+            //       overflow: TextOverflow.ellipsis,
+            //       style: IsmChatStyles.w600Black16,
+            //     ),
+            //   ),
             CupertinoActionSheetAction(
               onPressed: () async {
                 Get.back();
@@ -73,27 +89,39 @@ class IsmChatClearConversationBottomSheet extends StatelessWidget {
                 style: IsmChatStyles.w600Black16,
               ),
             ),
-            CupertinoActionSheetAction(
-              onPressed: () async {
-                Get.back();
-                await Get.dialog(
-                  IsmChatAlertDialogBox(
-                    title: '${IsmChatStrings.deleteChat}?',
-                    actionLabels: const [IsmChatStrings.deleteChat],
-                    callbackActions: [
-                      () => controller.deleteChat(conversation.conversationId),
-                    ],
+            // conversation.isGroup == true
+            //     ? CupertinoActionSheetAction(
+            //         onPressed: (){},
+            //         isDestructiveAction: true,
+            //         child: Text(
+            //           IsmChatStrings.exitGroup,
+            //           overflow: TextOverflow.ellipsis,
+            //           style: IsmChatStyles.w600Black16
+            //               .copyWith(color: IsmChatColors.redColor),
+            //         ))
+            //     :
+            if(conversation.isGroup == false) CupertinoActionSheetAction(
+                    onPressed: () async {
+                      Get.back();
+                      await Get.dialog(
+                        IsmChatAlertDialogBox(
+                          title: '${IsmChatStrings.deleteChat}?',
+                          actionLabels: const [IsmChatStrings.deleteChat],
+                          callbackActions: [
+                            () => controller
+                                .deleteChat(conversation.conversationId),
+                          ],
+                        ),
+                      );
+                    },
+                    isDestructiveAction: true,
+                    child: Text(
+                      IsmChatStrings.deleteChat,
+                      overflow: TextOverflow.ellipsis,
+                      style: IsmChatStyles.w600Black16
+                          .copyWith(color: IsmChatColors.redColor),
+                    ),
                   ),
-                );
-              },
-              isDestructiveAction: true,
-              child: Text(
-                IsmChatStrings.deleteChat,
-                overflow: TextOverflow.ellipsis,
-                style: IsmChatStyles.w600Black16
-                    .copyWith(color: IsmChatColors.redColor),
-              ),
-            ),
           ],
           cancelButton: CupertinoActionSheetAction(
             onPressed: Get.back,
