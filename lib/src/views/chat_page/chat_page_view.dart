@@ -260,6 +260,6 @@ class _IsmChatPageView extends StatelessWidget {
               ),
             ],
           ),
-        ),
+        ).withUnfocusGestureDetctor(context),
       );
 }

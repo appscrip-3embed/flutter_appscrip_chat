@@ -38,8 +38,10 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: IsmChatColors.whiteColor,
         appBar: IsmChatAppBar(
-          title:
-              widget.dbConversationModel.opponentDetails.target?.userName ?? '',
+          title: Text(
+            widget.dbConversationModel.opponentDetails.target?.userName ?? '',
+            style: IsmChatStyles.w600White18,
+          ),
         ),
         resizeToAvoidBottomInset: false,
         body: SafeArea(

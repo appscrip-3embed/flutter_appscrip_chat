@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:azlistview/azlistview.dart';
 import 'package:camera/camera.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
@@ -48,9 +49,9 @@ class IsmChatPageController extends GetxController
 
   var messagesScrollController = AutoScrollController();
 
-  var groupEligibleUserScrollController = AutoScrollController();
-
   final textEditingController = TextEditingController();
+
+  final participnatsEditingController = TextEditingController();
 
   final RxBool _showEmojiBoard = false.obs;
   bool get showEmojiBoard => _showEmojiBoard.value;
@@ -83,14 +84,6 @@ class IsmChatPageController extends GetxController
   set chatMessageModel(IsmChatMessageModel? value) =>
       _chatMessageModel.value = value;
 
-  final RxString _deliveredTime = ''.obs;
-  String get deliveredTime => _deliveredTime.value;
-  set deliveredTime(String value) => _deliveredTime.value = value;
-
-  final RxString _readTime = ''.obs;
-  String get readTime => _readTime.value;
-  set readTime(String value) => _readTime.value = value;
-
   final RxBool _isSearchSelect = false.obs;
   bool get isSearchSelect => _isSearchSelect.value;
   set isSearchSelect(bool value) => _isSearchSelect.value = value;
@@ -98,6 +91,16 @@ class IsmChatPageController extends GetxController
   final RxList<UserDetails> _groupMembers = <UserDetails>[].obs;
   List<UserDetails> get groupMembers => _groupMembers;
   set groupMembers(List<UserDetails> value) => _groupMembers.value = value;
+
+  final RxList<UserDetails> _readMessageMembers = <UserDetails>[].obs;
+  List<UserDetails> get readMessageMembers => _readMessageMembers;
+  set readMessageMembers(List<UserDetails> value) =>
+      _readMessageMembers.value = value;
+
+  final RxList<UserDetails> _deliverdMessageMembers = <UserDetails>[].obs;
+  List<UserDetails> get deliverdMessageMembers => _deliverdMessageMembers;
+  set deliverdMessageMembers(List<UserDetails> value) =>
+      _deliverdMessageMembers.value = value;
 
   final RxList<UserDetails> _mentionSuggestions = <UserDetails>[].obs;
   List<UserDetails> get mentionSuggestions => _mentionSuggestions;
@@ -108,13 +111,17 @@ class IsmChatPageController extends GetxController
   List<IsmChatMessageModel> get mediaList => _mediaList;
   set mediaList(List<IsmChatMessageModel> value) => _mediaList.value = value;
 
-  final RxList<IsmChatMessageModel> _mediaListLinks = <IsmChatMessageModel>[].obs;
+  final RxList<IsmChatMessageModel> _mediaListLinks =
+      <IsmChatMessageModel>[].obs;
   List<IsmChatMessageModel> get mediaListLinks => _mediaListLinks;
-  set mediaListLinks(List<IsmChatMessageModel> value) => _mediaListLinks.value = value;
+  set mediaListLinks(List<IsmChatMessageModel> value) =>
+      _mediaListLinks.value = value;
 
-  final RxList<IsmChatMessageModel> _mediaListDocs = <IsmChatMessageModel>[].obs;
+  final RxList<IsmChatMessageModel> _mediaListDocs =
+      <IsmChatMessageModel>[].obs;
   List<IsmChatMessageModel> get mediaListDocs => _mediaListDocs;
-  set mediaListDocs(List<IsmChatMessageModel> value) => _mediaListDocs.value = value;
+  set mediaListDocs(List<IsmChatMessageModel> value) =>
+      _mediaListDocs.value = value;
 
   final Completer<GoogleMapController> googleMapCompleter =
       Completer<GoogleMapController>();
@@ -198,14 +205,15 @@ class IsmChatPageController extends GetxController
   set selectedMessage(List<IsmChatMessageModel> value) =>
       _selectedMessage.value = value;
 
-  List<Map<String, List<IsmChatMessageModel>>> sortMediaList (List<IsmChatMessageModel> messages){
+  List<Map<String, List<IsmChatMessageModel>>> sortMediaList(
+      List<IsmChatMessageModel> messages) {
     var storeMediaImageList = <Map<String, List<IsmChatMessageModel>>>[];
     for (var x in messages) {
-      if(x.customType == IsmChatCustomMessageType.date){
-        storeMediaImageList.add({x.body : <IsmChatMessageModel>[]});
+      if (x.customType == IsmChatCustomMessageType.date) {
+        storeMediaImageList.add({x.body: <IsmChatMessageModel>[]});
         continue;
       }
-      var z =storeMediaImageList.last;
+      var z = storeMediaImageList.last;
       z.forEach((key, value) {
         value.add(x);
       });
@@ -219,8 +227,8 @@ class IsmChatPageController extends GetxController
   }
 
   List<IsmChatMessageModel> parseMessagesWithDate(
-      List<IsmChatMessageModel> messages,
-      ) {
+    List<IsmChatMessageModel> messages,
+  ) {
     var result = <List<IsmChatMessageModel>>[];
     var list1 = <IsmChatMessageModel>[];
     var allMessages = <IsmChatMessageModel>[];
@@ -280,7 +288,7 @@ class IsmChatPageController extends GetxController
 
   bool canRefreshDetails = true;
 
-  bool canCallEligibleApi = true;
+  bool canCallEligibleApi = false;
 
   final _groupEligibleUser = <SelectedForwardUser>[].obs;
   List<SelectedForwardUser> get groupEligibleUser => _groupEligibleUser;
@@ -334,7 +342,7 @@ class IsmChatPageController extends GetxController
       }
     }
     scrollListener();
-    onGrouEligibleUserListener();
+
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
     });
@@ -345,8 +353,6 @@ class IsmChatPageController extends GetxController
     });
   }
 
-
-
   @override
   void onClose() {
     super.onClose();
@@ -356,7 +362,7 @@ class IsmChatPageController extends GetxController
     }
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
-    groupEligibleUserScrollController.dispose();
+
     ifTimerMounted();
   }
 
@@ -369,7 +375,7 @@ class IsmChatPageController extends GetxController
     }
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
-    groupEligibleUserScrollController.dispose();
+
     ifTimerMounted();
   }
 
@@ -474,21 +480,6 @@ class IsmChatPageController extends GetxController
         !groupEligibleUser[index].isUserSelected;
   }
 
-  void onGrouEligibleUserListener() {
-    groupEligibleUserScrollController.addListener(
-      () {
-        if (groupEligibleUserScrollController.position.pixels >
-                groupEligibleUserScrollController.position.maxScrollExtent *
-                    0.8 &&
-            canCallEligibleApi) {
-          canCallEligibleApi = false;
-
-          getEligibleMembers(conversationId: conversation!.conversationId!);
-        }
-      },
-    );
-  }
-
   void onBottomAttachmentTapped(
     IsmChatAttachmentType attachmentType,
   ) async {
@@ -535,12 +526,18 @@ class IsmChatPageController extends GetxController
         var chatConversationController =
             Get.find<IsmChatConversationsController>();
         chatConversationController.forwardedList.clear();
-        await IsmChatUtility.openFullScreenBottomSheet(
-          IsmChatForwardView(
-            message: message,
-            conversation: conversation!,
-          ),
-        );
+        await Get.to(
+            IsmChatForwardView(
+              message: message,
+              conversation: conversation!,
+            ),
+            transition: Transition.downToUp);
+        // await IsmChatUtility.openFullScreenBottomSheet(
+        //   IsmChatForwardView(
+        //     message: message,
+        //     conversation: conversation!,
+        //   ),
+        // );
         break;
       case IsmChatFocusMenuType.copy:
         await Clipboard.setData(ClipboardData(text: message.body));
@@ -896,9 +893,9 @@ class IsmChatPageController extends GetxController
     } else {
       await ismChatConversationController.getChatConversations();
     }
-   await Get.delete<IsmChatPageController>(force: true);
-    unawaited(Get.find<IsmChatMqttController>().getChatConversationsUnreadCount())
-   ;
+    await Get.delete<IsmChatPageController>(force: true);
+    unawaited(
+        Get.find<IsmChatMqttController>().getChatConversationsUnreadCount());
   }
 
   Future<void> cropImage(File file) async {
@@ -1194,8 +1191,10 @@ class IsmChatPageController extends GetxController
         getMessageReadTime(message),
         getMessageDeliverTime(message),
         // Get.to(IsmChatMessageInfo(message: message))!,
-        IsmChatUtility.openFullScreenBottomSheet(
-            IsmChatMessageInfo(message: message)),
+        IsmChatUtility.openFullScreenBottomSheet(IsmChatMessageInfo(
+          message: message,
+          isGroup: conversation?.isGroup ?? false,
+        )),
       ],
     );
   }

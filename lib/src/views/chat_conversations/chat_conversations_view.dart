@@ -108,7 +108,7 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
                     );
                   } else {
                     IsmChatUtility.openFullScreenBottomSheet(
-                      const IsmChatCreateConversationView(),
+                      IsmChatCreateConversationView(),
                     );
                   }
                 },

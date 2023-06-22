@@ -8,6 +8,15 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
+extension ScaffoldExtenstion on Scaffold {
+  Widget withUnfocusGestureDetctor(BuildContext context) => GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: this,
+      );
+}
+
 extension NullCheck<T> on Iterable<T>? {
   bool get isNullOrEmpty => this == null || this!.isEmpty;
 }

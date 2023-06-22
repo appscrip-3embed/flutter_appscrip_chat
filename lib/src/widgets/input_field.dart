@@ -8,6 +8,11 @@ class IsmChatInputField extends StatelessWidget {
     this.suffixIcon,
     this.hint,
     this.onChanged,
+    this.fillColor,
+    this.cursorColor,
+    this.textInputAction,
+    this.style,
+    this.autofocus,
     super.key,
   });
 
@@ -16,20 +21,30 @@ class IsmChatInputField extends StatelessWidget {
   final String? hint;
   final EdgeInsets? padding;
   final Function(String)? onChanged;
+  final Color? fillColor;
+  final Color? cursorColor;
+  final TextInputAction? textInputAction;
+  final TextStyle? style;
+  final bool? autofocus;
 
   @override
   Widget build(BuildContext context) => Padding(
         padding: padding ?? IsmChatDimens.edgeInsets10_4,
         child: TextFormField(
+          cursorColor: cursorColor ?? IsmChatColors.whiteColor,
           controller: controller,
+          textInputAction: textInputAction ?? TextInputAction.search,
+          autofocus: autofocus ?? true,
+          style: style ?? IsmChatStyles.w500White16,
           decoration: InputDecoration(
+            border: InputBorder.none,
             hintText: hint,
             hintStyle: IsmChatStyles.w400Grey12,
             contentPadding: IsmChatDimens.edgeInsets10,
             isDense: true,
             isCollapsed: true,
             filled: true,
-            fillColor: IsmChatConfig.chatTheme.backgroundColor,
+            fillColor: fillColor ?? IsmChatConfig.chatTheme.backgroundColor,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(IsmChatDimens.ten),
               borderSide: const BorderSide(color: Colors.transparent),

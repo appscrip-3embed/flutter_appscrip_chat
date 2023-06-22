@@ -54,7 +54,6 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
         await ismChatPageController.getLocation(
             latitude: value.latitude.toString(),
             longitude: value.longitude.toString());
-
         setState(() {});
       });
 
@@ -336,6 +335,6 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
               ),
             ],
           ),
-        ),
+        ).withUnfocusGestureDetctor(context),
       );
 }

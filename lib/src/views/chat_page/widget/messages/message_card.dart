@@ -48,7 +48,8 @@ class MessageCard extends StatelessWidget {
             } else {
               if ([
                 IsmChatCustomMessageType.image,
-                IsmChatCustomMessageType.video
+                IsmChatCustomMessageType.video,
+                IsmChatCustomMessageType.file
               ].contains(message.customType)) {
                 controller.tapForMediaPreview(message);
               }

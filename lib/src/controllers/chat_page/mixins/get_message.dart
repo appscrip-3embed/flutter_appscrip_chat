@@ -57,7 +57,7 @@ mixin IsmChatPageGetMessageMixin {
   }
 
   Future<void> getMessageDeliverTime(IsmChatMessageModel message) async {
-    _controller.deliveredTime = '';
+    _controller.deliverdMessageMembers.clear();
     var response = await _controller._viewModel.getMessageDeliverTime(
       conversationId: message.conversationId ?? '',
       messageId: message.messageId ?? '',
@@ -66,11 +66,11 @@ mixin IsmChatPageGetMessageMixin {
     if (response == null || response.isEmpty) {
       return;
     }
-    _controller.deliveredTime = (response.first.timestamp ?? 0).deliverTime;
+    _controller.deliverdMessageMembers = response;
   }
 
   Future<void> getMessageReadTime(IsmChatMessageModel message) async {
-    _controller.readTime = '';
+    _controller.readMessageMembers.clear();
     var response = await _controller._viewModel.getMessageReadTime(
       conversationId: message.conversationId ?? '',
       messageId: message.messageId ?? '',
@@ -79,7 +79,7 @@ mixin IsmChatPageGetMessageMixin {
     if (response == null || response.isEmpty) {
       return;
     }
-    _controller.readTime = (response.first.timestamp ?? 0).deliverTime;
+    _controller.readMessageMembers = response;
   }
 
   Future<void> getConverstaionDetails(
@@ -93,42 +93,42 @@ mixin IsmChatPageGetMessageMixin {
         conversationId: conversationId,
         includeMembers: includeMembers,
         isLoading: isLoading);
-    if (data != null && (_controller.conversation?.conversationId == conversationId)) {
-        _controller.conversation = data.copyWith(conversationId: conversationId);
+    if (data != null &&
+        (_controller.conversation?.conversationId == conversationId)) {
+      _controller.conversation = data.copyWith(conversationId: conversationId);
 
-        // controller.medialist is storing media i.e. Image, Video and Audio. //
-        _controller.mediaList = _controller.messages
-            .where((e) => [
-          IsmChatCustomMessageType.image,
-          IsmChatCustomMessageType.video,
-          IsmChatCustomMessageType.audio,
-          // IsmChatCustomMessageType.file,
-        ].contains(e.customType))
-            .toList();
+      // controller.medialist is storing media i.e. Image, Video and Audio. //
+      _controller.mediaList = _controller.messages
+          .where((e) => [
+                IsmChatCustomMessageType.image,
+                IsmChatCustomMessageType.video,
+                IsmChatCustomMessageType.audio,
+                // IsmChatCustomMessageType.file,
+              ].contains(e.customType))
+          .toList();
 
-        // controller.mediaListLinks is storing links //
-        _controller.mediaListLinks = _controller.messages
-            .where((e) => [
-          IsmChatCustomMessageType.link,
-        ].contains(e.customType))
-            .toList();
+      // controller.mediaListLinks is storing links //
+      _controller.mediaListLinks = _controller.messages
+          .where((e) => [
+                IsmChatCustomMessageType.link,
+              ].contains(e.customType))
+          .toList();
 
-        // controller.mediaListDocs is storing docs //
-        _controller.mediaListDocs = _controller.messages
-            .where((e) => [
-          IsmChatCustomMessageType.file,
-        ].contains(e.customType))
-            .toList();
+      // controller.mediaListDocs is storing docs //
+      _controller.mediaListDocs = _controller.messages
+          .where((e) => [
+                IsmChatCustomMessageType.file,
+              ].contains(e.customType))
+          .toList();
 
-        if (data.members != null) {
-          _controller.groupMembers = data.members!;
-          _controller.groupMembers.sort((a, b) =>
-              a.userName.toLowerCase().compareTo(b.userName.toLowerCase()));
-        }
-        _controller.update();
-        IsmChatLog.success('Updated conversation');
+      if (data.members != null) {
+        _controller.groupMembers = data.members!;
+        _controller.groupMembers.sort((a, b) =>
+            a.userName.toLowerCase().compareTo(b.userName.toLowerCase()));
       }
-
+      _controller.update();
+      IsmChatLog.success('Updated conversation');
+    }
   }
 
   Future<void> getReacton({required Reaction reaction}) async {

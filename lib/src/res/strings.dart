@@ -89,9 +89,12 @@ class IsmChatStrings {
   static const String contactInfo = 'Contact Info';
   static const String audio = 'audio';
   static const String video = 'video';
-  static const String loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod';
+  static const String loremIpsum =
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod';
   static const String demoDate = '25 Dec 2016';
-  static const String mediaLinksAndDocs= 'Media, Links, and Docs';
-  static const String links= 'Links';
-  static const String docs= 'Docs';
+  static const String mediaLinksAndDocs = 'Media, Links, and Docs';
+  static const String links = 'Links';
+  static const String docs = 'Docs';
+  static const String readby = 'Read by';
+  static const String deliveredby = 'Delivered by';
 }
