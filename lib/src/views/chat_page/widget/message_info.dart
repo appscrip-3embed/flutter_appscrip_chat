@@ -13,7 +13,7 @@ class IsmChatMessageInfo extends StatelessWidget {
   final bool isGroup;
 
   @override
-  Widget build(BuildContext context) => GetX<IsmChatPageController>(
+  Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
         builder: (chatController) => GestureDetector(
           onTapUp: (_) {
             FocusManager.instance.primaryFocus?.unfocus();
@@ -124,103 +124,131 @@ class IsmChatMessageInfo extends StatelessWidget {
                     ),
                     IsmChatDimens.boxHeight16,
                     isGroup
-                        ? Column(
-                            children: [
-                              UserInfo(
-                                title: IsmChatStrings.readby,
-                                userList: chatController.readMessageMembers,
-                              ),
-                              IsmChatDimens.boxHeight10,
-                              UserInfo(
-                                title: IsmChatStrings.deliveredby,
-                                userList: chatController.deliverdMessageMembers,
-                              ),
-                            ],
+                        ? Obx(
+                            () => Column(
+                              children: [
+                                if (chatController
+                                    .readMessageMembers.isNotEmpty) ...[
+                                  _UserInfo(
+                                    userList: chatController.readMessageMembers,
+                                    title: IsmChatStrings.readby,
+                                  ),
+                                ] else ...[
+                                  const _MessageReadDelivered(
+                                    title: IsmChatStrings.readby,
+                                  )
+                                ],
+                                IsmChatDimens.boxHeight10,
+                                if (chatController
+                                    .deliverdMessageMembers.isNotEmpty) ...[
+                                  _UserInfo(
+                                    userList:
+                                        chatController.deliverdMessageMembers,
+                                    title: IsmChatStrings.deliveredby,
+                                  ),
+                                ] else ...[
+                                  const _MessageReadDelivered(
+                                    title: IsmChatStrings.deliveredby,
+                                  )
+                                ]
+                              ],
+                            ),
                           )
-                        : Card(
-                            elevation: 1,
-                            child: Padding(
-                              padding: IsmChatDimens.edgeInsets10,
-                              child: Column(
-                                children: [
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Icon(
-                                            Icons.done_all,
-                                            color: Colors.blue,
-                                            size: IsmChatDimens.twenty,
-                                          ),
-                                          IsmChatDimens.boxWidth14,
-                                          Text('Read',
-                                              style: IsmChatStyles.w400Black12)
-                                        ],
-                                      ),
-                                      chatController.readMessageMembers.isEmpty
-                                          ? Icon(
-                                              Icons.remove,
+                        : Obx(
+                            () => Card(
+                              elevation: 1,
+                              child: Padding(
+                                padding: IsmChatDimens.edgeInsets10,
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Icon(
+                                              Icons.done_all,
+                                              color: Colors.blue,
                                               size: IsmChatDimens.twenty,
-                                            )
-                                          : Text(
-                                              chatController.readMessageMembers
-                                                  .first.timestamp!.deliverTime,
+                                            ),
+                                            IsmChatDimens.boxWidth14,
+                                            Text('Read',
+                                                style:
+                                                    IsmChatStyles.w400Black12)
+                                          ],
+                                        ),
+                                        chatController
+                                                .readMessageMembers.isEmpty
+                                            ? Icon(
+                                                Icons.remove,
+                                                size: IsmChatDimens.twenty,
+                                              )
+                                            : Text(
+                                                chatController
+                                                    .readMessageMembers
+                                                    .first
+                                                    .timestamp!
+                                                    .deliverTime,
+                                                style:
+                                                    IsmChatStyles.w400Black12,
+                                              ),
+                                      ],
+                                    ),
+                                    IsmChatDimens.boxHeight8,
+                                    const Divider(
+                                      thickness: 0.1,
+                                      color: Colors.grey,
+                                    ),
+                                    IsmChatDimens.boxHeight8,
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Icon(
+                                              Icons.done_all,
+                                              color: Colors.grey,
+                                              size: IsmChatDimens.twenty,
+                                            ),
+                                            IsmChatDimens.boxWidth8,
+                                            Text(
+                                              'Delivered',
                                               style: IsmChatStyles.w400Black12,
                                             ),
-                                    ],
-                                  ),
-                                  IsmChatDimens.boxHeight8,
-                                  const Divider(
-                                    thickness: 0.1,
-                                    color: Colors.grey,
-                                  ),
-                                  IsmChatDimens.boxHeight8,
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Icon(
-                                            Icons.done_all,
-                                            color: Colors.grey,
-                                            size: IsmChatDimens.twenty,
-                                          ),
-                                          IsmChatDimens.boxWidth8,
-                                          Text(
-                                            'Delivered',
-                                            style: IsmChatStyles.w400Black12,
-                                          ),
-                                        ],
-                                      ),
-                                      chatController
-                                              .deliverdMessageMembers.isEmpty
-                                          ? Icon(
-                                              Icons.remove,
-                                              size: IsmChatDimens.twenty,
-                                            )
-                                          : Text(
-                                              chatController
-                                                  .deliverdMessageMembers
-                                                  .first
-                                                  .timestamp!
-                                                  .deliverTime,
-                                              style: IsmChatStyles.w400Black12,
-                                            )
-                                    ],
-                                  ),
-                                ],
+                                          ],
+                                        ),
+                                        chatController
+                                                .deliverdMessageMembers.isEmpty
+                                            ? Icon(
+                                                Icons.remove,
+                                                size: IsmChatDimens.twenty,
+                                              )
+                                            : Text(
+                                                chatController
+                                                    .deliverdMessageMembers
+                                                    .first
+                                                    .timestamp!
+                                                    .deliverTime,
+                                                style:
+                                                    IsmChatStyles.w400Black12,
+                                              )
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
+                          )
                   ],
                 ),
               ),
@@ -230,8 +258,39 @@ class IsmChatMessageInfo extends StatelessWidget {
       );
 }
 
-class UserInfo extends StatelessWidget {
-  const UserInfo({super.key, required this.userList, required this.title});
+class _MessageReadDelivered extends StatelessWidget {
+  const _MessageReadDelivered({
+    required this.title,
+  });
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) => Card(
+        elevation: 1,
+        child: Container(
+          width: IsmChatDimens.percentWidth(.8),
+          padding: IsmChatDimens.edgeInsets16,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: IsmChatStyles.w600Black16,
+              ),
+              IsmChatDimens.boxHeight5,
+              Text(
+                '...',
+                style: IsmChatStyles.w600Black16,
+              )
+            ],
+          ),
+        ),
+      );
+}
+
+class _UserInfo extends StatelessWidget {
+  const _UserInfo({required this.userList, required this.title});
 
   final List<UserDetails> userList;
   final String title;

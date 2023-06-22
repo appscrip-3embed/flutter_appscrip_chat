@@ -711,7 +711,9 @@ extension MentionMessage on IsmChatMessageModel {
         ),
       );
       var length = mentionedUsers!.length;
+
       var splitLength = splitMessages.length;
+
       for (var i = 0; i < length; i++) {
         var mention = mentionedUsers![i];
         messageList.add(
@@ -720,7 +722,8 @@ extension MentionMessage on IsmChatMessageModel {
             isMentioned: true,
           ),
         );
-        if (splitLength < length || i < length - 1) {
+
+        if (splitLength < length || i < length) {
           messageList.add(
             LocalMention(
               text: splitMessages[i + 1]
