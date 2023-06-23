@@ -1,5 +1,7 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class IsmChatTextMessage extends StatelessWidget {
   const IsmChatTextMessage(this.message, {super.key});
@@ -15,29 +17,62 @@ class IsmChatTextMessage extends StatelessWidget {
             minHeight: 36,
           ),
           padding: IsmChatDimens.edgeInsets4,
-          child: RichText(
-            text: TextSpan(
-              text: message.mentionedUsers.isNullOrEmpty ? message.body : null,
-              style: message.style,
-              children: message.mentionedUsers.isNullOrEmpty
-                  ? null
-                  : message.mentionList
-                      .map(
-                        (e) => TextSpan(
-                          text: e.text,
-                          style: (message.style).copyWith(
-                            color: e.isMentioned
-                                ? message.sentByMe
-                                    ? IsmChatConfig.chatTheme.mentionColor
-                                    : IsmChatConfig.chatTheme.primaryColor
-                                : null,
-                          ),
-                        ),
-                      )
-                      .toList(),
+          child: AbsorbPointer(
+            absorbing: message.mentionedUsers.isNullOrEmpty,
+            ignoringSemantics: true,
+            child: GestureDetector(
+              child: RichText(
+                text: TextSpan(
+                  text: message.mentionedUsers.isNullOrEmpty
+                      ? message.body
+                      : null,
+                  style: message.style,
+                  children: message.mentionedUsers.isNullOrEmpty
+                      ? null
+                      : message.mentionList
+                          .map(
+                            (e) => TextSpan(
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () async {
+                                  if (e.isMentioned) {
+                                    var user = message.mentionedUsers
+                                        ?.where((user) =>
+                                            user.userName ==
+                                            e.text.substring(1))
+                                        .toList();
+                                    if (!user.isNullOrEmpty) {
+                                      await Get.dialog(
+                                        AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                IsmChatDimens.eight),
+                                          ),
+                                          contentPadding:
+                                              IsmChatDimens.edgeInsets0,
+                                          content: IsmChatUserInfo(
+                                            userDetails: user!.first,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  }
+                                },
+                              text: e.text,
+                              style: (message.style).copyWith(
+                                color: e.isMentioned
+                                    ? message.sentByMe
+                                        ? IsmChatConfig.chatTheme.mentionColor
+                                        : IsmChatConfig.chatTheme.primaryColor
+                                    : null,
+                              ),
+                            ),
+                          )
+                          .toList(),
+                ),
+                softWrap: true,
+                maxLines: null,
+              ),
             ),
-            softWrap: true,
-            maxLines: null,
           ),
         ),
       );

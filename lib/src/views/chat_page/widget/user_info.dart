@@ -1,157 +1,126 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatUserInfo extends StatefulWidget {
-  const IsmChatUserInfo({super.key, required this.dbConversationModel});
+  const IsmChatUserInfo({super.key, required this.userDetails});
 
-  final DBConversationModel dbConversationModel;
+  final UserDetails userDetails;
 
   @override
   State<IsmChatUserInfo> createState() => _IsmChatUserInfoState();
 }
 
 class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
-  List<IsmChatMessageModel> mediaMessage = [];
+  final chatController = Get.find<IsmChatPageController>();
+  final conversationController = Get.find<IsmChatConversationsController>();
+  bool isUserBlock = false;
 
   @override
   void initState() {
-    getMessages();
+    if (!conversationController.blockUsers.isNullOrEmpty) {
+      isUserBlock = conversationController.blockUsers
+          .any((e) => e.userId == widget.userDetails.userId);
+    }
     super.initState();
   }
 
-  void getMessages() async {
-    var messages = await IsmChatConfig.objectBox
-        .getMessages(widget.dbConversationModel.conversationId);
-    IsmChatLog.error(messages);
-    if (messages?.isNotEmpty == true) {
-      mediaMessage = messages!
-          .where((e) => [
-                IsmChatCustomMessageType.video,
-                IsmChatCustomMessageType.image
-              ].contains(e.customType))
-          .toList();
-    }
-  }
-
   @override
-  Widget build(BuildContext context) => Scaffold(
-        backgroundColor: IsmChatColors.whiteColor,
-        appBar: IsmChatAppBar(
-          title: Text(
-            widget.dbConversationModel.opponentDetails.target?.userName ?? '',
-            style: IsmChatStyles.w600White18,
-          ),
-        ),
-        resizeToAvoidBottomInset: false,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            child: Column(
+  Widget build(BuildContext context) => SizedBox(
+        height: IsmChatDimens.twoHundred + IsmChatDimens.oneHundredFifty,
+        width: IsmChatDimens.twoHundred + IsmChatDimens.eighty,
+        child: Stack(
+          alignment: Alignment.topRight,
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                IsmChatDimens.boxHeight16,
-                IsmChatImage.profile(
-                  widget.dbConversationModel.opponentDetails.target
-                          ?.profileUrl ??
-                      '',
-                  dimensions: IsmChatDimens.hundred,
-                ),
-                IsmChatDimens.boxHeight10,
-                Text(
-                  widget.dbConversationModel.opponentDetails.target?.userName ??
-                      '',
-                  style: IsmChatStyles.w600Grey16,
-                ),
-                Text(
-                  widget.dbConversationModel.opponentDetails.target
-                          ?.userIdentifier ??
-                      '',
-                  style: IsmChatStyles.w600Grey16,
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        IsmChatDimens.boxWidth14,
-                        Text(
-                          IsmChatStrings.media,
-                          style: IsmChatStyles.w400Black16,
-                        ),
-                        const Spacer(),
-                        IconButton(
-                          onPressed: () {
-                            // IsmChatUtility.openFullScreenBottomSheet(IsmMedia(
-                            //   mediaList: mediaMessage,
-                            // ));
-                          },
-                          icon: const Icon(Icons.arrow_forward_rounded),
-                        ),
-                      ],
+                SizedBox(
+                  height: IsmChatDimens.twoHundred + IsmChatDimens.fifty,
+                  child: CachedNetworkImage(
+                    imageUrl: widget.userDetails.profileUrl,
+                    fit: BoxFit.fill,
+                    alignment: Alignment.center,
+                    imageBuilder: (_, image) => Container(
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10)),
+                        color: IsmChatConfig.chatTheme.backgroundColor!,
+                        image: DecorationImage(image: image, fit: BoxFit.cover),
+                      ),
                     ),
-                    _UserMediaList(mediaMessage),
-                  ],
+                    placeholder: (context, url) => Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: IsmChatConfig.chatTheme.primaryColor!
+                            .withOpacity(0.2),
+                      ),
+                      child: const Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      ),
+                    ),
+                  ),
                 ),
-                IsmChatDimens.boxHeight10,
-                TextButton.icon(
-                  onPressed: () {
-                    // Get.find<IsmChatPageController>()
-                    //   .handleBlockUnblock(true);
+                IsmChatDimens.boxHeight5,
+                Text(
+                  widget.userDetails.userName,
+                  style: IsmChatStyles.w600Black20,
+                ),
+                Text(
+                  widget.userDetails.userIdentifier,
+                  style: IsmChatStyles.w600Grey16,
+                ),
+                IsmChatDimens.boxHeight5,
+                IsmChatTapHandler(
+                  onTap: () async {
+                    await Get.dialog(IsmChatAlertDialogBox(
+                      title: isUserBlock
+                          ? IsmChatStrings.doWantUnBlckUser
+                          : IsmChatStrings.doWantBlckUser,
+                      actionLabels: [
+                        isUserBlock
+                            ? IsmChatStrings.unblock
+                            : IsmChatStrings.block,
+                      ],
+                      callbackActions: [
+                        () {
+                          Get.back();
+                          isUserBlock
+                              ? chatController.unblockUser(
+                                  opponentId: widget.userDetails.userId,
+                                  lastMessageTimeStamp: 0,
+                                  fromUser: true,
+                                )
+                              : chatController.blockUser(
+                                  opponentId: widget.userDetails.userId,
+                                  lastMessageTimeStamp: 0,
+                                  fromUser: true,
+                                );
+                        },
+                      ],
+                    ));
                   },
-                  icon: Icon(
-                    Icons.no_accounts_rounded,
-                    color: IsmChatConfig.chatTheme.primaryColor,
-                  ),
-                  label: Text(
-                    IsmChatStrings.block,
-                    style: IsmChatStyles.w500Black16,
+                  child: Text(
+                    isUserBlock
+                        ? IsmChatStrings.unBlockUser
+                        : IsmChatStrings.blockUser,
+                    style: IsmChatStyles.w600red16,
                   ),
                 ),
-                IsmChatDimens.boxHeight10,
               ],
             ),
-          ),
+            IconButton(
+                onPressed: Get.back,
+                icon: CircleAvatar(
+                  radius: IsmChatDimens.twelve,
+                  child: const Icon(
+                    Icons.clear_rounded,
+                    color: IsmChatColors.blackColor,
+                  ),
+                ))
+          ],
         ),
       );
-}
-
-class _UserMediaList extends StatelessWidget {
-  _UserMediaList(this.mediaList);
-  List<IsmChatMessageModel> mediaList;
-
-  @override
-  Widget build(BuildContext context) {
-    if (mediaList.isEmpty == true) {
-      return const Align(
-        alignment: Alignment.center,
-        child: Text(IsmChatStrings.noMedia),
-      );
-    } else {
-      return SizedBox(
-        height: IsmChatDimens.hundred,
-        child: ListView.separated(
-          padding: IsmChatDimens.edgeInsets10_0,
-          scrollDirection: Axis.horizontal,
-          itemCount: mediaList.take(10).length,
-          separatorBuilder: (_, index) => IsmChatDimens.boxWidth8,
-          itemBuilder: (_, index) {
-            var media = mediaList[index];
-            var url = media.customType == IsmChatCustomMessageType.image
-                ? media.attachments?.first.mediaUrl ?? ''
-                : media.attachments?.first.thumbnailUrl ?? '';
-            var iconData = media.customType == IsmChatCustomMessageType.audio
-                ? Icons.audio_file_rounded
-                : Icons.description_rounded;
-            return GestureDetector(
-              onTap: () =>
-                  Get.find<IsmChatPageController>().tapForMediaPreview(media),
-              child: ConversationMediaWidget(
-                  media: media, iconData: iconData, url: url),
-            );
-          },
-        ),
-      );
-    }
-  }
 }

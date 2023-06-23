@@ -122,6 +122,7 @@ mixin IsmChatGroupAdminMixin {
     _controller.groupEligibleUser.sort((a, b) => a.userDetails.userName
         .toLowerCase()
         .compareTo(b.userDetails.userName.toLowerCase()));
+    _controller.groupEligibleUserDuplicate = _controller.groupEligibleUser;
     _controller.canCallEligibleApi = true;
     _handleList(_controller.groupEligibleUser);
   }

@@ -133,51 +133,42 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                 BorderRadius.circular(IsmChatDimens.sixteen),
                             color: IsmChatColors.whiteColor,
                           ),
-                          child: Column(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  IsmChatUtility.openFullScreenBottomSheet(
-                                      IsmMedia(
-                                    mediaList: controller.mediaList,
-                                    mediaListLinks: controller.mediaListLinks,
-                                    mediaListDocs: controller.mediaListDocs,
-                                  ));
-                                },
-                                child: Row(
+                          child: IsmChatTapHandler(
+                            onTap: () {
+                              IsmChatUtility.openFullScreenBottomSheet(IsmMedia(
+                                mediaList: controller.mediaList,
+                                mediaListLinks: controller.mediaListLinks,
+                                mediaListDocs: controller.mediaListDocs,
+                              ));
+                            },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                SvgPicture.asset(
+                                  IsmChatAssets.gallarySvg,
+                                ),
+                                IsmChatDimens.boxWidth12,
+                                Text(
+                                  IsmChatStrings.mediaLinksAndDocs,
+                                  style: IsmChatStyles.w500Black16,
+                                ),
+                                const Spacer(),
+                                Row(
                                   children: [
-                                    SvgPicture.asset(
-                                      IsmChatAssets.gallarySvg,
-                                    ),
-                                    IsmChatDimens.boxWidth12,
                                     Text(
-                                      IsmChatStrings.mediaLinksAndDocs,
-                                      style: IsmChatStyles.w500Black16,
+                                      '${controller.mediaList.length + controller.mediaListLinks.length + controller.mediaListDocs.length}',
+                                      style: IsmChatStyles.w500GreyLight17,
                                     ),
-                                    const Spacer(),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          '${controller.mediaList.length + controller.mediaListLinks.length + controller.mediaListDocs.length}',
-                                          style: IsmChatStyles.w500GreyLight17,
-                                        ),
-                                        IsmChatDimens.boxWidth4,
-                                        Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: IsmChatColors.greyColorLight,
-                                          size: IsmChatDimens.fifteen,
-                                        ),
-                                      ],
+                                    IsmChatDimens.boxWidth4,
+                                    Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: IsmChatColors.greyColorLight,
+                                      size: IsmChatDimens.fifteen,
                                     ),
                                   ],
                                 ),
-                              ),
-                              Divider(
-                                thickness: 1,
-                                color: IsmChatColors.greyColorLight
-                                    .withOpacity(.3),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -211,6 +202,8 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                       IsmChatInputField(
                         autofocus: false,
                         hint: 'Search using name or email',
+                        cursorColor: IsmChatConfig.chatTheme.primaryColor,
+                        style: IsmChatStyles.w400Black16,
                         controller: controller.participnatsEditingController,
                         suffixIcon: controller
                                 .participnatsEditingController.text.isNotEmpty
@@ -302,32 +295,32 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                       Container(
                         padding: IsmChatDimens.edgeInsets16,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(IsmChatDimens.sixteen),
+                          borderRadius:
+                              BorderRadius.circular(IsmChatDimens.sixteen),
                           color: IsmChatColors.whiteColor,
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            InkWell(
-                              onTap: () async{
-                                await Get.dialog(
-                                  IsmChatAlertDialogBox(
-                                    title: IsmChatStrings.deleteAllMessage,
-                                    actionLabels: const [IsmChatStrings.clearChat],
-                                    callbackActions: [
-                                          () => controller
-                                          .clearAllMessages('${controller.conversation?.conversationId}'),
-                                    ],
-                                  ),
-                                );
-                                Get.back();
+                            TextButton.icon(
+                              onPressed: () async {
+                                controller.showDialogForClearChat();
                               },
-                              child: SizedBox(
-                                  height: IsmChatDimens.twenty,
-                                  child: Text(IsmChatStrings.clearChat, style: IsmChatStyles.w600red16,)),
+                              icon: const Icon(
+                                Icons.clear_all_rounded,
+                                color: IsmChatColors.blackColor,
+                              ),
+                              label: Text(
+                                IsmChatStrings.clearChat,
+                                style: IsmChatStyles.w600Black16,
+                              ),
                             ),
                             IsmChatDimens.boxHeight10,
-                            Divider(thickness: 1,color: IsmChatColors.greyColorLight.withOpacity(.3),),
+                            Divider(
+                              thickness: 1,
+                              color:
+                                  IsmChatColors.greyColorLight.withOpacity(.3),
+                            ),
                             IsmChatDimens.boxHeight5,
                             TextButton.icon(
                               onPressed: controller.showDialogExitButton,

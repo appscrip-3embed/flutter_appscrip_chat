@@ -78,6 +78,12 @@ class IsmChatPageController extends GetxController
   bool get isreplying => _isreplying.value;
   set isreplying(bool value) => _isreplying.value = value;
 
+  final RxBool _isMemberSearch = false.obs;
+  bool get isMemberSearch => _isMemberSearch.value;
+  set isMemberSearch(bool value) {
+    _isMemberSearch.value = value;
+  }
+
   final Rx<IsmChatMessageModel?> _chatMessageModel =
       Rx<IsmChatMessageModel?>(null);
   IsmChatMessageModel? get chatMessageModel => _chatMessageModel.value;
@@ -294,6 +300,13 @@ class IsmChatPageController extends GetxController
   List<SelectedForwardUser> get groupEligibleUser => _groupEligibleUser;
   set groupEligibleUser(List<SelectedForwardUser> value) {
     _groupEligibleUser.value = value;
+  }
+
+  final _groupEligibleUserDuplicate = <SelectedForwardUser>[].obs;
+  List<SelectedForwardUser> get groupEligibleUserDuplicate =>
+      _groupEligibleUserDuplicate;
+  set groupEligibleUserDuplicate(List<SelectedForwardUser> value) {
+    _groupEligibleUserDuplicate.value = value;
   }
 
   List<MentionModel> userMentionedList = [];
@@ -636,6 +649,21 @@ class IsmChatPageController extends GetxController
                   query.toLowerCase(),
                 ),
           ),
+        )
+        .toList();
+  }
+
+  void addParticipantSearch(String query) {
+    if (query.trim().isEmpty) {
+      groupEligibleUser.clear();
+      groupEligibleUser = groupEligibleUserDuplicate;
+      return;
+    }
+    groupEligibleUser = groupEligibleUser
+        .where(
+          (e) =>
+              e.userDetails.userName.didMatch(query) ||
+              e.userDetails.userIdentifier.didMatch(query),
         )
         .toList();
   }
@@ -1229,7 +1257,8 @@ class IsmChatPageController extends GetxController
       {required String opponentId,
       required int lastMessageTimeStamp,
       bool includeMembers = false,
-      bool isLoading = false}) async {
+      bool isLoading = false,
+      bool fromUser = false}) async {
     var data = await _viewModel.blockUser(
         opponentId: opponentId,
         lastMessageTimeStamp: lastMessageTimeStamp,
@@ -1238,24 +1267,30 @@ class IsmChatPageController extends GetxController
     if (data != null) {
       IsmChatUtility.showToast(IsmChatStrings.blockedSuccessfully);
       await Future.wait([
-        Get.find<IsmChatConversationsController>().getBlockUser(),
-        getConverstaionDetails(
-          conversationId: conversation?.conversationId ?? '',
-          includeMembers: includeMembers,
-        ),
-        getMessagesFromAPI()
+        if (fromUser) ...[
+          Get.find<IsmChatConversationsController>().getBlockUser(),
+        ] else ...[
+          getConverstaionDetails(
+            conversationId: conversation?.conversationId ?? '',
+            includeMembers: includeMembers,
+          ),
+          getMessagesFromAPI()
+        ]
       ]);
     }
   }
 
-  Future<void> unblockUser(
-      {required String opponentId,
-      required int lastMessageTimeStamp,
-      bool includeMembers = false,
-      bool isLoading = false}) async {
+  Future<void> unblockUser({
+    required String opponentId,
+    required int lastMessageTimeStamp,
+    bool includeMembers = false,
+    bool isLoading = false,
+    bool fromUser = false,
+  }) async {
     var isBlocked = await _conversationController.unblockUser(
       opponentId: opponentId,
       isLoading: isLoading,
+      fromUser: fromUser,
     );
     if (!isBlocked) {
       return;

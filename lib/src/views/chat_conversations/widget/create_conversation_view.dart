@@ -60,6 +60,8 @@ class IsmChatCreateConversationView extends StatelessWidget {
                     fillColor: IsmChatConfig.chatTheme.primaryColor,
                     controller: controller.userSearchNameController,
                     style: IsmChatStyles.w400White16,
+                    hint: 'Search user...',
+                    hintStyle: IsmChatStyles.w400White16,
                     onChanged: (value) {
                       controller.debounce.run(() {
                         controller.getNonBlockUserList(
@@ -81,6 +83,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                 onPressed: () {
                   controller.showSearchField = !controller.showSearchField;
                   controller.userSearchNameController.clear();
+                  // controller.forwardedList = controller.forwardedListDuplicat;
                 },
                 icon: Icon(
                   controller.showSearchField

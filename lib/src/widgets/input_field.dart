@@ -13,6 +13,7 @@ class IsmChatInputField extends StatelessWidget {
     this.textInputAction,
     this.style,
     this.autofocus,
+    this.hintStyle,
     super.key,
   });
 
@@ -25,6 +26,7 @@ class IsmChatInputField extends StatelessWidget {
   final Color? cursorColor;
   final TextInputAction? textInputAction;
   final TextStyle? style;
+  final TextStyle? hintStyle;
   final bool? autofocus;
 
   @override
@@ -39,7 +41,7 @@ class IsmChatInputField extends StatelessWidget {
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: hint,
-            hintStyle: IsmChatStyles.w400Grey12,
+            hintStyle: hintStyle ?? IsmChatStyles.w400Grey12,
             contentPadding: IsmChatDimens.edgeInsets10,
             isDense: true,
             isCollapsed: true,

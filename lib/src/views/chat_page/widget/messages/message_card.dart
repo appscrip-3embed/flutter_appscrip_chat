@@ -41,18 +41,16 @@ class MessageCard extends StatelessWidget {
                     controller.onReplyTap(
                         controller.messages.reversed.toList()[index]);
                   },
-        child: IsmChatTapHandler(
+        child: GestureDetector(
           onTap: () async {
             if (message.messageType == IsmChatMessageType.reply) {
               controller.scrollToMessage(message.parentMessageId ?? '');
-            } else {
-              if ([
-                IsmChatCustomMessageType.image,
-                IsmChatCustomMessageType.video,
-                IsmChatCustomMessageType.file
-              ].contains(message.customType)) {
-                controller.tapForMediaPreview(message);
-              }
+            } else if ([
+              IsmChatCustomMessageType.image,
+              IsmChatCustomMessageType.video,
+              IsmChatCustomMessageType.file
+            ].contains(message.customType)) {
+              controller.tapForMediaPreview(message);
             }
           },
           child: AutoScrollTag(

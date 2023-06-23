@@ -90,15 +90,16 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                     !widget.message.sentByMe) ...[
                   IsmChatTapHandler(
                     onTap: () async {
-                      var controller =
-                          Get.find<IsmChatConversationsController>();
-                      var conversationId = controller.getConversationId(
-                          widget.message.senderInfo?.userId ?? '');
-                      var conversationUser = await IsmChatConfig.objectBox
-                          .getDBConversation(conversationId: conversationId);
-                      await IsmChatUtility.openFullScreenBottomSheet(
-                        IsmChatUserInfo(
-                          dbConversationModel: conversationUser!,
+                      await Get.dialog(
+                        AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(IsmChatDimens.five),
+                          ),
+                          contentPadding: IsmChatDimens.edgeInsets0,
+                          content: IsmChatUserInfo(
+                            userDetails: widget.message.senderInfo!,
+                          ),
                         ),
                       );
                     },

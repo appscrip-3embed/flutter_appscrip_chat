@@ -3,15 +3,9 @@ import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class IsmChatGroupEligibleUser extends StatefulWidget {
+class IsmChatGroupEligibleUser extends StatelessWidget {
   const IsmChatGroupEligibleUser({super.key});
 
-  @override
-  State<IsmChatGroupEligibleUser> createState() =>
-      _IsmChatGroupEligibleUserState();
-}
-
-class _IsmChatGroupEligibleUserState extends State<IsmChatGroupEligibleUser> {
   Widget _buildSusWidget(String susTag) => Container(
         padding: IsmChatDimens.edgeInsets10_0,
         height: IsmChatDimens.forty,
@@ -41,30 +35,65 @@ class _IsmChatGroupEligibleUserState extends State<IsmChatGroupEligibleUser> {
           var chatPageController = Get.find<IsmChatPageController>();
           chatPageController.groupEligibleUser.clear();
           chatPageController.canCallEligibleApi = false;
+          chatPageController.participnatsEditingController.clear();
+          chatPageController.isMemberSearch = false;
           chatPageController.getEligibleMembers(
               conversationId: chatPageController.conversation!.conversationId!,
               limit: 20);
         },
         builder: (controller) => Scaffold(
           appBar: IsmChatAppBar(
-            title: Text(
-              'Add participants...  ${controller.groupEligibleUser.selectedUsers.isEmpty ? '' : controller.groupEligibleUser.selectedUsers.length}',
-              style: IsmChatStyles.w600White18,
-            ),
+            title: controller.isMemberSearch
+                ? IsmChatInputField(
+                    fillColor: IsmChatConfig.chatTheme.primaryColor,
+                    autofocus: true,
+                    hint: 'Search user..',
+                    hintStyle: IsmChatStyles.w600White16,
+                    cursorColor: IsmChatColors.whiteColor,
+                    style: IsmChatStyles.w600White16,
+                    controller: controller.participnatsEditingController,
+                    onChanged: (_) {
+                      controller.addParticipantSearch(_);
+                      // controller.update();
+                    },
+                  )
+                : Text(
+                    'Add participants...  ${controller.groupEligibleUser.selectedUsers.isEmpty ? '' : controller.groupEligibleUser.selectedUsers.length}',
+                    style: IsmChatStyles.w600White18,
+                  ),
             action: [
-              IconButton(
-                onPressed: () {
-                  // Todo
-                },
-                icon: const Icon(
-                  Icons.search_rounded,
-                  color: IsmChatColors.whiteColor,
-                ),
-              )
+              controller.isMemberSearch
+                  ? IconButton(
+                      onPressed: () {
+                        controller.isMemberSearch = !controller.isMemberSearch;
+                        controller.addParticipantSearch('');
+                        // controller.update();
+                      },
+                      icon: const Icon(
+                        Icons.clear_rounded,
+                        color: IsmChatColors.whiteColor,
+                      ),
+                    )
+                  : IconButton(
+                      onPressed: () {
+                        controller.isMemberSearch = !controller.isMemberSearch;
+                      },
+                      icon: const Icon(
+                        Icons.search_rounded,
+                        color: IsmChatColors.whiteColor,
+                      ),
+                    )
             ],
           ),
           body: controller.groupEligibleUser.isEmpty
-              ? const IsmChatLoadingDialog()
+              ? controller.isMemberSearch
+                  ? Center(
+                      child: Text(
+                        'No user found',
+                        style: IsmChatStyles.w600Black20,
+                      ),
+                    )
+                  : const IsmChatLoadingDialog()
               : SizedBox(
                   child: Column(
                     children: [

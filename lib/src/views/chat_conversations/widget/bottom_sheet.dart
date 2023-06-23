@@ -1,13 +1,7 @@
-import 'package:appscrip_chat_component/src/controllers/controllers.dart';
-import 'package:appscrip_chat_component/src/models/models.dart';
-import 'package:appscrip_chat_component/src/res/res.dart';
-import 'package:appscrip_chat_component/src/utilities/utilities.dart';
-import 'package:appscrip_chat_component/src/widgets/widgets.dart';
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../../../appscrip_chat_component.dart';
 
 class IsmChatLogutBottomSheet extends StatelessWidget {
   const IsmChatLogutBottomSheet({required this.signOutTap, super.key});
@@ -45,7 +39,7 @@ class IsmChatLogutBottomSheet extends StatelessWidget {
 }
 
 class IsmChatClearConversationBottomSheet extends StatelessWidget {
-  IsmChatClearConversationBottomSheet(this.conversation, {super.key});
+  const IsmChatClearConversationBottomSheet(this.conversation, {super.key});
 
   final IsmChatConversationModel conversation;
 
@@ -100,28 +94,29 @@ class IsmChatClearConversationBottomSheet extends StatelessWidget {
             //               .copyWith(color: IsmChatColors.redColor),
             //         ))
             //     :
-            if(conversation.isGroup == false) CupertinoActionSheetAction(
-                    onPressed: () async {
-                      Get.back();
-                      await Get.dialog(
-                        IsmChatAlertDialogBox(
-                          title: '${IsmChatStrings.deleteChat}?',
-                          actionLabels: const [IsmChatStrings.deleteChat],
-                          callbackActions: [
-                            () => controller
-                                .deleteChat(conversation.conversationId),
-                          ],
-                        ),
-                      );
-                    },
-                    isDestructiveAction: true,
-                    child: Text(
-                      IsmChatStrings.deleteChat,
-                      overflow: TextOverflow.ellipsis,
-                      style: IsmChatStyles.w600Black16
-                          .copyWith(color: IsmChatColors.redColor),
+            if (conversation.isGroup == false)
+              CupertinoActionSheetAction(
+                onPressed: () async {
+                  Get.back();
+                  await Get.dialog(
+                    IsmChatAlertDialogBox(
+                      title: '${IsmChatStrings.deleteChat}?',
+                      actionLabels: const [IsmChatStrings.deleteChat],
+                      callbackActions: [
+                        () =>
+                            controller.deleteChat(conversation.conversationId),
+                      ],
                     ),
-                  ),
+                  );
+                },
+                isDestructiveAction: true,
+                child: Text(
+                  IsmChatStrings.deleteChat,
+                  overflow: TextOverflow.ellipsis,
+                  style: IsmChatStyles.w600Black16
+                      .copyWith(color: IsmChatColors.redColor),
+                ),
+              ),
           ],
           cancelButton: CupertinoActionSheetAction(
             onPressed: Get.back,
