@@ -35,7 +35,6 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
           var chatPageController = Get.find<IsmChatPageController>();
           chatPageController.groupEligibleUser.clear();
           chatPageController.canCallEligibleApi = false;
-          chatPageController.participnatsEditingController.clear();
           chatPageController.isMemberSearch = false;
           chatPageController.getEligibleMembers(
               conversationId: chatPageController.conversation!.conversationId!,
@@ -54,7 +53,6 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
                     controller: controller.participnatsEditingController,
                     onChanged: (_) {
                       controller.addParticipantSearch(_);
-                      // controller.update();
                     },
                   )
                 : Text(
@@ -67,7 +65,6 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
                       onPressed: () {
                         controller.isMemberSearch = !controller.isMemberSearch;
                         controller.addParticipantSearch('');
-                        // controller.update();
                       },
                       icon: const Icon(
                         Icons.clear_rounded,
@@ -164,10 +161,13 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
                           indexBarHeight: IsmChatDimens.percentHeight(5),
                           indexBarWidth: IsmChatDimens.forty,
                           indexBarItemHeight: IsmChatDimens.twenty,
+
                           indexBarOptions: IndexBarOptions(
                             indexHintDecoration: const BoxDecoration(
-                                color: IsmChatColors.whiteColor),
+                              color: IsmChatColors.whiteColor,
+                            ),
                             indexHintChildAlignment: Alignment.center,
+                            selectTextStyle: IsmChatStyles.w400White12,
                             selectItemDecoration: BoxDecoration(
                               color: IsmChatConfig.chatTheme.primaryColor,
                               shape: BoxShape.circle,

@@ -302,12 +302,7 @@ class IsmChatPageController extends GetxController
     _groupEligibleUser.value = value;
   }
 
-  final _groupEligibleUserDuplicate = <SelectedForwardUser>[].obs;
-  List<SelectedForwardUser> get groupEligibleUserDuplicate =>
-      _groupEligibleUserDuplicate;
-  set groupEligibleUserDuplicate(List<SelectedForwardUser> value) {
-    _groupEligibleUserDuplicate.value = value;
-  }
+  List<SelectedForwardUser> groupEligibleUserDuplicate = [];
 
   List<MentionModel> userMentionedList = [];
 
@@ -655,7 +650,6 @@ class IsmChatPageController extends GetxController
 
   void addParticipantSearch(String query) {
     if (query.trim().isEmpty) {
-      groupEligibleUser.clear();
       groupEligibleUser = groupEligibleUserDuplicate;
       return;
     }

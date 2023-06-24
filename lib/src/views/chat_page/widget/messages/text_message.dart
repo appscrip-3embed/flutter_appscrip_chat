@@ -41,6 +41,7 @@ class IsmChatTextMessage extends StatelessWidget {
                                             e.text.substring(1))
                                         .toList();
                                     if (!user.isNullOrEmpty) {
+                                      IsmChatLog.error(user!.first);
                                       await Get.dialog(
                                         AlertDialog(
                                           shape: RoundedRectangleBorder(
@@ -50,7 +51,7 @@ class IsmChatTextMessage extends StatelessWidget {
                                           contentPadding:
                                               IsmChatDimens.edgeInsets0,
                                           content: IsmChatUserInfo(
-                                            userDetails: user!.first,
+                                            userDetails: user.first,
                                           ),
                                         ),
                                       );

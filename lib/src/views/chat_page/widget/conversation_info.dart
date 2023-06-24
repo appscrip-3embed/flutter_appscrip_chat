@@ -189,9 +189,12 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                   .conversation!.usersOwnDetails?.isAdmin ??
                               false)
                             IconButton(
-                              onPressed: () =>
-                                  IsmChatUtility.openFullScreenBottomSheet(
-                                      const IsmChatGroupEligibleUser()),
+                              onPressed: () {
+                                controller.participnatsEditingController
+                                    .clear();
+                                IsmChatUtility.openFullScreenBottomSheet(
+                                    const IsmChatGroupEligibleUser());
+                              },
                               icon: Icon(
                                 Icons.group_add_outlined,
                                 color: IsmChatConfig.chatTheme.primaryColor,

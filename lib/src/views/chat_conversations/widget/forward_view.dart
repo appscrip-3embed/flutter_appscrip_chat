@@ -170,6 +170,7 @@ class IsmChatForwardView extends StatelessWidget {
                             indexHintDecoration: const BoxDecoration(
                                 color: IsmChatColors.whiteColor),
                             indexHintChildAlignment: Alignment.center,
+                            selectTextStyle: IsmChatStyles.w400White12,
                             selectItemDecoration: BoxDecoration(
                               color: IsmChatConfig.chatTheme.primaryColor,
                               shape: BoxShape.circle,
