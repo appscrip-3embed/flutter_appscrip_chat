@@ -83,7 +83,11 @@ class IsmChatCreateConversationView extends StatelessWidget {
                 onPressed: () {
                   controller.showSearchField = !controller.showSearchField;
                   controller.userSearchNameController.clear();
-                  // controller.forwardedList = controller.forwardedListDuplicat;
+                  if (controller.showSearchField &&
+                      controller.forwardedListDuplicat.isNotEmpty) {
+                    controller.forwardedList = controller.forwardedListDuplicat;
+                    controller.handleList(controller.forwardedList);
+                  }
                 },
                 icon: Icon(
                   controller.showSearchField

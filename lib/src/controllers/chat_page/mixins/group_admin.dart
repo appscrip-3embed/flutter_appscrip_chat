@@ -102,12 +102,13 @@ mixin IsmChatGroupAdminMixin {
       int limit = 20,
       int skip = 0}) async {
     if (_controller.canCallEligibleApi) return;
-    _controller.canCallEligibleApi = false;
+    _controller.canCallEligibleApi = true;
+
     var response = await _controller._viewModel.getEligibleMembers(
         conversationId: conversationId,
         isLoading: isLoading,
         limit: limit,
-        skip: _controller.groupEligibleUser.length);
+        skip: _controller.groupEligibleUser.length.pagination());
     if (response == null) {
       return;
     }
@@ -124,7 +125,7 @@ mixin IsmChatGroupAdminMixin {
         .compareTo(b.userDetails.userName.toLowerCase()));
     _controller.groupEligibleUserDuplicate =
         List.from(_controller.groupEligibleUser);
-    _controller.canCallEligibleApi = true;
+    _controller.canCallEligibleApi = false;
     _handleList(_controller.groupEligibleUser);
   }
 

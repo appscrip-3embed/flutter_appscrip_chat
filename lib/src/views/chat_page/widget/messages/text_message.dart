@@ -37,11 +37,11 @@ class IsmChatTextMessage extends StatelessWidget {
                                   if (e.isMentioned) {
                                     var user = message.mentionedUsers
                                         ?.where((user) =>
-                                            user.userName ==
-                                            e.text.substring(1))
+                                            user.userName.toLowerCase() ==
+                                            e.text.substring(1).toLowerCase())
                                         .toList();
+
                                     if (!user.isNullOrEmpty) {
-                                      IsmChatLog.error(user!.first);
                                       await Get.dialog(
                                         AlertDialog(
                                           shape: RoundedRectangleBorder(
@@ -51,7 +51,7 @@ class IsmChatTextMessage extends StatelessWidget {
                                           contentPadding:
                                               IsmChatDimens.edgeInsets0,
                                           content: IsmChatUserInfo(
-                                            userDetails: user.first,
+                                            userDetails: user!.first,
                                           ),
                                         ),
                                       );

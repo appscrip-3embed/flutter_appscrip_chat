@@ -680,21 +680,20 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             ? _controller.chatMessageModel?.sentByMe
             : null,
       ),
-      mentionedUsers: _controller.userMentionedList
-          .map(
-            (e) => UserDetails(
-              userProfileImageUrl: '',
-              userName: _controller.groupMembers
-                  .where((m) => m.userId == e.userId)
-                  .first
-                  .userName,
-              userIdentifier: '',
-              userId: e.userId,
-              online: false,
-              lastSeen: 0,
-            ),
-          )
-          .toList(),
+      mentionedUsers: _controller.userMentionedList.map(
+        (e) {
+          var user =
+              _controller.groupMembers.where((m) => m.userId == e.userId);
+          return UserDetails(
+            userProfileImageUrl: user.first.profileUrl,
+            userName: user.first.userName,
+            userIdentifier: user.first.userIdentifier,
+            userId: e.userId,
+            online: false,
+            lastSeen: 0,
+          );
+        },
+      ).toList(),
     );
 
     if (!forwardMessgeForMulitpleUser) {

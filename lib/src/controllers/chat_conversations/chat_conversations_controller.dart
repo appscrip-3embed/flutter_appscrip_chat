@@ -234,10 +234,9 @@ class IsmChatConversationsController extends GetxController {
       isLoading: isLoading,
     );
     forwardedListDuplicat = List<SelectedForwardUser>.from(forwardedList);
-
     if (response == null) {
       forwardedList = forwardedListDuplicat;
-      _handleList(forwardedList);
+      handleList(forwardedList);
       return;
     }
     var users = response.users;
@@ -264,10 +263,10 @@ class IsmChatConversationsController extends GetxController {
           .toList();
     }
     isLoadingUsers = false;
-    _handleList(forwardedList);
+    handleList(forwardedList);
   }
 
-  void _handleList(List<SelectedForwardUser> list) {
+  void handleList(List<SelectedForwardUser> list) {
     if (list.isEmpty) return;
     for (var i = 0, length = list.length; i < length; i++) {
       var tag = list[i].userDetails.userName[0].toUpperCase();

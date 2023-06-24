@@ -60,26 +60,19 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
                     style: IsmChatStyles.w600White18,
                   ),
             action: [
-              controller.isMemberSearch
-                  ? IconButton(
-                      onPressed: () {
-                        controller.isMemberSearch = !controller.isMemberSearch;
-                        controller.addParticipantSearch('');
-                      },
-                      icon: const Icon(
-                        Icons.clear_rounded,
-                        color: IsmChatColors.whiteColor,
-                      ),
-                    )
-                  : IconButton(
-                      onPressed: () {
-                        controller.isMemberSearch = !controller.isMemberSearch;
-                      },
-                      icon: const Icon(
-                        Icons.search_rounded,
-                        color: IsmChatColors.whiteColor,
-                      ),
-                    )
+              IconButton(
+                onPressed: () {
+                  controller.isMemberSearch = !controller.isMemberSearch;
+                  controller.participnatsEditingController.clear();
+                  controller.addParticipantSearch('');
+                },
+                icon: Icon(
+                  controller.isMemberSearch
+                      ? Icons.clear_rounded
+                      : Icons.search_rounded,
+                  color: IsmChatColors.whiteColor,
+                ),
+              )
             ],
           ),
           body: controller.groupEligibleUser.isEmpty
@@ -101,6 +94,7 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
                             if (scrollNotification.metrics.pixels >
                                 scrollNotification.metrics.maxScrollExtent *
                                     0.7) {
+                              IsmChatLog.error('step1');
                               controller.getEligibleMembers(
                                 conversationId:
                                     controller.conversation!.conversationId!,

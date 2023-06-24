@@ -447,7 +447,6 @@ class IsmChatPageController extends GetxController
   Future<void> getMentionedUserList(String data) async {
     userMentionedList.clear();
     var mentionedList = data.split('@').toList();
-    IsmChatLog.info(mentionedList.asMap());
     mentionedList.asMap().forEach(
       (key, value) {
         var isMember = groupMembers.where(
@@ -456,7 +455,6 @@ class IsmChatPageController extends GetxController
               ),
         );
         if (isMember.isNotEmpty) {
-          IsmChatLog(isMember.first.userName);
           userMentionedList.add(MentionModel(
             wordCount: isMember.first.userName.split(' ').length,
             userId: isMember.first.userId,
@@ -465,7 +463,6 @@ class IsmChatPageController extends GetxController
         }
       },
     );
-    IsmChatLog.success(userMentionedList);
   }
 
   toggleEmojiBoard([
