@@ -1,9 +1,7 @@
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 
 @Entity()
 class DBConversationModel {
- 
   DBConversationModel({
     this.id = 0,
     this.unreadMessagesCount,
@@ -30,14 +28,12 @@ class DBConversationModel {
   String? conversationImageUrl;
   String? conversationId;
   final config = ToOne<ConversationConfigModel>();
-   @Transient()
+  @Transient()
   IsmChatMetaData? metaData;
   // @Backlink('conversation')
   // final messages = ToMany<DBMessageModel>();
 
-
-
   String get dbMetadata => metaData?.toJson() ?? '';
-  
+
   set dbMetadata(String value) => metaData = IsmChatMetaData.fromJson(value);
 }

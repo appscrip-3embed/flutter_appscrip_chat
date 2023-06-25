@@ -90,24 +90,17 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                     !widget.message.sentByMe) ...[
                   IsmChatTapHandler(
                     onTap: () async {
-                      //  var controller =
-                      //     Get.find<IsmChatConversationsController>();
-                      // var conversationId = controller.getConversationId(
-                      //     widget.message.senderInfo?.userId ?? '');
-                      // var conversationUser = await IsmChatConfig.objectBox
-                      //     .getDBConversation(conversationId: conversationId);
-                      await Get.dialog(
-                        AlertDialog(
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(IsmChatDimens.five),
-                          ),
-                          contentPadding: IsmChatDimens.edgeInsets0,
-                          content: IsmChatUserInfo(
-                            userDetails: widget.message.senderInfo!,
-                          ),
-                        ),
-                      );
+                      var controller =
+                          Get.find<IsmChatConversationsController>();
+                      var conversationId = controller.getConversationId(
+                          widget.message.senderInfo?.userId ?? '');
+                      var conversationUser = await IsmChatConfig.objectBox
+                          .getDBConversation(conversationId: conversationId);
+                      await IsmChatUtility.openFullScreenBottomSheet(
+                          IsmChatUserInfo(
+                        user: conversationUser!.opponentDetails.target!,
+                        conversationId: conversationUser.conversationId!,
+                      ));
                     },
                     child: IsmChatImage.profile(
                       widget.message.senderInfo?.profileUrl ?? '',
