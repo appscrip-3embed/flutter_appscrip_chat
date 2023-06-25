@@ -90,6 +90,12 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                     !widget.message.sentByMe) ...[
                   IsmChatTapHandler(
                     onTap: () async {
+                      //  var controller =
+                      //     Get.find<IsmChatConversationsController>();
+                      // var conversationId = controller.getConversationId(
+                      //     widget.message.senderInfo?.userId ?? '');
+                      // var conversationUser = await IsmChatConfig.objectBox
+                      //     .getDBConversation(conversationId: conversationId);
                       await Get.dialog(
                         AlertDialog(
                           shape: RoundedRectangleBorder(

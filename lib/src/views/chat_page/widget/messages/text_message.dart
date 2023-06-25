@@ -42,19 +42,36 @@ class IsmChatTextMessage extends StatelessWidget {
                                         .toList();
 
                                     if (!user.isNullOrEmpty) {
-                                      await Get.dialog(
-                                        AlertDialog(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                IsmChatDimens.eight),
-                                          ),
-                                          contentPadding:
-                                              IsmChatDimens.edgeInsets0,
-                                          content: IsmChatUserInfo(
-                                            userDetails: user!.first,
-                                          ),
-                                        ),
-                                      );
+                                      // var controller = Get.find<
+                                      //     IsmChatConversationsController>();
+                                      // var conversationId =
+                                      //     controller.getConversationId(
+                                      //         user!.first.userId);
+                                      // DBConversationModel? dbConversation;
+                                      // if (conversationId.isNotEmpty) {
+                                      //   dbConversation = await IsmChatConfig
+                                      //       .objectBox
+                                      //       .getDBConversation(
+                                      //           conversationId: conversationId);
+                                      // } else {
+                                      //   dbConversation = DBConversationModel(
+                                      //     messages: [],
+                                      //   );
+                                      // }
+
+                                      // await Get.dialog(
+                                      //   AlertDialog(
+                                      //     shape: RoundedRectangleBorder(
+                                      //       borderRadius: BorderRadius.circular(
+                                      //           IsmChatDimens.eight),
+                                      //     ),
+                                      //     contentPadding:
+                                      //         IsmChatDimens.edgeInsets0,
+                                      //     content: IsmChatUserInfo(
+                                      //       userDetails: user!.first,
+                                      //     ),
+                                      //   ),
+                                      // );
                                     }
                                   }
                                 },
