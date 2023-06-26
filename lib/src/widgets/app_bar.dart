@@ -14,7 +14,7 @@ class IsmChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   final double? height;
-  final String title;
+  final Widget title;
 
   final VoidCallback? onBack;
 
@@ -34,10 +34,7 @@ class IsmChatAppBar extends StatelessWidget implements PreferredSizeWidget {
             color: IsmChatColors.whiteColor,
           ),
         ),
-        title: Text(
-          title,
-          style: IsmChatStyles.w600White18,
-        ),
+        title: title,
         centerTitle: true,
         actions: action,
       );

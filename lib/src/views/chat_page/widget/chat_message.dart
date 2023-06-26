@@ -61,7 +61,9 @@ class _IsmChatMessageState extends State<IsmChatMessage>
           : () => controller.showOverlay(context, widget.message),
       onTap: showMessageInCenter
           ? null
-          : () => controller.onMessageSelect(widget.message),
+          : () {
+              controller.onMessageSelect(widget.message);
+            },
       child: Container(
         padding: IsmChatDimens.edgeInsets4_0,
         color: controller.selectedMessage.contains(widget.message)
@@ -95,10 +97,10 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                       var conversationUser = await IsmChatConfig.objectBox
                           .getDBConversation(conversationId: conversationId);
                       await IsmChatUtility.openFullScreenBottomSheet(
-                        IsmChatUserInfo(
-                          dbConversationModel: conversationUser!,
-                        ),
-                      );
+                          IsmChatUserInfo(
+                        user: conversationUser!.opponentDetails.target!,
+                        conversationId: conversationUser.conversationId!,
+                      ));
                     },
                     child: IsmChatImage.profile(
                       widget.message.senderInfo?.profileUrl ?? '',

@@ -19,12 +19,6 @@ class IsmChatTapHandler extends StatelessWidget {
         onTap: onTap,
         onLongPress: onLongPress,
         behavior: behavior ?? HitTestBehavior.translucent,
-        // splashColor: Colors.transparent,
-        // hoverColor: Colors.transparent,
-        // focusColor: Colors.transparent,
-        // highlightColor: Colors.transparent,
-        // overlayColor:
-        //     MaterialStateProperty.resolveWith((states) => Colors.transparent),
         child: child,
       );
 }

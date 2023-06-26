@@ -109,7 +109,6 @@ class IsmChatMessageField extends StatelessWidget {
                                           ?.isNotEmpty ??
                                       false) {
                                     controller.notifyTyping();
-
                                     controller.showMentionsUserList(_);
                                   }
                                 },

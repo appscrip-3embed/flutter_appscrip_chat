@@ -1,70 +1,269 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatGroupEligibleUser extends StatelessWidget {
   const IsmChatGroupEligibleUser({super.key});
 
+  Widget _buildSusWidget(String susTag) => Container(
+        padding: IsmChatDimens.edgeInsets10_0,
+        height: IsmChatDimens.forty,
+        width: double.infinity,
+        alignment: Alignment.centerLeft,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              susTag,
+              textScaleFactor: 1.5,
+              style: IsmChatStyles.w600Black14,
+            ),
+            SizedBox(
+                width: IsmChatDimens.percentWidth(.7),
+                child: Divider(
+                  height: .0,
+                  indent: IsmChatDimens.ten,
+                ))
+          ],
+        ),
+      );
+
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
         initState: (_) {
           var chatPageController = Get.find<IsmChatPageController>();
           chatPageController.groupEligibleUser.clear();
+          chatPageController.canCallEligibleApi = false;
+          chatPageController.isMemberSearch = false;
           chatPageController.getEligibleMembers(
               conversationId: chatPageController.conversation!.conversationId!,
               limit: 20);
         },
         builder: (controller) => Scaffold(
           appBar: IsmChatAppBar(
-            title:
-                'Add participants...  ${controller.groupEligibleUser.selectedUsers.isEmpty ? '' : controller.groupEligibleUser.selectedUsers.length}',
+            title: controller.isMemberSearch
+                ? IsmChatInputField(
+                    fillColor: IsmChatConfig.chatTheme.primaryColor,
+                    autofocus: true,
+                    hint: 'Search user..',
+                    hintStyle: IsmChatStyles.w600White16,
+                    cursorColor: IsmChatColors.whiteColor,
+                    style: IsmChatStyles.w600White16,
+                    controller: controller.participnatsEditingController,
+                    onChanged: (_) {
+                      controller.addParticipantSearch(_);
+                    },
+                  )
+                : Text(
+                    'Add participants...  ${controller.groupEligibleUser.selectedUsers.isEmpty ? '' : controller.groupEligibleUser.selectedUsers.length}',
+                    style: IsmChatStyles.w600White18,
+                  ),
+            action: [
+              IconButton(
+                onPressed: () {
+                  controller.isMemberSearch = !controller.isMemberSearch;
+                  controller.participnatsEditingController.clear();
+                  controller.addParticipantSearch('');
+                },
+                icon: Icon(
+                  controller.isMemberSearch
+                      ? Icons.clear_rounded
+                      : Icons.search_rounded,
+                  color: IsmChatColors.whiteColor,
+                ),
+              )
+            ],
           ),
           body: controller.groupEligibleUser.isEmpty
-              ? const IsmChatLoadingDialog()
+              ? controller.isMemberSearch
+                  ? Center(
+                      child: Text(
+                        'No user found',
+                        style: IsmChatStyles.w600Black20,
+                      ),
+                    )
+                  : const IsmChatLoadingDialog()
               : SizedBox(
                   child: Column(
                     children: [
                       Expanded(
-                        child: ListView.separated(
-                          controller:
-                              controller.groupEligibleUserScrollController,
-                          padding: IsmChatDimens.edgeInsets0_10,
-                          shrinkWrap: true,
+                          child: NotificationListener<ScrollNotification>(
+                        onNotification: (scrollNotification) {
+                          if (scrollNotification is ScrollEndNotification) {
+                            if (scrollNotification.metrics.pixels >
+                                scrollNotification.metrics.maxScrollExtent *
+                                    0.7) {
+                              IsmChatLog.error('step1');
+                              controller.getEligibleMembers(
+                                conversationId:
+                                    controller.conversation!.conversationId!,
+                                limit: 20,
+                              );
+                            }
+                          }
+
+                          return true;
+                        },
+                        child: AzListView(
+                          data: controller.groupEligibleUser,
                           itemCount: controller.groupEligibleUser.length,
-                          separatorBuilder: (_, __) => IsmChatDimens.boxHeight4,
-                          itemBuilder: (_, index) {
-                            var conversation =
-                                controller.groupEligibleUser[index].userDetails;
+                          physics: const BouncingScrollPhysics(),
+                          indexHintBuilder: (context, hint) => Container(
+                            alignment: Alignment.center,
+                            width: IsmChatDimens.eighty,
+                            height: IsmChatDimens.eighty,
+                            decoration: BoxDecoration(
+                              color: IsmChatConfig.chatTheme.primaryColor,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Text(hint,
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 30.0)),
+                          ),
+                          indexBarData: SuspensionUtil.getTagIndexList(
+                              controller.groupEligibleUser),
+                          // const [
+                          //   'A',
+                          //   'B',
+                          //   'C',
+                          //   'D',
+                          //   'E',
+                          //   'F',
+                          //   'G',
+                          //   'H',
+                          //   'I',
+                          //   'J',
+                          //   'K',
+                          //   'L',
+                          //   'M',
+                          //   'N',
+                          //   'O',
+                          //   'P',
+                          //   'Q',
+                          //   'R',
+                          //   'S',
+                          //   'T',
+                          //   'U',
+                          //   'V',
+                          //   'W',
+                          //   'X',
+                          //   'Y',
+                          //   'Z'
+                          // ],
+                          indexBarMargin: IsmChatDimens.edgeInsets10,
+                          indexBarHeight: IsmChatDimens.percentHeight(5),
+                          indexBarWidth: IsmChatDimens.forty,
+                          indexBarItemHeight: IsmChatDimens.twenty,
+
+                          indexBarOptions: IndexBarOptions(
+                            indexHintDecoration: const BoxDecoration(
+                              color: IsmChatColors.whiteColor,
+                            ),
+                            indexHintChildAlignment: Alignment.center,
+                            selectTextStyle: IsmChatStyles.w400White12,
+                            selectItemDecoration: BoxDecoration(
+                              color: IsmChatConfig.chatTheme.primaryColor,
+                              shape: BoxShape.circle,
+                            ),
+                            needRebuild: true,
+                            indexHintHeight: IsmChatDimens.percentHeight(.2),
+                          ),
+                          itemBuilder: (_, int index) {
+                            var user = controller.groupEligibleUser[index];
+                            var susTag = user.getSuspensionTag();
+                            if (user.userDetails.userId ==
+                                Get.find<IsmChatMqttController>().userId) {
+                              return const SizedBox.shrink();
+                            }
                             return IsmChatTapHandler(
                               onTap: () =>
                                   controller.onGrouEligibleUserTap(index),
-                              child: Container(
-                                color: controller
-                                        .groupEligibleUser[index].isUserSelected
-                                    ? IsmChatConfig.chatTheme.primaryColor!
-                                        .withOpacity(.2)
-                                    : null,
-                                child: ListTile(
-                                  dense: true,
-                                  leading: IsmChatImage.profile(
-                                    conversation.userProfileImageUrl,
+                              child: Column(
+                                children: [
+                                  Offstage(
+                                    offstage: user.isShowSuspension != true,
+                                    child: _buildSusWidget(susTag),
                                   ),
-                                  title: Text(
-                                    conversation.userName,
-                                    style: IsmChatStyles.w600Black14,
+                                  Container(
+                                    color: controller.groupEligibleUser[index]
+                                            .isUserSelected
+                                        ? IsmChatConfig.chatTheme.primaryColor!
+                                            .withOpacity(.2)
+                                        : null,
+                                    child: Column(
+                                      children: [
+                                        ListTile(
+                                          dense: true,
+                                          leading: IsmChatImage.profile(
+                                            user.userDetails.profileUrl,
+                                            name: user.userDetails.userName
+                                                    .capitalizeFirst ??
+                                                '',
+                                          ),
+                                          title: Text(
+                                            user.userDetails.userName
+                                                    .capitalizeFirst ??
+                                                '',
+                                            style: IsmChatStyles.w600Black14,
+                                          ),
+                                          subtitle: Text(
+                                            user.userDetails.userIdentifier,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: IsmChatStyles.w400Black12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  subtitle: Text(
-                                    conversation.userIdentifier,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: IsmChatStyles.w400Black12,
-                                  ),
-                                ),
+                                ],
                               ),
                             );
                           },
                         ),
-                      ),
+                      )
+
+                          // ListView.separated(
+                          //   controller:
+                          //       controller.groupEligibleUserScrollController,
+                          //   padding: IsmChatDimens.edgeInsets0_10,
+                          //   shrinkWrap: true,
+                          //   itemCount: controller.groupEligibleUser.length,
+                          //   separatorBuilder: (_, __) => IsmChatDimens.boxHeight4,
+                          //   itemBuilder: (_, index) {
+                          //     var conversation =
+                          //         controller.groupEligibleUser[index].userDetails;
+                          //     return IsmChatTapHandler(
+                          //       onTap: () =>
+                          //           controller.onGrouEligibleUserTap(index),
+                          //       child: Container(
+                          //         color: controller
+                          //                 .groupEligibleUser[index].isUserSelected
+                          //             ? IsmChatConfig.chatTheme.primaryColor!
+                          //                 .withOpacity(.2)
+                          //             : null,
+                          //         child: ListTile(
+                          //           dense: true,
+                          //           leading: IsmChatImage.profile(
+                          //             conversation.userProfileImageUrl,
+                          //           ),
+                          //           title: Text(
+                          //             conversation.userName,
+                          //             style: IsmChatStyles.w600Black14,
+                          //           ),
+                          //           subtitle: Text(
+                          //             conversation.userIdentifier,
+                          //             maxLines: 1,
+                          //             overflow: TextOverflow.ellipsis,
+                          //             style: IsmChatStyles.w400Black12,
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     );
+                          //   },
+                          // ),
+                          ),
                       if (controller.groupEligibleUser.selectedUsers.isNotEmpty)
                         const _SelectedUsers(),
                     ],

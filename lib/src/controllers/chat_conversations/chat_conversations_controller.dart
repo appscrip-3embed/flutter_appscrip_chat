@@ -15,6 +15,8 @@ class IsmChatConversationsController extends GetxController {
 
   var addGrouNameController = TextEditingController();
 
+  var userSearchNameController = TextEditingController();
+
   final _conversations = <IsmChatConversationModel>[].obs;
   List<IsmChatConversationModel> get conversations => _conversations;
   set conversations(List<IsmChatConversationModel> value) =>
@@ -62,6 +64,12 @@ class IsmChatConversationsController extends GetxController {
     _forwardedList.value = value;
   }
 
+  final _forwardedListDuplicat = <SelectedForwardUser>[].obs;
+  List<SelectedForwardUser> get forwardedListDuplicat => _forwardedListDuplicat;
+  set forwardedListDuplicat(List<SelectedForwardUser> value) {
+    _forwardedListDuplicat.value = value;
+  }
+
   final _blockUsers = <UserDetails>[].obs;
   List<UserDetails> get blockUsers => _blockUsers;
   set blockUsers(List<UserDetails> value) => _blockUsers.value = value;
@@ -76,7 +84,15 @@ class IsmChatConversationsController extends GetxController {
   bool get isLoadingUsers => _isLoadingUsers.value;
   set isLoadingUsers(bool value) => _isLoadingUsers.value = value;
 
+  final RxBool _showSearchField = false.obs;
+  bool get showSearchField => _showSearchField.value;
+  set showSearchField(bool value) {
+    _showSearchField.value = value;
+  }
+
   List<Emoji> reactions = [];
+
+  final debounce = IsmChatDebounce();
 
   @override
   onInit() async {
@@ -125,6 +141,7 @@ class IsmChatConversationsController extends GetxController {
   Future<bool> unblockUser({
     required String opponentId,
     required bool isLoading,
+    bool fromUser = false,
   }) async {
     var data = await _viewModel.unblockUser(
       opponentId: opponentId,
@@ -135,6 +152,9 @@ class IsmChatConversationsController extends GetxController {
     }
     unawaited(getBlockUser());
     IsmChatUtility.showToast(IsmChatStrings.unBlockedSuccessfully);
+    if (fromUser) {
+      return false;
+    }
     return true;
   }
 
@@ -204,12 +224,19 @@ class IsmChatConversationsController extends GetxController {
     isLoadingUsers = true;
     var response = await _viewModel.getNonBlockUserList(
       sort: sort,
-      skip: forwardedList.isEmpty ? 0 : forwardedList.length.pagination(),
+      skip: searchTag.isNotEmpty
+          ? 0
+          : forwardedList.isEmpty
+              ? 0
+              : forwardedList.length.pagination(),
       limit: limit,
       searchTag: searchTag,
       isLoading: isLoading,
     );
+    forwardedListDuplicat = List<SelectedForwardUser>.from(forwardedList);
     if (response == null) {
+      forwardedList = forwardedListDuplicat;
+      handleList(forwardedList);
       return;
     }
     var users = response.users;
@@ -218,18 +245,28 @@ class IsmChatConversationsController extends GetxController {
     if (opponentId != null) {
       users.removeWhere((e) => e.userId == opponentId);
     }
-    forwardedList.addAll(List.from(users)
-        .map((e) => SelectedForwardUser(
-              isUserSelected: false,
-              userDetails: e as UserDetails,
-              isBlocked: blockUsers.map((e) => e.userId).contains(e.userId),
-            ))
-        .toList());
+    if (searchTag.isEmpty) {
+      forwardedList.addAll(List.from(users)
+          .map((e) => SelectedForwardUser(
+                isUserSelected: false,
+                userDetails: e as UserDetails,
+                isBlocked: false,
+              ))
+          .toList());
+    } else {
+      forwardedList = List.from(users)
+          .map((e) => SelectedForwardUser(
+                isUserSelected: false,
+                userDetails: e as UserDetails,
+                isBlocked: false,
+              ))
+          .toList();
+    }
     isLoadingUsers = false;
-    _handleList(forwardedList);
+    handleList(forwardedList);
   }
 
-  void _handleList(List<SelectedForwardUser> list) {
+  void handleList(List<SelectedForwardUser> list) {
     if (list.isEmpty) return;
     for (var i = 0, length = list.length; i < length; i++) {
       var tag = list[i].userDetails.userName[0].toUpperCase();

@@ -9,7 +9,9 @@ class IsmChatReplyMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => IntrinsicWidth(
+        // stepHeight: 200,
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _ReplyMessage(message),

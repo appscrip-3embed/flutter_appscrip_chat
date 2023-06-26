@@ -101,15 +101,18 @@ mixin IsmChatGroupAdminMixin {
       bool isLoading = false,
       int limit = 20,
       int skip = 0}) async {
+    if (_controller.canCallEligibleApi) return;
+    _controller.canCallEligibleApi = true;
+
     var response = await _controller._viewModel.getEligibleMembers(
         conversationId: conversationId,
         isLoading: isLoading,
         limit: limit,
-        skip: _controller.groupEligibleUser.length);
-    if (response?.isEmpty ?? false) {
+        skip: _controller.groupEligibleUser.length.pagination());
+    if (response == null) {
       return;
     }
-    var users = response!;
+    var users = response;
     _controller.groupEligibleUser.addAll(List.from(users)
         .map((e) => SelectedForwardUser(
               isUserSelected: false,
@@ -120,7 +123,27 @@ mixin IsmChatGroupAdminMixin {
     _controller.groupEligibleUser.sort((a, b) => a.userDetails.userName
         .toLowerCase()
         .compareTo(b.userDetails.userName.toLowerCase()));
-    _controller.canCallEligibleApi = true;
+    _controller.groupEligibleUserDuplicate =
+        List.from(_controller.groupEligibleUser);
+    _controller.canCallEligibleApi = false;
+    _handleList(_controller.groupEligibleUser);
+  }
+
+  void _handleList(List<SelectedForwardUser> list) {
+    if (list.isEmpty) return;
+    for (var i = 0, length = list.length; i < length; i++) {
+      var tag = list[i].userDetails.userName[0].toUpperCase();
+      if (RegExp('[A-Z]').hasMatch(tag)) {
+        list[i].tagIndex = tag;
+      } else {
+        list[i].tagIndex = '#';
+      }
+    }
+    // A-Z sort.
+    SuspensionUtil.sortListBySuspensionTag(_controller.groupEligibleUser);
+
+    // show sus tag.
+    SuspensionUtil.setShowSuspensionStatus(_controller.groupEligibleUser);
   }
 
   ///Remove members from conversation

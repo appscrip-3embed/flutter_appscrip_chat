@@ -8,6 +8,15 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
+extension ScaffoldExtenstion on Scaffold {
+  Widget withUnfocusGestureDetctor(BuildContext context) => GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: this,
+      );
+}
+
 extension NullCheck<T> on Iterable<T>? {
   bool get isNullOrEmpty => this == null || this!.isEmpty;
 }
@@ -702,7 +711,9 @@ extension MentionMessage on IsmChatMessageModel {
         ),
       );
       var length = mentionedUsers!.length;
+
       var splitLength = splitMessages.length;
+
       for (var i = 0; i < length; i++) {
         var mention = mentionedUsers![i];
         messageList.add(
@@ -711,7 +722,8 @@ extension MentionMessage on IsmChatMessageModel {
             isMentioned: true,
           ),
         );
-        if (splitLength < length || i < length - 1) {
+
+        if (splitLength < length || i < length) {
           messageList.add(
             LocalMention(
               text: splitMessages[i + 1]
