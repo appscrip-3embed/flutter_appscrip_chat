@@ -33,12 +33,14 @@ class _ImsChatShowUserReactionState extends State<ImsChatShowUserReaction>
         length: (widget.message.reactions?.length ?? 0) + 1, vsync: this);
 
     _tabController.animateTo(widget.index + 1);
+
     ismChatEmoji =
         getIsmChatEmoji(message: widget.message, index: widget.index);
   }
 
   IsmChatEmoji getIsmChatEmoji(
       {required IsmChatMessageModel message, required int index}) {
+
     var reactionName = widget.message.reactions?[index].emojiKey;
     var reactionValue =
         IsmChatEmoji.values.firstWhere((e) => e.value == reactionName);
@@ -59,6 +61,7 @@ class _ImsChatShowUserReactionState extends State<ImsChatShowUserReaction>
             alignment: Alignment.topLeft,
             height: IsmChatDimens.fifty,
             child: TabBar(
+
                 controller: _tabController,
                 isScrollable: reactionLength > 3 ? true : false,
                 tabs: [
@@ -99,6 +102,7 @@ class _ImsChatShowUserReactionState extends State<ImsChatShowUserReaction>
                     );
                   }),
                 ]),
+
           ),
           SizedBox(
             height: IsmChatDimens.percentHeight(.3),
@@ -115,6 +119,7 @@ class _ImsChatShowUserReactionState extends State<ImsChatShowUserReaction>
                       showOwnUser = true;
                     }
                     var reactionValue =
+
                         getIsmChatEmoji(message: widget.message, index: index);
                     var reaction = widget._controller.reactions.firstWhere(
                         (e) => e.name == reactionValue.emojiKeyword);
@@ -171,11 +176,13 @@ class _ImsChatShowUserReactionState extends State<ImsChatShowUserReaction>
                             : widget._controller.conversation?.profileUrl ??
                                 ''),
                       ),
+
                     );
                   },
                 ),
                 ...List.generate(
                   reactionLength,
+
                   (index) => ListView(
                     children: List.generate(
                       widget.message.reactions?[index].userIds.length ?? 0,
@@ -186,6 +193,7 @@ class _ImsChatShowUserReactionState extends State<ImsChatShowUserReaction>
                         if (userId ==
                             IsmChatConfig
                                 .communicationConfig.userConfig.userId) {
+
                           showOwnUser = true;
                         }
                         return IsmChatTapHandler(
@@ -197,12 +205,15 @@ class _ImsChatShowUserReactionState extends State<ImsChatShowUserReaction>
                                       reactionType: ismChatEmoji,
                                       messageId: widget.message.messageId ?? '',
                                       conversationId:
+
                                           widget.message.conversationId ?? ''));
+
                             }
                           },
                           child: ListTile(
                             title: Text(showOwnUser
                                 ? IsmChatConfig.communicationConfig.userConfig
+
                                         .userName.isNotEmpty
                                     ? IsmChatConfig
                                         .communicationConfig.userConfig.userName
@@ -224,6 +235,7 @@ class _ImsChatShowUserReactionState extends State<ImsChatShowUserReaction>
                                     ''
                                 : widget._controller.conversation?.profileUrl ??
                                     ''),
+
                           ),
                         );
                       },
