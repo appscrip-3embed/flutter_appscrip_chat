@@ -41,6 +41,7 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
               limit: 20);
         },
         builder: (controller) => Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: IsmChatAppBar(
             title: controller.isMemberSearch
                 ? IsmChatInputField(
@@ -80,7 +81,7 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
                   ? Center(
                       child: Text(
                         'No user found',
-                        style: IsmChatStyles.w600Black20,
+                        style: IsmChatStyles.w600Black16,
                       ),
                     )
                   : const IsmChatLoadingDialog()
@@ -94,7 +95,7 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
                             if (scrollNotification.metrics.pixels >
                                 scrollNotification.metrics.maxScrollExtent *
                                     0.7) {
-                              IsmChatLog.error('step1');
+                             
                               controller.getEligibleMembers(
                                 conversationId:
                                     controller.conversation!.conversationId!,
@@ -224,45 +225,7 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
                         ),
                       )
 
-                          // ListView.separated(
-                          //   controller:
-                          //       controller.groupEligibleUserScrollController,
-                          //   padding: IsmChatDimens.edgeInsets0_10,
-                          //   shrinkWrap: true,
-                          //   itemCount: controller.groupEligibleUser.length,
-                          //   separatorBuilder: (_, __) => IsmChatDimens.boxHeight4,
-                          //   itemBuilder: (_, index) {
-                          //     var conversation =
-                          //         controller.groupEligibleUser[index].userDetails;
-                          //     return IsmChatTapHandler(
-                          //       onTap: () =>
-                          //           controller.onGrouEligibleUserTap(index),
-                          //       child: Container(
-                          //         color: controller
-                          //                 .groupEligibleUser[index].isUserSelected
-                          //             ? IsmChatConfig.chatTheme.primaryColor!
-                          //                 .withOpacity(.2)
-                          //             : null,
-                          //         child: ListTile(
-                          //           dense: true,
-                          //           leading: IsmChatImage.profile(
-                          //             conversation.userProfileImageUrl,
-                          //           ),
-                          //           title: Text(
-                          //             conversation.userName,
-                          //             style: IsmChatStyles.w600Black14,
-                          //           ),
-                          //           subtitle: Text(
-                          //             conversation.userIdentifier,
-                          //             maxLines: 1,
-                          //             overflow: TextOverflow.ellipsis,
-                          //             style: IsmChatStyles.w400Black12,
-                          //           ),
-                          //         ),
-                          //       ),
-                          //     );
-                          //   },
-                          // ),
+                         
                           ),
                       if (controller.groupEligibleUser.selectedUsers.isNotEmpty)
                         const _SelectedUsers(),

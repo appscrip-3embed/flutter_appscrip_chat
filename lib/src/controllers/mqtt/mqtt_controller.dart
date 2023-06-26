@@ -603,23 +603,55 @@ class IsmChatMqttController extends GetxController {
       return;
     }
 
-    if (messageId == actionModel.messageId) {
-      return;
-    }
-
     if (Get.isRegistered<IsmChatPageController>()) {
-      var controller = Get.find<IsmChatPageController>();
-      if (controller.conversation!.conversationId ==
-              actionModel.conversationId &&
-          controller.conversation!.lastMessageSentAt != actionModel.sentAt) {
-        await controller.getMessagesFromAPI(
-            conversationId: actionModel.conversationId ?? '',
-            lastMessageTimestamp: controller.messages.last.sentAt);
-        messageId = actionModel.messageId ?? '';
+      var allMessages =
+          await IsmChatConfig.objectBox.getMessages(actionModel.conversationId);
+      if (allMessages == null) {
+        return;
       }
+      allMessages.add(
+        IsmChatMessageModel(
+          members: actionModel.members,
+          initiatorId: actionModel.userDetails?.userId,
+          initiatorName: actionModel.userDetails?.userName,
+          customType:
+              IsmChatCustomMessageType.fromString(actionModel.action.name),
+          body: '',
+          sentAt: actionModel.sentAt,
+          sentByMe: false,
+        ),
+      );
+      await IsmChatConfig.objectBox
+          .saveMessages(actionModel.conversationId ?? '', allMessages);
+      await Get.find<IsmChatPageController>()
+          .getMessagesFromDB(actionModel.conversationId ?? '');
     }
-
-    await Get.find<IsmChatConversationsController>().getChatConversations();
+    var conversationController = Get.find<IsmChatConversationsController>();
+    if (actionModel.action == IsmChatActionEvents.removeMember) {
+      var conversation = await IsmChatConfig.objectBox
+          .getDBConversation(conversationId: actionModel.conversationId ?? '');
+      if (conversation != null) {
+        conversation.lastMessageDetails.target = LastMessageDetails(
+          sentByMe: false,
+          showInConversation: true,
+          sentAt: actionModel.sentAt,
+          senderName: '',
+          messageType: 0,
+          messageId: '',
+          conversationId: actionModel.conversationId ?? '',
+          body: '',
+          customType: IsmChatCustomMessageType.removeMember,
+          readCount: 0,
+          deliverCount: 0,
+          reactionType: '',
+        );
+        conversation.unreadMessagesCount = 0;
+        IsmChatConfig.objectBox.chatConversationBox.put(conversation);
+        await conversationController.getConversationsFromDB();
+      }
+    } else {
+      await conversationController.getChatConversations();
+    }
   }
 
   void _handleMemberLeave(IsmChatMqttActionModel actionModel) async {

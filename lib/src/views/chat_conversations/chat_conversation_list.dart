@@ -196,7 +196,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> with 
                                       widget.endActions!.isEmpty)
                               ? null
                               : ActionPane(
-                            // key: const ValueKey(0),
+                         
 
                                   extentRatio: 0.3,
                                   motion: const StretchMotion(),
@@ -230,10 +230,10 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> with 
                                           );
                                         },
                                         flex: 1,
-                                        backgroundColor: conversation.isGroup == true ? IsmChatColors.greyColor : IsmChatColors.redColor,
+                                        backgroundColor: IsmChatColors.redColor,
                                         foregroundColor: IsmChatColors.whiteColor,
-                                        icon: conversation.isGroup == true ? Icons.more_horiz : Icons.delete_rounded,
-                                        label: conversation.isGroup == true ? IsmChatStrings.more : IsmChatStrings.delete,
+                                        icon: Icons.delete_rounded,
+                                        label:  IsmChatStrings.delete,
                                       ),
                                   ],
                                 ),

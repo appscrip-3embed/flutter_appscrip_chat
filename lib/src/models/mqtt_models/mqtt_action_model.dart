@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
@@ -54,25 +55,34 @@ class IsmChatMqttActionModel {
         action: IsmChatActionEvents.fromName(map['action'] as String? ?? ''),
         reactionType: map['reactionType'] as String? ?? '',
         reactionsCount: map['reactionsCount'] as int? ?? 0,
+        members: map['members'] != null
+            ? List<UserDetails>.from(
+                (map['members'] as List).map(
+                  (dynamic x) => UserDetails.fromMap(x as Map<String, dynamic>),
+                ),
+              )
+            : [],
       );
 
-  const IsmChatMqttActionModel(
-      {this.conversationId,
-      this.userDetails,
-      this.opponentDetails,
-      this.initiatorDetails,
-      this.conversationDetails,
-      this.messageId,
-      this.messageIds,
-      this.lastMessageSentAt,
-      required this.sentAt,
-      required this.action,
-      this.reactionType,
-      this.reactionsCount,
-      this.initiatorId,
-      this.initiatorName,
-      this.memberId,
-      this.memberName});
+  const IsmChatMqttActionModel({
+    this.conversationId,
+    this.userDetails,
+    this.opponentDetails,
+    this.initiatorDetails,
+    this.conversationDetails,
+    this.messageId,
+    this.messageIds,
+    this.lastMessageSentAt,
+    required this.sentAt,
+    required this.action,
+    this.reactionType,
+    this.reactionsCount,
+    this.initiatorId,
+    this.initiatorName,
+    this.memberId,
+    this.memberName,
+    this.members,
+  });
   final String? conversationId;
   final IsmChatMqttUserModel? userDetails;
   final IsmChatMqttUserModel? opponentDetails;
@@ -89,18 +99,21 @@ class IsmChatMqttActionModel {
   final String? initiatorId;
   final String? reactionType;
   final int? reactionsCount;
+  final List<UserDetails>? members;
 
-  IsmChatMqttActionModel copyWith(
-          {String? conversationId,
-          IsmChatMqttUserModel? userDetails,
-          IsmChatMqttUserModel? opponentDetails,
-          IsmChatMqttUserModel? initiatorDetails,
-          int? sentAt,
-          IsmChatActionEvents? action,
-          String? memberId,
-          String? memberName,
-          String? initiatorName,
-          String? initiatorId}) =>
+  IsmChatMqttActionModel copyWith({
+    String? conversationId,
+    IsmChatMqttUserModel? userDetails,
+    IsmChatMqttUserModel? opponentDetails,
+    IsmChatMqttUserModel? initiatorDetails,
+    int? sentAt,
+    IsmChatActionEvents? action,
+    String? memberId,
+    String? memberName,
+    String? initiatorName,
+    String? initiatorId,
+    List<UserDetails>? members,
+  }) =>
       IsmChatMqttActionModel(
           conversationId: conversationId ?? this.conversationId,
           userDetails: userDetails ?? this.userDetails,
@@ -111,7 +124,8 @@ class IsmChatMqttActionModel {
           memberId: memberId ?? this.memberId,
           memberName: memberName ?? this.memberName,
           initiatorName: initiatorName ?? this.initiatorName,
-          initiatorId: initiatorId ?? this.initiatorId);
+          initiatorId: initiatorId ?? this.initiatorId,
+          members: members ?? this.members);
 
   Map<String, dynamic> toMap() => <String, dynamic>{
         'conversationId': conversationId,
@@ -123,7 +137,8 @@ class IsmChatMqttActionModel {
         'memberId': memberId,
         'memberName': memberName,
         'initiatorName': initiatorName,
-        'initiatorId': initiatorId
+        'initiatorId': initiatorId,
+        'members': members
       };
 
   String toJson() => json.encode(toMap());
@@ -160,4 +175,76 @@ class IsmChatMqttActionModel {
       initiatorId.hashCode ^
       initiatorName.hashCode ^
       action.hashCode;
+}
+
+class Members {
+  final String? memberProfileImageUrl;
+  final String? memberName;
+  final String? memberIdentifier;
+  final String? memberId;
+  Members({
+    this.memberProfileImageUrl,
+    this.memberName,
+    this.memberIdentifier,
+    this.memberId,
+  });
+
+  Members copyWith({
+    String? memberProfileImageUrl,
+    String? memberName,
+    String? memberIdentifier,
+    String? memberId,
+  }) =>
+      Members(
+        memberProfileImageUrl:
+            memberProfileImageUrl ?? this.memberProfileImageUrl,
+        memberName: memberName ?? this.memberName,
+        memberIdentifier: memberIdentifier ?? this.memberIdentifier,
+        memberId: memberId ?? this.memberId,
+      );
+
+  Map<String, dynamic> toMap() => <String, dynamic>{
+        'memberProfileImageUrl': memberProfileImageUrl,
+        'memberName': memberName,
+        'memberIdentifier': memberIdentifier,
+        'memberId': memberId,
+      };
+
+  factory Members.fromMap(Map<String, dynamic> map) => Members(
+        memberProfileImageUrl: map['memberProfileImageUrl'] != null
+            ? map['memberProfileImageUrl'] as String
+            : null,
+        memberName:
+            map['memberName'] != null ? map['memberName'] as String : null,
+        memberIdentifier: map['memberIdentifier'] != null
+            ? map['memberIdentifier'] as String
+            : null,
+        memberId: map['memberId'] != null ? map['memberId'] as String : null,
+      );
+
+  String toJson() => json.encode(toMap());
+
+  factory Members.fromJson(String source) =>
+      Members.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() =>
+      'Members(memberProfileImageUrl: $memberProfileImageUrl, memberName: $memberName, memberIdentifier: $memberIdentifier, memberId: $memberId)';
+
+  @override
+  bool operator ==(covariant Members other) {
+    if (identical(this, other)) return true;
+
+    return other.memberProfileImageUrl == memberProfileImageUrl &&
+        other.memberName == memberName &&
+        other.memberIdentifier == memberIdentifier &&
+        other.memberId == memberId;
+  }
+
+  @override
+  int get hashCode =>
+      memberProfileImageUrl.hashCode ^
+      memberName.hashCode ^
+      memberIdentifier.hashCode ^
+      memberId.hashCode;
 }
