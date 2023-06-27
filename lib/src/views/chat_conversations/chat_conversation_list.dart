@@ -126,7 +126,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> with 
               ),
             );
           }
-          final direction = AppState.of(context)?.direction;
+         
           return SizedBox(
             height: widget.height ?? Get.height,
             child: SmartRefresher(
@@ -157,7 +157,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList> with 
                       (_, index) {
                         var conversation = controller.conversations[index];
                         return Slidable(
-                          // key: ValueKey(index),
+                         
                           direction: Axis.horizontal,
                           closeOnScroll: true,
                           enabled: widget.isSlidableEnable

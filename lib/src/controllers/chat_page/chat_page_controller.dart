@@ -879,7 +879,8 @@ class IsmChatPageController extends GetxController
       var chatConversation = await IsmChatConfig.objectBox.getDBConversation(
           conversationId: conversation?.conversationId ?? '');
       if (chatConversation != null) {
-        if (messages.isNotEmpty) {
+
+        if (messages.isNotEmpty && messages.last.customType != IsmChatCustomMessageType.removeMember ) {
           chatConversation.lastMessageDetails.target = LastMessageDetails(
             sentByMe: messages.last.sentByMe,
             showInConversation: true,

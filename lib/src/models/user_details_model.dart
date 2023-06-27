@@ -15,6 +15,7 @@ class UserDetails {
       userId: map['userId'] as String? ?? '',
       online: map['online'] as bool? ?? false,
       memberName: map['memberName'] as String? ?? '',
+      memberId : map['memberId'] as String? ?? '',
       metaData: map['metaData'] == null
           ? IsmChatMetaData()
           : IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
@@ -42,6 +43,7 @@ class UserDetails {
     this.language,
     this.timestamp,
     this.memberName,
+    this.memberId,
     this.order,
     this.wordCount,
     this.isAdmin = false,
@@ -62,6 +64,8 @@ class UserDetails {
   final String? language;
   final int? timestamp;
   final String? memberName;
+  final String? memberId;
+
   final bool isAdmin;
   final int? wordCount;
   final int? order;
@@ -86,6 +90,7 @@ class UserDetails {
     bool? notification,
     String? language,
     String? memberName,
+    String? memberId,
     bool? isAdmin,
     int? wordCount,
     int? order,
@@ -104,7 +109,8 @@ class UserDetails {
           memberName: memberName ?? this.memberName,
           order: order ?? this.order,
           wordCount: wordCount ?? this.wordCount,
-          isAdmin: isAdmin ?? this.isAdmin);
+          isAdmin: isAdmin ?? this.isAdmin,
+          memberId: memberId ?? this.memberId);
 
   Map<String, dynamic> toMap() => <String, dynamic>{
         'userProfileImageUrl': userProfileImageUrl,
@@ -120,14 +126,15 @@ class UserDetails {
         'isAdmin': isAdmin,
         'memberName': memberName,
         'order': order,
-        'wordCount': wordCount
+        'wordCount': wordCount,
+        'memberId' : memberId
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'UserDetails(userProfileImageUrl: $userProfileImageUrl, userName: $userName, userIdentifier: $userIdentifier, userId: $userId, online: $online, lastSeen: $lastSeen, visibility: $visibility, notification: $notification, language: $language, isAdmin : $isAdmin, memberName : $memberName, order : $order, wordCount : $wordCount)';
+      'UserDetails(userProfileImageUrl: $userProfileImageUrl, userName: $userName, userIdentifier: $userIdentifier, userId: $userId, online: $online, lastSeen: $lastSeen, visibility: $visibility, notification: $notification, language: $language, isAdmin : $isAdmin, memberName : $memberName, order : $order, wordCount : $wordCount, memberId : $memberId)';
 
   @override
   bool operator ==(covariant UserDetails other) {
@@ -145,7 +152,8 @@ class UserDetails {
         other.language == language &&
         other.memberName == memberName &&
         other.isAdmin == isAdmin &&
-        other.wordCount == wordCount &&
+        other.wordCount == wordCount && 
+        other.memberId == memberId &&
         other.order == order;
   }
 
@@ -164,5 +172,6 @@ class UserDetails {
       memberName.hashCode ^
       wordCount.hashCode ^
       order.hashCode ^
-      language.hashCode;
+      language.hashCode ^
+      memberId.hashCode;
 }

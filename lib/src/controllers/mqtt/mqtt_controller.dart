@@ -603,26 +603,31 @@ class IsmChatMqttController extends GetxController {
       return;
     }
 
+    if (messageId == actionModel.sentAt.toString()) {
+      return;
+    }
+
+    var allMessages =
+        await IsmChatConfig.objectBox.getMessages(actionModel.conversationId);
+    if (allMessages == null) {
+      return;
+    }
+    allMessages.add(
+      IsmChatMessageModel(
+        members: actionModel.members,
+        initiatorId: actionModel.userDetails?.userId,
+        initiatorName: actionModel.userDetails?.userName,
+        customType:
+            IsmChatCustomMessageType.fromString(actionModel.action.name),
+        body: '',
+        sentAt: actionModel.sentAt,
+        sentByMe: false,
+      ),
+    );
+    await IsmChatConfig.objectBox
+        .saveMessages(actionModel.conversationId ?? '', allMessages);
+    messageId = actionModel.sentAt.toString();
     if (Get.isRegistered<IsmChatPageController>()) {
-      var allMessages =
-          await IsmChatConfig.objectBox.getMessages(actionModel.conversationId);
-      if (allMessages == null) {
-        return;
-      }
-      allMessages.add(
-        IsmChatMessageModel(
-          members: actionModel.members,
-          initiatorId: actionModel.userDetails?.userId,
-          initiatorName: actionModel.userDetails?.userName,
-          customType:
-              IsmChatCustomMessageType.fromString(actionModel.action.name),
-          body: '',
-          sentAt: actionModel.sentAt,
-          sentByMe: false,
-        ),
-      );
-      await IsmChatConfig.objectBox
-          .saveMessages(actionModel.conversationId ?? '', allMessages);
       await Get.find<IsmChatPageController>()
           .getMessagesFromDB(actionModel.conversationId ?? '');
     }
@@ -631,19 +636,20 @@ class IsmChatMqttController extends GetxController {
       var conversation = await IsmChatConfig.objectBox
           .getDBConversation(conversationId: actionModel.conversationId ?? '');
       if (conversation != null) {
+      IsmChatLog.error('opponent user ${actionModel.members?.first.memberId}');
         conversation.lastMessageDetails.target = LastMessageDetails(
           sentByMe: false,
           showInConversation: true,
           sentAt: actionModel.sentAt,
-          senderName: '',
+          senderName: actionModel.userDetails?.userName ?? '',
           messageType: 0,
           messageId: '',
           conversationId: actionModel.conversationId ?? '',
           body: '',
           customType: IsmChatCustomMessageType.removeMember,
-          readCount: 0,
-          deliverCount: 0,
-          reactionType: '',
+          senderId: actionModel.userDetails?.userId ?? '',
+          userId: actionModel.members?.first.memberId,
+          members: [actionModel.members?.first.memberName ?? ''],
         );
         conversation.unreadMessagesCount = 0;
         IsmChatConfig.objectBox.chatConversationBox.put(conversation);
@@ -660,7 +666,7 @@ class IsmChatMqttController extends GetxController {
       return;
     }
 
-    if (messageId == actionModel.messageId) {
+    if (messageId == actionModel.sentAt.toString()) {
       return;
     }
 
@@ -684,7 +690,7 @@ class IsmChatMqttController extends GetxController {
       return;
     }
 
-    if (messageId == actionModel.messageId) {
+    if (messageId == actionModel.sentAt.toString()) {
       return;
     }
 
