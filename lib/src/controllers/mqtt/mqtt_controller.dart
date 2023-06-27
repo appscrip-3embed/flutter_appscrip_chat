@@ -576,7 +576,7 @@ class IsmChatMqttController extends GetxController {
       return;
     }
 
-    if (messageId == actionModel.messageId) {
+    if (messageId == actionModel.sentAt.toString()) {
       return;
     }
 
@@ -589,7 +589,7 @@ class IsmChatMqttController extends GetxController {
         await controller.getMessagesFromAPI(
             conversationId: actionModel.conversationId ?? '',
             lastMessageTimestamp: controller.messages.last.sentAt);
-        messageId = actionModel.messageId ?? '';
+        messageId = actionModel.sentAt.toString();
       }
     }
     var conversationController = Get.find<IsmChatConversationsController>();
@@ -603,30 +603,71 @@ class IsmChatMqttController extends GetxController {
       return;
     }
 
-    if (Get.isRegistered<IsmChatPageController>()) {
-      var allMessages =
-          await IsmChatConfig.objectBox.getMessages(actionModel.conversationId);
-      if (allMessages == null) {
-        return;
-      }
-      allMessages.add(
-        IsmChatMessageModel(
-          members: actionModel.members,
-          initiatorId: actionModel.userDetails?.userId,
-          initiatorName: actionModel.userDetails?.userName,
-          customType:
-              IsmChatCustomMessageType.fromString(actionModel.action.name),
-          body: '',
-          sentAt: actionModel.sentAt,
-          sentByMe: false,
-        ),
-      );
-      await IsmChatConfig.objectBox
-          .saveMessages(actionModel.conversationId ?? '', allMessages);
-      await Get.find<IsmChatPageController>()
-          .getMessagesFromDB(actionModel.conversationId ?? '');
+    if (messageId == actionModel.sentAt.toString()) {
+      return;
     }
+
     var conversationController = Get.find<IsmChatConversationsController>();
+    if (actionModel.action == IsmChatActionEvents.addMember) {
+      await conversationController.getChatConversations();
+    }
+    var allMessages =
+        await IsmChatConfig.objectBox.getMessages(actionModel.conversationId);
+    allMessages?.add(
+      IsmChatMessageModel(
+        members: actionModel.members,
+        initiatorId: actionModel.userDetails?.userId,
+        initiatorName: actionModel.userDetails?.userName,
+        customType:
+            IsmChatCustomMessageType.fromString(actionModel.action.name),
+        body: '',
+        sentAt: actionModel.sentAt,
+        sentByMe: false,
+        isGroup: true,
+        conversationId: actionModel.conversationId,
+        memberId: actionModel.members?.first.memberId,
+        memberName: actionModel.members?.first.memberName,
+        senderInfo: UserDetails(
+          userProfileImageUrl: actionModel.userDetails?.profileImageUrl ?? '',
+          userName: actionModel.userDetails?.userName ?? '',
+          userIdentifier: actionModel.userDetails?.userIdentifier ?? '',
+          userId: actionModel.userDetails?.userId ?? '',
+          online: true,
+          lastSeen: 0,
+        ),
+      ),
+    );
+    await IsmChatConfig.objectBox
+        .saveMessages(actionModel.conversationId ?? '', allMessages ?? []);
+    messageId = actionModel.sentAt.toString();
+    if (Get.isRegistered<IsmChatPageController>()) {
+      var chatPageController = Get.find<IsmChatPageController>();
+      if (actionModel.conversationId ==
+          chatPageController.conversation?.conversationId) {
+        chatPageController.conversation =
+            chatPageController.conversation?.copyWith(
+          lastMessageDetails: LastMessageDetails(
+            sentByMe: false,
+            showInConversation: true,
+            sentAt: actionModel.sentAt,
+            senderName: actionModel.userDetails?.userName ?? '',
+            messageType: 0,
+            messageId: '',
+            conversationId: actionModel.conversationId ?? '',
+            body: '',
+            customType:
+                IsmChatCustomMessageType.fromString(actionModel.action.name),
+            senderId: actionModel.userDetails?.userId ?? '',
+            userId: actionModel.members?.first.memberId,
+            members:
+                actionModel.members?.map((e) => e.memberName ?? '').toList(),
+            reactionType: '',
+          ),
+        );
+        await chatPageController
+            .getMessagesFromDB(actionModel.conversationId ?? '');
+      }
+    }
     if (actionModel.action == IsmChatActionEvents.removeMember) {
       var conversation = await IsmChatConfig.objectBox
           .getDBConversation(conversationId: actionModel.conversationId ?? '');
@@ -635,22 +676,23 @@ class IsmChatMqttController extends GetxController {
           sentByMe: false,
           showInConversation: true,
           sentAt: actionModel.sentAt,
-          senderName: '',
+          senderName: actionModel.userDetails?.userName ?? '',
           messageType: 0,
           messageId: '',
           conversationId: actionModel.conversationId ?? '',
           body: '',
-          customType: IsmChatCustomMessageType.removeMember,
-          readCount: 0,
-          deliverCount: 0,
+          customType:
+              IsmChatCustomMessageType.fromString(actionModel.action.name),
+          senderId: actionModel.userDetails?.userId ?? '',
+          userId: actionModel.members?.first.memberId,
+          members:
+              actionModel.members?.map((e) => e.memberName.toString()).toList(),
           reactionType: '',
         );
         conversation.unreadMessagesCount = 0;
         IsmChatConfig.objectBox.chatConversationBox.put(conversation);
         await conversationController.getConversationsFromDB();
       }
-    } else {
-      await conversationController.getChatConversations();
     }
   }
 
@@ -660,7 +702,7 @@ class IsmChatMqttController extends GetxController {
       return;
     }
 
-    if (messageId == actionModel.messageId) {
+    if (messageId == actionModel.sentAt.toString()) {
       return;
     }
 
@@ -684,7 +726,7 @@ class IsmChatMqttController extends GetxController {
       return;
     }
 
-    if (messageId == actionModel.messageId) {
+    if (messageId == actionModel.sentAt.toString()) {
       return;
     }
 

@@ -40,7 +40,6 @@ class IsmChatConversationsViewModel {
       dbConversationModel.config.target = conversation.config;
       dbConversationModel.metaData = conversation.metaData;
       await IsmChatConfig.objectBox.createAndUpdateDB(dbConversationModel);
-
     }
 
     return conversations;
@@ -96,15 +95,20 @@ class IsmChatConversationsViewModel {
   Future<IsmChatResponseModel?> deleteChat(String conversationId) async =>
       await _repository.deleteChat(conversationId);
 
-  Future<void> clearAllMessages(String conversationId) async {
-    var response = await _repository.clearAllMessages(
-      conversationId: conversationId,
-    );
-    if (!response!.hasError) {
-      await IsmChatConfig.objectBox
-          .clearAllMessage(conversationId: conversationId);
-      await Get.find<IsmChatConversationsController>().getConversationsFromDB();
+  Future<void> clearAllMessages(String conversationId,
+      {bool fromServer = true}) async {
+    if (fromServer) {
+      var response = await _repository.clearAllMessages(
+        conversationId: conversationId,
+      );
+
+      if (response?.hasError == true) {
+        return;
+      }
     }
+    await IsmChatConfig.objectBox
+        .clearAllMessage(conversationId: conversationId);
+    await Get.find<IsmChatConversationsController>().getConversationsFromDB();
   }
 
   Future<IsmChatResponseModel?> unblockUser({

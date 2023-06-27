@@ -29,7 +29,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(1, 329637739332878047),
       name: 'UserDetails',
-      lastPropertyId: const IdUid(17, 5334335391531537992),
+      lastPropertyId: const IdUid(18, 313470723179830600),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -111,6 +111,11 @@ final _entities = <ModelEntity>[
             id: const IdUid(17, 5334335391531537992),
             name: 'order',
             type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(18, 313470723179830600),
+            name: 'memberId',
+            type: 9,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -225,7 +230,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(7, 3601465766739318501),
       name: 'LastMessageDetails',
-      lastPropertyId: const IdUid(16, 960767097846536496),
+      lastPropertyId: const IdUid(17, 450662359966201601),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -307,6 +312,11 @@ final _entities = <ModelEntity>[
             id: const IdUid(16, 960767097846536496),
             name: 'action',
             type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(17, 450662359966201601),
+            name: 'userId',
+            type: 9,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -338,7 +348,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(9, 3144208863203176583),
       name: 'DBConversationModel',
-      lastPropertyId: const IdUid(14, 5663210546040568880),
+      lastPropertyId: const IdUid(15, 297702767093462018),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -596,7 +606,8 @@ ModelDefinition getObjectBoxModel() {
         4703465573552064618,
         32733709291852383,
         6388414582076498476,
-        6061968472417448061
+        6061968472417448061,
+        297702767093462018
       ],
       retiredRelationUids: const [
         405050114779946002,
@@ -629,7 +640,10 @@ ModelDefinition getObjectBoxModel() {
               ? null
               : fbb.writeString(object.memberName!);
           final userDBMetadataOffset = fbb.writeString(object.userDBMetadata);
-          fbb.startTable(18);
+          final memberIdOffset = object.memberId == null
+              ? null
+              : fbb.writeString(object.memberId!);
+          fbb.startTable(19);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, userProfileImageUrlOffset);
           fbb.addOffset(2, userNameOffset);
@@ -646,6 +660,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(14, userDBMetadataOffset);
           fbb.addInt64(15, object.wordCount);
           fbb.addInt64(16, object.order);
+          fbb.addOffset(17, memberIdOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -674,6 +689,7 @@ ModelDefinition getObjectBoxModel() {
               language: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 22),
               timestamp: const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 24),
               memberName: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 26),
+              memberId: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 38),
               order: const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 36),
               wordCount: const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 34),
               isAdmin: const fb.BoolReader().vTableGet(buffer, rootOffset, 28, false))
@@ -833,7 +849,9 @@ ModelDefinition getObjectBoxModel() {
               : fbb.writeString(object.reactionType!);
           final actionOffset =
               object.action == null ? null : fbb.writeString(object.action!);
-          fbb.startTable(17);
+          final userIdOffset =
+              object.userId == null ? null : fbb.writeString(object.userId!);
+          fbb.startTable(18);
           fbb.addInt64(0, object.id);
           fbb.addBool(1, object.showInConversation);
           fbb.addInt64(2, object.sentAt);
@@ -850,6 +868,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(13, membersOffset);
           fbb.addOffset(14, reactionTypeOffset);
           fbb.addOffset(15, actionOffset);
+          fbb.addOffset(16, userIdOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -882,6 +901,7 @@ ModelDefinition getObjectBoxModel() {
               sentByMe: const fb.BoolReader().vTableGet(buffer, rootOffset, 28, false),
               members: const fb.ListReader<String>(fb.StringReader(asciiOptimization: true), lazy: false).vTableGetNullable(buffer, rootOffset, 30),
               reactionType: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 32),
+              userId: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 36),
               action: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 34))
             ..dbCustomType = const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 20);
 
@@ -943,7 +963,7 @@ ModelDefinition getObjectBoxModel() {
           final messagesOffset = fbb.writeList(
               object.messages.map(fbb.writeString).toList(growable: false));
           final dbMetadataOffset = fbb.writeString(object.dbMetadata);
-          fbb.startTable(15);
+          fbb.startTable(16);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.unreadMessagesCount);
           fbb.addInt64(2, object.opponentDetails.targetId);
@@ -1168,6 +1188,10 @@ class UserDetails_ {
   /// see [UserDetails.order]
   static final order =
       QueryIntegerProperty<UserDetails>(_entities[0].properties[15]);
+
+  /// see [UserDetails.memberId]
+  static final memberId =
+      QueryStringProperty<UserDetails>(_entities[0].properties[16]);
 }
 
 /// [AttachmentModel] entity fields to define ObjectBox queries.
@@ -1308,6 +1332,10 @@ class LastMessageDetails_ {
   /// see [LastMessageDetails.action]
   static final action =
       QueryStringProperty<LastMessageDetails>(_entities[4].properties[15]);
+
+  /// see [LastMessageDetails.userId]
+  static final userId =
+      QueryStringProperty<LastMessageDetails>(_entities[4].properties[16]);
 }
 
 /// [PendingMessageModel] entity fields to define ObjectBox queries.

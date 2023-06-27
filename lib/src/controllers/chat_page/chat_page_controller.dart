@@ -70,12 +70,11 @@ class IsmChatPageController extends GetxController
   set predictionList(List<IsmChatPrediction> value) =>
       _predictionList.value = value;
 
-
   final RxBool _isLocaionSearch = false.obs;
   bool get isLocaionSearch => _isLocaionSearch.value;
   set isLocaionSearch(bool value) {
     _isLocaionSearch.value = value;
-  }    
+  }
 
   final RxBool _showSendButton = false.obs;
   bool get showSendButton => _showSendButton.value;
@@ -218,60 +217,6 @@ class IsmChatPageController extends GetxController
   set selectedMessage(List<IsmChatMessageModel> value) =>
       _selectedMessage.value = value;
 
-  List<Map<String, List<IsmChatMessageModel>>> sortMediaList(
-      List<IsmChatMessageModel> messages) {
-    var storeMediaImageList = <Map<String, List<IsmChatMessageModel>>>[];
-    for (var x in messages) {
-      if (x.customType == IsmChatCustomMessageType.date) {
-        storeMediaImageList.add({x.body: <IsmChatMessageModel>[]});
-        continue;
-      }
-      var z = storeMediaImageList.last;
-      z.forEach((key, value) {
-        value.add(x);
-      });
-    }
-    return storeMediaImageList;
-  }
-
-  List<IsmChatMessageModel> sortMessages(List<IsmChatMessageModel> messages) {
-    messages.sort((a, b) => a.sentAt.compareTo(b.sentAt));
-    return parseMessagesWithDate(messages);
-  }
-
-  List<IsmChatMessageModel> parseMessagesWithDate(
-    List<IsmChatMessageModel> messages,
-  ) {
-    var result = <List<IsmChatMessageModel>>[];
-    var list1 = <IsmChatMessageModel>[];
-    var allMessages = <IsmChatMessageModel>[];
-    for (var x = 0; x < messages.length; x++) {
-      if (x == 0) {
-        list1.add(messages[x]);
-      } else if (DateTime.fromMillisecondsSinceEpoch(messages[x - 1].sentAt)
-          .isSameDay(DateTime.fromMillisecondsSinceEpoch(messages[x].sentAt))) {
-        list1.add(messages[x]);
-      } else {
-        result.add([...list1]);
-        list1.clear();
-        list1.add(messages[x]);
-      }
-      if (x == messages.length - 1 && list1.isNotEmpty) {
-        result.add([...list1]);
-      }
-    }
-
-    for (var messages in result) {
-      allMessages.add(
-        IsmChatMessageModel.fromMonth(
-          messages.first.sentAt,
-        ),
-      );
-      allMessages.addAll(messages);
-    }
-    return allMessages;
-  }
-
   List<IsmChatBottomSheetAttachmentModel> attachments = [
     const IsmChatBottomSheetAttachmentModel(
       label: 'Camera',
@@ -327,12 +272,67 @@ class IsmChatPageController extends GetxController
 
   bool didReactedLast = false;
 
+  List<Map<String, List<IsmChatMessageModel>>> sortMediaList(
+      List<IsmChatMessageModel> messages) {
+    var storeMediaImageList = <Map<String, List<IsmChatMessageModel>>>[];
+    for (var x in messages) {
+      if (x.customType == IsmChatCustomMessageType.date) {
+        storeMediaImageList.add({x.body: <IsmChatMessageModel>[]});
+        continue;
+      }
+      var z = storeMediaImageList.last;
+      z.forEach((key, value) {
+        value.add(x);
+      });
+    }
+    return storeMediaImageList;
+  }
+
+  List<IsmChatMessageModel> sortMessages(List<IsmChatMessageModel> messages) {
+    messages.sort((a, b) => a.sentAt.compareTo(b.sentAt));
+    return parseMessagesWithDate(messages);
+  }
+
+  List<IsmChatMessageModel> parseMessagesWithDate(
+    List<IsmChatMessageModel> messages,
+  ) {
+    var result = <List<IsmChatMessageModel>>[];
+    var list1 = <IsmChatMessageModel>[];
+    var allMessages = <IsmChatMessageModel>[];
+    for (var x = 0; x < messages.length; x++) {
+      if (x == 0) {
+        list1.add(messages[x]);
+      } else if (DateTime.fromMillisecondsSinceEpoch(messages[x - 1].sentAt)
+          .isSameDay(DateTime.fromMillisecondsSinceEpoch(messages[x].sentAt))) {
+        list1.add(messages[x]);
+      } else {
+        result.add([...list1]);
+        list1.clear();
+        list1.add(messages[x]);
+      }
+      if (x == messages.length - 1 && list1.isNotEmpty) {
+        result.add([...list1]);
+      }
+    }
+
+    for (var messages in result) {
+      allMessages.add(
+        IsmChatMessageModel.fromMonth(
+          messages.first.sentAt,
+        ),
+      );
+      allMessages.addAll(messages);
+    }
+    return allMessages;
+  }
+
   @override
   void onInit() async {
     super.onInit();
     _generateReactionList();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
+      IsmChatLog(conversation);
       await Future.delayed(Duration.zero);
       if (conversation!.conversationId?.isNotEmpty ?? false) {
         await getMessagesFromDB(conversation?.conversationId ?? '');
@@ -879,7 +879,8 @@ class IsmChatPageController extends GetxController
       var chatConversation = await IsmChatConfig.objectBox.getDBConversation(
           conversationId: conversation?.conversationId ?? '');
       if (chatConversation != null) {
-        if (messages.isNotEmpty) {
+        if (messages.isNotEmpty &&
+            messages.last.customType != IsmChatCustomMessageType.removeMember) {
           chatConversation.lastMessageDetails.target = LastMessageDetails(
             sentByMe: messages.last.sentByMe,
             showInConversation: true,
@@ -911,8 +912,8 @@ class IsmChatPageController extends GetxController
             reactionType: '',
           );
         }
-
         chatConversation.unreadMessagesCount = 0;
+
         IsmChatConfig.objectBox.chatConversationBox.put(chatConversation);
         await ismChatConversationController.getConversationsFromDB();
       }
@@ -953,14 +954,41 @@ class IsmChatPageController extends GetxController
     await Get.to(const IsmChatImageEditView());
   }
 
-  void showDialogForClearChat() async {
-    await Get.dialog(IsmChatAlertDialogBox(
-      title: IsmChatStrings.deleteAllMessage,
-      actionLabels: const [IsmChatStrings.clearChat],
-      callbackActions: [
-        () => clearAllMessages(conversation?.conversationId ?? ''),
-      ],
-    ));
+  void showDialogForClearChatAndDeleteGroup({isGroupDelete = false}) async {
+    if (!isGroupDelete) {
+      await Get.dialog(
+        IsmChatAlertDialogBox(
+          title: IsmChatStrings.deleteAllMessage,
+          actionLabels: const [IsmChatStrings.clearChat],
+          callbackActions: [
+            () => clearAllMessages(
+                  conversation?.conversationId ?? '',
+                  fromServer: conversation?.lastMessageDetails?.customType ==
+                              IsmChatCustomMessageType.removeMember &&
+                          conversation?.lastMessageDetails?.userId ==
+                              IsmChatConfig
+                                  .communicationConfig.userConfig.userId
+                      ? false
+                      : true,
+                ),
+          ],
+        ),
+      );
+    } else {
+      await Get.dialog(
+        IsmChatAlertDialogBox(
+          title: IsmChatStrings.deleteThiGroup,
+          actionLabels: const [IsmChatStrings.deleteGroup],
+          callbackActions: [
+            () => Get.find<IsmChatConversationsController>().deleteChat(
+                  conversation?.conversationId ?? '',
+                  deleteFromServer: false,
+                ),
+          ],
+        ),
+      );
+      Get.back();
+    }
   }
 
   /// function to show dialog for changing the group title
@@ -1265,9 +1293,8 @@ class IsmChatPageController extends GetxController
     if (data != null) {
       IsmChatUtility.showToast(IsmChatStrings.blockedSuccessfully);
       await Future.wait([
-        if (fromUser) ...[
-          Get.find<IsmChatConversationsController>().getBlockUser(),
-        ] else ...[
+        Get.find<IsmChatConversationsController>().getBlockUser(),
+        if (fromUser == false) ...[
           getConverstaionDetails(
             conversationId: conversation?.conversationId ?? '',
             includeMembers: includeMembers,
@@ -1355,8 +1382,10 @@ class IsmChatPageController extends GetxController
 
   bool isAllMessagesFromMe() => selectedMessage.every((e) => e.sentByMe);
 
-  Future<void> clearAllMessages(String conversationId) async {
-    await _viewModel.clearAllMessages(conversationId: conversationId);
+  Future<void> clearAllMessages(String conversationId,
+      {bool fromServer = true}) async {
+    await _viewModel.clearAllMessages(
+        conversationId: conversationId, fromServer: fromServer);
   }
 
   Future<void> getLocation(
@@ -1372,12 +1401,9 @@ class IsmChatPageController extends GetxController
     );
     isLocaionSearch = false;
     if (response == null || response.isEmpty) {
-       
       return;
     }
     predictionList = response;
-   
-   
   }
 
   Future<void> deleteReacton({required Reaction reaction}) async =>

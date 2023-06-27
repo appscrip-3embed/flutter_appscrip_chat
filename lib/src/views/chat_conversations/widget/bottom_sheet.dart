@@ -56,8 +56,17 @@ class IsmChatClearConversationBottomSheet extends StatelessWidget {
                     title: IsmChatStrings.deleteAllMessage,
                     actionLabels: const [IsmChatStrings.clearChat],
                     callbackActions: [
-                      () => controller
-                          .clearAllMessages(conversation.conversationId),
+                      () => controller.clearAllMessages(
+                            conversation.conversationId,
+                            fromServer: conversation
+                                            .lastMessageDetails?.customType ==
+                                        IsmChatCustomMessageType.removeMember &&
+                                    conversation.lastMessageDetails?.userId ==
+                                        IsmChatConfig.communicationConfig
+                                            .userConfig.userId
+                                ? false
+                                : true,
+                          ),
                     ],
                   ),
                 );
@@ -69,52 +78,83 @@ class IsmChatClearConversationBottomSheet extends StatelessWidget {
                 style: IsmChatStyles.w600Black16,
               ),
             ),
-            CupertinoActionSheetAction(
-              onPressed: () async {
-                Get.back();
-                // Todo
-                // if (conversation.isGroup!) {
-                //   await Get.dialog(
-                //     IsmChatAlertDialogBox(
-                //       title: 'Exit ${conversation.chatName}?',
-                //       content: const Text(
-                //         'Only group admins will be notified that you left the group',
-                //       ),
-                //       contentTextStyle: IsmChatStyles.w400Grey14,
-                //       actionLabels: const ['Exit'],
-                //       callbackActions: [
-                //         () {}
-                //         //  => _leaveGroup(
-                //         //       adminCount: adminCount,
-                //         //       isUserAdmin: isUserAdmin,
-                //         //     )
-                //       ],
-                //     ),
-                //   );
-                //   return;
-                // }
-                if(conversation.isGroup! == false){
-                    await Get.dialog(
-                  IsmChatAlertDialogBox(
-                    title: '${IsmChatStrings.deleteChat}?',
-                    actionLabels: const [IsmChatStrings.deleteChat],
-                    callbackActions: [
-                      () => controller.deleteChat(conversation.conversationId),
-                    ],
-                  ),
-                );
-                }
-              
-              },
-              isDestructiveAction: true,
-              child: Text(
-                 conversation.isGroup! ? IsmChatStrings.exitGroup :
-                IsmChatStrings.deleteChat,
-                overflow: TextOverflow.ellipsis,
-                style: IsmChatStyles.w600Black16
-                    .copyWith(color: IsmChatColors.redColor),
+            if (conversation.lastMessageDetails?.customType ==
+                    IsmChatCustomMessageType.removeMember &&
+                conversation.lastMessageDetails?.userId ==
+                    IsmChatConfig.communicationConfig.userConfig.userId) ...[
+              CupertinoActionSheetAction(
+                onPressed: () async {
+                  Get.back();
+                  await Get.dialog(
+                    IsmChatAlertDialogBox(
+                      title: IsmChatStrings.deleteThiGroup,
+                      actionLabels: const [IsmChatStrings.deleteGroup],
+                      callbackActions: [
+                        () => controller.deleteChat(
+                              conversation.conversationId,
+                              deleteFromServer: false,
+                            ),
+                      ],
+                    ),
+                  );
+                },
+                isDestructiveAction: true,
+                child: Text(
+                  IsmChatStrings.deleteGroup,
+                  overflow: TextOverflow.ellipsis,
+                  style: IsmChatStyles.w600Black16
+                      .copyWith(color: IsmChatColors.redColor),
+                ),
               ),
-            ),
+            ] else ...[
+              CupertinoActionSheetAction(
+                onPressed: () async {
+                  Get.back();
+                  // Todo
+                  // if (conversation.isGroup!) {
+                  //   await Get.dialog(
+                  //     IsmChatAlertDialogBox(
+                  //       title: 'Exit ${conversation.chatName}?',
+                  //       content: const Text(
+                  //         'Only group admins will be notified that you left the group',
+                  //       ),
+                  //       contentTextStyle: IsmChatStyles.w400Grey14,
+                  //       actionLabels: const ['Exit'],
+                  //       callbackActions: [
+                  //         () {}
+                  //         //  => _leaveGroup(
+                  //         //       adminCount: adminCount,
+                  //         //       isUserAdmin: isUserAdmin,
+                  //         //     )
+                  //       ],
+                  //     ),
+                  //   );
+                  //   return;
+                  // }
+                  if (conversation.isGroup! == false) {
+                    await Get.dialog(
+                      IsmChatAlertDialogBox(
+                        title: '${IsmChatStrings.deleteChat}?',
+                        actionLabels: const [IsmChatStrings.deleteChat],
+                        callbackActions: [
+                          () => controller
+                              .deleteChat(conversation.conversationId),
+                        ],
+                      ),
+                    );
+                  }
+                },
+                isDestructiveAction: true,
+                child: Text(
+                  conversation.isGroup!
+                      ? IsmChatStrings.exitGroup
+                      : IsmChatStrings.deleteChat,
+                  overflow: TextOverflow.ellipsis,
+                  style: IsmChatStyles.w600Black16
+                      .copyWith(color: IsmChatColors.redColor),
+                ),
+              ),
+            ],
           ],
           cancelButton: CupertinoActionSheetAction(
             onPressed: Get.back,

@@ -209,9 +209,32 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                       ],
                     ),
                   ),
-                  if (!controller.conversation!.isGroup!)
+                  if (controller.conversation?.lastMessageDetails?.customType ==
+                          IsmChatCustomMessageType.removeMember &&
+                      controller.conversation?.lastMessageDetails?.userId ==
+                          IsmChatConfig
+                              .communicationConfig.userConfig.userId) ...[
                     PopupMenuItem(
                       value: 2,
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.group_off_rounded,
+                            color: IsmChatColors.redColor,
+                          ),
+                          IsmChatDimens.boxWidth8,
+                          Text(
+                            IsmChatStrings.deleteGroup,
+                            style: IsmChatStyles.w500Black12
+                                .copyWith(color: IsmChatColors.redColor),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                  if (!controller.conversation!.isGroup!)
+                    PopupMenuItem(
+                      value: 3,
                       child: Row(
                         children: [
                           const Icon(
@@ -236,7 +259,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                       null)
                     ...(header?.popupItems ?? []).map(
                       (e) => PopupMenuItem(
-                        value: header!.popupItems!.indexOf(e) + 3,
+                        value: header!.popupItems!.indexOf(e) + 4,
                         child: Row(
                           children: [
                             Icon(
@@ -254,9 +277,10 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                 ],
                 elevation: 2,
                 onSelected: (value) {
-                  if (value == 1) {
-                    controller.showDialogForClearChat();
-                  } else if (value == 2) {
+                  if (value == 1 || value == 2) {
+                    controller.showDialogForClearChatAndDeleteGroup(
+                        isGroupDelete: value == 2 ? true : false);
+                  } else if (value == 3) {
                     controller.handleBlockUnblock();
                   } else {
                     if (header == null) {
@@ -264,7 +288,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                     }
                     if (header!.popupItems != null ||
                         header!.popupItems!.isNotEmpty) {
-                      header!.popupItems![value - 3]
+                      header!.popupItems![value - 4]
                           .onTap(controller.conversation!);
                     }
                   }
