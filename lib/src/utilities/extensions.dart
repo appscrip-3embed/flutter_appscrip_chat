@@ -530,8 +530,10 @@ extension ModelConversion on IsmChatConversationModel {
             .contains(lastMessageDetails!.customType)) {
       return const SizedBox.shrink();
     }
+
     var senderName =
         lastMessageDetails!.sentByMe ? 'You' : lastMessageDetails!.senderName;
+
     return Text(
       '$senderName: ',
       style: IsmChatStyles.w500Black12,
@@ -682,7 +684,8 @@ extension LastMessageBody on LastMessageDetails {
     if (iconData != null) {
       return Icon(
         iconData,
-        size: 16,
+        size: IsmChatDimens.fifteen,
+        color: IsmChatColors.blackColor,
       );
     }
     return const SizedBox.shrink();

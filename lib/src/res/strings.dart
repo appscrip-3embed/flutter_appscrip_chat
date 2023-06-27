@@ -41,6 +41,8 @@ class IsmChatStrings {
   static const String changeGroupTitle = 'Change group title';
   static const String changeGroupPhoto = 'Change group photo';
   static const String deleteAllMessage = 'Delete All Messages?';
+  static const String deleteThiGroup = 'Delete this group?';
+
   static const String enterNewGroupTitle = 'Enter new group title';
   static const String chooseNewGroupProfile = 'Choose new group profile';
   static const String cancel = 'Cancel';
@@ -64,6 +66,8 @@ class IsmChatStrings {
   static const String more = 'More';
   static const String archive = 'Archive';
   static const String deleteChat = 'Delete chat';
+  static const String deleteGroup = 'Delete group';
+
   static const String createGroupAlert =
       'Select at least one user, add group name and choose one photo';
   static const String admin = 'Admin';

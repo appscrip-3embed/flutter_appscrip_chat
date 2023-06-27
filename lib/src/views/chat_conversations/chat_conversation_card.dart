@@ -92,7 +92,7 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
                       widget.conversation.readCheck,
                     widget.conversation.sender,
                     widget.conversation.lastMessageDetails!.icon,
-                    IsmChatDimens.boxWidth2,
+                    IsmChatDimens.boxWidth4,
                   ],
                   Flexible(
                     child: Text(

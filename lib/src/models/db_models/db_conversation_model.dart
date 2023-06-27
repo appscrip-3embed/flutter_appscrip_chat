@@ -27,9 +27,11 @@ class DBConversationModel {
   String? conversationTitle;
   String? conversationImageUrl;
   String? conversationId;
+
   final config = ToOne<ConversationConfigModel>();
   @Transient()
   IsmChatMetaData? metaData;
+
   // @Backlink('conversation')
   // final messages = ToMany<DBMessageModel>();
 
