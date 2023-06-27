@@ -70,12 +70,19 @@ class IsmChatForwardView extends StatelessWidget {
                     hintStyle: IsmChatStyles.w400White16,
                     onChanged: (value) {
                       controller.debounce.run(() {
-                        controller.getNonBlockUserList(
+                      
+                          controller.getNonBlockUserList(
                           searchTag: value,
                           opponentId: IsmChatConfig
                               .communicationConfig.userConfig.userId,
-                        );
+                        ); 
                       });
+                       if (value.trim().isEmpty) {
+                         controller.isLoadingUsers = false;
+                          controller.forwardedList =
+                              controller.forwardedListDuplicat;
+                          controller.handleList(controller.forwardedList);
+                      }
                     },
                   )
                 : Text(
@@ -87,6 +94,14 @@ class IsmChatForwardView extends StatelessWidget {
                 onPressed: () {
                   controller.showSearchField = !controller.showSearchField;
                   controller.userSearchNameController.clear();
+                   if (!controller.showSearchField  &&
+                      controller.forwardedListDuplicat.isNotEmpty) {
+                    controller.forwardedList = controller.forwardedListDuplicat;
+                    controller.handleList(controller.forwardedList);
+                  }
+                   if(controller.isLoadingUsers){
+                        controller.isLoadingUsers = false;
+                      }
                 },
                 icon: Icon(
                   controller.showSearchField
@@ -115,110 +130,123 @@ class IsmChatForwardView extends StatelessWidget {
                           }
                           return true;
                         },
-                        child: AzListView(
-                          data: controller.forwardedList,
-                          itemCount: controller.forwardedList.length,
-                          indexHintBuilder: (context, hint) => Container(
-                            alignment: Alignment.center,
-                            width: IsmChatDimens.eighty,
-                            height: IsmChatDimens.eighty,
-                            decoration: BoxDecoration(
-                              color: IsmChatConfig.chatTheme.primaryColor,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Text(hint,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: IsmChatDimens.thirty)),
-                          ),
-                          indexBarMargin: IsmChatDimens.edgeInsets10,
-                          indexBarData: SuspensionUtil.getTagIndexList(
-                              controller.forwardedList)
-                          // [
-                          //     'A',
-                          //     'B',
-                          //     'C',
-                          //     'D',
-                          //     'E',
-                          //     'F',
-                          //     'G',
-                          //     'H',
-                          //     'I',
-                          //     'J',
-                          //     'K',
-                          //     'L',
-                          //     'M',
-                          //     'N',
-                          //     'O',
-                          //     'P',
-                          //     'Q',
-                          //     'R',
-                          //     'S',
-                          //     'T',
-                          //     'U',
-                          //     'V',
-                          //     'W',
-                          //     'X',
-                          //     'Y',
-                          //     'Z'
-                          //   ],
-                          ,
-                          indexBarHeight: IsmChatDimens.percentHeight(5),
-                          indexBarWidth: IsmChatDimens.forty,
-                          indexBarItemHeight: IsmChatDimens.twenty,
-                          indexBarOptions: IndexBarOptions(
-                            indexHintDecoration: const BoxDecoration(
-                                color: IsmChatColors.whiteColor),
-                            indexHintChildAlignment: Alignment.center,
-                            selectTextStyle: IsmChatStyles.w400White12,
-                            selectItemDecoration: BoxDecoration(
-                              color: IsmChatConfig.chatTheme.primaryColor,
-                              shape: BoxShape.circle,
-                            ),
-                            needRebuild: true,
-                            indexHintHeight: IsmChatDimens.percentHeight(.2),
-                          ),
-                          itemBuilder: (_, int index) {
-                            var user = controller.forwardedList[index];
-                            var susTag = user.getSuspensionTag();
-                            if (user.userDetails.userId ==
-                                Get.find<IsmChatMqttController>().userId) {
-                              return const SizedBox.shrink();
-                            }
-                            return IsmChatTapHandler(
-                              onTap: () => controller.onForwardUserTap(index),
-                              child: Column(
-                                children: [
-                                  Offstage(
-                                    offstage: user.isShowSuspension != true,
-                                    child: _buildSusWidget(susTag),
+                        child: controller.isLoadingUsers
+                            ? Center(
+                                child: Text(
+                                  'No user found',
+                                  style: IsmChatStyles.w600Black16,
+                                ),
+                              )
+                            : AzListView(
+                                data: controller.forwardedList,
+                                itemCount: controller.forwardedList.length,
+                                indexHintBuilder: (context, hint) => Container(
+                                  alignment: Alignment.center,
+                                  width: IsmChatDimens.eighty,
+                                  height: IsmChatDimens.eighty,
+                                  decoration: BoxDecoration(
+                                    color: IsmChatConfig.chatTheme.primaryColor,
+                                    shape: BoxShape.circle,
                                   ),
-                                  ListTile(
-                                    dense: true,
-                                    tileColor: user.isUserSelected
-                                        ? IsmChatConfig.chatTheme.primaryColor!
-                                            .withOpacity(.2)
-                                        : null,
-                                    leading: IsmChatImage.profile(
-                                      user.userDetails.userProfileImageUrl,
-                                      name: user.userDetails.userName,
-                                    ),
-                                    title: Text(
-                                      user.userDetails.userName,
-                                      style: IsmChatStyles.w600Black14,
-                                    ),
-                                    subtitle: Text(
-                                      user.userDetails.userIdentifier,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: IsmChatStyles.w400Black12,
-                                    ),
+                                  child: Text(hint,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: IsmChatDimens.thirty)),
+                                ),
+                                indexBarMargin: IsmChatDimens.edgeInsets10,
+                                indexBarData: SuspensionUtil.getTagIndexList(
+                                    controller.forwardedList)
+                                // [
+                                //     'A',
+                                //     'B',
+                                //     'C',
+                                //     'D',
+                                //     'E',
+                                //     'F',
+                                //     'G',
+                                //     'H',
+                                //     'I',
+                                //     'J',
+                                //     'K',
+                                //     'L',
+                                //     'M',
+                                //     'N',
+                                //     'O',
+                                //     'P',
+                                //     'Q',
+                                //     'R',
+                                //     'S',
+                                //     'T',
+                                //     'U',
+                                //     'V',
+                                //     'W',
+                                //     'X',
+                                //     'Y',
+                                //     'Z'
+                                //   ],
+                                ,
+                                indexBarHeight: IsmChatDimens.percentHeight(5),
+                                indexBarWidth: IsmChatDimens.forty,
+                                indexBarItemHeight: IsmChatDimens.twenty,
+                                indexBarOptions: IndexBarOptions(
+                                  indexHintDecoration: const BoxDecoration(
+                                      color: IsmChatColors.whiteColor),
+                                  indexHintChildAlignment: Alignment.center,
+                                  selectTextStyle: IsmChatStyles.w400White12,
+                                  selectItemDecoration: BoxDecoration(
+                                    color: IsmChatConfig.chatTheme.primaryColor,
+                                    shape: BoxShape.circle,
                                   ),
-                                ],
+                                  needRebuild: true,
+                                  indexHintHeight:
+                                      IsmChatDimens.percentHeight(.2),
+                                ),
+                                itemBuilder: (_, int index) {
+                                  var user = controller.forwardedList[index];
+                                  var susTag = user.getSuspensionTag();
+                                  if (user.userDetails.userId ==
+                                      Get.find<IsmChatMqttController>()
+                                          .userId) {
+                                    return const SizedBox.shrink();
+                                  }
+                                  return IsmChatTapHandler(
+                                    onTap: () =>
+                                        controller.onForwardUserTap(index),
+                                    child: Column(
+                                      children: [
+                                        Offstage(
+                                          offstage:
+                                              user.isShowSuspension != true,
+                                          child: _buildSusWidget(susTag),
+                                        ),
+                                        ListTile(
+                                          dense: true,
+                                          tileColor: user.isUserSelected
+                                              ? IsmChatConfig
+                                                  .chatTheme.primaryColor!
+                                                  .withOpacity(.2)
+                                              : null,
+                                          leading: IsmChatImage.profile(
+                                            user.userDetails
+                                                .userProfileImageUrl,
+                                            name: user.userDetails.userName,
+                                          ),
+                                          title: Text(
+                                            user.userDetails.userName,
+                                            style: IsmChatStyles.w600Black14,
+                                          ),
+                                          subtitle: Text(
+                                            user.userDetails.userIdentifier,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: IsmChatStyles.w400Black12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
                       ),
                     ),
                     if (controller.forwardedList.selectedUsers.isNotEmpty)

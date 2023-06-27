@@ -220,8 +220,6 @@ class IsmChatConversationsController extends GetxController {
     String? opponentId,
     bool isLoading = false,
   }) async {
-    if (isLoadingUsers) return;
-    isLoadingUsers = true;
     var response = await _viewModel.getNonBlockUserList(
       sort: sort,
       skip: searchTag.isNotEmpty
@@ -234,9 +232,9 @@ class IsmChatConversationsController extends GetxController {
       isLoading: isLoading,
     );
     forwardedListDuplicat = List<SelectedForwardUser>.from(forwardedList);
+    
     if (response == null) {
-      forwardedList = forwardedListDuplicat;
-      handleList(forwardedList);
+      isLoadingUsers = true;
       return;
     }
     var users = response.users;
@@ -262,7 +260,7 @@ class IsmChatConversationsController extends GetxController {
               ))
           .toList();
     }
-    isLoadingUsers = false;
+   
     handleList(forwardedList);
   }
 

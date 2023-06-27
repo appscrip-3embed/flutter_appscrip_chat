@@ -174,22 +174,52 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                             ),
                           ],
                         )
-                      : InkWell(
-                          onTap: () {
-                            controller.listOfAssetsPath
-                                .removeAt(controller.assetsIndex);
-                            controller.assetsIndex =
-                                controller.listOfAssetsPath.length - 1;
-                            if (controller.listOfAssetsPath.isEmpty) {
-                              controller.assetsIndex = 0;
-                              Get.back<void>();
-                            }
-                          },
-                          child: const Icon(
-                            Icons.delete,
-                            color: IsmChatColors.whiteColor,
-                          ),
-                        ),
+                      : Row(
+                        children: [
+                          // Todo add  video trimmer
+                          // IconButton(
+                          //     onPressed: ()  async{
+                          //     var mediaFile = await Get.to<File>(    IsmVideoTrimmerView(
+                          //   index: controller.assetsIndex,
+                          //   file: File(
+                          //     controller
+                          //         .listOfAssetsPath[controller.assetsIndex]
+                          //         .mediaUrl
+                          //         .toString(),
+                          //   ),
+                          //   durationInSeconds: 30,
+                          //   showButtonVolumnClose: false,
+                          // ));
+                          //  controller.listOfAssetsPath[
+                          //           controller
+                          //               .assetsIndex] = controller
+                          //           .listOfAssetsPath[controller.assetsIndex]
+                          //           .copyWith(mediaUrl: mediaFile!.path);
+                          //     },
+                          //     icon: const Icon(
+                          //       Icons.content_cut_rounded,
+                          //       color: IsmChatColors.whiteColor,
+                          //     ),
+                          //   ),
+
+                          IconButton(
+                              onPressed: () {
+                                controller.listOfAssetsPath
+                                    .removeAt(controller.assetsIndex);
+                                controller.assetsIndex =
+                                    controller.listOfAssetsPath.length - 1;
+                                if (controller.listOfAssetsPath.isEmpty) {
+                                  controller.assetsIndex = 0;
+                                  Get.back<void>();
+                                }
+                              },
+                              icon: const Icon(
+                                Icons.delete_forever_rounded,
+                                color: IsmChatColors.whiteColor,
+                              ),
+                            ),
+                        ],
+                      ),
                   IsmChatDimens.boxWidth20
                 ],
               ),
@@ -212,24 +242,15 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                               fit: BoxFit.contain,
                             ),
                           )
-                        : IsmVideoTrimmerView(
-                            index: controller.assetsIndex,
-                            file: File(
-                              controller
-                                  .listOfAssetsPath[controller.assetsIndex]
-                                  .mediaUrl
-                                  .toString(),
-                            ),
-                            durationInSeconds: 30,
-                            showButtonVolumnClose: false,
-                          ),
-                    // VideoViewPage(
-                    //     showVideoPlaying: true,
-                    //     path: controller
-                    //         .listOfAssetsPath[controller.assetsIndex]
-                    //         .mediaUrl
-                    //         .toString(),
-                    //   ),
+                        :
+                       
+                    VideoViewPage(
+                        showVideoPlaying: true,
+                        path: controller
+                            .listOfAssetsPath[controller.assetsIndex]
+                            .mediaUrl
+                            .toString(),
+                      ),
                     Positioned(
                       bottom: IsmChatDimens.ten,
                       child: Container(

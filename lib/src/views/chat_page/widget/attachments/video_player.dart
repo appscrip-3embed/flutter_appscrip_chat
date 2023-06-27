@@ -46,6 +46,21 @@ class VideoViewPageState extends State<VideoViewPage> {
 
   @override
   void didUpdateWidget(VideoViewPage oldWidget) {
+    if(widget.path != oldWidget.path){
+      _controller.pause();
+       _controller = widget.path.contains('http')     
+        ? VideoPlayerController.network(widget.path)
+        : VideoPlayerController.file(File(widget.path))
+      ..addListener(() {
+        setState(() {});
+      })
+      ..setLooping(true)
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        _controller.play();
+      });
+
+    }
     super.didUpdateWidget(oldWidget);
   }
 

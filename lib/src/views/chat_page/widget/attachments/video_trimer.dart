@@ -156,22 +156,22 @@ class _VideoTrimmerViewState extends State<IsmVideoTrimmerView> {
         body: Stack(
           alignment: Alignment.center,
           children: [
-            InkWell(
-              onTap: () async {
-                var playBackState = await trimmer.videoPlaybackControl(
-                  startValue: startValue.value,
-                  endValue: endValue.value,
-                );
-                isPlaying.value = playBackState;
-                setState(() {});
-                playPausedAction = true;
-                setState(() {});
-                if (playBackState == false) return;
-                await Future<void>.delayed(const Duration(milliseconds: 1000));
-                playPausedAction = false;
-                setState(() {});
-              },
-              child: Center(
+            Center(
+              child: IsmChatTapHandler(
+                onTap: ()async {
+                   var playBackState = await trimmer.videoPlaybackControl(
+                startValue: startValue.value,
+                endValue: endValue.value,
+              );
+              isPlaying.value = playBackState;
+              setState(() {});
+              playPausedAction = true;
+              setState(() {});
+              if (playBackState == false) return;
+              await Future<void>.delayed(const Duration(milliseconds: 1000));
+              playPausedAction = false;
+              setState(() {});
+                },
                 child: AspectRatio(
                   aspectRatio: trimmer.videoPlayerController!.value.aspectRatio,
                   child: Stack(

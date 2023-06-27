@@ -70,6 +70,13 @@ class IsmChatPageController extends GetxController
   set predictionList(List<IsmChatPrediction> value) =>
       _predictionList.value = value;
 
+
+  final RxBool _isLocaionSearch = false.obs;
+  bool get isLocaionSearch => _isLocaionSearch.value;
+  set isLocaionSearch(bool value) {
+    _isLocaionSearch.value = value;
+  }    
+
   final RxBool _showSendButton = false.obs;
   bool get showSendButton => _showSendButton.value;
   set showSendButton(bool value) => _showSendButton.value = value;
@@ -1357,15 +1364,20 @@ class IsmChatPageController extends GetxController
       required String longitude,
       String searchKeyword = ''}) async {
     predictionList.clear();
+    isLocaionSearch = true;
     var response = await _viewModel.getLocation(
       latitude: latitude,
       longitude: longitude,
       searchKeyword: searchKeyword,
     );
+    isLocaionSearch = false;
     if (response == null || response.isEmpty) {
+       
       return;
     }
     predictionList = response;
+   
+   
   }
 
   Future<void> deleteReacton({required Reaction reaction}) async =>
