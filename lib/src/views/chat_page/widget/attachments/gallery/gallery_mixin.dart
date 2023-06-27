@@ -15,17 +15,6 @@ import 'package:wechat_assets_picker/wechat_assets_picker.dart'
 
 @optionalTypeArgs
 mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
-  final ValueNotifier<bool> isDisplayingDetail = ValueNotifier<bool>(true);
-  final FocusNode _focus = FocusNode();
-
-  @override
-  void dispose() {
-    isDisplayingDetail.dispose();
-    _focus.removeListener(_onFocusChange);
-    _focus.dispose();
-    super.dispose();
-  }
-
   int get maxAssetsCount;
 
   List<AssetEntity> assets = <AssetEntity>[];
@@ -54,9 +43,7 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
               file.path.toString(),
               quality: 50,
               position: -1);
-          // var videoCompressPath = await VideoCompress.compressVideo(
-          //     file.path.toString(),
-          //     quality: VideoQuality.MediumQuality);
+
           ismChatPageController.listOfAssetsPath.add(AttachmentModel(
               thumbnailUrl: thumbTempPath.path,
               mediaUrl: file.path.toString(),
@@ -71,29 +58,21 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
 
   @override
   void initState() {
-    selectAssets(pickMethods);
-    _focus.addListener(_onFocusChange);
     super.initState();
-  }
-
-  void _onFocusChange() {
-    // ismChatPageController.keyBoardOpenOrNot = !_focus.hasFocus;
-    // ismChatPageController.update();
-    debugPrint('Focus: ${_focus.hasFocus.toString()}');
+    selectAssets(pickMethods);
+    ismChatPageController.assetsIndex = 0;
   }
 
   @override
   @mustCallSuper
   Widget build(BuildContext context) =>
       GetX<IsmChatPageController>(builder: (controller) {
-        // super.build(context);
         if (controller.listOfAssetsPath.isNotEmpty) {
           return WillPopScope(
             onWillPop: () async {
               controller.listOfAssetsPath.clear();
               return true;
             },
-            // shouldAddCallback: true,
             child: Scaffold(
               appBar: AppBar(
                 backgroundColor: IsmChatConfig.chatTheme.primaryColor,
@@ -105,6 +84,7 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                   onTap: () {
                     Get.back<void>();
                     controller.listOfAssetsPath.clear();
+                    controller.isVideoVisible = false;
                   },
                 ),
                 actions: [
@@ -160,10 +140,8 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                               onTap: () {
                                 controller.listOfAssetsPath
                                     .removeAt(controller.assetsIndex);
-                                controller.assetsIndex =
-                                    controller.listOfAssetsPath.length - 1;
+
                                 if (controller.listOfAssetsPath.isEmpty) {
-                                  controller.assetsIndex = 0;
                                   Get.back<void>();
                                 }
                               },
@@ -175,34 +153,37 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                           ],
                         )
                       : Row(
-                        children: [
-                          // Todo add  video trimmer
-                          // IconButton(
-                          //     onPressed: ()  async{
-                          //     var mediaFile = await Get.to<File>(    IsmVideoTrimmerView(
-                          //   index: controller.assetsIndex,
-                          //   file: File(
-                          //     controller
-                          //         .listOfAssetsPath[controller.assetsIndex]
-                          //         .mediaUrl
-                          //         .toString(),
-                          //   ),
-                          //   durationInSeconds: 30,
-                          //   showButtonVolumnClose: false,
-                          // ));
-                          //  controller.listOfAssetsPath[
-                          //           controller
-                          //               .assetsIndex] = controller
-                          //           .listOfAssetsPath[controller.assetsIndex]
-                          //           .copyWith(mediaUrl: mediaFile!.path);
-                          //     },
-                          //     icon: const Icon(
-                          //       Icons.content_cut_rounded,
-                          //       color: IsmChatColors.whiteColor,
-                          //     ),
-                          //   ),
+                          children: [
+                            // Todo add  video trimmer
+                            IconButton(
+                              onPressed: () async {
+                                controller.isVideoVisible = true;
+                                var mediaFile =
+                                    await Get.to<File>(IsmVideoTrimmerView(
+                                  index: controller.assetsIndex,
+                                  file: File(
+                                    controller
+                                        .listOfAssetsPath[
+                                            controller.assetsIndex]
+                                        .mediaUrl
+                                        .toString(),
+                                  ),
+                                  durationInSeconds: 30,
+                                ));
+                                IsmChatLog.error(mediaFile);
+                                controller.listOfAssetsPath[
+                                    controller
+                                        .assetsIndex] = controller
+                                    .listOfAssetsPath[controller.assetsIndex]
+                                    .copyWith(mediaUrl: mediaFile?.path);
+                              },
+                              icon: const Icon(
+                                Icons.content_cut_rounded,
+                                color: IsmChatColors.whiteColor,
+                              ),
+                            ),
 
-                          IconButton(
+                            IconButton(
                               onPressed: () {
                                 controller.listOfAssetsPath
                                     .removeAt(controller.assetsIndex);
@@ -218,8 +199,8 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                                 color: IsmChatColors.whiteColor,
                               ),
                             ),
-                        ],
-                      ),
+                          ],
+                        ),
                   IsmChatDimens.boxWidth20
                 ],
               ),
@@ -242,15 +223,13 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                               fit: BoxFit.contain,
                             ),
                           )
-                        :
-                       
-                    VideoViewPage(
-                        showVideoPlaying: true,
-                        path: controller
-                            .listOfAssetsPath[controller.assetsIndex]
-                            .mediaUrl
-                            .toString(),
-                      ),
+                        : VideoViewPage(
+                            showVideoPlaying: true,
+                            path: controller
+                                .listOfAssetsPath[controller.assetsIndex]
+                                .mediaUrl
+                                .toString(),
+                          ),
                     Positioned(
                       bottom: IsmChatDimens.ten,
                       child: Container(
@@ -270,6 +249,7 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                             return InkWell(
                               onTap: () async {
                                 controller.assetsIndex = index;
+                                controller.isVideoVisible = false;
                               },
                               child: Stack(
                                 alignment: Alignment.center,
