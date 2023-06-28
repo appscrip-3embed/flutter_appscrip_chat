@@ -143,7 +143,6 @@ class _IsmChatPageView extends StatelessWidget {
                       onPressed: () async {
                         var messageSenderSide =
                             controller.isAllMessagesFromMe();
-
                         controller.showDialogForDeleteMultipleMessage(
                             messageSenderSide, controller.selectedMessage);
                       },
@@ -158,11 +157,19 @@ class _IsmChatPageView extends StatelessWidget {
                   onTap: onTitleTap != null
                       ? () => onTitleTap?.call(controller.conversation!)
                       : () async {
-                          controller.canRefreshDetails = false;
-                          await IsmChatUtility.openFullScreenBottomSheet(
-                            const IsmChatConverstaionInfoView(),
-                          );
-                          controller.canRefreshDetails = true;
+                          if (!(controller.conversation?.lastMessageDetails
+                                      ?.customType ==
+                                  IsmChatCustomMessageType.removeMember &&
+                              controller.conversation?.lastMessageDetails
+                                      ?.userId ==
+                                  IsmChatConfig
+                                      .communicationConfig.userConfig.userId)) {
+                            controller.canRefreshDetails = false;
+                            await IsmChatUtility.openFullScreenBottomSheet(
+                              const IsmChatConverstaionInfoView(),
+                            );
+                            controller.canRefreshDetails = true;
+                          }
                         },
                   onBackTap: onBackTap,
                   header: header,
@@ -175,7 +182,7 @@ class _IsmChatPageView extends StatelessWidget {
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
                       child: Visibility(
@@ -218,12 +225,34 @@ class _IsmChatPageView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SafeArea(
-                      child: IsmChatMessageField(
-                        header: header,
-                        attachments: attachments,
-                      ),
-                    ),
+                    controller.conversation?.lastMessageDetails?.customType ==
+                                IsmChatCustomMessageType.removeMember &&
+                            controller
+                                    .conversation?.lastMessageDetails?.userId ==
+                                IsmChatConfig
+                                    .communicationConfig.userConfig.userId
+                        ? Container(
+                            color: IsmChatConfig.chatTheme.backgroundColor!,
+                            height: IsmChatDimens.sixty,
+                            width: double.maxFinite,
+                            child: SafeArea(
+                              child: Center(
+                                child: Text(
+                                  'You have been removed out of the group...!',
+                                  style: IsmChatStyles.w600Black12,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                ),
+                              ),
+                            ),
+                          )
+                        : SafeArea(
+                            child: IsmChatMessageField(
+                              header: header,
+                              attachments: attachments,
+                            ),
+                          ),
                     Offstage(
                       offstage: !controller.showEmojiBoard,
                       child: const EmojiBoard(),

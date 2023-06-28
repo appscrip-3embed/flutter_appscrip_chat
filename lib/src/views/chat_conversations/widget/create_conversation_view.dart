@@ -69,7 +69,15 @@ class IsmChatCreateConversationView extends StatelessWidget {
                           opponentId: IsmChatConfig
                               .communicationConfig.userConfig.userId,
                         );
+                        
                       });
+                      if (value.trim().isEmpty) {
+                         controller.isLoadingUsers = false;
+                          controller.forwardedList =
+                              controller.forwardedListDuplicat;
+                          controller.handleList(controller.forwardedList);
+                      }
+                     
                     },
                   )
                 : Text(
@@ -83,11 +91,15 @@ class IsmChatCreateConversationView extends StatelessWidget {
                 onPressed: () {
                   controller.showSearchField = !controller.showSearchField;
                   controller.userSearchNameController.clear();
-                  if (controller.showSearchField &&
+                 
+                  if (!controller.showSearchField  &&
                       controller.forwardedListDuplicat.isNotEmpty) {
                     controller.forwardedList = controller.forwardedListDuplicat;
                     controller.handleList(controller.forwardedList);
                   }
+                   if(controller.isLoadingUsers){
+                        controller.isLoadingUsers = false;
+                      }
                 },
                 icon: Icon(
                   controller.showSearchField
@@ -98,8 +110,11 @@ class IsmChatCreateConversationView extends StatelessWidget {
               )
             ],
           ),
-          body: controller.forwardedList.isEmpty
-              ? const IsmChatLoadingDialog()
+          body: 
+           
+           controller.forwardedList.isEmpty
+              ?  
+               const IsmChatLoadingDialog()
               : Column(
                   children: [
                     if (isGroupConversation) ...[
@@ -122,7 +137,8 @@ class IsmChatCreateConversationView extends StatelessWidget {
                           }
                           return true;
                         },
-                        child: AzListView(
+                        child:   controller.isLoadingUsers ?  Center(child: Text('No user found',style: IsmChatStyles.w600Black16,),) :
+                         AzListView(
                           data: controller.forwardedList,
                           itemCount: controller.forwardedList.length,
                           indexHintBuilder: (context, hint) => Container(

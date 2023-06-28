@@ -70,6 +70,12 @@ class IsmChatPageController extends GetxController
   set predictionList(List<IsmChatPrediction> value) =>
       _predictionList.value = value;
 
+  final RxBool _isLocaionSearch = false.obs;
+  bool get isLocaionSearch => _isLocaionSearch.value;
+  set isLocaionSearch(bool value) {
+    _isLocaionSearch.value = value;
+  }
+
   final RxBool _showSendButton = false.obs;
   bool get showSendButton => _showSendButton.value;
   set showSendButton(bool value) => _showSendButton.value = value;
@@ -211,6 +217,67 @@ class IsmChatPageController extends GetxController
   set selectedMessage(List<IsmChatMessageModel> value) =>
       _selectedMessage.value = value;
 
+  List<IsmChatBottomSheetAttachmentModel> attachments = [
+    const IsmChatBottomSheetAttachmentModel(
+      label: 'Camera',
+      backgroundColor: Colors.blueAccent,
+      icon: Icons.camera_alt_rounded,
+      attachmentType: IsmChatAttachmentType.camera,
+    ),
+    const IsmChatBottomSheetAttachmentModel(
+      label: 'Gallery',
+      backgroundColor: Colors.purpleAccent,
+      icon: Icons.photo_rounded,
+      attachmentType: IsmChatAttachmentType.gallery,
+    ),
+    const IsmChatBottomSheetAttachmentModel(
+      label: 'Documents',
+      backgroundColor: Colors.pinkAccent,
+      icon: Icons.description_rounded,
+      attachmentType: IsmChatAttachmentType.document,
+    ),
+    const IsmChatBottomSheetAttachmentModel(
+      label: 'Location',
+      backgroundColor: Colors.greenAccent,
+      icon: Icons.location_on_rounded,
+      attachmentType: IsmChatAttachmentType.location,
+    ),
+  ];
+
+  bool canRefreshDetails = true;
+
+  bool canCallEligibleApi = false;
+
+  final _groupEligibleUser = <SelectedForwardUser>[].obs;
+  List<SelectedForwardUser> get groupEligibleUser => _groupEligibleUser;
+  set groupEligibleUser(List<SelectedForwardUser> value) {
+    _groupEligibleUser.value = value;
+  }
+
+  List<SelectedForwardUser> groupEligibleUserDuplicate = [];
+
+  List<MentionModel> userMentionedList = [];
+
+  List<Emoji> reactions = [];
+
+  final _userReactionList = <UserDetails>[].obs;
+  List<UserDetails> get userReactionList => _userReactionList;
+  set userReactionList(List<UserDetails> value) {
+    _userReactionList.value = value;
+  }
+
+  final RxBool _isLoadingMessages = false.obs;
+  bool get isLoadingMessages => _isLoadingMessages.value;
+  set isLoadingMessages(bool value) => _isLoadingMessages.value = value;
+
+  final RxBool _isVideoVisible = true.obs;
+  bool get isVideoVisible => _isVideoVisible.value;
+  set isVideoVisible(bool value) {
+    _isVideoVisible.value = value;
+  }
+
+  bool didReactedLast = false;
+
   List<Map<String, List<IsmChatMessageModel>>> sortMediaList(
       List<IsmChatMessageModel> messages) {
     var storeMediaImageList = <Map<String, List<IsmChatMessageModel>>>[];
@@ -265,67 +332,13 @@ class IsmChatPageController extends GetxController
     return allMessages;
   }
 
-  List<IsmChatBottomSheetAttachmentModel> attachments = [
-    const IsmChatBottomSheetAttachmentModel(
-      label: 'Camera',
-      backgroundColor: Colors.blueAccent,
-      icon: Icons.camera_alt_rounded,
-      attachmentType: IsmChatAttachmentType.camera,
-    ),
-    const IsmChatBottomSheetAttachmentModel(
-      label: 'Gallery',
-      backgroundColor: Colors.purpleAccent,
-      icon: Icons.photo_rounded,
-      attachmentType: IsmChatAttachmentType.gallery,
-    ),
-    const IsmChatBottomSheetAttachmentModel(
-      label: 'Documents',
-      backgroundColor: Colors.pinkAccent,
-      icon: Icons.description_rounded,
-      attachmentType: IsmChatAttachmentType.document,
-    ),
-    const IsmChatBottomSheetAttachmentModel(
-      label: 'Location',
-      backgroundColor: Colors.greenAccent,
-      icon: Icons.location_on_rounded,
-      attachmentType: IsmChatAttachmentType.location,
-    ),
-  ];
-
-  bool canRefreshDetails = true;
-
-  bool canCallEligibleApi = false;
-
-  final _groupEligibleUser = <SelectedForwardUser>[].obs;
-  List<SelectedForwardUser> get groupEligibleUser => _groupEligibleUser;
-  set groupEligibleUser(List<SelectedForwardUser> value) {
-    _groupEligibleUser.value = value;
-  }
-
-  List<SelectedForwardUser> groupEligibleUserDuplicate = [];
-
-  List<MentionModel> userMentionedList = [];
-
-  List<Emoji> reactions = [];
-
-  final _userReactionList = <UserDetails>[].obs;
-  List<UserDetails> get userReactionList => _userReactionList;
-  set userReactionList(List<UserDetails> value) {
-    _userReactionList.value = value;
-  }
-
-  final RxBool _isLoadingMessages = false.obs;
-  bool get isLoadingMessages => _isLoadingMessages.value;
-  set isLoadingMessages(bool value) => _isLoadingMessages.value = value;
-
-  bool didReactedLast = false;
-
   @override
   void onInit() async {
     super.onInit();
     _generateReactionList();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
+      IsmChatLog(conversation);
       await Future.delayed(Duration.zero);
       if (conversation!.conversationId?.isNotEmpty ?? false) {
         await getMessagesFromDB(conversation?.conversationId ?? '');
@@ -756,7 +769,7 @@ class IsmChatPageController extends GetxController
     }
   }
 
-  /// Updates the [] mapping with the latest messages.
+  /// Updates the [''] mapping with the latest messages.
   void _generateIndexedMessageList() =>
       indexedMessageList = _viewModel.generateIndexedMessageList(messages);
 
@@ -872,7 +885,8 @@ class IsmChatPageController extends GetxController
       var chatConversation = await IsmChatConfig.objectBox.getDBConversation(
           conversationId: conversation?.conversationId ?? '');
       if (chatConversation != null) {
-        if (messages.isNotEmpty) {
+        if (messages.isNotEmpty &&
+            messages.last.customType != IsmChatCustomMessageType.removeMember) {
           chatConversation.lastMessageDetails.target = LastMessageDetails(
             sentByMe: messages.last.sentByMe,
             showInConversation: true,
@@ -904,8 +918,8 @@ class IsmChatPageController extends GetxController
             reactionType: '',
           );
         }
-
         chatConversation.unreadMessagesCount = 0;
+
         IsmChatConfig.objectBox.chatConversationBox.put(chatConversation);
         await ismChatConversationController.getConversationsFromDB();
       }
@@ -946,14 +960,41 @@ class IsmChatPageController extends GetxController
     await Get.to(const IsmChatImageEditView());
   }
 
-  void showDialogForClearChat() async {
-    await Get.dialog(IsmChatAlertDialogBox(
-      title: IsmChatStrings.deleteAllMessage,
-      actionLabels: const [IsmChatStrings.clearChat],
-      callbackActions: [
-        () => clearAllMessages(conversation?.conversationId ?? ''),
-      ],
-    ));
+  void showDialogForClearChatAndDeleteGroup({isGroupDelete = false}) async {
+    if (!isGroupDelete) {
+      await Get.dialog(
+        IsmChatAlertDialogBox(
+          title: IsmChatStrings.deleteAllMessage,
+          actionLabels: const [IsmChatStrings.clearChat],
+          callbackActions: [
+            () => clearAllMessages(
+                  conversation?.conversationId ?? '',
+                  fromServer: conversation?.lastMessageDetails?.customType ==
+                              IsmChatCustomMessageType.removeMember &&
+                          conversation?.lastMessageDetails?.userId ==
+                              IsmChatConfig
+                                  .communicationConfig.userConfig.userId
+                      ? false
+                      : true,
+                ),
+          ],
+        ),
+      );
+    } else {
+      await Get.dialog(
+        IsmChatAlertDialogBox(
+          title: IsmChatStrings.deleteThiGroup,
+          actionLabels: const [IsmChatStrings.deleteGroup],
+          callbackActions: [
+            () => Get.find<IsmChatConversationsController>().deleteChat(
+                  conversation?.conversationId ?? '',
+                  deleteFromServer: false,
+                ),
+          ],
+        ),
+      );
+      Get.back();
+    }
   }
 
   /// function to show dialog for changing the group title
@@ -1258,9 +1299,8 @@ class IsmChatPageController extends GetxController
     if (data != null) {
       IsmChatUtility.showToast(IsmChatStrings.blockedSuccessfully);
       await Future.wait([
-        if (fromUser) ...[
-          Get.find<IsmChatConversationsController>().getBlockUser(),
-        ] else ...[
+        Get.find<IsmChatConversationsController>().getBlockUser(),
+        if (fromUser == false) ...[
           getConverstaionDetails(
             conversationId: conversation?.conversationId ?? '',
             includeMembers: includeMembers,
@@ -1348,8 +1388,10 @@ class IsmChatPageController extends GetxController
 
   bool isAllMessagesFromMe() => selectedMessage.every((e) => e.sentByMe);
 
-  Future<void> clearAllMessages(String conversationId) async {
-    await _viewModel.clearAllMessages(conversationId: conversationId);
+  Future<void> clearAllMessages(String conversationId,
+      {bool fromServer = true}) async {
+    await _viewModel.clearAllMessages(
+        conversationId: conversationId, fromServer: fromServer);
   }
 
   Future<void> getLocation(
@@ -1357,11 +1399,13 @@ class IsmChatPageController extends GetxController
       required String longitude,
       String searchKeyword = ''}) async {
     predictionList.clear();
+    isLocaionSearch = true;
     var response = await _viewModel.getLocation(
       latitude: latitude,
       longitude: longitude,
       searchKeyword: searchKeyword,
     );
+    isLocaionSearch = false;
     if (response == null || response.isEmpty) {
       return;
     }

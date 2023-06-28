@@ -530,8 +530,10 @@ extension ModelConversion on IsmChatConversationModel {
             .contains(lastMessageDetails!.customType)) {
       return const SizedBox.shrink();
     }
+
     var senderName =
         lastMessageDetails!.sentByMe ? 'You' : lastMessageDetails!.senderName;
+
     return Text(
       '$senderName: ',
       style: IsmChatStyles.w500Black12,
@@ -602,7 +604,7 @@ extension LastMessageBody on LastMessageDetails {
       case IsmChatCustomMessageType.conversationCreated:
         return 'Conversation created';
       case IsmChatCustomMessageType.removeMember:
-        return '';
+        return 'Removed ${(members ?? []).join(', ')}';
       case IsmChatCustomMessageType.addMember:
         return 'Added ${(members ?? []).join(', ')}';
       case IsmChatCustomMessageType.addAdmin:
@@ -668,6 +670,8 @@ extension LastMessageBody on LastMessageDetails {
         iconData = Icons.shortcut_rounded;
         break;
       case IsmChatCustomMessageType.removeMember:
+        iconData = Icons.group_remove_outlined;
+        break;
       case IsmChatCustomMessageType.addAdmin:
       case IsmChatCustomMessageType.removeAdmin:
       case IsmChatCustomMessageType.deletedForMe:
@@ -680,7 +684,8 @@ extension LastMessageBody on LastMessageDetails {
     if (iconData != null) {
       return Icon(
         iconData,
-        size: 16,
+        size: IsmChatDimens.fifteen,
+        color: IsmChatColors.blackColor,
       );
     }
     return const SizedBox.shrink();

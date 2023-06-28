@@ -21,14 +21,14 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_local_notifications: ^14.1.0
-  flutter_native_image: ^0.0.6+1  
+  flutter_native_image: ^0.0.6+1
   flutter_screenutil: ^5.7.0
   flutter_slidable: ^2.0.0
   flutter_svg: ^1.0.3
   flutter_web_plugins:
     sdk: flutter
   fluttertoast: ^8.2.1
-  focused_menu: 
+  focused_menu:
     git:
       url: https://github.com/retroportalstudio/focused_menu.git
       ref: 8bba0ca
@@ -61,6 +61,7 @@ dependencies:
   video_compress: ^3.1.2
   video_player: ^2.6.0
   video_trimmer: ^2.0.1
+  visibility_detector: ^0.4.0+2
   voice_message_package: ^0.0.74
   wechat_assets_picker: ^8.4.1
 

@@ -66,8 +66,8 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
 
   @override
   void initState() {
-    super.initState();
     loadData();
+    super.initState();
   }
 
   @override
@@ -88,9 +88,15 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                         Icons.search,
                         color: IsmChatColors.whiteColor,
                       ),
-                onPressed: () {
+                onPressed: () async {
                   controller.isSearchSelect = !controller.isSearchSelect;
                   controller.textEditingController.clear();
+
+                  if (!controller.isSearchSelect) {
+                    await ismChatPageController.getLocation(
+                        latitude: latLng!.latitude.toString(),
+                        longitude: latLng!.longitude.toString());
+                  }
                 },
               ),
               IconButton(
@@ -116,25 +122,32 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                 IsmChatDimens.boxWidth16,
                 controller.isSearchSelect
                     ? Flexible(
-                        child: TextField(
-                          onSubmitted: (input) async {
-                            await ismChatPageController.getLocation(
-                                searchKeyword: input,
-                                latitude: latLng!.latitude.toString(),
-                                longitude: latLng!.longitude.toString());
-                          },
-                          controller: controller.textEditingController,
-                          textInputAction: TextInputAction.search,
-                          autofocus: true,
-                          cursorColor: IsmChatColors.whiteColor,
-                          style: IsmChatStyles.w500White16,
-                          decoration: InputDecoration(
-                            hintText: 'Search',
-                            hintStyle: IsmChatStyles.w600Black16,
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      )
+                        child: IsmChatInputField(
+                        fillColor: IsmChatConfig.chatTheme.primaryColor,
+                        onFieldSubmitted: (input) async {
+                          await ismChatPageController.getLocation(
+                              searchKeyword: input,
+                              latitude: latLng!.latitude.toString(),
+                              longitude: latLng!.longitude.toString());
+                        },
+                        onChanged: (value) {
+                          ismChatDebounce.run(
+                            () async {
+                              await ismChatPageController.getLocation(
+                                  searchKeyword: value.isNotEmpty ? value : '',
+                                  latitude: latLng!.latitude.toString(),
+                                  longitude: latLng!.longitude.toString());
+                            },
+                          );
+                        },
+                        controller: controller.textEditingController,
+                        textInputAction: TextInputAction.search,
+                        autofocus: true,
+                        cursorColor: IsmChatColors.whiteColor,
+                        style: IsmChatStyles.w500White16,
+                        hint: 'Search',
+                        hintStyle: IsmChatStyles.w600White16,
+                      ))
                     : Text(
                         'Send location',
                         style: controller.isSearchSelect
@@ -143,21 +156,16 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                       ),
               ],
             ),
-            leading: InkWell(
-              onTap: () {
+            leading: IconButton(
+              onPressed: () {
                 controller.isSearchSelect
                     ? controller.isSearchSelect = false
                     : Get.back<void>();
               },
-              child: controller.isSearchSelect
-                  ? Icon(
-                      Icons.adaptive.arrow_back,
-                      color: IsmChatColors.whiteColor,
-                    )
-                  : Icon(
-                      Icons.adaptive.arrow_back,
-                      color: IsmChatColors.whiteColor,
-                    ),
+              icon: Icon(
+                Icons.adaptive.arrow_back,
+                color: IsmChatColors.whiteColor,
+              ),
             ),
             automaticallyImplyLeading: false,
             elevation: 1,
@@ -232,6 +240,7 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                             IsmChatDimens.boxWidth8,
                             InkWell(
                               onTap: () async {
+                                IsmChatUtility.showLoader();
                                 var position =
                                     await Geolocator.getCurrentPosition(
                                         desiredAccuracy: LocationAccuracy.high);
@@ -251,6 +260,7 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                         controller.predictionList.first.name ??
                                             '');
                                 Get.back<void>();
+                                IsmChatUtility.closeLoader();
                               },
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -272,22 +282,28 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                         const SizedBox(
                           height: 100,
                         ),
-                        const IsmChatLoadingDialog(),
-                        // const Spacer()
+                        if (controller.isLocaionSearch || _markers.isEmpty) ...[
+                          const IsmChatLoadingDialog(),
+                        ] else ...[
+                          const Center(
+                            child: Text('No data found'),
+                          )
+                        ]
                       ] else ...[
                         ListView.builder(
                           shrinkWrap: true,
                           physics: const ScrollPhysics(),
+                          addAutomaticKeepAlives: true,
                           itemCount: controller.predictionList.length,
                           itemBuilder: (context, index) {
                             var prediction = controller.predictionList[index];
                             return InkWell(
                               onTap: () async {
+                                IsmChatUtility.showLoader();
                                 var locations = await locationFromAddress(
                                     ismChatPageController
                                         .predictionList[index].vicinity
                                         .toString());
-
                                 controller.sendLocation(
                                     conversationId: controller
                                             .conversation?.conversationId ??
@@ -305,6 +321,7 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                             '');
 
                                 Get.back<void>();
+                                IsmChatUtility.closeLoader();
                               },
                               child: ListTile(
                                 minLeadingWidth: 0,

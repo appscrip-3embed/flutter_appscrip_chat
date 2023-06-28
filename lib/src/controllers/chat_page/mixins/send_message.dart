@@ -105,7 +105,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
   }
 
   void sendPhotoAndVideo() async {
-    IsmChatLog.error('step1');
     if (_controller.listOfAssetsPath.isNotEmpty) {
       for (var media in _controller.listOfAssetsPath) {
         //TODO: remove await from here
@@ -390,7 +389,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       videoMessage = ismChatChatMessageModel;
     } else {
       final videoCopress = await VideoCompress.compressVideo(file!.path,
-          quality: VideoQuality.LowQuality, includeAudio: true);
+          quality: VideoQuality.MediumQuality, includeAudio: true);
       final thumbnailFile = isThumbnail
           ? thumbnailFiles!
           : await VideoCompress.getFileThumbnail(file.path,

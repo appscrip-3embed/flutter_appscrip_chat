@@ -44,6 +44,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
+      designSize: const Size(375, 745),
       builder: (_, child) => child!,
       child: GetMaterialApp(
         key: const Key('ChatApp'),

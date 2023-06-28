@@ -220,8 +220,6 @@ class IsmChatConversationsController extends GetxController {
     String? opponentId,
     bool isLoading = false,
   }) async {
-    if (isLoadingUsers) return;
-    isLoadingUsers = true;
     var response = await _viewModel.getNonBlockUserList(
       sort: sort,
       skip: searchTag.isNotEmpty
@@ -234,9 +232,9 @@ class IsmChatConversationsController extends GetxController {
       isLoading: isLoading,
     );
     forwardedListDuplicat = List<SelectedForwardUser>.from(forwardedList);
+
     if (response == null) {
-      forwardedList = forwardedListDuplicat;
-      handleList(forwardedList);
+      isLoadingUsers = true;
       return;
     }
     var users = response.users;
@@ -262,7 +260,7 @@ class IsmChatConversationsController extends GetxController {
               ))
           .toList();
     }
-    isLoadingUsers = false;
+
     handleList(forwardedList);
   }
 
@@ -283,11 +281,12 @@ class IsmChatConversationsController extends GetxController {
     SuspensionUtil.setShowSuspensionStatus(forwardedList);
   }
 
-  Future<void> clearAllMessages(String? conversationId) async {
+  Future<void> clearAllMessages(String? conversationId,
+      {bool fromServer = true}) async {
     if (conversationId == null || conversationId.isEmpty) {
       return;
     }
-    return _viewModel.clearAllMessages(conversationId);
+    return _viewModel.clearAllMessages(conversationId, fromServer: fromServer);
   }
 
   void navigateToMessages(IsmChatConversationModel conversation) =>
@@ -302,13 +301,11 @@ class IsmChatConversationsController extends GetxController {
     }
     if (deleteFromServer) {
       var response = await _viewModel.deleteChat(conversationId);
-
       if (response?.hasError ?? true) {
         return;
       }
     }
     await IsmChatConfig.objectBox.removeConversation(conversationId);
-
     await getConversationsFromDB();
     await getChatConversations();
   }

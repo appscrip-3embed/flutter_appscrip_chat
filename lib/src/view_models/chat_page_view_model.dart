@@ -438,13 +438,17 @@ class IsmChatPageViewModel {
     await Get.find<IsmChatPageController>().getMessagesFromDB(conversationId);
   }
 
-  Future<void> clearAllMessages({
-    required String conversationId,
-  }) async {
-    var response = await _repository.clearAllMessages(
-      conversationId: conversationId,
-    );
-    if (!response!.hasError) {
+  Future<void> clearAllMessages(
+      {required String conversationId, bool fromServer = true}) async {
+    if (fromServer) {
+      var response = await _repository.clearAllMessages(
+        conversationId: conversationId,
+      );
+      if (!response!.hasError) {
+        await IsmChatConfig.objectBox
+            .clearAllMessage(conversationId: conversationId);
+      }
+    } else {
       await IsmChatConfig.objectBox
           .clearAllMessage(conversationId: conversationId);
     }
