@@ -15,7 +15,7 @@ class UserDetails {
       userId: map['userId'] as String? ?? '',
       online: map['online'] as bool? ?? false,
       memberName: map['memberName'] as String? ?? '',
-      memberId : map['memberId'] as String? ?? '',
+      memberId: map['memberId'] as String? ?? '',
       metaData: map['metaData'] == null
           ? IsmChatMetaData()
           : IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
@@ -127,14 +127,14 @@ class UserDetails {
         'memberName': memberName,
         'order': order,
         'wordCount': wordCount,
-        'memberId' : memberId
+        'memberId': memberId
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'UserDetails(userProfileImageUrl: $userProfileImageUrl, userName: $userName, userIdentifier: $userIdentifier, userId: $userId, online: $online, lastSeen: $lastSeen, visibility: $visibility, notification: $notification, language: $language, isAdmin : $isAdmin, memberName : $memberName, order : $order, wordCount : $wordCount, memberId : $memberId)';
+      'UserDetails(userProfileImageUrl: $userProfileImageUrl, userName: $userName, userIdentifier: $userIdentifier, userId: $userId, online: $online, lastSeen: $lastSeen, visibility: $visibility, notification: $notification, language: $language, isAdmin : $isAdmin, memberName : $memberName, order : $order, wordCount : $wordCount, memberId : $memberId, metaData : $metaData)';
 
   @override
   bool operator ==(covariant UserDetails other) {
@@ -152,7 +152,7 @@ class UserDetails {
         other.language == language &&
         other.memberName == memberName &&
         other.isAdmin == isAdmin &&
-        other.wordCount == wordCount && 
+        other.wordCount == wordCount &&
         other.memberId == memberId &&
         other.order == order;
   }
