@@ -270,6 +270,12 @@ class IsmChatPageController extends GetxController
   bool get isLoadingMessages => _isLoadingMessages.value;
   set isLoadingMessages(bool value) => _isLoadingMessages.value = value;
 
+  final RxBool _isVideoVisible = true.obs;
+  bool get isVideoVisible => _isVideoVisible.value;
+  set isVideoVisible(bool value) {
+    _isVideoVisible.value = value;
+  }
+
   bool didReactedLast = false;
 
   List<Map<String, List<IsmChatMessageModel>>> sortMediaList(

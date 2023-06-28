@@ -389,7 +389,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       videoMessage = ismChatChatMessageModel;
     } else {
       final videoCopress = await VideoCompress.compressVideo(file!.path,
-          quality: VideoQuality.LowQuality, includeAudio: true);
+          quality: VideoQuality.MediumQuality, includeAudio: true);
       final thumbnailFile = isThumbnail
           ? thumbnailFiles!
           : await VideoCompress.getFileThumbnail(file.path,

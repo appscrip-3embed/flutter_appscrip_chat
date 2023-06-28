@@ -48,6 +48,7 @@ class _MyAppState extends State<MyApp> {
       child: GetMaterialApp(
         key: const Key('ChatApp'),
         locale: const Locale('en', 'US'),
+
         localizationsDelegates: GlobalMaterialLocalizations.delegates,
         supportedLocales: const [
           Locale('en', 'US'),
