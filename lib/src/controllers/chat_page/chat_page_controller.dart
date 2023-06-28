@@ -769,7 +769,7 @@ class IsmChatPageController extends GetxController
     }
   }
 
-  /// Updates the [] mapping with the latest messages.
+  /// Updates the [''] mapping with the latest messages.
   void _generateIndexedMessageList() =>
       indexedMessageList = _viewModel.generateIndexedMessageList(messages);
 

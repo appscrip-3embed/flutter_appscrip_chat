@@ -61,8 +61,8 @@ dependencies:
   video_compress: ^3.1.2
   video_player: ^2.6.0
   video_trimmer: ^2.0.1
-  voice_message_package: ^0.0.74
   visibility_detector: ^0.4.0+2
+  voice_message_package: ^0.0.74
   wechat_assets_picker: ^8.4.1
 
 dev_dependencies:
