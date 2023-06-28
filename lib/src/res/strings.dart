@@ -101,4 +101,9 @@ class IsmChatStrings {
   static const String docs = 'Docs';
   static const String readby = 'Read by';
   static const String deliveredby = 'Delivered by';
+  static const String deletedMessage = 'You deleted this message';
+  static const String wasDeletedMessage = 'This message was deleted';
+
+  static const String removeGroupMessage =
+      'You have been removed out of the group...!';
 }

@@ -556,7 +556,12 @@ class IsmChatMqttController extends GetxController {
     }
     if (actionModel.messageIds?.isNotEmpty == true) {
       for (var x in actionModel.messageIds!) {
-        allMessages.removeWhere((e) => e.messageId! == x);
+        var messageIndex = allMessages.indexWhere((e) => e.messageId == x);
+        if (messageIndex != -1) {
+          allMessages[messageIndex].customType =
+              IsmChatCustomMessageType.deletedForEveryone;
+        }
+        //  allMessages.removeWhere((e) => e.messageId! == x);
       }
     }
     await IsmChatConfig.objectBox

@@ -72,7 +72,9 @@ class MessageBubble extends StatelessWidget {
                         color: message.style.color,
                       ),
                     ),
-                    if (message.sentByMe) ...[
+                    if (message.sentByMe &&
+                        message.customType !=
+                            IsmChatCustomMessageType.deletedForEveryone) ...[
                       IsmChatDimens.boxWidth2,
                       Icon(
                         message.messageId!.isEmpty

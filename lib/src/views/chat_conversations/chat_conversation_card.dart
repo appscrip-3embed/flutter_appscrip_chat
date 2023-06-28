@@ -97,7 +97,12 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
                   Flexible(
                     child: Text(
                       widget.conversation.lastMessageDetails?.messageBody ?? '',
-                      style: IsmChatStyles.w400Black12,
+                      style: IsmChatStyles.w400Black12.copyWith(
+                          fontStyle: widget.conversation.lastMessageDetails
+                                      ?.customType ==
+                                  IsmChatCustomMessageType.deletedForEveryone
+                              ? FontStyle.italic
+                              : FontStyle.normal),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

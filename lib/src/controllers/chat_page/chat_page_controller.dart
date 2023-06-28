@@ -550,12 +550,7 @@ class IsmChatPageController extends GetxController
               conversation: conversation!,
             ),
             transition: Transition.downToUp);
-        // await IsmChatUtility.openFullScreenBottomSheet(
-        //   IsmChatForwardView(
-        //     message: message,
-        //     conversation: conversation!,
-        //   ),
-        // );
+
         break;
       case IsmChatFocusMenuType.copy:
         await Clipboard.setData(ClipboardData(text: message.body));
@@ -1386,7 +1381,15 @@ class IsmChatPageController extends GetxController
     }
   }
 
-  bool isAllMessagesFromMe() => selectedMessage.every((e) => e.sentByMe);
+  bool isAllMessagesFromMe() => selectedMessage.every(
+        (e) {
+          if (e.sentByMe &&
+              e.customType == IsmChatCustomMessageType.deletedForEveryone) {
+            return false;
+          }
+          return e.sentByMe;
+        },
+      );
 
   Future<void> clearAllMessages(String conversationId,
       {bool fromServer = true}) async {

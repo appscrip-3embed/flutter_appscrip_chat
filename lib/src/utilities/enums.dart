@@ -52,7 +52,6 @@ enum IsmChatCustomMessageType {
   addAdmin(17),
   removeAdmin(18),
   memberLeave(19),
-
   date(100);
 
   const IsmChatCustomMessageType(this.value);

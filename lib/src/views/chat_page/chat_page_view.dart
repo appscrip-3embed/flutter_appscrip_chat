@@ -238,7 +238,7 @@ class _IsmChatPageView extends StatelessWidget {
                             child: SafeArea(
                               child: Center(
                                 child: Text(
-                                  'You have been removed out of the group...!',
+                                  IsmChatStrings.removeGroupMessage,
                                   style: IsmChatStyles.w600Black12,
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.center,

@@ -309,6 +309,7 @@ extension ChildWidget on IsmChatCustomMessageType {
 
       case IsmChatCustomMessageType.removeAdmin:
         return IsmChatAddRevokeAdmin(message, isAdded: false);
+
       case IsmChatCustomMessageType.memberLeave:
         return IsmChatAddRemoveMember(message, didLeft: true);
     }
@@ -546,6 +547,8 @@ extension ModelConversion on IsmChatConversationModel {
           lastMessageDetails!.messageBody.isEmpty ||
           lastMessageDetails!.customType == IsmChatCustomMessageType.unblock ||
           lastMessageDetails!.customType == IsmChatCustomMessageType.block ||
+          lastMessageDetails!.customType ==
+              IsmChatCustomMessageType.deletedForEveryone ||
           [IsmChatCustomMessageType.addMember]
               .contains(lastMessageDetails!.customType)) {
         return const SizedBox.shrink();
@@ -615,6 +618,9 @@ extension LastMessageBody on LastMessageDetails {
         return '$senderName left';
       case IsmChatCustomMessageType.deletedForMe:
       case IsmChatCustomMessageType.deletedForEveryone:
+        return sentByMe
+            ? IsmChatStrings.deletedMessage
+            : IsmChatStrings.wasDeletedMessage;
       case IsmChatCustomMessageType.link:
       case IsmChatCustomMessageType.forward:
       case IsmChatCustomMessageType.date:
@@ -672,10 +678,12 @@ extension LastMessageBody on LastMessageDetails {
       case IsmChatCustomMessageType.removeMember:
         iconData = Icons.group_remove_outlined;
         break;
+      case IsmChatCustomMessageType.deletedForEveryone:
+        iconData = Icons.remove_circle_outline_rounded;
+        break;
       case IsmChatCustomMessageType.addAdmin:
       case IsmChatCustomMessageType.removeAdmin:
       case IsmChatCustomMessageType.deletedForMe:
-      case IsmChatCustomMessageType.deletedForEveryone:
       case IsmChatCustomMessageType.date:
       case IsmChatCustomMessageType.text:
       default:
@@ -801,4 +809,6 @@ extension MentionMessage on IsmChatMessageModel {
     return theme?.opponentMessageTheme?.borderColor ??
         IsmChatConfig.chatTheme.backgroundColor;
   }
+
+  Color? get iconColor {}
 }

@@ -388,7 +388,11 @@ class IsmChatPageViewModel {
     if (messages.isEmpty) {
       return;
     }
-    var myMessages = messages.where((m) => m.sentByMe).toList();
+    var myMessages = messages
+        .where((m) =>
+            m.sentByMe &&
+            m.customType != IsmChatCustomMessageType.deletedForEveryone)
+        .toList();
     if (myMessages.isNotEmpty) {
       var response = await _repository.deleteMessageForMe(
         conversationId: conversationId,
@@ -404,7 +408,19 @@ class IsmChatPageViewModel {
     }
 
     for (var x in messages) {
-      allMessages.removeWhere((e) => e.messageId == x.messageId);
+      allMessages.removeWhere(
+        (e) {
+          if (e.messageId == x.messageId &&
+              e.customType == IsmChatCustomMessageType.deletedForEveryone) {
+            return true;
+          }
+          if (e.messageId == x.messageId &&
+              e.customType != IsmChatCustomMessageType.deletedForEveryone) {
+            return true;
+          }
+          return false;
+        },
+      );
     }
 
     await IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
@@ -432,7 +448,13 @@ class IsmChatPageViewModel {
     }
 
     for (var x in messages) {
-      allMessages.removeWhere((e) => e.messageId == x.messageId);
+      var messageIndex =
+          allMessages.indexWhere((e) => e.messageId == x.messageId);
+      if (messageIndex != -1) {
+        allMessages[messageIndex].customType =
+            IsmChatCustomMessageType.deletedForEveryone;
+      }
+      // allMessages.removeWhere((e) => e.messageId == x.messageId);
     }
     await IsmChatConfig.objectBox.saveMessages(conversationId, allMessages);
     await Get.find<IsmChatPageController>().getMessagesFromDB(conversationId);
