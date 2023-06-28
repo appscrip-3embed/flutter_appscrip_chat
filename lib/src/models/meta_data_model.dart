@@ -21,6 +21,7 @@ class IsmChatMetaData {
   final String? genderOfUserWhoStartedGuestChat;
   final String? genderOfUserWhoReceivedTheGuestChat;
   final bool? paidChat;
+  final String? customType;
   IsmChatMetaData({
     this.id = 0,
     this.country,
@@ -38,6 +39,7 @@ class IsmChatMetaData {
     this.guestMatchInitiatedWithUserId,
     this.isGuestMatch,
     this.paidChat,
+    this.customType,
   });
 
   IsmChatMetaData copyWith({
@@ -56,91 +58,98 @@ class IsmChatMetaData {
     String? genderOfUserWhoStartedGuestChat,
     String? genderOfUserWhoReceivedTheGuestChat,
     bool? paidChat,
+    String? customType,
   }) =>
       IsmChatMetaData(
-          country: country ?? this.country,
-          parentMessageBody: parentMessageBody ?? this.parentMessageBody,
-          locationAddress: locationAddress ?? this.locationAddress,
-          profilePic: profilePic ?? this.profilePic,
-          parentMessageInitiator:
-          parentMessageInitiator ?? this.parentMessageInitiator,
-          userId: userId ?? this.userId,
-          isMatchId: isMatchId ?? this.isMatchId,
-          firstName: firstName ?? this.firstName,
-          lastName: lastName ?? this.lastName,
-          isGuestMatch: isGuestMatch ?? this.isGuestMatch,
-          guestMatchInitiatedByUserId:
-          guestMatchInitiatedByUserId ?? this.guestMatchInitiatedByUserId,
-          genderOfUserWhoReceivedTheGuestChat:
-          genderOfUserWhoReceivedTheGuestChat ??
-              this.genderOfUserWhoReceivedTheGuestChat,
-          genderOfUserWhoStartedGuestChat: genderOfUserWhoStartedGuestChat ??
-              this.genderOfUserWhoStartedGuestChat,
-          guestMatchInitiatedWithUserId: guestMatchInitiatedWithUserId ??
-              this.guestMatchInitiatedWithUserId,
-          paidChat: paidChat ?? this.paidChat);
+        country: country ?? this.country,
+        parentMessageBody: parentMessageBody ?? this.parentMessageBody,
+        locationAddress: locationAddress ?? this.locationAddress,
+        profilePic: profilePic ?? this.profilePic,
+        parentMessageInitiator:
+            parentMessageInitiator ?? this.parentMessageInitiator,
+        userId: userId ?? this.userId,
+        isMatchId: isMatchId ?? this.isMatchId,
+        firstName: firstName ?? this.firstName,
+        lastName: lastName ?? this.lastName,
+        isGuestMatch: isGuestMatch ?? this.isGuestMatch,
+        guestMatchInitiatedByUserId:
+            guestMatchInitiatedByUserId ?? this.guestMatchInitiatedByUserId,
+        genderOfUserWhoReceivedTheGuestChat:
+            genderOfUserWhoReceivedTheGuestChat ??
+                this.genderOfUserWhoReceivedTheGuestChat,
+        genderOfUserWhoStartedGuestChat: genderOfUserWhoStartedGuestChat ??
+            this.genderOfUserWhoStartedGuestChat,
+        guestMatchInitiatedWithUserId:
+            guestMatchInitiatedWithUserId ?? this.guestMatchInitiatedWithUserId,
+        paidChat: paidChat ?? this.paidChat,
+        customType: customType ?? this.country,
+      );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
-    if (country != null || country?.isNotEmpty == true) 'country': country,
-    if (parentMessageBody != null || parentMessageBody?.isNotEmpty == true)
-      'parentMessageBody': parentMessageBody,
-    if (locationAddress != null || locationAddress?.isNotEmpty == true)
-      'locationAddress': locationAddress,
-    if (parentMessageInitiator != null)
-      'parentMessageInitiator': parentMessageInitiator,
-    if (profilePic != null || profilePic?.isNotEmpty == true)
-      'profilePic': profilePic,
-    if (userId != null || userId?.isNotEmpty == true) 'userId': userId,
-    if (isMatchId != null || isMatchId?.isNotEmpty == true)
-      'isMatchId': isMatchId,
-    if (firstName != null || firstName?.isNotEmpty == true)
-      'firstName': firstName,
-    if (lastName != null || lastName?.isNotEmpty == true)
-      'lastName': lastName,
-    if (isGuestMatch != null) 'isGuestMatch': isGuestMatch,
-    if (genderOfUserWhoReceivedTheGuestChat != null ||
-        genderOfUserWhoReceivedTheGuestChat?.isNotEmpty == true)
-      'genderOfUserWhoReceivedTheGuestChat':
-      genderOfUserWhoReceivedTheGuestChat,
-    if (genderOfUserWhoStartedGuestChat != null ||
-        genderOfUserWhoStartedGuestChat?.isNotEmpty == true)
-      'genderOfUserWhoStartedGuestChat': genderOfUserWhoStartedGuestChat,
-    if (guestMatchInitiatedByUserId != null ||
-        guestMatchInitiatedByUserId?.isNotEmpty == true)
-      'guestMatchInitiatedByUserId': guestMatchInitiatedByUserId,
-    if (guestMatchInitiatedWithUserId != null ||
-        guestMatchInitiatedWithUserId?.isNotEmpty == true)
-      'guestMatchInitiatedWithUserId': guestMatchInitiatedWithUserId,
-    if (paidChat != null) 'paidChat': paidChat
-  };
+        if (country != null || country?.isNotEmpty == true) 'country': country,
+        if (parentMessageBody != null || parentMessageBody?.isNotEmpty == true)
+          'parentMessageBody': parentMessageBody,
+        if (locationAddress != null || locationAddress?.isNotEmpty == true)
+          'locationAddress': locationAddress,
+        if (parentMessageInitiator != null)
+          'parentMessageInitiator': parentMessageInitiator,
+        if (profilePic != null || profilePic?.isNotEmpty == true)
+          'profilePic': profilePic,
+        if (userId != null || userId?.isNotEmpty == true) 'userId': userId,
+        if (isMatchId != null || isMatchId?.isNotEmpty == true)
+          'isMatchId': isMatchId,
+        if (firstName != null || firstName?.isNotEmpty == true)
+          'firstName': firstName,
+        if (lastName != null || lastName?.isNotEmpty == true)
+          'lastName': lastName,
+        if (isGuestMatch != null) 'isGuestMatch': isGuestMatch,
+        if (genderOfUserWhoReceivedTheGuestChat != null ||
+            genderOfUserWhoReceivedTheGuestChat?.isNotEmpty == true)
+          'genderOfUserWhoReceivedTheGuestChat':
+              genderOfUserWhoReceivedTheGuestChat,
+        if (genderOfUserWhoStartedGuestChat != null ||
+            genderOfUserWhoStartedGuestChat?.isNotEmpty == true)
+          'genderOfUserWhoStartedGuestChat': genderOfUserWhoStartedGuestChat,
+        if (guestMatchInitiatedByUserId != null ||
+            guestMatchInitiatedByUserId?.isNotEmpty == true)
+          'guestMatchInitiatedByUserId': guestMatchInitiatedByUserId,
+        if (guestMatchInitiatedWithUserId != null ||
+            guestMatchInitiatedWithUserId?.isNotEmpty == true)
+          'guestMatchInitiatedWithUserId': guestMatchInitiatedWithUserId,
+        if (paidChat != null) 'paidChat': paidChat,
+        if (customType != null || customType?.isNotEmpty == true)
+          'customType': customType
+      };
 
   factory IsmChatMetaData.fromMap(Map<String, dynamic> map) => IsmChatMetaData(
-      country: map['country'] != null ? map['country'] as String : null,
-      parentMessageBody: map['parentMessageBody'] != null
-          ? map['parentMessageBody'] as String
-          : null,
-      locationAddress: map['locationAddress'] != null
-          ? map['locationAddress'] as String
-          : null,
-      profilePic:
-      map['profilePic'] != null ? map['profilePic'] as String : null,
-      parentMessageInitiator: map['parentMessageInitiator'] != null
-          ? map['parentMessageInitiator'] as bool
-          : null,
-      firstName: map['firstName'] as String? ?? '',
-      lastName: map['lastName'] as String? ?? '',
-      userId: map['userId'] as String? ?? '',
-      isMatchId: map['isMatchId'] as String? ?? '',
-      isGuestMatch: map['isGuestMatch'] as bool? ?? false,
-      genderOfUserWhoReceivedTheGuestChat:
-      map['genderOfUserWhoReceivedTheGuestChat'] as String? ?? '',
-      genderOfUserWhoStartedGuestChat:
-      map['genderOfUserWhoStartedGuestChat'] as String? ?? '',
-      guestMatchInitiatedByUserId:
-      map['guestMatchInitiatedByUserId'] as String? ?? '',
-      guestMatchInitiatedWithUserId:
-      map['guestMatchInitiatedWithUserId'] as String? ?? '',
-      paidChat: map['paidChat'] as bool? ?? false);
+        country: map['country'] != null ? map['country'] as String : null,
+        parentMessageBody: map['parentMessageBody'] != null
+            ? map['parentMessageBody'] as String
+            : null,
+        locationAddress: map['locationAddress'] != null
+            ? map['locationAddress'] as String
+            : null,
+        profilePic:
+            map['profilePic'] != null ? map['profilePic'] as String : null,
+        parentMessageInitiator: map['parentMessageInitiator'] != null
+            ? map['parentMessageInitiator'] as bool
+            : null,
+        firstName: map['firstName'] as String? ?? '',
+        lastName: map['lastName'] as String? ?? '',
+        userId: map['userId'] as String? ?? '',
+        isMatchId: map['isMatchId'] as String? ?? '',
+        isGuestMatch: map['isGuestMatch'] as bool? ?? false,
+        genderOfUserWhoReceivedTheGuestChat:
+            map['genderOfUserWhoReceivedTheGuestChat'] as String? ?? '',
+        genderOfUserWhoStartedGuestChat:
+            map['genderOfUserWhoStartedGuestChat'] as String? ?? '',
+        guestMatchInitiatedByUserId:
+            map['guestMatchInitiatedByUserId'] as String? ?? '',
+        guestMatchInitiatedWithUserId:
+            map['guestMatchInitiatedWithUserId'] as String? ?? '',
+        paidChat: map['paidChat'] as bool? ?? false,
+        customType: map['customType'] as String? ?? '',
+      );
 
   String toJson() => json.encode(toMap());
 
@@ -153,7 +162,7 @@ class IsmChatMetaData {
 
   @override
   String toString() =>
-      'IsmChatMetaData(country: $country, parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, profilePic: $profilePic, parentMessageInitiator: $parentMessageInitiator)';
+      'IsmChatMetaData(country: $country, parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, profilePic: $profilePic, parentMessageInitiator: $parentMessageInitiator, customType : $customType)';
 
   @override
   bool operator ==(covariant IsmChatMetaData other) {
@@ -163,7 +172,8 @@ class IsmChatMetaData {
         other.parentMessageBody == parentMessageBody &&
         other.locationAddress == locationAddress &&
         other.profilePic == profilePic &&
-        other.parentMessageInitiator == parentMessageInitiator;
+        other.parentMessageInitiator == parentMessageInitiator &&
+        other.customType == customType;
   }
 
   @override
@@ -172,5 +182,6 @@ class IsmChatMetaData {
       parentMessageBody.hashCode ^
       locationAddress.hashCode ^
       profilePic.hashCode ^
-      parentMessageInitiator.hashCode;
+      parentMessageInitiator.hashCode ^
+      customType.hashCode;
 }
