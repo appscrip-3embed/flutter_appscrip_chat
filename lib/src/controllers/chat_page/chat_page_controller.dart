@@ -663,7 +663,7 @@ class IsmChatPageController extends GetxController
       groupEligibleUser = groupEligibleUserDuplicate;
       return;
     }
-    groupEligibleUser = groupEligibleUser
+    groupEligibleUser = groupEligibleUserDuplicate
         .where(
           (e) =>
               e.userDetails.userName.didMatch(query) ||

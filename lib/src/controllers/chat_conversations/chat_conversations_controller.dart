@@ -231,18 +231,19 @@ class IsmChatConversationsController extends GetxController {
       searchTag: searchTag,
       isLoading: isLoading,
     );
-    forwardedListDuplicat = List<SelectedForwardUser>.from(forwardedList);
 
     if (response == null) {
       isLoadingUsers = true;
       return;
     }
+
     var users = response.users;
     users.sort((a, b) => a.userName.compareTo(b.userName));
 
     if (opponentId != null) {
       users.removeWhere((e) => e.userId == opponentId);
     }
+
     if (searchTag.isEmpty) {
       forwardedList.addAll(List.from(users)
           .map((e) => SelectedForwardUser(
@@ -251,6 +252,7 @@ class IsmChatConversationsController extends GetxController {
                 isBlocked: false,
               ))
           .toList());
+      forwardedListDuplicat = List<SelectedForwardUser>.from(forwardedList);
     } else {
       forwardedList = List.from(users)
           .map((e) => SelectedForwardUser(
@@ -260,7 +262,6 @@ class IsmChatConversationsController extends GetxController {
               ))
           .toList();
     }
-
     handleList(forwardedList);
   }
 

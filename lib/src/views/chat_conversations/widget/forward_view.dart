@@ -70,18 +70,17 @@ class IsmChatForwardView extends StatelessWidget {
                     hintStyle: IsmChatStyles.w400White16,
                     onChanged: (value) {
                       controller.debounce.run(() {
-                      
-                          controller.getNonBlockUserList(
+                        controller.isLoadingUsers = false;
+                        controller.getNonBlockUserList(
                           searchTag: value,
                           opponentId: IsmChatConfig
                               .communicationConfig.userConfig.userId,
-                        ); 
+                        );
                       });
-                       if (value.trim().isEmpty) {
-                         controller.isLoadingUsers = false;
-                          controller.forwardedList =
-                              controller.forwardedListDuplicat;
-                          controller.handleList(controller.forwardedList);
+                      if (value.trim().isEmpty) {
+                        controller.forwardedList =
+                            controller.forwardedListDuplicat;
+                        controller.handleList(controller.forwardedList);
                       }
                     },
                   )
@@ -94,14 +93,14 @@ class IsmChatForwardView extends StatelessWidget {
                 onPressed: () {
                   controller.showSearchField = !controller.showSearchField;
                   controller.userSearchNameController.clear();
-                   if (!controller.showSearchField  &&
+                  if (!controller.showSearchField &&
                       controller.forwardedListDuplicat.isNotEmpty) {
                     controller.forwardedList = controller.forwardedListDuplicat;
                     controller.handleList(controller.forwardedList);
                   }
-                   if(controller.isLoadingUsers){
-                        controller.isLoadingUsers = false;
-                      }
+                  if (controller.isLoadingUsers) {
+                    controller.isLoadingUsers = false;
+                  }
                 },
                 icon: Icon(
                   controller.showSearchField

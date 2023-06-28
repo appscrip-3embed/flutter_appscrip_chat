@@ -52,8 +52,8 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
                     cursorColor: IsmChatColors.whiteColor,
                     style: IsmChatStyles.w600White16,
                     controller: controller.participnatsEditingController,
-                    onChanged: (_) {
-                      controller.addParticipantSearch(_);
+                    onChanged: (value) {
+                      controller.addParticipantSearch(value);
                     },
                   )
                 : Text(
@@ -95,7 +95,6 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
                             if (scrollNotification.metrics.pixels >
                                 scrollNotification.metrics.maxScrollExtent *
                                     0.7) {
-                             
                               controller.getEligibleMembers(
                                 conversationId:
                                     controller.conversation!.conversationId!,
@@ -103,7 +102,6 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
                               );
                             }
                           }
-
                           return true;
                         },
                         child: AzListView(
@@ -223,10 +221,7 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
                             );
                           },
                         ),
-                      )
-
-                         
-                          ),
+                      )),
                       if (controller.groupEligibleUser.selectedUsers.isNotEmpty)
                         const _SelectedUsers(),
                     ],
