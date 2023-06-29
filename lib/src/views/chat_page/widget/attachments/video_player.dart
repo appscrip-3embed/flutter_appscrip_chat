@@ -32,7 +32,6 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
 
   @override
   void initState() {
-    super.initState();
     chatPageController.isVideoVisible = true;
     _controller = widget.path.contains('http')
         ? VideoPlayerController.network(widget.path)
@@ -48,6 +47,7 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
 
     // Use the controller to loop the video.
     // _controller.setLooping(true);
+    super.initState();
   }
 
   @override

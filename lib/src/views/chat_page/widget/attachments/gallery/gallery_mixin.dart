@@ -17,6 +17,8 @@ import 'package:wechat_assets_picker/wechat_assets_picker.dart'
 mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
   int get maxAssetsCount;
 
+  String dataSize = '';
+
   List<AssetEntity> assets = <AssetEntity>[];
 
   IsmChatPickMethod get pickMethods;
@@ -50,6 +52,10 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
               attachmentType: IsmChatMediaType.video));
         }
       }
+      dataSize = IsmChatUtility.fileToSize(
+        File(ismChatPageController
+            .listOfAssetsPath[ismChatPageController.assetsIndex].mediaUrl!),
+      );
     } else {
       Get.back<void>();
     }
@@ -58,9 +64,9 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
 
   @override
   void initState() {
-    super.initState();
-    selectAssets(pickMethods);
     ismChatPageController.assetsIndex = 0;
+    selectAssets(pickMethods);
+    super.initState();
   }
 
   @override
@@ -75,6 +81,16 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
             },
             child: Scaffold(
               appBar: AppBar(
+                title: IsmChatConstants.videoExtensions.contains(controller
+                        .listOfAssetsPath[controller.assetsIndex].mediaUrl!
+                        .split('.')
+                        .last)
+                    ? Text(
+                        dataSize,
+                        style: IsmChatStyles.w600White14,
+                      )
+                    : null,
+                centerTitle: true,
                 backgroundColor: IsmChatConfig.chatTheme.primaryColor,
                 leading: InkWell(
                   child: const Icon(
@@ -154,7 +170,6 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                         )
                       : Row(
                           children: [
-                            // Todo add  video trimmer
                             IconButton(
                               onPressed: () async {
                                 controller.isVideoVisible = true;
@@ -170,19 +185,25 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                                   ),
                                   durationInSeconds: 30,
                                 ));
-                                IsmChatLog.error(mediaFile);
+
                                 controller.listOfAssetsPath[
                                     controller
                                         .assetsIndex] = controller
                                     .listOfAssetsPath[controller.assetsIndex]
                                     .copyWith(mediaUrl: mediaFile?.path);
+
+                                dataSize = IsmChatUtility.fileToSize(
+                                  File(ismChatPageController
+                                      .listOfAssetsPath[
+                                          ismChatPageController.assetsIndex]
+                                      .mediaUrl!),
+                                );
                               },
                               icon: const Icon(
                                 Icons.content_cut_rounded,
                                 color: IsmChatColors.whiteColor,
                               ),
                             ),
-
                             IconButton(
                               onPressed: () {
                                 controller.listOfAssetsPath

@@ -5,23 +5,69 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 /// show the Video editing view page
-class IsmChatVideoView extends StatelessWidget {
-  IsmChatVideoView({
+class IsmChatVideoView extends StatefulWidget {
+  const IsmChatVideoView({
     Key? key,
     required this.file,
   }) : super(key: key);
   final File file;
 
+  @override
+  State<IsmChatVideoView> createState() => _IsmChatVideoViewState();
+}
+
+class _IsmChatVideoViewState extends State<IsmChatVideoView> {
   final chatPageController = Get.find<IsmChatPageController>();
+
+  File? videoFile;
+  String dataSize = '';
+
+  @override
+  void initState() {
+    videoFile = widget.file;
+    dataSize = IsmChatUtility.fileToSize(videoFile!);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: Colors.black,
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            dataSize,
+            style: IsmChatStyles.w600White16,
+          ),
+          leading: IconButton(
+            onPressed: Get.back,
+            icon: const Icon(
+              Icons.arrow_back_rounded,
+              color: IsmChatColors.whiteColor,
+            ),
+          ),
+          backgroundColor: IsmChatConfig.chatTheme.primaryColor,
+          actions: [
+            IconButton(
+              onPressed: () async {
+                var trimFile = await Get.to<File>(
+                  IsmVideoTrimmerView(file: widget.file, durationInSeconds: 30),
+                );
+                videoFile = trimFile;
+                dataSize = IsmChatUtility.fileToSize(videoFile!);
+                setState(() {});
+              },
+              icon: const Icon(
+                Icons.content_cut_rounded,
+                color: IsmChatColors.whiteColor,
+              ),
+            )
+          ],
+        ),
         body: SafeArea(
             child: Stack(
           fit: StackFit.expand,
           children: [
-            IsmVideoTrimmerView(file: file, durationInSeconds: 30),
+            VideoViewPage(path: videoFile!.path),
           ],
         )),
         floatingActionButton: Padding(
@@ -29,53 +75,26 @@ class IsmChatVideoView extends StatelessWidget {
           child: FloatingActionButton(
             backgroundColor: IsmChatConfig.chatTheme.primaryColor,
             onPressed: () {
-              chatPageController.sendVideo(
-                  file: file,
-                  conversationId:
-                      chatPageController.conversation?.conversationId ?? '',
-                  userId: chatPageController
-                          .conversation?.opponentDetails?.userId ??
-                      '');
-              Get.back<void>();
-              Get.back<void>();
-              // final bytes = file.readAsBytesSync();
-              // var dataSize = formatBytes(int.parse(bytes.length.toString()));
-              // if ((double.parse(dataSize.split(' ').first) <= 50.00) ||
-              //     (dataSize.split(' ').last == 'KB')) {
-              //   chatPageController.ismHandleMessageVideoSelection(file);
-              //   Get.back<void>();
-              //   Get.back<void>();
-              // } else {
-              //   Get.dialog<void>(
-              //     AlertDialog(
-              //       actionsPadding: IsmChatDimens.edgeInsets20,
-              //       title: Text(
-              //         'You can not send video more than 20 MB.',
-              //         style: IsmStyles.semiBoldBlack16,
-              //       ),
-              //       backgroundColor: IsmChatColors.whiteColor,
-              //       titleTextStyle: TextStyle(
-              //           fontWeight: FontWeight.bold,
-              //           color: IsmChatColors.black,
-              //           fontSize: IsmChatDimens.twenty),
-              //       actions: [
-              //         InkWell(
-              //             onTap: () {
-              //               Get.back<void>();
-              //             },
-              //             child: Text(
-              //               'cancel'.tr,
-              //               style: TextStyle(
-              //                   color: IsmChatColors.black,
-              //                   fontSize: IsmChatDimens.fifteen,
-              //                   fontWeight: FontWeight.bold),
-              //             )),
-              //       ],
-              //     ),
-              //   );
-              // }
+              if ((double.parse(dataSize.split(' ').first) <= 20.00) ||
+                  (dataSize.split(' ').last == 'KB')) {
+                chatPageController.sendVideo(
+                    file: widget.file,
+                    conversationId:
+                        chatPageController.conversation?.conversationId ?? '',
+                    userId: chatPageController
+                            .conversation?.opponentDetails?.userId ??
+                        '');
 
-              // _controller.ismHandleCameraImageSelection();
+                Get.back<void>();
+                Get.back<void>();
+              } else {
+                Get.dialog(
+                  const IsmChatAlertDialogBox(
+                    title: 'You can not send video more than 20 MB.',
+                    cancelLabel: 'Okay',
+                  ),
+                );
+              }
             },
             child: const Icon(
               Icons.send,

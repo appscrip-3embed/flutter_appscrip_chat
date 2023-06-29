@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
@@ -133,5 +134,31 @@ class IsmChatUtility {
       ],
     );
     return File(croppedFile!.path);
+  }
+
+  /// Returns text representation of a provided bytes value (e.g. 1kB, 1GB)
+  static String formatBytes(int size, [int fractionDigits = 2]) {
+    if (size <= 0) return '0 B';
+    final multiple = (log(size) / log(1024)).floor();
+    return '${(size / pow(1024, multiple)).toStringAsFixed(fractionDigits)} ${[
+      'B',
+      'KB',
+      'MB',
+      'GB',
+      'TB',
+      'PB',
+      'EB',
+      'ZB',
+      'YB'
+    ][multiple]}';
+  }
+
+  /// Returns data size representation of a provided file
+  static String fileToSize(File file) {
+    final bytes = file.readAsBytesSync();
+    var dataSize = IsmChatUtility.formatBytes(
+      int.parse(bytes.length.toString()),
+    );
+    return dataSize;
   }
 }
