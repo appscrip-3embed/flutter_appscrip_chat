@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 /// show the Photo and Video editing view page
@@ -14,45 +13,39 @@ class IsmChatImageEditView extends StatelessWidget {
         builder: (controller) => Scaffold(
           backgroundColor: IsmChatColors.blackColor,
           appBar: AppBar(
-            systemOverlayStyle: const SystemUiOverlayStyle(
-              statusBarColor: IsmChatColors.whiteColor,
-            ),
-            backgroundColor: IsmChatColors.blackColor,
+            backgroundColor: IsmChatConfig.chatTheme.primaryColor,
             actions: [
-              IsmChatDimens.boxWidth16,
-              InkWell(
-                onTap: () async {
+              IconButton(
+                onPressed: () async {
                   await controller.cropImage(controller.imagePath!);
                 },
-                child: Icon(
+                icon: Icon(
                   Icons.crop,
                   size: IsmChatDimens.twenty,
                   color: IsmChatColors.whiteColor,
                 ),
               ),
-              IsmChatDimens.boxWidth16,
-              InkWell(
-                onTap: () async {
+              IconButton(
+                onPressed: () async {
                   controller.imagePath =
                       await Get.to<File>(IsmChatImagePainterWidget(
                     file: controller.imagePath!,
                   ));
                 },
-                child: Icon(
+                icon: Icon(
                   Icons.edit,
                   size: IsmChatDimens.twenty,
                   color: IsmChatColors.whiteColor,
                 ),
               ),
-              IsmChatDimens.boxWidth8,
             ],
-            leading: InkWell(
-              child: Icon(
+            leading: IconButton(
+              icon: Icon(
                 Icons.clear,
                 size: IsmChatDimens.twenty,
                 color: IsmChatColors.whiteColor,
               ),
-              onTap: () {
+              onPressed: () {
                 Get.back<void>();
                 Get.back<void>();
               },
