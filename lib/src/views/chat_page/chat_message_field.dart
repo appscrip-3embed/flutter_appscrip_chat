@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
@@ -266,13 +267,24 @@ class _MicOrSendButton extends StatelessWidget {
                       controller.forVideoRecordTimer?.cancel();
                       controller.seconds = 0;
                       var path = await controller.recordAudio.stop();
-                      controller.sendAudio(
-                          path: path,
-                          conversationId:
-                              controller.conversation?.conversationId ?? '',
-                          userId: controller
-                                  .conversation?.opponentDetails?.userId ??
-                              '');
+                      var sizeMedia = IsmChatUtility.fileToSize(File(path!));
+                      if ((double.parse(sizeMedia.split(' ').first) >= 20.00) ||
+                          (sizeMedia.split(' ').last == 'KB')) {
+                        controller.sendAudio(
+                            path: path,
+                            conversationId:
+                                controller.conversation?.conversationId ?? '',
+                            userId: controller
+                                    .conversation?.opponentDetails?.userId ??
+                                '');
+                      } else {
+                        await Get.dialog(
+                          const IsmChatAlertDialogBox(
+                            title: 'You can not send audio more than 20 MB.',
+                            cancelLabel: 'Okay',
+                          ),
+                        );
+                      }
                     },
               onTap: () async {
                 if (controller.showSendButton) {

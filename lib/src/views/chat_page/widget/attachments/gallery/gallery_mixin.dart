@@ -81,15 +81,10 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
             },
             child: Scaffold(
               appBar: AppBar(
-                title: IsmChatConstants.videoExtensions.contains(controller
-                        .listOfAssetsPath[controller.assetsIndex].mediaUrl!
-                        .split('.')
-                        .last)
-                    ? Text(
-                        dataSize,
-                        style: IsmChatStyles.w600White14,
-                      )
-                    : null,
+                title: Text(
+                  dataSize,
+                  style: IsmChatStyles.w600White14,
+                ),
                 centerTitle: true,
                 backgroundColor: IsmChatConfig.chatTheme.primaryColor,
                 leading: InkWell(
@@ -121,6 +116,12 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                                     .listOfAssetsPath[controller.assetsIndex]
                                     .copyWith(
                                         mediaUrl: controller.imagePath?.path);
+                                dataSize = IsmChatUtility.fileToSize(
+                                  File(ismChatPageController
+                                      .listOfAssetsPath[
+                                          ismChatPageController.assetsIndex]
+                                      .mediaUrl!),
+                                );
                               },
                               child: const Icon(
                                 Icons.crop,
@@ -145,6 +146,12 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                                         .assetsIndex] = controller
                                     .listOfAssetsPath[controller.assetsIndex]
                                     .copyWith(mediaUrl: mediaFile!.path);
+                                dataSize = IsmChatUtility.fileToSize(
+                                  File(ismChatPageController
+                                      .listOfAssetsPath[
+                                          ismChatPageController.assetsIndex]
+                                      .mediaUrl!),
+                                );
                               },
                               child: const Icon(
                                 Icons.edit,
@@ -156,7 +163,6 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                               onTap: () {
                                 controller.listOfAssetsPath
                                     .removeAt(controller.assetsIndex);
-
                                 if (controller.listOfAssetsPath.isEmpty) {
                                   Get.back<void>();
                                 }
@@ -191,7 +197,6 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                                         .assetsIndex] = controller
                                     .listOfAssetsPath[controller.assetsIndex]
                                     .copyWith(mediaUrl: mediaFile?.path);
-
                                 dataSize = IsmChatUtility.fileToSize(
                                   File(ismChatPageController
                                       .listOfAssetsPath[
@@ -271,6 +276,12 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                               onTap: () async {
                                 controller.assetsIndex = index;
                                 controller.isVideoVisible = false;
+                                dataSize = IsmChatUtility.fileToSize(
+                                  File(ismChatPageController
+                                      .listOfAssetsPath[
+                                          ismChatPageController.assetsIndex]
+                                      .mediaUrl!),
+                                );
                               },
                               child: Stack(
                                 alignment: Alignment.center,
@@ -321,8 +332,7 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                       right: IsmChatDimens.ten,
                       child: InkWell(
                         onTap: () {
-                          Get.back<void>();
-                          controller.sendPhotoAndVideo();
+                          controller.sendMedia();
                         },
                         child: Container(
                           margin: IsmChatDimens.edgeInsets10,
