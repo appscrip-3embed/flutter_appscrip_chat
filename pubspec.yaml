@@ -22,16 +22,12 @@ dependencies:
     sdk: flutter
   flutter_local_notifications: ^14.1.0
   flutter_native_image: ^0.0.6+1
-  flutter_screenutil: ^5.7.0
+  flutter_screenutil: ^5.8.4
   flutter_slidable: ^2.0.0
   flutter_svg: ^1.0.3
   flutter_web_plugins:
     sdk: flutter
   fluttertoast: ^8.2.1
-  focused_menu:
-    git:
-      url: https://github.com/retroportalstudio/focused_menu.git
-      ref: 8bba0ca
   geocode: ^1.0.2
   geocoding: ^2.1.0
   geolocator: ^9.0.2
