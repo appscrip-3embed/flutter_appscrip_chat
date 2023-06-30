@@ -29,10 +29,9 @@ class AuthViewModel extends GetxController {
         email: email,
       );
 
-      if (IsmChatConfig.useDatabase) {
-        await dbWrapper?.userDetailsBox
-            .put(IsmChatStrings.userData, userDetails.toJson());
-      }
+      await dbWrapper?.userDetailsBox
+          .put(IsmChatStrings.userData, userDetails.toJson());
+
       return userDetails;
     } catch (e, st) {
       AppLog.error('Login $e', st);
@@ -104,10 +103,10 @@ class AuthViewModel extends GetxController {
         userToken: data['userToken'],
         email: createUser['userIdentifier'],
       );
-      if (IsmChatConfig.useDatabase) {
-        await dbWrapper?.userDetailsBox
-            .put(IsmChatStrings.userData, userDetails.toJson());
-      }
+
+      await dbWrapper?.userDetailsBox
+          .put(IsmChatStrings.userData, userDetails.toJson());
+
       return userDetails;
     } catch (e, st) {
       AppLog.error('Sign up $e', st);

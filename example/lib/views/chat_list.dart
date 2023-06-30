@@ -15,9 +15,10 @@ class ChatList extends StatelessWidget {
     return GetBuilder<ChatListController>(builder: (controller) {
       return Scaffold(
           body: IsmChatApp(
-        useDataBase: false,
-        chatTheme: IsmChatThemeData(primaryColor: AppColors.primaryColorLight,
-        chatPageTheme: IsmChatPageThemeData(
+        // useDataBase: false,
+        chatTheme: IsmChatThemeData(
+          primaryColor: AppColors.primaryColorLight,
+          chatPageTheme: IsmChatPageThemeData(
             selfMessageTheme: IsmChatMessageThemeData(
               // backgroundColor: Colors.white,
               borderColor: Colors.grey,
@@ -27,39 +28,42 @@ class ChatList extends StatelessWidget {
               borderColor: AppColors.primaryColorLight,
             ),
           ),
-        ),communicationConfig: IsmChatCommunicationConfig(
-            userConfig: IsmChatUserConfig(
-                userToken: AppConfig.userDetail?.userToken ?? '',
+        ),
+        communicationConfig: IsmChatCommunicationConfig(
+          userConfig: IsmChatUserConfig(
+              userToken: AppConfig.userDetail?.userToken ?? '',
                 userId: AppConfig.userDetail?.userId ?? '',
                 userName: AppConfig.userDetail?.userName ?? '',
-                userEmail: AppConfig.userDetail?.email ?? '',
-            userProfile: controller.userDetails?.userProfile ?? ''),mqttConfig: const IsmChatMqttConfig(
-              hostName: Constants.hostname,
-              port: Constants.port,
-            ),
-            projectConfig: const IsmChatProjectConfig(
-              accountId: Constants.accountId,
-              appSecret: Constants.appSecret,
-              userSecret: Constants.userSecret,
-              keySetId: Constants.keysetId,
-              licenseKey: Constants.licenseKey,
-              projectId: Constants.projectId,
-            ),
+              userEmail: AppConfig.userDetail?.email ?? '',
+              userProfile: ''),
+          mqttConfig: const IsmChatMqttConfig(
+            hostName: Constants.hostname,
+            port: Constants.port,
           ),
-          showAppBar: true,
-          onSignOut: controller.onSignOut,
-          onChatTap: (_, __) => RouteManagement.goToChatMessages(),
-          showCreateChatIcon: true,
-          onCreateChatTap: RouteManagement.goToUserList,
-          enableGroupChat: true,
-          allowDelete: true,
-          emptyConversationPlaceholder:
-              const IsmChatEmptyView(text: 'Create conversation',
+          projectConfig: const IsmChatProjectConfig(
+            accountId: Constants.accountId,
+            appSecret: Constants.appSecret,
+            userSecret: Constants.userSecret,
+            keySetId: Constants.keysetId,
+            licenseKey: Constants.licenseKey,
+            projectId: Constants.projectId,
+          ),
+        ),
+        showAppBar: true,
+        onSignOut: controller.onSignOut,
+        onChatTap: (_, __) => RouteManagement.goToChatMessages(),
+        showCreateChatIcon: true,
+        onCreateChatTap: RouteManagement.goToUserList,
+        enableGroupChat: true,
+        allowDelete: true,
+        emptyConversationPlaceholder: const IsmChatEmptyView(
+          text: 'Create conversation',
           icon: Icon(
             Icons.add_circle_outline_outlined,
             size: 70,
             color: AppColors.primaryColorLight,
-          ),),
+          ),
+        ),
         // isSlidableEnable: (_, conversation) {
         //   return conversation.metaData!.isMatchId!.isNotEmpty ? false : true;
         // },

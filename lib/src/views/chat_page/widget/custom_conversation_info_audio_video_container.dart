@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 // / The view part of the [IsmChatPageView], which will be used to
 /// show the Message Information view page
 class IsmChatConversationInfoAudioVideoContainer extends StatelessWidget {
-  IsmChatConversationInfoAudioVideoContainer(
+  const IsmChatConversationInfoAudioVideoContainer(
       {Key? key, required this.title, required this.pictureName})
       : super(key: key);
 
-  IconData? pictureName;
-  String? title;
+  final IconData? pictureName;
+  final String? title;
 
   @override
   Widget build(BuildContext context) => Container(

@@ -4,20 +4,13 @@ mixin IsmChatPageGetMessageMixin {
   IsmChatPageController get _controller => Get.find<IsmChatPageController>();
 
   Future<void> getMessagesFromDB(String conversationId) async {
-    if (IsmChatConfig.useDatabase) {
-      _controller.messages.clear();
-      var messages = await IsmChatConfig.dbWrapper!.getMessage(conversationId);
-      if (messages?.isEmpty ?? false || messages == null) {
-        return;
-      }
-      _controller.messages = _controller._viewModel.sortMessages(messages!);
-    } else {
-      var messages = List<IsmChatMessageModel>.from(_controller.messages);
-      messages
-          .removeWhere((e) => e.customType == IsmChatCustomMessageType.date);
-      _controller.messages.clear();
-      _controller.messages = _controller._viewModel.sortMessages(messages);
+    _controller.messages.clear();
+    var messages = await IsmChatConfig.dbWrapper!.getMessage(conversationId);
+    if (messages?.isEmpty ?? false || messages == null) {
+      return;
     }
+    _controller.messages = _controller._viewModel.sortMessages(messages!);
+
     _controller.isMessagesLoading = false;
     if (_controller.messages.isEmpty) {
       return;
@@ -58,26 +51,7 @@ mixin IsmChatPageGetMessageMixin {
     }
 
     if (data != null) {
-      if (IsmChatConfig.useDatabase) {
-        await getMessagesFromDB(conversationID);
-      } else {
-        if (fromBlockUnblock == null) {
-          if (_controller.messages.isEmpty) {
-            _controller.messages = _controller._viewModel.sortMessages(data);
-          } else {
-            _controller.messages
-                .addAll(_controller._viewModel.sortMessages(data));
-          }
-          await updateConversationMessage();
-        } else if (fromBlockUnblock) {
-          _controller.messages.add(data.first);
-          _controller.messages.removeWhere(
-              (e) => e.customType == IsmChatCustomMessageType.date);
-          _controller.messages =
-              _controller._viewModel.sortMessages(_controller.messages);
-          await updateConversationMessage();
-        }
-      }
+      await getMessagesFromDB(conversationID);
     }
     _controller.isLoadingMessages = false;
   }

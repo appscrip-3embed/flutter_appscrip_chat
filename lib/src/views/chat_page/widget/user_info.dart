@@ -39,8 +39,8 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
   }
 
   void getMessages() async {
-    var messages = await IsmChatConfig.dbWrapper!
-        .getMessage(widget.dbConversationModel.conversationId!);
+    var messages =
+        await IsmChatConfig.dbWrapper!.getMessage(widget.conversationId);
     IsmChatLog.error(messages);
     if (messages?.isNotEmpty == true) {
       mediaList = messages!
@@ -166,7 +166,6 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
                                   : chatPageController.blockUser(
                                       opponentId: widget.user.userId,
                                       lastMessageTimeStamp: 0,
-
                                     );
                             },
                           ],

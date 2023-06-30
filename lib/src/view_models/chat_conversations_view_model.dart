@@ -94,7 +94,8 @@ class IsmChatConversationsViewModel {
   Future<IsmChatResponseModel?> deleteChat(String conversationId) async =>
       await _repository.deleteChat(conversationId);
 
-  Future<void> clearAllMessages(String conversationId) async {
+  Future<void> clearAllMessages(String conversationId,
+      {bool fromServer = true}) async {
     var response = await _repository.clearAllMessages(
       conversationId: conversationId,
     );

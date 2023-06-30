@@ -66,25 +66,6 @@ class IsmChatConversationModel {
             : [],
       );
 
-  factory IsmChatConversationModel.fromDB(DBConversationModel dbConversation) =>
-      IsmChatConversationModel(
-        updatedAt: 0,
-        unreadMessagesCount: dbConversation.unreadMessagesCount,
-        privateOneToOne: false,
-        opponentDetails: dbConversation.opponentDetails.target,
-        messagingDisabled: dbConversation.messagingDisabled,
-        membersCount: dbConversation.membersCount,
-        lastMessageSentAt: dbConversation.lastMessageSentAt,
-        lastMessageDetails: dbConversation.lastMessageDetails.target,
-        isGroup: dbConversation.isGroup,
-        conversationType: IsmChatConversationType.public,
-        conversationTitle: dbConversation.conversationTitle,
-        conversationImageUrl: dbConversation.conversationImageUrl,
-        conversationId: dbConversation.conversationId,
-        config: dbConversation.config.target,
-        metaData: dbConversation.metaData,
-      );
-
   IsmChatConversationModel({
     this.updatedAt,
     this.unreadMessagesCount,

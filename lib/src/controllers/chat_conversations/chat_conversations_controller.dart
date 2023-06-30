@@ -96,25 +96,18 @@ class IsmChatConversationsController extends GetxController {
 
   @override
   onInit() async {
-    super.onInit();
-
     await _generateReactionList();
-    if (!IsmChatConfig.useDatabase) {
-      await getUserData();
-      await getChatConversations();
+    var users = await IsmChatConfig.dbWrapper!.userDetailsBox
+        .get(IsmChatStrings.userData);
+    if (users != null) {
+      userDetails = UserDetails.fromJson(users);
     } else {
-      var users = await IsmChatConfig.dbWrapper!.userDetailsBox
-          .get(IsmChatStrings.userData);
-      if (users != null) {
-        userDetails = UserDetails.fromJson(users);
-      } else {
-        await getUserData();
-      }
-      await getConversationsFromDB();
-      await getChatConversations();
+      await getUserData();
     }
-    userListScrollListener();
-    await getChatConversationUnreadCount();
+    await getConversationsFromDB();
+    await getChatConversations();
+    await Get.find<IsmChatMqttController>().getChatConversationsUnreadCount();
+    super.onInit();
   }
 
   @override
@@ -353,7 +346,6 @@ class IsmChatConversationsController extends GetxController {
     if (conversations.isEmpty) {
       isConversationsLoading = true;
     }
-
     var apiConversations =
         await _viewModel.getChatConversations(noOfConvesation);
 
@@ -379,11 +371,8 @@ class IsmChatConversationsController extends GetxController {
 
     unawaited(getBlockUser());
     conversationPage = conversationPage + 20;
-    if (IsmChatConfig.useDatabase) {
-      await getConversationsFromDB();
-    } else {
-      conversations = apiConversations;
-    }
+
+    await getConversationsFromDB();
   }
 
   Future<void> getBlockUser() async {

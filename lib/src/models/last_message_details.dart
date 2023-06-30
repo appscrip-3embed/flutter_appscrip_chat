@@ -105,6 +105,7 @@ class LastMessageDetails {
     List<String>? members,
     String? reactionType,
     String? action,
+    String? userId,
   }) =>
       LastMessageDetails(
           showInConversation: showInConversation ?? this.showInConversation,

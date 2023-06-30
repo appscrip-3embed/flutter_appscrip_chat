@@ -355,14 +355,7 @@ class IsmChatPageController extends GetxController
       conversation = _conversationController.currentConversation!;
       await Future.delayed(Duration.zero);
       if (conversation!.conversationId?.isNotEmpty ?? false) {
-        if (IsmChatConfig.useDatabase) {
-          await getMessagesFromDB(conversation?.conversationId ?? '');
-        }
-        messages = conversation?.messages ?? [];
-        if (messages.isNotEmpty) {
-          isMessagesLoading = false;
-        }
-
+        await getMessagesFromDB(conversation?.conversationId ?? '');
         await Future.wait([
           getMessagesFromAPI(),
           getConverstaionDetails(
@@ -882,56 +875,6 @@ class IsmChatPageController extends GetxController
   Future<void> updateLastMessage() async {
     var chatConversationController = Get.find<IsmChatConversationsController>();
     if (!didReactedLast) {
-      if (!IsmChatConfig.useDatabase) {
-        var converstionIndex = chatConversationController.conversations
-            .indexWhere(
-                (e) => e.conversationId == conversation?.conversationId);
-        chatConversationController.conversations[converstionIndex] =
-            chatConversationController.conversations[converstionIndex].copyWith(
-          lastMessageDetails: LastMessageDetails(
-            sentByMe: messages.last.sentByMe,
-            showInConversation: true,
-            sentAt: messages.last.sentAt,
-            senderName: messages.last.chatName,
-            messageType: messages.last.messageType?.value ?? 0,
-            messageId: messages.last.messageId ?? '',
-            conversationId: messages.last.conversationId ?? '',
-            body: messages.last.body,
-            customType: messages.last.customType,
-            readCount: chatConversationController
-                    .conversations[converstionIndex].isGroup!
-                ? messages.last.readByAll!
-                    ? chatConversationController
-                        .conversations[converstionIndex].membersCount!
-                    : messages.last.lastReadAt!.length
-                : messages.last.readByAll!
-                    ? 1
-                    : 0,
-            deliverCount: chatConversationController
-                    .conversations[converstionIndex].isGroup!
-                ? messages.last.deliveredToAll!
-                    ? chatConversationController
-                        .conversations[converstionIndex].membersCount!
-                    : 0
-                : messages.last.deliveredToAll!
-                    ? 1
-                    : 0,
-            members: messages.last.members
-                    ?.map((e) => e.memberName ?? '')
-                    .toList() ??
-                [],
-            reactionType: '',
-          ),
-          unreadMessagesCount: 0,
-          messages: messages,
-        );
-        chatConversationController.conversations.sort(
-          (a, b) => b.lastMessageDetails!.sentAt.compareTo(
-            a.lastMessageDetails!.sentAt,
-          ),
-        );
-        return;
-      }
       var chatConversation = await IsmChatConfig.dbWrapper!
           .getConversation(conversationId: conversation?.conversationId ?? '');
       if (chatConversation != null) {
@@ -976,7 +919,6 @@ class IsmChatPageController extends GetxController
             unreadMessagesCount: 0,
           );
         }
-
         await IsmChatConfig.dbWrapper!
             .saveConversation(conversation: chatConversation);
         await chatConversationController.getConversationsFromDB();

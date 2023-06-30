@@ -15,9 +15,8 @@ class ChatListController extends GetxController {
 
   @override
   void onInit() {
-    if (!IsmChatConfig.useDatabase) {
-      userDetails = Get.arguments['userData'];
-    }
+    userDetails = Get.arguments['userData'];
+
     super.onInit();
   }
 

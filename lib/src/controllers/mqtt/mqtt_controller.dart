@@ -10,6 +10,8 @@ import 'package:get/get.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 
 class IsmChatMqttController extends GetxController {
+  IsmChatMqttController(this._viewModel);
+  final IsmChatMqttViewModel _viewModel;
   final _deviceConfig = Get.find<IsmChatDeviceConfig>();
 
   var client = IsmChatMqttClient.client;
@@ -37,8 +39,6 @@ class IsmChatMqttController extends GetxController {
 
   @override
   void onInit() async {
-    super.onInit();
-    await _getDeviceId();
     _communicationConfig = IsmChatConfig.communicationConfig;
     userId = _communicationConfig.userConfig.userId;
 
@@ -49,6 +49,7 @@ class IsmChatMqttController extends GetxController {
     await initializeMqttClient();
     await connectClient();
     unawaited(getChatConversationsUnreadCount());
+    super.onInit();
   }
 
   Future<void> initializeMqttClient() async {
@@ -133,12 +134,12 @@ class IsmChatMqttController extends GetxController {
       if (payload['action'] != null) {
         var action = payload['action'];
         if (IsmChatActionEvents.values
-          .map((e) => e.toString())
-        .contains(action)) {
-
+            .map((e) => e.toString())
+            .contains(action)) {
           var actionModel = IsmChatMqttActionModel.fromMap(payload);
           _handleAction(actionModel);
-        }actionStreamController.add(payload);
+        }
+        actionStreamController.add(payload);
       } else {
         var message = IsmChatMessageModel.fromMap(payload);
         _handleLocalNotification(message);
@@ -640,7 +641,7 @@ class IsmChatMqttController extends GetxController {
       await conversationController.getChatConversations();
     }
     var allMessages =
-        await IsmChatConfig.objectBox.getMessages(actionModel.conversationId);
+        await IsmChatConfig.dbWrapper?.getMessage(actionModel.conversationId!);
     allMessages?.add(
       IsmChatMessageModel(
         members: actionModel.members,
@@ -665,9 +666,8 @@ class IsmChatMqttController extends GetxController {
         ),
       ),
     );
-    await IsmChatConfig.objectBox
-        .saveMessages(actionModel.conversationId ?? '', allMessages ?? []);
-
+    // Todo
+    // await IsmChatConfig.dbWrapper!.saveMessage(actionModel, allMessages ?? []);
     messageId = actionModel.sentAt.toString();
     if (Get.isRegistered<IsmChatPageController>()) {
       var chatPageController = Get.find<IsmChatPageController>();
@@ -698,10 +698,10 @@ class IsmChatMqttController extends GetxController {
       }
     }
     if (actionModel.action == IsmChatActionEvents.removeMember) {
-      var conversation = await IsmChatConfig.objectBox
-          .getDBConversation(conversationId: actionModel.conversationId ?? '');
+      var conversation = await IsmChatConfig.dbWrapper
+          ?.getConversation(conversationId: actionModel.conversationId ?? '');
       if (conversation != null) {
-        conversation.lastMessageDetails.target = LastMessageDetails(
+        conversation.lastMessageDetails?.copyWith(
           sentByMe: false,
           showInConversation: true,
           sentAt: actionModel.sentAt,
@@ -718,8 +718,9 @@ class IsmChatMqttController extends GetxController {
               actionModel.members?.map((e) => e.memberName.toString()).toList(),
           reactionType: '',
         );
-        conversation.unreadMessagesCount = 0;
-        IsmChatConfig.objectBox.chatConversationBox.put(conversation);
+        conversation = conversation.copyWith(unreadMessagesCount: 0);
+        await IsmChatConfig.dbWrapper
+            ?.saveConversation(conversation: conversation);
         await conversationController.getConversationsFromDB();
       }
     }
@@ -730,11 +731,9 @@ class IsmChatMqttController extends GetxController {
         _communicationConfig.userConfig.userId) {
       return;
     }
-
     if (messageId == actionModel.sentAt.toString()) {
       return;
     }
-
     if (Get.isRegistered<IsmChatPageController>()) {
       var controller = Get.find<IsmChatPageController>();
       if (controller.conversation!.conversationId ==
