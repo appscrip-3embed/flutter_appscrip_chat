@@ -268,8 +268,7 @@ class _MicOrSendButton extends StatelessWidget {
                       controller.seconds = 0;
                       var path = await controller.recordAudio.stop();
                       var sizeMedia = IsmChatUtility.fileToSize(File(path!));
-                      if ((double.parse(sizeMedia.split(' ').first) >= 20.00) ||
-                          (sizeMedia.split(' ').last == 'KB')) {
+                      if (sizeMedia.size()) {
                         controller.sendAudio(
                             path: path,
                             conversationId:

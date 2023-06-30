@@ -166,6 +166,12 @@ class IsmChatPageController extends GetxController
   File? get imagePath => _imagePath.value;
   set imagePath(File? value) => _imagePath.value = value;
 
+  final RxString _fileSize = ''.obs;
+  String get fileSize => _fileSize.value;
+  set fileSize(String value) {
+    _fileSize.value = value;
+  }
+
   final RxList<AttachmentModel> _listOfAssetsPath = <AttachmentModel>[].obs;
   List<AttachmentModel> get listOfAssetsPath => _listOfAssetsPath;
   set listOfAssetsPath(List<AttachmentModel> value) =>
@@ -945,6 +951,7 @@ class IsmChatPageController extends GetxController
     );
     if (croppedFile != null) {
       imagePath = File(croppedFile.path);
+      fileSize = IsmChatUtility.fileToSize(imagePath!);
       IsmChatLog.success('Image cropped ${imagePath?.path}');
     }
   }
@@ -952,6 +959,7 @@ class IsmChatPageController extends GetxController
   void takePhoto() async {
     var file = await cameraController.takePicture();
     imagePath = File(file.path);
+    fileSize = IsmChatUtility.fileToSize(imagePath!);
     await Get.to(const IsmChatImageEditView());
   }
 

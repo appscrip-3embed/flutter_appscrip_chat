@@ -108,13 +108,12 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     var isMaxSize = false;
     for (var x in _controller.listOfAssetsPath) {
       var sizeMedia = IsmChatUtility.fileToSize(File(x.mediaUrl!));
-      if ((double.parse(sizeMedia.split(' ').first) >= 20.00) ||
-          (sizeMedia.split(' ').last == 'KB')) {
+      if (sizeMedia.size()) {
         isMaxSize = true;
         break;
       }
     }
-
+    IsmChatLog.error(isMaxSize);
     if (!isMaxSize) {
       Get.back<void>();
       sendPhotoAndVideo();
@@ -300,8 +299,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         }
         for (var x in result!.files) {
           var sizeMedia = IsmChatUtility.fileToSize(File(x.path!));
-          if ((double.parse(sizeMedia.split(' ').first) >= 20.00) ||
-              (sizeMedia.split(' ').last == 'KB')) {
+          if (sizeMedia.size()) {
             bytes = x.bytes;
             nameWithExtension = x.path!.split('/').last;
             final extension = nameWithExtension.split('.').last;
@@ -613,6 +611,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     required double longitude,
     required String placeId,
     required String locationName,
+    required String locationSubName,
     SendMessageType sendMessageType = SendMessageType.pendingMessage,
     bool forwardMessgeForMulitpleUser = false,
     String? messageBody,
@@ -628,22 +627,26 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatMessageModel(
-        body: sendMessageType == SendMessageType.pendingMessage
-            ? 'https://www.google.com/maps/search/?api=1&map_action=map&query=$latitude%2C$longitude&query_place_id=$placeId'
-            : messageBody ?? '',
-        conversationId: conversationId,
-        customType: IsmChatCustomMessageType.location,
-        deliveredToAll: false,
-        messageId: '',
-        messageType: sendMessageType == SendMessageType.pendingMessage
-            ? IsmChatMessageType.normal
-            : IsmChatMessageType.forward,
-        messagingDisabled: false,
-        parentMessageId: '',
-        readByAll: false,
-        sentAt: sentAt,
-        sentByMe: true,
-        metaData: IsmChatMetaData(locationAddress: locationName));
+      body: sendMessageType == SendMessageType.pendingMessage
+          ? 'https://www.google.com/maps/search/?api=1&map_action=map&query=$latitude%2C$longitude&query_place_id=$placeId'
+          : messageBody ?? '',
+      conversationId: conversationId,
+      customType: IsmChatCustomMessageType.location,
+      deliveredToAll: false,
+      messageId: '',
+      messageType: sendMessageType == SendMessageType.pendingMessage
+          ? IsmChatMessageType.normal
+          : IsmChatMessageType.forward,
+      messagingDisabled: false,
+      parentMessageId: '',
+      readByAll: false,
+      sentAt: sentAt,
+      sentByMe: true,
+      metaData: IsmChatMetaData(
+        locationAddress: locationName,
+        locationSubAddress: locationSubName,
+      ),
+    );
     if (!forwardMessgeForMulitpleUser) {
       _controller.messages.add(textMessage);
       _controller.chatInputController.clear();

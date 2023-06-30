@@ -229,55 +229,59 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                         ),
                       ),
                       IsmChatDimens.boxHeight16,
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.my_location,
-                              color: Colors.teal,
-                            ),
-                            IsmChatDimens.boxWidth8,
-                            InkWell(
-                              onTap: () async {
-                                IsmChatUtility.showLoader();
-                                var position =
-                                    await Geolocator.getCurrentPosition(
-                                        desiredAccuracy: LocationAccuracy.high);
-                                controller.sendLocation(
+                      if (controller.predictionList.isNotEmpty)
+                        Padding(
+                          padding: IsmChatDimens.edgeInsets10_0,
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.my_location,
+                                color: Colors.teal,
+                              ),
+                              IsmChatDimens.boxWidth8,
+                              IsmChatTapHandler(
+                                onTap: () {
+                                  controller.sendLocation(
                                     conversationId: controller
                                             .conversation?.conversationId ??
                                         '',
                                     userId: controller.conversation
                                             ?.opponentDetails?.userId ??
                                         '',
-                                    latitude: position.latitude,
-                                    longitude: position.longitude,
+                                    latitude: controller.predictionList.first
+                                            .geometry?.location?.lat ??
+                                        0,
+                                    longitude: controller.predictionList.first
+                                            .geometry?.location?.lng ??
+                                        0,
                                     placeId: controller
                                             .predictionList.first.placeId ??
                                         '',
                                     locationName:
                                         controller.predictionList.first.name ??
-                                            '');
-                                Get.back<void>();
-                                IsmChatUtility.closeLoader();
-                              },
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Send your current location',
-                                  ),
-                                  Text(
-                                    'Accurate to 12 meters',
-                                    style: IsmChatStyles.w400Grey10,
-                                  )
-                                ],
+                                            '',
+                                    locationSubName: controller
+                                            .predictionList.first.vicinity ??
+                                        '',
+                                  );
+                                  Get.back<void>();
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Send your current location',
+                                    ),
+                                    Text(
+                                      'Accurate to 12 meters',
+                                      style: IsmChatStyles.w400Grey10,
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
                       if (controller.predictionList.isEmpty) ...[
                         const SizedBox(
                           height: 100,
@@ -291,60 +295,61 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                         ]
                       ] else ...[
                         ListView.builder(
-                          shrinkWrap: true,
-                          physics: const ScrollPhysics(),
-                          addAutomaticKeepAlives: true,
-                          itemCount: controller.predictionList.length,
-                          itemBuilder: (context, index) {
-                            var prediction = controller.predictionList[index];
-                            return InkWell(
-                              onTap: () async {
-                                IsmChatUtility.showLoader();
-                                var locations = await locationFromAddress(
-                                    ismChatPageController
-                                        .predictionList[index].vicinity
-                                        .toString());
-                                controller.sendLocation(
-                                    conversationId: controller
-                                            .conversation?.conversationId ??
-                                        '',
-                                    userId: controller.conversation
-                                            ?.opponentDetails?.userId ??
-                                        '',
-                                    latitude: locations.first.latitude,
-                                    longitude: locations.first.longitude,
-                                    placeId: controller
-                                            .predictionList[index].placeId ??
-                                        '',
-                                    locationName:
-                                        controller.predictionList[index].name ??
-                                            '');
+                            shrinkWrap: true,
+                            physics: const ScrollPhysics(),
+                            addAutomaticKeepAlives: true,
+                            itemCount: controller.predictionList.length,
+                            itemBuilder: (context, index) {
+                              var prediction = controller.predictionList[index];
+                              if (index == 0) {
+                                return const SizedBox.shrink();
+                              }
+                              return IsmChatTapHandler(
+                                onTap: () {
+                                  controller.sendLocation(
+                                      conversationId: controller
+                                              .conversation?.conversationId ??
+                                          '',
+                                      userId: controller.conversation
+                                              ?.opponentDetails?.userId ??
+                                          '',
+                                      latitude: controller.predictionList[index]
+                                              .geometry?.location?.lat ??
+                                          0,
+                                      longitude: controller
+                                              .predictionList[index]
+                                              .geometry
+                                              ?.location
+                                              ?.lng ??
+                                          0,
+                                      placeId:
+                                          controller.predictionList[index].placeId ?? '',
+                                      locationName: controller.predictionList[index].name ?? '',
+                                      locationSubName: controller.predictionList[index].vicinity ?? '');
 
-                                Get.back<void>();
-                                IsmChatUtility.closeLoader();
-                              },
-                              child: ListTile(
-                                minLeadingWidth: 0,
-                                leading: const Icon(
-                                  Icons.house_siding,
-                                ),
-                                title: SizedBox(
-                                  width: Get.width - 100,
-                                  child: Text(
-                                    prediction.name ?? '',
-                                    maxLines: 3,
+                                  Get.back<void>();
+                                },
+                                child: ListTile(
+                                  minLeadingWidth: 0,
+                                  leading: const Icon(
+                                    Icons.house_siding,
+                                  ),
+                                  title: SizedBox(
+                                    width: Get.width - 100,
+                                    child: Text(
+                                      prediction.name ?? '',
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    prediction.vicinity ?? '',
+                                    maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                                subtitle: Text(
-                                  prediction.vicinity ?? '',
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            );
-                          },
-                        )
+                              );
+                            })
                       ]
                     ],
                   ),

@@ -9,6 +9,7 @@ class IsmChatMetaData {
   final String? country;
   final String? parentMessageBody;
   final String? locationAddress;
+  final String? locationSubAddress;
   final String? profilePic;
   final String? lastName;
   final String? firstName;
@@ -27,6 +28,7 @@ class IsmChatMetaData {
     this.country,
     this.parentMessageBody,
     this.locationAddress,
+    this.locationSubAddress,
     this.profilePic,
     this.parentMessageInitiator,
     this.firstName,
@@ -59,31 +61,32 @@ class IsmChatMetaData {
     String? genderOfUserWhoReceivedTheGuestChat,
     bool? paidChat,
     String? customType,
+    String? locationSubAddress,
   }) =>
       IsmChatMetaData(
-        country: country ?? this.country,
-        parentMessageBody: parentMessageBody ?? this.parentMessageBody,
-        locationAddress: locationAddress ?? this.locationAddress,
-        profilePic: profilePic ?? this.profilePic,
-        parentMessageInitiator:
-            parentMessageInitiator ?? this.parentMessageInitiator,
-        userId: userId ?? this.userId,
-        isMatchId: isMatchId ?? this.isMatchId,
-        firstName: firstName ?? this.firstName,
-        lastName: lastName ?? this.lastName,
-        isGuestMatch: isGuestMatch ?? this.isGuestMatch,
-        guestMatchInitiatedByUserId:
-            guestMatchInitiatedByUserId ?? this.guestMatchInitiatedByUserId,
-        genderOfUserWhoReceivedTheGuestChat:
-            genderOfUserWhoReceivedTheGuestChat ??
-                this.genderOfUserWhoReceivedTheGuestChat,
-        genderOfUserWhoStartedGuestChat: genderOfUserWhoStartedGuestChat ??
-            this.genderOfUserWhoStartedGuestChat,
-        guestMatchInitiatedWithUserId:
-            guestMatchInitiatedWithUserId ?? this.guestMatchInitiatedWithUserId,
-        paidChat: paidChat ?? this.paidChat,
-        customType: customType ?? this.country,
-      );
+          country: country ?? this.country,
+          parentMessageBody: parentMessageBody ?? this.parentMessageBody,
+          locationAddress: locationAddress ?? this.locationAddress,
+          profilePic: profilePic ?? this.profilePic,
+          parentMessageInitiator:
+              parentMessageInitiator ?? this.parentMessageInitiator,
+          userId: userId ?? this.userId,
+          isMatchId: isMatchId ?? this.isMatchId,
+          firstName: firstName ?? this.firstName,
+          lastName: lastName ?? this.lastName,
+          isGuestMatch: isGuestMatch ?? this.isGuestMatch,
+          guestMatchInitiatedByUserId:
+              guestMatchInitiatedByUserId ?? this.guestMatchInitiatedByUserId,
+          genderOfUserWhoReceivedTheGuestChat:
+              genderOfUserWhoReceivedTheGuestChat ??
+                  this.genderOfUserWhoReceivedTheGuestChat,
+          genderOfUserWhoStartedGuestChat: genderOfUserWhoStartedGuestChat ??
+              this.genderOfUserWhoStartedGuestChat,
+          guestMatchInitiatedWithUserId: guestMatchInitiatedWithUserId ??
+              this.guestMatchInitiatedWithUserId,
+          paidChat: paidChat ?? this.paidChat,
+          customType: customType ?? this.country,
+          locationSubAddress: locationSubAddress ?? this.locationSubAddress);
 
   Map<String, dynamic> toMap() => <String, dynamic>{
         if (country != null || country?.isNotEmpty == true) 'country': country,
@@ -91,6 +94,9 @@ class IsmChatMetaData {
           'parentMessageBody': parentMessageBody,
         if (locationAddress != null || locationAddress?.isNotEmpty == true)
           'locationAddress': locationAddress,
+        if (locationSubAddress != null ||
+            locationSubAddress?.isNotEmpty == true)
+          'locationSubAddress': locationSubAddress,
         if (parentMessageInitiator != null)
           'parentMessageInitiator': parentMessageInitiator,
         if (profilePic != null || profilePic?.isNotEmpty == true)
@@ -129,6 +135,9 @@ class IsmChatMetaData {
         locationAddress: map['locationAddress'] != null
             ? map['locationAddress'] as String
             : null,
+        locationSubAddress: map['locationSubAddress'] != null
+            ? map['locationSubAddress'] as String
+            : null,
         profilePic:
             map['profilePic'] != null ? map['profilePic'] as String : null,
         parentMessageInitiator: map['parentMessageInitiator'] != null
@@ -162,7 +171,7 @@ class IsmChatMetaData {
 
   @override
   String toString() =>
-      'IsmChatMetaData(country: $country, parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, profilePic: $profilePic, parentMessageInitiator: $parentMessageInitiator, customType : $customType)';
+      'IsmChatMetaData(country: $country, parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, profilePic: $profilePic, parentMessageInitiator: $parentMessageInitiator, customType : $customType, locationSubAddress :$locationSubAddress)';
 
   @override
   bool operator ==(covariant IsmChatMetaData other) {
@@ -173,7 +182,9 @@ class IsmChatMetaData {
         other.locationAddress == locationAddress &&
         other.profilePic == profilePic &&
         other.parentMessageInitiator == parentMessageInitiator &&
-        other.customType == customType;
+        other.customType == customType &&
+        other.locationSubAddress == locationSubAddress &&
+        other.country == country;
   }
 
   @override
@@ -183,5 +194,6 @@ class IsmChatMetaData {
       locationAddress.hashCode ^
       profilePic.hashCode ^
       parentMessageInitiator.hashCode ^
-      customType.hashCode;
+      customType.hashCode ^
+      locationSubAddress.hashCode;
 }

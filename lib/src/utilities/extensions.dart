@@ -809,6 +809,15 @@ extension MentionMessage on IsmChatMessageModel {
     return theme?.opponentMessageTheme?.borderColor ??
         IsmChatConfig.chatTheme.backgroundColor;
   }
+}
 
-  Color? get iconColor {}
+extension SizeOfMedia on String {
+  bool size({double limit = 20}) {
+    if ((double.parse(split(' ').first) >= limit) ||
+        (split(' ').last == 'KB')) {
+      return true;
+    }
+
+    return false;
+  }
 }

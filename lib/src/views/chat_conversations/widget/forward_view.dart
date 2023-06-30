@@ -345,6 +345,7 @@ class IsmChatForwardView extends StatelessWidget {
                                           longitude: 0,
                                           placeId: '',
                                           locationName: '',
+                                          locationSubName: '',
                                           sendMessageType:
                                               SendMessageType.forwardMessage,
                                           messageBody: message.body);
@@ -440,6 +441,7 @@ class IsmChatForwardView extends StatelessWidget {
                                             longitude: 0,
                                             placeId: '',
                                             locationName: '',
+                                            locationSubName: '',
                                             sendMessageType:
                                                 SendMessageType.forwardMessage,
                                             forwardMessgeForMulitpleUser: true,
