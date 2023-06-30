@@ -84,7 +84,6 @@ class _IsmChatVideoViewState extends State<IsmChatVideoView> {
                     userId: chatPageController
                             .conversation?.opponentDetails?.userId ??
                         '');
-
                 Get.back<void>();
                 Get.back<void>();
               } else {

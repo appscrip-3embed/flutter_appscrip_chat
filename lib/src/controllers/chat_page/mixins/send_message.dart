@@ -104,6 +104,30 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
   }
 
+  void sendMedia() {
+    var isMaxSize = false;
+    for (var x in _controller.listOfAssetsPath) {
+      var sizeMedia = IsmChatUtility.fileToSize(File(x.mediaUrl!));
+      if ((double.parse(sizeMedia.split(' ').first) >= 20.00) ||
+          (sizeMedia.split(' ').last == 'KB')) {
+        isMaxSize = true;
+        break;
+      }
+    }
+
+    if (!isMaxSize) {
+      Get.back<void>();
+      sendPhotoAndVideo();
+    } else {
+      Get.dialog(
+        const IsmChatAlertDialogBox(
+          title: 'You can not send image and video more than 20 MB.',
+          cancelLabel: 'Okay',
+        ),
+      );
+    }
+  }
+
   void sendPhotoAndVideo() async {
     if (_controller.listOfAssetsPath.isNotEmpty) {
       for (var media in _controller.listOfAssetsPath) {
@@ -275,34 +299,45 @@ mixin IsmChatPageSendMessageMixin on GetxController {
               userId: [userId], metaData: _controller.conversation?.metaData);
         }
         for (var x in result!.files) {
-          bytes = x.bytes;
-          nameWithExtension = x.path!.split('/').last;
-          final extension = nameWithExtension.split('.').last;
-          documentMessage = IsmChatMessageModel(
-            body: 'Document',
-            conversationId: conversationId,
-            customType: IsmChatCustomMessageType.file,
-            attachments: [
-              AttachmentModel(
-                  attachmentType: IsmChatMediaType.file,
-                  thumbnailUrl: x.path,
-                  size: double.parse(x.bytes!.length.toString()),
-                  name: nameWithExtension,
-                  mimeType: extension,
-                  mediaUrl: x.path,
-                  mediaId: sentAt.toString(),
-                  extension: extension)
-            ],
-            deliveredToAll: false,
-            messageId: '',
-            deviceId: _controller._deviceConfig.deviceId!,
-            messageType: IsmChatMessageType.normal,
-            messagingDisabled: false,
-            parentMessageId: '',
-            readByAll: false,
-            sentAt: sentAt,
-            sentByMe: true,
-          );
+          var sizeMedia = IsmChatUtility.fileToSize(File(x.path!));
+          if ((double.parse(sizeMedia.split(' ').first) >= 20.00) ||
+              (sizeMedia.split(' ').last == 'KB')) {
+            bytes = x.bytes;
+            nameWithExtension = x.path!.split('/').last;
+            final extension = nameWithExtension.split('.').last;
+            documentMessage = IsmChatMessageModel(
+              body: 'Document',
+              conversationId: conversationId,
+              customType: IsmChatCustomMessageType.file,
+              attachments: [
+                AttachmentModel(
+                    attachmentType: IsmChatMediaType.file,
+                    thumbnailUrl: x.path,
+                    size: double.parse(x.bytes!.length.toString()),
+                    name: nameWithExtension,
+                    mimeType: extension,
+                    mediaUrl: x.path,
+                    mediaId: sentAt.toString(),
+                    extension: extension)
+              ],
+              deliveredToAll: false,
+              messageId: '',
+              deviceId: _controller._deviceConfig.deviceId!,
+              messageType: IsmChatMessageType.normal,
+              messagingDisabled: false,
+              parentMessageId: '',
+              readByAll: false,
+              sentAt: sentAt,
+              sentByMe: true,
+            );
+          } else {
+            await Get.dialog(
+              const IsmChatAlertDialogBox(
+                title: 'You can not send documnets more than 20 MB.',
+                cancelLabel: 'Okay',
+              ),
+            );
+          }
         }
       }
     }
