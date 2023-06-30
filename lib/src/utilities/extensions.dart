@@ -197,26 +197,14 @@ extension DateConvertor on int {
     }
     var now = DateTime.now();
     var date = toDate();
-    // if (now.isSameDay(date)) {
-    //   return 'Today';
-    // }
-    // return 'Yesterday';
-    // if (now.isSameMonth(date)) {
-    //   if (now.day - date.day == 1) {
-    //     return 'Yesterday';
-    //   }
-    if (now.difference(date) < const Duration(days: 8)) {
+
+    if (now.isSameDay(date)) {
+      return 'Today';
+    } else if (now.difference(date) < const Duration(days: 8)) {
       return date.weekday.weekDayString;
     }
     return date.toDateString();
   }
-  //   if (now.isSameMonth(date)) {
-  //     return 'This Month';
-  //   }
-  //   late DateFormat dateFormat;
-  //   dateFormat = DateFormat('yMMMM');
-  //   return dateFormat.format(date);
-  // }
 
   String get deliverTime {
     if (this == 0 || this == -1) {
@@ -809,6 +797,15 @@ extension MentionMessage on IsmChatMessageModel {
     return theme?.opponentMessageTheme?.borderColor ??
         IsmChatConfig.chatTheme.backgroundColor;
   }
+}
 
-  Color? get iconColor {}
+extension SizeOfMedia on String {
+  bool size({double limit = 20}) {
+    if ((double.parse(split(' ').first) >= limit) ||
+        (split(' ').last == 'KB')) {
+      return true;
+    }
+
+    return false;
+  }
 }

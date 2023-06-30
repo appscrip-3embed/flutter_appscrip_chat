@@ -75,8 +75,7 @@ class _IsmChatVideoViewState extends State<IsmChatVideoView> {
           child: FloatingActionButton(
             backgroundColor: IsmChatConfig.chatTheme.primaryColor,
             onPressed: () {
-              if ((double.parse(dataSize.split(' ').first) <= 20.00) ||
-                  (dataSize.split(' ').last == 'KB')) {
+              if (dataSize.size()) {
                 chatPageController.sendVideo(
                     file: widget.file,
                     conversationId:

@@ -1,6 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -60,7 +59,6 @@ class _IsmChatLocationMessageState extends State<IsmChatLocationMessage> {
                       rotateGesturesEnabled: false,
                       scrollGesturesEnabled: false,
                       buildingsEnabled: true,
-                      // liteModeEnabled: true,
                       mapToolbarEnabled: false,
                       tiltGesturesEnabled: false,
                       zoomControlsEnabled: false,
@@ -78,43 +76,20 @@ class _IsmChatLocationMessageState extends State<IsmChatLocationMessage> {
                 style: widget.message.style,
               ),
             ),
-            FutureBuilder<List<Placemark>>(
-              future: GeocodingPlatform.instance.placemarkFromCoordinates(
-                position.latitude,
-                position.longitude,
+            Padding(
+              padding: IsmChatDimens.edgeInsets4_0,
+              child: Text(
+                widget.message.metaData?.locationSubAddress ?? '',
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+                style: (widget.message.sentByMe
+                        ? IsmChatStyles.w400White12
+                        : IsmChatStyles.w400Black12)
+                    .copyWith(
+                  color: widget.message.style.color,
+                ),
               ),
-              builder: (_, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  );
-                }
-                if (snapshot.hasError || snapshot.data == null) {
-                  return const Text(
-                    'Error fetching address',
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    style: TextStyle(color: Colors.blueGrey),
-                  );
-                }
-                var addressDetails = snapshot.data!.first;
-                return Padding(
-                  padding: IsmChatDimens.edgeInsets4_0,
-                  child: Text(
-                    addressDetails.toAddress(),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    style: (widget.message.sentByMe
-                            ? IsmChatStyles.w400White12
-                            : IsmChatStyles.w400Black12)
-                        .copyWith(
-                      color: widget.message.style.color,
-                    ),
-                  ),
-                );
-              },
             ),
-            IsmChatDimens.boxHeight4,
           ],
         ),
       );

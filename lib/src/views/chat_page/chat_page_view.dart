@@ -183,6 +183,7 @@ class _IsmChatPageView extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Expanded(
                       child: Visibility(

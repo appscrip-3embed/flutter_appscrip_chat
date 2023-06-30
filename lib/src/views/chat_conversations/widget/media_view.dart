@@ -23,7 +23,8 @@ class _IsmMediaViewState extends State<IsmMediaView>
   @override
   void initState() {
     var storeSortLinks = chatPageController.sortMessages(widget.mediaList);
-    storeWidgetMediaList = chatPageController.sortMediaList(storeSortLinks);
+    storeWidgetMediaList =
+        chatPageController.sortMediaList(storeSortLinks).reversed.toList();
     super.initState();
   }
 
@@ -59,6 +60,7 @@ class _IsmMediaViewState extends State<IsmMediaView>
                         physics: const ScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: value.length,
+                        addAutomaticKeepAlives: true,
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
@@ -66,7 +68,6 @@ class _IsmMediaViewState extends State<IsmMediaView>
                           crossAxisSpacing: 6,
                         ),
                         itemBuilder: (context, valueIndex) {
-                          // return Text('${value[valueIndex]}');
                           var url = value[valueIndex].customType ==
                                   IsmChatCustomMessageType.image
                               ? value[valueIndex].attachments!.first.mediaUrl!
@@ -81,10 +82,22 @@ class _IsmMediaViewState extends State<IsmMediaView>
                           return GestureDetector(
                             onTap: () => Get.find<IsmChatPageController>()
                                 .tapForMediaPreview(value[valueIndex]),
-                            child: ConversationMediaWidget(
-                              media: value[valueIndex],
-                              iconData: iconData,
-                              url: url,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                ConversationMediaWidget(
+                                  media: value[valueIndex],
+                                  iconData: iconData,
+                                  url: url,
+                                ),
+                                if (value[valueIndex].customType ==
+                                    IsmChatCustomMessageType.video)
+                                  Icon(
+                                    Icons.play_circle_outline_outlined,
+                                    color: IsmChatColors.whiteColor,
+                                    size: IsmChatDimens.thirty,
+                                  )
+                              ],
                             ),
                           );
                         },

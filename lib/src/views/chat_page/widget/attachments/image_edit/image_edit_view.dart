@@ -14,6 +14,11 @@ class IsmChatImageEditView extends StatelessWidget {
           backgroundColor: IsmChatColors.blackColor,
           appBar: AppBar(
             backgroundColor: IsmChatConfig.chatTheme.primaryColor,
+            title: Text(
+              controller.fileSize,
+              style: IsmChatStyles.w600White16,
+            ),
+            centerTitle: true,
             actions: [
               IconButton(
                 onPressed: () async {
@@ -31,6 +36,8 @@ class IsmChatImageEditView extends StatelessWidget {
                       await Get.to<File>(IsmChatImagePainterWidget(
                     file: controller.imagePath!,
                   ));
+                  controller.fileSize =
+                      IsmChatUtility.fileToSize(controller.imagePath!);
                 },
                 icon: Icon(
                   Icons.edit,
@@ -61,12 +68,22 @@ class IsmChatImageEditView extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             backgroundColor: IsmChatConfig.chatTheme.primaryColor,
             onPressed: () {
-              controller.sendImage(
-                  conversationId: controller.conversation?.conversationId ?? '',
-                  userId:
-                      controller.conversation?.opponentDetails?.userId ?? '');
-              Get.back<void>();
-              Get.back<void>();
+              if (controller.fileSize.size()) {
+                controller.sendImage(
+                    conversationId:
+                        controller.conversation?.conversationId ?? '',
+                    userId:
+                        controller.conversation?.opponentDetails?.userId ?? '');
+                Get.back<void>();
+                Get.back<void>();
+              } else {
+                Get.dialog(
+                  const IsmChatAlertDialogBox(
+                    title: 'You can not send image more than 20 MB.',
+                    cancelLabel: 'Okay',
+                  ),
+                );
+              }
             },
             child: const Icon(
               Icons.send,
