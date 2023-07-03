@@ -251,23 +251,29 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                       ? () {
                                           Get.dialog(
                                             IsmChatGroupAdminDialog(
-                                              userId: member.userId,
+                                              user: member,
                                               isAdmin: true,
                                             ),
                                           );
                                         }
-                                      : null
+                                      : () async {
+                                          await controller
+                                              .showUserDetails(member);
+                                        }
                                   : controller.conversation!.usersOwnDetails
                                               ?.isAdmin ??
                                           false
                                       ? () {
                                           Get.dialog(
                                             IsmChatGroupAdminDialog(
-                                              userId: member.userId,
+                                              user: member,
                                             ),
                                           );
                                         }
-                                      : null,
+                                      : () async {
+                                          await controller
+                                              .showUserDetails(member);
+                                        },
                               trailing: member.isAdmin
                                   ? Text(
                                       IsmChatStrings.admin,

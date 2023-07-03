@@ -318,7 +318,7 @@ class IsmChatPageRepository {
     }
   }
 
-  Future<IsmChatConversationModel?> getConverstaionDetails(
+  Future<ModelWrapper> getConverstaionDetails(
       {required String conversationId,
       String? ids,
       bool? includeMembers,
@@ -337,14 +337,16 @@ class IsmChatPageRepository {
           headers: IsmChatUtility.tokenCommonHeader(),
           showLoader: isLoading ?? false);
       if (response.hasError) {
-        return null;
+        return ModelWrapper(data: null, statusCode: response.errorCode);
       }
       var data = jsonDecode(response.data) as Map<String, dynamic>;
-      return IsmChatConversationModel.fromMap(
-          data['conversationDetails'] as Map<String, dynamic>);
+      return ModelWrapper(
+          data: IsmChatConversationModel.fromMap(
+              data['conversationDetails'] as Map<String, dynamic>),
+          statusCode: response.errorCode);
     } catch (e, st) {
       IsmChatLog.error('Chat user Details $e', st);
-      return null;
+      return const ModelWrapper(data: null, statusCode: 1000);
     }
   }
 

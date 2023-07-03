@@ -100,7 +100,7 @@ class IsmChatStrings {
   static const String links = 'Links';
   static const String docs = 'Docs';
   static const String readby = 'Read by';
-  static const String deliveredby = 'Delivered by';
+  static const String deliveredTo = 'Delivered to';
   static const String deletedMessage = 'You deleted this message';
   static const String wasDeletedMessage = 'This message was deleted';
 

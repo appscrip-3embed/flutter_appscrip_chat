@@ -56,3 +56,12 @@ class IsmChatResponseModel {
   @override
   int get hashCode => data.hashCode ^ hasError.hashCode ^ errorCode.hashCode;
 }
+
+class ModelWrapper<T> {
+  const ModelWrapper({
+    required this.data,
+    required this.statusCode,
+  });
+  final T? data;
+  final int statusCode;
+}

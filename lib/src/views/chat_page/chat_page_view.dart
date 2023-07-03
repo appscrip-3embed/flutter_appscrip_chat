@@ -164,11 +164,9 @@ class _IsmChatPageView extends StatelessWidget {
                                       ?.userId ==
                                   IsmChatConfig
                                       .communicationConfig.userConfig.userId)) {
-                            controller.canRefreshDetails = false;
                             await IsmChatUtility.openFullScreenBottomSheet(
                               const IsmChatConverstaionInfoView(),
                             );
-                            controller.canRefreshDetails = true;
                           }
                         },
                   onBackTap: onBackTap,
@@ -226,12 +224,7 @@ class _IsmChatPageView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    controller.conversation?.lastMessageDetails?.customType ==
-                                IsmChatCustomMessageType.removeMember &&
-                            controller
-                                    .conversation?.lastMessageDetails?.userId ==
-                                IsmChatConfig
-                                    .communicationConfig.userConfig.userId
+                    controller.isActionAllowed == true
                         ? Container(
                             color: IsmChatConfig.chatTheme.backgroundColor!,
                             height: IsmChatDimens.sixty,
@@ -248,12 +241,35 @@ class _IsmChatPageView extends StatelessWidget {
                               ),
                             ),
                           )
-                        : SafeArea(
-                            child: IsmChatMessageField(
-                              header: header,
-                              attachments: attachments,
-                            ),
-                          ),
+                        : controller.conversation?.lastMessageDetails
+                                        ?.customType ==
+                                    IsmChatCustomMessageType.removeMember &&
+                                controller.conversation?.lastMessageDetails
+                                        ?.userId ==
+                                    IsmChatConfig
+                                        .communicationConfig.userConfig.userId
+                            ? Container(
+                                color: IsmChatConfig.chatTheme.backgroundColor!,
+                                height: IsmChatDimens.sixty,
+                                width: double.maxFinite,
+                                child: SafeArea(
+                                  child: Center(
+                                    child: Text(
+                                      IsmChatStrings.removeGroupMessage,
+                                      style: IsmChatStyles.w600Black12,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                      maxLines: 2,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : SafeArea(
+                                child: IsmChatMessageField(
+                                  header: header,
+                                  attachments: attachments,
+                                ),
+                              ),
                     Offstage(
                       offstage: !controller.showEmojiBoard,
                       child: const EmojiBoard(),

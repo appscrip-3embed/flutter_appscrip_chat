@@ -84,6 +84,10 @@ class IsmChatObjectBox {
             .build();
         final chatConversationResponse = query.findUnique();
         if (chatConversationResponse != null) {
+          chatConversationResponse.conversationImageUrl =
+              dbConversation.conversationImageUrl;
+          chatConversationResponse.conversationTitle =
+              dbConversation.conversationTitle;
           chatConversationResponse.isGroup = dbConversation.isGroup;
           chatConversationResponse.membersCount = dbConversation.membersCount;
           chatConversationResponse.lastMessageSentAt =
@@ -173,6 +177,7 @@ class IsmChatObjectBox {
     } else {
       messages.addAll(conversation.messages);
     }
+
     return messages.map(IsmChatMessageModel.fromJson).toList();
   }
 
@@ -199,8 +204,10 @@ class IsmChatObjectBox {
     if (conversation != null) {
       conversation.messages =
           messages.isEmpty ? [] : messages.map((e) => e.toJson()).toList();
+      IsmChatLog.error('step1');
 
       if (messages.isEmpty) {
+        IsmChatLog.error('step2');
         conversation.lastMessageDetails.target =
             conversation.lastMessageDetails.target!.copyWith(
           sentByMe: conversation.lastMessageDetails.target!.sentByMe,
@@ -215,6 +222,8 @@ class IsmChatObjectBox {
           body: '',
         );
       }
+      IsmChatLog.error('step3');
+      IsmChatLog.error('step  $conversation');
       chatConversationBox.put(conversation);
       if (messages.isEmpty) {
         var conversationForPendingMessge = pendingMessageBox

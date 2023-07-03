@@ -33,6 +33,8 @@ class IsmChatPageViewModel {
           IsmChatActionEvents.reactionAdd.name,
           IsmChatActionEvents.reactionRemove.name,
           IsmChatActionEvents.conversationDetailsUpdated.name,
+          IsmChatActionEvents.conversationImageUpdated.name,
+          IsmChatActionEvents.conversationTitleUpdated.name,
           if (e.memberId !=
               IsmChatConfig.communicationConfig.userConfig.userId) ...[
             IsmChatActionEvents.removeAdmin.name,
@@ -244,7 +246,7 @@ class IsmChatPageViewModel {
         conversationId: conversationId,
       );
 
-  Future<IsmChatConversationModel?> getConverstaionDetails(
+  Future<ModelWrapper> getConverstaionDetails(
           {required String conversationId,
           String? ids,
           bool? includeMembers,
