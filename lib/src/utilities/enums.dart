@@ -320,7 +320,9 @@ enum IsmChatActionEvents {
   deleteConversationLocally,
   reactionAdd,
   reactionRemove,
-  conversationDetailsUpdated;
+  conversationDetailsUpdated,
+  conversationTitleUpdated,
+  conversationImageUpdated;
 
   factory IsmChatActionEvents.fromName(String name) {
     switch (name) {
@@ -364,6 +366,10 @@ enum IsmChatActionEvents {
         return IsmChatActionEvents.reactionRemove;
       case 'conversationDetailsUpdated':
         return IsmChatActionEvents.conversationDetailsUpdated;
+      case 'conversationTitleUpdated':
+        return IsmChatActionEvents.conversationTitleUpdated;
+      case 'conversationImageUpdated':
+        return IsmChatActionEvents.conversationImageUpdated;
       default:
         return IsmChatActionEvents.typingEvent;
     }
@@ -412,6 +418,10 @@ enum IsmChatActionEvents {
         return 'reactionRemove';
       case IsmChatActionEvents.conversationDetailsUpdated:
         return 'conversationDetailsUpdated';
+      case IsmChatActionEvents.conversationTitleUpdated:
+        return 'conversationTitleUpdated';
+      case IsmChatActionEvents.conversationImageUpdated:
+        return 'conversationImageUpdated';
     }
   }
 }

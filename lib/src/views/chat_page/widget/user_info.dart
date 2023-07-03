@@ -4,8 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class IsmChatUserInfo extends StatefulWidget {
-  const IsmChatUserInfo(
-      {super.key, required this.user, required this.conversationId});
+  const IsmChatUserInfo({
+    super.key,
+    required this.user,
+    required this.conversationId,
+  });
 
   final UserDetails user;
   final String conversationId;
@@ -162,7 +165,6 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
                                   : chatPageController.blockUser(
                                       opponentId: widget.user.userId,
                                       lastMessageTimeStamp: 0,
-                                      
                                     );
                             },
                           ],

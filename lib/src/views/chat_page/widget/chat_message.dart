@@ -100,24 +100,15 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                       !widget.message.sentByMe) ...[
                     IsmChatTapHandler(
                       onTap: () async {
-                        var controller =
-                            Get.find<IsmChatConversationsController>();
-                        var conversationId = controller.getConversationId(
-                            widget.message.senderInfo?.userId ?? '');
-                        var conversationUser = await IsmChatConfig.objectBox
-                            .getDBConversation(conversationId: conversationId);
-                        await IsmChatUtility.openFullScreenBottomSheet(
-                            IsmChatUserInfo(
-                          user: conversationUser!.opponentDetails.target!,
-                          conversationId: conversationUser.conversationId!,
-                        ));
+                        await controller
+                            .showUserDetails(widget.message.senderInfo!);
                       },
                       child: IsmChatImage.profile(
                         widget.message.senderInfo?.profileUrl ?? '',
                         name: widget.message.senderInfo?.userName ?? '',
                         dimensions: IsmChatConfig
                                 .chatTheme.chatPageTheme?.profileImageSize ??
-                            40,
+                            30,
                       ),
                     )
                   ],

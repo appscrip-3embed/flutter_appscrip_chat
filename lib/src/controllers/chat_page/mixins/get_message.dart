@@ -93,9 +93,10 @@ mixin IsmChatPageGetMessageMixin {
         conversationId: conversationId,
         includeMembers: includeMembers,
         isLoading: isLoading);
-    if (data != null &&
+    if (data.data != null &&
         (_controller.conversation?.conversationId == conversationId)) {
-      _controller.conversation = data.copyWith(conversationId: conversationId);
+      _controller.conversation =
+          data.data.copyWith(conversationId: conversationId);
 
       // controller.medialist is storing media i.e. Image, Video and Audio. //
       _controller.mediaList = _controller.messages
@@ -122,13 +123,16 @@ mixin IsmChatPageGetMessageMixin {
               ].contains(e.customType))
           .toList();
 
-      if (data.members != null) {
-        _controller.groupMembers = data.members!;
+      if (data.data.members != null) {
+        _controller.groupMembers = data.data.members!;
         _controller.groupMembers.sort((a, b) =>
             a.userName.toLowerCase().compareTo(b.userName.toLowerCase()));
       }
       _controller.update();
       IsmChatLog.success('Updated conversation');
+      if (data.statusCode == 400) {
+        _controller.isActionAllowed = true;
+      }
     }
   }
 

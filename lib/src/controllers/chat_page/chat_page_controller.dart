@@ -250,8 +250,6 @@ class IsmChatPageController extends GetxController
     ),
   ];
 
-  bool canRefreshDetails = true;
-
   bool canCallEligibleApi = false;
 
   final _groupEligibleUser = <SelectedForwardUser>[].obs;
@@ -280,6 +278,12 @@ class IsmChatPageController extends GetxController
   bool get isVideoVisible => _isVideoVisible.value;
   set isVideoVisible(bool value) {
     _isVideoVisible.value = value;
+  }
+
+  final RxBool _isActionAllowed = false.obs;
+  bool get isActionAllowed => _isActionAllowed.value;
+  set isActionAllowed(bool value) {
+    _isActionAllowed.value = value;
   }
 
   bool didReactedLast = false;
@@ -344,7 +348,6 @@ class IsmChatPageController extends GetxController
     _generateReactionList();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
-      IsmChatLog(conversation);
       await Future.delayed(Duration.zero);
       if (conversation!.conversationId?.isNotEmpty ?? false) {
         await getMessagesFromDB(conversation?.conversationId ?? '');
@@ -892,7 +895,12 @@ class IsmChatPageController extends GetxController
             sentByMe: messages.last.sentByMe,
             showInConversation: true,
             sentAt: messages.last.sentAt,
-            senderName: messages.last.chatName,
+            senderName: [
+              IsmChatCustomMessageType.removeAdmin,
+              IsmChatCustomMessageType.addAdmin
+            ].contains(messages.last.customType)
+                ? messages.last.initiatorName ?? ''
+                : messages.last.chatName,
             messageType: messages.last.messageType?.value ?? 0,
             messageId: messages.last.messageId ?? '',
             conversationId: messages.last.conversationId ?? '',
@@ -1270,11 +1278,10 @@ class IsmChatPageController extends GetxController
         if (!Get.isRegistered<IsmChatPageController>()) {
           t.cancel();
         }
-        if (canRefreshDetails) {
-          getConverstaionDetails(
-              conversationId: conversation?.conversationId ?? '',
-              includeMembers: conversation?.isGroup == true ? true : false);
-        }
+
+        getConverstaionDetails(
+            conversationId: conversation?.conversationId ?? '',
+            includeMembers: conversation?.isGroup == true ? true : false);
       },
     );
   }
@@ -1425,4 +1432,23 @@ class IsmChatPageController extends GetxController
 
   Future<void> deleteReacton({required Reaction reaction}) async =>
       _viewModel.deleteReacton(reaction: reaction);
+
+  Future<void> showUserDetails(UserDetails userDetails) async {
+    var conversationController = Get.find<IsmChatConversationsController>();
+    var conversationId = conversationController.getConversationId(
+      userDetails.userId,
+    );
+    var conversationUser = await IsmChatConfig.objectBox
+        .getDBConversation(conversationId: conversationId);
+    UserDetails? user;
+    if (conversationUser != null) {
+      user = conversationUser.opponentDetails.target;
+    } else {
+      user = userDetails;
+    }
+    await IsmChatUtility.openFullScreenBottomSheet(IsmChatUserInfo(
+      user: user!,
+      conversationId: conversation?.conversationId ?? '',
+    ));
+  }
 }

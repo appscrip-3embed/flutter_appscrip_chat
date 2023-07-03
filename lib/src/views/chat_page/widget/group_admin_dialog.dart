@@ -5,11 +5,11 @@ import 'package:get/get.dart';
 class IsmChatGroupAdminDialog extends StatelessWidget {
   const IsmChatGroupAdminDialog({
     super.key,
-    required this.userId,
+    required this.user,
     this.isAdmin = false,
   });
 
-  final String userId;
+  final UserDetails user;
   final bool isAdmin;
 
   @override
@@ -24,11 +24,18 @@ class IsmChatGroupAdminDialog extends StatelessWidget {
                 //Todo: 1 make item option for message
                 //Todo: 2 make item option for user profile
                 PopupMenuItem(
+                  onTap: () async {
+                    await controller.showUserDetails(user);
+                  },
+                  padding: IsmChatDimens.edgeInsets24_0,
+                  child: const Text('View info'),
+                ),
+                PopupMenuItem(
                   onTap: () {
                     if (isAdmin) {
-                      controller.removeAdmin(userId);
+                      controller.removeAdmin(user.userId);
                     } else {
-                      controller.makeAdmin(userId);
+                      controller.makeAdmin(user.userId);
                     }
                   },
                   padding: IsmChatDimens.edgeInsets24_0,
@@ -36,7 +43,7 @@ class IsmChatGroupAdminDialog extends StatelessWidget {
                 ),
                 PopupMenuItem(
                   onTap: () {
-                    controller.removeMember(userId);
+                    controller.removeMember(user.userId);
                   },
                   padding: IsmChatDimens.edgeInsets24_0,
                   child: const Text('Remove from group'),

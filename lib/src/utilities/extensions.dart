@@ -216,9 +216,9 @@ extension DateConvertor on int {
     if (now.difference(timestamp) > const Duration(days: 365)) {
       dateFormat = DateFormat('EEEE, MMM d, yyyy');
     } else if (now.difference(timestamp) > const Duration(days: 7)) {
-      dateFormat = DateFormat('E, d MMM yyyy, h:mm aa');
+      dateFormat = DateFormat('E, d MMM yyyy, hh:mm:ss aa');
     } else {
-      dateFormat = DateFormat('EEEE h:mm aa');
+      dateFormat = DateFormat('EEEE  hh:mm:ss aa');
     }
 
     return dateFormat.format(timestamp);
@@ -599,9 +599,9 @@ extension LastMessageBody on LastMessageDetails {
       case IsmChatCustomMessageType.addMember:
         return 'Added ${(members ?? []).join(', ')}';
       case IsmChatCustomMessageType.addAdmin:
-        return '';
+        return 'Added you as an Admin';
       case IsmChatCustomMessageType.removeAdmin:
-        return '';
+        return 'Remove you as an Admin';
       case IsmChatCustomMessageType.memberLeave:
         return '$senderName left';
       case IsmChatCustomMessageType.deletedForMe:

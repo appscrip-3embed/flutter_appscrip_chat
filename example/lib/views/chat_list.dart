@@ -31,7 +31,7 @@ class ChatList extends GetView<ChatListController> {
           userConfig: IsmChatUserConfig(
               userToken: controller.userDetails?.userToken ?? '',
               userId: controller.userDetails?.userId ?? '',
-              userName: controller.userDetails?.userName ?? 'User',
+              userName: controller.userDetails?.userName ?? '',
               userEmail: controller.userDetails?.email ?? '',
               userProfile: controller.userDetails?.userProfile ?? ''),
           mqttConfig: const IsmChatMqttConfig(

@@ -11,10 +11,10 @@ class IsmChatAddRevokeAdmin extends StatelessWidget {
   final IsmChatMessageModel message;
   final bool isAdded;
 
-  String get _user =>
-      message.memberId == IsmChatConfig.communicationConfig.userConfig.userId
-          ? 'you'
-          : message.memberName!;
+  // String get _user =>
+  //     message.memberId == IsmChatConfig.communicationConfig.userConfig.userId
+  //         ? 'you'
+  //         : message.memberName!;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -24,8 +24,9 @@ class IsmChatAddRevokeAdmin extends StatelessWidget {
         ),
         padding: IsmChatDimens.edgeInsets8_4,
         child: Text(
-          '${message.initiator} ${isAdded ? 'added' : 'removed'} $_user ${isAdded ? 'as' : 'from'} Admin'
-              .trim(),
+          '${message.initiator} ${isAdded ? 'added' : 'removed'} you as an Admin'
+              .trim(), //'${message.initiator} ${isAdded ? 'added' : 'removed'} $_user ${isAdded ? 'as' : 'as an '} Admin'.trim()
+
           textAlign: TextAlign.center,
           style: IsmChatStyles.w500Black12.copyWith(
             color: IsmChatConfig.chatTheme.primaryColor,
