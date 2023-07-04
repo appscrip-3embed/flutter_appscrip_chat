@@ -14,7 +14,7 @@ dependencies:
   cached_network_image: ^3.2.3
   camera: ^0.10.3+2
   carousel_slider: ^4.2.1
-  connectivity_plus: ^4.0.1
+  connectivity_plus: ^3.0.6
   device_info_plus: ^9.0.2
   dio: ^5.2.1+1
   emoji_picker_flutter: ^1.5.4
