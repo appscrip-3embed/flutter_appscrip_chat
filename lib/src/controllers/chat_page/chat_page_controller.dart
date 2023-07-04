@@ -571,7 +571,7 @@ class IsmChatPageController extends GetxController
         IsmChatUtility.showToast('Message copied');
         break;
       case IsmChatFocusMenuType.delete:
-        showDialogForMessageDelete(message);
+        await showDialogForMessageDelete(message);
         break;
       case IsmChatFocusMenuType.selectMessage:
         selectedMessage.clear();
@@ -1159,7 +1159,8 @@ class IsmChatPageController extends GetxController
     }
   }
 
-  void showDialogForMessageDelete(IsmChatMessageModel message) async {
+  Future<void> showDialogForMessageDelete(IsmChatMessageModel message,
+      {bool fromMediaPrivew = false}) async {
     if (message.sentByMe) {
       await Get.dialog(
         IsmChatAlertDialogBox(
@@ -1174,6 +1175,7 @@ class IsmChatPageController extends GetxController
           ],
         ),
       );
+      if (fromMediaPrivew) Get.back();
     } else {
       await Get.dialog(
         IsmChatAlertDialogBox(
@@ -1185,6 +1187,7 @@ class IsmChatPageController extends GetxController
           ],
         ),
       );
+      if (fromMediaPrivew) Get.back();
     }
   }
 
@@ -1517,22 +1520,5 @@ class IsmChatPageController extends GetxController
     } catch (e, st) {
       IsmChatLog.error('Error downloading :- $e\n$st');
     }
-  }
-
-  Future<void> deleteMedia(IsmChatMessageModel message) async {
-    await Get.dialog(
-      IsmChatAlertDialogBox(
-        title: IsmChatStrings.deleteMessage,
-        actionLabels: const [
-          IsmChatStrings.deleteForEvery,
-          IsmChatStrings.deleteForMe,
-        ],
-        callbackActions: [
-          () => deleteMessageForEveryone([message]),
-          () => deleteMessageForMe([message]),
-        ],
-      ),
-    );
-    Get.back();
   }
 }

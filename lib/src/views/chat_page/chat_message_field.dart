@@ -257,13 +257,14 @@ class _MicOrSendButton extends StatelessWidget {
                                     .conversation?.lastMessageDetails?.userId ==
                                 IsmChatConfig
                                     .communicationConfig.userConfig.userId)) {
+                          controller.isEnableRecordingAudio = true;
+                          controller.forVideoRecordTimer =
+                              Timer.periodic(const Duration(seconds: 1), (_) {
+                            controller.seconds++;
+                          });
                           // Check and request permission
+
                           if (await controller.recordAudio.hasPermission()) {
-                            controller.isEnableRecordingAudio = true;
-                            controller.forVideoRecordTimer =
-                                Timer.periodic(const Duration(seconds: 1), (_) {
-                              controller.seconds++;
-                            });
                             await controller.recordAudio.start();
                           }
                         }
@@ -276,23 +277,25 @@ class _MicOrSendButton extends StatelessWidget {
                       controller.forVideoRecordTimer?.cancel();
                       controller.seconds = 0;
                       var path = await controller.recordAudio.stop();
-                      var sizeMedia =
-                          await IsmChatUtility.fileToSize(File(path!));
-                      if (sizeMedia.size()) {
-                        controller.sendAudio(
-                            path: path,
-                            conversationId:
-                                controller.conversation?.conversationId ?? '',
-                            userId: controller
-                                    .conversation?.opponentDetails?.userId ??
-                                '');
-                      } else {
-                        await Get.dialog(
-                          const IsmChatAlertDialogBox(
-                            title: 'You can not send audio more than 20 MB.',
-                            cancelLabel: 'Okay',
-                          ),
-                        );
+                      if (path != null) {
+                        var sizeMedia =
+                            await IsmChatUtility.fileToSize(File(path));
+                        if (sizeMedia.size()) {
+                          controller.sendAudio(
+                              path: path,
+                              conversationId:
+                                  controller.conversation?.conversationId ?? '',
+                              userId: controller
+                                      .conversation?.opponentDetails?.userId ??
+                                  '');
+                        } else {
+                          await Get.dialog(
+                            const IsmChatAlertDialogBox(
+                              title: 'You can not send audio more than 20 MB.',
+                              cancelLabel: 'Okay',
+                            ),
+                          );
+                        }
                       }
                     },
               onTap: () async {

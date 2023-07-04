@@ -803,11 +803,12 @@ extension MentionMessage on IsmChatMessageModel {
 
 extension SizeOfMedia on String {
   bool size({double limit = 20}) {
-    if ((split(' ').last == 'KB') ||
-        (double.parse(split(' ').first) >= limit)) {
+    if (split(' ').last == 'KB') {
       return true;
     }
-
+    if (double.parse(split(' ').first) >= limit) {
+      return true;
+    }
     return false;
   }
 }

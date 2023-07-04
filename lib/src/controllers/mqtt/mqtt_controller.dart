@@ -436,9 +436,11 @@ class IsmChatMqttController extends GetxController {
     if (conversation != null) {
       var lastMessage =
           IsmChatMessageModel.fromJson(conversation.messages.last);
+
       if (lastMessage.messageId == actionModel.messageId) {
         var isDelivered = lastMessage.deliveredTo
             ?.any((e) => e.userId == actionModel.userDetails?.userId);
+
         if (isDelivered == false) {
           lastMessage.deliveredTo?.add(
             MessageStatus(
@@ -447,6 +449,7 @@ class IsmChatMqttController extends GetxController {
             ),
           );
         }
+
         lastMessage.deliveredToAll = lastMessage.deliveredTo?.length ==
                 (conversation.membersCount ?? 0) - 1
             ? true
@@ -462,7 +465,6 @@ class IsmChatMqttController extends GetxController {
           await Get.find<IsmChatPageController>()
               .getMessagesFromDB(actionModel.conversationId!);
         }
-
         unawaited(Get.find<IsmChatConversationsController>()
             .getConversationsFromDB());
       }
@@ -499,7 +501,7 @@ class IsmChatMqttController extends GetxController {
                 ? true
                 : false;
         conversation.messages.last = lastMessage.toJson();
-        IsmChatLog.success(conversation.messages.last);
+
         conversation.lastMessageDetails.target =
             conversation.lastMessageDetails.target!.copyWith(
           readCount: lastMessage.readBy?.length,

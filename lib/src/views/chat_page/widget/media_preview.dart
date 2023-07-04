@@ -142,8 +142,9 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
                     await chatPageController
                         .saveMedia(widget.messageData[mediaIndex]);
                   } else if (value == 3) {
-                    await chatPageController
-                        .deleteMedia(widget.messageData[mediaIndex]);
+                    await chatPageController.showDialogForMessageDelete(
+                        widget.messageData[mediaIndex],
+                        fromMediaPrivew: true);
                   }
                 },
               ),
