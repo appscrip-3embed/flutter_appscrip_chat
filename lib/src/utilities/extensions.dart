@@ -28,7 +28,9 @@ extension MatchString on String {
       'https://${replaceAll('http://', '').replaceAll('https://', '')}';
 
   bool get isValidUrl =>
-      toLowerCase().contains('https') || toLowerCase().contains('www');
+      toLowerCase().contains('https') ||
+      toLowerCase().contains('http') ||
+      toLowerCase().contains('www');
 }
 
 extension MessagePagination on int {
@@ -801,8 +803,8 @@ extension MentionMessage on IsmChatMessageModel {
 
 extension SizeOfMedia on String {
   bool size({double limit = 20}) {
-    if ((double.parse(split(' ').first) >= limit) ||
-        (split(' ').last == 'KB')) {
+    if ((split(' ').last == 'KB') ||
+        (double.parse(split(' ').first) >= limit)) {
       return true;
     }
 

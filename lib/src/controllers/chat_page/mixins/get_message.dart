@@ -93,6 +93,7 @@ mixin IsmChatPageGetMessageMixin {
         conversationId: conversationId,
         includeMembers: includeMembers,
         isLoading: isLoading);
+
     if (data.data != null &&
         (_controller.conversation?.conversationId == conversationId)) {
       _controller.conversation =
@@ -128,11 +129,12 @@ mixin IsmChatPageGetMessageMixin {
         _controller.groupMembers.sort((a, b) =>
             a.userName.toLowerCase().compareTo(b.userName.toLowerCase()));
       }
+
       _controller.update();
       IsmChatLog.success('Updated conversation');
-      if (data.statusCode == 400) {
-        _controller.isActionAllowed = true;
-      }
+    }
+    if (data.statusCode == 400) {
+      _controller.isActionAllowed = true;
     }
   }
 

@@ -209,11 +209,13 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                       ],
                     ),
                   ),
-                  if (controller.conversation?.lastMessageDetails?.customType ==
-                          IsmChatCustomMessageType.removeMember &&
-                      controller.conversation?.lastMessageDetails?.userId ==
-                          IsmChatConfig
-                              .communicationConfig.userConfig.userId) ...[
+                  if ((controller.conversation?.lastMessageDetails
+                                  ?.customType ==
+                              IsmChatCustomMessageType.removeMember &&
+                          controller.conversation?.lastMessageDetails?.userId ==
+                              IsmChatConfig
+                                  .communicationConfig.userConfig.userId) ||
+                      controller.isActionAllowed == true) ...[
                     PopupMenuItem(
                       value: 2,
                       child: Row(

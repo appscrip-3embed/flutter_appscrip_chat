@@ -63,6 +63,9 @@ class IsmChatStrings {
   static const String deleteForMe = 'Delete for me';
   static const String deleteFromUser = 'Delete message from';
   static const String delete = 'Delete';
+  static const String save = 'Save';
+  static const String share = 'Share';
+
   static const String more = 'More';
   static const String archive = 'Archive';
   static const String deleteChat = 'Delete chat';

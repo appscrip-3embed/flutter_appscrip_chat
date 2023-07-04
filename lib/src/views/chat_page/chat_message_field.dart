@@ -243,20 +243,29 @@ class _MicOrSendButton extends StatelessWidget {
           aspectRatio: 1,
           child: GetX<IsmChatPageController>(
             builder: (controller) => GestureDetector(
-              onLongPressStart: controller.showSendButton
+              onLongPressStart: controller.showSendButton ||
+                      controller.isActionAllowed
                   ? null
                   : (val) async {
                       if (!controller.conversation!.isChattingAllowed) {
                         controller.showDialogCheckBlockUnBlock();
                       } else {
-                        controller.isEnableRecordingAudio = true;
-                        controller.forVideoRecordTimer =
-                            Timer.periodic(const Duration(seconds: 1), (_) {
-                          controller.seconds++;
-                        });
-                        // Check and request permission
-                        if (await controller.recordAudio.hasPermission()) {
-                          await controller.recordAudio.start();
+                        if (!(controller.conversation?.lastMessageDetails
+                                    ?.customType ==
+                                IsmChatCustomMessageType.removeMember &&
+                            controller
+                                    .conversation?.lastMessageDetails?.userId ==
+                                IsmChatConfig
+                                    .communicationConfig.userConfig.userId)) {
+                          // Check and request permission
+                          if (await controller.recordAudio.hasPermission()) {
+                            controller.isEnableRecordingAudio = true;
+                            controller.forVideoRecordTimer =
+                                Timer.periodic(const Duration(seconds: 1), (_) {
+                              controller.seconds++;
+                            });
+                            await controller.recordAudio.start();
+                          }
                         }
                       }
                     },
@@ -267,7 +276,8 @@ class _MicOrSendButton extends StatelessWidget {
                       controller.forVideoRecordTimer?.cancel();
                       controller.seconds = 0;
                       var path = await controller.recordAudio.stop();
-                      var sizeMedia = IsmChatUtility.fileToSize(File(path!));
+                      var sizeMedia =
+                          await IsmChatUtility.fileToSize(File(path!));
                       if (sizeMedia.size()) {
                         controller.sendAudio(
                             path: path,

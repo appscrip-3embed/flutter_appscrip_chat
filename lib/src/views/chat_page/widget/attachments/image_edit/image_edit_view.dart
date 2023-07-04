@@ -37,7 +37,7 @@ class IsmChatImageEditView extends StatelessWidget {
                     file: controller.imagePath!,
                   ));
                   controller.fileSize =
-                      IsmChatUtility.fileToSize(controller.imagePath!);
+                      await IsmChatUtility.fileToSize(controller.imagePath!);
                 },
                 icon: Icon(
                   Icons.edit,

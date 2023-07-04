@@ -336,9 +336,11 @@ class IsmChatPageRepository {
       var response = await _apiWrapper.get(url,
           headers: IsmChatUtility.tokenCommonHeader(),
           showLoader: isLoading ?? false);
+
       if (response.hasError) {
         return ModelWrapper(data: null, statusCode: response.errorCode);
       }
+
       var data = jsonDecode(response.data) as Map<String, dynamic>;
       return ModelWrapper(
           data: IsmChatConversationModel.fromMap(

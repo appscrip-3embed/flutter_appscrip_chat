@@ -104,21 +104,21 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
   }
 
-  void sendMedia() {
-    var isMaxSize = false;
+  void sendMedia() async {
+    var isMaxSize = true;
     for (var x in _controller.listOfAssetsPath) {
-      var sizeMedia = IsmChatUtility.fileToSize(File(x.mediaUrl!));
+      var sizeMedia = await IsmChatUtility.fileToSize(File(x.mediaUrl!));
       if (sizeMedia.size()) {
-        isMaxSize = true;
+        isMaxSize = false;
         break;
       }
     }
-    IsmChatLog.error(isMaxSize);
+
     if (!isMaxSize) {
       Get.back<void>();
       sendPhotoAndVideo();
     } else {
-      Get.dialog(
+      await Get.dialog(
         const IsmChatAlertDialogBox(
           title: 'You can not send image and video more than 20 MB.',
           cancelLabel: 'Okay',
@@ -298,7 +298,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
               userId: [userId], metaData: _controller.conversation?.metaData);
         }
         for (var x in result!.files) {
-          var sizeMedia = IsmChatUtility.fileToSize(File(x.path!));
+          var sizeMedia = await IsmChatUtility.fileToSize(File(x.path!));
           if (sizeMedia.size()) {
             bytes = x.bytes;
             nameWithExtension = x.path!.split('/').last;
