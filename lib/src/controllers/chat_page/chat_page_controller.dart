@@ -7,6 +7,7 @@ import 'dart:math';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:camera/camera.dart';
+import 'package:dio/dio.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -14,13 +15,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:video_compress/video_compress.dart';
 
 part './mixins/get_message.dart';
@@ -342,6 +345,8 @@ class IsmChatPageController extends GetxController
     return allMessages;
   }
 
+  final Dio dio = Dio();
+
   @override
   void onInit() async {
     super.onInit();
@@ -566,7 +571,7 @@ class IsmChatPageController extends GetxController
         IsmChatUtility.showToast('Message copied');
         break;
       case IsmChatFocusMenuType.delete:
-        showDialogForMessageDelete(message);
+        await showDialogForMessageDelete(message);
         break;
       case IsmChatFocusMenuType.selectMessage:
         selectedMessage.clear();
@@ -813,30 +818,15 @@ class IsmChatPageController extends GetxController
         return;
       }
       try {
-        if (localPath.contains('https://') || localPath.contains('http://')) {
-          final client = http.Client();
-          final request = await client.get(Uri.parse(localPath));
-          final bytes = request.bodyBytes;
-          final documentsDir =
-              (await path_provider.getApplicationDocumentsDirectory()).path;
-          localPath = '$documentsDir/${message.attachments?.first.name}';
-          if (!File(localPath).existsSync()) {
-            final file = File(localPath);
-            await file.writeAsBytes(bytes);
-            localPath = file.path;
-          }
-          await OpenFilex.open(localPath);
-        } else {
-          final documentsDir =
-              (await path_provider.getApplicationDocumentsDirectory()).path;
-          localPath = '$documentsDir/${message.attachments?.first.name}';
-          if (!File(localPath).existsSync()) {
-            final file = File(localPath);
-            await file.writeAsBytes(localPath as List<int>);
-            localPath = file.path;
-          }
-          await OpenFilex.open(localPath);
+        final path = await IsmChatUtility.makeDirectoryWithUrl(
+            urlPath: message.attachments?.first.mediaUrl ?? '',
+            fileName: message.attachments?.first.name ?? '');
+
+        if (path.path.isNotEmpty) {
+          localPath = path.path;
         }
+
+        await OpenFilex.open(localPath);
       } catch (e) {
         IsmChatLog.error('$e');
       }
@@ -959,7 +949,7 @@ class IsmChatPageController extends GetxController
     );
     if (croppedFile != null) {
       imagePath = File(croppedFile.path);
-      fileSize = IsmChatUtility.fileToSize(imagePath!);
+      fileSize = await IsmChatUtility.fileToSize(imagePath!);
       IsmChatLog.success('Image cropped ${imagePath?.path}');
     }
   }
@@ -967,7 +957,7 @@ class IsmChatPageController extends GetxController
   void takePhoto() async {
     var file = await cameraController.takePicture();
     imagePath = File(file.path);
-    fileSize = IsmChatUtility.fileToSize(imagePath!);
+    fileSize = await IsmChatUtility.fileToSize(imagePath!);
     await Get.to(const IsmChatImageEditView());
   }
 
@@ -1169,7 +1159,8 @@ class IsmChatPageController extends GetxController
     }
   }
 
-  void showDialogForMessageDelete(IsmChatMessageModel message) async {
+  Future<void> showDialogForMessageDelete(IsmChatMessageModel message,
+      {bool fromMediaPrivew = false}) async {
     if (message.sentByMe) {
       await Get.dialog(
         IsmChatAlertDialogBox(
@@ -1184,6 +1175,7 @@ class IsmChatPageController extends GetxController
           ],
         ),
       );
+      if (fromMediaPrivew) Get.back();
     } else {
       await Get.dialog(
         IsmChatAlertDialogBox(
@@ -1195,6 +1187,7 @@ class IsmChatPageController extends GetxController
           ],
         ),
       );
+      if (fromMediaPrivew) Get.back();
     }
   }
 
@@ -1378,6 +1371,7 @@ class IsmChatPageController extends GetxController
       selectedMessage.clear();
       isMessageSeleted = false;
     }
+    IsmChatUtility.showToast('Deleted your media');
   }
 
   Future<void> deleteMessageForMe(
@@ -1394,6 +1388,7 @@ class IsmChatPageController extends GetxController
       selectedMessage.clear();
       isMessageSeleted = false;
     }
+    IsmChatUtility.showToast('Deleted your media');
   }
 
   bool isAllMessagesFromMe() => selectedMessage.every(
@@ -1450,5 +1445,80 @@ class IsmChatPageController extends GetxController
       user: user!,
       conversationId: conversation?.conversationId ?? '',
     ));
+  }
+
+  Future<void> shareMedia(IsmChatMessageModel message) async {
+    IsmChatUtility.showLoader();
+    final path = await IsmChatUtility.makeDirectoryWithUrl(
+        urlPath: message.attachments?.first.mediaUrl ?? '',
+        fileName: message.attachments?.first.name ?? '');
+    if (path.path.isNotEmpty) {
+      var file = XFile(path.path);
+      IsmChatUtility.closeLoader();
+      var result = await Share.shareXFiles([file]);
+      if (result.status == ShareResultStatus.success) {
+        IsmChatUtility.showToast('Share your media');
+        IsmChatLog.success('File shared: ${result.status}');
+        Get.back();
+      }
+    } else {
+      IsmChatUtility.closeLoader();
+    }
+  }
+
+  /// call function for Save Media
+  Future<void> saveMedia(IsmChatMessageModel message) async {
+    Directory? directory;
+    try {
+      if (GetPlatform.isAndroid) {
+        if (await IsmChatUtility.requestPermission(Permission.storage) &&
+            // access media location needed for android 10/Q
+            await IsmChatUtility.requestPermission(
+                Permission.accessMediaLocation) &&
+            // manage external storage needed for android 11/R
+            await IsmChatUtility.requestPermission(
+                Permission.manageExternalStorage)) {
+          directory = await path_provider.getExternalStorageDirectory();
+          var newPath = '';
+          var paths = directory!.path.split('/');
+          for (var x = 1; x < paths.length; x++) {
+            var folder = paths[x];
+            if (folder != 'Android') {
+              newPath += '/$folder';
+            } else {
+              break;
+            }
+          }
+          newPath = '$newPath/ChatApp';
+          directory = Directory(newPath);
+        }
+      } else {
+        if (await IsmChatUtility.requestPermission(Permission.photos)) {
+          directory = await path_provider.getTemporaryDirectory();
+        }
+      }
+
+      if (!await directory!.exists()) {
+        await directory.create(recursive: true);
+      }
+      if (await directory.exists()) {
+        var saveFile =
+            File('${directory.path}/${message.attachments?.first.name}');
+
+        await dio.download(
+          message.attachments?.first.mediaUrl ?? '',
+          saveFile.path,
+        );
+
+        if (GetPlatform.isIOS) {
+          var staus = await ImageGallerySaver.saveFile(saveFile.path,
+              name: message.attachments?.first.name, isReturnPathOfIOS: true);
+          IsmChatLog.error(staus);
+        }
+      }
+      IsmChatUtility.showToast('Save your media');
+    } catch (e, st) {
+      IsmChatLog.error('Error downloading :- $e\n$st');
+    }
   }
 }

@@ -134,7 +134,7 @@ class IsmChatMessageModel {
               )
               .toList(),
     );
-    IsmChatLog.error('${model.senderInfo} == ${model.customType}');
+
     return model.copyWith(
         customType: model.customType != null &&
                 model.customType != IsmChatCustomMessageType.text

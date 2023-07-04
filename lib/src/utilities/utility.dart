@@ -1,14 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:permission_handler/permission_handler.dart';
 
 class IsmChatUtility {
   const IsmChatUtility._();
@@ -154,13 +158,65 @@ class IsmChatUtility {
   }
 
   /// Returns data size representation of a provided file
-  static String fileToSize(File file) {
-    final bytes = file.readAsBytesSync();
+  static Future<String> fileToSize(File file) async {
+    Uint8List? bytes;
+    try {
+      bytes = file.readAsBytesSync();
+    } catch (_) {
+      bytes = Uint8List.fromList(
+          await File.fromUri(Uri.parse(file.path)).readAsBytes());
+    }
     var dataSize = IsmChatUtility.formatBytes(
       int.parse(bytes.length.toString()),
     );
     return dataSize;
   }
 
-  ///
+  static Future<File> makeDirectoryWithUrl(
+      {required String urlPath, required String fileName}) async {
+    File? file;
+    String? path;
+    if (urlPath.isValidUrl) {
+      final url = Uri.parse(urlPath);
+      final response = await http.get(url);
+      final bytes = response.bodyBytes;
+      final documentsDir =
+          (await path_provider.getApplicationDocumentsDirectory()).path;
+      path = '$documentsDir/$fileName';
+      if (!File(path).existsSync()) {
+        file = File(path);
+        await file.writeAsBytes(bytes);
+      }
+    } else {
+      final documentsDir =
+          (await path_provider.getApplicationDocumentsDirectory()).path;
+      path = '$documentsDir/$fileName';
+      if (!File(path).existsSync()) {
+        file = File(path);
+        try {
+          final bytes = await file.readAsBytes();
+          await file.writeAsBytes(bytes);
+        } catch (_) {
+          return File(urlPath);
+        }
+      }
+    }
+    if (file != null) {
+      return file;
+    }
+    return File(path);
+  }
+
+  /// call function for permission for local storage
+  static Future<bool> requestPermission(Permission permission) async {
+    if (await permission.isGranted) {
+      return true;
+    } else {
+      var result = await permission.request();
+      if (result == PermissionStatus.granted) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

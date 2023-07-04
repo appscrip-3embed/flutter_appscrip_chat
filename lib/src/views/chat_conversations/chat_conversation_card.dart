@@ -110,6 +110,7 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
                 ],
               ),
           trailing: Column(
+            mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -120,20 +121,18 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
               ),
               if (widget.conversation.unreadMessagesCount != null &&
                   widget.conversation.unreadMessagesCount != 0)
-                Container(
-                  height: IsmChatDimens.twenty,
-                  width: IsmChatDimens.twenty,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: IsmChatConfig.chatTheme.primaryColor,
-                  ),
-                  alignment: Alignment.center,
+                CircleAvatar(
+                  radius: IsmChatDimens.twelve,
+                  backgroundColor: IsmChatConfig.chatTheme.primaryColor!,
                   child: Text(
-                    widget.conversation.unreadMessagesCount.toString(),
+                    (widget.conversation.unreadMessagesCount ?? 0) < 99
+                        ? widget.conversation.unreadMessagesCount.toString()
+                        : '99+',
                     style: IsmChatStyles.w700White10,
                     textAlign: TextAlign.center,
+                    maxLines: 1,
                   ),
-                )
+                ),
             ],
           ),
         ),

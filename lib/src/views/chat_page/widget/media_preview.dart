@@ -32,6 +32,7 @@ class IsmMediaPreview extends StatefulWidget {
 class _MediaPreviewState extends State<IsmMediaPreview> {
   /// Page controller for handing the PageView pages
   PageController pageController = PageController();
+  final chatPageController = Get.find<IsmChatPageController>();
 
   String mediaTime = '';
 
@@ -80,6 +81,75 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
               Get.back<void>();
             },
           ),
+          actions: [
+            Padding(
+              padding: EdgeInsets.only(
+                  right: IsmChatDimens.five, top: IsmChatDimens.two),
+              child: PopupMenuButton(
+                icon: const Icon(
+                  Icons.more_vert,
+                  color: IsmChatColors.whiteColor,
+                ),
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: 1,
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.share_rounded,
+                          color: IsmChatColors.blackColor,
+                        ),
+                        IsmChatDimens.boxWidth8,
+                        const Text(IsmChatStrings.share)
+                      ],
+                    ),
+                  ),
+                  if (widget.messageData[mediaIndex].attachments!.first
+                      .mediaUrl!.isValidUrl)
+                    PopupMenuItem(
+                      value: 2,
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.save_rounded,
+                            color: IsmChatColors.blackColor,
+                          ),
+                          IsmChatDimens.boxWidth8,
+                          const Text(IsmChatStrings.save)
+                        ],
+                      ),
+                    ),
+                  PopupMenuItem(
+                    value: 3,
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.delete_rounded,
+                          color: IsmChatColors.blackColor,
+                        ),
+                        IsmChatDimens.boxWidth8,
+                        const Text(IsmChatStrings.delete)
+                      ],
+                    ),
+                  ),
+                ],
+                elevation: 1,
+                onSelected: (value) async {
+                  if (value == 1) {
+                    await chatPageController
+                        .shareMedia(widget.messageData[mediaIndex]);
+                  } else if (value == 2) {
+                    await chatPageController
+                        .saveMedia(widget.messageData[mediaIndex]);
+                  } else if (value == 3) {
+                    await chatPageController.showDialogForMessageDelete(
+                        widget.messageData[mediaIndex],
+                        fromMediaPrivew: true);
+                  }
+                },
+              ),
+            ),
+          ],
         ),
         body: SizedBox(
           height: IsmChatDimens.percentHeight(1),

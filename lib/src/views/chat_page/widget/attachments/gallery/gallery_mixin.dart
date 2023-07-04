@@ -52,7 +52,7 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
               attachmentType: IsmChatMediaType.video));
         }
       }
-      dataSize = IsmChatUtility.fileToSize(
+      dataSize = await IsmChatUtility.fileToSize(
         File(ismChatPageController
             .listOfAssetsPath[ismChatPageController.assetsIndex].mediaUrl!),
       );
@@ -116,7 +116,7 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                                     .listOfAssetsPath[controller.assetsIndex]
                                     .copyWith(
                                         mediaUrl: controller.imagePath?.path);
-                                dataSize = IsmChatUtility.fileToSize(
+                                dataSize = await IsmChatUtility.fileToSize(
                                   File(ismChatPageController
                                       .listOfAssetsPath[
                                           ismChatPageController.assetsIndex]
@@ -146,7 +146,7 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                                         .assetsIndex] = controller
                                     .listOfAssetsPath[controller.assetsIndex]
                                     .copyWith(mediaUrl: mediaFile!.path);
-                                dataSize = IsmChatUtility.fileToSize(
+                                dataSize = await IsmChatUtility.fileToSize(
                                   File(ismChatPageController
                                       .listOfAssetsPath[
                                           ismChatPageController.assetsIndex]
@@ -197,7 +197,7 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                                         .assetsIndex] = controller
                                     .listOfAssetsPath[controller.assetsIndex]
                                     .copyWith(mediaUrl: mediaFile?.path);
-                                dataSize = IsmChatUtility.fileToSize(
+                                dataSize = await IsmChatUtility.fileToSize(
                                   File(ismChatPageController
                                       .listOfAssetsPath[
                                           ismChatPageController.assetsIndex]
@@ -276,7 +276,7 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                               onTap: () async {
                                 controller.assetsIndex = index;
                                 controller.isVideoVisible = false;
-                                dataSize = IsmChatUtility.fileToSize(
+                                dataSize = await IsmChatUtility.fileToSize(
                                   File(ismChatPageController
                                       .listOfAssetsPath[
                                           ismChatPageController.assetsIndex]

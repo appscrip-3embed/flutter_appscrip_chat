@@ -156,19 +156,24 @@ class _IsmChatPageView extends StatelessWidget {
               : IsmChatPageHeader(
                   onTap: onTitleTap != null
                       ? () => onTitleTap?.call(controller.conversation!)
-                      : () async {
-                          if (!(controller.conversation?.lastMessageDetails
-                                      ?.customType ==
-                                  IsmChatCustomMessageType.removeMember &&
-                              controller.conversation?.lastMessageDetails
-                                      ?.userId ==
-                                  IsmChatConfig
-                                      .communicationConfig.userConfig.userId)) {
-                            await IsmChatUtility.openFullScreenBottomSheet(
-                              const IsmChatConverstaionInfoView(),
-                            );
-                          }
-                        },
+                      : controller.isActionAllowed == false
+                          ? () async {
+                              if (controller.isActionAllowed == false) {
+                                if (!(controller.conversation
+                                            ?.lastMessageDetails?.customType ==
+                                        IsmChatCustomMessageType.removeMember &&
+                                    controller.conversation?.lastMessageDetails
+                                            ?.userId ==
+                                        IsmChatConfig.communicationConfig
+                                            .userConfig.userId)) {
+                                  await IsmChatUtility
+                                      .openFullScreenBottomSheet(
+                                    const IsmChatConverstaionInfoView(),
+                                  );
+                                }
+                              }
+                            }
+                          : null,
                   onBackTap: onBackTap,
                   header: header,
                   height: height,
@@ -241,7 +246,8 @@ class _IsmChatPageView extends StatelessWidget {
                               ),
                             ),
                           )
-                        : controller.conversation?.lastMessageDetails
+                        : controller.isActionAllowed == false &&
+                                controller.conversation?.lastMessageDetails
                                         ?.customType ==
                                     IsmChatCustomMessageType.removeMember &&
                                 controller.conversation?.lastMessageDetails
