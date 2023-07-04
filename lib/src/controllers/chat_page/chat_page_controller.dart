@@ -1368,6 +1368,7 @@ class IsmChatPageController extends GetxController
       selectedMessage.clear();
       isMessageSeleted = false;
     }
+    IsmChatUtility.showToast('Deleted your media');
   }
 
   Future<void> deleteMessageForMe(
@@ -1384,6 +1385,7 @@ class IsmChatPageController extends GetxController
       selectedMessage.clear();
       isMessageSeleted = false;
     }
+    IsmChatUtility.showToast('Deleted your media');
   }
 
   bool isAllMessagesFromMe() => selectedMessage.every(
@@ -1452,6 +1454,7 @@ class IsmChatPageController extends GetxController
       IsmChatUtility.closeLoader();
       var result = await Share.shareXFiles([file]);
       if (result.status == ShareResultStatus.success) {
+        IsmChatUtility.showToast('Share your media');
         IsmChatLog.success('File shared: ${result.status}');
         Get.back();
       }
@@ -1498,12 +1501,11 @@ class IsmChatPageController extends GetxController
       if (await directory.exists()) {
         var saveFile =
             File('${directory.path}/${message.attachments?.first.name}');
-        if (message.attachments!.first.mediaUrl!.isValidUrl) {
-          await dio.download(
-            message.attachments?.first.mediaUrl ?? '',
-            saveFile.path,
-          );
-        }
+
+        await dio.download(
+          message.attachments?.first.mediaUrl ?? '',
+          saveFile.path,
+        );
 
         if (GetPlatform.isIOS) {
           var staus = await ImageGallerySaver.saveFile(saveFile.path,
@@ -1511,8 +1513,26 @@ class IsmChatPageController extends GetxController
           IsmChatLog.error(staus);
         }
       }
+      IsmChatUtility.showToast('Save your media');
     } catch (e, st) {
-      IsmChatLog.error('Error Message :- $e\n$st');
+      IsmChatLog.error('Error downloading :- $e\n$st');
     }
+  }
+
+  Future<void> deleteMedia(IsmChatMessageModel message) async {
+    await Get.dialog(
+      IsmChatAlertDialogBox(
+        title: IsmChatStrings.deleteMessage,
+        actionLabels: const [
+          IsmChatStrings.deleteForEvery,
+          IsmChatStrings.deleteForMe,
+        ],
+        callbackActions: [
+          () => deleteMessageForEveryone([message]),
+          () => deleteMessageForMe([message]),
+        ],
+      ),
+    );
+    Get.back();
   }
 }

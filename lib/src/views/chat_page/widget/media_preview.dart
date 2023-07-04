@@ -104,19 +104,21 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
                       ],
                     ),
                   ),
-                  PopupMenuItem(
-                    value: 2,
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.save_rounded,
-                          color: IsmChatColors.blackColor,
-                        ),
-                        IsmChatDimens.boxWidth8,
-                        const Text(IsmChatStrings.save)
-                      ],
+                  if (widget.messageData[mediaIndex].attachments!.first
+                      .mediaUrl!.isValidUrl)
+                    PopupMenuItem(
+                      value: 2,
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.save_rounded,
+                            color: IsmChatColors.blackColor,
+                          ),
+                          IsmChatDimens.boxWidth8,
+                          const Text(IsmChatStrings.save)
+                        ],
+                      ),
                     ),
-                  ),
                   PopupMenuItem(
                     value: 3,
                     child: Row(
@@ -132,13 +134,16 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
                   ),
                 ],
                 elevation: 1,
-                onSelected: (value) {
+                onSelected: (value) async {
                   if (value == 1) {
-                    chatPageController
+                    await chatPageController
                         .shareMedia(widget.messageData[mediaIndex]);
                   } else if (value == 2) {
-                    chatPageController
+                    await chatPageController
                         .saveMedia(widget.messageData[mediaIndex]);
+                  } else if (value == 3) {
+                    await chatPageController
+                        .deleteMedia(widget.messageData[mediaIndex]);
                   }
                 },
               ),
