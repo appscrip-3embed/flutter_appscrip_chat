@@ -15,7 +15,7 @@ dependencies:
   camera: ^0.10.3+2
   carousel_slider: ^4.2.1
   connectivity_plus: ^4.0.1
-  device_info_plus: ^8.1.0
+  device_info_plus: ^9.0.2
   dio: ^5.2.1+1
   emoji_picker_flutter: ^1.5.4
   file_picker: ^5.2.6
@@ -61,7 +61,7 @@ dependencies:
   video_trimmer: ^2.0.1
   visibility_detector: ^0.4.0+2
   voice_message_package: ^0.0.74
-  wechat_assets_picker: ^8.5.0
+  wechat_assets_picker: ^8.4.1
 
 dev_dependencies:
   flutter_lints: ^2.0.0
