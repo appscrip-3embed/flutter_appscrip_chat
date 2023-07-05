@@ -395,7 +395,7 @@ class IsmChatPageViewModel {
     if (allMessages == null) {
       return;
     }
-    IsmChatLog.error('length Of Message ${allMessages.length}');
+
     for (var x in messages) {
       allMessages.removeWhere(
         (e) {
@@ -414,7 +414,6 @@ class IsmChatPageViewModel {
     var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (conversation != null) {
-      IsmChatLog.error('length Of MessageSecond ${allMessages.length}');
       conversation = conversation.copyWith(messages: allMessages);
 
       await IsmChatConfig.dbWrapper!

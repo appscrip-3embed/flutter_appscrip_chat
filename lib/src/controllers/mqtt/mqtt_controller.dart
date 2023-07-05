@@ -418,13 +418,12 @@ class IsmChatMqttController extends GetxController {
                 (conversation.membersCount ?? 0) - 1
             ? true
             : false;
-        conversation.messages.last = lastMessage.toJson();
+        conversation.messages?.last = lastMessage;
 
-        conversation.lastMessageDetails.target =
-            conversation.lastMessageDetails.target!.copyWith(
+        conversation.lastMessageDetails?.copyWith(
           deliverCount: lastMessage.deliveredTo?.length,
         );
-        conversationBox.put(conversation);
+
         await IsmChatConfig.dbWrapper!
             .saveConversation(conversation: conversation);
         if (Get.isRegistered<IsmChatPageController>()) {
@@ -462,10 +461,9 @@ class IsmChatMqttController extends GetxController {
             lastMessage.readBy?.length == (conversation.membersCount ?? 0) - 1
                 ? true
                 : false;
-        conversation.messages.last = lastMessage.toJson();
+        conversation.messages?.last = lastMessage;
 
-        conversation.lastMessageDetails.target =
-            conversation.lastMessageDetails.target!.copyWith(
+        conversation.lastMessageDetails?.copyWith(
           readCount: lastMessage.readBy?.length,
         );
         await IsmChatConfig.dbWrapper!

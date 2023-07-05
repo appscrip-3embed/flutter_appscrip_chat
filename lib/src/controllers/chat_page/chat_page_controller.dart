@@ -886,11 +886,11 @@ class IsmChatPageController extends GetxController
               showInConversation: true,
               sentAt: messages.last.sentAt,
               senderName: [
-              IsmChatCustomMessageType.removeAdmin,
-              IsmChatCustomMessageType.addAdmin
-            ].contains(messages.last.customType)
-                ? messages.last.initiatorName ?? ''
-                : messages.last.chatName,
+                IsmChatCustomMessageType.removeAdmin,
+                IsmChatCustomMessageType.addAdmin
+              ].contains(messages.last.customType)
+                  ? messages.last.initiatorName ?? ''
+                  : messages.last.chatName,
               messageType: messages.last.messageType?.value ?? 0,
               messageId: messages.last.messageId ?? '',
               conversationId: messages.last.conversationId ?? '',
@@ -1434,11 +1434,11 @@ class IsmChatPageController extends GetxController
     var conversationId = conversationController.getConversationId(
       userDetails.userId,
     );
-    var conversationUser = await IsmChatConfig.objectBox
-        .getDBConversation(conversationId: conversationId);
+    var conversationUser = await IsmChatConfig.dbWrapper!
+        .getConversation(conversationId: conversationId);
     UserDetails? user;
     if (conversationUser != null) {
-      user = conversationUser.opponentDetails.target;
+      user = conversationUser.opponentDetails;
     } else {
       user = userDetails;
     }
