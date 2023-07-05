@@ -112,6 +112,7 @@ class IsmChatDBWrapper {
     if (conversations.isEmpty) {
       return [];
     }
+
     return conversations
         .map((e) => IsmChatConversationModel.fromJson(e!))
         .toList();
@@ -144,6 +145,7 @@ class IsmChatDBWrapper {
       if (map == null) {
         return null;
       }
+
       return IsmChatConversationModel.fromJson(map);
     }
     if (listMap == null || listMap.isEmpty) {
@@ -153,7 +155,6 @@ class IsmChatDBWrapper {
       conversationId: conversationId,
       messages: listMap.map(IsmChatMessageModel.fromJson).toList(),
     );
-
     return conversations;
   }
 
@@ -286,6 +287,8 @@ class IsmChatDBWrapper {
           return;
         }
         conversation = conversation.copyWith(
+          conversationImageUrl: conversationModel.conversationImageUrl,
+          conversationTitle: conversationModel.conversationTitle,
           isGroup: conversationModel.isGroup,
           membersCount: conversationModel.membersCount,
           lastMessageDetails: conversationModel.lastMessageDetails,

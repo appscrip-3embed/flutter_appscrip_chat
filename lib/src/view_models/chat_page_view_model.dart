@@ -579,11 +579,10 @@ class IsmChatPageViewModel {
         allMessages.indexWhere((e) => e.messageId == reaction.messageId);
 
     allMessages[messageIndex] = message;
-
     var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: reaction.conversationId);
     if (conversation != null) {
-      conversation.copyWith(messages: allMessages);
+      conversation = conversation.copyWith(messages: allMessages);
       await IsmChatConfig.dbWrapper!
           .saveConversation(conversation: conversation);
     }
@@ -629,7 +628,7 @@ class IsmChatPageViewModel {
     var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: reaction.conversationId);
     if (conversation != null) {
-      conversation.copyWith(messages: allMessages);
+      conversation = conversation.copyWith(messages: allMessages);
       await IsmChatConfig.dbWrapper!
           .saveConversation(conversation: conversation);
     }

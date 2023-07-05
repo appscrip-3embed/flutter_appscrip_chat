@@ -37,9 +37,14 @@ class LastMessageDetails {
                 : null,
         sentByMe: true,
         members: map['members'] != null
-            ? (map['members'] as List)
-                .map((e) => e['memberName'] as String? ?? '')
-                .toList()
+            ? (map['members'] as List).map((e) {
+                if (e.runtimeType == Map<String, dynamic>) {
+                  return e['memberName'] as String? ?? '';
+                } else if (e.runtimeType == String) {
+                  return e as String? ?? '';
+                }
+                return e['memberName'] as String? ?? '';
+              }).toList()
             : <String>[],
         reactionType: map['reactionType'] as String? ?? '',
         userId: map['userId'] as String? ?? '',

@@ -404,7 +404,6 @@ class IsmChatMqttController extends GetxController {
       if (lastMessage.messageId == actionModel.messageId) {
         var isDelivered = lastMessage.deliveredTo
             ?.any((e) => e.userId == actionModel.userDetails?.userId);
-
         if (isDelivered == false) {
           lastMessage.deliveredTo?.add(
             MessageStatus(
@@ -421,7 +420,7 @@ class IsmChatMqttController extends GetxController {
         conversation.messages?.last = lastMessage;
 
         conversation.lastMessageDetails?.copyWith(
-          deliverCount: lastMessage.deliveredTo?.length,
+          readCount: lastMessage.deliveredTo?.length,
         );
 
         await IsmChatConfig.dbWrapper!
@@ -536,15 +535,11 @@ class IsmChatMqttController extends GetxController {
         modifiedMessages.add(modified);
       }
     }
-    conversation.copyWith(
+    conversation = conversation.copyWith(
         messages: modifiedMessages,
         lastMessageDetails: conversation.lastMessageDetails?.copyWith(
-          deliverCount: conversation.isGroup!
-              ? conversation.lastMessageDetails!.deliverCount + 1
-              : 1,
-          readCount: conversation.isGroup!
-              ? conversation.lastMessageDetails!.readCount + 1
-              : 1,
+          deliverCount: modifiedMessages.last.deliveredTo?.length,
+          readCount: modifiedMessages.last.readBy?.length,
         ));
 
     await IsmChatConfig.dbWrapper!.saveConversation(conversation: conversation);
@@ -583,7 +578,7 @@ class IsmChatMqttController extends GetxController {
     var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: actionModel.conversationId);
     if (conversation != null) {
-      conversation.copyWith(messages: allMessages);
+      conversation = conversation.copyWith(messages: allMessages);
       await IsmChatConfig.dbWrapper!
           .saveConversation(conversation: conversation);
     }
@@ -832,7 +827,8 @@ class IsmChatMqttController extends GetxController {
         var conversation = await IsmChatConfig.dbWrapper!
             .getConversation(conversationId: actionModel.conversationId);
         if (conversation != null) {
-          conversation.copyWith(messages: allMessages);
+          conversation = conversation.copyWith(messages: allMessages);
+          IsmChatLog.error(conversation);
           await IsmChatConfig.dbWrapper!
               .saveConversation(conversation: conversation);
           await Get.find<IsmChatPageController>()
@@ -886,7 +882,7 @@ class IsmChatMqttController extends GetxController {
         var conversation = await IsmChatConfig.dbWrapper!
             .getConversation(conversationId: actionModel.conversationId);
         if (conversation != null) {
-          conversation.copyWith(messages: allMessages);
+          conversation = conversation.copyWith(messages: allMessages);
           await IsmChatConfig.dbWrapper!
               .saveConversation(conversation: conversation);
           await Get.find<IsmChatPageController>()

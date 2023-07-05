@@ -41,7 +41,7 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
   void getMessages() async {
     var messages =
         await IsmChatConfig.dbWrapper!.getMessage(widget.conversationId);
-    IsmChatLog.error(messages);
+
     if (messages?.isNotEmpty == true) {
       mediaList = messages!
           .where((e) => [

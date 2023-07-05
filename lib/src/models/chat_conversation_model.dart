@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
@@ -69,7 +70,6 @@ class IsmChatConversationModel {
   IsmChatConversationModel({
     this.updatedAt,
     this.unreadMessagesCount,
-    //  this.searchableTags,
     this.privateOneToOne,
     this.opponentDetails,
     this.metaData,
@@ -95,7 +95,6 @@ class IsmChatConversationModel {
 
   final int? updatedAt;
   final int? unreadMessagesCount;
-  //  List<String> searchableTags;
   final List<String>? userIds;
   final bool? privateOneToOne;
   final UserDetails? opponentDetails;
@@ -159,7 +158,6 @@ class IsmChatConversationModel {
       IsmChatConversationModel(
         updatedAt: updatedAt ?? this.updatedAt,
         unreadMessagesCount: unreadMessagesCount ?? this.unreadMessagesCount,
-        // searchableTags: searchableTags ?? this.searchableTags,
         privateOneToOne: privateOneToOne ?? this.privateOneToOne,
         opponentDetails: opponentDetails ?? this.opponentDetails,
         metaData: metaData ?? this.metaData,
@@ -183,16 +181,6 @@ class IsmChatConversationModel {
       );
 
   Map<String, dynamic> toMap() => {
-        'updatedAt': updatedAt,
-        'unreadMessagesCount': unreadMessagesCount,
-        // 'searchableTags': searchableTags,
-        'privateOneToOne': privateOneToOne,
-        'opponentDetails': opponentDetails?.toMap(),
-        'metaData': metaData?.toMap(),
-        'messagingDisabled': messagingDisabled,
-        'lastReadAt': lastReadAt?.map((x) => x.toMap()).toList(),
-        'lastMessageSentAt': lastMessageSentAt,
-        'lastMessageDetails': lastMessageDetails?.toMap(),
         'isGroup': isGroup,
         'createdBy': createdBy,
         'createdByUserName': createdByUserName,
@@ -205,65 +193,77 @@ class IsmChatConversationModel {
         'members': members?.map((e) => e.toMap()).toList(),
         'usersOwnDetails': usersOwnDetails?.toMap(),
         'messages': messages?.map((e) => e.toMap()).toList(),
+        'updatedAt': updatedAt,
+        'unreadMessagesCount': unreadMessagesCount,
+        'userIds': userIds,
+        'privateOneToOne': privateOneToOne,
+        'opponentDetails': opponentDetails?.toMap(),
+        'metaData': metaData?.toMap(),
+        'messagingDisabled': messagingDisabled,
+        'membersCount': membersCount,
+        'lastReadAt': lastReadAt?.map((x) => x.toMap()).toList(),
+        'lastMessageSentAt': lastMessageSentAt,
+        'lastMessageDetails': lastMessageDetails?.toMap(),
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'ChatConversationModel(updatedAt: $updatedAt, unreadMessagesCount: $unreadMessagesCount, privateOneToOne: $privateOneToOne, opponentDetails: $opponentDetails, metaData: $metaData, messagingDisabled: $messagingDisabled, lastMessageSentAt: $lastMessageSentAt, lastMessageDetails: $lastMessageDetails, isGroup: $isGroup, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, config: $config, lastReadAt: $lastReadAt, createdAt $createdAt, usersOwnDetails $usersOwnDetails, createdBy: $createdBy, createdByUserName: $createdByUserName)';
+      'IsmChatConversationModel(updatedAt: $updatedAt, unreadMessagesCount: $unreadMessagesCount, userIds: $userIds, privateOneToOne: $privateOneToOne, opponentDetails: $opponentDetails, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, lastMessageSentAt: $lastMessageSentAt, lastMessageDetails: $lastMessageDetails, isGroup: $isGroup, conversationType: $conversationType, createdAt: $createdAt, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, config: $config, members: $members, usersOwnDetails: $usersOwnDetails, createdBy: $createdBy, createdByUserName: $createdByUserName, messages: $messages)';
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(covariant IsmChatConversationModel other) {
     if (identical(this, other)) return true;
 
-    return other is IsmChatConversationModel &&
-        other.updatedAt == updatedAt &&
+    return other.updatedAt == updatedAt &&
         other.unreadMessagesCount == unreadMessagesCount &&
-        // listEquals(other.searchableTags, searchableTags) &&
+        listEquals(other.userIds, userIds) &&
         other.privateOneToOne == privateOneToOne &&
         other.opponentDetails == opponentDetails &&
         other.metaData == metaData &&
         other.messagingDisabled == messagingDisabled &&
         other.membersCount == membersCount &&
         listEquals(other.lastReadAt, lastReadAt) &&
-        other.lastMessageDetails == lastMessageDetails &&
         other.lastMessageSentAt == lastMessageSentAt &&
+        other.lastMessageDetails == lastMessageDetails &&
         other.isGroup == isGroup &&
         other.conversationType == conversationType &&
+        other.createdAt == createdAt &&
         other.conversationTitle == conversationTitle &&
         other.conversationImageUrl == conversationImageUrl &&
         other.conversationId == conversationId &&
-        other.createdAt == createdAt &&
+        other.config == config &&
+        listEquals(other.members, members) &&
+        other.usersOwnDetails == usersOwnDetails &&
         other.createdBy == createdBy &&
         other.createdByUserName == createdByUserName &&
-        other.usersOwnDetails == usersOwnDetails &&
-        other.config == config &&
-        other.messages == messages;
+        listEquals(other.messages, messages);
   }
 
   @override
   int get hashCode =>
       updatedAt.hashCode ^
       unreadMessagesCount.hashCode ^
-      // searchableTags.hashCode ^
+      userIds.hashCode ^
       privateOneToOne.hashCode ^
       opponentDetails.hashCode ^
       metaData.hashCode ^
       messagingDisabled.hashCode ^
       membersCount.hashCode ^
       lastReadAt.hashCode ^
-      lastMessageDetails.hashCode ^
       lastMessageSentAt.hashCode ^
+      lastMessageDetails.hashCode ^
       isGroup.hashCode ^
       conversationType.hashCode ^
+      createdAt.hashCode ^
       conversationTitle.hashCode ^
       conversationImageUrl.hashCode ^
       conversationId.hashCode ^
-      createdAt.hashCode ^
+      config.hashCode ^
+      members.hashCode ^
+      usersOwnDetails.hashCode ^
       createdBy.hashCode ^
       createdByUserName.hashCode ^
-      usersOwnDetails.hashCode ^
-      config.hashCode ^
       messages.hashCode;
 }

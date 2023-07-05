@@ -15,7 +15,6 @@ class ChatList extends StatelessWidget {
     return GetBuilder<ChatListController>(builder: (controller) {
       return Scaffold(
           body: IsmChatApp(
-        // useDataBase: false,
         chatTheme: IsmChatThemeData(
           primaryColor: AppColors.primaryColorLight,
           chatPageTheme: IsmChatPageThemeData(
@@ -32,8 +31,8 @@ class ChatList extends StatelessWidget {
         communicationConfig: IsmChatCommunicationConfig(
           userConfig: IsmChatUserConfig(
               userToken: AppConfig.userDetail?.userToken ?? '',
-                userId: AppConfig.userDetail?.userId ?? '',
-                userName: AppConfig.userDetail?.userName ?? '',
+              userId: AppConfig.userDetail?.userId ?? '',
+              userName: AppConfig.userDetail?.userName ?? '',
               userEmail: AppConfig.userDetail?.email ?? '',
               userProfile: ''),
           mqttConfig: const IsmChatMqttConfig(

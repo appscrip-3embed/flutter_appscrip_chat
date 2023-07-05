@@ -7,6 +7,8 @@ import 'package:chat_component_example/res/res.dart';
 import 'package:chat_component_example/view_models/view_models.dart';
 import 'package:get/get.dart';
 
+import '../../utilities/config.dart';
+
 class ChatListController extends GetxController {
   final ChatListViewModel _viewModel;
   ChatListController(this._viewModel);
@@ -15,8 +17,7 @@ class ChatListController extends GetxController {
 
   @override
   void onInit() {
-    userDetails = Get.arguments['userData'];
-
+    userDetails = AppConfig.userDetail!;
     super.onInit();
   }
 

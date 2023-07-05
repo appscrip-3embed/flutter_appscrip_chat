@@ -16,30 +16,25 @@ class IsmChatConversationsViewModel {
     if (conversations == null || conversations.isEmpty) {
       return [];
     }
+    var dbConversations = await IsmChatConfig.dbWrapper!.getAllConversations();
 
-    if (IsmChatConfig.useDatabase) {
-      var dbConversations =
-          await IsmChatConfig.dbWrapper!.getAllConversations();
-
-      for (var conversation in conversations) {
-        IsmChatConversationModel? dbConversation;
-        if (dbConversations.isNotEmpty) {
-          dbConversation = dbConversations.firstWhere(
-            (e) => e.conversationId == conversation.conversationId,
-            orElse: () => IsmChatConversationModel(messages: []),
-          );
-        }
-
-        conversation.copyWith(
-            messages: dbConversation?.messages,
-            opponentDetails: conversation.opponentDetails,
-            lastMessageDetails: conversation.lastMessageDetails,
-            config: conversation.config,
-            metaData: conversation.metaData);
-
-        await IsmChatConfig.dbWrapper!
-            .createAndUpdateConversation(conversation);
+    for (var conversation in conversations) {
+      IsmChatConversationModel? dbConversation;
+      if (dbConversations.isNotEmpty) {
+        dbConversation = dbConversations.firstWhere(
+          (e) => e.conversationId == conversation.conversationId,
+          orElse: () => IsmChatConversationModel(messages: []),
+        );
       }
+      conversation.copyWith(
+        messages: dbConversation?.messages,
+        opponentDetails: conversation.opponentDetails,
+        lastMessageDetails: conversation.lastMessageDetails,
+        config: conversation.config,
+        metaData: conversation.metaData,
+      );
+
+      await IsmChatConfig.dbWrapper!.createAndUpdateConversation(conversation);
     }
     return conversations;
   }

@@ -35,7 +35,7 @@ class AuthController extends GetxController {
     );
     if (data != null) {
       await AppConfig.getUserData();
-      Get.offAllNamed(AppRoutes.chatList, arguments: {'userData': data});
+      Get.offAllNamed(AppRoutes.chatList);
     }
   }
 
