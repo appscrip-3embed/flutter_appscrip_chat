@@ -19,7 +19,7 @@ class IsmChatMetaData {
   final String? genderOfUserWhoStartedGuestChat;
   final String? genderOfUserWhoReceivedTheGuestChat;
   final bool? paidChat;
-  final String? customType;
+  final Map<String,dynamic>? customType;
   IsmChatMetaData({
     this.id = 0,
     this.country,
@@ -57,7 +57,7 @@ class IsmChatMetaData {
     String? genderOfUserWhoStartedGuestChat,
     String? genderOfUserWhoReceivedTheGuestChat,
     bool? paidChat,
-    String? customType,
+    Map<String,dynamic>? customType,
     String? locationSubAddress,
   }) =>
       IsmChatMetaData(
@@ -82,7 +82,7 @@ class IsmChatMetaData {
           guestMatchInitiatedWithUserId: guestMatchInitiatedWithUserId ??
               this.guestMatchInitiatedWithUserId,
           paidChat: paidChat ?? this.paidChat,
-          customType: customType ?? this.country,
+          customType: customType ?? this.customType,
           locationSubAddress: locationSubAddress ?? this.locationSubAddress);
 
   Map<String, dynamic> toMap() => <String, dynamic>{
@@ -154,7 +154,7 @@ class IsmChatMetaData {
         guestMatchInitiatedWithUserId:
             map['guestMatchInitiatedWithUserId'] as String? ?? '',
         paidChat: map['paidChat'] as bool? ?? false,
-        customType: map['customType'] as String? ?? '',
+        customType: map['customType'] as Map<String,dynamic>? ?? {},
       );
 
   String toJson() => json.encode(toMap());
@@ -181,6 +181,7 @@ class IsmChatMetaData {
         other.parentMessageInitiator == parentMessageInitiator &&
         other.customType == customType &&
         other.locationSubAddress == locationSubAddress &&
+        other.customType == customType &&
         other.country == country;
   }
 
