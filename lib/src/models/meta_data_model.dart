@@ -154,7 +154,8 @@ class IsmChatMetaData {
         guestMatchInitiatedWithUserId:
             map['guestMatchInitiatedWithUserId'] as String? ?? '',
         paidChat: map['paidChat'] as bool? ?? false,
-        customType: map['customType'] as Map<String,dynamic>? ?? {},
+        customType: map['customType'].runtimeType == String ? {'${map['customType']}' : map['customType']} :
+        map['customType'] as Map<String,dynamic>? ?? {},
       );
 
   String toJson() => json.encode(toMap());
