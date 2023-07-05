@@ -45,8 +45,9 @@ class IsmChatConversationModel {
         conversationTitle: map['conversationTitle'] as String?,
         conversationImageUrl: map['conversationImageUrl'] as String?,
         conversationId: map['conversationId'] as String? ?? '',
-        config: ConversationConfigModel.fromMap(
-            map['config'] as Map<String, dynamic>),
+        config: map['config'] != null ?
+        ConversationConfigModel.fromMap(
+            map['config'] as Map<String, dynamic>) : ConversationConfigModel(typingEvents: false, readEvents: false, pushNotifications: false),
         members: map['members'] == null
             ? []
             : List<UserDetails>.from(
