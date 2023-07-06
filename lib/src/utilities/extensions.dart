@@ -767,6 +767,14 @@ extension MentionMessage on IsmChatMessageModel {
     );
   }
 
+  Color? get textColor {
+    var theme = IsmChatConfig.chatTheme.chatPageTheme;
+    if (sentByMe) {
+      return theme?.selfMessageTheme?.textColor ?? IsmChatColors.whiteColor;
+    }
+    return theme?.opponentMessageTheme?.textColor ?? IsmChatColors.blackColor;
+  }
+
   Color? get backgroundColor {
     var theme = IsmChatConfig.chatTheme.chatPageTheme;
     if (sentByMe) {

@@ -14,7 +14,7 @@ class IsmChatDeletedMessage extends StatelessWidget {
             children: [
               Icon(
                 Icons.remove_circle_outline_rounded,
-                color: message.borderColor,
+                color: message.textColor,
               ),
               IsmChatDimens.boxWidth4,
               Text(
