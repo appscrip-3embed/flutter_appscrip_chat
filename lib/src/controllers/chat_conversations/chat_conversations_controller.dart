@@ -232,12 +232,10 @@ class IsmChatConversationsController extends GetxController {
       isLoading: isLoading,
     );
 
-    if (response == null) {
+    var users = response?.users ?? [];
+    if (users.isEmpty) {
       isLoadingUsers = true;
-      return;
     }
-
-    var users = response.users;
     users.sort((a, b) => a.userName.compareTo(b.userName));
 
     if (opponentId != null) {
@@ -318,9 +316,7 @@ class IsmChatConversationsController extends GetxController {
     }
     conversations.clear();
     conversations = dbConversations;
-
     isConversationsLoading = false;
-
     if (conversations.length <= 1) {
       return;
     }
@@ -361,18 +357,16 @@ class IsmChatConversationsController extends GetxController {
       refreshControllerOnEmptyList.loadComplete();
     }
 
-    if (conversations.isEmpty) {
-      isConversationsLoading = false;
-    }
-
     if (apiConversations.isEmpty) {
       return;
     }
 
     unawaited(getBlockUser());
     conversationPage = conversationPage + 20;
-
     await getConversationsFromDB();
+    if (conversations.isEmpty) {
+      isConversationsLoading = false;
+    }
   }
 
   Future<void> getBlockUser() async {

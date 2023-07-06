@@ -349,10 +349,10 @@ class IsmChatPageController extends GetxController
 
   @override
   void onInit() async {
-    super.onInit();
     _generateReactionList();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
+
       await Future.delayed(Duration.zero);
       if (conversation!.conversationId?.isNotEmpty ?? false) {
         await getMessagesFromDB(conversation?.conversationId ?? '');
@@ -386,6 +386,7 @@ class IsmChatPageController extends GetxController
         showEmojiBoard = false;
       }
     });
+    super.onInit();
   }
 
   @override
