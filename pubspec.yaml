@@ -51,7 +51,7 @@ dependencies:
   pull_to_refresh: ^2.0.0
   record: ^4.4.4
   scroll_to_index: ^3.0.1
-  share_plus: ^7.0.2
+  share_plus: ^6.3.4
   swipe_to: ^1.0.2
   syncfusion_flutter_pdfviewer: ^20.4.54
   url_launcher: ^6.1.10
@@ -61,7 +61,7 @@ dependencies:
   video_trimmer: ^2.0.1
   visibility_detector: ^0.4.0+2
   voice_message_package: ^0.0.74
-  wechat_assets_picker: ^8.4.1
+  wechat_assets_picker: ^8.5.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0
