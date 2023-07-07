@@ -33,7 +33,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     if (response != null) {
       var data = jsonDecode(response.data);
       var conversationId = data['conversationId'];
-      _controller.conversation
+      _controller.conversation = _controller.conversation
           ?.copyWith(conversationId: conversationId.toString());
       var dbConversationModel = IsmChatConversationModel(
         conversationId: conversationId.toString(),
@@ -51,7 +51,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         config: _controller.conversation?.config,
         metaData: _controller.conversation?.metaData,
       );
-
       await IsmChatConfig.dbWrapper!
           .createAndUpdateConversation(dbConversationModel);
       return conversationId.toString();
