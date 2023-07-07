@@ -262,7 +262,7 @@ class IsmChatDBWrapper {
               conversation: forwardConversation, dbBox: dbBox);
           return;
         }
-        conversation.messages?.add(message.toMap() as IsmChatMessageModel);
+        conversation.messages?.add(message);
         await saveConversation(conversation: conversation, dbBox: dbBox);
         break;
     }
@@ -283,6 +283,7 @@ class IsmChatDBWrapper {
         var conversation = await getConversation(
             conversationId: conversationModel.conversationId);
         if (conversation == null) {
+          IsmChatLog.error('Step1');
           await saveConversation(conversation: conversationModel);
           return;
         }

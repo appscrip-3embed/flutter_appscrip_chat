@@ -119,7 +119,7 @@ class IsmChatPageRepository {
       }
       return response;
     } catch (e, st) {
-      IsmChatLog.error('Change group title  $e', st);
+      IsmChatLog.error('Change group title error  $e', st);
       return null;
     }
   }

@@ -25,8 +25,6 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
 
   GeoCode geoCode = GeoCode();
 
-  final ismChatDebounce = IsmChatDebounce();
-
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(30.7046, 76.7179),
     zoom: 14,
@@ -92,7 +90,7 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                   controller.textEditingController.clear();
 
                   if (!controller.isSearchSelect) {
-                    await ismChatPageController.getLocation(
+                    await controller.getLocation(
                         latitude: latLng!.latitude.toString(),
                         longitude: latLng!.longitude.toString());
                   }
@@ -109,7 +107,7 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                     controller.textEditingController.clear();
                   }
 
-                  await ismChatPageController.getLocation(
+                  await controller.getLocation(
                       latitude: latLng!.latitude.toString(),
                       longitude: latLng!.longitude.toString());
                 },
@@ -124,15 +122,15 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                         child: IsmChatInputField(
                         fillColor: IsmChatConfig.chatTheme.primaryColor,
                         onFieldSubmitted: (input) async {
-                          await ismChatPageController.getLocation(
+                          await controller.getLocation(
                               searchKeyword: input,
                               latitude: latLng!.latitude.toString(),
                               longitude: latLng!.longitude.toString());
                         },
                         onChanged: (value) {
-                          ismChatDebounce.run(
+                          controller.ismChatDebounce.run(
                             () async {
-                              await ismChatPageController.getLocation(
+                              await controller.getLocation(
                                   searchKeyword: value.isNotEmpty ? value : '',
                                   latitude: latLng!.latitude.toString(),
                                   longitude: latLng!.longitude.toString());
@@ -182,7 +180,7 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                       onMapCreated: mapController.complete,
                       myLocationButtonEnabled: false,
                       onCameraMove: (position) {
-                        ismChatDebounce.run(() async {
+                        controller.ismChatDebounce.run(() async {
                           latLng = LatLng(position.target.latitude,
                               position.target.longitude);
                           setState(() {});
@@ -288,10 +286,25 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                         if (controller.isLocaionSearch || _markers.isEmpty) ...[
                           const IsmChatLoadingDialog(),
                         ] else ...[
-                          const Center(
-                            child: Text('No data found'),
+                          Center(
+                            child: Text(
+                              IsmChatStrings.noDataFound,
+                              style: IsmChatStyles.w500Black14,
+                            ),
                           )
                         ]
+                      ] else if (controller.predictionList.length == 1) ...[
+                        Column(
+                          children: [
+                            SizedBox(
+                              height: IsmChatDimens.hundred,
+                            ),
+                            Center(
+                              child: Text(IsmChatStrings.noDataFound,
+                                  style: IsmChatStyles.w500Black14),
+                            ),
+                          ],
+                        )
                       ] else ...[
                         ListView.builder(
                             shrinkWrap: true,

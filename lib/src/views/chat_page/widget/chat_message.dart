@@ -35,6 +35,8 @@ class _IsmChatMessageState extends State<IsmChatMessage>
       IsmChatCustomMessageType.addAdmin,
       IsmChatCustomMessageType.removeAdmin,
       IsmChatCustomMessageType.memberLeave,
+      IsmChatCustomMessageType.conversationImageUpdated,
+      IsmChatCustomMessageType.conversationTitleUpdated
     ].contains(widget.message.customType!);
     isGroup = controller.conversation!.isGroup ?? false;
   }

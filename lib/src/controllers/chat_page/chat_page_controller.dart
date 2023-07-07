@@ -203,6 +203,12 @@ class IsmChatPageController extends GetxController
   Duration get myDuration => _myDuration.value;
   set myDuration(Duration value) => _myDuration.value = value;
 
+  final RxBool _isTyping = true.obs;
+  bool get isTyping => _isTyping.value;
+  set isTyping(bool value) {
+    _isTyping.value = value;
+  }
+
   final RxBool _showDownSideButton = false.obs;
   bool get showDownSideButton => _showDownSideButton.value;
   set showDownSideButton(bool value) => _showDownSideButton.value = value;
@@ -346,6 +352,8 @@ class IsmChatPageController extends GetxController
   }
 
   final Dio dio = Dio();
+
+  final ismChatDebounce = IsmChatDebounce();
 
   @override
   void onInit() async {
@@ -1233,6 +1241,8 @@ class IsmChatPageController extends GetxController
     }
   }
 
+  void showDialogForAdmin(UserDetails user, {bool isAdmin = true}) async {}
+
   Future<void> readMessage({
     required String conversationId,
     required String messageId,
@@ -1243,10 +1253,23 @@ class IsmChatPageController extends GetxController
     );
   }
 
-  Future<void> notifyTyping() async {
-    await _viewModel.notifyTyping(
-      conversationId: conversation?.conversationId ?? '',
-    );
+  void notifyTyping() {
+    if (isTyping) {
+      isTyping = false;
+      var tickTick = 0;
+      Timer.periodic(const Duration(seconds: 3), (timer) async {
+        if (tickTick == 0) {
+          await _viewModel.notifyTyping(
+            conversationId: conversation?.conversationId ?? '',
+          );
+        }
+        if (tickTick == 3) {
+          isTyping = true;
+          timer.cancel();
+        }
+        tickTick++;
+      });
+    }
   }
 
   Future<void> getMessageInformation(
@@ -1373,7 +1396,7 @@ class IsmChatPageController extends GetxController
       selectedMessage.clear();
       isMessageSeleted = false;
     }
-    IsmChatUtility.showToast('Deleted your media');
+    IsmChatUtility.showToast('Deleted your message');
   }
 
   Future<void> deleteMessageForMe(
@@ -1390,7 +1413,7 @@ class IsmChatPageController extends GetxController
       selectedMessage.clear();
       isMessageSeleted = false;
     }
-    IsmChatUtility.showToast('Deleted your media');
+    IsmChatUtility.showToast('Deleted your message');
   }
 
   bool isAllMessagesFromMe() => selectedMessage.every(
@@ -1425,6 +1448,7 @@ class IsmChatPageController extends GetxController
       return;
     }
     predictionList = response;
+    IsmChatLog.error('checl list ${predictionList.length}');
   }
 
   Future<void> deleteReacton({required Reaction reaction}) async =>

@@ -33,8 +33,6 @@ class IsmChatPageViewModel {
           IsmChatActionEvents.reactionAdd.name,
           IsmChatActionEvents.reactionRemove.name,
           IsmChatActionEvents.conversationDetailsUpdated.name,
-          IsmChatActionEvents.conversationImageUpdated.name,
-          IsmChatActionEvents.conversationTitleUpdated.name,
           if (e.memberId !=
               IsmChatConfig.communicationConfig.userConfig.userId) ...[
             IsmChatActionEvents.removeAdmin.name,
@@ -144,14 +142,16 @@ class IsmChatPageViewModel {
         if (chatForwardMessages == null) {
           return false;
         }
+
         for (var x = 0; x < chatForwardMessages.messages!.length; x++) {
-          var pendingMessage = chatForwardMessages.messages![x];
-          if (pendingMessage.messageId!.isNotEmpty ||
-              pendingMessage.sentAt != createdAt) {
+          var forwardMessage = chatForwardMessages.messages![x];
+          if (forwardMessage.messageId!.isNotEmpty ||
+              forwardMessage.sentAt != createdAt) {
             continue;
           }
-          pendingMessage.messageId = messageId;
-          pendingMessage.deliveredToAll = false;
+          forwardMessage.messageId = messageId;
+
+          forwardMessage.deliveredToAll = false;
           chatForwardMessages.messages?.removeAt(x);
           await dbBox.saveConversation(
               conversation: chatForwardMessages, dbBox: IsmChatDbBox.forward);
@@ -164,12 +164,15 @@ class IsmChatPageViewModel {
           final conversationModel = await dbBox.getConversation(
             conversationId: conversationId,
           );
+
           if (conversationModel != null) {
-            conversationModel.messages?.add(pendingMessage);
+            conversationModel.messages?.add(forwardMessage);
           }
+
           await dbBox.saveConversation(
             conversation: conversationModel!,
           );
+
           return true;
         }
       }

@@ -155,14 +155,7 @@ class _ImsChatShowUserReactionState extends State<ImsChatShowUserReaction>
                       },
                       child: ListTile(
                         title: Text(showOwnUser
-                            ? IsmChatConfig.communicationConfig.userConfig
-                                    .userName.isNotEmpty
-                                ? IsmChatConfig
-                                    .communicationConfig.userConfig.userName
-                                : Get.find<IsmChatConversationsController>()
-                                        .userDetails
-                                        ?.userName ??
-                                    ''
+                            ? IsmChatStrings.you
                             : widget._controller.conversation!.isGroup!
                                 ? reactionUser?.userName ?? ''
                                 : widget._controller.conversation?.chatName ??
@@ -229,10 +222,6 @@ class _ImsChatShowUserReactionState extends State<ImsChatShowUserReaction>
                           showOwnUser = true;
                         }
 
-                        IsmChatLog.error('show own user $showOwnUser');
-                        IsmChatLog.error(
-                            'show own user ${IsmChatConfig.communicationConfig.userConfig.userName}');
-
                         return IsmChatTapHandler(
                           onTap: () async {
                             Get.back();
@@ -247,14 +236,7 @@ class _ImsChatShowUserReactionState extends State<ImsChatShowUserReaction>
                           },
                           child: ListTile(
                             title: Text(showOwnUser
-                                ? IsmChatConfig.communicationConfig.userConfig
-                                        .userName.isNotEmpty
-                                    ? IsmChatConfig
-                                        .communicationConfig.userConfig.userName
-                                    : Get.find<IsmChatConversationsController>()
-                                            .userDetails
-                                            ?.userName ??
-                                        ''
+                                ? IsmChatStrings.you
                                 : widget._controller.conversation!.isGroup!
                                     ? reactionUser?.userName ?? ''
                                     : widget._controller.conversation
