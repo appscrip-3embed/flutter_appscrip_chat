@@ -168,43 +168,6 @@ class IsmChatMessageInfo extends StatelessWidget {
                                         children: [
                                           Icon(
                                             Icons.done_all,
-                                            color: Colors.blue,
-                                            size: IsmChatDimens.twenty,
-                                          ),
-                                          IsmChatDimens.boxWidth14,
-                                          Text('Read',
-                                              style: IsmChatStyles.w400Black12)
-                                        ],
-                                      ),
-                                      chatController.readMessageMembers.isEmpty
-                                          ? Icon(
-                                              Icons.remove,
-                                              size: IsmChatDimens.twenty,
-                                            )
-                                          : Text(
-                                              chatController.readMessageMembers
-                                                  .first.timestamp!.deliverTime,
-                                              style: IsmChatStyles.w400Black12,
-                                            ),
-                                    ],
-                                  ),
-                                  IsmChatDimens.boxHeight8,
-                                  const Divider(
-                                    thickness: 0.1,
-                                    color: Colors.grey,
-                                  ),
-                                  IsmChatDimens.boxHeight8,
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Icon(
-                                            Icons.done_all,
                                             color: Colors.grey,
                                             size: IsmChatDimens.twenty,
                                           ),
@@ -229,6 +192,43 @@ class IsmChatMessageInfo extends StatelessWidget {
                                                   .deliverTime,
                                               style: IsmChatStyles.w400Black12,
                                             )
+                                    ],
+                                  ),
+                                  IsmChatDimens.boxHeight8,
+                                  const Divider(
+                                    thickness: 0.1,
+                                    color: Colors.grey,
+                                  ),
+                                  IsmChatDimens.boxHeight8,
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Icon(
+                                            Icons.done_all,
+                                            color: Colors.blue,
+                                            size: IsmChatDimens.twenty,
+                                          ),
+                                          IsmChatDimens.boxWidth14,
+                                          Text('Read',
+                                              style: IsmChatStyles.w400Black12)
+                                        ],
+                                      ),
+                                      chatController.readMessageMembers.isEmpty
+                                          ? Icon(
+                                              Icons.remove,
+                                              size: IsmChatDimens.twenty,
+                                            )
+                                          : Text(
+                                              chatController.readMessageMembers
+                                                  .first.timestamp!.deliverTime,
+                                              style: IsmChatStyles.w400Black12,
+                                            ),
                                     ],
                                   ),
                                 ],

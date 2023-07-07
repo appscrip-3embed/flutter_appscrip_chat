@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/src/utilities/utilities.dart';
-import 'package:objectbox/objectbox.dart';
 
-@Entity()
 class LastMessageDetails {
   factory LastMessageDetails.fromJson(String source) =>
       LastMessageDetails.fromMap(json.decode(source) as Map<String, dynamic>);
@@ -30,15 +28,23 @@ class LastMessageDetails {
             : 0,
         readCount: map['readBy'] != null ? (map['readBy'] as List).length : 0,
         customType: map['customType'] != null
-            ? IsmChatCustomMessageType.fromString(map['customType'] as String)
+            ? map['customType'].runtimeType == String
+                ? IsmChatCustomMessageType.fromString(
+                    map['customType'] as String)
+                : IsmChatCustomMessageType.fromValue(map['customType'] as int)
             : map['action'] != null
                 ? IsmChatCustomMessageType.fromAction(map['action'] as String)
                 : null,
         sentByMe: true,
         members: map['members'] != null
-            ? (map['members'] as List)
-                .map((e) => e['memberName'] as String? ?? '')
-                .toList()
+            ? (map['members'] as List).map((e) {
+                if (e.runtimeType == Map<String, dynamic>) {
+                  return e['memberName'] as String? ?? '';
+                } else if (e.runtimeType == String) {
+                  return e as String? ?? '';
+                }
+                return e['memberName'] as String? ?? '';
+              }).toList()
             : <String>[],
         reactionType: map['reactionType'] as String? ?? '',
         userId: map['userId'] as String? ?? '',
@@ -86,13 +92,7 @@ class LastMessageDetails {
   final String? reactionType;
   final String? action;
   final String? userId;
-  @Transient()
-  IsmChatCustomMessageType? customType;
-
-  int? get dbCustomType => customType?.value;
-  set dbCustomType(int? type) {
-    customType = IsmChatCustomMessageType.fromValue(type ?? 1);
-  }
+  final IsmChatCustomMessageType? customType;
 
   LastMessageDetails copyWith({
     bool? showInConversation,
@@ -110,6 +110,7 @@ class LastMessageDetails {
     List<String>? members,
     String? reactionType,
     String? action,
+    String? userId,
   }) =>
       LastMessageDetails(
           showInConversation: showInConversation ?? this.showInConversation,

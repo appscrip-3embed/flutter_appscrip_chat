@@ -5,17 +5,16 @@ mixin IsmChatPageGetMessageMixin {
 
   Future<void> getMessagesFromDB(String conversationId) async {
     _controller.messages.clear();
-    var messages = await IsmChatConfig.objectBox.getMessages(conversationId);
+    var messages = await IsmChatConfig.dbWrapper!.getMessage(conversationId);
     if (messages?.isEmpty ?? false || messages == null) {
       return;
     }
-
     _controller.messages = _controller._viewModel.sortMessages(messages!);
+
     _controller.isMessagesLoading = false;
     if (_controller.messages.isEmpty) {
       return;
     }
-
     _controller._generateIndexedMessageList();
   }
 
@@ -23,6 +22,7 @@ mixin IsmChatPageGetMessageMixin {
     String conversationId = '',
     bool forPagination = false,
     int? lastMessageTimestamp,
+    bool? fromBlockUnblock,
   }) async {
     if (_controller.isLoadingMessages) return;
     _controller.isLoadingMessages = true;
@@ -54,6 +54,15 @@ mixin IsmChatPageGetMessageMixin {
       await getMessagesFromDB(conversationID);
     }
     _controller.isLoadingMessages = false;
+  }
+
+  Future<void> updateConversationMessage() async {
+    var chatConersationController = Get.find<IsmChatConversationsController>();
+    var converstionIndex = chatConersationController.conversations.indexWhere(
+        (e) => e.conversationId == _controller.conversation?.conversationId);
+    chatConersationController.conversations[converstionIndex] =
+        chatConersationController.conversations[converstionIndex]
+            .copyWith(messages: _controller.messages);
   }
 
   Future<void> getMessageDeliverTime(IsmChatMessageModel message) async {

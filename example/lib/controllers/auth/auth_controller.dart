@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:chat_component_example/res/res.dart';
+import 'package:chat_component_example/utilities/utilities.dart';
 import 'package:chat_component_example/view_models/view_models.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -26,11 +29,12 @@ class AuthController extends GetxController {
   }
 
   Future<void> login() async {
-    var isLoggedIn = await _viewModel.login(
+    var data = await _viewModel.login(
       emailController.text.trim(),
       passwordController.text.trim(),
     );
-    if (isLoggedIn) {
+    if (data != null) {
+      await AppConfig.getUserData();
       Get.offAllNamed(AppRoutes.chatList);
     }
   }
@@ -100,8 +104,9 @@ class AuthController extends GetxController {
     };
     var response =
         await _viewModel.postCreateUser(isLoading: true, createUser: creatUser);
-    if (response) {
-      Get.offNamed(AppRoutes.chatList);
+    if (response != null) {
+      await AppConfig.getUserData();
+      Get.offAllNamed(AppRoutes.chatList, arguments: {'userData': response});
     }
   }
 

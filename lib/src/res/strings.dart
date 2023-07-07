@@ -3,6 +3,7 @@ class IsmChatStrings {
 
   static const String name = 'Appscrip Chat Component';
   static const String dbname = 'appscrip_chat_component';
+  static const String userData = 'userData';
 
   static const String chats = 'Chats';
 
@@ -106,6 +107,7 @@ class IsmChatStrings {
   static const String deliveredTo = 'Delivered to';
   static const String deletedMessage = 'You deleted this message';
   static const String wasDeletedMessage = 'This message was deleted';
+  static const String noDataFound = 'No data found';
 
   static const String removeGroupMessage =
       'You have been removed out of the group...!';

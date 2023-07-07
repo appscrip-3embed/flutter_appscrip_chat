@@ -4,13 +4,14 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
+
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:permission_handler/permission_handler.dart';
 
@@ -63,8 +64,17 @@ class IsmChatUtility {
           shape: shape);
 
   /// Returns true if the internet connection is available.
-  static Future<bool> get isNetworkAvailable async =>
-      await InternetConnectionChecker().hasConnection;
+  static Future<bool> get isNetworkAvailable async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.mobile) {
+      return true;
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      return true;
+    } else if (connectivityResult == ConnectivityResult.ethernet) {
+      return true;
+    }
+    return false;
+  }
 
   /// common header for All api
   static Map<String, String> commonHeader() {
@@ -93,7 +103,6 @@ class IsmChatUtility {
     try {
       return utf8.fuse(base64).decode(value);
     } catch (e) {
-      IsmChatLog.error('Decode Error - $value');
       return value;
     }
   }

@@ -5,15 +5,16 @@ import 'package:chat_component_example/utilities/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ChatList extends GetView<ChatListController> {
+class ChatList extends StatelessWidget {
   const ChatList({super.key});
 
   static const String route = AppRoutes.chatList;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IsmChatApp(
+    return GetBuilder<ChatListController>(builder: (controller) {
+      return Scaffold(
+          body: IsmChatApp(
         chatTheme: IsmChatThemeData(
           primaryColor: AppColors.primaryColorLight,
           chatPageTheme: IsmChatPageThemeData(
@@ -29,11 +30,11 @@ class ChatList extends GetView<ChatListController> {
         ),
         communicationConfig: IsmChatCommunicationConfig(
           userConfig: IsmChatUserConfig(
-              userToken: controller.userDetails?.userToken ?? '',
-              userId: controller.userDetails?.userId ?? '',
-              userName: controller.userDetails?.userName ?? '',
-              userEmail: controller.userDetails?.email ?? '',
-              userProfile: controller.userDetails?.userProfile ?? ''),
+              userToken: AppConfig.userDetail?.userToken ?? '',
+              userId: AppConfig.userDetail?.userId ?? '',
+              userName: AppConfig.userDetail?.userName ?? '',
+              userEmail: AppConfig.userDetail?.email ?? '',
+              userProfile: ''),
           mqttConfig: const IsmChatMqttConfig(
             hostName: Constants.hostname,
             port: Constants.port,
@@ -65,7 +66,7 @@ class ChatList extends GetView<ChatListController> {
         // isSlidableEnable: (_, conversation) {
         //   return conversation.metaData!.isMatchId!.isNotEmpty ? false : true;
         // },
-      ),
-    );
+      ));
+    });
   }
 }

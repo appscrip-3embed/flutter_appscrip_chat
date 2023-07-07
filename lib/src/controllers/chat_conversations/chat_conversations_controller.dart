@@ -4,7 +4,7 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -96,18 +96,18 @@ class IsmChatConversationsController extends GetxController {
 
   @override
   onInit() async {
-    super.onInit();
-
     await _generateReactionList();
-    var users = IsmChatConfig.objectBox.userDetailsBox.getAll();
-    if (users.isNotEmpty) {
-      userDetails = users.first;
+    var users = await IsmChatConfig.dbWrapper!.userDetailsBox
+        .get(IsmChatStrings.userData);
+    if (users != null) {
+      userDetails = UserDetails.fromJson(users);
     } else {
       await getUserData();
     }
     await getConversationsFromDB();
     await getChatConversations();
     await Get.find<IsmChatMqttController>().getChatConversationsUnreadCount();
+    super.onInit();
   }
 
   @override
@@ -232,12 +232,10 @@ class IsmChatConversationsController extends GetxController {
       isLoading: isLoading,
     );
 
-    if (response == null) {
+    var users = response?.users ?? [];
+    if (users.isEmpty) {
       isLoadingUsers = true;
-      return;
     }
-
-    var users = response.users;
     users.sort((a, b) => a.userName.compareTo(b.userName));
 
     if (opponentId != null) {
@@ -306,21 +304,19 @@ class IsmChatConversationsController extends GetxController {
         return;
       }
     }
-    await IsmChatConfig.objectBox.removeConversation(conversationId);
+    await IsmChatConfig.dbWrapper?.removeConversation(conversationId);
     await getConversationsFromDB();
     await getChatConversations();
   }
 
   Future<void> getConversationsFromDB() async {
-    var dbConversations = IsmChatConfig.objectBox.getAllConversations();
-    if (dbConversations.isEmpty) {
+    var dbConversations = await IsmChatConfig.dbWrapper!.getAllConversations();
+    if (dbConversations.isEmpty == true) {
       return;
     }
     conversations.clear();
     conversations = dbConversations;
-
     isConversationsLoading = false;
-
     if (conversations.length <= 1) {
       return;
     }
@@ -346,7 +342,6 @@ class IsmChatConversationsController extends GetxController {
     if (conversations.isEmpty) {
       isConversationsLoading = true;
     }
-
     var apiConversations =
         await _viewModel.getChatConversations(noOfConvesation);
 
@@ -362,10 +357,6 @@ class IsmChatConversationsController extends GetxController {
       refreshControllerOnEmptyList.loadComplete();
     }
 
-    if (conversations.isEmpty) {
-      isConversationsLoading = false;
-    }
-
     if (apiConversations.isEmpty) {
       return;
     }
@@ -373,6 +364,9 @@ class IsmChatConversationsController extends GetxController {
     unawaited(getBlockUser());
     conversationPage = conversationPage + 20;
     await getConversationsFromDB();
+    if (conversations.isEmpty) {
+      isConversationsLoading = false;
+    }
   }
 
   Future<void> getBlockUser() async {
@@ -384,10 +378,13 @@ class IsmChatConversationsController extends GetxController {
     }
   }
 
-  Future<dynamic> getUserData() async {
+  Future<void> getUserData() async {
     var user = await _viewModel.getUserData();
     if (user != null) {
       userDetails = user;
+
+      await IsmChatConfig.dbWrapper?.userDetailsBox
+          .put(IsmChatStrings.userData, user.toJson());
     }
   }
 

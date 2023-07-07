@@ -302,6 +302,9 @@ extension ChildWidget on IsmChatCustomMessageType {
 
       case IsmChatCustomMessageType.memberLeave:
         return IsmChatAddRemoveMember(message, didLeft: true);
+      case IsmChatCustomMessageType.conversationTitleUpdated:
+      case IsmChatCustomMessageType.conversationImageUpdated:
+        return IsmChatConversationUpdate(message);
     }
   }
 
@@ -481,19 +484,6 @@ extension ModelConversion on IsmChatConversationModel {
   IsmChatMqttController get _mqttController =>
       Get.find<IsmChatMqttController>();
 
-  DBConversationModel convertToDbModel(List<String>? messages) =>
-      DBConversationModel(
-        conversationId: conversationId,
-        conversationImageUrl: conversationImageUrl,
-        conversationTitle: conversationTitle,
-        isGroup: isGroup,
-        lastMessageSentAt: lastMessageSentAt,
-        messagingDisabled: messagingDisabled,
-        membersCount: membersCount,
-        unreadMessagesCount: unreadMessagesCount,
-        messages: messages ?? [],
-      );
-
   String get typingUsers {
     var users = _mqttController.typingUsers
         .where(
@@ -596,6 +586,10 @@ extension LastMessageBody on LastMessageDetails {
         return 'Unblocked';
       case IsmChatCustomMessageType.conversationCreated:
         return 'Conversation created';
+      case IsmChatCustomMessageType.conversationImageUpdated:
+        return 'Changed this group profile';
+      case IsmChatCustomMessageType.conversationTitleUpdated:
+        return 'Changed this group title';
       case IsmChatCustomMessageType.removeMember:
         return 'Removed ${(members ?? []).join(', ')}';
       case IsmChatCustomMessageType.addMember:
@@ -674,6 +668,8 @@ extension LastMessageBody on LastMessageDetails {
       case IsmChatCustomMessageType.addAdmin:
       case IsmChatCustomMessageType.removeAdmin:
       case IsmChatCustomMessageType.deletedForMe:
+      case IsmChatCustomMessageType.conversationImageUpdated:
+      case IsmChatCustomMessageType.conversationTitleUpdated:
       case IsmChatCustomMessageType.date:
       case IsmChatCustomMessageType.text:
       default:
@@ -778,6 +774,14 @@ extension MentionMessage on IsmChatMessageModel {
         .copyWith(
       color: theme?.opponentMessageTheme?.textColor,
     );
+  }
+
+  Color? get textColor {
+    var theme = IsmChatConfig.chatTheme.chatPageTheme;
+    if (sentByMe) {
+      return theme?.selfMessageTheme?.textColor ?? IsmChatColors.whiteColor;
+    }
+    return theme?.opponentMessageTheme?.textColor ?? IsmChatColors.blackColor;
   }
 
   Color? get backgroundColor {

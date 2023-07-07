@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

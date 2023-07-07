@@ -9,10 +9,8 @@ class IsmChatMqttRepository {
     bool isLoading = false,
   }) async {
     try {
-      var response = await _apiWrapper.get(
-          IsmChatAPI.conversationUnreadCount,
-          headers: IsmChatUtility.tokenCommonHeader(),
-          showLoader: isLoading);
+      var response = await _apiWrapper.get(IsmChatAPI.conversationUnreadCount,
+          headers: IsmChatUtility.tokenCommonHeader(), showLoader: isLoading);
       if (response.hasError) {
         return null;
       }
@@ -20,7 +18,7 @@ class IsmChatMqttRepository {
       var count = unReadCount['count'].toString();
       return count;
     } catch (e, st) {
-      IsmChatLog.error('Get Conversations unread $e', st);
+      IsmChatLog.error('Get Conversations unread error $e', st);
       return null;
     }
   }

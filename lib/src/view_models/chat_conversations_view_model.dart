@@ -16,32 +16,26 @@ class IsmChatConversationsViewModel {
     if (conversations == null || conversations.isEmpty) {
       return [];
     }
-    var dbConversations = IsmChatConfig.objectBox.chatConversationBox.getAll();
+    var dbConversations = await IsmChatConfig.dbWrapper!.getAllConversations();
 
     for (var conversation in conversations) {
-      DBConversationModel? dbConversation;
+      IsmChatConversationModel? dbConversation;
       if (dbConversations.isNotEmpty) {
         dbConversation = dbConversations.firstWhere(
           (e) => e.conversationId == conversation.conversationId,
-          orElse: () => DBConversationModel(messages: []),
+          orElse: () => IsmChatConversationModel(messages: []),
         );
       }
-      var dbConversationModel =
-          conversation.convertToDbModel(dbConversation?.messages);
+      conversation.copyWith(
+        messages: dbConversation?.messages,
+        opponentDetails: conversation.opponentDetails,
+        lastMessageDetails: conversation.lastMessageDetails,
+        config: conversation.config,
+        metaData: conversation.metaData,
+      );
 
-      dbConversationModel.opponentDetails.target = conversation.opponentDetails;
-      dbConversationModel.lastMessageDetails.target =
-          conversation.lastMessageDetails;
-
-      if (conversation.lastMessageDetails?.action ==
-          IsmChatActionEvents.conversationCreated.name) {
-        dbConversationModel.unreadMessagesCount = 0;
-      }
-      dbConversationModel.config.target = conversation.config;
-      dbConversationModel.metaData = conversation.metaData;
-      await IsmChatConfig.objectBox.createAndUpdateDB(dbConversationModel);
+      await IsmChatConfig.dbWrapper!.createAndUpdateConversation(conversation);
     }
-
     return conversations;
   }
 
@@ -97,18 +91,14 @@ class IsmChatConversationsViewModel {
 
   Future<void> clearAllMessages(String conversationId,
       {bool fromServer = true}) async {
-    if (fromServer) {
-      var response = await _repository.clearAllMessages(
-        conversationId: conversationId,
-      );
-
-      if (response?.hasError == true) {
-        return;
-      }
+    var response = await _repository.clearAllMessages(
+      conversationId: conversationId,
+    );
+    if (!response!.hasError) {
+      await IsmChatConfig.dbWrapper!
+          .clearAllMessage(conversationId: conversationId);
+      await Get.find<IsmChatConversationsController>().getConversationsFromDB();
     }
-    await IsmChatConfig.objectBox
-        .clearAllMessage(conversationId: conversationId);
-    await Get.find<IsmChatConversationsController>().getConversationsFromDB();
   }
 
   Future<IsmChatResponseModel?> unblockUser({

@@ -28,7 +28,7 @@ class IsmChatConversationsRepository {
       var user = IsmChatUserListModel.fromMap(data);
       return user;
     } catch (e, st) {
-      IsmChatLog.error('GetUserList $e', st);
+      IsmChatLog.error('GetUserList error $e', st);
       return null;
     }
   }
@@ -61,7 +61,7 @@ class IsmChatConversationsRepository {
 
       return user;
     } catch (e, st) {
-      IsmChatLog.error('Get non block UserList $e', st);
+      IsmChatLog.error('Get non block UserList error $e', st);
       return null;
     }
   }
@@ -93,7 +93,7 @@ class IsmChatConversationsRepository {
           e.isGroup == false);
       return listData;
     } catch (e, st) {
-      IsmChatLog.error('GetChatConversations $e', st);
+      IsmChatLog.error('GetChatConversations error $e', st);
       return null;
     }
   }
@@ -113,7 +113,7 @@ class IsmChatConversationsRepository {
       }
       return response;
     } catch (e, st) {
-      IsmChatLog.error(' un Block user $e', st);
+      IsmChatLog.error(' UnBlock user error $e', st);
       return null;
     }
   }
@@ -130,10 +130,9 @@ class IsmChatConversationsRepository {
 
       var data = jsonDecode(response.data) as Map<String, dynamic>;
       var user = UserDetails.fromMap(data);
-      IsmChatConfig.objectBox.userDetailsBox.put(user);
       return user;
     } catch (e, st) {
-      IsmChatLog.error('GetUserData $e', st);
+      IsmChatLog.error('GetUserDataError $e', st);
       return null;
     }
   }
@@ -150,7 +149,7 @@ class IsmChatConversationsRepository {
       }
       return response;
     } catch (e, st) {
-      IsmChatLog.error('Delete chat $e', st);
+      IsmChatLog.error('Delete chat error $e', st);
       return null;
     }
   }
@@ -169,7 +168,7 @@ class IsmChatConversationsRepository {
       }
       return response;
     } catch (e, st) {
-      IsmChatLog.error('Clear chat $e', st);
+      IsmChatLog.error('Clear chat error $e', st);
       return null;
     }
   }
@@ -189,7 +188,7 @@ class IsmChatConversationsRepository {
         return;
       }
     } catch (e, st) {
-      IsmChatLog.error('Delivery Message $e', st);
+      IsmChatLog.error('Delivery Message error $e', st);
     }
   }
 
@@ -207,7 +206,7 @@ class IsmChatConversationsRepository {
       var user = IsmChatUserListModel.fromMap(data);
       return user;
     } catch (e, st) {
-      IsmChatLog.error('GetChat Block users $e', st);
+      IsmChatLog.error('GetChat Block users error $e', st);
       return null;
     }
   }

@@ -1,36 +1,39 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatApp extends StatelessWidget {
-  IsmChatApp(
-      {super.key,
-      this.communicationConfig,
-      required this.onChatTap,
-      this.onCreateChatTap,
-      this.showCreateChatIcon = false,
-      this.chatTheme,
-      this.chatDarkTheme,
-      this.loadingDialog,
-      this.databaseName,
-      this.onSignOut,
-      this.showAppBar = false,
-      this.enableGroupChat = false,
-      this.createChatIcon,
-      this.name,
-      this.nameBuilder,
-      this.profileImageUrl,
-      this.profileImageBuilder,
-      this.subtitle,
-      this.subtitleBuilder,
-      this.actions,
-      this.endActions,
-      this.onProfileWidget,
-      this.isSlidableEnable,
-      this.emptyConversationPlaceholder,
-      this.allowDelete = false}) {
+  IsmChatApp({
+    super.key,
+    this.communicationConfig,
+    required this.onChatTap,
+    this.onCreateChatTap,
+    this.showCreateChatIcon = false,
+    this.chatTheme,
+    this.chatDarkTheme,
+    this.loadingDialog,
+    this.databaseName,
+    this.onSignOut,
+    this.showAppBar = false,
+    this.enableGroupChat = false,
+    this.createChatIcon,
+    this.name,
+    this.nameBuilder,
+    this.profileImageUrl,
+    this.profileImageBuilder,
+    this.subtitle,
+    this.subtitleBuilder,
+    this.actions,
+    this.endActions,
+    this.onProfileWidget,
+    this.isSlidableEnable,
+    this.emptyConversationPlaceholder,
+    this.allowDelete = false,
+    this.useDataBase = true,
+  }) {
     assert(IsmChatConfig.isInitialized,
-        'ChatObjectBox is not initialized\nYou are getting this error because the IsmChatObjectBox class is not initialized, to initialize ChatObjectBox class call AppscripChatComponent.initialize() before your runApp()');
+        'ChatObjectBox is not initialized\nYou are getting this error because the Database class is not initialized, to initialize ChatObjectBox class call AppscripChatComponent.initialize() before your runApp()');
     assert(IsmChatConfig.configInitilized || communicationConfig != null,
         '''communicationConfig of type IsmChatCommunicationConfig must be initialized
     1. Either initialize using IsmChatApp.initializeMqtt() by passing  communicationConfig.
@@ -50,7 +53,7 @@ class IsmChatApp extends StatelessWidget {
       IsmChatConfig.communicationConfig = communicationConfig!;
       IsmChatConfig.configInitilized = true;
     }
-
+    IsmChatConfig.useDatabase = !kIsWeb && useDataBase;
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
@@ -136,9 +139,11 @@ class IsmChatApp extends StatelessWidget {
       isSlidableEnable;
   final Widget? emptyConversationPlaceholder;
 
+  final bool useDataBase;
+
   /// Call this function for Get all Conversation List
-  static Future<List<IsmChatConversationModel>> getAllConversation() async =>
-      IsmChatConfig.objectBox.getAllConversations();
+  static Future<List<IsmChatConversationModel>?> getAllConversation() async =>
+      IsmChatConfig.dbWrapper?.getAllConversations();
 
   /// Call this function for update conversation Details in meta data
   static Future<void> updateConversation(
@@ -154,7 +159,11 @@ class IsmChatApp extends StatelessWidget {
 
   /// Call this function on SignOut to delete the data stored locally in the Local Database
   static void logout() async {
-    await IsmChatConfig.objectBox.deleteChatLocalDb();
+    await Get.find<IsmChatMqttController>().unSubscribe();
+    await Get.find<IsmChatMqttController>().disconnect();
+
+    await IsmChatConfig.dbWrapper?.deleteChatLocalDb();
+
     await Future.wait([
       Get.delete<IsmChatConversationsController>(force: true),
       Get.delete<IsmChatMqttController>(force: true),
@@ -230,6 +239,7 @@ class IsmChatApp extends StatelessWidget {
       IsmChatConversationsBinding().dependencies();
     }
     var controller = Get.find<IsmChatConversationsController>();
+    Get.put(IsmChatDeviceConfig()).init();
     var conversationId = controller.getConversationId(userId);
     late IsmChatConversationModel conversation;
     if (conversationId.isEmpty) {

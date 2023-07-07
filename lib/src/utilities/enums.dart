@@ -52,6 +52,8 @@ enum IsmChatCustomMessageType {
   addAdmin(17),
   removeAdmin(18),
   memberLeave(19),
+  conversationTitleUpdated(20),
+  conversationImageUpdated(21),
   date(100);
 
   const IsmChatCustomMessageType(this.value);
@@ -96,6 +98,10 @@ enum IsmChatCustomMessageType {
         return IsmChatCustomMessageType.removeAdmin;
       case 19:
         return IsmChatCustomMessageType.memberLeave;
+      case 20:
+        return IsmChatCustomMessageType.conversationTitleUpdated;
+      case 21:
+        return IsmChatCustomMessageType.conversationImageUpdated;
       case 100:
         return IsmChatCustomMessageType.date;
       default:
@@ -124,6 +130,10 @@ enum IsmChatCustomMessageType {
       'addAdmin': IsmChatCustomMessageType.addAdmin,
       'revokeAdmin': IsmChatCustomMessageType.removeAdmin,
       'memberLeave': IsmChatCustomMessageType.memberLeave,
+      'conversationTitleUpdated':
+          IsmChatCustomMessageType.conversationTitleUpdated,
+      'conversationImageUpdated':
+          IsmChatCustomMessageType.conversationImageUpdated
     };
 
     var type = value.split('.').last;
@@ -191,6 +201,10 @@ enum IsmChatCustomMessageType {
         return null;
       case IsmChatActionEvents.deleteConversationLocally:
         return null;
+      case IsmChatActionEvents.reactionAdd:
+        return null;
+      case IsmChatActionEvents.reactionRemove:
+        return null;
       case IsmChatActionEvents.removeAdmin:
         return IsmChatCustomMessageType.removeAdmin;
       case IsmChatActionEvents.addAdmin:
@@ -209,8 +223,10 @@ enum IsmChatCustomMessageType {
         return IsmChatCustomMessageType.addMember;
       case IsmChatActionEvents.memberLeave:
         return IsmChatCustomMessageType.memberLeave;
-      case IsmChatActionEvents.reactionAdd:
-      case IsmChatActionEvents.reactionRemove:
+      case IsmChatActionEvents.conversationTitleUpdated:
+        return IsmChatCustomMessageType.conversationTitleUpdated;
+      case IsmChatActionEvents.conversationImageUpdated:
+        return IsmChatCustomMessageType.conversationImageUpdated;
       default:
         return null;
     }
@@ -549,4 +565,10 @@ enum IsmChatFeature {
   reply,
   forward,
   reaction;
+}
+
+enum IsmChatDbBox {
+  main,
+  pending,
+  forward;
 }

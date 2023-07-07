@@ -38,20 +38,12 @@ mixin IsmChatGroupAdminMixin {
     if (response?.hasError ?? true) {
       return;
     } else {
-      _controller.conversation?.conversationTitle = conversationTitle;
-      for (var i = 0;
-          i < _ismChatConversationsController.conversations.length;
-          i++) {
-        if (_ismChatConversationsController.conversations[i].conversationId ==
-            conversationId) {
-          _ismChatConversationsController.conversations[i].conversationTitle =
-              conversationTitle;
-          await _ismChatConversationsController.getChatConversations();
-          break;
-        }
-      }
+      _controller.conversation = _controller.conversation
+          ?.copyWith(conversationTitle: conversationTitle);
       _controller.update();
-      _ismChatConversationsController.update();
+      await _controller.getMessagesFromAPI(
+          lastMessageTimestamp: _controller.messages.last.sentAt);
+      unawaited(_ismChatConversationsController.getChatConversations());
       IsmChatUtility.showToast('Group title changed successfully!');
     }
   }
@@ -69,10 +61,13 @@ mixin IsmChatGroupAdminMixin {
     if (response?.hasError ?? true) {
       return;
     } else {
-      _controller.conversation?.conversationImageUrl = conversationImageUrl;
-      await _ismChatConversationsController.getChatConversations();
+      _controller.conversation = _controller.conversation
+          ?.copyWith(conversationImageUrl: conversationImageUrl);
       _controller.update();
-      _ismChatConversationsController.update();
+      await _controller.getMessagesFromAPI(
+          lastMessageTimestamp: _controller.messages.last.sentAt);
+      unawaited(_ismChatConversationsController.getChatConversations());
+      IsmChatUtility.showToast('Group profile changed successfully!');
     }
   }
 
@@ -175,7 +170,6 @@ mixin IsmChatGroupAdminMixin {
         includeMembers: true,
         isLoading: false,
       );
-      // await _controller.getMessagesFromAPI();
     }
   }
 
@@ -195,6 +189,5 @@ mixin IsmChatGroupAdminMixin {
       includeMembers: true,
       isLoading: false,
     );
-    // await _controller.getMessagesFromAPI();
   }
 }

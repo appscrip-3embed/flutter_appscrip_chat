@@ -203,6 +203,12 @@ class IsmChatPageController extends GetxController
   Duration get myDuration => _myDuration.value;
   set myDuration(Duration value) => _myDuration.value = value;
 
+  final RxBool _isTyping = true.obs;
+  bool get isTyping => _isTyping.value;
+  set isTyping(bool value) {
+    _isTyping.value = value;
+  }
+
   final RxBool _showDownSideButton = false.obs;
   bool get showDownSideButton => _showDownSideButton.value;
   set showDownSideButton(bool value) => _showDownSideButton.value = value;
@@ -347,12 +353,14 @@ class IsmChatPageController extends GetxController
 
   final Dio dio = Dio();
 
+  final ismChatDebounce = IsmChatDebounce();
+
   @override
   void onInit() async {
-    super.onInit();
     _generateReactionList();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
+
       await Future.delayed(Duration.zero);
       if (conversation!.conversationId?.isNotEmpty ?? false) {
         await getMessagesFromDB(conversation?.conversationId ?? '');
@@ -386,6 +394,7 @@ class IsmChatPageController extends GetxController
         showEmojiBoard = false;
       }
     });
+    super.onInit();
   }
 
   @override
@@ -771,7 +780,7 @@ class IsmChatPageController extends GetxController
       Get.back(); // to Chat Page
       Get.back(); // to Conversation Page
       await Future.wait([
-        IsmChatConfig.objectBox
+        IsmChatConfig.dbWrapper!
             .removeConversation(conversation!.conversationId!),
         _conversationController.getChatConversations(),
       ]);
@@ -873,57 +882,58 @@ class IsmChatPageController extends GetxController
   }
 
   Future<void> updateLastMessage() async {
-    var ismChatConversationController =
-        Get.find<IsmChatConversationsController>();
+    var chatConversationController = Get.find<IsmChatConversationsController>();
     if (!didReactedLast) {
-      var chatConversation = await IsmChatConfig.objectBox.getDBConversation(
-          conversationId: conversation?.conversationId ?? '');
+      var chatConversation = await IsmChatConfig.dbWrapper!
+          .getConversation(conversationId: conversation?.conversationId ?? '');
       if (chatConversation != null) {
         if (messages.isNotEmpty &&
             messages.last.customType != IsmChatCustomMessageType.removeMember) {
-          chatConversation.lastMessageDetails.target = LastMessageDetails(
-            sentByMe: messages.last.sentByMe,
-            showInConversation: true,
-            sentAt: messages.last.sentAt,
-            senderName: [
-              IsmChatCustomMessageType.removeAdmin,
-              IsmChatCustomMessageType.addAdmin
-            ].contains(messages.last.customType)
-                ? messages.last.initiatorName ?? ''
-                : messages.last.chatName,
-            messageType: messages.last.messageType?.value ?? 0,
-            messageId: messages.last.messageId ?? '',
-            conversationId: messages.last.conversationId ?? '',
-            body: messages.last.body,
-            customType: messages.last.customType,
-            readCount: chatConversation.isGroup!
-                ? messages.last.readByAll!
-                    ? chatConversation.membersCount!
-                    : messages.last.lastReadAt!.length
-                : messages.last.readByAll!
-                    ? 1
-                    : 0,
-            deliverCount: chatConversation.isGroup!
-                ? messages.last.deliveredToAll!
-                    ? chatConversation.membersCount!
-                    : 0
-                : messages.last.deliveredToAll!
-                    ? 1
-                    : 0,
-            members: messages.last.members
-                    ?.map((e) => e.memberName ?? '')
-                    .toList() ??
-                [],
-            reactionType: '',
+          chatConversation = chatConversation.copyWith(
+            lastMessageDetails: LastMessageDetails(
+              sentByMe: messages.last.sentByMe,
+              showInConversation: true,
+              sentAt: messages.last.sentAt,
+              senderName: [
+                IsmChatCustomMessageType.removeAdmin,
+                IsmChatCustomMessageType.addAdmin
+              ].contains(messages.last.customType)
+                  ? messages.last.initiatorName ?? ''
+                  : messages.last.chatName,
+              messageType: messages.last.messageType?.value ?? 0,
+              messageId: messages.last.messageId ?? '',
+              conversationId: messages.last.conversationId ?? '',
+              body: messages.last.body,
+              customType: messages.last.customType,
+              readCount: chatConversation.isGroup!
+                  ? messages.last.readByAll!
+                      ? chatConversation.membersCount!
+                      : messages.last.lastReadAt!.length
+                  : messages.last.readByAll!
+                      ? 1
+                      : 0,
+              deliverCount: chatConversation.isGroup!
+                  ? messages.last.deliveredToAll!
+                      ? chatConversation.membersCount!
+                      : 0
+                  : messages.last.deliveredToAll!
+                      ? 1
+                      : 0,
+              members: messages.last.members
+                      ?.map((e) => e.memberName ?? '')
+                      .toList() ??
+                  [],
+              reactionType: '',
+            ),
+            unreadMessagesCount: 0,
           );
         }
-        chatConversation.unreadMessagesCount = 0;
-
-        IsmChatConfig.objectBox.chatConversationBox.put(chatConversation);
-        await ismChatConversationController.getConversationsFromDB();
+        await IsmChatConfig.dbWrapper!
+            .saveConversation(conversation: chatConversation);
+        await chatConversationController.getConversationsFromDB();
       }
     } else {
-      await ismChatConversationController.getChatConversations();
+      await chatConversationController.getChatConversations();
     }
     await Get.delete<IsmChatPageController>(force: true);
     unawaited(
@@ -1231,6 +1241,8 @@ class IsmChatPageController extends GetxController
     }
   }
 
+  void showDialogForAdmin(UserDetails user, {bool isAdmin = true}) async {}
+
   Future<void> readMessage({
     required String conversationId,
     required String messageId,
@@ -1241,10 +1253,23 @@ class IsmChatPageController extends GetxController
     );
   }
 
-  Future<void> notifyTyping() async {
-    await _viewModel.notifyTyping(
-      conversationId: conversation?.conversationId ?? '',
-    );
+  void notifyTyping() {
+    if (isTyping) {
+      isTyping = false;
+      var tickTick = 0;
+      Timer.periodic(const Duration(seconds: 3), (timer) async {
+        if (tickTick == 0) {
+          await _viewModel.notifyTyping(
+            conversationId: conversation?.conversationId ?? '',
+          );
+        }
+        if (tickTick == 3) {
+          isTyping = true;
+          timer.cancel();
+        }
+        tickTick++;
+      });
+    }
   }
 
   Future<void> getMessageInformation(
@@ -1335,7 +1360,7 @@ class IsmChatPageController extends GetxController
         conversationId: conversation?.conversationId ?? '',
         includeMembers: includeMembers,
       ),
-      getMessagesFromAPI(),
+      getMessagesFromAPI(fromBlockUnblock: true),
     ]);
   }
 
@@ -1365,13 +1390,13 @@ class IsmChatPageController extends GetxController
     selectedMessage.clear();
     pendingMessges.where((e) => e.messageId == '').toList();
     if (pendingMessges.isNotEmpty) {
-      await IsmChatConfig.objectBox
+      await IsmChatConfig.dbWrapper!
           .removePendingMessage(conversation!.conversationId!, pendingMessges);
       await getMessagesFromDB(conversation!.conversationId!);
       selectedMessage.clear();
       isMessageSeleted = false;
     }
-    IsmChatUtility.showToast('Deleted your media');
+    IsmChatUtility.showToast('Deleted your message');
   }
 
   Future<void> deleteMessageForMe(
@@ -1382,13 +1407,13 @@ class IsmChatPageController extends GetxController
     selectedMessage.clear();
     pendingMessges.where((e) => e.messageId == '').toList();
     if (pendingMessges.isNotEmpty) {
-      await IsmChatConfig.objectBox
+      await IsmChatConfig.dbWrapper!
           .removePendingMessage(conversation!.conversationId!, pendingMessges);
       await getMessagesFromDB(conversation!.conversationId!);
       selectedMessage.clear();
       isMessageSeleted = false;
     }
-    IsmChatUtility.showToast('Deleted your media');
+    IsmChatUtility.showToast('Deleted your message');
   }
 
   bool isAllMessagesFromMe() => selectedMessage.every(
@@ -1423,6 +1448,7 @@ class IsmChatPageController extends GetxController
       return;
     }
     predictionList = response;
+    IsmChatLog.error('checl list ${predictionList.length}');
   }
 
   Future<void> deleteReacton({required Reaction reaction}) async =>
@@ -1433,11 +1459,11 @@ class IsmChatPageController extends GetxController
     var conversationId = conversationController.getConversationId(
       userDetails.userId,
     );
-    var conversationUser = await IsmChatConfig.objectBox
-        .getDBConversation(conversationId: conversationId);
+    var conversationUser = await IsmChatConfig.dbWrapper!
+        .getConversation(conversationId: conversationId);
     UserDetails? user;
     if (conversationUser != null) {
-      user = conversationUser.opponentDetails.target;
+      user = conversationUser.opponentDetails;
     } else {
       user = userDetails;
     }
