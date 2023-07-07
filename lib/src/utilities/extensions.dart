@@ -302,6 +302,9 @@ extension ChildWidget on IsmChatCustomMessageType {
 
       case IsmChatCustomMessageType.memberLeave:
         return IsmChatAddRemoveMember(message, didLeft: true);
+      case IsmChatCustomMessageType.conversationTitleUpdated:
+      case IsmChatCustomMessageType.conversationImageUpdated:
+        return IsmChatConversationUpdate(message);
     }
   }
 
@@ -583,6 +586,10 @@ extension LastMessageBody on LastMessageDetails {
         return 'Unblocked';
       case IsmChatCustomMessageType.conversationCreated:
         return 'Conversation created';
+      case IsmChatCustomMessageType.conversationImageUpdated:
+        return 'Changed this group profile';
+      case IsmChatCustomMessageType.conversationTitleUpdated:
+        return 'Changed this group title';
       case IsmChatCustomMessageType.removeMember:
         return 'Removed ${(members ?? []).join(', ')}';
       case IsmChatCustomMessageType.addMember:
@@ -661,6 +668,8 @@ extension LastMessageBody on LastMessageDetails {
       case IsmChatCustomMessageType.addAdmin:
       case IsmChatCustomMessageType.removeAdmin:
       case IsmChatCustomMessageType.deletedForMe:
+      case IsmChatCustomMessageType.conversationImageUpdated:
+      case IsmChatCustomMessageType.conversationTitleUpdated:
       case IsmChatCustomMessageType.date:
       case IsmChatCustomMessageType.text:
       default:

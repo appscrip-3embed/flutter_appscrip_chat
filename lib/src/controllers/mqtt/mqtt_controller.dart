@@ -915,6 +915,16 @@ class IsmChatMqttController extends GetxController {
           includeMembers:
               controller.conversation?.isGroup == true ? true : false,
         );
+        if (controller.messages.isNotEmpty) {
+          await controller.getMessagesFromAPI(
+            conversationId: actionModel.conversationId ?? '',
+            lastMessageTimestamp: controller.messages.last.sentAt,
+          );
+        } else {
+          await controller.getMessagesFromAPI(
+            conversationId: actionModel.conversationId ?? '',
+          );
+        }
       }
     }
 

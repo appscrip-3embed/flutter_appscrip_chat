@@ -251,9 +251,12 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                       ? () {
                                           Get.dialog(
                                             IsmChatGroupAdminDialog(
-                                              user: member,
-                                              isAdmin: true,
-                                            ),
+                                                user: member,
+                                                isAdmin: true,
+                                                groupName: controller
+                                                        .conversation
+                                                        ?.conversationTitle ??
+                                                    ''),
                                           );
                                         }
                                       : () async {
@@ -267,6 +270,9 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                           Get.dialog(
                                             IsmChatGroupAdminDialog(
                                               user: member,
+                                              groupName: controller.conversation
+                                                      ?.conversationTitle ??
+                                                  '',
                                             ),
                                           );
                                         }
@@ -289,7 +295,11 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                           color: IsmChatColors.blackColor,
                                         )
                                       : null,
-                              title: Text(member.userName),
+                              title: Text(IsmChatConfig.communicationConfig
+                                          .userConfig.userId ==
+                                      member.userId
+                                  ? IsmChatStrings.you
+                                  : member.userName),
                               subtitle: Text(member.userIdentifier),
                               leading: IsmChatImage.profile(member.profileUrl),
                             );

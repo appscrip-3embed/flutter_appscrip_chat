@@ -490,22 +490,22 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             : conversationController.userDetails?.userName ?? '';
 
     await ismPostMediaUrl(
-      forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
-      isNetWorkUrl: isNetWorkUrl ?? false,
-      imageAndFile: false,
-      bytes: bytes,
-      createdAt: sentAt,
-      ismChatChatMessageModel: videoMessage,
-      mediaId: mediaId ?? '',
-      mediaType: IsmChatMediaType.video.value,
-      nameWithExtension: nameWithExtension ?? '',
-      notificationBody: 'Sent you an Video',
-      thumbnailNameWithExtension: thumbnailNameWithExtension,
-      thumbnailMediaId: thumbnailMediaId,
-      thumbnailBytes: thumbnailBytes,
-      thumbanilMediaType: IsmChatMediaType.image.value,
-      notificationTitle: notificationTitle,
-    );
+        forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
+        isNetWorkUrl: isNetWorkUrl ?? false,
+        imageAndFile: false,
+        bytes: bytes,
+        createdAt: sentAt,
+        ismChatChatMessageModel: videoMessage,
+        mediaId: mediaId ?? '',
+        mediaType: IsmChatMediaType.video.value,
+        nameWithExtension: nameWithExtension ?? '',
+        notificationBody: 'Sent you an Video',
+        thumbnailNameWithExtension: thumbnailNameWithExtension,
+        thumbnailMediaId: thumbnailMediaId,
+        thumbnailBytes: thumbnailBytes,
+        thumbanilMediaType: IsmChatMediaType.image.value,
+        notificationTitle: notificationTitle,
+        sendMessageType: sendMessageType);
   }
 
   Future<void> sendImage({
@@ -551,7 +551,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           quality: 60,
           percentage: 70);
       bytes = compressedFile.readAsBytesSync();
-      // final image = await decodeImageFromList(bytes);
       nameWithExtension = compressedFile.path.split('/').last;
       mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
       final extension = nameWithExtension.split('.').last;

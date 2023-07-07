@@ -3,14 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatGroupAdminDialog extends StatelessWidget {
-  const IsmChatGroupAdminDialog({
-    super.key,
-    required this.user,
-    this.isAdmin = false,
-  });
+  const IsmChatGroupAdminDialog(
+      {super.key, required this.user, this.isAdmin = false, this.groupName});
 
   final UserDetails user;
   final bool isAdmin;
+  final String? groupName;
 
   @override
   Widget build(BuildContext context) => Dialog(
@@ -42,8 +40,18 @@ class IsmChatGroupAdminDialog extends StatelessWidget {
                   child: Text(isAdmin ? 'Revoke Admin' : 'Make Admin'),
                 ),
                 PopupMenuItem(
-                  onTap: () {
-                    controller.removeMember(user.userId);
+                  onTap: () async {
+                    await Future.delayed(const Duration(milliseconds: 100));
+                    await Get.dialog(
+                      IsmChatAlertDialogBox(
+                        title:
+                            'Remove "${user.userName.capitalizeFirst}" from $groupName?',
+                        actionLabels: const [IsmChatStrings.ok],
+                        callbackActions: [
+                          () => controller.removeMember(user.userId),
+                        ],
+                      ),
+                    );
                   },
                   padding: IsmChatDimens.edgeInsets24_0,
                   child: const Text('Remove from group'),
