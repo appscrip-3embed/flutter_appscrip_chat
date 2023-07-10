@@ -64,12 +64,11 @@ class IsmChatDBWrapper {
     // Future<Store> openStore() {...} is defined in the generated objectbox.g.dart.
 
     var dbName = databaseName ?? IsmChatConfig.dbName;
-    Directory? directory;
-    if (!kIsWeb) {
-      directory = await getApplicationDocumentsDirectory();
-    }
+    // Directory? directory;
+    // if (!kIsWeb) {
+    //   directory = await getApplicationDocumentsDirectory();
+    // }
 
-    // var directory = await getApplicationDocumentsDirectory();
     await Hive.initFlutter();
     final collection = await BoxCollection.open(
       dbName,
@@ -79,7 +78,7 @@ class IsmChatDBWrapper {
         _pendingBox,
         _forwardBox,
       },
-      path: directory?.path ?? '',
+      // path: directory?.path ?? '',
     );
 
     var instance = IsmChatDBWrapper._create(collection);
