@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -22,14 +25,18 @@ class DBWrapper {
   }
 
   static Future<DBWrapper> create([String? databaseName]) async {
-    var dbName = databaseName ?? IsmChatConfig.dbName;
-    var directory = await getApplicationDocumentsDirectory();
+    var dbName = databaseName ?? 'appscrip_chat_component_example';
+    Directory? directory;
+    if (!kIsWeb) {
+      directory = await getApplicationDocumentsDirectory();
+    }
+
     final collection = await BoxCollection.open(
       dbName,
       {
         _userBox,
       },
-      path: directory.path,
+      path: directory?.path ?? '',
     );
 
     var instance = DBWrapper._create(collection);

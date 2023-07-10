@@ -21,9 +21,6 @@ void main() async {
 Future<void> initialize() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  var deviceConfig = Get.put(IsmChatDeviceConfig());
-  deviceConfig.init();
-
   dbWrapper = await DBWrapper.create();
   await AppConfig.getUserData();
 

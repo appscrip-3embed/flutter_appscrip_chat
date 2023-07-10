@@ -30,6 +30,7 @@ class AuthController extends GetxController {
 
   Future<void> login() async {
     var data = await _viewModel.login(
+      userNameController.text.trim(),
       emailController.text.trim(),
       passwordController.text.trim(),
     );
@@ -106,7 +107,7 @@ class AuthController extends GetxController {
         await _viewModel.postCreateUser(isLoading: true, createUser: creatUser);
     if (response != null) {
       await AppConfig.getUserData();
-      Get.offAllNamed(AppRoutes.chatList, arguments: {'userData': response});
+      Get.offAllNamed(AppRoutes.chatList);
     }
   }
 
