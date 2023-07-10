@@ -1,12 +1,6 @@
-import 'dart:io';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:path_provider/path_provider.dart';
 // import 'package:path_provider/path_provider.dart';
 // import 'objectbox.g.dart'; // created by `flutter pub run build_runner build`
 
@@ -59,15 +53,9 @@ class IsmChatDBWrapper {
     forwardMessageBox = boxes2[1];
   }
 
-  /// Create an instance of ObjectBox to use throughout the presenter.
+  /// Create an instance of HiveBox to use throughout the presenter.
   static Future<IsmChatDBWrapper> create([String? databaseName]) async {
-    // Future<Store> openStore() {...} is defined in the generated objectbox.g.dart.
-
     var dbName = databaseName ?? IsmChatConfig.dbName;
-    // Directory? directory;
-    // if (!kIsWeb) {
-    //   directory = await getApplicationDocumentsDirectory();
-    // }
 
     await Hive.initFlutter();
     final collection = await BoxCollection.open(
@@ -78,7 +66,6 @@ class IsmChatDBWrapper {
         _pendingBox,
         _forwardBox,
       },
-      // path: directory?.path ?? '',
     );
 
     var instance = IsmChatDBWrapper._create(collection);

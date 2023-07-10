@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
 /// Create this in the apps main function.
@@ -30,7 +31,7 @@ class DBWrapper {
     if (!kIsWeb) {
       directory = await getApplicationDocumentsDirectory();
     }
-
+    // await Hive.initFlutter();
     final collection = await BoxCollection.open(
       dbName,
       {
