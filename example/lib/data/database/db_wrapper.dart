@@ -31,7 +31,6 @@ class DBWrapper {
     if (!kIsWeb) {
       directory = await getApplicationDocumentsDirectory();
     }
-    // await Hive.initFlutter();
     final collection = await BoxCollection.open(
       dbName,
       {
