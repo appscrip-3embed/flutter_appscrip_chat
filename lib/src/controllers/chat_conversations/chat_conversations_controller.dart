@@ -97,8 +97,10 @@ class IsmChatConversationsController extends GetxController {
   @override
   onInit() async {
     await _generateReactionList();
-    var users = await IsmChatConfig.dbWrapper!.userDetailsBox
+
+    var users = await IsmChatConfig.dbWrapper?.userDetailsBox
         .get(IsmChatStrings.userData);
+
     if (users != null) {
       userDetails = UserDetails.fromJson(users);
     } else {
@@ -382,7 +384,6 @@ class IsmChatConversationsController extends GetxController {
     var user = await _viewModel.getUserData();
     if (user != null) {
       userDetails = user;
-
       await IsmChatConfig.dbWrapper?.userDetailsBox
           .put(IsmChatStrings.userData, user.toJson());
     }

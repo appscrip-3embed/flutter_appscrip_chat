@@ -9,7 +9,8 @@ import 'package:chat_component_example/utilities/utilities.dart';
 import 'package:get/get.dart';
 
 class AuthViewModel extends GetxController {
-  Future<UserDetailsModel?> login(String email, String password) async {
+  Future<UserDetailsModel?> login(
+      String userName, String email, String password) async {
     try {
       var response = await ApiWrapper.post(
         Api.authenticate,
@@ -24,13 +25,13 @@ class AuthViewModel extends GetxController {
 
       var data = jsonDecode(response.data);
       var userDetails = UserDetailsModel(
-        userId: data['userId'],
-        userToken: data['userToken'],
-        email: email,
-      );
+          userId: data['userId'],
+          userToken: data['userToken'],
+          email: email,
+          userName: userName);
 
       await dbWrapper?.userDetailsBox
-          .put(IsmChatStrings.userData, userDetails.toJson());
+          .put(IsmChatStrings.user, userDetails.toJson());
 
       return userDetails;
     } catch (e, st) {

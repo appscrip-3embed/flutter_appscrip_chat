@@ -24,10 +24,9 @@ class AppscripChatComponent {
   static Future<void> initialize({bool useDatabase = true}) async {
     IsmChatConfig.useDatabase = !kIsWeb && useDatabase;
     Get.put(IsmChatDeviceConfig()).init();
-    if (IsmChatConfig.useDatabase) {
-      // await Hive.initFlutter();
-      IsmChatConfig.dbWrapper = await IsmChatDBWrapper.create();
-    }
+
+    IsmChatConfig.dbWrapper = await IsmChatDBWrapper.create();
+
     IsmChatConfig.isInitialized = true;
   }
 }

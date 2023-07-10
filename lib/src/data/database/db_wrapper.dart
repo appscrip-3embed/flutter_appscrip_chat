@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+// import 'package:path_provider/path_provider.dart';
 // import 'objectbox.g.dart'; // created by `flutter pub run build_runner build`
 
 /// Provides access to the ObjectBox Store throughout the presenter.
@@ -26,14 +31,14 @@ class IsmChatDBWrapper {
   /// A Box of user Details.
   late final CollectionBox<IsmChatConversationTypeMap> userDetailsBox;
 
+  /// A Box of Conversation model
+  late final CollectionBox<IsmChatConversationTypeMap> chatConversationBox;
+
   /// A Box of Pending message.
   late final CollectionBox<IsmChatMessageBoxType> pendingMessageBox;
 
   /// A Box of Forward Message box.
   late final CollectionBox<IsmChatMessageBoxType> forwardMessageBox;
-
-  /// A Box of Conversation model
-  late final CollectionBox<IsmChatConversationTypeMap> chatConversationBox;
 
   Future<void> _createBox() async {
     var data = await Future.wait<dynamic>([
@@ -59,6 +64,11 @@ class IsmChatDBWrapper {
     // Future<Store> openStore() {...} is defined in the generated objectbox.g.dart.
 
     var dbName = databaseName ?? IsmChatConfig.dbName;
+    Directory? directory;
+    if (!kIsWeb) {
+      directory = await getApplicationDocumentsDirectory();
+    }
+
     // var directory = await getApplicationDocumentsDirectory();
     await Hive.initFlutter();
     final collection = await BoxCollection.open(
@@ -69,6 +79,7 @@ class IsmChatDBWrapper {
         _pendingBox,
         _forwardBox,
       },
+      path: directory?.path ?? '',
     );
 
     var instance = IsmChatDBWrapper._create(collection);
