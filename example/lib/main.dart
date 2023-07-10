@@ -23,13 +23,12 @@ Future<void> initialize() async {
 
   dbWrapper = await DBWrapper.create();
   await AppConfig.getUserData();
-
-  // await Future.wait(
-  //   [
-  //     AppscripChatComponent.initialize(),
-  //     LocalNoticeService().setup(),
-  //   ],
-  // );
+  await Future.wait(
+    [
+      AppscripChatComponent.initialize(),
+      LocalNoticeService().setup(),
+    ],
+  );
 }
 
 class MyApp extends StatefulWidget {

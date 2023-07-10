@@ -65,7 +65,6 @@ class IsmChatDBWrapper {
     if (!kIsWeb) {
       directory = await getApplicationDocumentsDirectory();
     }
-
     final collection = await BoxCollection.open(
       dbName,
       {
@@ -74,7 +73,7 @@ class IsmChatDBWrapper {
         _pendingBox,
         _forwardBox,
       },
-      path: directory?.path ?? '',
+      path: '${directory?.path}/$dbName',
     );
 
     var instance = IsmChatDBWrapper._create(collection);
