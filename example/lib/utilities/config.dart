@@ -11,7 +11,8 @@ class AppConfig {
   static UserDetailsModel? userDetail;
 
   static Future<void> getUserData() async {
-    var data = await dbWrapper!.userDetailsBox.get(IsmChatStrings.userData);
+    var data = await dbWrapper!.userDetailsBox.get(IsmChatStrings.user);
+
     if (data == null) {
       return;
     }
