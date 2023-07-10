@@ -1,6 +1,7 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 // import 'objectbox.g.dart'; // created by `flutter pub run build_runner build`
 
@@ -58,7 +59,8 @@ class IsmChatDBWrapper {
     // Future<Store> openStore() {...} is defined in the generated objectbox.g.dart.
 
     var dbName = databaseName ?? IsmChatConfig.dbName;
-    var directory = await getApplicationDocumentsDirectory();
+    // var directory = await getApplicationDocumentsDirectory();
+    await Hive.initFlutter();
     final collection = await BoxCollection.open(
       dbName,
       {
@@ -67,7 +69,6 @@ class IsmChatDBWrapper {
         _pendingBox,
         _forwardBox,
       },
-      path: directory.path,
     );
 
     var instance = IsmChatDBWrapper._create(collection);
