@@ -26,7 +26,7 @@ class IsmChatConversationsViewModel {
           orElse: () => IsmChatConversationModel(messages: []),
         );
       }
-      conversation.copyWith(
+      conversation = conversation.copyWith(
         messages: dbConversation?.messages,
         opponentDetails: conversation.opponentDetails,
         lastMessageDetails: conversation.lastMessageDetails,

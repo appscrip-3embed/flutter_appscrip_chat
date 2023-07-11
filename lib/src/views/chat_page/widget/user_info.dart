@@ -53,6 +53,7 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
       mediaListLinks = messages
           .where((e) => [
                 IsmChatCustomMessageType.link,
+                IsmChatCustomMessageType.location,
               ].contains(e.customType))
           .toList();
       mediaListDocs = messages

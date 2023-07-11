@@ -85,15 +85,38 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                 child: Column(
                   children: [
                     IsmChatDimens.boxHeight16,
-                    IsmChatImage.profile(
-                      controller.conversation?.profileUrl ?? '',
-                      dimensions: IsmChatDimens.hundred,
+                    IsmChatTapHandler(
+                      onTap: () {
+                        controller.showDialogForChangeGroupProfile();
+                      },
+                      child: Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          IsmChatImage.profile(
+                            controller.conversation?.profileUrl ?? '',
+                            dimensions: IsmChatDimens.hundred,
+                          ),
+                          CircleAvatar(
+                            radius: IsmChatDimens.forteen,
+                            child: Icon(
+                              Icons.edit_outlined,
+                              size: IsmChatDimens.eighteen,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                     IsmChatDimens.boxHeight5,
-                    Text(
-                      controller.conversation!.chatName,
-                      style: IsmChatStyles.w600Black27,
-                    ),
+                    TextButton(
+                        onPressed: () {
+                          controller.groupTitleController.text =
+                              controller.conversation!.chatName;
+                          controller.showDialogForChangeGroupTitle();
+                        },
+                        child: Text(
+                          controller.conversation!.chatName,
+                          style: IsmChatStyles.w600Black27,
+                        )),
                     Text(
                       controller
                               .conversation!.opponentDetails?.userIdentifier ??

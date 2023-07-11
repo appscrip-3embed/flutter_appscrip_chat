@@ -291,7 +291,6 @@ class IsmChatDBWrapper {
         var conversation = await getConversation(
             conversationId: conversationModel.conversationId);
         if (conversation == null) {
-          IsmChatLog.error('Step1');
           await saveConversation(conversation: conversationModel);
           return;
         }

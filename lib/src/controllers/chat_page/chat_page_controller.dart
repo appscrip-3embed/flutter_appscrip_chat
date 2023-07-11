@@ -399,28 +399,26 @@ class IsmChatPageController extends GetxController
 
   @override
   void onClose() {
-    super.onClose();
     if (areCamerasInitialized) {
       _frontCameraController.dispose();
       _backCameraController.dispose();
     }
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
-
     ifTimerMounted();
+    super.onClose();
   }
 
   @override
   void dispose() {
-    super.dispose();
     if (areCamerasInitialized) {
       _frontCameraController.dispose();
       _backCameraController.dispose();
     }
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
-
     ifTimerMounted();
+    super.dispose();
   }
 
   _generateReactionList() async {
@@ -890,7 +888,7 @@ class IsmChatPageController extends GetxController
         if (messages.isNotEmpty &&
             messages.last.customType != IsmChatCustomMessageType.removeMember) {
           chatConversation = chatConversation.copyWith(
-            lastMessageDetails: LastMessageDetails(
+            lastMessageDetails: chatConversation.lastMessageDetails?.copyWith(
               sentByMe: messages.last.sentByMe,
               showInConversation: true,
               sentAt: messages.last.sentAt,
@@ -923,11 +921,12 @@ class IsmChatPageController extends GetxController
                       ?.map((e) => e.memberName ?? '')
                       .toList() ??
                   [],
-              reactionType: '',
             ),
             unreadMessagesCount: 0,
           );
         }
+
+        IsmChatLog.success(chatConversation.toJson());
         await IsmChatConfig.dbWrapper!
             .saveConversation(conversation: chatConversation);
         await chatConversationController.getConversationsFromDB();
@@ -1029,7 +1028,6 @@ class IsmChatPageController extends GetxController
   Future<void> showDialogForChangeGroupProfile() async =>
       await Get.dialog(IsmChatAlertDialogBox(
         title: IsmChatStrings.chooseNewGroupProfile,
-        actionLabels: const [IsmChatStrings.change],
         content: SizedBox(
           height: IsmChatDimens.eighty,
           child: Row(
@@ -1103,12 +1101,6 @@ class IsmChatPageController extends GetxController
             ],
           ),
         ),
-        callbackActions: [
-          () => changeGroupTitle(
-              conversationTitle: groupTitleController.text,
-              conversationId: conversation?.conversationId ?? '',
-              isLoading: true),
-        ],
       ));
 
   void showDialogForBlockUnBlockUser(
