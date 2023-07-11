@@ -75,6 +75,8 @@ class IsmChatDBWrapper {
       },
       path: '${directory?.path}/$dbName',
     );
+    IsmChatLog.success(
+        '[CREATED] - Hive databse at ${directory?.path}/$dbName');
 
     var instance = IsmChatDBWrapper._create(collection);
     await instance._createBox();
