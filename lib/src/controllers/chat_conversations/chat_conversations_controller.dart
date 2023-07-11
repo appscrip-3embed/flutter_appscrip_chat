@@ -344,8 +344,8 @@ class IsmChatConversationsController extends GetxController {
     if (conversations.isEmpty) {
       isConversationsLoading = true;
     }
-    var apiConversations =
-        await _viewModel.getChatConversations(noOfConvesation);
+
+    await _viewModel.getChatConversations(noOfConvesation);
 
     if (origin == ApiCallOrigin.referesh) {
       refreshController.refreshCompleted(
@@ -357,10 +357,6 @@ class IsmChatConversationsController extends GetxController {
     } else if (origin == ApiCallOrigin.loadMore) {
       refreshController.loadComplete();
       refreshControllerOnEmptyList.loadComplete();
-    }
-
-    if (apiConversations.isEmpty) {
-      return;
     }
 
     unawaited(getBlockUser());
