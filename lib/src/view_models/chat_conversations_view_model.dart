@@ -7,11 +7,14 @@ class IsmChatConversationsViewModel {
 
   final IsmChatConversationsRepository _repository;
 
-  var chatLimit = 20;
   Future<List<IsmChatConversationModel>> getChatConversations(
-      int conversationPage) async {
+    int conversationPage, {
+    int chatLimit = 20,
+  }) async {
     var conversations = await _repository.getChatConversations(
-        skip: conversationPage, limit: chatLimit);
+      skip: conversationPage,
+      limit: chatLimit,
+    );
 
     if (conversations == null || conversations.isEmpty) {
       return [];

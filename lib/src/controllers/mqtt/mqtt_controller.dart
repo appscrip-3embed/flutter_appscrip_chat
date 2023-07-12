@@ -248,7 +248,7 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleMessage(IsmChatMessageModel message) async {
-    await Future.delayed(const Duration(milliseconds: 10));
+    await Future.delayed(const Duration(milliseconds: 100));
     var conversationController = Get.find<IsmChatConversationsController>();
     if (message.senderInfo!.userId == _communicationConfig.userConfig.userId) {
       return;
@@ -262,19 +262,21 @@ class IsmChatMqttController extends GetxController {
     }
 
     // To handle and show last message & unread count in conversation list
-    conversation.copyWith(
-        unreadMessagesCount: conversation.unreadMessagesCount! + 1,
-        lastMessageDetails: conversation.lastMessageDetails?.copyWith(
-          sentByMe: message.sentByMe,
-          showInConversation: true,
-          sentAt: message.sentAt,
-          senderName: message.senderInfo!.userName,
-          messageType: message.messageType?.value ?? 0,
-          messageId: message.messageId!,
-          conversationId: message.conversationId!,
-          body: message.body,
-          customType: message.customType,
-        ));
+    conversation = conversation.copyWith(
+      unreadMessagesCount: (conversation.unreadMessagesCount ?? 0) + 1,
+      lastMessageDetails: conversation.lastMessageDetails?.copyWith(
+        sentByMe: message.sentByMe,
+        showInConversation: true,
+        sentAt: message.sentAt,
+        senderName: message.senderInfo!.userName,
+        messageType: message.messageType?.value ?? 0,
+        messageId: message.messageId!,
+        conversationId: message.conversationId!,
+        body: message.body,
+        customType: message.customType,
+        action: '',
+      ),
+    );
 
     conversation.messages?.add(message);
 

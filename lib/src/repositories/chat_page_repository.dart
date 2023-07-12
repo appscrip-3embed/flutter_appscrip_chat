@@ -78,6 +78,7 @@ class IsmChatPageRepository {
         'attachments': attachments,
         'notificationBody': notificationBody,
         'notificationTitle': notificationTitle,
+        'searchableTags': [body],
         if (mentionedUsers?.isNotEmpty == true) 'mentionedUsers': mentionedUsers
       };
       var response = await _apiWrapper.post(
@@ -685,7 +686,7 @@ class IsmChatPageRepository {
         'metaData': metaData,
         'customType': null,
         'conversationTitle': conversationTitle,
-        'conversationImageUrl': conversationImageUrl
+        'conversationImageUrl': conversationImageUrl,
       };
       var response = await _apiWrapper.post(IsmChatAPI.chatConversation,
           payload: payload,

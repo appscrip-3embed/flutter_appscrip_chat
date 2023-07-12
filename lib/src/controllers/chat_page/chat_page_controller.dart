@@ -384,7 +384,6 @@ class IsmChatPageController extends GetxController
         isMessagesLoading = false;
       }
     }
-    scrollListener();
 
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
@@ -534,9 +533,9 @@ class IsmChatPageController extends GetxController
         break;
       case IsmChatAttachmentType.document:
         sendDocument(
-          conversationId: conversation?.conversationId ?? '',
-          userId: conversation?.opponentDetails?.userId ?? '',
-        );
+            conversationId: conversation?.conversationId ?? '',
+            userId: conversation?.opponentDetails?.userId ?? '',
+            opponentName: conversation?.opponentDetails?.userName ?? '');
         break;
       case IsmChatAttachmentType.location:
         await Get.to<void>(const IsmChatLocationWidget());
@@ -891,7 +890,11 @@ class IsmChatPageController extends GetxController
             lastMessageDetails: chatConversation.lastMessageDetails?.copyWith(
               sentByMe: messages.last.sentByMe,
               showInConversation: true,
-              sentAt: messages.last.sentAt,
+              sentAt: chatConversation
+                          .lastMessageDetails?.reactionType?.isNotEmpty ==
+                      true
+                  ? chatConversation.lastMessageDetails?.sentAt
+                  : messages.last.sentAt,
               senderName: [
                 IsmChatCustomMessageType.removeAdmin,
                 IsmChatCustomMessageType.addAdmin
@@ -926,7 +929,6 @@ class IsmChatPageController extends GetxController
           );
         }
 
-        IsmChatLog.success(chatConversation.toJson());
         await IsmChatConfig.dbWrapper!
             .saveConversation(conversation: chatConversation);
         await chatConversationController.getConversationsFromDB();

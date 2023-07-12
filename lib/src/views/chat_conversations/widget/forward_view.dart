@@ -339,6 +339,9 @@ class IsmChatForwardView extends StatelessWidget {
                                         userId: ismChatConversation
                                                 .opponentDetails?.userId ??
                                             '',
+                                        opponentName: ismChatConversation
+                                                .opponentDetails?.userName ??
+                                            '',
                                         sendMessageType:
                                             SendMessageType.forwardMessage,
                                         messageBody: message.body);
@@ -350,6 +353,9 @@ class IsmChatForwardView extends StatelessWidget {
                                               '',
                                       userId: ismChatConversation
                                               .opponentDetails?.userId ??
+                                          '',
+                                      opponentName: ismChatConversation
+                                              .opponentDetails?.userName ??
                                           '',
                                       latitude: 0,
                                       longitude: 0,
@@ -373,6 +379,9 @@ class IsmChatForwardView extends StatelessWidget {
                                       userId: ismChatConversation
                                               .opponentDetails?.userId ??
                                           '',
+                                      opponentName: ismChatConversation
+                                              .opponentDetails?.userName ??
+                                          '',
                                       ismChatChatMessageModel: message,
                                       sendMessageType:
                                           SendMessageType.forwardMessage,
@@ -385,6 +394,9 @@ class IsmChatForwardView extends StatelessWidget {
                                               '',
                                       userId: ismChatConversation
                                               .opponentDetails?.userId ??
+                                          '',
+                                      opponentName: ismChatConversation
+                                              .opponentDetails?.userName ??
                                           '',
                                       ismChatChatMessageModel: message,
                                       sendMessageType:
@@ -399,6 +411,9 @@ class IsmChatForwardView extends StatelessWidget {
                                       userId: ismChatConversation
                                               .opponentDetails?.userId ??
                                           '',
+                                      opponentName: ismChatConversation
+                                              .opponentDetails?.userName ??
+                                          '',
                                       message: message,
                                       sendMessageType:
                                           SendMessageType.forwardMessage,
@@ -411,6 +426,9 @@ class IsmChatForwardView extends StatelessWidget {
                                               '',
                                       userId: ismChatConversation
                                               .opponentDetails?.userId ??
+                                          '',
+                                      opponentName: ismChatConversation
+                                              .opponentDetails?.userName ??
                                           '',
                                       ismChatChatMessageModel: message,
                                       sendMessageType:
@@ -441,6 +459,7 @@ class IsmChatForwardView extends StatelessWidget {
                                       ismChatPageController.sendTextMessage(
                                           conversationId: conversationId,
                                           userId: x.userDetails.userId,
+                                          opponentName: x.userDetails.userName,
                                           sendMessageType:
                                               SendMessageType.forwardMessage,
                                           forwardMessgeForMulitpleUser: true,
@@ -450,6 +469,7 @@ class IsmChatForwardView extends StatelessWidget {
                                       ismChatPageController.sendLocation(
                                           conversationId: conversationId,
                                           userId: x.userDetails.userId,
+                                          opponentName: x.userDetails.userName,
                                           latitude: 0,
                                           longitude: 0,
                                           placeId: '',
@@ -464,6 +484,7 @@ class IsmChatForwardView extends StatelessWidget {
                                       await ismChatPageController.sendImage(
                                         conversationId: conversationId,
                                         userId: x.userDetails.userId,
+                                        opponentName: x.userDetails.userName,
                                         ismChatChatMessageModel: message,
                                         forwardMessgeForMulitpleUser: true,
                                         sendMessageType:
@@ -474,6 +495,7 @@ class IsmChatForwardView extends StatelessWidget {
                                       await ismChatPageController.sendVideo(
                                         conversationId: conversationId,
                                         userId: x.userDetails.userId,
+                                        opponentName: x.userDetails.userName,
                                         ismChatChatMessageModel: message,
                                         forwardMessgeForMulitpleUser: true,
                                         sendMessageType:
@@ -484,6 +506,7 @@ class IsmChatForwardView extends StatelessWidget {
                                       ismChatPageController.sendDocument(
                                         conversationId: conversationId,
                                         userId: x.userDetails.userId,
+                                        opponentName: x.userDetails.userName,
                                         message: message,
                                         forwardMessgeForMulitpleUser: true,
                                         sendMessageType:
@@ -494,6 +517,7 @@ class IsmChatForwardView extends StatelessWidget {
                                       ismChatPageController.sendAudio(
                                         conversationId: conversationId,
                                         userId: x.userDetails.userId,
+                                        opponentName: x.userDetails.userName,
                                         ismChatChatMessageModel: message,
                                         forwardMessgeForMulitpleUser: true,
                                         sendMessageType:

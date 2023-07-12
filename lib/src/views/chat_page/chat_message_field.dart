@@ -282,12 +282,16 @@ class _MicOrSendButton extends StatelessWidget {
                             await IsmChatUtility.fileToSize(File(path));
                         if (sizeMedia.size()) {
                           controller.sendAudio(
-                              path: path,
-                              conversationId:
-                                  controller.conversation?.conversationId ?? '',
-                              userId: controller
-                                      .conversation?.opponentDetails?.userId ??
-                                  '');
+                            path: path,
+                            conversationId:
+                                controller.conversation?.conversationId ?? '',
+                            userId: controller
+                                    .conversation?.opponentDetails?.userId ??
+                                '',
+                            opponentName: controller
+                                    .conversation?.opponentDetails?.userName ??
+                                '',
+                          );
                         } else {
                           await Get.dialog(
                             const IsmChatAlertDialogBox(
@@ -310,7 +314,10 @@ class _MicOrSendButton extends StatelessWidget {
                             controller.conversation?.conversationId ?? '',
                         userId:
                             controller.conversation?.opponentDetails?.userId ??
-                                '');
+                                '',
+                        opponentName: controller
+                                .conversation?.opponentDetails?.userName ??
+                            '');
                   }
                 }
               },

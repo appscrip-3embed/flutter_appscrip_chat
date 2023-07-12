@@ -84,7 +84,7 @@ class AuthViewModel extends GetxController {
     }
   }
 
-  Future<UserDetailsModel?> postCreateUser(
+  Future<ModelWrapperExample> postCreateUser(
       {required bool isLoading,
       required Map<String, dynamic> createUser}) async {
     try {
@@ -95,7 +95,7 @@ class AuthViewModel extends GetxController {
         showLoader: isLoading,
       );
       if (response.hasError) {
-        return null;
+        return ModelWrapperExample(data: null, statusCode: response.errorCode);
       }
       var data = jsonDecode(response.data);
 
@@ -108,10 +108,11 @@ class AuthViewModel extends GetxController {
       await dbWrapper?.userDetailsBox
           .put(IsmChatStrings.userData, userDetails.toJson());
 
-      return userDetails;
+      return ModelWrapperExample(
+          data: userDetails, statusCode: response.errorCode);
     } catch (e, st) {
       AppLog.error('Sign up $e', st);
-      return null;
+      return const ModelWrapperExample(data: null, statusCode: 1000);
     }
   }
 }

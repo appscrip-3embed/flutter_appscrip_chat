@@ -245,6 +245,9 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                     userId: controller.conversation
                                             ?.opponentDetails?.userId ??
                                         '',
+                                    opponentName: controller.conversation
+                                            ?.opponentDetails?.userName ??
+                                        '',
                                     latitude: controller.predictionList.first
                                             .geometry?.location?.lat ??
                                         0,
@@ -319,11 +322,13 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                               return IsmChatTapHandler(
                                 onTap: () {
                                   controller.sendLocation(
-                                      conversationId: controller
-                                              .conversation?.conversationId ??
+                                      conversationId: controller.conversation?.conversationId ??
                                           '',
                                       userId: controller.conversation
                                               ?.opponentDetails?.userId ??
+                                          '',
+                                      opponentName: controller.conversation
+                                              ?.opponentDetails?.userName ??
                                           '',
                                       latitude: controller.predictionList[index]
                                               .geometry?.location?.lat ??
@@ -334,8 +339,7 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                               ?.location
                                               ?.lng ??
                                           0,
-                                      placeId:
-                                          controller.predictionList[index].placeId ?? '',
+                                      placeId: controller.predictionList[index].placeId ?? '',
                                       locationName: controller.predictionList[index].name ?? '',
                                       locationSubName: controller.predictionList[index].vicinity ?? '');
 

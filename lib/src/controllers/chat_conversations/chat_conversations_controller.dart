@@ -337,15 +337,18 @@ class IsmChatConversationsController extends GetxController {
     return conversation.conversationId!;
   }
 
-  Future<void> getChatConversations({
-    int noOfConvesation = 0,
-    ApiCallOrigin? origin,
-  }) async {
+  Future<void> getChatConversations(
+      {int noOfConvesation = 0,
+      ApiCallOrigin? origin,
+      int chatLimit = 20}) async {
     if (conversations.isEmpty) {
       isConversationsLoading = true;
     }
 
-    await _viewModel.getChatConversations(noOfConvesation);
+    await _viewModel.getChatConversations(
+      noOfConvesation,
+      chatLimit: chatLimit,
+    );
 
     if (origin == ApiCallOrigin.referesh) {
       refreshController.refreshCompleted(
