@@ -97,7 +97,6 @@ class IsmChatDBWrapper {
       Get.find<IsmChatMqttController>().unSubscribe(),
       Get.find<IsmChatMqttController>().disconnect(),
     ]);
-
     IsmChatLog.success('[CLEARED] - All entries are removed from database');
   }
 

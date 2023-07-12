@@ -1287,6 +1287,7 @@ class IsmChatPageController extends GetxController
       (Timer t) {
         if (!Get.isRegistered<IsmChatPageController>()) {
           t.cancel();
+          conversationDetailsApTimer?.cancel();
         }
 
         getConverstaionDetails(

@@ -128,10 +128,14 @@ class IsmChatPageViewModel {
             await dbBox.pendingMessageBox
                 .delete(chatPendingMessages.conversationId!);
           }
-          final conversationModel =
+          var conversationModel =
               await dbBox.getConversation(conversationId: conversationId);
           if (conversationModel != null) {
             conversationModel.messages?.add(pendingMessage);
+            conversationModel = conversationModel.copyWith(
+              lastMessageDetails: conversationModel.lastMessageDetails
+                  ?.copyWith(reactionType: ''),
+            );
           }
           await dbBox.saveConversation(conversation: conversationModel!);
           return true;

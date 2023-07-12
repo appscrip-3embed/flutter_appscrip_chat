@@ -611,6 +611,7 @@ extension LastMessageBody on LastMessageDetails {
       case IsmChatCustomMessageType.text:
       default:
         var isReacted = action == IsmChatActionEvents.reactionAdd.name;
+
         return reactionType?.isNotEmpty == true
             ? sentByMe
                 ? 'You ${isReacted ? 'reacted' : 'removed'} ${reactionType?.reactionString} ${isReacted ? 'to' : 'from'} a message'
