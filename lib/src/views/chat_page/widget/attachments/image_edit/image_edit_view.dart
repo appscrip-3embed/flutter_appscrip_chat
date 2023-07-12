@@ -70,10 +70,12 @@ class IsmChatImageEditView extends StatelessWidget {
             onPressed: () {
               if (controller.fileSize.size()) {
                 controller.sendImage(
-                    conversationId:
-                        controller.conversation?.conversationId ?? '',
-                    userId:
-                        controller.conversation?.opponentDetails?.userId ?? '');
+                  conversationId: controller.conversation?.conversationId ?? '',
+                  userId:
+                      controller.conversation?.opponentDetails?.userId ?? '',
+                  opponentName:
+                      controller.conversation?.opponentDetails?.userName ?? '',
+                );
                 Get.back<void>();
                 Get.back<void>();
               } else {

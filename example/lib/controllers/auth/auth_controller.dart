@@ -58,6 +58,18 @@ class AuthController extends GetxController {
     _isEmailValid.value = value;
   }
 
+  final RxBool _isPassward = true.obs;
+  bool get isPassward => _isPassward.value;
+  set isPassward(bool value) {
+    _isPassward.value = value;
+  }
+
+  final RxBool _isConfirmPasswared = true.obs;
+  bool get isConfirmPasswared => _isConfirmPasswared.value;
+  set isConfirmPasswared(bool value) {
+    _isConfirmPasswared.value = value;
+  }
+
   Uint8List? bytes;
 
   void ismUploadImage(ImageSource imageSource) async {
@@ -105,9 +117,27 @@ class AuthController extends GetxController {
     };
     var response =
         await _viewModel.postCreateUser(isLoading: true, createUser: creatUser);
-    if (response != null) {
+    if (response.data != null) {
       await AppConfig.getUserData();
       Get.offAllNamed(AppRoutes.chatList);
+    } else if (response.statusCode == 409) {
+      Get.back();
+
+      await Get.dialog(
+        AlertDialog(
+          title: const Text('Alert message...'),
+          content: const Text('Already registered this user'),
+          actions: [
+            TextButton(
+              onPressed: Get.back,
+              child: const Text(
+                'Okay',
+                style: TextStyle(fontSize: 15),
+              ),
+            )
+          ],
+        ),
+      );
     }
   }
 

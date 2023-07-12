@@ -175,6 +175,7 @@ class IsmChatDBWrapper {
     }
     switch (dbBox) {
       case IsmChatDbBox.main:
+        IsmChatLog.success(conversation.toJson());
         await chatConversationBox.put(
                 conversation.conversationId ?? '', conversation.toJson())
             as Map<String, dynamic>?;

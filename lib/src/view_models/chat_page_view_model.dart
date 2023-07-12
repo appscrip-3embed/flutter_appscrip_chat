@@ -67,24 +67,24 @@ class IsmChatPageViewModel {
     return null;
   }
 
-  Future<bool> sendMessage({
-    required bool showInConversation,
-    required int messageType,
-    required bool encrypted,
-    required String deviceId,
-    required String conversationId,
-    required String body,
-    required int createdAt,
-    required String notificationBody,
-    required String notificationTitle,
-    SendMessageType sendMessageType = SendMessageType.pendingMessage,
-    String? parentMessageId,
-    IsmChatMetaData? metaData,
-    List<Map<String, dynamic>>? mentionedUsers,
-    Map<String, dynamic>? events,
-    String? customType,
-    List<Map<String, dynamic>>? attachments,
-  }) async {
+  Future<bool> sendMessage(
+      {required bool showInConversation,
+      required int messageType,
+      required bool encrypted,
+      required String deviceId,
+      required String conversationId,
+      required String body,
+      required int createdAt,
+      required String notificationBody,
+      required String notificationTitle,
+      SendMessageType sendMessageType = SendMessageType.pendingMessage,
+      String? parentMessageId,
+      IsmChatMetaData? metaData,
+      List<Map<String, dynamic>>? mentionedUsers,
+      Map<String, dynamic>? events,
+      String? customType,
+      List<Map<String, dynamic>>? attachments,
+      List<String>? searchableTags}) async {
     try {
       var messageId = await _repository.sendMessage(
         showInConversation: showInConversation,

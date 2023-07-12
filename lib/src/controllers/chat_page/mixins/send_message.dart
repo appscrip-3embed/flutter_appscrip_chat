@@ -10,6 +10,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     IsmChatMetaData? metaData,
     bool isGroup = false,
     bool isLoading = true,
+    List<String> searchableTags = const [' '],
   }) async {
     if (isGroup) {
       userId = _controller.conversation!.userIds ?? [];
@@ -22,7 +23,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       members: userId,
       isGroup: isGroup,
       conversationType: 0,
-      searchableTags: [' '],
+      searchableTags: searchableTags,
       metaData: metaData != null ? metaData.toMap() : {},
       conversationImageUrl:
           isGroup ? _controller.conversation!.conversationImageUrl ?? '' : '',
@@ -136,17 +137,22 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         if (media.attachmentType == IsmChatMediaType.image) {
           _controller.imagePath = File(media.mediaUrl!);
           await sendImage(
-              conversationId: _controller.conversation?.conversationId ?? '',
-              userId: _controller.conversation?.opponentDetails?.userId ?? '');
+            conversationId: _controller.conversation?.conversationId ?? '',
+            userId: _controller.conversation?.opponentDetails?.userId ?? '',
+            opponentName:
+                _controller.conversation?.opponentDetails?.userName ?? '',
+          );
         } else {
           await sendVideo(
-              file: File(media.mediaUrl!),
-              isThumbnail: true,
-              thumbnailFiles: File(media.thumbnailUrl!),
-              conversationId: _controller.conversation?.conversationId ?? '',
-              userId: _controller.conversation?.opponentDetails?.userId ?? '');
+            file: File(media.mediaUrl!),
+            isThumbnail: true,
+            thumbnailFiles: File(media.thumbnailUrl!),
+            conversationId: _controller.conversation?.conversationId ?? '',
+            userId: _controller.conversation?.opponentDetails?.userId ?? '',
+            opponentName:
+                _controller.conversation?.opponentDetails?.userName ?? '',
+          );
         }
-        // await Future.delayed(const Duration(milliseconds: 1));
       }
       _controller.listOfAssetsPath.clear();
     }
@@ -159,12 +165,15 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     IsmChatMessageModel? ismChatChatMessageModel,
     required String conversationId,
     required String userId,
+    required String opponentName,
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null) {
       conversationId = await createConversation(
-          userId: [userId], metaData: _controller.conversation?.metaData);
+          userId: [userId],
+          metaData: _controller.conversation?.metaData,
+          searchableTags: [opponentName]);
     }
     IsmChatMessageModel? audioMessage;
     String? nameWithExtension;
@@ -262,6 +271,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     bool forwardMessgeForMulitpleUser = false,
     required String conversationId,
     required String userId,
+    required String opponentName,
   }) async {
     IsmChatMessageModel? documentMessage;
     String? nameWithExtension;
@@ -296,7 +306,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             .getConversation(conversationId: conversationId);
         if (chatConversationResponse == null) {
           conversationId = await createConversation(
-              userId: [userId], metaData: _controller.conversation?.metaData);
+              userId: [userId],
+              metaData: _controller.conversation?.metaData,
+              searchableTags: [opponentName]);
         }
         for (var x in result!.files) {
           var sizeMedia = await IsmChatUtility.fileToSize(File(x.path!));
@@ -381,12 +393,15 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     bool forwardMessgeForMulitpleUser = false,
     required String conversationId,
     required String userId,
+    required String opponentName,
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null) {
       conversationId = await createConversation(
-          userId: [userId], metaData: _controller.conversation?.metaData);
+          userId: [userId],
+          metaData: _controller.conversation?.metaData,
+          searchableTags: [opponentName]);
     }
     IsmChatMessageModel? videoMessage;
     String? nameWithExtension;
@@ -513,12 +528,16 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     bool forwardMessgeForMulitpleUser = false,
     required String conversationId,
     required String userId,
+    required String opponentName,
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null) {
       conversationId = await createConversation(
-          userId: [userId], metaData: _controller.conversation?.metaData);
+        userId: [userId],
+        metaData: _controller.conversation?.metaData,
+        searchableTags: [opponentName],
+      );
     }
     IsmChatMessageModel? imageMessage;
     String? nameWithExtension;
@@ -621,12 +640,15 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     String? messageBody,
     required String conversationId,
     required String userId,
+    required String opponentName,
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null) {
       conversationId = await createConversation(
-          userId: [userId], metaData: _controller.conversation?.metaData);
+          userId: [userId],
+          metaData: _controller.conversation?.metaData,
+          searchableTags: [opponentName]);
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatMessageModel(
@@ -685,13 +707,17 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     String? messageBody,
     required String conversationId,
     required String userId,
+    required String opponentName,
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
 
     if (chatConversationResponse == null) {
       conversationId = await createConversation(
-          userId: [userId], metaData: _controller.conversation?.metaData);
+        userId: [userId],
+        metaData: _controller.conversation?.metaData,
+        searchableTags: [opponentName],
+      );
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatMessageModel(

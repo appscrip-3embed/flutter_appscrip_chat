@@ -5,8 +5,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../res/dimens.dart';
-import '../widgets/button.dart';
-import '../widgets/input_field.dart';
+import '../widgets/widgets.dart';
 
 /// The view part of the [IsmSignupView], which will be used to
 /// show the Signup view page
@@ -216,11 +215,32 @@ class SignupView extends StatelessWidget {
                       Text(Strings.password),
                       Dimens.boxHeight8,
                       InputField.password(
+                          suffixIcon: IconButton(
+                            icon: Icon(!controller.isPassward
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined),
+                            onPressed: () {
+                              controller.isPassward = !controller.isPassward;
+                            },
+                          ),
+                          obscureText: controller.isPassward,
+                          obscureCharacter: '*',
                           controller: controller.passwordController),
                       Dimens.boxHeight16,
                       Text(Strings.confirmPassword),
                       Dimens.boxHeight8,
                       InputField.confirmPassword(
+                          suffixIcon: IconButton(
+                            icon: Icon(!controller.isConfirmPasswared
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined),
+                            onPressed: () {
+                              controller.isConfirmPasswared =
+                                  !controller.isConfirmPasswared;
+                            },
+                          ),
+                          obscureText: controller.isConfirmPasswared,
+                          obscureCharacter: '*',
                           validator: (value) {
                             if (controller.passwordController.text == value) {
                               return null;
@@ -234,19 +254,22 @@ class SignupView extends StatelessWidget {
                         onTap: controller.profileImage.isNotEmpty
                             ? controller.validateSignUp
                             : () {
-                                Get.dialog(AlertDialog(
-                                  title: const Text('Alert message...'),
-                                  content: const Text(
-                                      'All fields must be filled with Profile image'),
-                                  actions: [
-                                    TextButton(
+                                Get.dialog(
+                                  AlertDialog(
+                                    title: const Text('Alert message...'),
+                                    content: const Text(
+                                        'All fields must be filled with Profile image'),
+                                    actions: [
+                                      TextButton(
                                         onPressed: Get.back,
                                         child: const Text(
                                           'Okay',
                                           style: TextStyle(fontSize: 20),
-                                        ))
-                                  ],
-                                ));
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                );
                               },
                       ),
                       const SizedBox(
@@ -254,7 +277,11 @@ class SignupView extends StatelessWidget {
                       ),
                       Center(
                         child: InkWell(
-                          onTap: Get.back,
+                          onTap: () {
+                            controller.passwordController.clear();
+                            controller.isPassward = true;
+                            Get.back();
+                          },
                           child: Text(
                             Strings.login,
                             style: const TextStyle(

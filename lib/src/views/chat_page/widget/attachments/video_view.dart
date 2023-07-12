@@ -77,12 +77,16 @@ class _IsmChatVideoViewState extends State<IsmChatVideoView> {
             onPressed: () {
               if (dataSize.size()) {
                 chatPageController.sendVideo(
-                    file: widget.file,
-                    conversationId:
-                        chatPageController.conversation?.conversationId ?? '',
-                    userId: chatPageController
-                            .conversation?.opponentDetails?.userId ??
-                        '');
+                  file: widget.file,
+                  conversationId:
+                      chatPageController.conversation?.conversationId ?? '',
+                  userId: chatPageController
+                          .conversation?.opponentDetails?.userId ??
+                      '',
+                  opponentName: chatPageController
+                          .conversation?.opponentDetails?.userName ??
+                      '',
+                );
                 Get.back<void>();
                 Get.back<void>();
               } else {
