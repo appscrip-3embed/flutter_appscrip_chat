@@ -459,7 +459,7 @@ class IsmChatPageController extends GetxController
     );
   }
 
-  showReactionUser(
+  void showReactionUser(
       {required IsmChatMessageModel message,
       required String reactionType,
       required int index}) async {
@@ -470,6 +470,16 @@ class IsmChatPageController extends GetxController
         reactionType: reactionType,
         index: index,
       ),
+      isDismissible: true,
+      isScrollControlled: true,
+      ignoreSafeArea: true,
+      enableDrag: true,
+    );
+  }
+
+  void addWallpaper() async {
+    await Get.bottomSheet(
+      ImsChatShowWallpaper(),
       isDismissible: true,
       isScrollControlled: true,
       ignoreSafeArea: true,

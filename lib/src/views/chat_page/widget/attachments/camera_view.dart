@@ -14,18 +14,27 @@ class IsmChatCameraView extends StatefulWidget {
 
 class _CameraScreenViewState extends State<IsmChatCameraView> {
   @override
-  Widget build(BuildContext context) => Scaffold(
-        backgroundColor: IsmChatColors.blackColor,
-        body: SafeArea(
-          child: GetX<IsmChatPageController>(
-            builder: (controller) => Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+  Widget build(BuildContext context) => GetX<IsmChatPageController>(
+        builder: (controller) => MediaQuery.removePadding(
+          removeTop: true,
+          context: context,
+          child: Scaffold(
+            backgroundColor: IsmChatColors.blackColor,
+            body: Stack(
+              alignment: Alignment.center,
               children: [
+                Visibility(
+                  visible: controller.areCamerasInitialized,
+                  replacement: const IsmChatLoadingDialog(),
+                  child: CameraPreview(controller.cameraController),
+                ),
                 if (controller.isRecording) ...[
-                  UnconstrainedBox(
+                  Align(
+                    alignment: Alignment.topCenter,
                     child: Container(
-                      padding: IsmChatDimens.edgeInsets8_4,
-                      margin: IsmChatDimens.edgeInsets10,
+                      height: IsmChatDimens.thirty,
+                      width: IsmChatDimens.eighty,
+                      margin: IsmChatDimens.edgeInsetsTop20.copyWith(top: 40),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         color: IsmChatColors.greenColor,
@@ -38,101 +47,99 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                     ),
                   )
                 ] else ...[
-                  Container(
+                  Align(
                     alignment: Alignment.topLeft,
-                    padding: IsmChatDimens.edgeInsets10,
-                    child: IconButton(
-                      onPressed: Get.back,
-                      icon: const Icon(
-                        Icons.close_rounded,
-                        color: IsmChatColors.whiteColor,
+                    child: Padding(
+                      padding: IsmChatDimens.edgeInsetsTop20.copyWith(top: 40),
+                      child: IconButton(
+                        onPressed: Get.back,
+                        icon: const Icon(
+                          Icons.close_rounded,
+                          color: IsmChatColors.whiteColor,
+                        ),
                       ),
                     ),
                   ),
                 ],
-                Expanded(
-                  child: Visibility(
-                    visible: controller.areCamerasInitialized,
-                    replacement: const IsmChatLoadingDialog(),
-                    child: CameraPreview(controller.cameraController),
-                  ),
-                ),
-                Container(
-                  color: Colors.transparent,
-                  padding: IsmChatDimens.edgeInsets0_16_0_0,
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                              controller.flashMode.icon,
-                              color: IsmChatColors.whiteColor,
-                            ),
-                            onPressed: controller.toggleFlash,
-                          ),
-                          GestureDetector(
-                            onLongPressStart: (_) async {
-                              await controller.cameraController
-                                  .startVideoRecording();
-                              controller.startTimer();
-                              controller.isRecording = true;
-                            },
-                            onLongPressEnd: (_) async {
-                              var file = await controller.cameraController
-                                  .stopVideoRecording();
-                              setState(() {
-                                controller.isRecording = false;
-                                controller.forVideoRecordTimer?.cancel();
-                                controller.myDuration = const Duration();
-                                if (controller.flashMode != FlashMode.off) {
-                                  controller.toggleFlash(FlashMode.off);
-                                }
-                                if (!controller.isFrontCameraSelected) {
-                                  // Becauase after coming back from edit video screen, the default camera should be front camera
-                                  controller.toggleCamera();
-                                }
-                              });
-                              await Get.to<void>(IsmChatVideoView(
-                                file: File(file.path),
-                              ));
-                            },
-                            onTap: controller.isRecording
-                                ? null
-                                : controller.takePhoto,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: IsmChatColors.whiteColor,
-                                  width: IsmChatDimens.two,
-                                ),
-                                shape: BoxShape.circle,
-                                color: controller.isRecording
-                                    ? Colors.red
-                                    : IsmChatConfig.chatTheme.primaryColor,
+                Positioned(
+                  bottom: 0,
+                  child: Container(
+                    width: IsmChatDimens.percentWidth(1),
+                    color: Colors.transparent,
+                    padding: IsmChatDimens.edgeInsets20_0,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                controller.flashMode.icon,
+                                color: IsmChatColors.whiteColor,
                               ),
-                              height: IsmChatDimens.sixty,
-                              width: IsmChatDimens.sixty,
+                              onPressed: controller.toggleFlash,
                             ),
-                          ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.flip_camera_ios,
-                              color: Colors.white,
+                            GestureDetector(
+                              onLongPressStart: (_) async {
+                                await controller.cameraController
+                                    .startVideoRecording();
+                                controller.startTimer();
+                                controller.isRecording = true;
+                              },
+                              onLongPressEnd: (_) async {
+                                var file = await controller.cameraController
+                                    .stopVideoRecording();
+                                setState(() {
+                                  controller.isRecording = false;
+                                  controller.forVideoRecordTimer?.cancel();
+                                  controller.myDuration = const Duration();
+                                  if (controller.flashMode != FlashMode.off) {
+                                    controller.toggleFlash(FlashMode.off);
+                                  }
+                                  if (!controller.isFrontCameraSelected) {
+                                    // Becauase after coming back from edit video screen, the default camera should be front camera
+                                    controller.toggleCamera();
+                                  }
+                                });
+                                await Get.to<void>(IsmChatVideoView(
+                                  file: File(file.path),
+                                ));
+                              },
+                              onTap: controller.isRecording
+                                  ? null
+                                  : controller.takePhoto,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: IsmChatColors.whiteColor,
+                                    width: IsmChatDimens.two,
+                                  ),
+                                  shape: BoxShape.circle,
+                                  color: controller.isRecording
+                                      ? Colors.red
+                                      : IsmChatConfig.chatTheme.primaryColor,
+                                ),
+                                height: IsmChatDimens.sixty,
+                                width: IsmChatDimens.sixty,
+                              ),
                             ),
-                            onPressed: controller.toggleCamera,
-                          ),
-                        ],
-                      ),
-                      IsmChatDimens.boxHeight10,
-                      Text(
-                        'Hold for Video, Tap for Photo',
-                        style: IsmChatStyles.w500White14,
-                      ),
-                      IsmChatDimens.boxHeight10,
-                    ],
+                            IconButton(
+                              icon: const Icon(
+                                Icons.flip_camera_ios,
+                                color: Colors.white,
+                              ),
+                              onPressed: controller.toggleCamera,
+                            ),
+                          ],
+                        ),
+                        IsmChatDimens.boxHeight10,
+                        Text(
+                          'Hold for Video, Tap for Photo',
+                          style: IsmChatStyles.w500White14,
+                        ),
+                        IsmChatDimens.boxHeight10,
+                      ],
+                    ),
                   ),
                 )
               ],

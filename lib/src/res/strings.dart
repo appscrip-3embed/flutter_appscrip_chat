@@ -40,6 +40,8 @@ class IsmChatStrings {
   static const String unBlockUser = 'Unblock User';
   static const String blockedUsers = 'Blocked Users';
   static const String clearChat = 'Clear chat';
+  static const String wallpaper = 'Wallpaper';
+
   static const String changeGroupTitle = 'Change group title';
   static const String changeGroupPhoto = 'Change group photo';
   static const String deleteAllMessage = 'Delete All Messages?';

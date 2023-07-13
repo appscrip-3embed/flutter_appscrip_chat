@@ -401,6 +401,8 @@ extension LastMessageWidget on String {
       style: IsmChatStyles.w400Black12,
     );
   }
+
+  Color getColor() => Color(int.parse('0xff${replaceFirst('#', '')}'));
 }
 
 extension GetLink on String {
