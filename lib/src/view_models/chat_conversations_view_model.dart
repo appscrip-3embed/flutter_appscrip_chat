@@ -44,6 +44,9 @@ class IsmChatConversationsViewModel {
 
   Future<UserDetails?> getUserData() async => await _repository.getUserData();
 
+  Future<UserDetails?> updateUserData(Map<String, dynamic> metaData) async =>
+      await _repository.updateUserData(metaData);
+
   Future<IsmChatUserListModel?> getUserList({
     String? pageToken,
     int? count,

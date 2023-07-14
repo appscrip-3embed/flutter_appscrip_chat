@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -94,6 +96,10 @@ class IsmChatConversationsController extends GetxController {
 
   final debounce = IsmChatDebounce();
 
+  List<BackGroundAsset> backgroundImage = [];
+
+  List<BackGroundAsset> backgroundColor = [];
+
   @override
   onInit() async {
     await _generateReactionList();
@@ -109,6 +115,7 @@ class IsmChatConversationsController extends GetxController {
     await getConversationsFromDB();
     await getChatConversations();
     await Get.find<IsmChatMqttController>().getChatConversationsUnreadCount();
+    await getBackGroundAssets();
     super.onInit();
   }
 
@@ -122,6 +129,24 @@ class IsmChatConversationsController extends GetxController {
   void dispose() {
     conversationScrollController.dispose();
     super.dispose();
+  }
+
+  Future<AssetsModel?> getAssetFilesList() async {
+    var jsonString = await rootBundle.loadString(
+        'packages/appscrip_chat_component/assets/assets_backgroundAssets.json');
+    var filesList = jsonDecode(jsonString);
+    if (filesList != null) {
+      return AssetsModel.fromMap(filesList.first);
+    }
+    return null;
+  }
+
+  Future<void> getBackGroundAssets() async {
+    var assets = await getAssetFilesList();
+    if (assets != null) {
+      backgroundImage = assets.images;
+      backgroundColor = assets.colors;
+    }
   }
 
   Future<void> _generateReactionList() async {
@@ -383,9 +408,14 @@ class IsmChatConversationsController extends GetxController {
     var user = await _viewModel.getUserData();
     if (user != null) {
       userDetails = user;
+      IsmChatLog.success(user.toJson());
       await IsmChatConfig.dbWrapper?.userDetailsBox
           .put(IsmChatStrings.userData, user.toJson());
     }
+  }
+
+  Future<void> updateUserData(Map<String, dynamic> metaData) async {
+    await _viewModel.updateUserData(metaData);
   }
 
   void onSearch(String query) {

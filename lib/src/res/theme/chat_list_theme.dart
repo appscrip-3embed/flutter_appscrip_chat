@@ -1,5 +1,6 @@
 import 'package:appscrip_chat_component/src/res/res.dart';
 import 'package:flutter/material.dart';
+
 class IsmChatListThemeData {
   const IsmChatListThemeData({
     this.tileColor,

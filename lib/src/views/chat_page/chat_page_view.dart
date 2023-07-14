@@ -117,12 +117,19 @@ class _IsmChatPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
         builder: (controller) => DecoratedBox(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: NetworkImage(
-                  'https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148902771.jpg?w=2000'),
-              fit: BoxFit.cover,
-            ),
+          decoration: BoxDecoration(
+            color: controller.backgroundColor.isNotEmpty
+                ? controller.backgroundColor.toColor
+                : IsmChatColors.whiteColor,
+            image: controller.backgroundImage.isNotEmpty
+                ? DecorationImage(
+                    image: controller.backgroundImage.isValidUrl
+                        ? NetworkImage(controller.backgroundImage)
+                            as ImageProvider
+                        : AssetImage(controller.backgroundImage),
+                    fit: BoxFit.cover,
+                  )
+                : null,
           ),
           child: Scaffold(
             backgroundColor: Colors.transparent,

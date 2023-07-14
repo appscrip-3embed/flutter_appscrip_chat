@@ -1,5 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'dart:developer';
+
+import 'package:flutter/foundation.dart';
+
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/models/models.dart';
 
 class IsmChatMetaData {
   int id;
@@ -19,27 +25,28 @@ class IsmChatMetaData {
   final String? genderOfUserWhoStartedGuestChat;
   final String? genderOfUserWhoReceivedTheGuestChat;
   final bool? paidChat;
-  final Map<String,dynamic>? customType;
-  IsmChatMetaData({
-    this.id = 0,
-    this.country,
-    this.parentMessageBody,
-    this.locationAddress,
-    this.locationSubAddress,
-    this.profilePic,
-    this.parentMessageInitiator,
-    this.firstName,
-    this.lastName,
-    this.isMatchId,
-    this.userId,
-    this.genderOfUserWhoReceivedTheGuestChat,
-    this.genderOfUserWhoStartedGuestChat,
-    this.guestMatchInitiatedByUserId,
-    this.guestMatchInitiatedWithUserId,
-    this.isGuestMatch,
-    this.paidChat,
-    this.customType,
-  });
+  final Map<String, dynamic>? customType;
+  final List<Map<String, IsmChatBackgroundModel>>? assetList;
+  IsmChatMetaData(
+      {this.id = 0,
+      this.country,
+      this.parentMessageBody,
+      this.locationAddress,
+      this.locationSubAddress,
+      this.profilePic,
+      this.parentMessageInitiator,
+      this.firstName,
+      this.lastName,
+      this.isMatchId,
+      this.userId,
+      this.genderOfUserWhoReceivedTheGuestChat,
+      this.genderOfUserWhoStartedGuestChat,
+      this.guestMatchInitiatedByUserId,
+      this.guestMatchInitiatedWithUserId,
+      this.isGuestMatch,
+      this.paidChat,
+      this.customType,
+      this.assetList});
 
   IsmChatMetaData copyWith({
     String? country,
@@ -57,8 +64,9 @@ class IsmChatMetaData {
     String? genderOfUserWhoStartedGuestChat,
     String? genderOfUserWhoReceivedTheGuestChat,
     bool? paidChat,
-    Map<String,dynamic>? customType,
+    Map<String, dynamic>? customType,
     String? locationSubAddress,
+    List<Map<String, IsmChatBackgroundModel>>? assetList,
   }) =>
       IsmChatMetaData(
           country: country ?? this.country,
@@ -83,7 +91,8 @@ class IsmChatMetaData {
               this.guestMatchInitiatedWithUserId,
           paidChat: paidChat ?? this.paidChat,
           customType: customType ?? this.customType,
-          locationSubAddress: locationSubAddress ?? this.locationSubAddress);
+          locationSubAddress: locationSubAddress ?? this.locationSubAddress,
+          assetList: assetList ?? this.assetList);
 
   Map<String, dynamic> toMap() => <String, dynamic>{
         if (country != null || country?.isNotEmpty == true) 'country': country,
@@ -121,7 +130,9 @@ class IsmChatMetaData {
           'guestMatchInitiatedWithUserId': guestMatchInitiatedWithUserId,
         if (paidChat != null) 'paidChat': paidChat,
         if (customType != null || customType?.isNotEmpty == true)
-          'customType': customType
+          'customType': customType,
+        if (assetList != null || assetList?.isNotEmpty == true)
+          'assetList': assetList
       };
 
   factory IsmChatMetaData.fromMap(Map<String, dynamic> map) => IsmChatMetaData(
@@ -154,8 +165,23 @@ class IsmChatMetaData {
         guestMatchInitiatedWithUserId:
             map['guestMatchInitiatedWithUserId'] as String? ?? '',
         paidChat: map['paidChat'] as bool? ?? false,
-        customType: map['customType'].runtimeType == String ? {'${map['customType']}' : map['customType']} :
-        map['customType'] as Map<String,dynamic>? ?? {},
+        customType: map['customType'].runtimeType == String
+            ? {'${map['customType']}': map['customType']}
+            : map['customType'] as Map<String, dynamic>? ?? {},
+        assetList: map['assetList'] == null
+            ? []
+            : List<Map<String, IsmChatBackgroundModel>>.from(
+                map['assetList'].map(
+                  (x) => Map.from(x).map(
+                    (k, v) => MapEntry<String, IsmChatBackgroundModel>(
+                      k,
+                      v.runtimeType == String
+                          ? IsmChatBackgroundModel.fromJson(v)
+                          : IsmChatBackgroundModel.fromMap(v),
+                    ),
+                  ),
+                ),
+              ).toList(),
       );
 
   String toJson() => json.encode(toMap());
@@ -169,7 +195,7 @@ class IsmChatMetaData {
 
   @override
   String toString() =>
-      'IsmChatMetaData(country: $country, parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, profilePic: $profilePic, parentMessageInitiator: $parentMessageInitiator, customType : $customType, locationSubAddress :$locationSubAddress)';
+      'IsmChatMetaData(country: $country, parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, profilePic: $profilePic, parentMessageInitiator: $parentMessageInitiator, customType : $customType, locationSubAddress :$locationSubAddress, assetList : $assetList)';
 
   @override
   bool operator ==(covariant IsmChatMetaData other) {

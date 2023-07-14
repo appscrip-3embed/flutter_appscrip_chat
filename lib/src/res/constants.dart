@@ -5,6 +5,7 @@ class IsmChatAssets {
 
   static const String _svgBase = '$_base/svg';
   static const String _imageBase = '$_base/images';
+  static const String backgroundImages = '$_base/background_images';
 
   static const String noImage = '$_imageBase/noperson.png';
 
