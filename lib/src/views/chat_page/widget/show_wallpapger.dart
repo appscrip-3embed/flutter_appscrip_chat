@@ -118,8 +118,6 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                             mainAxisSpacing: 5,
                           ),
                           itemBuilder: (context, index) {
-                            var image =
-                                conversationController.backgroundImage[index];
                             if (index == 0) {
                               return IsmChatTapHandler(
                                 onTap: () async {
@@ -158,6 +156,8 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                 ),
                               );
                             }
+                            var image = conversationController
+                                .backgroundImage[index - 1];
                             return IsmChatTapHandler(
                               onTap: () async {
                                 await Get.to(IsmChatWallpaperPreview(
@@ -170,7 +170,8 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                 height: IsmChatDimens.hundred,
                                 width: IsmChatDimens.hundred,
                                 child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius:
+                                      BorderRadius.circular(IsmChatDimens.ten),
                                   child: Image.asset(
                                     '${IsmChatAssets.backgroundImages}/${image.path!}',
                                     fit: BoxFit.cover,
