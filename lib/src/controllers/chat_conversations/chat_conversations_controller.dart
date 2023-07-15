@@ -408,9 +408,29 @@ class IsmChatConversationsController extends GetxController {
     var user = await _viewModel.getUserData();
     if (user != null) {
       userDetails = user;
-      IsmChatLog.success(user.toJson());
+      if (userDetails?.metaData?.assetList?.isNotEmpty == true) {
+        final assetList = userDetails?.metaData?.assetList?.toList() ?? [];
+        final indexOfAsset = assetList
+            .indexWhere((e) => e.values.first.srNoBackgroundAssset == 100);
+
+        final pathName =
+            assetList[indexOfAsset].values.first.imageUrl!.split('/').last;
+        var filePath = await IsmChatUtility.makeDirectoryWithUrl(
+            urlPath: assetList[indexOfAsset].values.first.imageUrl ?? '',
+            fileName: pathName);
+        assetList[indexOfAsset] = {
+          '${assetList[indexOfAsset].keys}': IsmChatBackgroundModel(
+            isImage: assetList[indexOfAsset].values.first.isImage,
+            imageUrl: filePath.path,
+            srNoBackgroundAssset:
+                assetList[indexOfAsset].values.first.srNoBackgroundAssset,
+          )
+        };
+        userDetails = userDetails?.copyWith(
+            metaData: userDetails?.metaData?.copyWith(assetList: assetList));
+      }
       await IsmChatConfig.dbWrapper?.userDetailsBox
-          .put(IsmChatStrings.userData, user.toJson());
+          .put(IsmChatStrings.userData, userDetails!.toJson());
     }
   }
 

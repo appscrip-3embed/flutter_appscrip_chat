@@ -201,7 +201,7 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                         assetList[assetIndex] = {
                           '${pageController.conversation?.conversationId}':
                               IsmChatBackgroundModel(
-                            isImage: false,
+                            isImage: true,
                             imageUrl: assetSrNo == 100
                                 ? conversationController.profileImage
                                 : imagePath!,
@@ -213,7 +213,7 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                         assetList.add({
                           '${pageController.conversation?.conversationId}':
                               IsmChatBackgroundModel(
-                            isImage: false,
+                            isImage: true,
                             imageUrl: assetSrNo == 100
                                 ? conversationController.profileImage
                                 : imagePath!,

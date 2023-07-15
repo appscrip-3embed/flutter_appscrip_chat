@@ -367,7 +367,7 @@ class IsmChatPageController extends GetxController
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
       await Future.delayed(Duration.zero);
-      if (conversation!.conversationId?.isNotEmpty ?? false) {
+      if (conversation?.conversationId?.isNotEmpty ?? false) {
         _getBackGroundAsset();
         await getMessagesFromDB(conversation?.conversationId ?? '');
         await Future.wait([

@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:photo_view/photo_view.dart';
 
 /// show the All media Preview view page
 class IsmMediaPreview extends StatefulWidget {
@@ -155,25 +156,18 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
           height: IsmChatDimens.percentHeight(1),
           width: IsmChatDimens.percentWidth(1),
           child: CarouselSlider.builder(
-            itemBuilder: (BuildContext context, int index, int realIndex) =>
-                widget.messageData[index].customType ==
-                        IsmChatCustomMessageType.image
-                    ? FittedBox(
-                        fit: BoxFit.contain,
-                        child: InteractiveViewer(
-                            child: IsmChatImage(
-                          widget.messageData[index].attachments?.first
-                                  .mediaUrl ??
-                              '',
-                          isNetworkImage: widget.messageData[index].attachments!
-                              .first.mediaUrl!.isValidUrl,
-                          radius: 0,
-                        )),
-                      )
-                    : VideoViewPage(
-                        path: widget.messageData[index].attachments?.first
-                                .mediaUrl ??
-                            ''),
+            itemBuilder: (BuildContext context, int index, int realIndex) {
+              var url =
+                  widget.messageData[index].attachments!.first.mediaUrl ?? '';
+              return widget.messageData[index].customType ==
+                      IsmChatCustomMessageType.image
+                  ? PhotoView(
+                      imageProvider: url.isValidUrl
+                          ? NetworkImage(url) as ImageProvider
+                          : AssetImage(url),
+                    )
+                  : VideoViewPage(path: url);
+            },
             options: CarouselOptions(
               height: IsmChatDimens.percentHeight(1),
               viewportFraction: 1,

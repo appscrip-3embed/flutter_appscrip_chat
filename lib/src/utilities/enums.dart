@@ -564,7 +564,8 @@ enum IsmChatEmoji {
 enum IsmChatFeature {
   reply,
   forward,
-  reaction;
+  reaction,
+  chageWallpaper;
 }
 
 enum IsmChatDbBox {
