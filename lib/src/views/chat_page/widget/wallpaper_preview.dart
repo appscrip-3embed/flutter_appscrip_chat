@@ -184,6 +184,7 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                     if (imagePath != null) {
                       IsmChatUtility.showLoader();
                       pageController.backgroundImage = imagePath!;
+                      pageController.backgroundColor = '';
                       if (assetSrNo == 100) {
                         var file = File(imagePath!);
                         var bytes = file.readAsBytesSync();
@@ -230,7 +231,7 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                     } else {
                       IsmChatUtility.showLoader();
                       pageController.backgroundColor = backgroundColor!;
-
+                      pageController.backgroundImage = '';
                       var assetList = conversationController
                               .userDetails?.metaData?.assetList ??
                           [];
@@ -260,10 +261,9 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                       await conversationController.updateUserData(
                         {'assetList': assetList},
                       );
-
                       IsmChatUtility.closeLoader();
                     }
-                    await conversationController.getUserData();
+                    await conversationController.getUserData(isLoading: true);
                     if (assetSrNo != 100) Get.back();
                     Get.back();
                   },

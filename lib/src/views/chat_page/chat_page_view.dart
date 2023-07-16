@@ -38,11 +38,29 @@ class IsmChatPageView extends StatefulWidget {
   State<IsmChatPageView> createState() => _IsmChatPageViewState();
 }
 
-class _IsmChatPageViewState extends State<IsmChatPageView> {
+class _IsmChatPageViewState extends State<IsmChatPageView>
+    with WidgetsBindingObserver {
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
     IsmChatPageBinding().dependencies();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.inactive) {
+      IsmChatLog.error('app inactive, is lock screen:');
+    } else if (state == AppLifecycleState.resumed) {
+      IsmChatLog.error('app inactive, is lock screen:');
+    }
   }
 
   IsmChatPageController get controller => Get.find<IsmChatPageController>();

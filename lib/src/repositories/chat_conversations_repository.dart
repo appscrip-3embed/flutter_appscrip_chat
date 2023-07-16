@@ -118,12 +118,10 @@ class IsmChatConversationsRepository {
     }
   }
 
-  Future<UserDetails?> getUserData() async {
+  Future<UserDetails?> getUserData({bool isLoading = false}) async {
     try {
-      var response = await _apiWrapper.get(
-        IsmChatAPI.userDetails,
-        headers: IsmChatUtility.tokenCommonHeader(),
-      );
+      var response = await _apiWrapper.get(IsmChatAPI.userDetails,
+          headers: IsmChatUtility.tokenCommonHeader(), showLoader: isLoading);
       if (response.hasError) {
         return null;
       }

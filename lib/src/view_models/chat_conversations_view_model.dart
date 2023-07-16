@@ -42,7 +42,8 @@ class IsmChatConversationsViewModel {
     return conversations;
   }
 
-  Future<UserDetails?> getUserData() async => await _repository.getUserData();
+  Future<UserDetails?> getUserData({bool isLoading = false}) async =>
+      await _repository.getUserData(isLoading: isLoading);
 
   Future<UserDetails?> updateUserData(Map<String, dynamic> metaData) async =>
       await _repository.updateUserData(metaData);

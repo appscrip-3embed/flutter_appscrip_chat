@@ -55,7 +55,8 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                           {'assetList': assetList},
                         );
                         IsmChatUtility.closeLoader();
-                        await conversationController.getUserData();
+                        await conversationController.getUserData(
+                            isLoading: true);
                         chatPageController.backgroundColor = '';
                         chatPageController.backgroundImage = '';
                         Get.back();

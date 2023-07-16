@@ -404,28 +404,30 @@ class IsmChatConversationsController extends GetxController {
     }
   }
 
-  Future<void> getUserData() async {
-    var user = await _viewModel.getUserData();
+  Future<void> getUserData({bool isLoading = false}) async {
+    var user = await _viewModel.getUserData(isLoading: isLoading);
     if (user != null) {
       userDetails = user;
       if (userDetails?.metaData?.assetList?.isNotEmpty == true) {
         final assetList = userDetails?.metaData?.assetList?.toList() ?? [];
         final indexOfAsset = assetList
             .indexWhere((e) => e.values.first.srNoBackgroundAssset == 100);
-
-        final pathName =
-            assetList[indexOfAsset].values.first.imageUrl!.split('/').last;
-        var filePath = await IsmChatUtility.makeDirectoryWithUrl(
-            urlPath: assetList[indexOfAsset].values.first.imageUrl ?? '',
-            fileName: pathName);
-        assetList[indexOfAsset] = {
-          '${assetList[indexOfAsset].keys}': IsmChatBackgroundModel(
-            isImage: assetList[indexOfAsset].values.first.isImage,
-            imageUrl: filePath.path,
-            srNoBackgroundAssset:
-                assetList[indexOfAsset].values.first.srNoBackgroundAssset,
-          )
-        };
+        if (indexOfAsset != -1) {
+          final pathName =
+              assetList[indexOfAsset].values.first.imageUrl!.split('/').last;
+          var filePath = await IsmChatUtility.makeDirectoryWithUrl(
+              urlPath: assetList[indexOfAsset].values.first.imageUrl ?? '',
+              fileName: pathName);
+          assetList[indexOfAsset] = {
+            '${assetList[indexOfAsset].keys}': IsmChatBackgroundModel(
+              color: assetList[indexOfAsset].values.first.color,
+              isImage: assetList[indexOfAsset].values.first.isImage,
+              imageUrl: filePath.path,
+              srNoBackgroundAssset:
+                  assetList[indexOfAsset].values.first.srNoBackgroundAssset,
+            )
+          };
+        }
         userDetails = userDetails?.copyWith(
             metaData: userDetails?.metaData?.copyWith(assetList: assetList));
       }

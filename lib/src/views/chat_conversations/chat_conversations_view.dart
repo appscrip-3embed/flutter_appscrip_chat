@@ -62,12 +62,30 @@ class IsmChatConversations extends StatefulWidget {
   State<IsmChatConversations> createState() => _IsmChatConversationsState();
 }
 
-class _IsmChatConversationsState extends State<IsmChatConversations> {
+class _IsmChatConversationsState extends State<IsmChatConversations>
+    with WidgetsBindingObserver {
   @override
   void initState() {
-    super.initState();
+    WidgetsBinding.instance.addObserver(this);
     if (!Get.isRegistered<IsmChatMqttController>()) {
       IsmChatMqttBinding().dependencies();
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.inactive) {
+      IsmChatLog.error('app inactive, is lock screen:');
+    } else if (state == AppLifecycleState.resumed) {
+      IsmChatLog.error('app inactive, is lock screen:');
     }
   }
 

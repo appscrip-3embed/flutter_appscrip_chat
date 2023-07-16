@@ -42,7 +42,7 @@ dependencies:
   image_gallery_saver: ^2.0.3
   image_painter: ^0.5.0
   image_picker: ^0.8.7
-  intl: any
+  intl: ^0.18.0
   link_preview_generator: ^1.2.0
   mqtt_client: ^9.8.0
   open_filex: ^4.3.2
