@@ -285,10 +285,6 @@ class IsmChatPageController extends GetxController
     _userReactionList.value = value;
   }
 
-  final RxBool _isLoadingMessages = false.obs;
-  bool get isLoadingMessages => _isLoadingMessages.value;
-  set isLoadingMessages(bool value) => _isLoadingMessages.value = value;
-
   final RxBool _isVideoVisible = true.obs;
   bool get isVideoVisible => _isVideoVisible.value;
   set isVideoVisible(bool value) {
@@ -1476,7 +1472,6 @@ class IsmChatPageController extends GetxController
       return;
     }
     predictionList = response;
-    IsmChatLog.error('checl list ${predictionList.length}');
   }
 
   Future<void> deleteReacton({required Reaction reaction}) async =>

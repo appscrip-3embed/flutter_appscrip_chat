@@ -11,10 +11,10 @@ mixin IsmChatPageGetMessageMixin {
     }
     _controller.messages = _controller._viewModel.sortMessages(messages!);
 
-    _controller.isMessagesLoading = false;
     if (_controller.messages.isEmpty) {
       return;
     }
+    _controller.isMessagesLoading = false;
     _controller._generateIndexedMessageList();
   }
 
@@ -24,8 +24,6 @@ mixin IsmChatPageGetMessageMixin {
     int? lastMessageTimestamp,
     bool? fromBlockUnblock,
   }) async {
-    if (_controller.isLoadingMessages) return;
-    _controller.isLoadingMessages = true;
     if (_controller.messages.isEmpty) {
       _controller.isMessagesLoading = true;
     }
@@ -53,7 +51,6 @@ mixin IsmChatPageGetMessageMixin {
     if (data != null) {
       await getMessagesFromDB(conversationID);
     }
-    _controller.isLoadingMessages = false;
   }
 
   Future<void> updateConversationMessage() async {
