@@ -36,7 +36,7 @@ class DBWrapper {
       {
         _userBox,
       },
-      path: '${directory?.path}/$dbName',
+      path: directory != null ? '${directory.path}/$dbName' : null,
     );
 
     var instance = DBWrapper._create(collection);

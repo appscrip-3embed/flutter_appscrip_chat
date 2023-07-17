@@ -196,6 +196,21 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                   color: header?.iconColor ?? IsmChatColors.whiteColor,
                 ),
                 itemBuilder: (context) => [
+                  if (IsmChatConfig.features
+                      .contains(IsmChatFeature.chageWallpaper))
+                    PopupMenuItem(
+                      value: 4,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.wallpaper_rounded,
+                            color: IsmChatConfig.chatTheme.primaryColor,
+                          ),
+                          IsmChatDimens.boxWidth8,
+                          const Text(IsmChatStrings.wallpaper)
+                        ],
+                      ),
+                    ),
                   PopupMenuItem(
                     value: 1,
                     child: Row(
@@ -261,7 +276,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                       null)
                     ...(header?.popupItems ?? []).map(
                       (e) => PopupMenuItem(
-                        value: header!.popupItems!.indexOf(e) + 4,
+                        value: header!.popupItems!.indexOf(e) + 5,
                         child: Row(
                           children: [
                             Icon(
@@ -284,13 +299,15 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                         isGroupDelete: value == 2 ? true : false);
                   } else if (value == 3) {
                     controller.handleBlockUnblock();
+                  } else if (value == 4) {
+                    controller.addWallpaper();
                   } else {
                     if (header == null) {
                       return;
                     }
                     if (header!.popupItems != null ||
                         header!.popupItems!.isNotEmpty) {
-                      header!.popupItems![value - 4]
+                      header!.popupItems![value - 5]
                           .onTap(controller.conversation!);
                     }
                   }

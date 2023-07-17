@@ -17,4 +17,6 @@ export 'messages/messages.dart';
 export 'reaction.dart';
 export 'reaction_button.dart';
 export 'show_user_reaction.dart';
+export 'show_wallpapger.dart';
 export 'user_info.dart';
+export 'wallpaper_preview.dart';

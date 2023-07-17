@@ -1,0 +1,168 @@
+[
+    {
+        "images": [
+            {
+                "srNo": 1,
+                "path": "image1.png"
+            },
+            {
+                "srNo": 2,
+                "path": "image2.png"
+            },
+            {
+                "srNo": 3,
+                "path": "image3.png"
+            },
+            {
+                "srNo": 4,
+                "path": "image4.png"
+            },
+            {
+                "srNo": 5,
+                "path": "image5.png"
+            },
+            {
+                "srNo": 6,
+                "path": "image6.png"
+            },
+            {
+                "srNo": 7,
+                "path": "image7.png"
+            },
+            {
+                "srNo": 8,
+                "path": "image8.png"
+            },
+            {
+                "srNo": 9,
+                "path": "image9.png"
+            },
+            {
+                "srNo": 10,
+                "path": "image10.png"
+            },
+            {
+                "srNo": 11,
+                "path": "image11.png"
+            },
+            {
+                "srNo": 12,
+                "path": "image12.png"
+            },
+            {
+                "srNo": 13,
+                "path": "image13.png"
+            },
+            {
+                "srNo": 14,
+                "path": "image14.png"
+            },
+            {
+                "srNo": 15,
+                "path": "image15.png"
+            },
+            {
+                "srNo": 16,
+                "path": "image16.png"
+            },
+            {
+                "srNo": 17,
+                "path": "image17.png"
+            },
+            {
+                "srNo": 18,
+                "path": "image18.png"
+            },
+            {
+                "srNo": 19,
+                "path": "image19.png"
+            },
+            {
+                "srNo": 20,
+                "path": "image20.png"
+            }
+        ],
+        "colors": [
+            {
+                "srNo": 1,
+                "color": "FF80ED"
+            },
+            {
+                "srNo": 2,
+                "color": "065535"
+            },
+            {
+                "srNo": 3,
+                "color": "ffe4e1"
+            },
+            {
+                "srNo": 4,
+                "color": "ff0000"
+            },
+            {
+                "srNo": 5,
+                "color": "ffd700"
+            },
+            {
+                "srNo": 6,
+                "color": "00ffff"
+            },
+            {
+                "srNo": 7,
+                "color": "c6e2ff"
+            },
+            {
+                "srNo": 8,
+                "color": "0000ff"
+            },
+            {
+                "srNo": 9,
+                "color": "40e0d0"
+            },
+            {
+                "srNo": 10,
+                "color": "d3ffce"
+            },
+            {
+                "srNo": 11,
+                "color": "40E0D0"
+            },
+            {
+                "srNo": 12,
+                "color": "800000"
+            },
+            {
+                "srNo": 13,
+                "color": "003366"
+            },
+            {
+                "srNo": 14,
+                "color": "00ff00"
+            },
+            {
+                "srNo": 15,
+                "color": "FFC3A0"
+            },
+            {
+                "srNo": 16,
+                "color": "3399FF"
+            },
+            {
+                "srNo": 17,
+                "color": "c0d6e4"
+            },
+            {
+                "srNo": 18,
+                "color": "daa520"
+            },
+            {
+                "srNo": 10,
+                "color": "ff1493"
+            },
+            {
+                "srNo": 10,
+                "color": "554506"
+            }
+        ]
+    }
+]

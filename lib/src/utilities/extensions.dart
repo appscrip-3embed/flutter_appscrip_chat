@@ -401,6 +401,8 @@ extension LastMessageWidget on String {
       style: IsmChatStyles.w400Black12,
     );
   }
+
+  Color getColor() => Color(int.parse('0xff${replaceFirst('#', '')}'));
 }
 
 extension GetLink on String {
@@ -815,5 +817,15 @@ extension SizeOfMedia on String {
       return true;
     }
     return false;
+  }
+}
+
+extension ColorExtension on String {
+  Color get toColor {
+    var hexString = this;
+    final buffer = StringBuffer();
+    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
+    buffer.write(hexString.replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
   }
 }

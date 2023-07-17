@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -94,6 +96,10 @@ class IsmChatConversationsController extends GetxController {
 
   final debounce = IsmChatDebounce();
 
+  List<BackGroundAsset> backgroundImage = [];
+
+  List<BackGroundAsset> backgroundColor = [];
+
   @override
   onInit() async {
     await _generateReactionList();
@@ -109,6 +115,7 @@ class IsmChatConversationsController extends GetxController {
     await getConversationsFromDB();
     await getChatConversations();
     await Get.find<IsmChatMqttController>().getChatConversationsUnreadCount();
+    await getBackGroundAssets();
     super.onInit();
   }
 
@@ -122,6 +129,24 @@ class IsmChatConversationsController extends GetxController {
   void dispose() {
     conversationScrollController.dispose();
     super.dispose();
+  }
+
+  Future<AssetsModel?> getAssetFilesList() async {
+    var jsonString = await rootBundle.loadString(
+        'packages/appscrip_chat_component/assets/assets_backgroundAssets.json');
+    var filesList = jsonDecode(jsonString);
+    if (filesList != null) {
+      return AssetsModel.fromMap(filesList.first);
+    }
+    return null;
+  }
+
+  Future<void> getBackGroundAssets() async {
+    var assets = await getAssetFilesList();
+    if (assets != null) {
+      backgroundImage = assets.images;
+      backgroundColor = assets.colors;
+    }
   }
 
   Future<void> _generateReactionList() async {
@@ -379,13 +404,40 @@ class IsmChatConversationsController extends GetxController {
     }
   }
 
-  Future<void> getUserData() async {
-    var user = await _viewModel.getUserData();
+  Future<void> getUserData({bool isLoading = false}) async {
+    var user = await _viewModel.getUserData(isLoading: isLoading);
     if (user != null) {
       userDetails = user;
+      if (userDetails?.metaData?.assetList?.isNotEmpty == true) {
+        final assetList = userDetails?.metaData?.assetList?.toList() ?? [];
+        final indexOfAsset = assetList
+            .indexWhere((e) => e.values.first.srNoBackgroundAssset == 100);
+        if (indexOfAsset != -1) {
+          final pathName =
+              assetList[indexOfAsset].values.first.imageUrl!.split('/').last;
+          var filePath = await IsmChatUtility.makeDirectoryWithUrl(
+              urlPath: assetList[indexOfAsset].values.first.imageUrl ?? '',
+              fileName: pathName);
+          assetList[indexOfAsset] = {
+            '${assetList[indexOfAsset].keys}': IsmChatBackgroundModel(
+              color: assetList[indexOfAsset].values.first.color,
+              isImage: assetList[indexOfAsset].values.first.isImage,
+              imageUrl: filePath.path,
+              srNoBackgroundAssset:
+                  assetList[indexOfAsset].values.first.srNoBackgroundAssset,
+            )
+          };
+        }
+        userDetails = userDetails?.copyWith(
+            metaData: userDetails?.metaData?.copyWith(assetList: assetList));
+      }
       await IsmChatConfig.dbWrapper?.userDetailsBox
-          .put(IsmChatStrings.userData, user.toJson());
+          .put(IsmChatStrings.userData, userDetails!.toJson());
     }
+  }
+
+  Future<void> updateUserData(Map<String, dynamic> metaData) async {
+    await _viewModel.updateUserData(metaData);
   }
 
   void onSearch(String query) {

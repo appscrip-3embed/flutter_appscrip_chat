@@ -73,7 +73,7 @@ class IsmChatDBWrapper {
         _pendingBox,
         _forwardBox,
       },
-      path: '${directory?.path}/$dbName',
+      path: directory != null ? '${directory.path}/$dbName' : null,
     );
     IsmChatLog.success(
         '[CREATED] - Hive databse at ${directory?.path}/$dbName');
@@ -175,7 +175,6 @@ class IsmChatDBWrapper {
     }
     switch (dbBox) {
       case IsmChatDbBox.main:
-        IsmChatLog.success(conversation.toJson());
         await chatConversationBox.put(
                 conversation.conversationId ?? '', conversation.toJson())
             as Map<String, dynamic>?;

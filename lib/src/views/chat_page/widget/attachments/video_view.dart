@@ -23,9 +23,9 @@ class _IsmChatVideoViewState extends State<IsmChatVideoView> {
   String dataSize = '';
 
   @override
-  void initState() async {
+  void initState() {
     videoFile = widget.file;
-    dataSize = await IsmChatUtility.fileToSize(videoFile!);
+    IsmChatUtility.fileToSize(videoFile!).then((value) => dataSize = value);
     super.initState();
   }
 

@@ -13,6 +13,8 @@ import 'views/views.dart';
 
 DBWrapper? dbWrapper;
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   await initialize();
   runApp(const MyApp());
@@ -52,6 +54,7 @@ class _MyAppState extends State<MyApp> {
       builder: (_, child) => child!,
       child: GetMaterialApp(
         key: const Key('ChatApp'),
+        navigatorKey: navigatorKey,
         locale: const Locale('en', 'US'),
         localizationsDelegates: GlobalMaterialLocalizations.delegates,
         supportedLocales: const [

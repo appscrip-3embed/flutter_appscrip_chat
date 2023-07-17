@@ -18,4 +18,5 @@ class AssetConstants {
   const AssetConstants._();
 
   static const String noImage = 'assets/images/noperson.png';
+  static const String image = 'assets/images/pexels-red-zeppelin-17445017.jpg';
 }

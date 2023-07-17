@@ -171,9 +171,15 @@ class IsmChatPageController extends GetxController
 
   final RxString _fileSize = ''.obs;
   String get fileSize => _fileSize.value;
-  set fileSize(String value) {
-    _fileSize.value = value;
-  }
+  set fileSize(String value) => _fileSize.value = value;
+
+  final RxString _backgroundImage = ''.obs;
+  String get backgroundImage => _backgroundImage.value;
+  set backgroundImage(String value) => _backgroundImage.value = value;
+
+  final RxString _backgroundColor = ''.obs;
+  String get backgroundColor => _backgroundColor.value;
+  set backgroundColor(String value) => _backgroundColor.value = value;
 
   final RxList<AttachmentModel> _listOfAssetsPath = <AttachmentModel>[].obs;
   List<AttachmentModel> get listOfAssetsPath => _listOfAssetsPath;
@@ -360,9 +366,9 @@ class IsmChatPageController extends GetxController
     _generateReactionList();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
-
       await Future.delayed(Duration.zero);
-      if (conversation!.conversationId?.isNotEmpty ?? false) {
+      if (conversation?.conversationId?.isNotEmpty ?? false) {
+        _getBackGroundAsset();
         await getMessagesFromDB(conversation?.conversationId ?? '');
         await Future.wait([
           getMessagesFromAPI(),
@@ -430,6 +436,17 @@ class IsmChatPageController extends GetxController
     );
   }
 
+  _getBackGroundAsset() {
+    var assets = _conversationController.userDetails?.metaData?.assetList ?? [];
+    var asset = assets
+        .where((e) => e.keys.contains(conversation?.conversationId))
+        .toList();
+    if (asset.isNotEmpty) {
+      backgroundColor = asset.first.values.first.color!;
+      backgroundImage = asset.first.values.first.imageUrl!;
+    }
+  }
+
   showMentionsUserList(String value) async {
     if (!conversation!.isGroup!) {
       return;
@@ -459,7 +476,7 @@ class IsmChatPageController extends GetxController
     );
   }
 
-  showReactionUser(
+  void showReactionUser(
       {required IsmChatMessageModel message,
       required String reactionType,
       required int index}) async {
@@ -474,6 +491,22 @@ class IsmChatPageController extends GetxController
       isScrollControlled: true,
       ignoreSafeArea: true,
       enableDrag: true,
+    );
+  }
+
+  void addWallpaper() async {
+    await Get.bottomSheet(
+      const ImsChatShowWallpaper(),
+      isDismissible: true,
+      isScrollControlled: true,
+      ignoreSafeArea: true,
+      enableDrag: true,
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(IsmChatDimens.ten),
+        ),
+      ),
     );
   }
 

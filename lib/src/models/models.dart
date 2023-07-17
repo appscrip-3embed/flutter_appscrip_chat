@@ -1,4 +1,5 @@
 export 'attachment_model.dart';
+export 'background_model.dart';
 export 'bottom_sheet_attachment_model.dart';
 export 'chat_conversation_model.dart';
 export 'chat_message_model.dart';

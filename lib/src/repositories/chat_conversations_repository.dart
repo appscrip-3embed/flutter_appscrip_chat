@@ -118,21 +118,41 @@ class IsmChatConversationsRepository {
     }
   }
 
-  Future<UserDetails?> getUserData() async {
+  Future<UserDetails?> getUserData({bool isLoading = false}) async {
     try {
-      var response = await _apiWrapper.get(
-        IsmChatAPI.userDetails,
-        headers: IsmChatUtility.tokenCommonHeader(),
-      );
+      var response = await _apiWrapper.get(IsmChatAPI.userDetails,
+          headers: IsmChatUtility.tokenCommonHeader(), showLoader: isLoading);
       if (response.hasError) {
         return null;
       }
 
       var data = jsonDecode(response.data) as Map<String, dynamic>;
+
       var user = UserDetails.fromMap(data);
+
       return user;
     } catch (e, st) {
       IsmChatLog.error('GetUserDataError $e', st);
+      return null;
+    }
+  }
+
+  Future<UserDetails?> updateUserData(Map<String, dynamic> metaData) async {
+    try {
+      var requestData = {'metaData': metaData};
+      var response = await _apiWrapper.patch(
+        IsmChatAPI.updateUsers,
+        payload: requestData,
+        headers: IsmChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return null;
+      }
+      var data = jsonDecode(response.data) as Map<String, dynamic>;
+      var user = UserDetails.fromMap(data);
+      return user;
+    } catch (e, st) {
+      IsmChatLog.error('updateUserDataError $e', st);
       return null;
     }
   }

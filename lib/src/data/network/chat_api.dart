@@ -9,6 +9,7 @@ class IsmChatAPI {
   static const String user = '$baseUrl/chat/user';
   static const String userDetails = '$baseUrl/chat/user/details';
   static const String allUsers = '$baseUrl/chat/users';
+  static const String updateUsers = '$baseUrl/chat/user';
   static const String authenticate = '$allUsers/authenticate';
 
   static const String chatConversation = '$baseUrl/chat/conversation';
@@ -16,7 +17,8 @@ class IsmChatAPI {
   static const String chatConversationDelete = '$chatConversation/local';
   static const String getChatConversations = '$baseUrl/chat/conversations';
   static const String conversationDetails = '$chatConversation/details';
-  static const String conversationUnreadCount = '${chatConversation}s/unread/count';
+  static const String conversationUnreadCount =
+      '${chatConversation}s/unread/count';
 
   static const String conversationMembers = '$chatConversation/members';
   static const String eligibleMembers = '$chatConversation/eligible/members';
