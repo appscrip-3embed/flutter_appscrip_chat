@@ -136,7 +136,7 @@ class IsmChatConversationsController extends GetxController {
         'packages/appscrip_chat_component/assets/assets_backgroundAssets.json');
     var filesList = jsonDecode(jsonString);
     if (filesList != null) {
-      return AssetsModel.fromMap(filesList.first);
+      return AssetsModel.fromMap(filesList);
     }
     return null;
   }

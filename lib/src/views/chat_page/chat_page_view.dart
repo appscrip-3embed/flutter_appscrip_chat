@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -38,29 +40,11 @@ class IsmChatPageView extends StatefulWidget {
   State<IsmChatPageView> createState() => _IsmChatPageViewState();
 }
 
-class _IsmChatPageViewState extends State<IsmChatPageView>
-    with WidgetsBindingObserver {
+class _IsmChatPageViewState extends State<IsmChatPageView> {
   @override
   void initState() {
-    WidgetsBinding.instance.addObserver(this);
     IsmChatPageBinding().dependencies();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.inactive) {
-      IsmChatLog.error('app inactive, is lock screen:');
-    } else if (state == AppLifecycleState.resumed) {
-      IsmChatLog.error('app inactive, is lock screen:');
-    }
   }
 
   IsmChatPageController get controller => Get.find<IsmChatPageController>();
@@ -143,8 +127,13 @@ class _IsmChatPageView extends StatelessWidget {
                 ? DecorationImage(
                     image: controller.backgroundImage.isValidUrl
                         ? NetworkImage(controller.backgroundImage)
-                            as ImageProvider
-                        : AssetImage(controller.backgroundImage),
+                        : controller.backgroundImage.contains(
+                                'packages/appscrip_chat_component/assets')
+                            ? AssetImage(controller.backgroundImage)
+                                as ImageProvider
+                            : FileImage(
+                                File(controller.backgroundImage),
+                              ),
                     fit: BoxFit.cover,
                   )
                 : null,

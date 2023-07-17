@@ -124,6 +124,7 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                 onTap: () async {
                                   var file = await IsmChatUtility.pickImage(
                                       ImageSource.gallery);
+
                                   if (file != null) {
                                     await Get.to(
                                       IsmChatWallpaperPreview(
