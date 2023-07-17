@@ -60,13 +60,13 @@ class MentionUserList extends StatelessWidget {
       );
 }
 
-class _NoSuggestions extends StatelessWidget {
-  const _NoSuggestions();
+// class _NoSuggestions extends StatelessWidget {
+//   const _NoSuggestions();
 
-  @override
-  Widget build(BuildContext context) => ListTile(
-        horizontalTitleGap: IsmChatDimens.four,
-        leading: const Icon(Icons.no_accounts_rounded),
-        title: const Text('No match found'),
-      );
-}
+//   @override
+//   Widget build(BuildContext context) => ListTile(
+//         horizontalTitleGap: IsmChatDimens.four,
+//         leading: const Icon(Icons.no_accounts_rounded),
+//         title: const Text('No match found'),
+//       );
+// }

@@ -107,8 +107,8 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                       ),
                     ),
                     IsmChatDimens.boxHeight5,
-                    TextButton(
-                        onPressed: () {
+                    IsmChatTapHandler(
+                        onTap: () {
                           controller.groupTitleController.text =
                               controller.conversation!.chatName;
                           controller.showDialogForChangeGroupTitle();
@@ -123,7 +123,6 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                           '',
                       style: IsmChatStyles.w500GreyLight17,
                     ),
-                    IsmChatDimens.boxHeight16,
                     if (controller.conversation?.isGroup ?? false) ...[
                       Text(
                         '${controller.conversation?.membersCount} ${IsmChatStrings.participants}',
@@ -136,13 +135,6 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (controller.conversation?.isGroup ?? false) ...[
-                          Padding(
-                            padding: IsmChatDimens.edgeInsets10,
-                            child: Text(
-                              IsmChatStrings.addDescription,
-                              style: IsmChatStyles.w400Grey14,
-                            ),
-                          ),
                           Padding(
                             padding: IsmChatDimens.edgeInsets10_5_10_10,
                             child: Text(

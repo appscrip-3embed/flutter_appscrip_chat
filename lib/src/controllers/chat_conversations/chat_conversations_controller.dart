@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:azlistview/azlistview.dart';

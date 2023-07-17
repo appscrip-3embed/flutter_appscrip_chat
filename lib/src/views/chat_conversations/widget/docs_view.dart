@@ -75,7 +75,7 @@ class _IsmDocsViewState extends State<IsmDocsView>
                           return GestureDetector(
                             onTap: () => Get.find<IsmChatPageController>()
                                 .tapForMediaPreview(value[valueIndex]),
-                            child: Container(
+                            child: SizedBox(
                               height: context.width * 0.15,
                               width: double.maxFinite,
                               // color: value[valueIndex].backgroundColor,

@@ -2,11 +2,11 @@
     "images": [
         {
             "srNo": 1,
-            "path": "image1.png"
+            "path": "image1.jpg"
         },
         {
             "srNo": 2,
-            "path": "image2.png"
+            "path": "image2.jpg"
         },
         {
             "srNo": 3,
@@ -14,71 +14,75 @@
         },
         {
             "srNo": 4,
-            "path": "image4.png"
+            "path": "image4.jpg"
         },
         {
             "srNo": 5,
-            "path": "image5.png"
+            "path": "image5.jpg"
         },
         {
             "srNo": 6,
-            "path": "image6.png"
+            "path": "image6.jpg"
         },
         {
             "srNo": 7,
-            "path": "image7.png"
+            "path": "image7.jpg"
         },
         {
             "srNo": 8,
-            "path": "image8.png"
+            "path": "image8.jpg"
         },
         {
             "srNo": 9,
-            "path": "image9.png"
+            "path": "image9.jpg"
         },
         {
             "srNo": 10,
-            "path": "image10.png"
+            "path": "image10.jpg"
         },
         {
             "srNo": 11,
-            "path": "image11.png"
+            "path": "image11.jpg"
         },
         {
             "srNo": 12,
-            "path": "image12.png"
+            "path": "image12.jpg"
         },
         {
             "srNo": 13,
-            "path": "image13.png"
+            "path": "image13.jpg"
         },
         {
             "srNo": 14,
-            "path": "image14.png"
+            "path": "image14.jpg"
         },
         {
             "srNo": 15,
-            "path": "image15.png"
+            "path": "image15.jpg"
         },
         {
             "srNo": 16,
-            "path": "image16.png"
+            "path": "image16.jpg"
         },
         {
             "srNo": 17,
-            "path": "image17.png"
+            "path": "image17.jpg"
         },
         {
             "srNo": 18,
-            "path": "image18.png"
+            "path": "image18.jpg"
         },
         {
             "srNo": 19,
-            "path": "image19.png"
+            "path": "image19.jpg"
         },
         {
             "srNo": 20,
-            "path": "image20.png"
+            "path": "image20.jpg"
+        },
+        {
+            "srNo": 21,
+            "path": "image21.jpg"
         }
     ],
     "colors": [
@@ -155,11 +159,11 @@
             "color": "daa520"
         },
         {
-            "srNo": 10,
+            "srNo": 19,
             "color": "ff1493"
         },
         {
-            "srNo": 10,
+            "srNo": 20,
             "color": "554506"
         }
     ]
