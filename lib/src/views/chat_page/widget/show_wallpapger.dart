@@ -224,7 +224,7 @@ class _BackgroundImage extends StatefulWidget {
 class _BackgroundImageState extends State<_BackgroundImage>
     with AutomaticKeepAliveClientMixin<_BackgroundImage> {
   @override
-  bool get wantKeepAlive => mounted;
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {

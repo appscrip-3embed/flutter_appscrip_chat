@@ -107,7 +107,7 @@ class AuthViewModel extends GetxController {
       );
 
       await dbWrapper?.userDetailsBox
-          .put(IsmChatStrings.userData, userDetails.toJson());
+          .put(IsmChatStrings.user, userDetails.toJson());
 
       return ModelWrapperExample(
           data: userDetails, statusCode: response.errorCode);
