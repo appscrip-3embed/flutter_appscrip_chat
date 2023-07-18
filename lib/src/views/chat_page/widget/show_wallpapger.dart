@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,7 +18,6 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
 
   final conversationController = Get.find<IsmChatConversationsController>();
   final chatPageController = Get.find<IsmChatPageController>();
-  final rnd = math.Random();
 
   @override
   void initState() {
@@ -112,6 +110,7 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                           padding: IsmChatDimens.edgeInsets10_0,
                           itemCount:
                               conversationController.backgroundImage.length + 1,
+                          addAutomaticKeepAlives: true,
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3,
@@ -124,6 +123,7 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                 onTap: () async {
                                   var file = await IsmChatUtility.pickImage(
                                       ImageSource.gallery);
+
                                   if (file != null) {
                                     await Get.to(
                                       IsmChatWallpaperPreview(
@@ -167,18 +167,7 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                   assetSrNo: image.srNo,
                                 ));
                               },
-                              child: SizedBox(
-                                height: IsmChatDimens.hundred,
-                                width: IsmChatDimens.hundred,
-                                child: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.circular(IsmChatDimens.ten),
-                                  child: Image.asset(
-                                    '${IsmChatAssets.backgroundImages}/${image.path!}',
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
+                              child: _BackgroundImage(image: image),
                             );
                           },
                         ),
@@ -219,4 +208,37 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
           ],
         ),
       );
+}
+
+class _BackgroundImage extends StatefulWidget {
+  const _BackgroundImage({
+    required this.image,
+  });
+
+  final BackGroundAsset image;
+
+  @override
+  State<_BackgroundImage> createState() => _BackgroundImageState();
+}
+
+class _BackgroundImageState extends State<_BackgroundImage>
+    with AutomaticKeepAliveClientMixin<_BackgroundImage> {
+  @override
+  bool get wantKeepAlive => mounted;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return SizedBox(
+      height: IsmChatDimens.hundred,
+      width: IsmChatDimens.hundred,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(IsmChatDimens.ten),
+        child: Image.asset(
+          '${IsmChatAssets.backgroundImages}/${widget.image.path!}',
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
 }

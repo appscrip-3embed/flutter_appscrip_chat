@@ -29,14 +29,49 @@ class AuthController extends GetxController {
   }
 
   Future<void> login() async {
-    var data = await _viewModel.login(
+    var response = await _viewModel.login(
       userNameController.text.trim(),
       emailController.text.trim(),
       passwordController.text.trim(),
     );
-    if (data != null) {
+
+    if (response.data != null) {
       await AppConfig.getUserData();
       Get.offAllNamed(AppRoutes.chatList);
+    } else if (response.statusCode == 401) {
+      Get.back();
+      await Get.dialog(
+        AlertDialog(
+          title: const Text('Alert message...'),
+          content: const Text('Incorrect userIdentifier or password.'),
+          actions: [
+            TextButton(
+              onPressed: Get.back,
+              child: const Text(
+                'Okay',
+                style: TextStyle(fontSize: 15),
+              ),
+            )
+          ],
+        ),
+      );
+    } else if (response.statusCode == 404) {
+      Get.back();
+      await Get.dialog(
+        AlertDialog(
+          title: const Text('Alert message...'),
+          content: const Text('User not found.'),
+          actions: [
+            TextButton(
+              onPressed: Get.back,
+              child: const Text(
+                'Okay',
+                style: TextStyle(fontSize: 15),
+              ),
+            )
+          ],
+        ),
+      );
     }
   }
 
@@ -122,7 +157,6 @@ class AuthController extends GetxController {
       Get.offAllNamed(AppRoutes.chatList);
     } else if (response.statusCode == 409) {
       Get.back();
-
       await Get.dialog(
         AlertDialog(
           title: const Text('Alert message...'),

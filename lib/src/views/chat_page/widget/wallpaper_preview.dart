@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
@@ -36,9 +35,14 @@ class IsmChatWallpaperPreview extends StatelessWidget {
             color: backgroundColor?.toColor,
             image: imagePath != null
                 ? DecorationImage(
-                    image: AssetImage(
-                      imagePath!,
-                    ),
+                    image: imagePath!
+                            .contains('packages/appscrip_chat_component/assets')
+                        ? AssetImage(
+                            imagePath!,
+                          ) as ImageProvider
+                        : FileImage(
+                            File(imagePath!),
+                          ),
                     fit: BoxFit.cover,
                   )
                 : null,

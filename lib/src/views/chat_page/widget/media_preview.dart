@@ -165,6 +165,9 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
                       imageProvider: url.isValidUrl
                           ? NetworkImage(url) as ImageProvider
                           : AssetImage(url),
+                      loadingBuilder: (context, event) =>
+                          const IsmChatLoadingDialog(),
+                      wantKeepAlive: true,
                     )
                   : VideoViewPage(path: url);
             },

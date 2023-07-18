@@ -277,11 +277,9 @@ class AppState extends InheritedWidget {
   final Axis direction;
 
   @override
-  bool updateShouldNotify(covariant AppState oldWidget) {
-    return direction != oldWidget.direction;
-  }
+  bool updateShouldNotify(covariant AppState oldWidget) =>
+      direction != oldWidget.direction;
 
-  static AppState? of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<AppState>();
-  }
+  static AppState? of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<AppState>();
 }
