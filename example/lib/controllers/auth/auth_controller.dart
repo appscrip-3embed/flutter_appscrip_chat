@@ -38,12 +38,29 @@ class AuthController extends GetxController {
     if (response.data != null) {
       await AppConfig.getUserData();
       Get.offAllNamed(AppRoutes.chatList);
+    } else if (response.statusCode == 401) {
+      Get.back();
+      await Get.dialog(
+        AlertDialog(
+          title: const Text('Alert message...'),
+          content: const Text('Incorrect userIdentifier or password.'),
+          actions: [
+            TextButton(
+              onPressed: Get.back,
+              child: const Text(
+                'Okay',
+                style: TextStyle(fontSize: 15),
+              ),
+            )
+          ],
+        ),
+      );
     } else if (response.statusCode == 404) {
       Get.back();
       await Get.dialog(
         AlertDialog(
           title: const Text('Alert message...'),
-          content: const Text('Not registered this user'),
+          content: const Text('User not found.'),
           actions: [
             TextButton(
               onPressed: Get.back,

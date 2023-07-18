@@ -174,6 +174,7 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                               ));
                             },
                             child: SizedBox(
+                              key: Key('$index'),
                               height: IsmChatDimens.hundred,
                               width: IsmChatDimens.hundred,
                               child: ClipRRect(
