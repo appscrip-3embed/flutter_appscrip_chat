@@ -15,7 +15,7 @@ class IsmChatMessage extends StatefulWidget {
 }
 
 class _IsmChatMessageState extends State<IsmChatMessage>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin<IsmChatMessage> {
   @override
   bool get wantKeepAlive => mounted;
 
