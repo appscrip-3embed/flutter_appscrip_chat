@@ -11,7 +11,11 @@ class IsmChatPageView extends StatefulWidget {
     this.header,
     this.onBackTap,
     this.emptyChatPlaceholder,
-    this.messageWidgetCallback,
+    this.messageWidgetBuilder,
+    this.chatPageBackGroundDecoration,
+    this.textFieldBackGroundDecoration,
+    this.textFieldPadding,
+    this.bodyBackGroundColor,
     this.attachments = IsmChatAttachmentType.values,
     this.features = IsmChatFeature.values,
     super.key,
@@ -24,7 +28,11 @@ class IsmChatPageView extends StatefulWidget {
   final double? height;
   final IsmChatHeader? header;
   final Widget? emptyChatPlaceholder;
-  final MessageWidgetCallback? messageWidgetCallback;
+  final MessageWidgetBuilder? messageWidgetBuilder;
+  final EdgeInsetsGeometry? textFieldPadding;
+  final Decoration? textFieldBackGroundDecoration;
+  final Decoration? chatPageBackGroundDecoration;
+  final Color? bodyBackGroundColor;
 
   /// It it an optional parameter which take List of `IsmChatAttachmentType` which is an enum.
   /// Pass in the types of attachments that you want to allow.
@@ -88,7 +96,13 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                   height: widget.height,
                   emptyChatPlaceholder: widget.emptyChatPlaceholder,
                   attachments: widget.attachments,
-                  messageWidgetCallback: widget.messageWidgetCallback,
+                  messageWidgetBuilder: widget.messageWidgetBuilder,
+                  textFieldBackGroundDecoration:
+                      widget.textFieldBackGroundDecoration,
+                  textFieldPadding: widget.textFieldPadding,
+                  chatPageBackGroundDecoration:
+                      widget.chatPageBackGroundDecoration,
+                  bodyBackGroundColor: widget.bodyBackGroundColor,
                 ),
               )
             : _IsmChatPageView(
@@ -98,7 +112,13 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                 height: widget.height,
                 emptyChatPlaceholder: widget.emptyChatPlaceholder,
                 attachments: widget.attachments,
-                messageWidgetCallback: widget.messageWidgetCallback,
+                messageWidgetBuilder: widget.messageWidgetBuilder,
+                textFieldBackGroundDecoration:
+                    widget.textFieldBackGroundDecoration,
+                textFieldPadding: widget.textFieldPadding,
+                chatPageBackGroundDecoration:
+                    widget.chatPageBackGroundDecoration,
+                bodyBackGroundColor: widget.bodyBackGroundColor,
               ),
       );
 }
@@ -110,7 +130,11 @@ class _IsmChatPageView extends StatelessWidget {
     this.height,
     this.header,
     this.emptyChatPlaceholder,
-    this.messageWidgetCallback,
+    this.messageWidgetBuilder,
+    this.textFieldBackGroundDecoration,
+    this.textFieldPadding,
+    this.chatPageBackGroundDecoration,
+    this.bodyBackGroundColor,
     this.attachments = IsmChatAttachmentType.values,
   });
 
@@ -120,7 +144,11 @@ class _IsmChatPageView extends StatelessWidget {
   final IsmChatHeader? header;
   final Widget? emptyChatPlaceholder;
   final List<IsmChatAttachmentType> attachments;
-  final MessageWidgetCallback? messageWidgetCallback;
+  final MessageWidgetBuilder? messageWidgetBuilder;
+  final EdgeInsetsGeometry? textFieldPadding;
+  final Decoration? textFieldBackGroundDecoration;
+  final Decoration? chatPageBackGroundDecoration;
+  final Color? bodyBackGroundColor;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
@@ -145,7 +173,7 @@ class _IsmChatPageView extends StatelessWidget {
                 : null,
           ),
           child: Scaffold(
-            backgroundColor: Colors.transparent,
+            backgroundColor: bodyBackGroundColor ?? Colors.transparent,
             resizeToAvoidBottomInset: true,
             appBar: controller.isMessageSeleted
                 ? AppBar(
@@ -210,7 +238,8 @@ class _IsmChatPageView extends StatelessWidget {
             body: Stack(
               alignment: Alignment.bottomRight,
               children: [
-                SizedBox(
+                Container(
+                  decoration: chatPageBackGroundDecoration,
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
                   child: Column(
@@ -246,7 +275,7 @@ class _IsmChatPageView extends StatelessWidget {
                                     addAutomaticKeepAlives: true,
                                     itemCount: controller.messages.length,
                                     itemBuilder: (_, index) => IsmChatMessage(
-                                        index, messageWidgetCallback),
+                                        index, messageWidgetBuilder),
                                   ),
                                 ),
                               ),
@@ -301,10 +330,14 @@ class _IsmChatPageView extends StatelessWidget {
                                     ),
                                   ),
                                 )
-                              : SafeArea(
-                                  child: IsmChatMessageField(
-                                    header: header,
-                                    attachments: attachments,
+                              : Container(
+                                  padding: textFieldPadding,
+                                  decoration: textFieldBackGroundDecoration,
+                                  child: SafeArea(
+                                    child: IsmChatMessageField(
+                                      header: header,
+                                      attachments: attachments,
+                                    ),
                                   ),
                                 ),
                       Offstage(

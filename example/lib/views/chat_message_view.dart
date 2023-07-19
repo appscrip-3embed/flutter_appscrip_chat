@@ -11,6 +11,15 @@ class ChatMessageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IsmChatPageView(
+      header: IsmChatHeader(
+          // shape: BeveledRectangleBorder(
+          //   borderRadius: BorderRadius.vertical(
+          //     bottom: Radius.circular(
+          //       IsmChatDimens.twenty,
+          //     ),
+          //   ),
+          // ),
+          ),
       emptyChatPlaceholder: IsmChatEmptyView(
         icon: Icon(
           Icons.chat_outlined,

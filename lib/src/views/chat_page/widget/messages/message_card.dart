@@ -10,7 +10,7 @@ class MessageCard extends StatelessWidget {
     required this.showMessageInCenter,
     required this.message,
     required this.index,
-    this.messageWidgetCallback,
+    this.messageWidgetBuilder,
   })  : controller = Get.find<IsmChatPageController>(),
         canReply = IsmChatConfig.features.contains(IsmChatFeature.reply);
 
@@ -19,7 +19,7 @@ class MessageCard extends StatelessWidget {
   final IsmChatPageController controller;
   final int index;
   final bool canReply;
-  final MessageWidgetCallback? messageWidgetCallback;
+  final MessageWidgetBuilder? messageWidgetBuilder;
 
   @override
   Widget build(BuildContext context) => SwipeTo(
@@ -61,7 +61,7 @@ class MessageCard extends StatelessWidget {
             key: Key('scroll-${message.messageId}'),
             child: Hero(
               tag: message,
-              child: messageWidgetCallback?.call(context, message,
+              child: messageWidgetBuilder?.call(context, message,
                       message.customType!, showMessageInCenter) ??
                   MessageBubble(
                     message: message,
