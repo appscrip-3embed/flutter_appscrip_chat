@@ -76,17 +76,12 @@ class IsmChatApp extends StatelessWidget {
 
   final bool enableGroupChat;
 
-  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
-      profileImageBuilder;
-  final String Function(BuildContext, IsmChatConversationModel, String)?
-      profileImageUrl;
-  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
-      nameBuilder;
-  final String Function(BuildContext, IsmChatConversationModel, String)? name;
-  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
-      subtitleBuilder;
-  final String Function(BuildContext, IsmChatConversationModel, String)?
-      subtitle;
+  final ConversationWidgetCallback? profileImageBuilder;
+  final ConversationStringCallback? profileImageUrl;
+  final ConversationWidgetCallback? nameBuilder;
+  final ConversationStringCallback? name;
+  final ConversationWidgetCallback? subtitleBuilder;
+  final ConversationStringCallback? subtitle;
 
   /// Opitonal field
   ///
