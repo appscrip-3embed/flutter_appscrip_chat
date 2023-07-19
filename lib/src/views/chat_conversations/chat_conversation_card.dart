@@ -17,19 +17,16 @@ class IsmChatConversationCard extends StatefulWidget {
 
   final IsmChatConversationModel conversation;
   final VoidCallback? onTap;
+
+  final ConversationWidgetCallback? profileImageBuilder;
+  final ConversationStringCallback? profileImageUrl;
+  final ConversationWidgetCallback? nameBuilder;
+  final ConversationStringCallback? name;
+  final ConversationWidgetCallback? subtitleBuilder;
+  final ConversationStringCallback? subtitle;
+
   final Widget? Function(BuildContext, IsmChatConversationModel)?
       onProfileWidget;
-  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
-      profileImageBuilder;
-  final String? Function(BuildContext, IsmChatConversationModel, String)?
-      profileImageUrl;
-  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
-      nameBuilder;
-  final String? Function(BuildContext, IsmChatConversationModel, String)? name;
-  final Widget? Function(BuildContext, IsmChatConversationModel, String)?
-      subtitleBuilder;
-  final String? Function(BuildContext, IsmChatConversationModel, String)?
-      subtitle;
 
   @override
   State<IsmChatConversationCard> createState() =>

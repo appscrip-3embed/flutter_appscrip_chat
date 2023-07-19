@@ -1,4 +1,4 @@
-import 'package:appscrip_chat_component/src/models/models.dart';
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
 typedef ConversationWidgetCallback = Widget? Function(
@@ -12,3 +12,6 @@ typedef ConversationStringCallback = String? Function(
   IsmChatConversationModel,
   String,
 );
+
+typedef MessageWidgetCallback = Widget? Function(
+    BuildContext, IsmChatMessageModel, IsmChatCustomMessageType, bool);

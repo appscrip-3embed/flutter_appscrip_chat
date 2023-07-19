@@ -19,13 +19,13 @@ class ChatList extends StatelessWidget {
           primaryColor: AppColors.primaryColorLight,
           chatPageTheme: IsmChatPageThemeData(
             selfMessageTheme: IsmChatMessageThemeData(
-              // backgroundColor: Colors.white,
-              borderColor: Colors.grey,
-            ),
+                // backgroundColor: Colors.white,
+                borderColor: Colors.grey,
+                showProfile: true),
             opponentMessageTheme: IsmChatMessageThemeData(
-              // backgroundColor: Colors.white,
-              borderColor: AppColors.primaryColorLight,
-            ),
+                // backgroundColor: Colors.white,
+                borderColor: AppColors.primaryColorLight,
+                showProfile: true),
           ),
         ),
         communicationConfig: IsmChatCommunicationConfig(

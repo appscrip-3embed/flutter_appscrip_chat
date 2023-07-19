@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatMessage extends StatefulWidget {
-  IsmChatMessage(this.index, {super.key})
+  IsmChatMessage(this.index, this.messageWidgetCallback, {super.key})
       : message =
             Get.find<IsmChatPageController>().messages.reversed.toList()[index];
 
   final IsmChatMessageModel message;
   final int index;
+  final MessageWidgetCallback? messageWidgetCallback;
 
   @override
   State<IsmChatMessage> createState() => _IsmChatMessageState();
@@ -19,7 +20,8 @@ class _IsmChatMessageState extends State<IsmChatMessage>
   @override
   bool get wantKeepAlive => mounted;
 
-  var controller = Get.find<IsmChatPageController>();
+  final controller = Get.find<IsmChatPageController>();
+  final coverstaionController = Get.find<IsmChatConversationsController>();
 
   late bool showMessageInCenter;
   late bool isGroup;
@@ -130,25 +132,35 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                                 .chatTheme.chatPageTheme?.profileImageSize ??
                             30,
                       ),
-                      IsmChatDimens.boxWidth2,
+                      if (widget.messageWidgetCallback == null) ...[
+                        IsmChatDimens.boxWidth2,
+                      ],
                     ],
                   _Message(
                     message: widget.message,
                     showMessageInCenter: showMessageInCenter,
                     index: widget.index,
+                    messageWidgetCallback: widget.messageWidgetCallback,
                   ),
                   if (theme?.selfMessageTheme?.showProfile != null)
                     if (theme?.selfMessageTheme?.showProfile == true &&
                         !isGroup &&
                         !showMessageInCenter &&
                         widget.message.sentByMe) ...[
-                      IsmChatDimens.boxWidth4,
+                      if (widget.messageWidgetCallback == null) ...[
+                        IsmChatDimens.boxWidth4,
+                      ],
                       IsmChatImage.profile(
                         IsmChatConfig
                                 .communicationConfig.userConfig.userProfile ??
+                            coverstaionController
+                                .userDetails?.userProfileImageUrl ??
                             '',
-                        name: IsmChatConfig
-                            .communicationConfig.userConfig.userName,
+                        name: IsmChatConfig.communicationConfig.userConfig
+                                .userName.isNotEmpty
+                            ? IsmChatConfig
+                                .communicationConfig.userConfig.userName
+                            : coverstaionController.userDetails?.userName,
                         dimensions: IsmChatConfig
                                 .chatTheme.chatPageTheme?.profileImageSize ??
                             30,
@@ -169,12 +181,14 @@ class _Message extends StatelessWidget {
     required this.message,
     required this.showMessageInCenter,
     required this.index,
+    this.messageWidgetCallback,
   }) : controller = Get.find<IsmChatPageController>();
 
   final IsmChatMessageModel message;
   final bool showMessageInCenter;
   final IsmChatPageController controller;
   final int index;
+  final MessageWidgetCallback? messageWidgetCallback;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -212,6 +226,7 @@ class _Message extends StatelessWidget {
                   showMessageInCenter: showMessageInCenter,
                   message: message,
                   index: index,
+                  messageWidgetCallback: messageWidgetCallback,
                 ),
               ],
             ),

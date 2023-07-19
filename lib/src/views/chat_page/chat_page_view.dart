@@ -11,6 +11,7 @@ class IsmChatPageView extends StatefulWidget {
     this.header,
     this.onBackTap,
     this.emptyChatPlaceholder,
+    this.messageWidgetCallback,
     this.attachments = IsmChatAttachmentType.values,
     this.features = IsmChatFeature.values,
     super.key,
@@ -23,6 +24,7 @@ class IsmChatPageView extends StatefulWidget {
   final double? height;
   final IsmChatHeader? header;
   final Widget? emptyChatPlaceholder;
+  final MessageWidgetCallback? messageWidgetCallback;
 
   /// It it an optional parameter which take List of `IsmChatAttachmentType` which is an enum.
   /// Pass in the types of attachments that you want to allow.
@@ -86,6 +88,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                   height: widget.height,
                   emptyChatPlaceholder: widget.emptyChatPlaceholder,
                   attachments: widget.attachments,
+                  messageWidgetCallback: widget.messageWidgetCallback,
                 ),
               )
             : _IsmChatPageView(
@@ -95,6 +98,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                 height: widget.height,
                 emptyChatPlaceholder: widget.emptyChatPlaceholder,
                 attachments: widget.attachments,
+                messageWidgetCallback: widget.messageWidgetCallback,
               ),
       );
 }
@@ -106,6 +110,7 @@ class _IsmChatPageView extends StatelessWidget {
     this.height,
     this.header,
     this.emptyChatPlaceholder,
+    this.messageWidgetCallback,
     this.attachments = IsmChatAttachmentType.values,
   });
 
@@ -115,6 +120,7 @@ class _IsmChatPageView extends StatelessWidget {
   final IsmChatHeader? header;
   final Widget? emptyChatPlaceholder;
   final List<IsmChatAttachmentType> attachments;
+  final MessageWidgetCallback? messageWidgetCallback;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
@@ -239,8 +245,8 @@ class _IsmChatPageView extends StatelessWidget {
                                     reverse: true,
                                     addAutomaticKeepAlives: true,
                                     itemCount: controller.messages.length,
-                                    itemBuilder: (_, index) =>
-                                        IsmChatMessage(index),
+                                    itemBuilder: (_, index) => IsmChatMessage(
+                                        index, messageWidgetCallback),
                                   ),
                                 ),
                               ),
