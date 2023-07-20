@@ -13,5 +13,5 @@ typedef ConversationStringCallback = String? Function(
   String,
 );
 
-typedef MessageWidgetCallback = Widget? Function(
+typedef MessageWidgetBuilder = Widget? Function(
     BuildContext, IsmChatMessageModel, IsmChatCustomMessageType, bool);

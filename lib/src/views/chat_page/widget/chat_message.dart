@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatMessage extends StatefulWidget {
-  IsmChatMessage(this.index, this.messageWidgetCallback, {super.key})
+  IsmChatMessage(this.index, this.messageWidgetBuilder, {super.key})
       : message =
             Get.find<IsmChatPageController>().messages.reversed.toList()[index];
 
   final IsmChatMessageModel message;
   final int index;
-  final MessageWidgetCallback? messageWidgetCallback;
-
+  final MessageWidgetBuilder? messageWidgetBuilder;
   @override
   State<IsmChatMessage> createState() => _IsmChatMessageState();
 }
@@ -132,7 +131,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                                 .chatTheme.chatPageTheme?.profileImageSize ??
                             30,
                       ),
-                      if (widget.messageWidgetCallback == null) ...[
+                      if (widget.messageWidgetBuilder == null) ...[
                         IsmChatDimens.boxWidth2,
                       ],
                     ],
@@ -140,14 +139,14 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                     message: widget.message,
                     showMessageInCenter: showMessageInCenter,
                     index: widget.index,
-                    messageWidgetCallback: widget.messageWidgetCallback,
+                    messageWidgetBuilder: widget.messageWidgetBuilder,
                   ),
                   if (theme?.selfMessageTheme?.showProfile != null)
                     if (theme?.selfMessageTheme?.showProfile == true &&
                         !isGroup &&
                         !showMessageInCenter &&
                         widget.message.sentByMe) ...[
-                      if (widget.messageWidgetCallback == null) ...[
+                      if (widget.messageWidgetBuilder == null) ...[
                         IsmChatDimens.boxWidth4,
                       ],
                       IsmChatImage.profile(
@@ -181,14 +180,14 @@ class _Message extends StatelessWidget {
     required this.message,
     required this.showMessageInCenter,
     required this.index,
-    this.messageWidgetCallback,
+    this.messageWidgetBuilder,
   }) : controller = Get.find<IsmChatPageController>();
 
   final IsmChatMessageModel message;
   final bool showMessageInCenter;
   final IsmChatPageController controller;
   final int index;
-  final MessageWidgetCallback? messageWidgetCallback;
+  final MessageWidgetBuilder? messageWidgetBuilder;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -226,7 +225,7 @@ class _Message extends StatelessWidget {
                   showMessageInCenter: showMessageInCenter,
                   message: message,
                   index: index,
-                  messageWidgetCallback: messageWidgetCallback,
+                  messageWidgetBuilder: messageWidgetBuilder,
                 ),
               ],
             ),
