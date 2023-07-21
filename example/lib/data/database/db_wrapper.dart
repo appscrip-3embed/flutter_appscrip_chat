@@ -28,6 +28,7 @@ class DBWrapper {
   static Future<DBWrapper> create([String? databaseName]) async {
     var dbName = databaseName ?? 'appscrip_chat_component_example';
     Directory? directory;
+
     if (!kIsWeb) {
       directory = await getApplicationDocumentsDirectory();
     }

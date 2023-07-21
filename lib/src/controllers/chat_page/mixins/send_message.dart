@@ -233,6 +233,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         readByAll: false,
         sentAt: sentAt,
         sentByMe: true,
+        isUploading: true,
       );
     }
 
@@ -340,6 +341,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
               readByAll: false,
               sentAt: sentAt,
               sentByMe: true,
+              isUploading: true,
             );
           } else {
             await Get.dialog(
@@ -480,6 +482,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           readByAll: false,
           sentAt: sentAt,
           sentByMe: true,
+          isUploading: true,
         );
       }
     }
@@ -573,30 +576,30 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
       final extension = nameWithExtension.split('.').last;
       imageMessage = IsmChatMessageModel(
-        body: 'Image',
-        conversationId: conversationId,
-        customType: IsmChatCustomMessageType.image,
-        attachments: [
-          AttachmentModel(
-              attachmentType: IsmChatMediaType.image,
-              thumbnailUrl: compressedFile.path,
-              size: double.parse(bytes.length.toString()),
-              name: nameWithExtension,
-              mimeType: 'image/jpeg',
-              mediaUrl: compressedFile.path,
-              mediaId: mediaId,
-              extension: extension)
-        ],
-        deliveredToAll: false,
-        messageId: '',
-        deviceId: _controller._deviceConfig.deviceId!,
-        messageType: IsmChatMessageType.normal,
-        messagingDisabled: false,
-        parentMessageId: '',
-        readByAll: false,
-        sentAt: sentAt,
-        sentByMe: true,
-      );
+          body: 'Image',
+          conversationId: conversationId,
+          customType: IsmChatCustomMessageType.image,
+          attachments: [
+            AttachmentModel(
+                attachmentType: IsmChatMediaType.image,
+                thumbnailUrl: compressedFile.path,
+                size: double.parse(bytes.length.toString()),
+                name: nameWithExtension,
+                mimeType: 'image/jpeg',
+                mediaUrl: compressedFile.path,
+                mediaId: mediaId,
+                extension: extension)
+          ],
+          deliveredToAll: false,
+          messageId: '',
+          deviceId: _controller._deviceConfig.deviceId!,
+          messageType: IsmChatMessageType.normal,
+          messagingDisabled: false,
+          parentMessageId: '',
+          readByAll: false,
+          sentAt: sentAt,
+          sentByMe: true,
+          isUploading: true);
     }
     if (!forwardMessgeForMulitpleUser) {
       _controller.messages.add(imageMessage);
@@ -667,6 +670,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       readByAll: false,
       sentAt: sentAt,
       sentByMe: true,
+      isUploading: true,
       metaData: IsmChatMetaData(
         locationAddress: locationName,
         locationSubAddress: locationSubName,

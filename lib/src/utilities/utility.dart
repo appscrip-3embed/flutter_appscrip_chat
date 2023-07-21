@@ -228,4 +228,16 @@ class IsmChatUtility {
     }
     return false;
   }
+
+  static Widget circularProgressBar(
+          [Color? backgroundColor, Color? animatedColor]) =>
+      DecoratedBox(
+        decoration: BoxDecoration(
+            color: backgroundColor?.withOpacity(.5),
+            borderRadius: BorderRadius.circular(15)),
+        child: CircularProgressIndicator(
+          backgroundColor: animatedColor,
+          valueColor: AlwaysStoppedAnimation(backgroundColor?.withOpacity(.5)),
+        ),
+      );
 }

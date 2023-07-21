@@ -7,10 +7,18 @@ class IsmChatImageMessage extends StatelessWidget {
   final IsmChatMessageModel message;
 
   @override
-  Widget build(BuildContext context) => IsmChatImage(
-        message.attachments?.first.mediaUrl ?? '',
-        isNetworkImage: message.attachments?.isNotEmpty ?? true
-            ? message.attachments?.first.mediaUrl?.isValidUrl ?? true
-            : false,
+  Widget build(BuildContext context) => Stack(
+        alignment: Alignment.center,
+        children: [
+          IsmChatImage(
+            message.attachments?.first.mediaUrl ?? '',
+            isNetworkImage: message.attachments?.isNotEmpty ?? true
+                ? message.attachments?.first.mediaUrl?.isValidUrl ?? true
+                : false,
+          ),
+          if (message.isUploading == true)
+            IsmChatUtility.circularProgressBar(
+                IsmChatColors.blackColor, IsmChatColors.whiteColor),
+        ],
       );
 }

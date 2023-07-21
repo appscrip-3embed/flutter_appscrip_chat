@@ -19,13 +19,10 @@ class IsmChatVideoMessage extends StatelessWidget {
             Icons.play_circle,
             size: IsmChatDimens.sixty,
             color: IsmChatColors.whiteColor,
-          )
+          ),
+          if (message.isUploading == true)
+            IsmChatUtility.circularProgressBar(
+                IsmChatColors.blackColor, IsmChatColors.whiteColor),
         ],
       );
-
-  //  Text(
-  //       message.attachments?.first.mediaUrl ?? '',
-  //       style: IsmChatStyles.w400Black12,
-  //     );
-  // IsmChatImage(message.attachments!.first.mediaUrl);
 }

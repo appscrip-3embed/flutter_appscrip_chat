@@ -10,130 +10,130 @@ class IsmChatMessageModel {
 
   factory IsmChatMessageModel.fromMap(Map<String, dynamic> map) {
     var model = IsmChatMessageModel(
-      body: map['body'] != null && (map['body'] as String).isNotEmpty
-          ? IsmChatUtility.decodePayload(map['body'] as String)
-          : '',
-      action: map['action'] as String? ?? '',
-      updatedAt: map['updatedAt'] as int? ?? 0,
-      sentAt: map['sentAt'] as int? ?? 0,
-      unreadMessagesCount: map['unreadMessagesCount'] as int? ?? 0,
-      userId: map['userId'] as String? ?? map['initiatorId'] as String? ?? '',
-      userName:
-          map['userName'] as String? ?? map['initiatorName'] as String? ?? '',
-      searchableTags: map['searchableTags'] != null
-          ? List<String>.from(map['searchableTags'] as List<dynamic>)
-          : [],
-      privateOneToOne: map['privateOneToOne'] as bool? ?? false,
-      showInConversation: map['showInConversation'] as bool? ?? true,
-      readByAll: map['readByAll'] as bool? ?? false,
-      senderInfo: map['senderInfo'] != null &&
-              (map['senderInfo'] as Map<String, dynamic>).keys.isNotEmpty
-          ? UserDetails.fromMap(map['senderInfo'] as Map<String, dynamic>)
-          : map['senderId'] != null
-              ? UserDetails(
-                  userProfileImageUrl: map['senderProfileImageUrl'] as String,
-                  userName: map['senderName'] as String,
-                  userIdentifier: map['senderIdentifier'] as String,
-                  userId: map['senderId'] as String,
-                  online: false,
-                  lastSeen: 0,
+        body: map['body'] != null && (map['body'] as String).isNotEmpty
+            ? IsmChatUtility.decodePayload(map['body'] as String)
+            : '',
+        action: map['action'] as String? ?? '',
+        updatedAt: map['updatedAt'] as int? ?? 0,
+        sentAt: map['sentAt'] as int? ?? 0,
+        unreadMessagesCount: map['unreadMessagesCount'] as int? ?? 0,
+        userId: map['userId'] as String? ?? map['initiatorId'] as String? ?? '',
+        userName:
+            map['userName'] as String? ?? map['initiatorName'] as String? ?? '',
+        searchableTags: map['searchableTags'] != null
+            ? List<String>.from(map['searchableTags'] as List<dynamic>)
+            : [],
+        privateOneToOne: map['privateOneToOne'] as bool? ?? false,
+        showInConversation: map['showInConversation'] as bool? ?? true,
+        readByAll: map['readByAll'] as bool? ?? false,
+        senderInfo: map['senderInfo'] != null &&
+                (map['senderInfo'] as Map<String, dynamic>).keys.isNotEmpty
+            ? UserDetails.fromMap(map['senderInfo'] as Map<String, dynamic>)
+            : map['senderId'] != null
+                ? UserDetails(
+                    userProfileImageUrl: map['senderProfileImageUrl'] as String,
+                    userName: map['senderName'] as String,
+                    userIdentifier: map['senderIdentifier'] as String,
+                    userId: map['senderId'] as String,
+                    online: false,
+                    lastSeen: 0,
+                  )
+                : null,
+        metaData: map['metaData'] != null
+            ? IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>)
+            : null,
+        messagingDisabled: map['messagingDisabled'] as bool? ?? false,
+        membersCount: map['membersCount'] as int? ?? 0,
+        lastReadAt: map['lastReadAt'].runtimeType == List
+            ? List<IsmChatLastReadAt>.from(map['lastReadAt'] as List<dynamic>)
+            : IsmChatLastReadAt.fromNetworkMap(
+                map['lastReadAt'] as Map<String, dynamic>? ?? {}),
+        attachments: map['attachments'] != null
+            ? (map['attachments'] as List<dynamic>)
+                .map((e) => AttachmentModel.fromMap(e as Map<String, dynamic>))
+                .toList()
+            : null,
+        lastMessageSentAt: map['lastMessageSentAt'] as int? ?? 0,
+        isGroup: map['isGroup'] as bool? ?? false,
+        deliveredToAll: map['deliveredToAll'] as bool? ?? false,
+        customType: map['customType'] != null
+            ? IsmChatCustomMessageType.fromMap(map['customType'])
+            : map['action'] != null
+                ? IsmChatCustomMessageType.fromAction(map['action'] as String)
+                : null,
+        createdByUserName: map['createdByUserName'] as String? ?? '',
+        createdByUserImageUrl: map['createdByUserImageUrl'] as String? ?? '',
+        createdBy: map['createdBy'] as String? ?? '',
+        conversationType: map['conversationType'] as int? ?? 0,
+        conversationTitle: map['conversationTitle'] as String?,
+        conversationImageUrl: map['conversationImageUrl'] as String?,
+        conversationId: map['conversationId'] as String? ?? '',
+        messageId: map['messageId'] as String? ?? '',
+        deviceId: map['deviceId'] as String? ?? '',
+        parentMessageId: map['parentMessageId'] as String? ?? '',
+        adminCount: map['adminCount'] as int? ?? 0,
+        messageType:
+            IsmChatMessageType.fromValue(map['messageType'] as int? ?? 0),
+        memberId: map['memberId'] as String?,
+        memberName: map['memberName'] as String?,
+        sentByMe: true,
+        mentionedUsers: map['mentionedUsers'] == null
+            ? []
+            : (map['mentionedUsers'] as List)
+                .map(
+                  (e) => UserDetails.fromMap(e as Map<String, dynamic>),
                 )
-              : null,
-      metaData: map['metaData'] != null
-          ? IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>)
-          : null,
-      messagingDisabled: map['messagingDisabled'] as bool? ?? false,
-      membersCount: map['membersCount'] as int? ?? 0,
-      lastReadAt: map['lastReadAt'].runtimeType == List
-          ? List<IsmChatLastReadAt>.from(map['lastReadAt'] as List<dynamic>)
-          : IsmChatLastReadAt.fromNetworkMap(
-              map['lastReadAt'] as Map<String, dynamic>? ?? {}),
-      attachments: map['attachments'] != null
-          ? (map['attachments'] as List<dynamic>)
-              .map((e) => AttachmentModel.fromMap(e as Map<String, dynamic>))
-              .toList()
-          : null,
-      lastMessageSentAt: map['lastMessageSentAt'] as int? ?? 0,
-      isGroup: map['isGroup'] as bool? ?? false,
-      deliveredToAll: map['deliveredToAll'] as bool? ?? false,
-      customType: map['customType'] != null
-          ? IsmChatCustomMessageType.fromMap(map['customType'])
-          : map['action'] != null
-              ? IsmChatCustomMessageType.fromAction(map['action'] as String)
-              : null,
-      createdByUserName: map['createdByUserName'] as String? ?? '',
-      createdByUserImageUrl: map['createdByUserImageUrl'] as String? ?? '',
-      createdBy: map['createdBy'] as String? ?? '',
-      conversationType: map['conversationType'] as int? ?? 0,
-      conversationTitle: map['conversationTitle'] as String?,
-      conversationImageUrl: map['conversationImageUrl'] as String?,
-      conversationId: map['conversationId'] as String? ?? '',
-      messageId: map['messageId'] as String? ?? '',
-      deviceId: map['deviceId'] as String? ?? '',
-      parentMessageId: map['parentMessageId'] as String? ?? '',
-      adminCount: map['adminCount'] as int? ?? 0,
-      messageType:
-          IsmChatMessageType.fromValue(map['messageType'] as int? ?? 0),
-      memberId: map['memberId'] as String?,
-      memberName: map['memberName'] as String?,
-      sentByMe: true,
-      mentionedUsers: map['mentionedUsers'] == null
-          ? []
-          : (map['mentionedUsers'] as List)
-              .map(
-                (e) => UserDetails.fromMap(e as Map<String, dynamic>),
-              )
-              .toList(),
-      initiatorId: map['initiatorId'] as String? ?? '',
-      initiatorName: map['initiatorName'] as String? ?? '',
-      members: map['members'] == null
-          ? []
-          : List<UserDetails>.from(
-              (map['members'] as List).map(
-                (e) => UserDetails.fromMap(e as Map<String, dynamic>),
-              ),
-            ),
-      deliveredTo: map['deliveredTo'] == null
-          ? []
-          : List<MessageStatus>.from(
-              (map['deliveredTo'] as List).map(
-                (e) {
-                  if (e.runtimeType == String) {
-                    return MessageStatus.fromJson(e as String);
-                  }
-                  return MessageStatus.fromMap(e as Map<String, dynamic>);
-                },
-              ),
-            ),
-      readBy: map['readBy'] == null
-          ? []
-          : List<MessageStatus>.from(
-              (map['readBy'] as List).map(
-                (e) {
-                  if (e.runtimeType == String) {
-                    return MessageStatus.fromJson(e as String);
-                  }
-                  return MessageStatus.fromMap(e as Map<String, dynamic>);
-                },
-              ),
-            ),
-      notificationTitle: map['notificationTitle'] as String? ?? '',
-      notificationBody: map['notificationBody'] as String? ?? '',
-      reactions: (map['reactions'].runtimeType == List)
-          ? (map['reactions'] as List)
-              .map((e) => MessageReactionModel.fromJson(e as String))
-              .toList()
-          : (map['reactions'] as Map<String, dynamic>?)
-              ?.keys
-              .map(
-                (e) => MessageReactionModel(
-                  emojiKey: e,
-                  userIds:
-                      (map['reactions'][e] as List<dynamic>).cast<String>(),
+                .toList(),
+        initiatorId: map['initiatorId'] as String? ?? '',
+        initiatorName: map['initiatorName'] as String? ?? '',
+        members: map['members'] == null
+            ? []
+            : List<UserDetails>.from(
+                (map['members'] as List).map(
+                  (e) => UserDetails.fromMap(e as Map<String, dynamic>),
                 ),
-              )
-              .toList(),
-    );
+              ),
+        deliveredTo: map['deliveredTo'] == null
+            ? []
+            : List<MessageStatus>.from(
+                (map['deliveredTo'] as List).map(
+                  (e) {
+                    if (e.runtimeType == String) {
+                      return MessageStatus.fromJson(e as String);
+                    }
+                    return MessageStatus.fromMap(e as Map<String, dynamic>);
+                  },
+                ),
+              ),
+        readBy: map['readBy'] == null
+            ? []
+            : List<MessageStatus>.from(
+                (map['readBy'] as List).map(
+                  (e) {
+                    if (e.runtimeType == String) {
+                      return MessageStatus.fromJson(e as String);
+                    }
+                    return MessageStatus.fromMap(e as Map<String, dynamic>);
+                  },
+                ),
+              ),
+        notificationTitle: map['notificationTitle'] as String? ?? '',
+        notificationBody: map['notificationBody'] as String? ?? '',
+        reactions: (map['reactions'].runtimeType == List)
+            ? (map['reactions'] as List)
+                .map((e) => MessageReactionModel.fromJson(e as String))
+                .toList()
+            : (map['reactions'] as Map<String, dynamic>?)
+                ?.keys
+                .map(
+                  (e) => MessageReactionModel(
+                    emojiKey: e,
+                    userIds:
+                        (map['reactions'][e] as List<dynamic>).cast<String>(),
+                  ),
+                )
+                .toList(),
+        isUploading: map['isUploading'] as bool? ?? false);
 
     return model.copyWith(
         customType: model.customType != null &&
@@ -201,6 +201,7 @@ class IsmChatMessageModel {
         notificationTitle: '',
         deliveredTo: [],
         readBy: [],
+        isUploading: false,
       );
 
   factory IsmChatMessageModel.fromMonth(int sentAt) => IsmChatMessageModel(
@@ -245,6 +246,7 @@ class IsmChatMessageModel {
         notificationTitle: '',
         readBy: [],
         deliveredTo: [],
+        isUploading: false,
       );
 
   IsmChatMessageModel({
@@ -293,6 +295,7 @@ class IsmChatMessageModel {
     this.notificationTitle,
     this.readBy,
     this.deliveredTo,
+    this.isUploading,
   });
 
   String body;
@@ -340,6 +343,7 @@ class IsmChatMessageModel {
   String? notificationTitle;
   List<MessageStatus>? readBy;
   List<MessageStatus>? deliveredTo;
+  bool? isUploading;
 
   String get chatName => conversationTitle ?? senderInfo?.userName ?? '';
 
@@ -396,6 +400,7 @@ class IsmChatMessageModel {
     String? notificationTitle,
     List<MessageStatus>? readBy,
     List<MessageStatus>? deliveredTo,
+    bool? isUploading,
   }) =>
       IsmChatMessageModel(
           body: body ?? this.body,
@@ -444,7 +449,8 @@ class IsmChatMessageModel {
           notificationBody: notificationBody ?? this.notificationBody,
           notificationTitle: notificationTitle ?? this.notificationTitle,
           readBy: readBy ?? this.readBy,
-          deliveredTo: deliveredTo ?? this.deliveredTo);
+          deliveredTo: deliveredTo ?? this.deliveredTo,
+          isUploading: isUploading ?? this.isUploading);
 
   Map<String, dynamic> toMap() => {
         'body': IsmChatUtility.encodePayload(body),
@@ -491,14 +497,15 @@ class IsmChatMessageModel {
         'notificationBody': notificationBody,
         'notificationTitle': notificationTitle,
         'readBy': readBy?.map((e) => e.toMap()).toList(),
-        'deliveredTo': deliveredTo?.map((e) => e.toMap()).toList()
+        'deliveredTo': deliveredTo?.map((e) => e.toMap()).toList(),
+        'isUploading': isUploading
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'IsmChatMessageModel(body: $body, action: $action, updatedAt: $updatedAt, sentAt: $sentAt, unreadMessagesCount: $unreadMessagesCount, userName: $userName, userId: $userId, searchableTags: $searchableTags, privateOneToOne: $privateOneToOne, showInConversation: $showInConversation, readByAll: $readByAll, senderInfo: $senderInfo, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, attachments: $attachments, lastMessageSentAt: $lastMessageSentAt, isGroup: $isGroup, deliveredToAll: $deliveredToAll, customType: $customType, createdByUserName: $createdByUserName, createdByUserImageUrl: $createdByUserImageUrl, createdBy: $createdBy, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, parentMessageId: $parentMessageId, initiatorId : $initiatorId  messageId: $messageId, deviceId: $deviceId, adminCount: $adminCount, messageType: $messageType, sentByMe: $sentByMe, mentionedUsers: $mentionedUsers, initiatorName : $initiatorName, members: $members, memberId: $memberId, memberName: $memberName, reactions : $reactions, readBy : $readBy, deliveredTo : $deliveredTo)';
+      'IsmChatMessageModel(body: $body, action: $action, updatedAt: $updatedAt, sentAt: $sentAt, unreadMessagesCount: $unreadMessagesCount, userName: $userName, userId: $userId, searchableTags: $searchableTags, privateOneToOne: $privateOneToOne, showInConversation: $showInConversation, readByAll: $readByAll, senderInfo: $senderInfo, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, attachments: $attachments, lastMessageSentAt: $lastMessageSentAt, isGroup: $isGroup, deliveredToAll: $deliveredToAll, customType: $customType, createdByUserName: $createdByUserName, createdByUserImageUrl: $createdByUserImageUrl, createdBy: $createdBy, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, parentMessageId: $parentMessageId, initiatorId : $initiatorId  messageId: $messageId, deviceId: $deviceId, adminCount: $adminCount, messageType: $messageType, sentByMe: $sentByMe, mentionedUsers: $mentionedUsers, initiatorName : $initiatorName, members: $members, memberId: $memberId, memberName: $memberName, reactions : $reactions, readBy : $readBy, deliveredTo : $deliveredTo, isUploading : $isUploading)';
 
   @override
   bool operator ==(Object other) {
@@ -546,6 +553,7 @@ class IsmChatMessageModel {
         other.memberName == memberName &&
         other.adminCount == adminCount &&
         other.reactions == reactions &&
+        other.isUploading == isUploading &&
         listEquals(other.readBy, readBy) &&
         listEquals(other.deliveredTo, deliveredTo);
   }
@@ -594,6 +602,7 @@ class IsmChatMessageModel {
       adminCount.hashCode ^
       reactions.hashCode ^
       deliveredTo.hashCode ^
+      isUploading.hashCode ^
       readBy.hashCode;
 }
 

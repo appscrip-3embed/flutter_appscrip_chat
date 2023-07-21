@@ -121,6 +121,7 @@ class IsmChatPageViewModel {
           }
           pendingMessage.messageId = messageId;
           pendingMessage.deliveredToAll = false;
+          pendingMessage.isUploading = false;
           chatPendingMessages.messages?.removeAt(x);
           await dbBox.saveConversation(
               conversation: chatPendingMessages, dbBox: IsmChatDbBox.pending);
@@ -154,8 +155,8 @@ class IsmChatPageViewModel {
             continue;
           }
           forwardMessage.messageId = messageId;
-
           forwardMessage.deliveredToAll = false;
+          forwardMessage.isUploading = false;
           chatForwardMessages.messages?.removeAt(x);
           await dbBox.saveConversation(
               conversation: chatForwardMessages, dbBox: IsmChatDbBox.forward);

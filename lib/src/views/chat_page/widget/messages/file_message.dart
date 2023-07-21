@@ -76,6 +76,12 @@ class IsmChatFileMessage extends StatelessWidget {
                   ),
                 ),
               ),
+              if (message.isUploading == true)
+                Align(
+                  alignment: Alignment.center,
+                  child: IsmChatUtility.circularProgressBar(
+                      IsmChatColors.blackColor, IsmChatColors.whiteColor),
+                )
             ],
           ),
         ),

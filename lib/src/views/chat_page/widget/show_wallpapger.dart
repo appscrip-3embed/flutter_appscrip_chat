@@ -41,7 +41,6 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                     IsmChatTapHandler(
                       onTap: () async {
                         IsmChatUtility.showLoader();
-
                         var assetList = conversationController
                                 .userDetails?.metaData?.assetList ??
                             [];
@@ -107,6 +106,8 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                   conversationController.backgroundImage.isEmpty
                       ? const IsmChatLoadingDialog()
                       : GridView.builder(
+                          cacheExtent: 999999,
+                          shrinkWrap: true,
                           padding: IsmChatDimens.edgeInsets10_0,
                           itemCount:
                               conversationController.backgroundImage.length + 1,
@@ -229,6 +230,7 @@ class _BackgroundImageState extends State<_BackgroundImage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
     return SizedBox(
       height: IsmChatDimens.hundred,
       width: IsmChatDimens.hundred,
@@ -237,6 +239,10 @@ class _BackgroundImageState extends State<_BackgroundImage>
         child: Image.asset(
           '${IsmChatAssets.backgroundImages}/${widget.image.path!}',
           fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            IsmChatLog.error(error, stackTrace);
+            return const SizedBox.shrink();
+          },
         ),
       ),
     );

@@ -14,26 +14,34 @@ class IsmChatAudioMessage extends StatelessWidget {
       color: message.sentByMe
           ? IsmChatConfig.chatTheme.primaryColor
           : IsmChatConfig.chatTheme.backgroundColor,
-      child: VoiceMessage(
-        audioSrc: url,
-        played: false,
-        me: message.sentByMe,
-        meBgColor: IsmChatConfig
-                .chatTheme.chatPageTheme?.selfMessageTheme?.backgroundColor ??
-            IsmChatConfig.chatTheme.primaryColor!,
-        mePlayIconColor: IsmChatConfig
-                .chatTheme.chatPageTheme?.selfMessageTheme?.backgroundColor ??
-            IsmChatConfig.chatTheme.primaryColor!,
-        contactBgColor: IsmChatConfig.chatTheme.chatPageTheme
-                ?.opponentMessageTheme?.backgroundColor ??
-            IsmChatConfig.chatTheme.backgroundColor!,
-        contactPlayIconColor: IsmChatConfig.chatTheme.chatPageTheme
-                ?.opponentMessageTheme?.backgroundColor ??
-            IsmChatConfig.chatTheme.backgroundColor!,
-        contactFgColor: IsmChatConfig
-                .chatTheme.chatPageTheme?.selfMessageTheme?.backgroundColor ??
-            IsmChatConfig.chatTheme.primaryColor!,
-        onPlay: () {},
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          VoiceMessage(
+            audioSrc: url,
+            played: false,
+            me: message.sentByMe,
+            meBgColor: IsmChatConfig.chatTheme.chatPageTheme?.selfMessageTheme
+                    ?.backgroundColor ??
+                IsmChatConfig.chatTheme.primaryColor!,
+            mePlayIconColor: IsmChatConfig.chatTheme.chatPageTheme
+                    ?.selfMessageTheme?.backgroundColor ??
+                IsmChatConfig.chatTheme.primaryColor!,
+            contactBgColor: IsmChatConfig.chatTheme.chatPageTheme
+                    ?.opponentMessageTheme?.backgroundColor ??
+                IsmChatConfig.chatTheme.backgroundColor!,
+            contactPlayIconColor: IsmChatConfig.chatTheme.chatPageTheme
+                    ?.opponentMessageTheme?.backgroundColor ??
+                IsmChatConfig.chatTheme.backgroundColor!,
+            contactFgColor: IsmChatConfig.chatTheme.chatPageTheme
+                    ?.selfMessageTheme?.backgroundColor ??
+                IsmChatConfig.chatTheme.primaryColor!,
+            onPlay: () {},
+          ),
+          if (message.isUploading == true)
+            IsmChatUtility.circularProgressBar(
+                IsmChatColors.blackColor, IsmChatColors.whiteColor),
+        ],
       ),
     );
   }

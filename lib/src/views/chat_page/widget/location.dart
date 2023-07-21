@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:geocode/geocode.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -237,34 +238,36 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                               ),
                               IsmChatDimens.boxWidth8,
                               IsmChatTapHandler(
-                                onTap: () {
-                                  controller.sendLocation(
-                                    conversationId: controller
-                                            .conversation?.conversationId ??
-                                        '',
-                                    userId: controller.conversation
-                                            ?.opponentDetails?.userId ??
-                                        '',
-                                    opponentName: controller.conversation
-                                            ?.opponentDetails?.userName ??
-                                        '',
-                                    latitude: controller.predictionList.first
-                                            .geometry?.location?.lat ??
-                                        0,
-                                    longitude: controller.predictionList.first
-                                            .geometry?.location?.lng ??
-                                        0,
-                                    placeId: controller
-                                            .predictionList.first.placeId ??
-                                        '',
-                                    locationName:
-                                        controller.predictionList.first.name ??
-                                            '',
-                                    locationSubName: controller
-                                            .predictionList.first.vicinity ??
-                                        '',
+                                onTap: () async {
+                                  IsmChatUtility.showLoader();
+                                  var addresses = await GeocodingPlatform
+                                      .instance
+                                      .placemarkFromCoordinates(
+                                    latLng!.latitude,
+                                    latLng!.longitude,
                                   );
-                                  Get.back<void>();
+                                  if (addresses.isNotEmpty) {
+                                    IsmChatLog.error(addresses.first);
+                                    controller.sendLocation(
+                                      conversationId: controller
+                                              .conversation?.conversationId ??
+                                          '',
+                                      userId: controller.conversation
+                                              ?.opponentDetails?.userId ??
+                                          '',
+                                      opponentName: controller.conversation
+                                              ?.opponentDetails?.userName ??
+                                          '',
+                                      latitude: latLng!.latitude,
+                                      longitude: latLng!.longitude,
+                                      placeId: '',
+                                      locationName: '${addresses.first.name}',
+                                      locationSubName:
+                                          '${addresses.first.subLocality} ${addresses.first.subAdministrativeArea}',
+                                    );
+                                    IsmChatUtility.closeLoader();
+                                    Get.back<void>();
+                                  }
                                 },
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -296,19 +299,21 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                             ),
                           )
                         ]
-                      ] else if (controller.predictionList.length == 1) ...[
-                        Column(
-                          children: [
-                            SizedBox(
-                              height: IsmChatDimens.hundred,
-                            ),
-                            Center(
-                              child: Text(IsmChatStrings.noDataFound,
-                                  style: IsmChatStyles.w500Black14),
-                            ),
-                          ],
-                        )
-                      ] else ...[
+                      ]
+                      // else if (controller.predictionList.length == 1) ...[
+                      //   Column(
+                      //     children: [
+                      //       SizedBox(
+                      //         height: IsmChatDimens.hundred,
+                      //       ),
+                      //       Center(
+                      //         child: Text(IsmChatStrings.noDataFound,
+                      //             style: IsmChatStyles.w500Black14),
+                      //       ),
+                      //     ],
+                      //   )
+                      // ]
+                      else ...[
                         ListView.builder(
                             shrinkWrap: true,
                             physics: const ScrollPhysics(),
@@ -316,9 +321,9 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                             itemCount: controller.predictionList.length,
                             itemBuilder: (context, index) {
                               var prediction = controller.predictionList[index];
-                              if (index == 0) {
-                                return const SizedBox.shrink();
-                              }
+                              // if (index == 0) {
+                              //   return const SizedBox.shrink();
+                              // }
                               return IsmChatTapHandler(
                                 onTap: () {
                                   controller.sendLocation(

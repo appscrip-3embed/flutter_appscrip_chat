@@ -73,10 +73,12 @@ class IsmChatDBWrapper {
         _pendingBox,
         _forwardBox,
       },
-      path: directory != null ? '${directory.path}/$dbName' : null,
+      // path: directory != null ? '${directory.path}/$dbName' : null,
     );
-    IsmChatLog.success(
-        '[CREATED] - Hive databse at ${directory?.path}/$dbName');
+    if (!kIsWeb) {
+      IsmChatLog.success(
+          '[CREATED] - Hive databse at ${directory?.path}/$dbName');
+    }
 
     var instance = IsmChatDBWrapper._create(collection);
     await instance._createBox();
