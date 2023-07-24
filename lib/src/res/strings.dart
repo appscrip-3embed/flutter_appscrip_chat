@@ -41,6 +41,8 @@ class IsmChatStrings {
   static const String blockedUsers = 'Blocked Users';
   static const String clearChat = 'Clear chat';
   static const String wallpaper = 'Wallpaper';
+  static const String newGroup = 'New Group';
+  static const String logout = 'Logout';
 
   static const String changeGroupTitle = 'Change group title';
   static const String changeGroupPhoto = 'Change group photo';

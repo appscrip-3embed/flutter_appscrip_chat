@@ -37,7 +37,7 @@ class AuthController extends GetxController {
 
     if (response.data != null) {
       await AppConfig.getUserData();
-      Get.offAllNamed(AppRoutes.chatList);
+      Get.offAllNamed(AppRoutes.webView);
     } else if (response.statusCode == 401) {
       Get.back();
       await Get.dialog(
@@ -154,7 +154,7 @@ class AuthController extends GetxController {
         await _viewModel.postCreateUser(isLoading: true, createUser: creatUser);
     if (response.data != null) {
       await AppConfig.getUserData();
-      Get.offAllNamed(AppRoutes.chatList);
+      Get.offAllNamed(AppRoutes.webView);
     } else if (response.statusCode == 409) {
       Get.back();
       await Get.dialog(

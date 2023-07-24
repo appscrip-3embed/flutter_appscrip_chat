@@ -6,4 +6,5 @@ export 'icon_and_text.dart';
 export 'input_field.dart';
 export 'loading_dialog.dart';
 export 'no_message.dart';
+export 'responsive_builder_view.dart';
 export 'tap_handler.dart';

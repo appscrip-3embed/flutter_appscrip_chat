@@ -31,6 +31,7 @@ class IsmChatApp extends StatelessWidget {
     this.emptyConversationPlaceholder,
     this.allowDelete = false,
     this.useDataBase = true,
+    this.showSearch = true,
   }) {
     assert(IsmChatConfig.isInitialized,
         'ChatHiveBox is not initialized\nYou are getting this error because the Database class is not initialized, to initialize ChatHiveBox class call AppscripChatComponent.initialize() before your runApp()');
@@ -121,6 +122,7 @@ class IsmChatApp extends StatelessWidget {
 
   final bool showAppBar;
   final VoidCallback? onSignOut;
+  final bool showSearch;
 
   final bool allowDelete;
 
@@ -296,6 +298,38 @@ class IsmChatApp extends StatelessWidget {
     if (!Get.isRegistered<IsmChatConversationsController>()) {
       IsmChatConversationsBinding().dependencies();
     }
+    if (!Get.isRegistered<IsmChatPageController>()) {
+      IsmChatPageBinding().dependencies();
+    }
+    var controller = Get.find<IsmChatConversationsController>();
+    controller.navigateToMessages(ismChatConversation);
+    (onNavigateToChat ?? IsmChatConfig.onChatTap)
+        .call(Get.context!, ismChatConversation);
+  }
+
+  /// This function can be used to directly go to chatting page and start chatting from chat list for web chat
+  ///
+  /// Follow the following steps :-
+  /// 1. Navigate to the Screen/View where `IsmChatApp` is used as the root widget for `Chat` module
+  /// 2. Call this function by providing all the required data (must add `await` keyword as this is a Future)
+  ///
+  /// * `ismChatConversation` - Conversation of the user coming from backend APIs (`Required`)
+  /// * `duration` - The duration for which the loading dialog will be displayed, this is to make sure all the controllers and variables are initialized before executing any statement and/or calling the APIs for data. (default `Duration(milliseconds: 500)`)
+  /// * `onNavigateToChat` - This function will be executed to navigate to the specific chat screen of the selected user. If not provided, the `onChatTap` callback will be used which is passed to `IsmChatApp`.
+  /// * `isLoading` - This variable will be executed to show loading to the specific chat screen of the selected user. If not provided, the `onChatTap` callback will be used which is passed to `defalut false`.
+  static Future<void> chatFromChatListWithConversation(
+      {required IsmChatConversationModel ismChatConversation,
+      void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
+      Duration duration = const Duration(milliseconds: 500),
+      bool isLoading = false}) async {
+    await Get.delete<IsmChatPageController>(force: true);
+    if (isLoading) IsmChatUtility.showLoader();
+    await Future.delayed(duration);
+    if (isLoading) IsmChatUtility.closeLoader();
+
+    if (!Get.isRegistered<IsmChatPageController>()) {
+      IsmChatPageBinding().dependencies();
+    }
     var controller = Get.find<IsmChatConversationsController>();
     controller.navigateToMessages(ismChatConversation);
     (onNavigateToChat ?? IsmChatConfig.onChatTap)
@@ -318,6 +352,7 @@ class IsmChatApp extends StatelessWidget {
         onCreateChatTap: onCreateChatTap,
         showCreateChatIcon: showCreateChatIcon,
         showAppBar: showAppBar,
+        showSearch: showSearch,
         onSignOut: onSignOut,
         isGroupChatEnabled: enableGroupChat,
         createChatIcon: createChatIcon,

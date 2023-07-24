@@ -51,8 +51,24 @@ class ChatList extends StatelessWidget {
         ),
         showAppBar: true,
         onSignOut: controller.onSignOut,
-        onChatTap: (_, __) => RouteManagement.goToChatMessages(),
+        showSearch: false,
+        onChatTap: (_, conversation) async {
+          if (Responsive.isWeb(context) || Responsive.isTablet(context)) {
+            if (controller.conversationId != conversation.conversationId) {
+              IsmChatApp.chatFromChatListWithConversation(
+                ismChatConversation: conversation,
+                isLoading: false,
+                duration: const Duration(milliseconds: 100),
+              );
+            }
+            controller.conversationId = conversation.conversationId!;
+            controller.update();
+          } else {
+            RouteManagement.goToChatMessages();
+          }
+        },
         showCreateChatIcon: true,
+
         onCreateChatTap: RouteManagement.goToUserList,
         enableGroupChat: true,
         allowDelete: true,

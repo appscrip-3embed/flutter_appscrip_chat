@@ -98,8 +98,8 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
 
   @override
   void initState() {
-    super.initState();
     IsmChatConversationsBinding().dependencies();
+    super.initState();
   }
 
   @override

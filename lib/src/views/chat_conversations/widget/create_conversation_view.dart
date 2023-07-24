@@ -21,19 +21,20 @@ class IsmChatCreateConversationView extends StatelessWidget {
         width: double.infinity,
         alignment: Alignment.centerLeft,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Text(
               susTag,
               textScaleFactor: 1.5,
               style: IsmChatStyles.w600Black14,
             ),
-            SizedBox(
-                width: IsmChatDimens.percentWidth(.7),
-                child: Divider(
-                  height: .0,
-                  indent: IsmChatDimens.ten,
-                ))
+            if (!Responsive.isWebAndTablet(Get.context!))
+              SizedBox(
+                  width: IsmChatDimens.percentWidth(.8),
+                  child: Divider(
+                    height: .0,
+                    indent: IsmChatDimens.ten,
+                  ))
           ],
         ),
       );

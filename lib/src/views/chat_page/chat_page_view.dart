@@ -59,6 +59,16 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
 
   IsmChatPageController get controller => Get.find<IsmChatPageController>();
 
+  @override
+  void didUpdateWidget(IsmChatPageView oldWidget) {
+    if (Get.isRegistered<IsmChatPageController>()) {
+      if (widget.header != oldWidget.header) {
+        controller.strtInit();
+      }
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
   Future<bool> navigateBack() async {
     if (controller.isMessageSeleted) {
       controller.isMessageSeleted = false;

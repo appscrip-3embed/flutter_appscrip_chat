@@ -4,6 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class Dimens {
   const Dimens._();
 
+  /// Get the height with the percent value of the screen height.
+  static double percentHeight(double percentValue) => percentValue.sh;
+
+  /// Get the width with the percent value of the screen width.
+  static double percentWidth(double percentValue) => percentValue.sw;
+
   static final double eight = 8.sp;
   static final double ten = 10.sp;
   static final double sixTeen = 16.sp;

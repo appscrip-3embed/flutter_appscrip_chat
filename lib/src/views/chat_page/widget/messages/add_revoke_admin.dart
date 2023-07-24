@@ -17,19 +17,21 @@ class IsmChatAddRevokeAdmin extends StatelessWidget {
   //         : message.memberName!;
 
   @override
-  Widget build(BuildContext context) => Container(
-        decoration: BoxDecoration(
-          color: IsmChatConfig.chatTheme.backgroundColor,
-          borderRadius: BorderRadius.circular(IsmChatDimens.eight),
-        ),
-        padding: IsmChatDimens.edgeInsets8_4,
-        child: Text(
-          '${message.initiator} ${isAdded ? 'added' : 'removed'} you as an Admin'
-              .trim(), //'${message.initiator} ${isAdded ? 'added' : 'removed'} $_user ${isAdded ? 'as' : 'as an '} Admin'.trim()
+  Widget build(BuildContext context) => Center(
+        child: Container(
+          decoration: BoxDecoration(
+            color: IsmChatConfig.chatTheme.backgroundColor,
+            borderRadius: BorderRadius.circular(IsmChatDimens.eight),
+          ),
+          padding: IsmChatDimens.edgeInsets8_4,
+          child: Text(
+            '${message.initiator} ${isAdded ? 'added' : 'removed'} you as an Admin'
+                .trim(), //'${message.initiator} ${isAdded ? 'added' : 'removed'} $_user ${isAdded ? 'as' : 'as an '} Admin'.trim()
 
-          textAlign: TextAlign.center,
-          style: IsmChatStyles.w500Black12.copyWith(
-            color: IsmChatConfig.chatTheme.primaryColor,
+            textAlign: TextAlign.center,
+            style: IsmChatStyles.w500Black12.copyWith(
+              color: IsmChatConfig.chatTheme.primaryColor,
+            ),
           ),
         ),
       );

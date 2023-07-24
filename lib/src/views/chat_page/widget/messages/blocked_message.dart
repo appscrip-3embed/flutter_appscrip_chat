@@ -18,16 +18,19 @@ class IsmChatBlockedMessage extends StatelessWidget {
           var text = ismMqttController.userId == message.initiatorId
               ? 'You $status this user'
               : 'You are $status';
-          return Container(
-            decoration: BoxDecoration(
-              color: IsmChatConfig.chatTheme.backgroundColor,
-              borderRadius: BorderRadius.circular(IsmChatDimens.eight),
-            ),
-            padding: IsmChatDimens.edgeInsets8_4,
-            child: Text(
-              text,
-              style: IsmChatStyles.w500Black12.copyWith(
-                color: IsmChatConfig.chatTheme.primaryColor,
+          return Center(
+            child: Container(
+              decoration: BoxDecoration(
+                color: IsmChatConfig.chatTheme.backgroundColor,
+                borderRadius: BorderRadius.circular(IsmChatDimens.eight),
+              ),
+              padding: IsmChatDimens.edgeInsets8_4,
+              child: Text(
+                text,
+                style: IsmChatStyles.w500Black12.copyWith(
+                  color: IsmChatConfig.chatTheme.primaryColor,
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
           );

@@ -1,5 +1,6 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -24,6 +25,7 @@ class IsmChatConversations extends StatefulWidget {
     this.subtitleBuilder,
     this.isSlidableEnable,
     this.emptyConversationPlaceholder,
+    this.showSearch = true,
     super.key,
   });
 
@@ -37,6 +39,7 @@ class IsmChatConversations extends StatefulWidget {
   final VoidCallback? onCreateChatTap;
   final bool showCreateChatIcon;
   final Widget? createChatIcon;
+  final bool showSearch;
 
   final bool allowDelete;
 
@@ -68,7 +71,16 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
     if (!Get.isRegistered<IsmChatMqttController>()) {
       IsmChatMqttBinding().dependencies();
     }
+    startInit();
     super.initState();
+  }
+
+  startInit() {
+    if (Get.isRegistered<IsmChatConversationsController>()) {
+      Get.find<IsmChatConversationsController>();
+    } else {
+      IsmChatConversationsBinding().dependencies();
+    }
   }
 
   @override
@@ -77,6 +89,8 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
             ? IsmChatListHeader(
                 onSignOut: widget.onSignOut!,
                 onSearchTap: widget.onChatTap,
+                showSearch: widget.showSearch,
+                isGroupChatEnabled: widget.isGroupChatEnabled,
               )
             : null,
         body: SafeArea(
@@ -96,7 +110,7 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
             emptyConversationPlaceholder: widget.emptyConversationPlaceholder,
           ),
         ),
-        floatingActionButton: widget.showCreateChatIcon
+        floatingActionButton: widget.showCreateChatIcon && !kIsWeb
             ? IsmChatStartChatFAB(
                 icon: widget.createChatIcon,
                 onTap: () {
@@ -112,6 +126,15 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
                     );
                   }
                 },
+              )
+            : null,
+        drawer: Get.isRegistered<IsmChatConversationsController>()
+            ? Obx(
+                () => Get.find<IsmChatConversationsController>().isTapGroup
+                    ? IsmChatCreateConversationView(
+                        isGroupConversation: true,
+                      )
+                    : IsmChatCreateConversationView(),
               )
             : null,
       );

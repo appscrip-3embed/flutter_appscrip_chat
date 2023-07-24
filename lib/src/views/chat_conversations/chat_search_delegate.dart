@@ -57,76 +57,80 @@ class IsmChatSearchDelegate extends SearchDelegate<void> {
                 ),
               ),
             )
-          : ListView.builder(
-              itemCount: _controller.suggestions.length,
-              itemBuilder: (_, index) {
-                var conversation = _controller.suggestions[index];
-                return GestureDetector(
-                  onTap: () {
-                    _controller.navigateToMessages(conversation);
-                    onChatTap(_, conversation);
-                  },
-                  child: IsmChatConversationCard(
-                    _controller.suggestions[index],
-                    nameBuilder: (_, __, name) {
-                      if (!name.didMatch(query)) {
-                        return null;
-                      }
-                      var before = name.substring(
-                          0, name.toLowerCase().indexOf(query.toLowerCase()));
-                      var match = name.substring(
-                          before.length, before.length + query.length);
-                      var after = name.substring(before.length + match.length);
-                      return RichText(
-                        text: TextSpan(
-                          text: before,
-                          style: IsmChatStyles.w600Black14,
-                          children: [
-                            TextSpan(
-                              text: match,
-                              style: TextStyle(
-                                  color: IsmChatConfig.chatTheme.primaryColor),
-                            ),
-                            TextSpan(
-                              text: after,
-                            ),
-                          ],
-                        ),
-                      );
+          : SizedBox(
+              child: ListView.builder(
+                itemCount: _controller.suggestions.length,
+                itemBuilder: (_, index) {
+                  var conversation = _controller.suggestions[index];
+                  return GestureDetector(
+                    onTap: () {
+                      _controller.navigateToMessages(conversation);
+                      onChatTap(_, conversation);
                     },
-                    subtitleBuilder: (_, __, msg) {
-                      if (!msg.didMatch(query)) {
-                        return null;
-                      }
-                      var before = msg.substring(
-                          0, msg.toLowerCase().indexOf(query.toLowerCase()));
-                      var match = msg.substring(
-                          before.length, before.length + query.length);
-                      var after = msg.substring(before.length + match.length);
-                      return RichText(
-                        text: TextSpan(
-                          text: before,
-                          style: IsmChatStyles.w400Black12,
-                          children: [
-                            TextSpan(
-                              text: match,
-                              style: TextStyle(
-                                color: IsmChatConfig.chatTheme.primaryColor,
-                                fontWeight: FontWeight.w600,
+                    child: IsmChatConversationCard(
+                      _controller.suggestions[index],
+                      nameBuilder: (_, __, name) {
+                        if (!name.didMatch(query)) {
+                          return null;
+                        }
+                        var before = name.substring(
+                            0, name.toLowerCase().indexOf(query.toLowerCase()));
+                        var match = name.substring(
+                            before.length, before.length + query.length);
+                        var after =
+                            name.substring(before.length + match.length);
+                        return RichText(
+                          text: TextSpan(
+                            text: before,
+                            style: IsmChatStyles.w600Black14,
+                            children: [
+                              TextSpan(
+                                text: match,
+                                style: TextStyle(
+                                    color:
+                                        IsmChatConfig.chatTheme.primaryColor),
                               ),
-                            ),
-                            TextSpan(
-                              text: after,
-                            ),
-                          ],
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      );
-                    },
-                  ),
-                );
-              },
+                              TextSpan(
+                                text: after,
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      subtitleBuilder: (_, __, msg) {
+                        if (!msg.didMatch(query)) {
+                          return null;
+                        }
+                        var before = msg.substring(
+                            0, msg.toLowerCase().indexOf(query.toLowerCase()));
+                        var match = msg.substring(
+                            before.length, before.length + query.length);
+                        var after = msg.substring(before.length + match.length);
+                        return RichText(
+                          text: TextSpan(
+                            text: before,
+                            style: IsmChatStyles.w400Black12,
+                            children: [
+                              TextSpan(
+                                text: match,
+                                style: TextStyle(
+                                  color: IsmChatConfig.chatTheme.primaryColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              TextSpan(
+                                text: after,
+                              ),
+                            ],
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
     );
   }

@@ -359,6 +359,35 @@ class IsmChatPageController extends GetxController
 
   @override
   void onInit() async {
+    strtInit();
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    if (areCamerasInitialized) {
+      _frontCameraController.dispose();
+      _backCameraController.dispose();
+    }
+    conversationDetailsApTimer?.cancel();
+    messagesScrollController.dispose();
+    ifTimerMounted();
+    super.onClose();
+  }
+
+  @override
+  void dispose() {
+    if (areCamerasInitialized) {
+      _frontCameraController.dispose();
+      _backCameraController.dispose();
+    }
+    conversationDetailsApTimer?.cancel();
+    messagesScrollController.dispose();
+    ifTimerMounted();
+    super.dispose();
+  }
+
+  void strtInit() async {
     _generateReactionList();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
@@ -395,31 +424,6 @@ class IsmChatPageController extends GetxController
         showEmojiBoard = false;
       }
     });
-    super.onInit();
-  }
-
-  @override
-  void onClose() {
-    if (areCamerasInitialized) {
-      _frontCameraController.dispose();
-      _backCameraController.dispose();
-    }
-    conversationDetailsApTimer?.cancel();
-    messagesScrollController.dispose();
-    ifTimerMounted();
-    super.onClose();
-  }
-
-  @override
-  void dispose() {
-    if (areCamerasInitialized) {
-      _frontCameraController.dispose();
-      _backCameraController.dispose();
-    }
-    conversationDetailsApTimer?.cancel();
-    messagesScrollController.dispose();
-    ifTimerMounted();
-    super.dispose();
   }
 
   _generateReactionList() async {

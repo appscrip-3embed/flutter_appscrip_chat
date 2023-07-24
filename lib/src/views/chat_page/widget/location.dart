@@ -247,7 +247,6 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                     latLng!.longitude,
                                   );
                                   if (addresses.isNotEmpty) {
-                                    IsmChatLog.error(addresses.first);
                                     controller.sendLocation(
                                       conversationId: controller
                                               .conversation?.conversationId ??

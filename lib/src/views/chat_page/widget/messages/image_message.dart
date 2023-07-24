@@ -10,11 +10,16 @@ class IsmChatImageMessage extends StatelessWidget {
   Widget build(BuildContext context) => Stack(
         alignment: Alignment.center,
         children: [
-          IsmChatImage(
-            message.attachments?.first.mediaUrl ?? '',
-            isNetworkImage: message.attachments?.isNotEmpty ?? true
-                ? message.attachments?.first.mediaUrl?.isValidUrl ?? true
-                : false,
+          SizedBox(
+            height: Responsive.isWebAndTablet(context)
+                ? IsmChatDimens.percentHeight(.3)
+                : null,
+            child: IsmChatImage(
+              message.attachments?.first.mediaUrl ?? '',
+              isNetworkImage: message.attachments?.isNotEmpty ?? true
+                  ? message.attachments?.first.mediaUrl?.isValidUrl ?? true
+                  : false,
+            ),
           ),
           if (message.isUploading == true)
             IsmChatUtility.circularProgressBar(

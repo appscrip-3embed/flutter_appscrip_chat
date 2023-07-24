@@ -1,3 +1,4 @@
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/controllers/controllers.dart';
 import 'package:chat_component_example/res/dimens.dart';
 import 'package:chat_component_example/res/res.dart';
@@ -29,44 +30,53 @@ class LoginView extends StatelessWidget {
           key: controller.loginFormKey,
           child: Padding(
             padding: Dimens.edgeInsets16,
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(Strings.email),
-                Dimens.boxHeight8,
-                InputField.email(controller: controller.emailController),
-                Dimens.boxHeight16,
-                Text(Strings.password),
-                Dimens.boxHeight8,
-                InputField.password(
-                    suffixIcon: IconButton(
-                      icon: Icon(!controller.isPassward
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined),
-                      onPressed: () {
-                        controller.isPassward = !controller.isPassward;
-                      },
+            child: Center(
+              child: SizedBox(
+                // alignment: Alignment.center,
+                width: ResponsiveExample.isWebAndTablet(context)
+                    ? Dimens.percentWidth(.3)
+                    : null,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(Strings.email),
+                    Dimens.boxHeight8,
+                    InputField.email(controller: controller.emailController),
+                    Dimens.boxHeight16,
+                    Text(Strings.password),
+                    Dimens.boxHeight8,
+                    InputField.password(
+                        suffixIcon: IconButton(
+                          icon: Icon(!controller.isPassward
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined),
+                          onPressed: () {
+                            controller.isPassward = !controller.isPassward;
+                          },
+                        ),
+                        obscureText: controller.isPassward,
+                        obscureCharacter: '*',
+                        controller: controller.passwordController),
+                    Dimens.boxHeight32,
+                    Button(
+                        onTap: controller.validateLogin, label: Strings.login),
+                    const SizedBox(
+                      height: 20,
                     ),
-                    obscureText: controller.isPassward,
-                    obscureCharacter: '*',
-                    controller: controller.passwordController),
-                Dimens.boxHeight32,
-                Button(onTap: controller.validateLogin, label: Strings.login),
-                const SizedBox(
-                  height: 20,
+                    Center(
+                      child: InkWell(
+                        onTap: RouteManagement.goToSignPage,
+                        child: Text(
+                          Strings.signUp,
+                          style: const TextStyle(
+                              color: AppColors.primaryColorLight),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-                Center(
-                  child: InkWell(
-                    onTap: RouteManagement.goToSignPage,
-                    child: Text(
-                      Strings.signUp,
-                      style:
-                          const TextStyle(color: AppColors.primaryColorLight),
-                    ),
-                  ),
-                )
-              ],
+              ),
             ),
           ),
         ),

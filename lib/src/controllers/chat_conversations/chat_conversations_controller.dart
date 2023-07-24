@@ -5,6 +5,7 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -87,9 +88,11 @@ class IsmChatConversationsController extends GetxController {
 
   final RxBool _showSearchField = false.obs;
   bool get showSearchField => _showSearchField.value;
-  set showSearchField(bool value) {
-    _showSearchField.value = value;
-  }
+  set showSearchField(bool value) => _showSearchField.value = value;
+
+  final RxBool _isTapGroup = false.obs;
+  bool get isTapGroup => _isTapGroup.value;
+  set isTapGroup(bool value) => _isTapGroup.value = value;
 
   List<Emoji> reactions = [];
 
@@ -407,29 +410,32 @@ class IsmChatConversationsController extends GetxController {
     var user = await _viewModel.getUserData(isLoading: isLoading);
     if (user != null) {
       userDetails = user;
-      if (userDetails?.metaData?.assetList?.isNotEmpty == true) {
-        final assetList = userDetails?.metaData?.assetList?.toList() ?? [];
-        final indexOfAsset = assetList
-            .indexWhere((e) => e.values.first.srNoBackgroundAssset == 100);
-        if (indexOfAsset != -1) {
-          final pathName =
-              assetList[indexOfAsset].values.first.imageUrl!.split('/').last;
-          var filePath = await IsmChatUtility.makeDirectoryWithUrl(
-              urlPath: assetList[indexOfAsset].values.first.imageUrl ?? '',
-              fileName: pathName);
-          assetList[indexOfAsset] = {
-            '${assetList[indexOfAsset].keys}': IsmChatBackgroundModel(
-              color: assetList[indexOfAsset].values.first.color,
-              isImage: assetList[indexOfAsset].values.first.isImage,
-              imageUrl: filePath.path,
-              srNoBackgroundAssset:
-                  assetList[indexOfAsset].values.first.srNoBackgroundAssset,
-            )
-          };
+      if (!kIsWeb) {
+        if (userDetails?.metaData?.assetList?.isNotEmpty == true) {
+          final assetList = userDetails?.metaData?.assetList?.toList() ?? [];
+          final indexOfAsset = assetList
+              .indexWhere((e) => e.values.first.srNoBackgroundAssset == 100);
+          if (indexOfAsset != -1) {
+            final pathName =
+                assetList[indexOfAsset].values.first.imageUrl!.split('/').last;
+            var filePath = await IsmChatUtility.makeDirectoryWithUrl(
+                urlPath: assetList[indexOfAsset].values.first.imageUrl ?? '',
+                fileName: pathName);
+            assetList[indexOfAsset] = {
+              '${assetList[indexOfAsset].keys}': IsmChatBackgroundModel(
+                color: assetList[indexOfAsset].values.first.color,
+                isImage: assetList[indexOfAsset].values.first.isImage,
+                imageUrl: filePath.path,
+                srNoBackgroundAssset:
+                    assetList[indexOfAsset].values.first.srNoBackgroundAssset,
+              )
+            };
+          }
+          userDetails = userDetails?.copyWith(
+              metaData: userDetails?.metaData?.copyWith(assetList: assetList));
         }
-        userDetails = userDetails?.copyWith(
-            metaData: userDetails?.metaData?.copyWith(assetList: assetList));
       }
+
       await IsmChatConfig.dbWrapper?.userDetailsBox
           .put(IsmChatStrings.userData, userDetails!.toJson());
     }

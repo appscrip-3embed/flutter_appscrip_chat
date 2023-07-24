@@ -122,8 +122,10 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                     )
                                   : controller.conversation!.isGroup == true
                                       ? SizedBox(
-                                          width:
-                                              IsmChatDimens.percentWidth(.55),
+                                          width: Responsive.isWebAndTablet(
+                                                  context)
+                                              ? null
+                                              : IsmChatDimens.percentWidth(.55),
                                           child: Text(
                                             controller.conversation?.members
                                                             ?.isEmpty ==

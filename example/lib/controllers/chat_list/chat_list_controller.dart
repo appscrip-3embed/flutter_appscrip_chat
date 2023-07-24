@@ -15,6 +15,12 @@ class ChatListController extends GetxController {
 
   UserDetailsModel userDetails = UserDetailsModel();
 
+  final RxString _conversationId = ''.obs;
+  String get conversationId => _conversationId.value;
+  set conversationId(String value) {
+    _conversationId.value = value;
+  }
+
   @override
   void onInit() {
     userDetails = AppConfig.userDetail!;

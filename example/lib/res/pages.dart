@@ -26,6 +26,11 @@ class AppPages {
       binding: ChatConversationBinding(),
     ),
     GetPage(
+      name: WebChatView.route,
+      page: WebChatView.new,
+      binding: ChatConversationBinding(),
+    ),
+    GetPage(
       name: UserListPageView.route,
       page: UserListPageView.new,
       binding: ChatConversationBinding(),
