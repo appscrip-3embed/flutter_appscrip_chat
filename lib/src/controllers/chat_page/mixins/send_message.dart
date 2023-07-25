@@ -247,6 +247,11 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await IsmChatConfig.dbWrapper!
           .saveMessage(audioMessage, IsmChatDbBox.forward);
     }
+
+    if (Responsive.isWebAndTablet(Get.context!)) {
+      _controller.updateLastMessagOnCurrentTime(audioMessage);
+    }
+
     var notificationTitle =
         IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
             ? IsmChatConfig.communicationConfig.userConfig.userName
@@ -312,11 +317,14 @@ mixin IsmChatPageSendMessageMixin on GetxController {
               searchableTags: [opponentName]);
         }
         for (var x in result!.files) {
-          var sizeMedia = await IsmChatUtility.fileToSize(File(x.path!));
+          var sizeMedia = kIsWeb
+              ? IsmChatUtility.formatBytes(
+                  int.parse(x.bytes!.length.toString()),
+                )
+              : await IsmChatUtility.fileToSize(File(x.path!));
           if (sizeMedia.size()) {
             bytes = x.bytes;
-            nameWithExtension = x.path!.split('/').last;
-            final extension = nameWithExtension.split('.').last;
+            nameWithExtension = x.name;
             documentMessage = IsmChatMessageModel(
               body: 'Document',
               conversationId: conversationId,
@@ -324,13 +332,13 @@ mixin IsmChatPageSendMessageMixin on GetxController {
               attachments: [
                 AttachmentModel(
                     attachmentType: IsmChatMediaType.file,
-                    thumbnailUrl: x.path,
+                    thumbnailUrl: kIsWeb ? '' : x.path,
                     size: double.parse(x.bytes!.length.toString()),
                     name: nameWithExtension,
-                    mimeType: extension,
-                    mediaUrl: x.path,
+                    mimeType: x.extension,
+                    mediaUrl: kIsWeb ? x.bytes.toString() : x.path,
                     mediaId: sentAt.toString(),
-                    extension: extension)
+                    extension: x.extension)
               ],
               deliveredToAll: false,
               messageId: '',
@@ -366,6 +374,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         await IsmChatConfig.dbWrapper!
             .saveMessage(documentMessage, IsmChatDbBox.forward);
       }
+      if (Responsive.isWebAndTablet(Get.context!)) {
+        _controller.updateLastMessagOnCurrentTime(documentMessage);
+      }
+
       var notificationTitle =
           IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
               ? IsmChatConfig.communicationConfig.userConfig.userName
@@ -501,6 +513,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await IsmChatConfig.dbWrapper!
           .saveMessage(videoMessage!, IsmChatDbBox.forward);
     }
+    if (Responsive.isWebAndTablet(Get.context!)) {
+      _controller.updateLastMessagOnCurrentTime(videoMessage);
+    }
     var notificationTitle =
         IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
             ? IsmChatConfig.communicationConfig.userConfig.userName
@@ -612,6 +627,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await IsmChatConfig.dbWrapper!
           .saveMessage(imageMessage, IsmChatDbBox.forward);
     }
+    if (Responsive.isWebAndTablet(Get.context!)) {
+      _controller.updateLastMessagOnCurrentTime(imageMessage);
+    }
     var notificationTitle =
         IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
             ? IsmChatConfig.communicationConfig.userConfig.userName
@@ -687,6 +705,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     } else {
       await IsmChatConfig.dbWrapper!
           .saveMessage(textMessage, IsmChatDbBox.forward);
+    }
+    if (Responsive.isWebAndTablet(Get.context!)) {
+      _controller.updateLastMessagOnCurrentTime(textMessage);
     }
     var notificationTitle =
         IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
@@ -779,6 +800,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     } else {
       await IsmChatConfig.dbWrapper!
           .saveMessage(textMessage, IsmChatDbBox.forward);
+    }
+    if (Responsive.isWebAndTablet(Get.context!)) {
+      _controller.updateLastMessagOnCurrentTime(textMessage);
     }
     var notificationTitle =
         IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty

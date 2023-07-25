@@ -117,14 +117,14 @@ class _MoreIcon extends StatelessWidget {
           Icons.more_vert_rounded,
           color: IsmChatConfig.chatTheme.primaryColor,
         ),
-        onSelected: (index) {
+        onSelected: (index) async {
           if (index == 1) {
             if (Responsive.isWebAndTablet(context)) {
               Get.find<IsmChatConversationsController>().isTapBlockUserList =
                   true;
               Scaffold.of(context).openDrawer();
             } else {
-              IsmChatUtility.openFullScreenBottomSheet(
+              await IsmChatUtility.openFullScreenBottomSheet(
                 const IsmChatBlockedUsersView(),
               );
             }
@@ -134,7 +134,18 @@ class _MoreIcon extends StatelessWidget {
                 false;
             Scaffold.of(context).openDrawer();
           } else if (index == 3) {
-            onSignOut?.call();
+            await Get.dialog(IsmChatAlertDialogBox(
+              title: '${IsmChatStrings.logout}?',
+              content: const Text('Are you sure you want to logout'),
+              actionLabels: const [
+                IsmChatStrings.logout,
+              ],
+              callbackActions: [
+                () {
+                  onSignOut?.call();
+                },
+              ],
+            ));
           }
         },
         itemBuilder: (_) => [

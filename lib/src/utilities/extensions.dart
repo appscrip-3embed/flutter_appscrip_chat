@@ -809,13 +809,14 @@ extension MentionMessage on IsmChatMessageModel {
 }
 
 extension SizeOfMedia on String {
-  bool size({double limit = 20}) {
+  bool size({double limit = 20.0}) {
     if (split(' ').last == 'KB') {
       return true;
     }
-    if (double.parse(split(' ').first) >= limit) {
+    if (double.parse(split(' ').first).round() <= limit) {
       return true;
     }
+
     return false;
   }
 }

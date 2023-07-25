@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/controllers/mqtt/clients/mobile_client.dart'
     if (dart.library.html) 'clients/web_client.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -141,7 +142,9 @@ class IsmChatMqttController extends GetxController {
         actionStreamController.add(payload);
       } else {
         var message = IsmChatMessageModel.fromMap(payload);
-        _handleLocalNotification(message);
+        if (!kIsWeb) {
+          _handleLocalNotification(message);
+        }
         _handleMessage(message);
       }
     });
@@ -261,8 +264,11 @@ class IsmChatMqttController extends GetxController {
     }
 
     // To handle and show last message & unread count in conversation list
+
     conversation = conversation.copyWith(
-      unreadMessagesCount: (conversation.unreadMessagesCount ?? 0) + 1,
+      unreadMessagesCount: Responsive.isWebAndTablet(Get.context!)
+          ? 0
+          : (conversation.unreadMessagesCount ?? 0) + 1,
       lastMessageDetails: conversation.lastMessageDetails?.copyWith(
         sentByMe: message.sentByMe,
         showInConversation: true,

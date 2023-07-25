@@ -820,6 +820,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.8.0"
+  image_picker_web:
+    dependency: transitive
+    description:
+      name: image_picker_web
+      sha256: "1185be1cf3cf2ccd99be3f2fd451647147fe512f09db0aad894438ab95a984eb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0+1"
   image_picker_windows:
     dependency: transitive
     description:

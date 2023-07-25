@@ -149,4 +149,33 @@ mixin IsmChatPageGetMessageMixin {
     var response = await _controller._viewModel.getReacton(reaction: reaction);
     _controller.userReactionList = response ?? [];
   }
+
+  void updateLastMessagOnCurrentTime(IsmChatMessageModel message) async {
+    var conversationController = Get.find<IsmChatConversationsController>();
+    var conversation = await IsmChatConfig.dbWrapper!
+        .getConversation(conversationId: message.conversationId);
+
+    if (conversation == null) {
+      return;
+    }
+
+    conversation = conversation.copyWith(
+      unreadMessagesCount: 0,
+      lastMessageDetails: conversation.lastMessageDetails?.copyWith(
+        sentByMe: message.sentByMe,
+        showInConversation: true,
+        sentAt: message.sentAt,
+        senderName: message.senderInfo?.userName,
+        messageType: message.messageType?.value ?? 0,
+        messageId: message.messageId ?? '',
+        conversationId: message.conversationId ?? '',
+        body: message.body,
+        customType: message.customType,
+        action: '',
+      ),
+    );
+
+    await IsmChatConfig.dbWrapper!.saveConversation(conversation: conversation);
+    unawaited(conversationController.getConversationsFromDB());
+  }
 }

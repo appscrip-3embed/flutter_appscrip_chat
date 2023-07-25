@@ -135,28 +135,24 @@ class IsmChatMessageModel {
                 .toList(),
         isUploading: map['isUploading'] as bool? ?? false);
 
-    return model.copyWith(
-        customType: model.customType != null &&
-                model.customType != IsmChatCustomMessageType.text
-            ? model.customType
-            : IsmChatCustomMessageType.withBody(model.body),
-        sentByMe: model.senderInfo != null
-            ? model.senderInfo!.userId ==
-                IsmChatConfig.communicationConfig.userConfig.userId
-            : model.memberId != null
-                ? IsmChatConfig.communicationConfig.userConfig.userId ==
-                        model.memberId
-                    ? false
-                    : true
-                : true
+    if (IsmChatConfig.configInitilized) {
+      model = model.copyWith(
+          customType: model.customType != null &&
+                  model.customType != IsmChatCustomMessageType.text
+              ? model.customType
+              : IsmChatCustomMessageType.withBody(model.body),
+          sentByMe: model.senderInfo != null
+              ? model.senderInfo!.userId ==
+                  IsmChatConfig.communicationConfig.userConfig.userId
+              : model.memberId != null
+                  ? IsmChatConfig.communicationConfig.userConfig.userId ==
+                          model.memberId
+                      ? false
+                      : true
+                  : true);
+    }
 
-        //  ? model.senderInfo!.userIdentifier.contains('.')
-        //     ? model.senderInfo!.userId ==
-        //         IsmChatConfig.communicationConfig.userConfig.userId
-        //     : model.senderInfo!.userIdentifier ==
-        //         IsmChatConfig.communicationConfig.userConfig.userId
-        // : true,
-        );
+    return model;
   }
 
   factory IsmChatMessageModel.fromDate(int sentAt) => IsmChatMessageModel(

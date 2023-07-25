@@ -20,3 +20,4 @@ export 'show_user_reaction.dart';
 export 'show_wallpapger.dart';
 export 'user_info.dart';
 export 'wallpaper_preview.dart';
+export 'web_media_preview.dart';

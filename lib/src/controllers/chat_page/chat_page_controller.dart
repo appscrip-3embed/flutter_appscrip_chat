@@ -10,6 +10,7 @@ import 'package:camera/camera.dart';
 import 'package:dio/dio.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
@@ -293,9 +294,11 @@ class IsmChatPageController extends GetxController
 
   final RxBool _isActionAllowed = false.obs;
   bool get isActionAllowed => _isActionAllowed.value;
-  set isActionAllowed(bool value) {
-    _isActionAllowed.value = value;
-  }
+  set isActionAllowed(bool value) => _isActionAllowed.value = value;
+
+  final RxList<PlatformFile> _webMedia = <PlatformFile>[].obs;
+  RxList<PlatformFile> get webMedia => _webMedia;
+  set webMedia(List<PlatformFile> value) => _webMedia.value = value;
 
   bool didReactedLast = false;
 
@@ -359,35 +362,6 @@ class IsmChatPageController extends GetxController
 
   @override
   void onInit() async {
-    strtInit();
-    super.onInit();
-  }
-
-  @override
-  void onClose() {
-    if (areCamerasInitialized) {
-      _frontCameraController.dispose();
-      _backCameraController.dispose();
-    }
-    conversationDetailsApTimer?.cancel();
-    messagesScrollController.dispose();
-    ifTimerMounted();
-    super.onClose();
-  }
-
-  @override
-  void dispose() {
-    if (areCamerasInitialized) {
-      _frontCameraController.dispose();
-      _backCameraController.dispose();
-    }
-    conversationDetailsApTimer?.cancel();
-    messagesScrollController.dispose();
-    ifTimerMounted();
-    super.dispose();
-  }
-
-  void strtInit() async {
     _generateReactionList();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
@@ -424,6 +398,33 @@ class IsmChatPageController extends GetxController
         showEmojiBoard = false;
       }
     });
+    scrollListener();
+    unawaited(updateUnreadMessgaeCount());
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    if (areCamerasInitialized) {
+      _frontCameraController.dispose();
+      _backCameraController.dispose();
+    }
+    conversationDetailsApTimer?.cancel();
+    messagesScrollController.dispose();
+    ifTimerMounted();
+    super.onClose();
+  }
+
+  @override
+  void dispose() {
+    if (areCamerasInitialized) {
+      _frontCameraController.dispose();
+      _backCameraController.dispose();
+    }
+    conversationDetailsApTimer?.cancel();
+    messagesScrollController.dispose();
+    ifTimerMounted();
+    super.dispose();
   }
 
   _generateReactionList() async {
@@ -562,7 +563,9 @@ class IsmChatPageController extends GetxController
         break;
       case IsmChatAttachmentType.gallery:
         listOfAssetsPath.clear();
-        await Get.to<void>(const IsmChatMediaiAssetsPage());
+        kIsWeb
+            ? getMediaWithWeb()
+            : await Get.to<void>(const IsmChatMediaiAssetsPage());
         break;
       case IsmChatAttachmentType.document:
         sendDocument(
@@ -573,6 +576,21 @@ class IsmChatPageController extends GetxController
       case IsmChatAttachmentType.location:
         await Get.to<void>(const IsmChatLocationWidget());
         break;
+    }
+  }
+
+  void getMediaWithWeb() async {
+    final result = await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        type: FileType.custom,
+        allowedExtensions: [
+          ...IsmChatConstants.imageExtensions,
+          ...IsmChatConstants.videoExtensions
+        ],
+        allowCompression: true,
+        withData: true);
+    if (result!.files.isNotEmpty) {
+      webMedia = result.files;
     }
   }
 
@@ -668,6 +686,7 @@ class IsmChatPageController extends GetxController
         getMessagesFromAPI(forPagination: true, lastMessageTimestamp: 0);
       }
       toggleEmojiBoard(false, false);
+
       if (Get.height * 0.3 < messagesScrollController.offset) {
         showDownSideButton = true;
       } else {
@@ -974,6 +993,20 @@ class IsmChatPageController extends GetxController
         Get.find<IsmChatMqttController>().getChatConversationsUnreadCount());
   }
 
+  Future<void> updateUnreadMessgaeCount() async {
+    var chatConversationController = Get.find<IsmChatConversationsController>();
+    var chatConversation = await IsmChatConfig.dbWrapper!
+        .getConversation(conversationId: conversation?.conversationId ?? '');
+    if (chatConversation != null) {
+      chatConversation = chatConversation.copyWith(
+        unreadMessagesCount: 0,
+      );
+      await IsmChatConfig.dbWrapper!
+          .saveConversation(conversation: chatConversation);
+      await chatConversationController.getConversationsFromDB();
+    }
+  }
+
   Future<void> cropImage(File file) async {
     final croppedFile = await ImageCropper().cropImage(
       sourcePath: file.path,
@@ -1000,8 +1033,12 @@ class IsmChatPageController extends GetxController
 
   void takePhoto() async {
     var file = await cameraController.takePicture();
+
+    // await Get.dialog(Image.network(file.path));
+
     imagePath = File(file.path);
     fileSize = await IsmChatUtility.fileToSize(imagePath!);
+
     await Get.to(const IsmChatImageEditView());
   }
 

@@ -49,7 +49,7 @@ class LastMessageDetails {
         reactionType: map['reactionType'] as String? ?? '',
         userId: map['userId'] as String? ?? '',
         action: map['action'] as String? ?? '');
-    details.copyWith(
+    details = details.copyWith(
       sentByMe: details.senderId.isNotEmpty
           ? details.senderId ==
               IsmChatConfig.communicationConfig.userConfig.userId

@@ -1,17 +1,28 @@
+import 'dart:convert';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
-class IsmChatFileMessage extends StatelessWidget {
+class IsmChatFileMessage extends StatefulWidget {
   const IsmChatFileMessage(this.message, {super.key});
 
   final IsmChatMessageModel message;
 
   @override
+  State<IsmChatFileMessage> createState() => _IsmChatFileMessageState();
+}
+
+class _IsmChatFileMessageState extends State<IsmChatFileMessage> {
+  final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
+
+  @override
   Widget build(BuildContext context) => Container(
         width: context.width * 0.6,
+        height: kIsWeb ? context.height * 0.2 : null,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(IsmChatDimens.ten),
         ),
@@ -21,27 +32,61 @@ class IsmChatFileMessage extends StatelessWidget {
           child: Stack(
             alignment: Alignment.bottomCenter,
             children: [
-              if (message.attachments?.first.mediaUrl?.isNotEmpty == true)
+              if (widget.message.attachments?.first.mediaUrl?.isNotEmpty ==
+                  true)
                 AbsorbPointer(
-                  child: SfPdfViewer.network(
-                    message.attachments?.first.mediaUrl ?? '',
-                    enableDoubleTapZooming: false,
-                    canShowHyperlinkDialog: false,
-                    canShowPaginationDialog: false,
-                    canShowScrollHead: false,
-                    enableTextSelection: false,
-                    canShowPasswordDialog: false,
-                    canShowScrollStatus: false,
-                    enableDocumentLinkAnnotation: false,
-                    enableHyperlinkNavigation: false,
-                  ),
+                  child: widget.message.attachments?.first.mediaUrl!
+                              .isValidUrl ==
+                          true
+                      ? SfPdfViewer.network(
+                          key: _pdfViewerKey,
+                          widget.message.attachments?.first.mediaUrl ?? '',
+                          enableDoubleTapZooming: false,
+                          canShowHyperlinkDialog: false,
+                          canShowPaginationDialog: false,
+                          canShowScrollHead: false,
+                          enableTextSelection: false,
+                          canShowPasswordDialog: false,
+                          canShowScrollStatus: false,
+                          enableDocumentLinkAnnotation: false,
+                          enableHyperlinkNavigation: false,
+                        )
+                      : kIsWeb
+                          ? SfPdfViewer.memory(
+                              Uint8List.fromList(List.from(json.decode(
+                                  widget.message.attachments?.first.mediaUrl ??
+                                      '') as List)),
+                              key: _pdfViewerKey,
+                              enableDoubleTapZooming: false,
+                              canShowHyperlinkDialog: false,
+                              canShowPaginationDialog: false,
+                              canShowScrollHead: false,
+                              enableTextSelection: false,
+                              canShowPasswordDialog: false,
+                              canShowScrollStatus: false,
+                              enableDocumentLinkAnnotation: false,
+                              enableHyperlinkNavigation: false,
+                            )
+                          : SfPdfViewer.asset(
+                              key: _pdfViewerKey,
+                              widget.message.attachments?.first.mediaUrl ?? '',
+                              enableDoubleTapZooming: false,
+                              canShowHyperlinkDialog: false,
+                              canShowPaginationDialog: false,
+                              canShowScrollHead: false,
+                              enableTextSelection: false,
+                              canShowPasswordDialog: false,
+                              canShowScrollStatus: false,
+                              enableDocumentLinkAnnotation: false,
+                              enableHyperlinkNavigation: false,
+                            ),
                 ),
               Container(
                 height: context.width * 0.15,
                 width: double.maxFinite,
-                color: message.backgroundColor,
+                color: widget.message.backgroundColor,
                 child: Container(
-                  color: (message.sentByMe
+                  color: (widget.message.sentByMe
                           ? IsmChatColors.whiteColor
                           : IsmChatColors.greyColor)
                       .withOpacity(0.2),
@@ -61,12 +106,12 @@ class IsmChatFileMessage extends StatelessWidget {
                       IsmChatDimens.boxWidth4,
                       Flexible(
                         child: Text(
-                          message.attachments?.first.name ?? '',
-                          style: (message.sentByMe
+                          widget.message.attachments?.first.name ?? '',
+                          style: (widget.message.sentByMe
                                   ? IsmChatStyles.w400White12
                                   : IsmChatStyles.w400Black12)
                               .copyWith(
-                            color: message.style.color,
+                            color: widget.message.style.color,
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -76,7 +121,7 @@ class IsmChatFileMessage extends StatelessWidget {
                   ),
                 ),
               ),
-              if (message.isUploading == true)
+              if (widget.message.isUploading == true)
                 Align(
                   alignment: Alignment.center,
                   child: IsmChatUtility.circularProgressBar(

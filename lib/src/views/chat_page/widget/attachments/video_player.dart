@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
@@ -32,9 +33,11 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
   @override
   void initState() {
     chatPageController.isVideoVisible = true;
-    _controller = widget.path.contains('http')
-        ? VideoPlayerController.network(widget.path)
-        : VideoPlayerController.file(File(widget.path))
+    _controller = kIsWeb
+        ? VideoPlayerController.asset(widget.path)
+        : widget.path.isValidUrl
+            ? VideoPlayerController.network(widget.path)
+            : VideoPlayerController.file(File(widget.path))
       ..addListener(() {
         setState(() {});
       })
