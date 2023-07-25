@@ -25,7 +25,7 @@ class IsmChatMessageField extends StatelessWidget {
 
           return Row(
             mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               if (controller.isEnableRecordingAudio) ...[
                 Expanded(
@@ -53,6 +53,29 @@ class IsmChatMessageField extends StatelessWidget {
                   ),
                 ),
               ] else ...[
+                if (Responsive.isWebAndTablet(context)) ...[
+                  IsmChatDimens.boxWidth8,
+                  Container(
+                    margin: IsmChatDimens.edgeInsetsBottom4,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: IsmChatConfig.chatTheme.primaryColor,
+                    ),
+                    child: const _EmojiButton(IsmChatColors.whiteColor),
+                  ),
+                  IsmChatDimens.boxWidth8,
+                  if (attachments.isNotEmpty)
+                    Container(
+                      margin: IsmChatDimens.edgeInsetsBottom4,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: IsmChatConfig.chatTheme.primaryColor,
+                      ),
+                      child: _AttachmentIcon(
+                          attachments, IsmChatColors.whiteColor),
+                    ),
+                  IsmChatDimens.boxWidth2,
+                ],
                 Expanded(
                   child: Container(
                     margin: IsmChatDimens.edgeInsets4
@@ -89,8 +112,13 @@ class IsmChatMessageField extends StatelessWidget {
                                   filled: true,
                                   fillColor: header?.backgroundColor ??
                                       IsmChatConfig.chatTheme.backgroundColor,
-                                  contentPadding: IsmChatDimens.edgeInsets4,
-                                  prefixIcon: const _EmojiButton(),
+                                  contentPadding:
+                                      Responsive.isWebAndTablet(context)
+                                          ? IsmChatDimens.edgeInsets12
+                                          : IsmChatDimens.edgeInsets8,
+                                  prefixIcon: Responsive.isWebAndTablet(context)
+                                      ? null
+                                      : const _EmojiButton(null),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(
                                         IsmChatDimens.twenty),
@@ -121,8 +149,10 @@ class IsmChatMessageField extends StatelessWidget {
                                 // },
                               ),
                             ),
-                            if (attachments.isNotEmpty)
-                              _AttachmentIcon(attachments)
+                            if (attachments.isNotEmpty &&
+                                !Responsive.isWebAndTablet(context)) ...[
+                              _AttachmentIcon(attachments, null)
+                            ]
                           ],
                         ),
                       ],
@@ -205,12 +235,14 @@ class _ReplyMessage extends StatelessWidget {
 }
 
 class _EmojiButton extends StatelessWidget {
-  const _EmojiButton();
+  const _EmojiButton(this.color);
+
+  final Color? color;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
         builder: (controller) => IconButton(
-          color: IsmChatConfig.chatTheme.primaryColor,
+          color: color ?? IsmChatConfig.chatTheme.primaryColor,
           icon: AnimatedSwitcher(
             duration: IsmChatConfig.animationDuration,
             transitionBuilder: (child, animation) => ScaleTransition(
@@ -237,7 +269,7 @@ class _MicOrSendButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        margin: IsmChatDimens.edgeInsetsBottom10,
+        margin: IsmChatDimens.edgeInsetsBottom8,
         height: IsmChatDimens.inputFieldHeight,
         child: AspectRatio(
           aspectRatio: 1,
@@ -352,9 +384,10 @@ class _MicOrSendButton extends StatelessWidget {
 }
 
 class _AttachmentIcon extends GetView<IsmChatPageController> {
-  const _AttachmentIcon(this.attachments);
+  const _AttachmentIcon(this.attachments, this.color);
 
   final List<IsmChatAttachmentType> attachments;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) => IconButton(
@@ -370,7 +403,7 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
             );
           }
         },
-        color: IsmChatConfig.chatTheme.primaryColor,
+        color: color ?? IsmChatConfig.chatTheme.primaryColor,
         icon: const Icon(Icons.attach_file_rounded),
       );
 }

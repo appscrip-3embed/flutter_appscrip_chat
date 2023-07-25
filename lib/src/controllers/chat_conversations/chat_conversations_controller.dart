@@ -94,6 +94,10 @@ class IsmChatConversationsController extends GetxController {
   bool get isTapGroup => _isTapGroup.value;
   set isTapGroup(bool value) => _isTapGroup.value = value;
 
+  final RxBool _isTapBlockUserList = false.obs;
+  bool get isTapBlockUserList => _isTapBlockUserList.value;
+  set isTapBlockUserList(bool value) => _isTapBlockUserList.value = value;
+
   List<Emoji> reactions = [];
 
   final debounce = IsmChatDebounce();

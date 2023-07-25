@@ -81,19 +81,27 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
           ),
           actions: [
             if (showSearch) _SearchAction(onTap: onSearchTap),
-            IconButton(
-                onPressed: () {
-                  Get.find<IsmChatConversationsController>().isTapGroup = false;
-                  Scaffold.of(context).openDrawer();
-                },
-                icon: Icon(
-                  Icons.message_rounded,
-                  color: IsmChatConfig.chatTheme.primaryColor,
-                )),
+            if (kIsWeb) const _StartMessage(),
             _MoreIcon(onSignOut),
           ],
         ),
       );
+}
+
+class _StartMessage extends StatelessWidget {
+  const _StartMessage();
+
+  @override
+  Widget build(BuildContext context) => IconButton(
+      onPressed: () {
+        Get.find<IsmChatConversationsController>().isTapGroup = false;
+        Get.find<IsmChatConversationsController>().isTapBlockUserList = false;
+        Scaffold.of(context).openDrawer();
+      },
+      icon: Icon(
+        Icons.message_rounded,
+        color: IsmChatConfig.chatTheme.primaryColor,
+      ));
 }
 
 class _MoreIcon extends StatelessWidget {
@@ -111,11 +119,19 @@ class _MoreIcon extends StatelessWidget {
         ),
         onSelected: (index) {
           if (index == 1) {
-            IsmChatUtility.openFullScreenBottomSheet(
-              const IsmChatBlockedUsersView(),
-            );
+            if (Responsive.isWebAndTablet(context)) {
+              Get.find<IsmChatConversationsController>().isTapBlockUserList =
+                  true;
+              Scaffold.of(context).openDrawer();
+            } else {
+              IsmChatUtility.openFullScreenBottomSheet(
+                const IsmChatBlockedUsersView(),
+              );
+            }
           } else if (index == 2) {
             Get.find<IsmChatConversationsController>().isTapGroup = true;
+            Get.find<IsmChatConversationsController>().isTapBlockUserList =
+                false;
             Scaffold.of(context).openDrawer();
           } else if (index == 3) {
             onSignOut?.call();
@@ -150,19 +166,21 @@ class _MoreIcon extends StatelessWidget {
               ],
             ),
           ),
-          PopupMenuItem(
-            value: 3,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.logout_outlined,
-                  color: IsmChatConfig.chatTheme.primaryColor,
-                ),
-                IsmChatDimens.boxWidth8,
-                const Text(IsmChatStrings.logout),
-              ],
+          if (kIsWeb) ...[
+            PopupMenuItem(
+              value: 3,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.logout_outlined,
+                    color: IsmChatConfig.chatTheme.primaryColor,
+                  ),
+                  IsmChatDimens.boxWidth8,
+                  const Text(IsmChatStrings.logout),
+                ],
+              ),
             ),
-          ),
+          ]
         ],
       );
 }

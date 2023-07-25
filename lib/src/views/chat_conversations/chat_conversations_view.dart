@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/views/chat_conversations/widget/blocked_users.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -130,11 +131,14 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
             : null,
         drawer: Get.isRegistered<IsmChatConversationsController>()
             ? Obx(
-                () => Get.find<IsmChatConversationsController>().isTapGroup
-                    ? IsmChatCreateConversationView(
-                        isGroupConversation: true,
-                      )
-                    : IsmChatCreateConversationView(),
+                () => Get.find<IsmChatConversationsController>()
+                        .isTapBlockUserList
+                    ? const IsmChatBlockedUsersView()
+                    : Get.find<IsmChatConversationsController>().isTapGroup
+                        ? IsmChatCreateConversationView(
+                            isGroupConversation: true,
+                          )
+                        : IsmChatCreateConversationView(),
               )
             : null,
       );

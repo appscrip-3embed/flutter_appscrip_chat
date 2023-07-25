@@ -36,7 +36,7 @@ class Responsive extends StatelessWidget {
       MediaQuery.of(context).size.width >= 1500;
 
   static bool isWebAndTablet(BuildContext context) =>
-      Responsive.isWeb(context) || Responsive.isTablet(context);
+      isWeb(context) || isTablet(context);
 
   // static const layoutKey = Key('layout-builder-key');
   // static const containerKey = Key('container-key');

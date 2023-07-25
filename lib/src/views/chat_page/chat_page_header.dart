@@ -38,19 +38,24 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                 )),
           ),
           child: AppBar(
+            leadingWidth: Responsive.isWebAndTablet(context)
+                ? IsmChatDimens.twenty
+                : null,
             shadowColor: header?.shadowColors,
             surfaceTintColor:
                 header?.backgroundColor ?? IsmChatConfig.chatTheme.primaryColor,
-            leading: IsmChatTapHandler(
-              onTap: () async {
-                Get.back<void>();
-                await controller.updateLastMessage();
-                if (onBackTap != null) {
-                  onBackTap!.call();
-                }
-              },
-              child: const Icon(Icons.arrow_back_rounded),
-            ),
+            leading: !Responsive.isWebAndTablet(context)
+                ? IsmChatTapHandler(
+                    onTap: () async {
+                      Get.back<void>();
+                      await controller.updateLastMessage();
+                      if (onBackTap != null) {
+                        onBackTap!.call();
+                      }
+                    },
+                    child: const Icon(Icons.arrow_back_rounded),
+                  )
+                : const SizedBox.shrink(),
             titleSpacing: IsmChatDimens.two,
             centerTitle: false,
             shape: header?.shape,

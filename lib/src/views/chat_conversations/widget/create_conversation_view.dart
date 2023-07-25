@@ -241,10 +241,21 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                   );
 
                                   Get.back<void>();
-                                  controller
-                                      .navigateToMessages(ismChatConversation);
-                                  (onChatTap ?? IsmChatConfig.onChatTap)
-                                      .call(_, ismChatConversation);
+                                  if (Responsive.isWebAndTablet(context)) {
+                                    await IsmChatApp
+                                        .chatFromChatListWithConversation(
+                                      ismChatConversation: ismChatConversation,
+                                      isLoading: false,
+                                      duration: const Duration(
+                                        milliseconds: 100,
+                                      ),
+                                    );
+                                  } else {
+                                    controller.navigateToMessages(
+                                        ismChatConversation);
+                                    (onChatTap ?? IsmChatConfig.onChatTap)
+                                        .call(_, ismChatConversation);
+                                  }
                                 }
                               },
                               child: Column(
@@ -451,10 +462,21 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                       .forwardedList.selectedUsers.length,
                                 );
                                 Get.back<void>();
-                                controller
-                                    .navigateToMessages(ismChatConversation);
-                                (onChatTap ?? IsmChatConfig.onChatTap)
-                                    .call(context, ismChatConversation);
+                                if (Responsive.isWebAndTablet(context)) {
+                                  await IsmChatApp
+                                      .chatFromChatListWithConversation(
+                                    ismChatConversation: ismChatConversation,
+                                    isLoading: false,
+                                    duration: const Duration(
+                                      milliseconds: 100,
+                                    ),
+                                  );
+                                } else {
+                                  controller
+                                      .navigateToMessages(ismChatConversation);
+                                  (onChatTap ?? IsmChatConfig.onChatTap)
+                                      .call(context, ismChatConversation);
+                                }
                               },
                             ),
                             IsmChatDimens.boxWidth8,
