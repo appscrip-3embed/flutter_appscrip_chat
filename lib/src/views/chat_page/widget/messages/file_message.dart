@@ -53,9 +53,9 @@ class _IsmChatFileMessageState extends State<IsmChatFileMessage> {
                         )
                       : kIsWeb
                           ? SfPdfViewer.memory(
-                              Uint8List.fromList(List.from(json.decode(
-                                  widget.message.attachments?.first.mediaUrl ??
-                                      '') as List)),
+                              widget.message.attachments?.first.mediaUrl!
+                                      .strigToUnit8List ??
+                                  Uint8List(0),
                               key: _pdfViewerKey,
                               enableDoubleTapZooming: false,
                               canShowHyperlinkDialog: false,

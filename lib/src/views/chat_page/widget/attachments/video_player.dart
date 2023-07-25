@@ -1,5 +1,8 @@
 import 'dart:io';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
+    if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -33,11 +36,16 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
   @override
   void initState() {
     chatPageController.isVideoVisible = true;
+
     _controller = kIsWeb
-        ? VideoPlayerController.asset(widget.path)
+        ? VideoPlayerController.network(
+            IsmChatBlob.blobToUrl(widget.path.strigToUnit8List),
+          )
         : widget.path.isValidUrl
             ? VideoPlayerController.network(widget.path)
-            : VideoPlayerController.file(File(widget.path))
+            : VideoPlayerController.file(
+                File(widget.path),
+              )
       ..addListener(() {
         setState(() {});
       })
@@ -57,9 +65,13 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
     if (widget.path != oldWidget.path) {
       chatPageController.isVideoVisible = true;
       _controller.pause();
-      _controller = widget.path.contains('http')
-          ? VideoPlayerController.network(widget.path)
-          : VideoPlayerController.file(File(widget.path))
+      _controller = kIsWeb
+          ? VideoPlayerController.network(
+              IsmChatBlob.blobToUrl(widget.path.strigToUnit8List),
+            )
+          : widget.path.isValidUrl
+              ? VideoPlayerController.network(widget.path)
+              : VideoPlayerController.file(File(widget.path))
         ..addListener(() {
           setState(() {});
         })

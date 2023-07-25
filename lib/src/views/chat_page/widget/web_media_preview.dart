@@ -1,15 +1,12 @@
+import 'dart:html' as html;
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class WebMediaPreview extends StatefulWidget {
+class WebMediaPreview extends StatelessWidget {
   const WebMediaPreview({super.key});
 
-  @override
-  State<WebMediaPreview> createState() => _WebMediaPreviewState();
-}
-
-class _WebMediaPreviewState extends State<WebMediaPreview> {
   @override
   Widget build(BuildContext context) =>
       GetX<IsmChatPageController>(builder: (controller) {
@@ -170,126 +167,119 @@ class _WebMediaPreviewState extends State<WebMediaPreview> {
                   IsmChatDimens.boxWidth20
                 ],
               ),
-              backgroundColor: IsmChatColors.blackColor,
-              body: SafeArea(
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    IsmChatConstants.imageExtensions.contains(
-                      controller.webMedia[controller.assetsIndex].name
-                          .split('.')
-                          .last,
-                    )
-                        ? SizedBox(
-                            height: IsmChatDimens.percentHeight(1),
-                            child: Image.memory(
-                              controller
-                                  .webMedia[controller.assetsIndex].bytes!,
-                              fit: BoxFit.contain,
-                            ),
-                          )
-                        : VideoViewPage(
-                            showVideoPlaying: true,
-                            path: controller
-                                .webMedia[controller.assetsIndex].bytes
-                                .toString(),
+              backgroundColor: IsmChatColors.whiteColor,
+              body: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                // ali gnment: Alignment.center,
+                // fit: StackFit.passthrough,
+                children: [
+                  IsmChatConstants.imageExtensions.contains(
+                    controller.webMedia[controller.assetsIndex].name
+                        .split('.')
+                        .last,
+                  )
+                      ? SizedBox(
+                          height: IsmChatDimens.percentHeight(.5),
+                          child: Image.memory(
+                            controller.webMedia[controller.assetsIndex].bytes!,
+                            fit: BoxFit.contain,
                           ),
-                    Positioned(
-                      bottom: IsmChatDimens.ten,
-                      child: Container(
-                        width: Get.width,
-                        alignment: Alignment.center,
-                        height: IsmChatDimens.sixty,
-                        margin: IsmChatDimens.edgeInsets10,
-                        child: ListView.separated(
-                          shrinkWrap: true,
-                          physics: const BouncingScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          separatorBuilder: (context, index) =>
-                              IsmChatDimens.boxWidth8,
-                          itemCount: controller.listOfAssetsPath.length,
-                          itemBuilder: (context, index) {
-                            var media = controller.listOfAssetsPath[index];
-                            return InkWell(
-                              onTap: () async {
-                                controller.assetsIndex = index;
-                                controller.isVideoVisible = false;
-                                // dataSize = await IsmChatUtility.fileToSize(
-                                //   File(ismChatPageController
-                                //       .listOfAssetsPath[
-                                //           ismChatPageController.assetsIndex]
-                                //       .mediaUrl!),
-                                // );
-                              },
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Container(
-                                    height: IsmChatDimens.sixty,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(IsmChatDimens.ten)),
-                                        border: controller.assetsIndex == index
-                                            ? Border.all(
-                                                color: Get
-                                                    .theme.secondaryHeaderColor,
-                                                width: IsmChatDimens.two)
-                                            : null),
-                                    width: IsmChatDimens.sixty,
-                                    child: IsmChatImage(
-                                      media.attachmentType ==
-                                              IsmChatMediaType.video
-                                          ? media.thumbnailUrl.toString()
-                                          : media.mediaUrl.toString(),
-                                      isNetworkImage: false,
-                                    ),
-                                  ),
-                                  if (media.attachmentType ==
-                                      IsmChatMediaType.video)
-                                    Container(
-                                      alignment: Alignment.center,
-                                      width: IsmChatDimens.thirtyTwo,
-                                      height: IsmChatDimens.thirtyTwo,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.grey),
-                                        color: Colors.white,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: const Icon(Icons.play_arrow,
-                                          color: Colors.black),
-                                    ),
-                                ],
-                              ),
-                            );
+                        )
+                      : VideoViewPage(
+                          showVideoPlaying: true,
+                          path: controller
+                              .webMedia[controller.assetsIndex].bytes
+                              .toString(),
+                        ),
+                  Container(
+                    width: Get.width,
+                    alignment: Alignment.center,
+                    height: IsmChatDimens.sixty,
+                    margin: IsmChatDimens.edgeInsets10,
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      separatorBuilder: (context, index) =>
+                          IsmChatDimens.boxWidth8,
+                      itemCount: controller.webMedia.length,
+                      itemBuilder: (context, index) {
+                        var media = controller.webMedia[index];
+                        return InkWell(
+                          onTap: () async {
+                            controller.assetsIndex = index;
+                            controller.isVideoVisible = false;
+                            // dataSize = await IsmChatUtility.fileToSize(
+                            //   File(ismChatPageController
+                            //       .listOfAssetsPath[
+                            //           ismChatPageController.assetsIndex]
+                            //       .mediaUrl!),
+                            // );
                           },
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: IsmChatDimens.eighty,
-                      right: IsmChatDimens.ten,
-                      child: InkWell(
-                        onTap: () {
-                          controller.sendMedia();
-                        },
-                        child: Container(
-                          margin: IsmChatDimens.edgeInsets10,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              color: IsmChatConfig.chatTheme.primaryColor,
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(IsmChatDimens.fifty))),
-                          width: IsmChatDimens.fifty,
-                          height: IsmChatDimens.fifty,
-                          child: const Icon(
-                            Icons.send,
-                            color: IsmChatColors.whiteColor,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                  height: IsmChatDimens.sixty,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(IsmChatDimens.ten)),
+                                      border: controller.assetsIndex == index
+                                          ? Border.all(
+                                              color: IsmChatColors.blackColor,
+                                              width: IsmChatDimens.two)
+                                          : null),
+                                  width: IsmChatDimens.sixty,
+                                  child: Image.memory(media.bytes!)),
+                              if (IsmChatConstants.videoExtensions.contains(
+                                controller.webMedia[controller.assetsIndex].name
+                                    .split('.')
+                                    .last,
+                              ))
+                                Container(
+                                  alignment: Alignment.center,
+                                  width: IsmChatDimens.thirtyTwo,
+                                  height: IsmChatDimens.thirtyTwo,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey),
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.play_arrow,
+                                      color: Colors.black),
+                                ),
+                            ],
                           ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                        );
+                      },
+                    ),
+                  ),
+                  // Positioned(
+                  //   bottom: IsmChatDimens.eighty,
+                  //   right: IsmChatDimens.ten,
+                  //   child: InkWell(
+                  //     onTap: () {
+                  //       controller.sendMedia();
+                  //     },
+                  //     child: Container(
+                  //       margin: IsmChatDimens.edgeInsets10,
+                  //       alignment: Alignment.center,
+                  //       decoration: BoxDecoration(
+                  //           color: IsmChatConfig.chatTheme.primaryColor,
+                  //           borderRadius: BorderRadius.all(
+                  //               Radius.circular(IsmChatDimens.fifty))),
+                  //       width: IsmChatDimens.fifty,
+                  //       height: IsmChatDimens.fifty,
+                  //       child: const Icon(
+                  //         Icons.send,
+                  //         color: IsmChatColors.whiteColor,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // )
+                ],
               ),
             ),
           );

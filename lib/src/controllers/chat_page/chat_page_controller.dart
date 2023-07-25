@@ -581,14 +581,22 @@ class IsmChatPageController extends GetxController
 
   void getMediaWithWeb() async {
     final result = await FilePicker.platform.pickFiles(
-        allowMultiple: true,
-        type: FileType.custom,
-        allowedExtensions: [
-          ...IsmChatConstants.imageExtensions,
-          ...IsmChatConstants.videoExtensions
-        ],
-        allowCompression: true,
-        withData: true);
+      allowMultiple: true,
+      type: FileType.custom,
+      allowedExtensions: [
+        ...IsmChatConstants.imageExtensions,
+        ...IsmChatConstants.videoExtensions
+      ],
+      withData: true,
+      onFileLoading: (value) {
+        if (FilePickerStatus.picking == value) {
+          IsmChatUtility.showLoader();
+        } else if (FilePickerStatus.done == value) {
+          IsmChatUtility.closeLoader();
+        }
+      },
+      allowCompression: true,
+    );
     if (result!.files.isNotEmpty) {
       webMedia = result.files;
     }
