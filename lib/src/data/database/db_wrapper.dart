@@ -73,7 +73,7 @@ class IsmChatDBWrapper {
         _pendingBox,
         _forwardBox,
       },
-      // path: directory != null ? '${directory.path}/$dbName' : null,
+      path: directory != null ? '${directory.path}/$dbName' : null,
     );
     if (!kIsWeb) {
       IsmChatLog.success(
