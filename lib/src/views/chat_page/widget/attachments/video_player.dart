@@ -36,7 +36,6 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
   @override
   void initState() {
     chatPageController.isVideoVisible = true;
-
     _controller = kIsWeb
         ? VideoPlayerController.network(
             IsmChatBlob.blobToUrl(widget.path.strigToUnit8List),
@@ -81,6 +80,7 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
           _controller.play();
         });
     }
+    if (Responsive.isWebAndTablet(context)) IsmChatUtility.closeLoader();
     super.didUpdateWidget(oldWidget);
   }
 
@@ -110,7 +110,7 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
             }
           },
           child: Stack(
-            fit: StackFit.expand,
+            fit: kIsWeb ? StackFit.loose : StackFit.expand,
             children: [
               _controller.value.isInitialized
                   ? Center(

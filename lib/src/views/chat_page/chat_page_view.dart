@@ -182,78 +182,73 @@ class _IsmChatPageView extends StatelessWidget {
                   )
                 : null,
           ),
-          child: controller.webMedia.isNotEmpty
-              ? const WebMediaPreview()
-              : Scaffold(
-                  drawerEnableOpenDragGesture: false,
-                  backgroundColor: bodyBackGroundColor ?? Colors.transparent,
-                  resizeToAvoidBottomInset: true,
-                  appBar: controller.isMessageSeleted
-                      ? AppBar(
-                          leading: IsmChatTapHandler(
-                            onTap: () async {
-                              controller.isMessageSeleted = false;
-                              controller.selectedMessage.clear();
-                            },
-                            child: const Icon(Icons.arrow_back_rounded),
-                          ),
-                          titleSpacing: IsmChatDimens.four,
-                          title: Text(
-                            '${controller.selectedMessage.length} Messages',
-                            style: IsmChatStyles.w600White18,
-                          ),
-                          backgroundColor: IsmChatConfig.chatTheme.primaryColor,
-                          iconTheme: const IconThemeData(
-                              color: IsmChatColors.whiteColor),
-                          actions: [
-                            IconButton(
-                              onPressed: () async {
-                                var messageSenderSide =
-                                    controller.isAllMessagesFromMe();
-                                controller.showDialogForDeleteMultipleMessage(
-                                    messageSenderSide,
-                                    controller.selectedMessage);
-                              },
-                              icon: const Icon(
-                                Icons.delete_rounded,
-                                color: IsmChatColors.whiteColor,
-                              ),
-                            ),
-                          ],
-                        )
-                      : IsmChatPageHeader(
-                          onTap: onTitleTap != null
-                              ? () => onTitleTap?.call(controller.conversation!)
-                              : controller.isActionAllowed == false
-                                  ? () async {
-                                      if (controller.isActionAllowed == false) {
-                                        if (!(controller
-                                                    .conversation
-                                                    ?.lastMessageDetails
-                                                    ?.customType ==
-                                                IsmChatCustomMessageType
-                                                    .removeMember &&
-                                            controller
-                                                    .conversation
-                                                    ?.lastMessageDetails
-                                                    ?.userId ==
-                                                IsmChatConfig
-                                                    .communicationConfig
-                                                    .userConfig
-                                                    .userId)) {
-                                          await IsmChatUtility
-                                              .openFullScreenBottomSheet(
-                                            const IsmChatConverstaionInfoView(),
-                                          );
-                                        }
-                                      }
-                                    }
-                                  : null,
-                          onBackTap: onBackTap,
-                          header: header,
-                          height: height,
+          child: Scaffold(
+            drawerEnableOpenDragGesture: false,
+            backgroundColor: bodyBackGroundColor ?? Colors.transparent,
+            resizeToAvoidBottomInset: true,
+            appBar: controller.isMessageSeleted
+                ? AppBar(
+                    leading: IsmChatTapHandler(
+                      onTap: () async {
+                        controller.isMessageSeleted = false;
+                        controller.selectedMessage.clear();
+                      },
+                      child: const Icon(Icons.arrow_back_rounded),
+                    ),
+                    titleSpacing: IsmChatDimens.four,
+                    title: Text(
+                      '${controller.selectedMessage.length} Messages',
+                      style: IsmChatStyles.w600White18,
+                    ),
+                    backgroundColor: IsmChatConfig.chatTheme.primaryColor,
+                    iconTheme:
+                        const IconThemeData(color: IsmChatColors.whiteColor),
+                    actions: [
+                      IconButton(
+                        onPressed: () async {
+                          var messageSenderSide =
+                              controller.isAllMessagesFromMe();
+                          controller.showDialogForDeleteMultipleMessage(
+                              messageSenderSide, controller.selectedMessage);
+                        },
+                        icon: const Icon(
+                          Icons.delete_rounded,
+                          color: IsmChatColors.whiteColor,
                         ),
-                  body: Stack(
+                      ),
+                    ],
+                  )
+                : IsmChatPageHeader(
+                    onTap: onTitleTap != null
+                        ? () => onTitleTap?.call(controller.conversation!)
+                        : controller.isActionAllowed == false
+                            ? () async {
+                                if (controller.isActionAllowed == false) {
+                                  if (!(controller
+                                              .conversation
+                                              ?.lastMessageDetails
+                                              ?.customType ==
+                                          IsmChatCustomMessageType
+                                              .removeMember &&
+                                      controller.conversation
+                                              ?.lastMessageDetails?.userId ==
+                                          IsmChatConfig.communicationConfig
+                                              .userConfig.userId)) {
+                                    await IsmChatUtility
+                                        .openFullScreenBottomSheet(
+                                      const IsmChatConverstaionInfoView(),
+                                    );
+                                  }
+                                }
+                              }
+                            : null,
+                    onBackTap: onBackTap,
+                    header: header,
+                    height: height,
+                  ),
+            body: controller.webMedia.isNotEmpty
+                ? const WebMediaPreview()
+                : Stack(
                     alignment: Alignment.bottomRight,
                     children: [
                       Container(
@@ -403,7 +398,7 @@ class _IsmChatPageView extends StatelessWidget {
                       ),
                     ],
                   ),
-                ).withUnfocusGestureDetctor(context),
+          ).withUnfocusGestureDetctor(context),
         ),
       );
 }

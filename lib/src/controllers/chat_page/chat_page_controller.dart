@@ -5,6 +5,8 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
+    if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:camera/camera.dart';
 import 'package:dio/dio.dart';
@@ -296,9 +298,9 @@ class IsmChatPageController extends GetxController
   bool get isActionAllowed => _isActionAllowed.value;
   set isActionAllowed(bool value) => _isActionAllowed.value = value;
 
-  final RxList<PlatformFile> _webMedia = <PlatformFile>[].obs;
-  RxList<PlatformFile> get webMedia => _webMedia;
-  set webMedia(List<PlatformFile> value) => _webMedia.value = value;
+  final RxList<WebMediaModel> _webMedia = <WebMediaModel>[].obs;
+  RxList<WebMediaModel> get webMedia => _webMedia;
+  set webMedia(List<WebMediaModel> value) => _webMedia.value = value;
 
   bool didReactedLast = false;
 
@@ -580,6 +582,8 @@ class IsmChatPageController extends GetxController
   }
 
   void getMediaWithWeb() async {
+    webMedia.clear();
+    assetsIndex = 0;
     final result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
       type: FileType.custom,
@@ -598,7 +602,31 @@ class IsmChatPageController extends GetxController
       allowCompression: true,
     );
     if (result!.files.isNotEmpty) {
-      webMedia = result.files;
+      for (var x in result.files) {
+        var dataSize = IsmChatUtility.formatBytes(x.bytes?.length ?? 0);
+        if (IsmChatConstants.videoExtensions.contains(x.extension)) {
+          var thumbnailBytes =
+              await IsmChatBlob.getVideoThumbnailBytes(x.bytes!);
+          if (thumbnailBytes != null) {
+            webMedia.add(
+              WebMediaModel(
+                  isVideo:
+                      IsmChatConstants.videoExtensions.contains(x.extension),
+                  platformFile: x,
+                  thumbnailBytes: thumbnailBytes,
+                  dataSize: dataSize),
+            );
+          }
+        } else {
+          webMedia.add(
+            WebMediaModel(
+                isVideo: IsmChatConstants.videoExtensions.contains(x.extension),
+                platformFile: x,
+                thumbnailBytes: Uint8List(0),
+                dataSize: dataSize),
+          );
+        }
+      }
     }
   }
 

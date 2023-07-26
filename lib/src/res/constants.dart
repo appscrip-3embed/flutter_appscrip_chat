@@ -157,7 +157,6 @@ class IsmChatConstants {
     'fs',
     'gbr',
     'odg',
-    'svg',
     'stl',
     'vrml',
     'x3d',

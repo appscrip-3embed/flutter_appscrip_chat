@@ -130,18 +130,40 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
   }
 
+  void sendMediaWeb() async {
+    var isMaxSize = false;
+    for (var x in _controller.webMedia) {
+      if (!x.dataSize.size()) {
+        isMaxSize = true;
+        break;
+      }
+    }
+    if (isMaxSize == false) {
+      Get.back<void>();
+      _controller.webMedia.clear();
+    } else {
+      await Get.dialog(
+        const IsmChatAlertDialogBox(
+          title: 'You can not send image and video more than 20 MB.',
+          cancelLabel: 'Okay',
+        ),
+      );
+    }
+  }
+
   void sendPhotoAndVideo() async {
     if (_controller.listOfAssetsPath.isNotEmpty) {
       for (var media in _controller.listOfAssetsPath) {
         //TODO: remove await from here
         if (media.attachmentType == IsmChatMediaType.image) {
-          _controller.imagePath = File(media.mediaUrl!);
           await sendImage(
-            conversationId: _controller.conversation?.conversationId ?? '',
-            userId: _controller.conversation?.opponentDetails?.userId ?? '',
-            opponentName:
-                _controller.conversation?.opponentDetails?.userName ?? '',
-          );
+              conversationId: _controller.conversation?.conversationId ?? '',
+              userId: _controller.conversation?.opponentDetails?.userId ?? '',
+              opponentName:
+                  _controller.conversation?.opponentDetails?.userName ?? '',
+              imagePath: File(
+                media.mediaUrl!,
+              ));
         } else {
           await sendVideo(
             file: File(media.mediaUrl!),
@@ -547,6 +569,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     required String conversationId,
     required String userId,
     required String opponentName,
+    File? imagePath,
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
