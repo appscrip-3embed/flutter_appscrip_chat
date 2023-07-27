@@ -15,7 +15,12 @@ class ReactionGrid extends StatelessWidget {
         elevation: IsmChatDimens.four,
         borderRadius: BorderRadius.circular(IsmChatDimens.sixteen),
         child: SizedBox(
-          height: IsmChatDimens.ninty,
+          height: Responsive.isWebAndTablet(context)
+              ? IsmChatDimens.percentHeight(.25)
+              : IsmChatDimens.ninty,
+          width: Responsive.isWebAndTablet(context)
+              ? IsmChatDimens.percentWidth(.5)
+              : null,
           child: GridView.builder(
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

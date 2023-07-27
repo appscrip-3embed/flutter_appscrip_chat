@@ -24,7 +24,7 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
   final TextStyle? titleStyle;
   final Color? titleColor;
   final bool showSearch;
-  final void Function(BuildContext, IsmChatConversationModel) onSearchTap;
+  final void Function(BuildContext, IsmChatConversationModel, bool) onSearchTap;
   final List<Widget>? actions;
   final VoidCallback? onSignOut;
   final bool isGroupChatEnabled;
@@ -199,7 +199,7 @@ class _MoreIcon extends StatelessWidget {
 class _SearchAction extends StatelessWidget {
   const _SearchAction({required this.onTap});
 
-  final void Function(BuildContext, IsmChatConversationModel) onTap;
+  final void Function(BuildContext, IsmChatConversationModel, bool) onTap;
 
   @override
   Widget build(BuildContext context) => IconButton(

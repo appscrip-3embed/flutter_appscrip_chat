@@ -106,7 +106,7 @@ class IsmChatApp extends StatelessWidget {
   ///
   /// `IsmChatConversationModel` gives data of current chat, it could be used for local storage or state variables
   ///
-  final void Function(BuildContext, IsmChatConversationModel) onChatTap;
+  final void Function(BuildContext, IsmChatConversationModel, bool) onChatTap;
 
   /// A callback for `navigating` to the create chat screen
   ///
@@ -215,7 +215,8 @@ class IsmChatApp extends StatelessWidget {
     String? email,
     required String userId,
     IsmChatMetaData? metaData,
-    void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
+    void Function(BuildContext, IsmChatConversationModel, bool)?
+        onNavigateToChat,
     Duration duration = const Duration(milliseconds: 500),
   }) async {
     assert(
@@ -270,7 +271,7 @@ class IsmChatApp extends StatelessWidget {
     controller.navigateToMessages(conversation);
 
     (onNavigateToChat ?? IsmChatConfig.onChatTap)
-        .call(Get.context!, conversation);
+        .call(Get.context!, conversation, false);
   }
 
   /// This function can be used to directly go to chatting page and start chatting from anywhere in the app
@@ -319,7 +320,8 @@ class IsmChatApp extends StatelessWidget {
   /// * `isLoading` - This variable will be executed to show loading to the specific chat screen of the selected user. If not provided, the `onChatTap` callback will be used which is passed to `defalut false`.
   static Future<void> chatFromChatListWithConversation(
       {required IsmChatConversationModel ismChatConversation,
-      void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
+      void Function(BuildContext, IsmChatConversationModel, bool)?
+          onNavigateToChat,
       Duration duration = const Duration(milliseconds: 500),
       bool isLoading = false}) async {
     await Get.delete<IsmChatPageController>(force: true);
@@ -333,7 +335,7 @@ class IsmChatApp extends StatelessWidget {
     var controller = Get.find<IsmChatConversationsController>();
     controller.navigateToMessages(ismChatConversation);
     (onNavigateToChat ?? IsmChatConfig.onChatTap)
-        .call(Get.context!, ismChatConversation);
+        .call(Get.context!, ismChatConversation, true);
   }
 
   static final RxString _unReadConversationMessages = ''.obs;

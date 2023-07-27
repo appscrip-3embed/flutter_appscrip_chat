@@ -1,7 +1,11 @@
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
+    if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
 import 'package:camera/camera.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -52,7 +56,13 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                     child: Padding(
                       padding: IsmChatDimens.edgeInsetsTop20.copyWith(top: 40),
                       child: IconButton(
-                        onPressed: Get.back,
+                        onPressed: () {
+                          if (kIsWeb) {
+                            controller.isCameraView = false;
+                          } else {
+                            Get.back();
+                          }
+                        },
                         icon: const Icon(
                           Icons.close_rounded,
                           color: IsmChatColors.whiteColor,
@@ -70,15 +80,18 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                     child: Column(
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: Responsive.isWebAndTablet(context)
+                              ? MainAxisAlignment.center
+                              : MainAxisAlignment.spaceBetween,
                           children: [
-                            IconButton(
-                              icon: Icon(
-                                controller.flashMode.icon,
-                                color: IsmChatColors.whiteColor,
+                            if (!Responsive.isWebAndTablet(context))
+                              IconButton(
+                                icon: Icon(
+                                  controller.flashMode.icon,
+                                  color: IsmChatColors.whiteColor,
+                                ),
+                                onPressed: controller.toggleFlash,
                               ),
-                              onPressed: controller.toggleFlash,
-                            ),
                             GestureDetector(
                               onLongPressStart: (_) async {
                                 await controller.cameraController
@@ -101,9 +114,34 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                                     controller.toggleCamera();
                                   }
                                 });
-                                await Get.to<void>(IsmChatVideoView(
-                                  file: File(file.path),
-                                ));
+
+                                if (kIsWeb) {
+                                  var bytes = await file.readAsBytes();
+                                  var fileSize = IsmChatUtility.formatBytes(
+                                    int.parse(bytes.length.toString()),
+                                  );
+                                  var thumbnailBytes =
+                                      await IsmChatBlob.getVideoThumbnailBytes(
+                                          bytes);
+                                  controller.webMedia.add(
+                                    WebMediaModel(
+                                      dataSize: fileSize,
+                                      isVideo: true,
+                                      platformFile: PlatformFile(
+                                        name:
+                                            '${DateTime.now().millisecondsSinceEpoch}.mp4',
+                                        bytes: bytes,
+                                        path: file.path,
+                                        size: 0,
+                                      ),
+                                      thumbnailBytes: thumbnailBytes!,
+                                    ),
+                                  );
+                                } else {
+                                  await Get.to<void>(IsmChatVideoView(
+                                    file: File(file.path),
+                                  ));
+                                }
                               },
                               onTap: controller.isRecording
                                   ? null
@@ -123,13 +161,14 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                                 width: IsmChatDimens.sixty,
                               ),
                             ),
-                            IconButton(
-                              icon: const Icon(
-                                Icons.flip_camera_ios,
-                                color: Colors.white,
+                            if (!Responsive.isWebAndTablet(context))
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.flip_camera_ios,
+                                  color: Colors.white,
+                                ),
+                                onPressed: controller.toggleCamera,
                               ),
-                              onPressed: controller.toggleCamera,
-                            ),
                           ],
                         ),
                         IsmChatDimens.boxHeight10,

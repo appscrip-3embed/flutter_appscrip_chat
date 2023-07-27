@@ -38,7 +38,7 @@ class IsmChatConversationList extends StatefulWidget {
     this.allowDelete = false,
   });
 
-  final void Function(BuildContext, IsmChatConversationModel) onChatTap;
+  final void Function(BuildContext, IsmChatConversationModel, bool) onChatTap;
 
   /// `itemBuilder` will handle how child items are rendered on the screen.
   ///
@@ -252,8 +252,13 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                                         style: IsmChatStyles.typing,
                                       ),
                               onTap: () {
-                                controller.navigateToMessages(conversation);
-                                widget.onChatTap(_, conversation);
+                                if (controller.isConversationId !=
+                                    conversation.conversationId) {
+                                  controller.navigateToMessages(conversation);
+                                  widget.onChatTap(_, conversation, true);
+                                  controller.isConversationId =
+                                      conversation.conversationId ?? '';
+                                }
                               },
                             ),
                           ),

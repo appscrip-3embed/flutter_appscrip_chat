@@ -26,8 +26,27 @@ class WebMediaPreview extends StatelessWidget {
                   Get.back<void>();
                   controller.webMedia.clear();
                   controller.isVideoVisible = false;
+                  controller.isCameraView = false;
                 },
               ),
+              actions: [
+                if (controller.isCameraView)
+                  TextButton(
+                      onPressed: () async {
+                        controller.isCameraView = false;
+                        controller.webMedia.clear();
+                        controller.isVideoVisible = false;
+                        controller.isCameraView = false;
+                        Get.back<void>();
+
+                        await controller.initializeCamera();
+                        controller.isCameraView = true;
+                      },
+                      child: Text(
+                        'Retake',
+                        style: IsmChatStyles.w600Black14,
+                      ))
+              ],
             ),
             backgroundColor: IsmChatColors.whiteColor,
             body: Column(

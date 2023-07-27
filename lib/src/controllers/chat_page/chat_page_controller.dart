@@ -63,6 +63,10 @@ class IsmChatPageController extends GetxController
   bool get showEmojiBoard => _showEmojiBoard.value;
   set showEmojiBoard(bool value) => _showEmojiBoard.value = value;
 
+  final RxBool _showAttachment = false.obs;
+  bool get showAttachment => _showAttachment.value;
+  set showAttachment(bool value) => _showAttachment.value = value;
+
   final RxBool _isMessagesLoading = true.obs;
   bool get isMessagesLoading => _isMessagesLoading.value;
   set isMessagesLoading(bool value) => _isMessagesLoading.value = value;
@@ -284,15 +288,16 @@ class IsmChatPageController extends GetxController
 
   final _userReactionList = <UserDetails>[].obs;
   List<UserDetails> get userReactionList => _userReactionList;
-  set userReactionList(List<UserDetails> value) {
-    _userReactionList.value = value;
-  }
+  set userReactionList(List<UserDetails> value) =>
+      _userReactionList.value = value;
 
   final RxBool _isVideoVisible = true.obs;
   bool get isVideoVisible => _isVideoVisible.value;
-  set isVideoVisible(bool value) {
-    _isVideoVisible.value = value;
-  }
+  set isVideoVisible(bool value) => _isVideoVisible.value = value;
+
+  final RxBool _isCameraView = false.obs;
+  bool get isCameraView => _isCameraView.value;
+  set isCameraView(bool value) => _isCameraView.value = value;
 
   final RxBool _isActionAllowed = false.obs;
   bool get isActionAllowed => _isActionAllowed.value;
@@ -367,6 +372,8 @@ class IsmChatPageController extends GetxController
     _generateReactionList();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
+      _conversationController.isConversationId =
+          conversation?.conversationId ?? '';
       await Future.delayed(Duration.zero);
       if (conversation?.conversationId?.isNotEmpty ?? false) {
         _getBackGroundAsset();
@@ -409,7 +416,7 @@ class IsmChatPageController extends GetxController
   void onClose() {
     if (areCamerasInitialized) {
       _frontCameraController.dispose();
-      _backCameraController.dispose();
+      // _backCameraController.dispose();
     }
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
@@ -421,7 +428,7 @@ class IsmChatPageController extends GetxController
   void dispose() {
     if (areCamerasInitialized) {
       _frontCameraController.dispose();
-      _backCameraController.dispose();
+      // _backCameraController.dispose();
     }
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
@@ -548,6 +555,10 @@ class IsmChatPageController extends GetxController
     showEmojiBoard = showEmoji ?? !showEmojiBoard;
   }
 
+  toggleAttachment() {
+    showAttachment = !showAttachment;
+  }
+
   /// This function will be used in [Add participants Screen] to Select or Unselect users
   void onGrouEligibleUserTap(int index) {
     groupEligibleUser[index].isUserSelected =
@@ -561,7 +572,10 @@ class IsmChatPageController extends GetxController
     switch (attachmentType) {
       case IsmChatAttachmentType.camera:
         await initializeCamera();
-        await Get.to<void>(const IsmChatCameraView());
+        kIsWeb
+            ? isCameraView = true
+            : await Get.to<void>(const IsmChatCameraView());
+
         break;
       case IsmChatAttachmentType.gallery:
         listOfAssetsPath.clear();
@@ -601,7 +615,12 @@ class IsmChatPageController extends GetxController
       },
       allowCompression: true,
     );
-    if (result!.files.isNotEmpty) {
+    if (result == null) {
+      IsmChatUtility.closeLoader();
+      return;
+    }
+
+    if (result.files.isNotEmpty) {
       for (var x in result.files) {
         var dataSize = IsmChatUtility.formatBytes(x.bytes?.length ?? 0);
         if (IsmChatConstants.videoExtensions.contains(x.extension)) {
@@ -783,7 +802,7 @@ class IsmChatPageController extends GetxController
   }
 
   Future<void> initializeCamera() async {
-    if (areCamerasInitialized) {
+    if (areCamerasInitialized && !kIsWeb) {
       return;
     }
     _cameras = await availableCameras();
@@ -933,16 +952,18 @@ class IsmChatPageController extends GetxController
 
   void toggleCamera() async {
     areCamerasInitialized = false;
-    isFrontCameraSelected = !isFrontCameraSelected;
+    if (!kIsWeb) {
+      isFrontCameraSelected = !isFrontCameraSelected;
+    }
     if (isFrontCameraSelected) {
       _frontCameraController = CameraController(
-        _cameras[1],
+        _cameras[0],
         ResolutionPreset.high,
         imageFormatGroup: ImageFormatGroup.jpeg,
       );
     } else {
       _backCameraController = CameraController(
-        _cameras[0],
+        _cameras[1],
         ResolutionPreset.high,
         imageFormatGroup: ImageFormatGroup.jpeg,
       );
@@ -1070,12 +1091,30 @@ class IsmChatPageController extends GetxController
   void takePhoto() async {
     var file = await cameraController.takePicture();
 
-    // await Get.dialog(Image.network(file.path));
-
-    imagePath = File(file.path);
-    fileSize = await IsmChatUtility.fileToSize(imagePath!);
-
-    await Get.to(const IsmChatImageEditView());
+    if (kIsWeb) {
+      Get.back();
+      var bytes = await file.readAsBytes();
+      var fileSize = IsmChatUtility.formatBytes(
+        int.parse(bytes.length.toString()),
+      );
+      webMedia.add(
+        WebMediaModel(
+          dataSize: fileSize,
+          isVideo: false,
+          platformFile: PlatformFile(
+            name: '${DateTime.now().millisecondsSinceEpoch}.png',
+            bytes: bytes,
+            path: file.path,
+            size: 0,
+          ),
+          thumbnailBytes: Uint8List(0),
+        ),
+      );
+    } else {
+      imagePath = File(file.path);
+      fileSize = await IsmChatUtility.fileToSize(imagePath!);
+      await Get.to(const IsmChatImageEditView());
+    }
   }
 
   void showDialogForClearChatAndDeleteGroup({isGroupDelete = false}) async {

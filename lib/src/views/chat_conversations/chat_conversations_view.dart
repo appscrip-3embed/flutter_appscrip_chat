@@ -35,7 +35,7 @@ class IsmChatConversations extends StatefulWidget {
 
   final bool isGroupChatEnabled;
 
-  final void Function(BuildContext, IsmChatConversationModel) onChatTap;
+  final void Function(BuildContext, IsmChatConversationModel, bool) onChatTap;
 
   final VoidCallback? onCreateChatTap;
   final bool showCreateChatIcon;

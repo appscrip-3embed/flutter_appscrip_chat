@@ -248,89 +248,66 @@ class _IsmChatPageView extends StatelessWidget {
                   ),
             body: controller.webMedia.isNotEmpty
                 ? const WebMediaPreview()
-                : Stack(
-                    alignment: Alignment.bottomRight,
-                    children: [
-                      Container(
-                        decoration: chatPageBackGroundDecoration,
-                        height: MediaQuery.of(context).size.height,
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Expanded(
-                              child: Visibility(
-                                visible: !controller.isMessagesLoading,
-                                replacement: const IsmChatLoadingDialog(),
-                                child: Stack(
-                                  alignment: Alignment.bottomLeft,
-                                  children: [
-                                    Visibility(
-                                      visible: controller.messages.isNotEmpty &&
-                                          controller.messages.length != 1,
-                                      replacement: emptyChatPlaceholder ??
-                                          const IsmChatEmptyView(
-                                            icon: Icon(Icons.chat_outlined),
-                                            text: IsmChatStrings.noMessages,
+                : controller.isCameraView
+                    ? const IsmChatCameraView()
+                    : Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          Container(
+                            decoration: chatPageBackGroundDecoration,
+                            height: MediaQuery.of(context).size.height,
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Expanded(
+                                  child: Visibility(
+                                    visible: !controller.isMessagesLoading,
+                                    replacement: const IsmChatLoadingDialog(),
+                                    child: Stack(
+                                      alignment: Alignment.bottomLeft,
+                                      children: [
+                                        Visibility(
+                                          visible: controller
+                                                  .messages.isNotEmpty &&
+                                              controller.messages.length != 1,
+                                          replacement: emptyChatPlaceholder ??
+                                              const IsmChatEmptyView(
+                                                icon: Icon(Icons.chat_outlined),
+                                                text: IsmChatStrings.noMessages,
+                                              ),
+                                          child: Align(
+                                            alignment: Alignment.topCenter,
+                                            child: ListView.builder(
+                                              controller: controller
+                                                  .messagesScrollController,
+                                              shrinkWrap: true,
+                                              keyboardDismissBehavior:
+                                                  ScrollViewKeyboardDismissBehavior
+                                                      .onDrag,
+                                              padding:
+                                                  IsmChatDimens.edgeInsets4_8,
+                                              reverse: true,
+                                              addAutomaticKeepAlives: true,
+                                              itemCount:
+                                                  controller.messages.length,
+                                              itemBuilder: (_, index) =>
+                                                  IsmChatMessage(index,
+                                                      messageWidgetBuilder),
+                                            ),
                                           ),
-                                      child: Align(
-                                        alignment: Alignment.topCenter,
-                                        child: ListView.builder(
-                                          controller: controller
-                                              .messagesScrollController,
-                                          shrinkWrap: true,
-                                          keyboardDismissBehavior:
-                                              ScrollViewKeyboardDismissBehavior
-                                                  .onDrag,
-                                          padding: IsmChatDimens.edgeInsets4_8,
-                                          reverse: true,
-                                          addAutomaticKeepAlives: true,
-                                          itemCount: controller.messages.length,
-                                          itemBuilder: (_, index) =>
-                                              IsmChatMessage(
-                                                  index, messageWidgetBuilder),
                                         ),
-                                      ),
+                                        Obx(
+                                          () => controller.showMentionUserList
+                                              ? const MentionUserList()
+                                              : const SizedBox.shrink(),
+                                        ),
+                                      ],
                                     ),
-                                    Obx(
-                                      () => controller.showMentionUserList
-                                          ? const MentionUserList()
-                                          : const SizedBox.shrink(),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ),
-                            controller.isActionAllowed == true
-                                ? Container(
-                                    color: IsmChatConfig
-                                        .chatTheme.backgroundColor!,
-                                    height: IsmChatDimens.sixty,
-                                    width: double.maxFinite,
-                                    child: SafeArea(
-                                      child: Center(
-                                        child: Text(
-                                          IsmChatStrings.removeGroupMessage,
-                                          style: IsmChatStyles.w600Black12,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.center,
-                                          maxLines: 2,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : controller.isActionAllowed == false &&
-                                        controller
-                                                .conversation
-                                                ?.lastMessageDetails
-                                                ?.customType ==
-                                            IsmChatCustomMessageType
-                                                .removeMember &&
-                                        controller.conversation
-                                                ?.lastMessageDetails?.userId ==
-                                            IsmChatConfig.communicationConfig
-                                                .userConfig.userId
+                                controller.isActionAllowed == true
                                     ? Container(
                                         color: IsmChatConfig
                                             .chatTheme.backgroundColor!,
@@ -348,56 +325,91 @@ class _IsmChatPageView extends StatelessWidget {
                                           ),
                                         ),
                                       )
-                                    : Container(
-                                        padding: textFieldPadding,
-                                        decoration:
-                                            textFieldBackGroundDecoration,
-                                        child: SafeArea(
-                                          child: IsmChatMessageField(
-                                            header: header,
-                                            attachments: attachments,
+                                    : controller.isActionAllowed == false &&
+                                            controller
+                                                    .conversation
+                                                    ?.lastMessageDetails
+                                                    ?.customType ==
+                                                IsmChatCustomMessageType
+                                                    .removeMember &&
+                                            controller
+                                                    .conversation
+                                                    ?.lastMessageDetails
+                                                    ?.userId ==
+                                                IsmChatConfig
+                                                    .communicationConfig
+                                                    .userConfig
+                                                    .userId
+                                        ? Container(
+                                            color: IsmChatConfig
+                                                .chatTheme.backgroundColor!,
+                                            height: IsmChatDimens.sixty,
+                                            width: double.maxFinite,
+                                            child: SafeArea(
+                                              child: Center(
+                                                child: Text(
+                                                  IsmChatStrings
+                                                      .removeGroupMessage,
+                                                  style:
+                                                      IsmChatStyles.w600Black12,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 2,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        : Container(
+                                            padding: textFieldPadding,
+                                            decoration:
+                                                textFieldBackGroundDecoration,
+                                            child: SafeArea(
+                                              child: IsmChatMessageField(
+                                                header: header,
+                                                attachments: attachments,
+                                              ),
+                                            ),
                                           ),
+                                Offstage(
+                                  offstage: !controller.showEmojiBoard,
+                                  child: const EmojiBoard(),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Obx(
+                            () => !controller.showDownSideButton
+                                ? const SizedBox.shrink()
+                                : Positioned(
+                                    bottom: IsmChatDimens.ninty,
+                                    right: IsmChatDimens.eight,
+                                    child: IsmChatTapHandler(
+                                      onTap: controller.scrollDown,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: IsmChatConfig
+                                              .chatTheme.backgroundColor!
+                                              .withOpacity(0.5),
+                                          border: Border.all(
+                                            color: IsmChatConfig
+                                                .chatTheme.primaryColor!,
+                                            width: 1.5,
+                                          ),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        padding: IsmChatDimens.edgeInsets8,
+                                        child: Icon(
+                                          Icons.expand_more_rounded,
+                                          color: IsmChatConfig
+                                              .chatTheme.primaryColor,
                                         ),
                                       ),
-                            Offstage(
-                              offstage: !controller.showEmojiBoard,
-                              child: const EmojiBoard(),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Obx(
-                        () => !controller.showDownSideButton
-                            ? const SizedBox.shrink()
-                            : Positioned(
-                                bottom: IsmChatDimens.ninty,
-                                right: IsmChatDimens.eight,
-                                child: IsmChatTapHandler(
-                                  onTap: controller.scrollDown,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: IsmChatConfig
-                                          .chatTheme.backgroundColor!
-                                          .withOpacity(0.5),
-                                      border: Border.all(
-                                        color: IsmChatConfig
-                                            .chatTheme.primaryColor!,
-                                        width: 1.5,
-                                      ),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    padding: IsmChatDimens.edgeInsets8,
-                                    child: Icon(
-                                      Icons.expand_more_rounded,
-                                      color:
-                                          IsmChatConfig.chatTheme.primaryColor,
                                     ),
                                   ),
-                                ),
-                              ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
           ).withUnfocusGestureDetctor(context),
         ),
       );

@@ -10,7 +10,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
     this.isGroupConversation = false,
   });
 
-  final void Function(BuildContext, IsmChatConversationModel)? onChatTap;
+  final void Function(BuildContext, IsmChatConversationModel, bool)? onChatTap;
   final bool isGroupConversation;
 
   final converstaionController = Get.find<IsmChatConversationsController>();
@@ -254,7 +254,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                     controller.navigateToMessages(
                                         ismChatConversation);
                                     (onChatTap ?? IsmChatConfig.onChatTap)
-                                        .call(_, ismChatConversation);
+                                        .call(_, ismChatConversation, false);
                                   }
                                 }
                               },
@@ -467,15 +467,12 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                       .chatFromChatListWithConversation(
                                     ismChatConversation: ismChatConversation,
                                     isLoading: false,
-                                    duration: const Duration(
-                                      milliseconds: 100,
-                                    ),
                                   );
                                 } else {
                                   controller
                                       .navigateToMessages(ismChatConversation);
-                                  (onChatTap ?? IsmChatConfig.onChatTap)
-                                      .call(context, ismChatConversation);
+                                  (onChatTap ?? IsmChatConfig.onChatTap).call(
+                                      context, ismChatConversation, false);
                                 }
                               },
                             ),

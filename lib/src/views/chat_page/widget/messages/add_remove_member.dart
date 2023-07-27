@@ -16,7 +16,6 @@ class IsmChatAddRemoveMember extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Center(
         child: Container(
-          alignment: Alignment.center,
           decoration: BoxDecoration(
             color: IsmChatConfig.chatTheme.backgroundColor,
             borderRadius: BorderRadius.circular(IsmChatDimens.eight),

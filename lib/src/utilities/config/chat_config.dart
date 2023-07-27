@@ -18,7 +18,8 @@ class IsmChatConfig {
   static bool isInitialized = false;
   static bool isGroupChatEnabled = false;
   static Duration animationDuration = const Duration(milliseconds: 300);
-  static late void Function(BuildContext, IsmChatConversationModel) onChatTap;
+  static late void Function(BuildContext, IsmChatConversationModel, bool)
+      onChatTap;
 
   static IsmChatThemeData get chatTheme => Get.isDarkMode
       ? _chatDarkTheme ?? IsmChatThemeData.light()

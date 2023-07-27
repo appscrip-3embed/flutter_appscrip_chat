@@ -15,11 +15,13 @@ class ChatListController extends GetxController {
 
   UserDetailsModel userDetails = UserDetailsModel();
 
-  final RxString _conversationId = ''.obs;
-  String get conversationId => _conversationId.value;
-  set conversationId(String value) {
-    _conversationId.value = value;
-  }
+  final RxBool _chatPageVisible = false.obs;
+  bool get chatPageVisible => _chatPageVisible.value;
+  set chatPageVisible(bool value) => _chatPageVisible.value = value;
+
+  final RxBool _firstTapConversation = false.obs;
+  bool get firstTapConversation => _firstTapConversation.value;
+  set firstTapConversation(bool value) => _firstTapConversation.value = value;
 
   @override
   void onInit() {

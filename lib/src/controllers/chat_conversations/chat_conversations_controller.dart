@@ -98,6 +98,10 @@ class IsmChatConversationsController extends GetxController {
   bool get isTapBlockUserList => _isTapBlockUserList.value;
   set isTapBlockUserList(bool value) => _isTapBlockUserList.value = value;
 
+  final RxString _isConversationId = ''.obs;
+  String get isConversationId => _isConversationId.value;
+  set isConversationId(String value) => _isConversationId.value = value;
+
   List<Emoji> reactions = [];
 
   final debounce = IsmChatDebounce();

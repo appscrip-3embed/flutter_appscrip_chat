@@ -824,7 +824,7 @@ extension SizeOfMedia on String {
 
   Uint8List get strigToUnit8List {
     var list = Uint8List.fromList(
-      List.from(json.decode(this) as List),
+      List.from(jsonDecode(this) as List),
     );
     return list;
   }

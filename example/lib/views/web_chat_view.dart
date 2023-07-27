@@ -24,7 +24,7 @@ class WebChatView extends StatelessWidget {
                   SizedBox(
                       width: Dimens.percentWidth(.3), child: const ChatList()),
                   Expanded(
-                    child: controller.conversationId.isEmpty
+                    child: !controller.firstTapConversation
                         ? const Material(
                             child: Center(
                               child: Text('Show place holder'),

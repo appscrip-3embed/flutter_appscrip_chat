@@ -140,7 +140,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
     if (isMaxSize == false) {
       Get.back<void>();
-      _controller.webMedia.clear();
+      sendPhotoAndVideoForWeb();
     } else {
       await Get.dialog(
         const IsmChatAlertDialogBox(
@@ -148,6 +148,37 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           cancelLabel: 'Okay',
         ),
       );
+    }
+  }
+
+  void sendPhotoAndVideoForWeb() async {
+    if (_controller.webMedia.isNotEmpty) {
+      IsmChatUtility.showLoader();
+      for (var media in _controller.webMedia) {
+        //TODO: remove await from here
+        if (IsmChatConstants.imageExtensions
+            .contains(media.platformFile.extension)) {
+          await sendImage(
+            conversationId: _controller.conversation?.conversationId ?? '',
+            userId: _controller.conversation?.opponentDetails?.userId ?? '',
+            opponentName:
+                _controller.conversation?.opponentDetails?.userName ?? '',
+            webMediaModel: media,
+          );
+        } else {
+          await sendVideo(
+            webMediaModel: media,
+            isThumbnail: true,
+            conversationId: _controller.conversation?.conversationId ?? '',
+            userId: _controller.conversation?.opponentDetails?.userId ?? '',
+            opponentName:
+                _controller.conversation?.opponentDetails?.userName ?? '',
+          );
+        }
+      }
+      IsmChatUtility.closeLoader();
+      _controller.isCameraView = false;
+      _controller.webMedia.clear();
     }
   }
 
@@ -420,17 +451,17 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
   }
 
-  Future<void> sendVideo({
-    File? file,
-    bool isThumbnail = false,
-    File? thumbnailFiles,
-    SendMessageType sendMessageType = SendMessageType.pendingMessage,
-    IsmChatMessageModel? ismChatChatMessageModel,
-    bool forwardMessgeForMulitpleUser = false,
-    required String conversationId,
-    required String userId,
-    required String opponentName,
-  }) async {
+  Future<void> sendVideo(
+      {File? file,
+      bool isThumbnail = false,
+      File? thumbnailFiles,
+      SendMessageType sendMessageType = SendMessageType.pendingMessage,
+      IsmChatMessageModel? ismChatChatMessageModel,
+      bool forwardMessgeForMulitpleUser = false,
+      required String conversationId,
+      required String userId,
+      required String opponentName,
+      WebMediaModel? webMediaModel}) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null) {
@@ -447,6 +478,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     String? thumbnailMediaId;
     String? mediaId;
     bool? isNetWorkUrl;
+    String? extension;
+    File? thumbnailFile;
+    MediaInfo? videoCopress;
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     if (sendMessageType == SendMessageType.forwardMessage) {
       ismChatChatMessageModel!.conversationId = conversationId;
@@ -474,55 +508,68 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       }
       videoMessage = ismChatChatMessageModel;
     } else {
-      final videoCopress = await VideoCompress.compressVideo(file!.path,
-          quality: VideoQuality.MediumQuality, includeAudio: true);
-      final thumbnailFile = isThumbnail
-          ? thumbnailFiles!
-          : await VideoCompress.getFileThumbnail(file.path,
-              quality: 50, // default(100)
-              position: -1 // default(-1)
-              );
-      if (videoCopress != null) {
-        bytes = videoCopress.file!.readAsBytesSync();
-        thumbnailBytes = thumbnailFile.readAsBytesSync();
-        thumbnailNameWithExtension = thumbnailFile.path.split('/').last;
-        thumbnailMediaId =
-            thumbnailNameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
-        nameWithExtension = file.path.split('/').last;
-        mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
-        final extension = nameWithExtension.split('.').last;
-
-        videoMessage = IsmChatMessageModel(
-          body: 'Video',
-          conversationId: conversationId,
-          customType: IsmChatCustomMessageType.video,
-          attachments: [
-            AttachmentModel(
-                attachmentType: IsmChatMediaType.video,
-                thumbnailUrl: thumbnailFile.path,
-                size: double.parse(bytes.length.toString()),
-                name: nameWithExtension,
-                mimeType: extension,
-                mediaUrl: videoCopress.file!.path,
-                mediaId: mediaId,
-                extension: extension)
-          ],
-          deliveredToAll: false,
-          messageId: '',
-          deviceId: _controller._deviceConfig.deviceId!,
-          messageType: IsmChatMessageType.normal,
-          messagingDisabled: false,
-          parentMessageId: '',
-          readByAll: false,
-          sentAt: sentAt,
-          sentByMe: true,
-          isUploading: true,
-        );
+      if (webMediaModel == null && !kIsWeb) {
+        videoCopress = await VideoCompress.compressVideo(file!.path,
+            quality: VideoQuality.MediumQuality, includeAudio: true);
+        thumbnailFile = isThumbnail
+            ? thumbnailFiles!
+            : await VideoCompress.getFileThumbnail(file.path,
+                quality: 50, // default(100)
+                position: -1 // default(-1)
+                );
+        if (videoCopress != null) {
+          bytes = videoCopress.file!.readAsBytesSync();
+          thumbnailBytes = thumbnailFile.readAsBytesSync();
+          thumbnailNameWithExtension = thumbnailFile.path.split('/').last;
+          thumbnailMediaId =
+              thumbnailNameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
+          nameWithExtension = file.path.split('/').last;
+          mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
+          extension = nameWithExtension.split('.').last;
+        }
+      } else {
+        bytes = webMediaModel?.platformFile.bytes;
+        thumbnailBytes = webMediaModel?.thumbnailBytes;
+        thumbnailNameWithExtension = '$sentAt.png';
+        thumbnailMediaId = '$sentAt';
+        nameWithExtension = webMediaModel?.platformFile.name;
+        mediaId = '$sentAt';
+        extension = webMediaModel?.platformFile.extension;
       }
+      videoMessage = IsmChatMessageModel(
+        body: 'Video',
+        conversationId: conversationId,
+        customType: IsmChatCustomMessageType.video,
+        attachments: [
+          AttachmentModel(
+              attachmentType: IsmChatMediaType.video,
+              thumbnailUrl: webMediaModel != null
+                  ? thumbnailBytes.toString()
+                  : thumbnailFile?.path,
+              size: double.parse(bytes!.length.toString()),
+              name: nameWithExtension,
+              mimeType: extension,
+              mediaUrl: webMediaModel != null
+                  ? webMediaModel.platformFile.bytes.toString()
+                  : videoCopress!.file!.path,
+              mediaId: mediaId,
+              extension: extension)
+        ],
+        deliveredToAll: false,
+        messageId: '',
+        deviceId: _controller._deviceConfig.deviceId!,
+        messageType: IsmChatMessageType.normal,
+        messagingDisabled: false,
+        parentMessageId: '',
+        readByAll: false,
+        sentAt: sentAt,
+        sentByMe: true,
+        isUploading: true,
+      );
     }
     if (!forwardMessgeForMulitpleUser) {
       try {
-        _controller.messages.add(videoMessage!);
+        _controller.messages.add(videoMessage);
       } catch (e, st) {
         IsmChatLog.error('$e,/n$st');
       }
@@ -530,10 +577,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
 
     if (sendMessageType == SendMessageType.pendingMessage) {
       await IsmChatConfig.dbWrapper!
-          .saveMessage(videoMessage!, IsmChatDbBox.pending);
+          .saveMessage(videoMessage, IsmChatDbBox.pending);
     } else {
       await IsmChatConfig.dbWrapper!
-          .saveMessage(videoMessage!, IsmChatDbBox.forward);
+          .saveMessage(videoMessage, IsmChatDbBox.forward);
     }
     if (Responsive.isWebAndTablet(Get.context!)) {
       _controller.updateLastMessagOnCurrentTime(videoMessage);
@@ -562,15 +609,15 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         sendMessageType: sendMessageType);
   }
 
-  Future<void> sendImage({
-    SendMessageType sendMessageType = SendMessageType.pendingMessage,
-    IsmChatMessageModel? ismChatChatMessageModel,
-    bool forwardMessgeForMulitpleUser = false,
-    required String conversationId,
-    required String userId,
-    required String opponentName,
-    File? imagePath,
-  }) async {
+  Future<void> sendImage(
+      {SendMessageType sendMessageType = SendMessageType.pendingMessage,
+      IsmChatMessageModel? ismChatChatMessageModel,
+      bool forwardMessgeForMulitpleUser = false,
+      required String conversationId,
+      required String userId,
+      required String opponentName,
+      File? imagePath,
+      WebMediaModel? webMediaModel}) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null) {
@@ -585,6 +632,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     Uint8List? bytes;
     String? mediaId;
     bool? isNetWorkUrl;
+    String? extension;
+    File? compressedFile;
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     if (sendMessageType == SendMessageType.forwardMessage) {
       ismChatChatMessageModel!.conversationId = conversationId;
@@ -605,28 +654,41 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       }
       imageMessage = ismChatChatMessageModel;
     } else {
-      var compressedFile = await FlutterNativeImage.compressImage(
-          _controller.imagePath!.path,
-          quality: 60,
-          percentage: 70);
-      bytes = compressedFile.readAsBytesSync();
-      nameWithExtension = compressedFile.path.split('/').last;
-      mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
-      final extension = nameWithExtension.split('.').last;
+      if (webMediaModel == null) {
+        compressedFile = await FlutterNativeImage.compressImage(
+            _controller.imagePath!.path,
+            quality: 60,
+            percentage: 70);
+        bytes = compressedFile.readAsBytesSync();
+        nameWithExtension = compressedFile.path.split('/').last;
+        mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
+        extension = nameWithExtension.split('.').last;
+      } else {
+        bytes = webMediaModel.platformFile.bytes;
+        nameWithExtension = webMediaModel.platformFile.name;
+        mediaId = sentAt.toString();
+        extension = webMediaModel.platformFile.extension;
+      }
+
       imageMessage = IsmChatMessageModel(
           body: 'Image',
           conversationId: conversationId,
           customType: IsmChatCustomMessageType.image,
           attachments: [
             AttachmentModel(
-                attachmentType: IsmChatMediaType.image,
-                thumbnailUrl: compressedFile.path,
-                size: double.parse(bytes.length.toString()),
-                name: nameWithExtension,
-                mimeType: 'image/jpeg',
-                mediaUrl: compressedFile.path,
-                mediaId: mediaId,
-                extension: extension)
+              attachmentType: IsmChatMediaType.image,
+              thumbnailUrl: kIsWeb
+                  ? webMediaModel?.platformFile.bytes.toString()
+                  : compressedFile?.path,
+              size: double.parse(bytes!.length.toString()),
+              name: nameWithExtension,
+              mimeType: 'image/jpeg',
+              mediaUrl: kIsWeb
+                  ? webMediaModel?.platformFile.bytes.toString()
+                  : compressedFile?.path,
+              mediaId: mediaId,
+              extension: extension,
+            )
           ],
           deliveredToAll: false,
           messageId: '',
@@ -651,12 +713,14 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           .saveMessage(imageMessage, IsmChatDbBox.forward);
     }
     if (Responsive.isWebAndTablet(Get.context!)) {
+      IsmChatLog.error('step2');
       _controller.updateLastMessagOnCurrentTime(imageMessage);
     }
     var notificationTitle =
         IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
             ? IsmChatConfig.communicationConfig.userConfig.userName
             : conversationController.userDetails?.userName ?? '';
+
     await ismPostMediaUrl(
       forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
       isNetWorkUrl: isNetWorkUrl ?? false,

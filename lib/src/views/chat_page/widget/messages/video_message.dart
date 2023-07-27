@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class IsmChatVideoMessage extends StatelessWidget {
@@ -14,11 +15,26 @@ class IsmChatVideoMessage extends StatelessWidget {
             height: Responsive.isWebAndTablet(context)
                 ? IsmChatDimens.percentHeight(.3)
                 : null,
-            child: IsmChatImage(
-              message.attachments?.first.thumbnailUrl ?? '',
-              isNetworkImage:
-                  message.attachments?.first.mediaUrl?.isValidUrl ?? false,
-            ),
+            child: kIsWeb
+                ? message.attachments?.first.mediaUrl?.isValidUrl == true
+                    ? IsmChatImage(
+                        message.attachments?.first.thumbnailUrl ?? '',
+                        isNetworkImage:
+                            message.attachments?.first.mediaUrl?.isValidUrl ??
+                                false,
+                      )
+                    : Image.memory(
+                        message.attachments?.first.thumbnailUrl!
+                                .strigToUnit8List ??
+                            Uint8List(0),
+                        fit: BoxFit.cover,
+                      )
+                : IsmChatImage(
+                    message.attachments?.first.thumbnailUrl ?? '',
+                    isNetworkImage:
+                        message.attachments?.first.mediaUrl?.isValidUrl ??
+                            false,
+                  ),
           ),
           Icon(
             Icons.play_circle,

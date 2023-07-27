@@ -65,14 +65,21 @@ class IsmChatMessageField extends StatelessWidget {
                   ),
                   IsmChatDimens.boxWidth8,
                   if (attachments.isNotEmpty)
+                    // AvailabilityFloatingButton(
+                    //   onAddAvailability: () {},
+                    //   onAddEvent: () {},
+                    //   onRequestLeave: () {},
+                    // ),
                     Container(
                       margin: IsmChatDimens.edgeInsetsBottom4,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: IsmChatConfig.chatTheme.primaryColor,
                       ),
-                      child: _AttachmentIcon(
-                          attachments, IsmChatColors.whiteColor),
+                      child:
+                          // _AttachmentIcon(
+                          //     attachments, IsmChatColors.whiteColor)
+                          _AttachmentIconForWeb(),
                     ),
                   IsmChatDimens.boxWidth2,
                 ],
@@ -266,7 +273,6 @@ class _EmojiButton extends StatelessWidget {
 
 class _MicOrSendButton extends StatelessWidget {
   const _MicOrSendButton();
-
   @override
   Widget build(BuildContext context) => Container(
         margin: IsmChatDimens.edgeInsetsBottom8,
@@ -379,6 +385,152 @@ class _MicOrSendButton extends StatelessWidget {
               ),
             ),
           ),
+        ),
+      );
+}
+
+class _AttachmentIconForWeb extends StatefulWidget {
+  const _AttachmentIconForWeb();
+
+  @override
+  State<_AttachmentIconForWeb> createState() => _AttachmentIconForWebState();
+}
+
+class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
+    with TickerProviderStateMixin {
+  OverlayEntry? overlayEntry;
+  GlobalKey globalKey = GlobalKey();
+
+  AnimationController? fabAnimationController;
+
+  late Animation<double> _animation;
+  late Animation<double> curve;
+  late Animation<double> _buttonAnimation;
+  bool isOpened = false;
+
+  final children = ['Share', 'Icon', 'Buddon'];
+
+  @override
+  void initState() {
+    super.initState();
+    fabAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..addListener(() {
+        setState(() {
+          isOpened = fabAnimationController?.isCompleted ?? false;
+        });
+      });
+    curve = CurvedAnimation(
+      parent: fabAnimationController!,
+      curve: Curves.easeInOut,
+    );
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(curve);
+    _buttonAnimation = Tween<double>(
+      begin: 10,
+      end: 0,
+    ).animate(curve);
+  }
+
+  @override
+  void dispose() {
+    fabAnimationController!.dispose();
+    super.dispose();
+  }
+
+  void _toggle() {
+    if (fabAnimationController!.isCompleted) {
+      fabAnimationController!.reverse();
+    } else {
+      fabAnimationController!.forward();
+      showOverLay();
+    }
+  }
+
+  showOverLay() async {
+    var renderBox = globalKey.currentContext!.findRenderObject() as RenderBox?;
+    var offset = renderBox!.localToGlobal(Offset.zero);
+    OverlayState? overlayState = Overlay.of(context);
+    overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        left: offset.dx,
+        bottom: renderBox.size.height + 16,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ...children.map((e) {
+              var index = children.indexOf(e);
+              return Transform(
+                transform: Matrix4.translationValues(
+                  0.0,
+                  _buttonAnimation.value * (index + 1),
+                  0.0,
+                ),
+                child: Padding(
+                  padding: IsmChatDimens.edgeInsets0_4,
+                  child: IsmChatTapHandler(
+                    onTap: () {
+                      _toggle();
+                      switch (index) {
+                        case 0:
+                          // widget.onAddAvailability();
+                          break;
+                        case 1:
+                          // widget.onAddEvent();
+                          break;
+                        case 2:
+                          // widget.onRequestLeave();
+                          break;
+                      }
+                    },
+                    child: Opacity(
+                      opacity: _animation.value,
+                      child: Padding(
+                        padding: IsmChatDimens.edgeInsets4,
+                        child: Text(
+                          e,
+                          style: IsmChatStyles.w400Black14,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ],
+        ),
+      ),
+    );
+    overlayState.setState(() {});
+    fabAnimationController?.addListener(() {
+      overlayState.setState(() {});
+    });
+    // await fabAnimationController?.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) => GetX<IsmChatPageController>(
+        builder: (controller) => IconButton(
+          key: globalKey,
+          color: IsmChatColors.whiteColor,
+          icon: AnimatedSwitcher(
+            duration: IsmChatConfig.animationDuration,
+            transitionBuilder: (child, animation) => ScaleTransition(
+              scale: animation,
+              child: child,
+            ),
+            child: controller.showAttachment
+                ? Icon(
+                    Icons.close_rounded,
+                    key: UniqueKey(),
+                  )
+                : Icon(
+                    Icons.attachment_rounded,
+                    key: UniqueKey(),
+                  ),
+          ),
+          onPressed: _toggle,
         ),
       );
 }

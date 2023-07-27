@@ -6,7 +6,7 @@ class IsmChatSearchDelegate extends SearchDelegate<void> {
   IsmChatSearchDelegate({required this.onChatTap});
 
   final _controller = Get.find<IsmChatConversationsController>();
-  final void Function(BuildContext, IsmChatConversationModel) onChatTap;
+  final void Function(BuildContext, IsmChatConversationModel,bool) onChatTap;
   @override
   List<Widget> buildActions(BuildContext context) => [
         if (query.trim().isNotEmpty)
@@ -65,7 +65,7 @@ class IsmChatSearchDelegate extends SearchDelegate<void> {
                   return GestureDetector(
                     onTap: () {
                       _controller.navigateToMessages(conversation);
-                      onChatTap(_, conversation);
+                      onChatTap(_, conversation,false);
                     },
                     child: IsmChatConversationCard(
                       _controller.suggestions[index],

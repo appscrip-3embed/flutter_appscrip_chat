@@ -22,7 +22,7 @@ class IsmChatForwardView extends StatelessWidget {
   /// (Optional)
   ///
   /// This callback can be provided if there's a need to change the trigger when the chat is tapped to forward the message
-  final void Function(BuildContext, IsmChatConversationModel)? onChatTap;
+  final void Function(BuildContext, IsmChatConversationModel, bool)? onChatTap;
 
   final converstaionController = Get.find<IsmChatConversationsController>();
 
@@ -325,8 +325,8 @@ class IsmChatForwardView extends StatelessWidget {
                                   ismChatPageController.conversation =
                                       ismChatConversation;
 
-                                  (onChatTap ?? IsmChatConfig.onChatTap)
-                                      .call(context, ismChatConversation);
+                                  (onChatTap ?? IsmChatConfig.onChatTap).call(
+                                      context, ismChatConversation, false);
                                   await ismChatPageController.getMessagesFromDB(
                                       ismChatConversation.conversationId ?? '');
                                   await Future.delayed(
@@ -441,7 +441,7 @@ class IsmChatForwardView extends StatelessWidget {
                                   Get.back<void>();
                                   controller.navigateToMessages(conversation);
                                   (onChatTap ?? IsmChatConfig.onChatTap)
-                                      .call(context, conversation);
+                                      .call(context, conversation, false);
                                   await Future.delayed(
                                       const Duration(milliseconds: 1000));
 
