@@ -4,10 +4,10 @@ analyzer:
   exclude:
     - lib/**/*.g.dart
   # strong-mode:
-    # implicit-casts: false
-    # implicit-dynamic: true
-    # strict-casts: true
-    # strict-raw-types: true
+  # implicit-casts: false
+  # implicit-dynamic: true
+  # strict-casts: true
+  # strict-raw-types: true
   errors:
     close_sinks: ignore
     missing_required_param: warning
@@ -31,6 +31,7 @@ linter:
     - avoid_types_as_parameter_names
     - avoid_unused_constructor_parameters
     - await_only_futures
+    - avoid_js_rounded_ints
     - camel_case_types
     - file_names
     - cancel_subscriptions
