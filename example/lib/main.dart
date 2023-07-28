@@ -58,7 +58,11 @@ class _MyAppState extends State<MyApp> {
         key: const Key('ChatApp'),
         navigatorKey: navigatorKey,
         locale: const Locale('en', 'US'),
-        localizationsDelegates: GlobalMaterialLocalizations.delegates,
+        localizationsDelegates: const [
+          ...GlobalMaterialLocalizations.delegates,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+
         supportedLocales: const [
           Locale('en', 'US'),
         ],

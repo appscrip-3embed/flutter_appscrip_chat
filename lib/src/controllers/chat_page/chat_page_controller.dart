@@ -307,6 +307,17 @@ class IsmChatPageController extends GetxController
   RxList<WebMediaModel> get webMedia => _webMedia;
   set webMedia(List<WebMediaModel> value) => _webMedia.value = value;
 
+  final Rx<OverlayEntry?> _overlayEntry = Rx<OverlayEntry?>(null);
+  OverlayEntry? get overlayEntry => _overlayEntry.value;
+  set overlayEntry(OverlayEntry? value) => _overlayEntry.value = value;
+
+  final Rx<AnimationController?> _fabAnimationController =
+      Rx<AnimationController?>(null);
+  AnimationController? get fabAnimationController =>
+      _fabAnimationController.value;
+  set fabAnimationController(AnimationController? value) =>
+      _fabAnimationController.value = value;
+
   bool didReactedLast = false;
 
   List<Map<String, List<IsmChatMessageModel>>> sortMediaList(
@@ -416,10 +427,14 @@ class IsmChatPageController extends GetxController
   void onClose() {
     if (areCamerasInitialized) {
       _frontCameraController.dispose();
-      // _backCameraController.dispose();
+
+      _backCameraController.dispose();
     }
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
+    overlayEntry?.dispose();
+    fabAnimationController!.dispose();
+    overlayEntry = null;
     ifTimerMounted();
     super.onClose();
   }
@@ -428,10 +443,12 @@ class IsmChatPageController extends GetxController
   void dispose() {
     if (areCamerasInitialized) {
       _frontCameraController.dispose();
-      // _backCameraController.dispose();
+      _backCameraController.dispose();
     }
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
+    overlayEntry?.dispose();
+    fabAnimationController!.dispose();
     ifTimerMounted();
     super.dispose();
   }
@@ -736,6 +753,14 @@ class IsmChatPageController extends GetxController
 
   void scrollListener() {
     messagesScrollController.addListener(() {
+      if (showAttachment) {
+        fabAnimationController!.reverse();
+        if (fabAnimationController!.isDismissed) {
+          overlayEntry?.remove();
+        }
+        showAttachment = false;
+      }
+
       if (messagesScrollController.offset.toInt() ==
           messagesScrollController.position.maxScrollExtent.toInt()) {
         getMessagesFromAPI(forPagination: true, lastMessageTimestamp: 0);

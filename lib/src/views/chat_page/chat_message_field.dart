@@ -76,10 +76,11 @@ class IsmChatMessageField extends StatelessWidget {
                         shape: BoxShape.circle,
                         color: IsmChatConfig.chatTheme.primaryColor,
                       ),
-                      child:
-                          // _AttachmentIcon(
-                          //     attachments, IsmChatColors.whiteColor)
-                          _AttachmentIconForWeb(),
+                      child: Responsive.isWebAndTablet(context)
+                          ? _AttachmentIconForWeb(
+                              attachments, IsmChatConfig.chatTheme.primaryColor)
+                          : _AttachmentIcon(
+                              attachments, IsmChatColors.whiteColor),
                     ),
                   IsmChatDimens.boxWidth2,
                 ],
@@ -390,7 +391,10 @@ class _MicOrSendButton extends StatelessWidget {
 }
 
 class _AttachmentIconForWeb extends StatefulWidget {
-  const _AttachmentIconForWeb();
+  const _AttachmentIconForWeb(this.attachments, this.backgroundColor);
+
+  final List<IsmChatAttachmentType> attachments;
+  final Color? backgroundColor;
 
   @override
   State<_AttachmentIconForWeb> createState() => _AttachmentIconForWebState();
@@ -398,31 +402,23 @@ class _AttachmentIconForWeb extends StatefulWidget {
 
 class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
     with TickerProviderStateMixin {
-  OverlayEntry? overlayEntry;
-  GlobalKey globalKey = GlobalKey();
-
-  AnimationController? fabAnimationController;
+  final controller = Get.find<IsmChatPageController>();
+  final layerLink = LayerLink();
 
   late Animation<double> _animation;
   late Animation<double> curve;
   late Animation<double> _buttonAnimation;
-  bool isOpened = false;
-
-  final children = ['Share', 'Icon', 'Buddon'];
+  int? hoverIndex;
 
   @override
   void initState() {
-    super.initState();
-    fabAnimationController = AnimationController(
+    hoverIndex = null;
+    controller.fabAnimationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    )..addListener(() {
-        setState(() {
-          isOpened = fabAnimationController?.isCompleted ?? false;
-        });
-      });
+      duration: const Duration(milliseconds: 100),
+    );
     curve = CurvedAnimation(
-      parent: fabAnimationController!,
+      parent: controller.fabAnimationController!,
       curve: Curves.easeInOut,
     );
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(curve);
@@ -430,89 +426,131 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
       begin: 10,
       end: 0,
     ).animate(curve);
+    super.initState();
   }
 
   @override
   void dispose() {
-    fabAnimationController!.dispose();
+    controller.fabAnimationController!.dispose();
+    controller.overlayEntry?.dispose();
+    controller.overlayEntry = null;
     super.dispose();
   }
 
-  void _toggle() {
-    if (fabAnimationController!.isCompleted) {
-      fabAnimationController!.reverse();
+  void _toggle(BuildContext context) async {
+    if (controller.showAttachment) {
+      showOverLay(context);
     } else {
-      fabAnimationController!.forward();
-      showOverLay();
+      await controller.fabAnimationController!.reverse();
+      if (controller.fabAnimationController!.isDismissed) {
+        controller.overlayEntry?.remove();
+      }
     }
   }
 
-  showOverLay() async {
-    var renderBox = globalKey.currentContext!.findRenderObject() as RenderBox?;
-    var offset = renderBox!.localToGlobal(Offset.zero);
+  showOverLay(BuildContext context) async {
+    final renderBox = context.findRenderObject() as RenderBox?;
+    final size = renderBox!.size;
+    final offset = renderBox.localToGlobal(Offset.zero);
     OverlayState? overlayState = Overlay.of(context);
-    overlayEntry = OverlayEntry(
+    controller.overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
-        left: offset.dx,
-        bottom: renderBox.size.height + 16,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            ...children.map((e) {
-              var index = children.indexOf(e);
-              return Transform(
-                transform: Matrix4.translationValues(
-                  0.0,
-                  _buttonAnimation.value * (index + 1),
-                  0.0,
-                ),
-                child: Padding(
-                  padding: IsmChatDimens.edgeInsets0_4,
-                  child: IsmChatTapHandler(
-                    onTap: () {
-                      _toggle();
-                      switch (index) {
-                        case 0:
-                          // widget.onAddAvailability();
-                          break;
-                        case 1:
-                          // widget.onAddEvent();
-                          break;
-                        case 2:
-                          // widget.onRequestLeave();
-                          break;
-                      }
-                    },
-                    child: Opacity(
-                      opacity: _animation.value,
-                      child: Padding(
-                        padding: IsmChatDimens.edgeInsets4,
-                        child: Text(
-                          e,
-                          style: IsmChatStyles.w400Black14,
-                        ),
+        left: offset.dx - 5,
+        bottom: size.height + 20,
+        child: Material(
+          color: Colors.transparent,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: List.generate(
+              widget.attachments.length,
+              (index) {
+                var data = widget.attachments[index];
+                return Transform(
+                  transform: Matrix4.translationValues(
+                    0.0,
+                    _buttonAnimation.value * (index + 1),
+                    0.0,
+                  ),
+                  child: SizedBox(
+                    width: IsmChatDimens.oneHundredFifty,
+                    child: InkWell(
+                      onHover: (value) {
+                        if (value) {
+                          overlayState.setState(() {
+                            hoverIndex = index;
+                          });
+                        } else {
+                          overlayState.setState(() {
+                            hoverIndex = null;
+                          });
+                        }
+                      },
+                      onTap: () {
+                        controller.showAttachment = !controller.showAttachment;
+                        _toggle(context);
+                        controller.onBottomAttachmentTapped(data);
+                      },
+                      hoverColor: Colors.transparent,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Opacity(
+                            opacity: _animation.value,
+                            child: AbsorbPointer(
+                              absorbing: true,
+                              child: Padding(
+                                padding: IsmChatDimens.edgeInsets4,
+                                child: CircleAvatar(
+                                    radius: IsmChatDimens.twenty +
+                                        IsmChatDimens.two,
+                                    child: IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(data.iconData),
+                                    )),
+                              ),
+                            ),
+                          ),
+                          if (hoverIndex == index)
+                            Opacity(
+                              opacity: _animation.value,
+                              child: Container(
+                                width: IsmChatDimens.percentWidth(.06),
+                                alignment: Alignment.center,
+                                padding: IsmChatDimens.edgeInsets4,
+                                decoration: BoxDecoration(
+                                    color:
+                                        IsmChatConfig.chatTheme.backgroundColor,
+                                    borderRadius: BorderRadius.circular(
+                                        IsmChatDimens.five)),
+                                child: Text(
+                                  data.name.capitalizeFirst.toString(),
+                                  style: IsmChatStyles.w400Black14,
+                                ),
+                              ),
+                            )
+                        ],
                       ),
                     ),
                   ),
-                ),
-              );
-            }).toList(),
-          ],
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
-    overlayState.setState(() {});
-    fabAnimationController?.addListener(() {
+
+    controller.fabAnimationController?.addListener(() {
       overlayState.setState(() {});
     });
-    // await fabAnimationController?.forward();
+
+    overlayState.insert(controller.overlayEntry!);
+    await controller.fabAnimationController?.forward();
   }
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
         builder: (controller) => IconButton(
-          key: globalKey,
           color: IsmChatColors.whiteColor,
           icon: AnimatedSwitcher(
             duration: IsmChatConfig.animationDuration,
@@ -530,7 +568,11 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
                     key: UniqueKey(),
                   ),
           ),
-          onPressed: _toggle,
+          onPressed: () {
+            controller.showAttachment = !controller.showAttachment;
+
+            _toggle(context);
+          },
         ),
       );
 }

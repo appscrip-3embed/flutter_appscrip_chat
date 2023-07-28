@@ -52,6 +52,7 @@ class ChatList extends StatelessWidget {
         showAppBar: true,
         onSignOut: controller.onSignOut,
         showSearch: false,
+
         onChatTap: (_, conversation, isVisible) async {
           if (Responsive.isWeb(context) || Responsive.isTablet(context)) {
             if (isVisible) {

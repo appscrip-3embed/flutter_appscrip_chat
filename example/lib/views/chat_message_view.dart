@@ -1,6 +1,7 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 
 import 'package:chat_component_example/res/res.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ChatMessageView extends StatelessWidget {
@@ -19,6 +20,12 @@ class ChatMessageView extends StatelessWidget {
         ),
         text: 'No Messages',
       ),
+      attachments: const [
+        IsmChatAttachmentType.camera,
+        IsmChatAttachmentType.gallery,
+        IsmChatAttachmentType.document,
+        if (!kIsWeb) IsmChatAttachmentType.document,
+      ],
     );
   }
 }

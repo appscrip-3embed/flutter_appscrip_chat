@@ -1,5 +1,6 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -43,7 +44,11 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
 
   @override
   void initState() {
+    startInit();
     super.initState();
+  }
+
+  startInit() {
     initiated = widget.initiated;
     mediaIndex = widget.mediaIndex;
     final timeStamp = DateTime.fromMillisecondsSinceEpoch(widget.mediaTime);
@@ -54,9 +59,13 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        backgroundColor: IsmChatColors.blackColor,
+        backgroundColor: Responsive.isWebAndTablet(context)
+            ? null
+            : IsmChatColors.blackColor,
         appBar: AppBar(
-          backgroundColor: IsmChatColors.blackColor,
+          backgroundColor: Responsive.isWebAndTablet(context)
+              ? null
+              : IsmChatColors.blackColor,
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -153,44 +162,128 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
           ],
         ),
         body: SizedBox(
-          height: IsmChatDimens.percentHeight(1),
-          width: IsmChatDimens.percentWidth(1),
-          child: CarouselSlider.builder(
-            itemBuilder: (BuildContext context, int index, int realIndex) {
-              var url =
-                  widget.messageData[index].attachments!.first.mediaUrl ?? '';
-              return widget.messageData[index].customType ==
-                      IsmChatCustomMessageType.image
-                  ? PhotoView(
-                      imageProvider: url.isValidUrl
-                          ? NetworkImage(url) as ImageProvider
-                          : AssetImage(url),
-                      loadingBuilder: (context, event) =>
-                          const IsmChatLoadingDialog(),
-                      wantKeepAlive: true,
-                    )
-                  : VideoViewPage(path: url);
-            },
-            options: CarouselOptions(
-              height: IsmChatDimens.percentHeight(1),
-              viewportFraction: 1,
-              enlargeCenterPage: true,
-              initialPage: widget.mediaIndex,
-              enableInfiniteScroll: false,
-              onPageChanged: (index, _) {
-                final timeStamp = DateTime.fromMillisecondsSinceEpoch(
-                    widget.messageData[index].sentAt);
-                final time = DateFormat.jm().format(timeStamp);
-                final monthDay = DateFormat.MMMd().format(timeStamp);
-                setState(
-                  () {
-                    initiated = widget.messageData[index].sentByMe;
-                    mediaTime = '$monthDay, $time';
+          height: Responsive.isWebAndTablet(context)
+              ? null
+              : IsmChatDimens.percentHeight(1),
+          width: Responsive.isWebAndTablet(context)
+              ? null
+              : IsmChatDimens.percentWidth(1),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: IsmChatDimens.percentWidth(.5),
+                height: IsmChatDimens.percentHeight(.7),
+                child: CarouselSlider.builder(
+                  itemBuilder:
+                      (BuildContext context, int index, int realIndex) {
+                    var url =
+                        widget.messageData[index].attachments!.first.mediaUrl ??
+                            '';
+                    return widget.messageData[index].customType ==
+                            IsmChatCustomMessageType.image
+                        ? PhotoView(
+                            imageProvider: url.isValidUrl
+                                ? NetworkImage(url)
+                                : kIsWeb
+                                    ? MemoryImage(url.strigToUnit8List)
+                                        as ImageProvider
+                                    : AssetImage(url),
+                            loadingBuilder: (context, event) =>
+                                const IsmChatLoadingDialog(),
+                            wantKeepAlive: true,
+                          )
+                        : VideoViewPage(path: url);
                   },
-                );
-              },
-            ),
-            itemCount: widget.messageData.length,
+                  options: CarouselOptions(
+                    height: IsmChatDimens.percentHeight(1),
+                    aspectRatio: 16 / 9,
+                    viewportFraction: 1,
+                    enlargeCenterPage: true,
+                    initialPage: widget.mediaIndex,
+                    enableInfiniteScroll: false,
+                    onPageChanged: (index, _) {
+                      final timeStamp = DateTime.fromMillisecondsSinceEpoch(
+                          widget.messageData[index].sentAt);
+                      final time = DateFormat.jm().format(timeStamp);
+                      final monthDay = DateFormat.MMMd().format(timeStamp);
+                      // setState(
+                      //   () {
+                      //     initiated = widget.messageData[index].sentByMe;
+                      //     mediaTime = '$monthDay, $time';
+                      //   },
+                      // );
+                    },
+                  ),
+                  itemCount: widget.messageData.length,
+                ),
+              ),
+              Container(
+                width: Get.width,
+                alignment: Alignment.center,
+                height: IsmChatDimens.twoHundred,
+                margin: IsmChatDimens.edgeInsets10,
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  separatorBuilder: (context, index) => IsmChatDimens.boxWidth8,
+                  itemCount: widget.messageData.length,
+                  itemBuilder: (context, index) {
+                    var media = widget.messageData[index];
+                    final controller = Get.find<IsmChatPageController>();
+                    return InkWell(
+                      onTap: () async {
+                        controller.assetsIndex = index;
+                        controller.isVideoVisible = false;
+                        // dataSize = await IsmChatUtility.fileToSize(
+                        //   File(ismChatPageController
+                        //       .listOfAssetsPath[
+                        //           ismChatPageController.assetsIndex]
+                        //       .mediaUrl!),
+                        // );
+                      },
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            height: IsmChatDimens.sixty,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(IsmChatDimens.ten)),
+                                border: controller.assetsIndex == index
+                                    ? Border.all(
+                                        color: Get.theme.secondaryHeaderColor,
+                                        width: IsmChatDimens.two)
+                                    : null),
+                            width: IsmChatDimens.sixty,
+                            child: IsmChatImage(
+                              media.attachments?.first.thumbnailUrl ?? '',
+                              isNetworkImage: false,
+                            ),
+                          ),
+                          if (media.attachments?.first.attachmentType ==
+                              IsmChatMediaType.video)
+                            Container(
+                              alignment: Alignment.center,
+                              width: IsmChatDimens.thirtyTwo,
+                              height: IsmChatDimens.thirtyTwo,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(Icons.play_arrow,
+                                  color: Colors.black),
+                            ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       );

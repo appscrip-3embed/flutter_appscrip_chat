@@ -38,7 +38,9 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
     chatPageController.isVideoVisible = true;
     _controller = kIsWeb
         ? VideoPlayerController.network(
-            IsmChatBlob.blobToUrl(widget.path.strigToUnit8List),
+            widget.path.isValidUrl
+                ? widget.path
+                : IsmChatBlob.blobToUrl(widget.path.strigToUnit8List),
           )
         : widget.path.isValidUrl
             ? VideoPlayerController.network(widget.path)
@@ -117,7 +119,52 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
                       child: AspectRatio(
                         aspectRatio: _controller.value.aspectRatio,
                         // Use the VideoPlayer widget to display the video.
-                        child: VideoPlayer(_controller),
+                        child: Stack(children: [
+                          VideoPlayer(_controller),
+                          if (!widget.showVideoPlaying && kIsWeb)
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Padding(
+                                padding: IsmChatDimens.edgeInsets20,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    ValueListenableBuilder(
+                                        valueListenable: _controller,
+                                        builder: (context,
+                                                VideoPlayerValue value,
+                                                child) =>
+                                            Text(
+                                              _videoDuration(
+                                                value.position,
+                                              ),
+                                              style: IsmChatStyles.w600White14,
+                                            )),
+                                    Expanded(
+                                      child: SizedBox(
+                                        height: IsmChatDimens.five,
+                                        child: VideoProgressIndicator(
+                                            _controller,
+                                            allowScrubbing: true,
+                                            colors: const VideoProgressColors(
+                                                backgroundColor:
+                                                    IsmChatColors.whiteColor,
+                                                playedColor:
+                                                    IsmChatColors.greenColor),
+                                            padding: IsmChatDimens
+                                                .edgeInsetsHorizontal10),
+                                      ),
+                                    ),
+                                    Text(
+                                      _videoDuration(
+                                          _controller.value.duration),
+                                      style: IsmChatStyles.w600White14,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                        ]),
                       ),
                     )
                   : const Center(
@@ -150,25 +197,26 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
                   ),
                 ),
               ),
-              if (!widget.showVideoPlaying)
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: IsmChatDimens.edgeInsets20,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ValueListenableBuilder(
-                            valueListenable: _controller,
-                            builder: (context, VideoPlayerValue value, child) =>
-                                Text(
-                                  _videoDuration(
-                                    value.position,
-                                  ),
-                                  style: IsmChatStyles.w600White14,
-                                )),
-                        Expanded(
-                          child: SizedBox(
+              if (!kIsWeb)
+                if (!widget.showVideoPlaying)
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: IsmChatDimens.edgeInsets20,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ValueListenableBuilder(
+                              valueListenable: _controller,
+                              builder:
+                                  (context, VideoPlayerValue value, child) =>
+                                      Text(
+                                        _videoDuration(
+                                          value.position,
+                                        ),
+                                        style: IsmChatStyles.w600White14,
+                                      )),
+                          SizedBox(
                             height: IsmChatDimens.five,
                             child: VideoProgressIndicator(_controller,
                                 allowScrubbing: true,
@@ -177,15 +225,14 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
                                     playedColor: IsmChatColors.greenColor),
                                 padding: IsmChatDimens.edgeInsetsHorizontal10),
                           ),
-                        ),
-                        Text(
-                          _videoDuration(_controller.value.duration),
-                          style: IsmChatStyles.w600White14,
-                        )
-                      ],
+                          Text(
+                            _videoDuration(_controller.value.duration),
+                            style: IsmChatStyles.w600White14,
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                )
+                  )
             ],
           ),
         ),

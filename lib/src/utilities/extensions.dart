@@ -839,3 +839,19 @@ extension ColorExtension on String {
     return Color(int.parse(buffer.toString(), radix: 16));
   }
 }
+
+extension AttachmentIcon on IsmChatAttachmentType {
+  IconData get iconData {
+    switch (this) {
+      case IsmChatAttachmentType.camera:
+        return Icons.camera_alt_outlined;
+      case IsmChatAttachmentType.gallery:
+        return Icons.collections;
+
+      case IsmChatAttachmentType.document:
+        return Icons.description;
+      case IsmChatAttachmentType.location:
+        return Icons.pin_drop;
+    }
+  }
+}
