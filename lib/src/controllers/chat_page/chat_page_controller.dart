@@ -387,12 +387,14 @@ class IsmChatPageController extends GetxController
       }
       IsmChatLog.error(conversation?.messageFromOutSide);
       if (conversation?.messageFromOutSide != null) {
+        await Future.delayed(const Duration(milliseconds: 100));
+        chatInputController.text = conversation?.messageFromOutSide ?? '';
+        sendTextMessage(
+          conversationId: conversation?.conversationId ?? '',
+          userId: conversation?.opponentDetails?.userId ?? '',
+          opponentName: conversation?.opponentDetails?.userName ?? '',
+        );
         IsmChatLog.error(conversation?.messageFromOutSide);
-        //  sendTextMessage(
-        //   conversationId: conversation?.conversationId ?? '',
-        //   userId: conversation?.opponentDetails?.userId ?? '',
-        //   opponentName: conversation?.opponentDetails?.userName ?? '',
-        // );
       }
     }
   }
