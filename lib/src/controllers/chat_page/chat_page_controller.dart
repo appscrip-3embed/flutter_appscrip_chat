@@ -363,7 +363,7 @@ class IsmChatPageController extends GetxController
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
       final newMeessageFromOutside = conversation?.messageFromOutSide;
-      IsmChatLog.error('sendMessage step3 ${conversation?.messageFromOutSide}');
+      IsmChatLog.error('sendMessage step3 $newMeessageFromOutside');
       await Future.delayed(Duration.zero);
       if (conversation?.conversationId?.isNotEmpty ?? false) {
         _getBackGroundAsset();
@@ -388,11 +388,11 @@ class IsmChatPageController extends GetxController
 
         isMessagesLoading = false;
       }
-      IsmChatLog.error('sendMessage step4 ${conversation?.messageFromOutSide}');
+      IsmChatLog.error('sendMessage step4 $newMeessageFromOutside');
       if (newMeessageFromOutside != null ||
           newMeessageFromOutside!.isNotEmpty) {
         await Future.delayed(const Duration(milliseconds: 100));
-        chatInputController.text = conversation?.messageFromOutSide ?? '';
+        chatInputController.text = newMeessageFromOutside;
         sendTextMessage(
           conversationId: conversation?.conversationId ?? '',
           userId: conversation?.opponentDetails?.userId ?? '',
