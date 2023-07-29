@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 import 'dart:math';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:camera/camera.dart';
@@ -359,6 +358,7 @@ class IsmChatPageController extends GetxController
 
   @override
   void onInit() async {
+    super.onInit();
     _generateReactionList();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
@@ -385,8 +385,22 @@ class IsmChatPageController extends GetxController
         }
         isMessagesLoading = false;
       }
+      if (conversation?.messageFromOutSide != null) {
+        IsmChatLog.error(conversation?.messageFromOutSide);
+        //  sendTextMessage(
+        //   conversationId: conversation?.conversationId ?? '',
+        //   userId: conversation?.opponentDetails?.userId ?? '',
+        //   opponentName: conversation?.opponentDetails?.userName ?? '',
+        // );
+      }
     }
+  }
 
+  @override
+  void onReady() {
+    super.onReady();
+
+    scrollListener();
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
     });
@@ -395,11 +409,11 @@ class IsmChatPageController extends GetxController
         showEmojiBoard = false;
       }
     });
-    super.onInit();
   }
 
   @override
   void onClose() {
+    super.onClose();
     if (areCamerasInitialized) {
       _frontCameraController.dispose();
       _backCameraController.dispose();
@@ -407,11 +421,11 @@ class IsmChatPageController extends GetxController
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
     ifTimerMounted();
-    super.onClose();
   }
 
   @override
   void dispose() {
+    super.dispose();
     if (areCamerasInitialized) {
       _frontCameraController.dispose();
       _backCameraController.dispose();
@@ -419,7 +433,6 @@ class IsmChatPageController extends GetxController
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
     ifTimerMounted();
-    super.dispose();
   }
 
   _generateReactionList() async {

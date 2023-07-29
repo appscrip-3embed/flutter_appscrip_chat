@@ -100,6 +100,7 @@ class IsmChatConversationModel {
     this.createdBy,
     this.createdByUserName,
     this.messages,
+    this.messageFromOutSide,
   });
 
   final int? updatedAt;
@@ -125,6 +126,7 @@ class IsmChatConversationModel {
   final String? createdBy;
   final String? createdByUserName;
   final List<IsmChatMessageModel>? messages;
+  final String? messageFromOutSide;
 
   String get replyName =>
       IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
@@ -163,31 +165,33 @@ class IsmChatConversationModel {
     List<UserDetails>? members,
     IsmChatUserOwnDetails? usersOwnDetails,
     List<IsmChatMessageModel>? messages,
+    String? messageFromOutSide,
   }) =>
       IsmChatConversationModel(
-        updatedAt: updatedAt ?? this.updatedAt,
-        unreadMessagesCount: unreadMessagesCount ?? this.unreadMessagesCount,
-        privateOneToOne: privateOneToOne ?? this.privateOneToOne,
-        opponentDetails: opponentDetails ?? this.opponentDetails,
-        metaData: metaData ?? this.metaData,
-        messagingDisabled: messagingDisabled ?? this.messagingDisabled,
-        membersCount: membersCount ?? this.membersCount,
-        lastReadAt: lastReadAt ?? this.lastReadAt,
-        lastMessageSentAt: lastMessageSentAt ?? this.lastMessageSentAt,
-        lastMessageDetails: lastMessageDetails ?? this.lastMessageDetails,
-        isGroup: isGroup ?? this.isGroup,
-        conversationType: conversationType ?? this.conversationType,
-        conversationTitle: conversationTitle ?? this.conversationTitle,
-        conversationImageUrl: conversationImageUrl ?? this.conversationImageUrl,
-        conversationId: conversationId ?? this.conversationId,
-        createdAt: createdAt ?? this.createdAt,
-        createdBy: createdBy ?? this.createdBy,
-        createdByUserName: createdByUserName ?? this.createdByUserName,
-        config: config ?? this.config,
-        members: members ?? this.members,
-        usersOwnDetails: usersOwnDetails ?? this.usersOwnDetails,
-        messages: messages ?? this.messages,
-      );
+          updatedAt: updatedAt ?? this.updatedAt,
+          unreadMessagesCount: unreadMessagesCount ?? this.unreadMessagesCount,
+          privateOneToOne: privateOneToOne ?? this.privateOneToOne,
+          opponentDetails: opponentDetails ?? this.opponentDetails,
+          metaData: metaData ?? this.metaData,
+          messagingDisabled: messagingDisabled ?? this.messagingDisabled,
+          membersCount: membersCount ?? this.membersCount,
+          lastReadAt: lastReadAt ?? this.lastReadAt,
+          lastMessageSentAt: lastMessageSentAt ?? this.lastMessageSentAt,
+          lastMessageDetails: lastMessageDetails ?? this.lastMessageDetails,
+          isGroup: isGroup ?? this.isGroup,
+          conversationType: conversationType ?? this.conversationType,
+          conversationTitle: conversationTitle ?? this.conversationTitle,
+          conversationImageUrl:
+              conversationImageUrl ?? this.conversationImageUrl,
+          conversationId: conversationId ?? this.conversationId,
+          createdAt: createdAt ?? this.createdAt,
+          createdBy: createdBy ?? this.createdBy,
+          createdByUserName: createdByUserName ?? this.createdByUserName,
+          config: config ?? this.config,
+          members: members ?? this.members,
+          usersOwnDetails: usersOwnDetails ?? this.usersOwnDetails,
+          messages: messages ?? this.messages,
+          messageFromOutSide: messageFromOutSide ?? this.messageFromOutSide);
 
   Map<String, dynamic> toMap() => {
         'isGroup': isGroup,
@@ -219,7 +223,7 @@ class IsmChatConversationModel {
 
   @override
   String toString() =>
-      'IsmChatConversationModel(updatedAt: $updatedAt, unreadMessagesCount: $unreadMessagesCount, userIds: $userIds, privateOneToOne: $privateOneToOne, opponentDetails: $opponentDetails, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, lastMessageSentAt: $lastMessageSentAt, lastMessageDetails: $lastMessageDetails, isGroup: $isGroup, conversationType: $conversationType, createdAt: $createdAt, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, config: $config, members: $members, usersOwnDetails: $usersOwnDetails, createdBy: $createdBy, createdByUserName: $createdByUserName, messages: $messages)';
+      'IsmChatConversationModel(updatedAt: $updatedAt, unreadMessagesCount: $unreadMessagesCount, userIds: $userIds, privateOneToOne: $privateOneToOne, opponentDetails: $opponentDetails, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, lastMessageSentAt: $lastMessageSentAt, lastMessageDetails: $lastMessageDetails, isGroup: $isGroup, conversationType: $conversationType, createdAt: $createdAt, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, config: $config, members: $members, usersOwnDetails: $usersOwnDetails, createdBy: $createdBy, createdByUserName: $createdByUserName, messages: $messages, )';
 
   @override
   bool operator ==(covariant IsmChatConversationModel other) {

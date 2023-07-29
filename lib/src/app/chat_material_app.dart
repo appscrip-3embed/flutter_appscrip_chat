@@ -215,6 +215,7 @@ class IsmChatApp extends StatelessWidget {
     IsmChatMetaData? metaData,
     void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
     Duration duration = const Duration(milliseconds: 500),
+    String? messageFromOutSide,
   }) async {
     assert(
       [name, userId].every((e) => e.isNotEmpty),
@@ -250,16 +251,16 @@ class IsmChatApp extends StatelessWidget {
               firstName: name.split(' ').first,
               lastName: name.split(' ').last));
       conversation = IsmChatConversationModel(
-        messagingDisabled: false,
-        conversationImageUrl: profileImageUrl,
-        isGroup: false,
-        opponentDetails: userDetails,
-        unreadMessagesCount: 0,
-        lastMessageDetails: null,
-        lastMessageSentAt: 0,
-        membersCount: 1,
-        metaData: metaData,
-      );
+          messagingDisabled: false,
+          conversationImageUrl: profileImageUrl,
+          isGroup: false,
+          opponentDetails: userDetails,
+          unreadMessagesCount: 0,
+          lastMessageDetails: null,
+          lastMessageSentAt: 0,
+          membersCount: 1,
+          metaData: metaData,
+          messageFromOutSide: messageFromOutSide);
     } else {
       conversation = controller.conversations
           .firstWhere((e) => e.conversationId == conversationId);
