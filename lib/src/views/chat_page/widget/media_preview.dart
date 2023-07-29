@@ -2,6 +2,7 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
@@ -48,6 +49,20 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
     super.initState();
   }
 
+  Future<bool> rebuild() async {
+    if (!mounted) return false;
+
+    // if there's a current frame,
+    if (SchedulerBinding.instance.schedulerPhase != SchedulerPhase.idle) {
+      // wait for the end of that frame.
+      await SchedulerBinding.instance.endOfFrame;
+      if (!mounted) return false;
+    }
+
+    setState(() {});
+    return true;
+  }
+
   startInit() {
     initiated = widget.initiated;
     mediaIndex = widget.mediaIndex;
@@ -85,7 +100,7 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
           leading: InkWell(
             child: Icon(
               Icons.adaptive.arrow_back,
-              color: IsmChatColors.whiteColor,
+              color: IsmChatColors.blackColor,
             ),
             onTap: () {
               Get.back<void>();
@@ -98,7 +113,7 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
               child: PopupMenuButton(
                 icon: const Icon(
                   Icons.more_vert,
-                  color: IsmChatColors.whiteColor,
+                  color: IsmChatColors.blackColor,
                 ),
                 itemBuilder: (context) => [
                   PopupMenuItem(
@@ -173,7 +188,6 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: IsmChatDimens.percentWidth(.5),
                 height: IsmChatDimens.percentHeight(.7),
                 child: CarouselSlider.builder(
                   itemBuilder:
@@ -203,17 +217,18 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
                     enlargeCenterPage: true,
                     initialPage: widget.mediaIndex,
                     enableInfiniteScroll: false,
-                    onPageChanged: (index, _) {
+                    onPageChanged: (index, _) async {
                       final timeStamp = DateTime.fromMillisecondsSinceEpoch(
                           widget.messageData[index].sentAt);
                       final time = DateFormat.jm().format(timeStamp);
                       final monthDay = DateFormat.MMMd().format(timeStamp);
                       // setState(
                       //   () {
-                      //     initiated = widget.messageData[index].sentByMe;
-                      //     mediaTime = '$monthDay, $time';
-                      //   },
+                      initiated = widget.messageData[index].sentByMe;
+                      mediaTime = '$monthDay, $time';
+                      // },
                       // );
+                      if (!await rebuild()) return;
                     },
                   ),
                   itemCount: widget.messageData.length,
@@ -222,7 +237,7 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
               Container(
                 width: Get.width,
                 alignment: Alignment.center,
-                height: IsmChatDimens.twoHundred,
+                height: IsmChatDimens.sixty,
                 margin: IsmChatDimens.edgeInsets10,
                 child: ListView.separated(
                   shrinkWrap: true,
@@ -231,18 +246,16 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
                   separatorBuilder: (context, index) => IsmChatDimens.boxWidth8,
                   itemCount: widget.messageData.length,
                   itemBuilder: (context, index) {
-                    var media = widget.messageData[index];
                     final controller = Get.find<IsmChatPageController>();
+                    var media = widget.messageData[index].attachments;
+                    var isVideo = IsmChatConstants.videoExtensions.contains(
+                      media?.first.extension,
+                    );
                     return InkWell(
                       onTap: () async {
                         controller.assetsIndex = index;
                         controller.isVideoVisible = false;
-                        // dataSize = await IsmChatUtility.fileToSize(
-                        //   File(ismChatPageController
-                        //       .listOfAssetsPath[
-                        //           ismChatPageController.assetsIndex]
-                        //       .mediaUrl!),
-                        // );
+                        setState(() {});
                       },
                       child: Stack(
                         alignment: Alignment.center,
@@ -251,20 +264,38 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
                             height: IsmChatDimens.sixty,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.all(
-                                    Radius.circular(IsmChatDimens.ten)),
+                                  Radius.circular(IsmChatDimens.ten),
+                                ),
                                 border: controller.assetsIndex == index
                                     ? Border.all(
-                                        color: Get.theme.secondaryHeaderColor,
+                                        color: IsmChatColors.blackColor,
                                         width: IsmChatDimens.two)
                                     : null),
                             width: IsmChatDimens.sixty,
-                            child: IsmChatImage(
-                              media.attachments?.first.thumbnailUrl ?? '',
-                              isNetworkImage: false,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(IsmChatDimens.ten),
+                              ),
+                              child: media?.first.mediaUrl?.isValidUrl == true
+                                  ? Image.network(
+                                      isVideo
+                                          ? media?.first.thumbnailUrl ?? ''
+                                          : media?.first.mediaUrl ?? '',
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.memory(
+                                      isVideo
+                                          ? media?.first.thumbnailUrl!
+                                                  .strigToUnit8List ??
+                                              Uint8List(0)
+                                          : media?.first.mediaUrl!
+                                                  .strigToUnit8List ??
+                                              Uint8List(0),
+                                      fit: BoxFit.cover,
+                                    ),
                             ),
                           ),
-                          if (media.attachments?.first.attachmentType ==
-                              IsmChatMediaType.video)
+                          if (isVideo)
                             Container(
                               alignment: Alignment.center,
                               width: IsmChatDimens.thirtyTwo,
