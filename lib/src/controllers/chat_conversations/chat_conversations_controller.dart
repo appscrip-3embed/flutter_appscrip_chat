@@ -314,10 +314,8 @@ class IsmChatConversationsController extends GetxController {
     return _viewModel.clearAllMessages(conversationId, fromServer: fromServer);
   }
 
-  void navigateToMessages(IsmChatConversationModel conversation) {
-    currentConversation = conversation;
-    IsmChatLog.error('sendMessage step2 ${conversation.messageFromOutSide}');
-  }
+  void navigateToMessages(IsmChatConversationModel conversation) =>
+      currentConversation = conversation;
 
   Future<void> deleteChat(
     String? conversationId, {
