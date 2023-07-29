@@ -251,20 +251,24 @@ class IsmChatApp extends StatelessWidget {
               firstName: name.split(' ').first,
               lastName: name.split(' ').last));
       conversation = IsmChatConversationModel(
-          messagingDisabled: false,
-          conversationImageUrl: profileImageUrl,
-          isGroup: false,
-          opponentDetails: userDetails,
-          unreadMessagesCount: 0,
-          lastMessageDetails: null,
-          lastMessageSentAt: 0,
-          membersCount: 1,
-          metaData: metaData,
-          messageFromOutSide: messageFromOutSide);
+        messagingDisabled: false,
+        conversationImageUrl: profileImageUrl,
+        isGroup: false,
+        opponentDetails: userDetails,
+        unreadMessagesCount: 0,
+        lastMessageDetails: null,
+        lastMessageSentAt: 0,
+        membersCount: 1,
+        metaData: metaData,
+        messageFromOutSide: messageFromOutSide,
+      );
     } else {
       conversation = controller.conversations
           .firstWhere((e) => e.conversationId == conversationId);
-      conversation = conversation.copyWith(metaData: metaData);
+      conversation = conversation.copyWith(
+        metaData: metaData,
+        messageFromOutSide: messageFromOutSide,
+      );
     }
     controller.navigateToMessages(conversation);
 
