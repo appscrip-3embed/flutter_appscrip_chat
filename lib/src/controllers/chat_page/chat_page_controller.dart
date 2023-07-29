@@ -362,6 +362,7 @@ class IsmChatPageController extends GetxController
     _generateReactionList();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
+      final newMeessageFromOutside = conversation?.messageFromOutSide;
       IsmChatLog.error('sendMessage step3 ${conversation?.messageFromOutSide}');
       await Future.delayed(Duration.zero);
       if (conversation?.conversationId?.isNotEmpty ?? false) {
@@ -384,10 +385,12 @@ class IsmChatPageController extends GetxController
         if (conversation!.isGroup ?? false) {
           await createConversation(userId: [], isGroup: true);
         }
+
         isMessagesLoading = false;
       }
       IsmChatLog.error('sendMessage step4 ${conversation?.messageFromOutSide}');
-      if (conversation?.messageFromOutSide != null) {
+      if (newMeessageFromOutside != null ||
+          newMeessageFromOutside!.isNotEmpty) {
         await Future.delayed(const Duration(milliseconds: 100));
         chatInputController.text = conversation?.messageFromOutSide ?? '';
         sendTextMessage(
