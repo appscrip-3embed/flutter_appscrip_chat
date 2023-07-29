@@ -385,6 +385,7 @@ class IsmChatPageController extends GetxController
         }
         isMessagesLoading = false;
       }
+      IsmChatLog.error(conversation?.messageFromOutSide);
       if (conversation?.messageFromOutSide != null) {
         IsmChatLog.error(conversation?.messageFromOutSide);
         //  sendTextMessage(
@@ -399,7 +400,6 @@ class IsmChatPageController extends GetxController
   @override
   void onReady() {
     super.onReady();
-
     scrollListener();
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
