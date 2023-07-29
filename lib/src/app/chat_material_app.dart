@@ -270,6 +270,7 @@ class IsmChatApp extends StatelessWidget {
         messageFromOutSide: messageFromOutSide,
       );
     }
+    IsmChatLog.error('sendMessage ${conversation.messageFromOutSide}');
     controller.navigateToMessages(conversation);
 
     (onNavigateToChat ?? IsmChatConfig.onChatTap)
