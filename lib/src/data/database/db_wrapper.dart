@@ -65,21 +65,33 @@ class IsmChatDBWrapper {
     if (!kIsWeb) {
       directory = await getApplicationDocumentsDirectory();
     }
-    final collection = await BoxCollection.open(
-      dbName,
-      {
-        _userBox,
-        _conversationBox,
-        _pendingBox,
-        _forwardBox,
-      },
-      path: directory != null ? '${directory.path}/$dbName' : null,
-    );
+    BoxCollection? collection;
+    if (!kIsWeb) {
+      collection = await BoxCollection.open(
+        dbName,
+        {
+          _userBox,
+          _conversationBox,
+          _pendingBox,
+          _forwardBox,
+        },
+        path: directory != null ? '${directory.path}/$dbName' : null,
+      );
+    } else {
+      collection = await BoxCollection.open(
+        dbName,
+        {
+          _userBox,
+          _conversationBox,
+          _pendingBox,
+          _forwardBox,
+        },
+      );
+    }
     if (!kIsWeb) {
       IsmChatLog.success(
           '[CREATED] - Hive databse at ${directory?.path}/$dbName');
     }
-
     var instance = IsmChatDBWrapper._create(collection);
     await instance._createBox();
     return instance;

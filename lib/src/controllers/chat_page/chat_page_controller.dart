@@ -385,7 +385,7 @@ class IsmChatPageController extends GetxController
         }
         isMessagesLoading = false;
       }
-      IsmChatLog.error(conversation?.messageFromOutSide);
+
       if (conversation?.messageFromOutSide != null) {
         await Future.delayed(const Duration(milliseconds: 100));
         chatInputController.text = conversation?.messageFromOutSide ?? '';
@@ -394,7 +394,6 @@ class IsmChatPageController extends GetxController
           userId: conversation?.opponentDetails?.userId ?? '',
           opponentName: conversation?.opponentDetails?.userName ?? '',
         );
-        IsmChatLog.error(conversation?.messageFromOutSide);
       }
     }
   }
