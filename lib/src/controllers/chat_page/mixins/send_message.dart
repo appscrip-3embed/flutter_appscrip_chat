@@ -713,7 +713,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           .saveMessage(imageMessage, IsmChatDbBox.forward);
     }
     if (Responsive.isWebAndTablet(Get.context!)) {
-      IsmChatLog.error('step2');
       _controller.updateLastMessagOnCurrentTime(imageMessage);
     }
     var notificationTitle =

@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:html' as html;
+
 import 'package:flutter/services.dart';
 // import 'package:html/html.dart' as html;
 
@@ -43,5 +45,32 @@ class IsmChatBlob {
     await reader.onLoadEnd.first;
 
     return Uint8List.fromList(reader.result as List<int>);
+  }
+
+  static void fileDownloadWithBytes(
+    List<int> bytes, {
+    String? downloadName,
+  }) {
+    // Encode our file in base64
+    final base64 = base64Encode(bytes);
+    // Create the link with the file
+    final anchor =
+        html.AnchorElement(href: 'data:application/octet-stream;base64,$base64')
+          ..target = 'blank';
+    // add the name
+    if (downloadName != null) {
+      anchor.download = downloadName;
+    }
+    // trigger download
+    html.document.body?.append(anchor);
+    anchor.click();
+    anchor.remove();
+    return;
+  }
+
+  static void fileDownloadWithUrl(String url) {
+    var anchorElement = html.AnchorElement(href: url);
+    anchorElement.download = url;
+    anchorElement.click();
   }
 }

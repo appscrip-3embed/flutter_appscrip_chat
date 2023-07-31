@@ -266,7 +266,9 @@ class IsmChatMqttController extends GetxController {
     // To handle and show last message & unread count in conversation list
 
     conversation = conversation.copyWith(
-      unreadMessagesCount: Responsive.isWebAndTablet(Get.context!)
+      unreadMessagesCount: Responsive.isWebAndTablet(Get.context!) &&
+              (Get.find<IsmChatPageController>().conversation?.conversationId ==
+                  message.conversationId)
           ? 0
           : (conversation.unreadMessagesCount ?? 0) + 1,
       lastMessageDetails: conversation.lastMessageDetails?.copyWith(

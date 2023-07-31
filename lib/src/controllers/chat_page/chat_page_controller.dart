@@ -311,6 +311,10 @@ class IsmChatPageController extends GetxController
   OverlayEntry? get overlayEntry => _overlayEntry.value;
   set overlayEntry(OverlayEntry? value) => _overlayEntry.value = value;
 
+  // final RxInt _screenWidget = 0.obs;
+  // int get screenWidget => _screenWidget.value;
+  // set screenWidget(int value) => _screenWidget.value = value;
+
   final Rx<AnimationController?> _fabAnimationController =
       Rx<AnimationController?>(null);
   AnimationController? get fabAnimationController =>
@@ -943,13 +947,23 @@ class IsmChatPageController extends GetxController
               ].contains(item.customType))
           .toList();
       var selectedMediaIndex = mediaList.indexOf(message);
-      await Get.to<void>(IsmMediaPreview(
-        mediaIndex: selectedMediaIndex,
-        messageData: mediaList,
-        mediaUserName: message.chatName,
-        initiated: message.sentByMe,
-        mediaTime: message.sentAt,
-      ));
+      if (Responsive.isWebAndTablet(Get.context!)) {
+        await Get.to<void>(IsmWebMessageMediaPreview(
+          mediaIndex: selectedMediaIndex,
+          messageData: mediaList,
+          mediaUserName: message.chatName,
+          initiated: message.sentByMe,
+          mediaTime: message.sentAt,
+        ));
+      } else {
+        await Get.to<void>(IsmMediaPreview(
+          mediaIndex: selectedMediaIndex,
+          messageData: mediaList,
+          mediaUserName: message.chatName,
+          initiated: message.sentByMe,
+          mediaTime: message.sentAt,
+        ));
+      }
     } else if (message.customType == IsmChatCustomMessageType.file) {
       var localPath = message.attachments?.first.mediaUrl;
       if (localPath == null) {

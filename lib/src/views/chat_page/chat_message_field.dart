@@ -244,7 +244,6 @@ class _ReplyMessage extends StatelessWidget {
 
 class _EmojiButton extends StatelessWidget {
   const _EmojiButton(this.color);
-
   final Color? color;
 
   @override
@@ -408,11 +407,11 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
   late Animation<double> _animation;
   late Animation<double> curve;
   late Animation<double> _buttonAnimation;
-  int? hoverIndex;
+  int? toolTipIndex;
 
   @override
   void initState() {
-    hoverIndex = null;
+    toolTipIndex = null;
     controller.fabAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 100),
@@ -451,89 +450,91 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
   showOverLay(BuildContext context) async {
     final renderBox = context.findRenderObject() as RenderBox?;
     final size = renderBox!.size;
-    final offset = renderBox.localToGlobal(Offset.zero);
+
     OverlayState? overlayState = Overlay.of(context);
     controller.overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
-        left: offset.dx - 5,
-        bottom: size.height + 20,
-        child: Material(
-          color: Colors.transparent,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: List.generate(
-              widget.attachments.length,
-              (index) {
-                var data = widget.attachments[index];
-                return Transform(
-                  transform: Matrix4.translationValues(
-                    0.0,
-                    _buttonAnimation.value * (index + 1),
-                    0.0,
-                  ),
-                  child: SizedBox(
-                    width: IsmChatDimens.oneHundredFifty,
-                    child: InkWell(
-                      onHover: (value) {
-                        if (value) {
-                          overlayState.setState(() {
-                            hoverIndex = index;
-                          });
-                        } else {
-                          overlayState.setState(() {
-                            hoverIndex = null;
-                          });
-                        }
-                      },
-                      onTap: () {
-                        controller.showAttachment = !controller.showAttachment;
-                        _toggle(context);
-                        controller.onBottomAttachmentTapped(data);
-                      },
-                      hoverColor: Colors.transparent,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Opacity(
-                            opacity: _animation.value,
-                            child: AbsorbPointer(
-                              absorbing: true,
-                              child: Padding(
-                                padding: IsmChatDimens.edgeInsets4,
-                                child: CircleAvatar(
-                                    radius: IsmChatDimens.twenty +
-                                        IsmChatDimens.two,
-                                    child: IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(data.iconData),
-                                    )),
+        bottom: size.height + IsmChatDimens.twenty,
+        child: CompositedTransformFollower(
+          offset: Offset(-IsmChatDimens.two,
+              -(IsmChatDimens.oneHundredFifty + IsmChatDimens.ten)),
+          showWhenUnlinked: false,
+          link: layerLink,
+          child: Material(
+            color: Colors.transparent,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(
+                widget.attachments.length * 2 - 1,
+                (i) {
+                  if (i % 2 != 0) {
+                    return IsmChatDimens.boxHeight10;
+                  }
+                  var index = i ~/ 2;
+                  var data = widget.attachments[index];
+                  return Transform(
+                    transform: Matrix4.translationValues(
+                      0.0,
+                      _buttonAnimation.value * (index + 1),
+                      0.0,
+                    ),
+                    child: SizedBox(
+                      width: IsmChatDimens.oneHundredFifty,
+                      child: InkWell(
+                        hoverColor: Colors.transparent,
+                        onHover: (value) {
+                          if (value) {
+                            toolTipIndex = index;
+                          } else {
+                            toolTipIndex = null;
+                          }
+                          overlayState.setState(() {});
+                        },
+                        onTap: () {
+                          controller.showAttachment =
+                              !controller.showAttachment;
+                          _toggle(context);
+                          controller.onBottomAttachmentTapped(data);
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CircleAvatar(
+                              radius: IsmChatDimens.twenty + IsmChatDimens.two,
+                              backgroundColor:
+                                  IsmChatConfig.chatTheme.primaryColor,
+                              child: Icon(
+                                data.iconData,
+                                color: IsmChatColors.whiteColor,
                               ),
                             ),
-                          ),
-                          if (hoverIndex == index)
-                            Opacity(
-                              opacity: _animation.value,
-                              child: Container(
-                                width: IsmChatDimens.percentWidth(.06),
+                            if (toolTipIndex == index) ...[
+                              IsmChatDimens.boxWidth4,
+                              Container(
                                 alignment: Alignment.center,
-                                padding: IsmChatDimens.edgeInsets4,
                                 decoration: BoxDecoration(
-                                    color:
-                                        IsmChatConfig.chatTheme.backgroundColor,
-                                    borderRadius: BorderRadius.circular(
-                                        IsmChatDimens.five)),
+                                  border: Border.all(
+                                      color: IsmChatColors.blackColor),
+                                  borderRadius:
+                                      BorderRadius.circular(IsmChatDimens.ten),
+                                  color: IsmChatColors.whiteColor,
+                                ),
+                                width: IsmChatDimens.ninty,
+                                height: IsmChatDimens.thirty,
                                 child: Text(
                                   data.name.capitalizeFirst.toString(),
                                   style: IsmChatStyles.w400Black14,
                                 ),
-                              ),
-                            )
-                        ],
+                              )
+                            ]
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -550,29 +551,31 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
-        builder: (controller) => IconButton(
-          color: IsmChatColors.whiteColor,
-          icon: AnimatedSwitcher(
-            duration: IsmChatConfig.animationDuration,
-            transitionBuilder: (child, animation) => ScaleTransition(
-              scale: animation,
-              child: child,
+        builder: (controller) => CompositedTransformTarget(
+          link: layerLink,
+          child: IconButton(
+            color: IsmChatColors.whiteColor,
+            icon: AnimatedSwitcher(
+              duration: IsmChatConfig.animationDuration,
+              transitionBuilder: (child, animation) => ScaleTransition(
+                scale: animation,
+                child: child,
+              ),
+              child: controller.showAttachment
+                  ? Icon(
+                      Icons.close_rounded,
+                      key: UniqueKey(),
+                    )
+                  : Icon(
+                      Icons.attachment_rounded,
+                      key: UniqueKey(),
+                    ),
             ),
-            child: controller.showAttachment
-                ? Icon(
-                    Icons.close_rounded,
-                    key: UniqueKey(),
-                  )
-                : Icon(
-                    Icons.attachment_rounded,
-                    key: UniqueKey(),
-                  ),
+            onPressed: () {
+              controller.showAttachment = !controller.showAttachment;
+              _toggle(context);
+            },
           ),
-          onPressed: () {
-            controller.showAttachment = !controller.showAttachment;
-
-            _toggle(context);
-          },
         ),
       );
 }

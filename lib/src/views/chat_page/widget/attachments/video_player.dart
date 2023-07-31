@@ -30,11 +30,14 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
     final hours = twoDigits(duration.inHours);
     final minutes = twoDigits(duration.inMinutes);
     final seconds = twoDigits(duration.inSeconds);
+
     return [if (duration.inHours > 0) hours, minutes, seconds].join(':');
   }
 
   @override
   void initState() {
+    super.initState();
+
     chatPageController.isVideoVisible = true;
     _controller = kIsWeb
         ? VideoPlayerController.network(
@@ -47,44 +50,46 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
             : VideoPlayerController.file(
                 File(widget.path),
               )
-      ..addListener(() {
-        setState(() {});
-      })
       ..setLooping(true)
       ..initialize().then((_) {
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
         _controller.play();
       });
+    ValueListenable<VideoPlayerValue>? x;
+    x = _controller;
+    IsmChatLog.error('duratiaon ${x.value.position}');
+  }
 
-    // Use the controller to loop the video.
-    // _controller.setLooping(true);
-    super.initState();
+  void updateState() {
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
   void didUpdateWidget(VideoViewPage oldWidget) {
     if (widget.path != oldWidget.path) {
-      chatPageController.isVideoVisible = true;
-      _controller.pause();
-      _controller = kIsWeb
-          ? VideoPlayerController.network(
-              IsmChatBlob.blobToUrl(widget.path.strigToUnit8List),
-            )
-          : widget.path.isValidUrl
-              ? VideoPlayerController.network(widget.path)
-              : VideoPlayerController.file(File(widget.path))
-        ..addListener(() {
-          setState(() {});
-        })
-        ..setLooping(true)
-        ..initialize().then((_) {
-          // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-          _controller.play();
-        });
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        chatPageController.isVideoVisible = true;
+        _controller.pause();
+        _controller = kIsWeb
+            ? VideoPlayerController.network(
+                IsmChatBlob.blobToUrl(widget.path.strigToUnit8List),
+              )
+            : widget.path.isValidUrl
+                ? VideoPlayerController.network(widget.path)
+                : VideoPlayerController.file(File(widget.path))
+          ..setLooping(true)
+          ..initialize().then((_) {
+            // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+            _controller.play();
+          });
+      });
     }
-    if (Responsive.isWebAndTablet(context)) IsmChatUtility.closeLoader();
     super.didUpdateWidget(oldWidget);
   }
+
+  void startInit() {}
 
   @override
   void dispose() {
@@ -108,7 +113,7 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
               } else {
                 _controller.play();
               }
-              setState(() {});
+              updateState();
             }
           },
           child: Stack(
@@ -130,16 +135,16 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     ValueListenableBuilder(
-                                        valueListenable: _controller,
-                                        builder: (context,
-                                                VideoPlayerValue value,
-                                                child) =>
-                                            Text(
-                                              _videoDuration(
-                                                value.position,
-                                              ),
-                                              style: IsmChatStyles.w600White14,
-                                            )),
+                                      valueListenable: _controller,
+                                      builder: (context, VideoPlayerValue value,
+                                              child) =>
+                                          Text(
+                                        _videoDuration(
+                                          value.position,
+                                        ),
+                                        style: IsmChatStyles.w600White14,
+                                      ),
+                                    ),
                                     Expanded(
                                       child: SizedBox(
                                         height: IsmChatDimens.five,
@@ -155,11 +160,12 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
                                                 .edgeInsetsHorizontal10),
                                       ),
                                     ),
-                                    Text(
-                                      _videoDuration(
-                                          _controller.value.duration),
-                                      style: IsmChatStyles.w600White14,
-                                    )
+                                    if (!kIsWeb)
+                                      Text(
+                                        _videoDuration(
+                                            _controller.value.duration),
+                                        style: IsmChatStyles.w600White14,
+                                      )
                                   ],
                                 ),
                               ),
@@ -176,13 +182,11 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
                 alignment: Alignment.center,
                 child: InkWell(
                   onTap: () {
-                    setState(
-                      () {
-                        _controller.value.isPlaying
-                            ? _controller.pause()
-                            : _controller.play();
-                      },
-                    );
+                    _controller.value.isPlaying
+                        ? _controller.pause()
+                        : _controller.play();
+
+                    updateState();
                   },
                   child: CircleAvatar(
                     radius: 33,
