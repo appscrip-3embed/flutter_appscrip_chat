@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -315,9 +318,30 @@ class _MicOrSendButton extends StatelessWidget {
                       controller.forVideoRecordTimer?.cancel();
                       controller.seconds = 0;
                       var path = await controller.recordAudio.stop();
+                      String? sizeMedia;
+                      WebMediaModel? webMediaModel;
+
                       if (path != null) {
-                        var sizeMedia =
-                            await IsmChatUtility.fileToSize(File(path));
+                        if (kIsWeb) {
+                          final bytes =
+                              await IsmChatUtility.urlToUint8List(path);
+                          sizeMedia = IsmChatUtility.formatBytes(
+                            int.parse(bytes.length.toString()),
+                          );
+                          webMediaModel = WebMediaModel(
+                              platformFile: PlatformFile(
+                                  name:
+                                      '${DateTime.now().millisecondsSinceEpoch}.m4a',
+                                  size: bytes.length,
+                                  bytes: bytes,
+                                  path: path),
+                              isVideo: false,
+                              thumbnailBytes: Uint8List(0),
+                              dataSize: sizeMedia);
+                        } else {
+                          sizeMedia =
+                              await IsmChatUtility.fileToSize(File(path));
+                        }
                         if (sizeMedia.size()) {
                           controller.sendAudio(
                             path: path,
@@ -329,6 +353,7 @@ class _MicOrSendButton extends StatelessWidget {
                             opponentName: controller
                                     .conversation?.opponentDetails?.userName ??
                                 '',
+                            webMediaModel: kIsWeb ? webMediaModel : null,
                           );
                         } else {
                           await Get.dialog(

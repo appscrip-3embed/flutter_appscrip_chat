@@ -211,15 +211,15 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
   }
 
-  void sendAudio({
-    String? path,
-    SendMessageType sendMessageType = SendMessageType.pendingMessage,
-    bool forwardMessgeForMulitpleUser = false,
-    IsmChatMessageModel? ismChatChatMessageModel,
-    required String conversationId,
-    required String userId,
-    required String opponentName,
-  }) async {
+  void sendAudio(
+      {String? path,
+      SendMessageType sendMessageType = SendMessageType.pendingMessage,
+      bool forwardMessgeForMulitpleUser = false,
+      IsmChatMessageModel? ismChatChatMessageModel,
+      required String conversationId,
+      required String userId,
+      required String opponentName,
+      WebMediaModel? webMediaModel}) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null) {
@@ -233,6 +233,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     Uint8List? bytes;
     String? mediaId;
     bool? isNetWorkUrl;
+    String? extension;
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     if (sendMessageType == SendMessageType.forwardMessage) {
       ismChatChatMessageModel!.conversationId = conversationId;
@@ -256,11 +257,19 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       if (path == null || path.isEmpty) {
         return;
       }
-      bytes =
-          Uint8List.fromList(await File.fromUri(Uri.parse(path)).readAsBytes());
-      nameWithExtension = path.split('/').last;
-      final extension = nameWithExtension.split('.').last;
-      mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
+      if (webMediaModel == null) {
+        bytes = Uint8List.fromList(
+            await File.fromUri(Uri.parse(path)).readAsBytes());
+        nameWithExtension = path.split('/').last;
+        extension = nameWithExtension.split('.').last;
+        mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
+      } else {
+        bytes = webMediaModel.platformFile.bytes;
+        nameWithExtension = webMediaModel.platformFile.name;
+        extension = webMediaModel.platformFile.extension;
+        mediaId = sentAt.toString();
+      }
+
       audioMessage = IsmChatMessageModel(
         body: 'Audio',
         conversationId: conversationId,
@@ -269,7 +278,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           AttachmentModel(
             attachmentType: IsmChatMediaType.audio,
             thumbnailUrl: path,
-            size: double.parse(bytes.length.toString()),
+            size: double.parse(bytes!.length.toString()),
             name: nameWithExtension,
             mimeType: extension,
             mediaUrl: path,

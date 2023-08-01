@@ -15,4 +15,6 @@ class IsmChatBlob {
   }) {}
 
   static void fileDownloadWithUrl(String url) {}
+
+  static void playAudioWithBlobUrl(String url) {}
 }

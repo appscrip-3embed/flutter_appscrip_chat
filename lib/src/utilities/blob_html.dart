@@ -73,4 +73,13 @@ class IsmChatBlob {
     anchorElement.download = url;
     anchorElement.click();
   }
+
+  static void playAudioWithBlobUrl(String url) {
+    // Create an audio element and set the Blob URL as the source
+    final audioElement = html.AudioElement();
+    audioElement.src = url;
+
+    // Play the audio
+    audioElement.play();
+  }
 }

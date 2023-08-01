@@ -240,4 +240,12 @@ class IsmChatUtility {
           valueColor: AlwaysStoppedAnimation(backgroundColor?.withOpacity(.5)),
         ),
       );
+
+  static Future<Uint8List> urlToUint8List(String url) async {
+    var response = await http.get(Uri.parse(url));
+    final bytes = response.bodyBytes;
+    //  IsmChatLog.error(resp);
+
+    return bytes;
+  }
 }

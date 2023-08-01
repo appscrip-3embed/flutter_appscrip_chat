@@ -1129,7 +1129,6 @@ class IsmChatPageController extends GetxController
 
   void takePhoto() async {
     var file = await cameraController.takePicture();
-
     if (kIsWeb) {
       Get.back();
       var bytes = await file.readAsBytes();
