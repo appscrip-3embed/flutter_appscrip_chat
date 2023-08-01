@@ -75,6 +75,12 @@ extension DurationExtensions on Duration {
       return '$twoDigitMinutes:$twoDigitSeconds';
     }
   }
+
+  List<double> get waveSamples {
+    var number = (inMilliseconds ~/ 30).clamp(100, 150).toInt();
+    var random = Random();
+    return List.generate(number, (i) => (random.nextInt(130) + 30).toDouble());
+  }
 }
 
 extension IntToTimeLeft on int {

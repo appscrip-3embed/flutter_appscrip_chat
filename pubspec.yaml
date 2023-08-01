@@ -10,7 +10,6 @@ environment:
 
 dependencies:
   any_link_preview: ^3.0.0
-  audioplayers: ^3.0.1
   azlistview: ^2.0.0
   cached_network_image: ^3.2.3
   camera: ^0.10.3+2
@@ -20,7 +19,6 @@ dependencies:
   dio: ^5.2.1+1
   emoji_picker_flutter: ^1.5.4
   file_picker: ^5.2.10
-  file_saver: ^0.2.5
   flutter:
     sdk: flutter
   flutter_audio_waveforms: ^1.2.1+8
@@ -45,8 +43,8 @@ dependencies:
   image_gallery_saver: ^2.0.3
   image_painter: ^0.5.0
   image_picker: ^0.8.7
-  image_picker_web: ^3.0.0+1
   intl: ^0.18.0
+  just_audio: ^0.9.34
   link_preview_generator: ^1.2.0
   mqtt_client: ^9.8.0
   open_filex: ^4.3.2
@@ -66,7 +64,6 @@ dependencies:
   video_player: ^2.6.0
   video_trimmer: ^2.0.1
   visibility_detector: ^0.4.0+2
-  voice_message_package: ^1.0.41
   wechat_assets_picker: ^8.5.0
 
 dev_dependencies:
