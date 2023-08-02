@@ -24,26 +24,29 @@ class IsmChatMetaData {
   final bool? paidChat;
   final Map<String, dynamic>? customType;
   final List<Map<String, IsmChatBackgroundModel>>? assetList;
-  IsmChatMetaData(
-      {this.id = 0,
-      this.country,
-      this.parentMessageBody,
-      this.locationAddress,
-      this.locationSubAddress,
-      this.profilePic,
-      this.parentMessageInitiator,
-      this.firstName,
-      this.lastName,
-      this.isMatchId,
-      this.userId,
-      this.genderOfUserWhoReceivedTheGuestChat,
-      this.genderOfUserWhoStartedGuestChat,
-      this.guestMatchInitiatedByUserId,
-      this.guestMatchInitiatedWithUserId,
-      this.isGuestMatch,
-      this.paidChat,
-      this.customType,
-      this.assetList});
+  final Duration? duration;
+  IsmChatMetaData({
+    this.id = 0,
+    this.country,
+    this.parentMessageBody,
+    this.locationAddress,
+    this.locationSubAddress,
+    this.profilePic,
+    this.parentMessageInitiator,
+    this.firstName,
+    this.lastName,
+    this.isMatchId,
+    this.userId,
+    this.genderOfUserWhoReceivedTheGuestChat,
+    this.genderOfUserWhoStartedGuestChat,
+    this.guestMatchInitiatedByUserId,
+    this.guestMatchInitiatedWithUserId,
+    this.isGuestMatch,
+    this.paidChat,
+    this.customType,
+    this.assetList,
+    this.duration,
+  });
 
   IsmChatMetaData copyWith({
     String? country,
@@ -64,32 +67,35 @@ class IsmChatMetaData {
     Map<String, dynamic>? customType,
     String? locationSubAddress,
     List<Map<String, IsmChatBackgroundModel>>? assetList,
+    Duration? duration,
   }) =>
       IsmChatMetaData(
-          country: country ?? this.country,
-          parentMessageBody: parentMessageBody ?? this.parentMessageBody,
-          locationAddress: locationAddress ?? this.locationAddress,
-          profilePic: profilePic ?? this.profilePic,
-          parentMessageInitiator:
-              parentMessageInitiator ?? this.parentMessageInitiator,
-          userId: userId ?? this.userId,
-          isMatchId: isMatchId ?? this.isMatchId,
-          firstName: firstName ?? this.firstName,
-          lastName: lastName ?? this.lastName,
-          isGuestMatch: isGuestMatch ?? this.isGuestMatch,
-          guestMatchInitiatedByUserId:
-              guestMatchInitiatedByUserId ?? this.guestMatchInitiatedByUserId,
-          genderOfUserWhoReceivedTheGuestChat:
-              genderOfUserWhoReceivedTheGuestChat ??
-                  this.genderOfUserWhoReceivedTheGuestChat,
-          genderOfUserWhoStartedGuestChat: genderOfUserWhoStartedGuestChat ??
-              this.genderOfUserWhoStartedGuestChat,
-          guestMatchInitiatedWithUserId: guestMatchInitiatedWithUserId ??
-              this.guestMatchInitiatedWithUserId,
-          paidChat: paidChat ?? this.paidChat,
-          customType: customType ?? this.customType,
-          locationSubAddress: locationSubAddress ?? this.locationSubAddress,
-          assetList: assetList ?? this.assetList);
+        country: country ?? this.country,
+        parentMessageBody: parentMessageBody ?? this.parentMessageBody,
+        locationAddress: locationAddress ?? this.locationAddress,
+        profilePic: profilePic ?? this.profilePic,
+        parentMessageInitiator:
+            parentMessageInitiator ?? this.parentMessageInitiator,
+        userId: userId ?? this.userId,
+        isMatchId: isMatchId ?? this.isMatchId,
+        firstName: firstName ?? this.firstName,
+        lastName: lastName ?? this.lastName,
+        isGuestMatch: isGuestMatch ?? this.isGuestMatch,
+        guestMatchInitiatedByUserId:
+            guestMatchInitiatedByUserId ?? this.guestMatchInitiatedByUserId,
+        genderOfUserWhoReceivedTheGuestChat:
+            genderOfUserWhoReceivedTheGuestChat ??
+                this.genderOfUserWhoReceivedTheGuestChat,
+        genderOfUserWhoStartedGuestChat: genderOfUserWhoStartedGuestChat ??
+            this.genderOfUserWhoStartedGuestChat,
+        guestMatchInitiatedWithUserId:
+            guestMatchInitiatedWithUserId ?? this.guestMatchInitiatedWithUserId,
+        paidChat: paidChat ?? this.paidChat,
+        customType: customType ?? this.customType,
+        locationSubAddress: locationSubAddress ?? this.locationSubAddress,
+        assetList: assetList ?? this.assetList,
+        duration: duration ?? this.duration,
+      );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
         if (country != null || country?.isNotEmpty == true) 'country': country,
@@ -129,7 +135,8 @@ class IsmChatMetaData {
         if (customType != null || customType?.isNotEmpty == true)
           'customType': customType,
         if (assetList != null || assetList?.isNotEmpty == true)
-          'assetList': assetList
+          'assetList': assetList,
+        if (duration != null) 'duration': duration?.inSeconds,
       };
 
   factory IsmChatMetaData.fromMap(Map<String, dynamic> map) => IsmChatMetaData(
@@ -179,6 +186,7 @@ class IsmChatMetaData {
                   ),
                 ),
               ).toList(),
+        duration: Duration(seconds: map['duration'] as int? ?? 0),
       );
 
   String toJson() => json.encode(toMap());
@@ -192,7 +200,7 @@ class IsmChatMetaData {
 
   @override
   String toString() =>
-      'IsmChatMetaData(country: $country, parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, profilePic: $profilePic, parentMessageInitiator: $parentMessageInitiator, customType : $customType, locationSubAddress :$locationSubAddress, assetList : $assetList)';
+      'IsmChatMetaData(country: $country, parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, profilePic: $profilePic, parentMessageInitiator: $parentMessageInitiator, customType : $customType, locationSubAddress :$locationSubAddress, assetList : $assetList, duration : $duration)';
 
   @override
   bool operator ==(covariant IsmChatMetaData other) {
@@ -206,7 +214,8 @@ class IsmChatMetaData {
         other.customType == customType &&
         other.locationSubAddress == locationSubAddress &&
         other.customType == customType &&
-        other.country == country;
+        other.country == country &&
+        other.duration == duration;
   }
 
   @override
@@ -217,5 +226,6 @@ class IsmChatMetaData {
       profilePic.hashCode ^
       parentMessageInitiator.hashCode ^
       customType.hashCode ^
-      locationSubAddress.hashCode;
+      locationSubAddress.hashCode ^
+      duration.hashCode;
 }

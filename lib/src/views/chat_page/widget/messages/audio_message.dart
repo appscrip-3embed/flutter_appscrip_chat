@@ -1,11 +1,11 @@
 import 'dart:async';
-
+import 'dart:io';
+import 'dart:math' as math;
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:flutter/foundation.dart';
+// import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_audio_waveforms/flutter_audio_waveforms.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:uuid/uuid.dart';
 
 class IsmChatAudioMessage extends StatelessWidget {
   const IsmChatAudioMessage(this.message, {super.key});
@@ -15,6 +15,7 @@ class IsmChatAudioMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var url = message.attachments!.first.mediaUrl!;
+    var duration = message.metaData?.duration;
 
     return Material(
       color: message.sentByMe
@@ -23,39 +24,28 @@ class IsmChatAudioMessage extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // _AudioPlayer(
-          //   source: url,
-          //   onDelete: () {},
-          // ),
-          // IsmChatTapHandler(
-          //   onTap: () {
-          //     IsmChatBlob.playAudioWithBlobUrl(url);
-          //   },
-          //   child: Text('RAHUL'),
-          // ),
-          // FittedBox(
-          //   child: VoiceMessage(
-          //     audioSrc: url,
-          //     played: false,
-          //     me: message.sentByMe,
-          //     meBgColor: IsmChatConfig.chatTheme.chatPageTheme?.selfMessageTheme
-          //             ?.backgroundColor ??
-          //         IsmChatConfig.chatTheme.primaryColor!,
-          //     mePlayIconColor: IsmChatConfig.chatTheme.chatPageTheme
-          //             ?.selfMessageTheme?.backgroundColor ??
-          //         IsmChatConfig.chatTheme.primaryColor!,
-          //     contactBgColor: IsmChatConfig.chatTheme.chatPageTheme
-          //             ?.opponentMessageTheme?.backgroundColor ??
-          //         IsmChatConfig.chatTheme.backgroundColor!,
-          //     contactPlayIconColor: IsmChatConfig.chatTheme.chatPageTheme
-          //             ?.opponentMessageTheme?.backgroundColor ??
-          //         IsmChatConfig.chatTheme.backgroundColor!,
-          //     contactFgColor: IsmChatConfig.chatTheme.chatPageTheme
-          //             ?.selfMessageTheme?.backgroundColor ??
-          //         IsmChatConfig.chatTheme.primaryColor!,
-          //     onPlay: () {},
-          //   ),
-          // ),
+          VoiceMessage(
+            audioSrc: url,
+            played: false,
+            me: message.sentByMe,
+            meBgColor: IsmChatConfig.chatTheme.chatPageTheme?.selfMessageTheme
+                    ?.backgroundColor ??
+                IsmChatConfig.chatTheme.primaryColor!,
+            mePlayIconColor: IsmChatConfig.chatTheme.chatPageTheme
+                    ?.selfMessageTheme?.backgroundColor ??
+                IsmChatConfig.chatTheme.primaryColor!,
+            contactBgColor: IsmChatConfig.chatTheme.chatPageTheme
+                    ?.opponentMessageTheme?.backgroundColor ??
+                IsmChatConfig.chatTheme.backgroundColor!,
+            contactPlayIconColor: IsmChatConfig.chatTheme.chatPageTheme
+                    ?.opponentMessageTheme?.backgroundColor ??
+                IsmChatConfig.chatTheme.backgroundColor!,
+            contactFgColor: IsmChatConfig.chatTheme.chatPageTheme
+                    ?.selfMessageTheme?.backgroundColor ??
+                IsmChatConfig.chatTheme.primaryColor!,
+            duration: duration,
+            onPlay: () {},
+          ),
           if (message.isUploading == true)
             IsmChatUtility.circularProgressBar(
                 IsmChatColors.blackColor, IsmChatColors.whiteColor),
@@ -65,170 +55,321 @@ class IsmChatAudioMessage extends StatelessWidget {
   }
 }
 
-// class _AudioPlayer extends StatefulWidget {
-//   const _AudioPlayer({
-//     Key? key,
-//     required this.source,
-//     required this.onDelete,
-//   }) : super(key: key);
+/// document will be added
+class ContactNoise extends StatelessWidget {
+  const ContactNoise({Key? key}) : super(key: key);
 
-//   /// Path from where to play recorded audio
-//   final String source;
+  @override
+  Widget build(BuildContext context) => Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [for (int i = 0; i < 27; i++) _singleNoise(context)],
+      );
 
-//   /// Callback when audio file should be removed
-//   /// Setting this to null hides the delete button
-//   final VoidCallback onDelete;
+  Widget _singleNoise(BuildContext context) {
+    final height = 5.74.w * math.Random().nextDouble() + .26.w;
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: .2.w),
+      width: 2,
+      height: height,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(1000),
+        color: Colors.grey,
+      ),
+    );
+  }
+}
 
-//   @override
-//   _AudioPlayerState createState() => _AudioPlayerState();
-// }
+/// document will be added
+class Noises extends StatelessWidget {
+  const Noises({Key? key}) : super(key: key);
 
-// class _AudioPlayerState extends State<_AudioPlayer> {
-//   static const double _controlSize = 56;
+  @override
+  Widget build(BuildContext context) => Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [for (int i = 0; i < 27; i++) _singleNoise(context)],
+      );
 
-//   final _audioPlayer = AudioPlayer();
-//   // late StreamSubscription<void> _playerStateChangedSubscription;
-//   // late StreamSubscription<Duration?> _durationChangedSubscription;
-//   // late StreamSubscription<Duration> _positionChangedSubscription;
+  Widget _singleNoise(BuildContext context) {
+    final height = 5.74.w * math.Random().nextDouble() + .26.w;
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: .2.w),
+      width: 2,
+      height: height,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(1000),
+        color: Colors.white,
+      ),
+    );
+  }
+}
 
-//   Duration? maxDuration;
-//   Duration? elapsedDuration;
+/// This is the main widget.
+// ignore: must_be_immutable
+class VoiceMessage extends StatefulWidget {
+  VoiceMessage({
+    Key? key,
+    required this.me,
+    this.audioSrc,
+    this.audioFile,
+    this.duration,
+    this.waveForm,
+    this.noiseCount = 27,
+    this.meBgColor = Colors.pink,
+    this.contactBgColor = const Color(0xffffffff),
+    this.contactFgColor = Colors.pink,
+    this.contactCircleColor = Colors.red,
+    this.mePlayIconColor = Colors.black,
+    this.contactPlayIconColor = Colors.black26,
+    this.radius = 12,
+    this.contactPlayIconBgColor = Colors.grey,
+    this.meFgColor = const Color(0xffffffff),
+    this.played = false,
+    this.onPlay,
+  }) : super(key: key);
 
-//   List<double> waveSamples = [];
+  final String? audioSrc;
+  Future<File>? audioFile;
+  final Duration? duration;
 
-//   @override
-//   void initState() {
-//     super.initState();
+  final List<double>? waveForm;
+  final double radius;
 
-//     maxDuration = const Duration(seconds: 5);
-//     elapsedDuration = Duration.zero;
-//     waveSamples = maxDuration!.waveSamples;
-//     _audioPlayer.onPlayerComplete.listen((state) async {
-//       await stop();
-//       setState(() {});
-//     });
-//     _audioPlayer.setSourceUrl(widget.source);
-//     _audioPlayer.onDurationChanged.listen((Duration duration) {
-//       setState(() {
-//         maxDuration = duration;
-//       });
-//     });
-//     _audioPlayer.onPositionChanged.listen((Duration position) {
-//       setState(() {
-//         elapsedDuration = position;
-//       });
-//     });
-//   }
+  final int noiseCount;
+  final Color meBgColor,
+      meFgColor,
+      contactBgColor,
+      contactFgColor,
+      contactCircleColor,
+      mePlayIconColor,
+      contactPlayIconColor,
+      contactPlayIconBgColor;
+  final bool played, me;
+  Function()? onPlay;
+  // String Function(Duration duration)? formatDuration;
 
-//   Future<int> getAudioDuration(String audioFilePath) async {
-   
-//     final result = await _audioPlayer.se(audioFilePath);
-//     final duration = result?. ?? Duration.zero;
-//     await player.release();
-//     return duration.inMilliseconds;
-//   }
+  @override
+  // ignore: library_private_types_in_public_api
+  _VoiceMessageState createState() => _VoiceMessageState();
+}
 
+class _VoiceMessageState extends State<VoiceMessage>
+    with SingleTickerProviderStateMixin {
+  // late StreamSubscription stream;
+  final AudioPlayer _player = AudioPlayer();
+  final double maxNoiseHeight = 6;
+  Duration? _audioDuration;
+  double maxDurationForSlider = .0000001;
+  int duration = 00;
+  String remainingTime = '';
 
-//   // duration() async {
+  @override
+  void initState() {
+    super.initState();
+    _setDuration();
 
-//   //   maxDuration = await _audioPlayer.getDuration() ?? const Duration();
-//   //   IsmChatLog.error(' $maxDuration');
-//   // }
+    _player.playerStateStream.listen((event) {
+      IsmChatLog.error(event.playing);
+      IsmChatLog.error(event.processingState);
+      if (event.processingState == ProcessingState.completed) {
+        duration = _audioDuration!.inMilliseconds;
+        remainingTime = _audioDuration!.formatDuration();
+        _player.stop();
+        setState(() {});
+      } else if (event.processingState == ProcessingState.buffering) {}
+    });
+    _player.positionStream.listen(
+      (Duration p) {
+        if (_player.playing) {
+          remainingTime = p.formatDuration();
+          setState(() {});
+        }
+      },
+    );
+  }
 
-//   @override
-//   void dispose() {
-//     // _playerStateChangedSubscription.cancel();
-//     // _positionChangedSubscription.cancel();
-//     // _durationChangedSubscription.cancel();
-//     _audioPlayer.dispose();
-//     super.dispose();
-//   }
+  @override
+  Widget build(BuildContext context) => _sizerChild(context);
 
-//   @override
-//   Widget build(BuildContext context) => LayoutBuilder(
-//         builder: (context, constraints) => Column(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             Row(
-//               mainAxisSize: MainAxisSize.max,
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: <Widget>[
-//                 _buildControl(),
-//                 if (maxDuration != null && elapsedDuration != null)
-//                   _buildSlider(constraints.maxWidth),
+  Container _sizerChild(BuildContext context) => Container(
+        width: IsmChatDimens.twoHundred,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(widget.radius),
+            bottomLeft: widget.me
+                ? Radius.circular(widget.radius)
+                : const Radius.circular(4),
+            bottomRight: !widget.me
+                ? Radius.circular(widget.radius)
+                : const Radius.circular(4),
+            topRight: Radius.circular(widget.radius),
+          ),
+          color: widget.me ? widget.meBgColor : widget.contactBgColor,
+        ),
+        child: Padding(
+          padding: IsmChatDimens.edgeInsets10,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _playButton(context),
+              IsmChatDimens.boxWidth8,
+              _durationWithNoise(context),
+            ],
+          ),
+        ),
+      );
 
-//                 // IconButton(
-//                 //   icon: const Icon(Icons.delete,
-//                 //       color: Color(0xFF73748D), size: _deleteBtnSize),
-//                 //   onPressed: () {
-//                 //     if (_audioPlayer.state == ap.PlayerState.playing) {
-//                 //       stop().then((value) => widget.onDelete());
-//                 //     } else {
-//                 //       widget.onDelete();
-//                 //     }
-//                 //   },
-//                 // ),
-//               ],
-//             ),
-//             Text(elapsedDuration?.formatDuration() ?? '00:00'),
-//           ],
-//         ),
-//       );
+  Widget _playButton(BuildContext context) => InkWell(
+        onTap: _changePlayingStatus,
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: widget.me ? widget.meFgColor : widget.contactPlayIconBgColor,
+          ),
+          width: IsmChatDimens.fifty,
+          height: IsmChatDimens.fifty,
+          child: Icon(
+            _player.playing ? Icons.pause : Icons.play_arrow,
+            color: widget.me
+                ? widget.mePlayIconColor
+                : widget.contactPlayIconColor,
+          ),
+        ),
+      );
 
-//   Widget _buildControl() {
-//     Icon icon;
-//     Color color;
+  Widget _durationWithNoise(BuildContext context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _noise(context),
+          Row(
+            children: [
+              /// show played badge
+              if (!widget.played)
+                Widgets.circle(context, 1.5.w,
+                    widget.me ? widget.meFgColor : widget.contactCircleColor),
+              IsmChatDimens.boxWidth4,
+              Text(
+                remainingTime,
+                style: TextStyle(
+                  fontSize: 10,
+                  color: widget.me ? widget.meFgColor : widget.contactFgColor,
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
 
-//     if (_audioPlayer.state == ap.PlayerState.playing) {
-//       icon = const Icon(Icons.pause, color: Colors.red, size: 30);
-//       color = Colors.red.withOpacity(0.1);
-//     } else {
-//       final theme = Theme.of(context);
-//       icon = Icon(Icons.play_arrow, color: theme.primaryColor, size: 30);
-//       color = theme.primaryColor.withOpacity(0.1);
-//     }
+  /// Noise widget of audio.
+  Widget _noise(BuildContext context) {
+    final theme = Theme.of(context);
+    final newTHeme = theme.copyWith(
+      sliderTheme: SliderThemeData(
+        trackShape: CustomTrackShape(),
+        thumbShape: SliderComponentShape.noThumb,
+        minThumbSeparation: 0,
+      ),
+    );
 
-//     return ClipOval(
-//       child: Material(
-//         color: color,
-//         child: InkWell(
-//           child:
-//               SizedBox(width: _controlSize, height: _controlSize, child: icon),
-//           onTap: () {
-//             if (_audioPlayer.state == ap.PlayerState.playing) {
-//               pause();
-//             } else {
-//               play();
-//             }
-//           },
-//         ),
-//       ),
-//     );
-//   }
+    ///
+    return Theme(
+      data: newTHeme,
+      child: SizedBox(
+        height: 40,
+        width: 100,
+        child: Stack(
+          clipBehavior: Clip.hardEdge,
+          children: [
+            widget.me ? const Noises() : const ContactNoise(),
+          ],
+        ),
+      ),
+    );
+  }
 
-//   Widget _buildSlider(double widgetWidth) => RectangleWaveform(
-//         maxDuration: maxDuration,
-//         elapsedDuration: elapsedDuration,
-//         samples: waveSamples,
-//         height: 50,
-//         width: 250,
-//         // invert: true,
-//         // absolute: true,
-//         isRoundedRectangle: true,
-//         isCentered: true,
-//         showActiveWaveform: true,
-//         activeColor: Colors.green,
-//         inactiveColor: Colors.grey,
-//         // borderWidth: 0.4,
-//       );
+  void _startPlaying() async {
+    if (widget.audioFile != null) {
+      var path = (await widget.audioFile!).path;
+      debugPrint('> _startPlaying path $path');
+      await _player.play();
+    } else if (widget.audioSrc != null) {
+      if (!_player.playing) {
+        await _player.setAudioSource(
+          AudioSource.uri(
+            Uri.parse(
+              widget.audioSrc!,
+            ),
+          ),
+        );
+        await _player.play();
+      } else {
+        await _player.play();
+      }
+    }
+  }
 
-//   Future<void> play() => _audioPlayer.play(
-//         kIsWeb
-//             ? ap.UrlSource(widget.source)
-//             : ap.DeviceFileSource(widget.source),
-//       );
+  _pause() async => await _player.pause();
 
-//   Future<void> pause() => _audioPlayer.pause();
+  void _setDuration() async {
+    if (widget.duration != null) {
+      _audioDuration = widget.duration;
+    } else {
+      _audioDuration = await AudioPlayer().setUrl(
+        widget.audioSrc!,
+      );
+    }
+    duration = _audioDuration!.inMilliseconds;
+    maxDurationForSlider = duration + .0;
+    remainingTime = _audioDuration!.formatDuration();
+    setState(() {});
+  }
 
-//   Future<void> stop() => _audioPlayer.stop();
-// }
+  void _changePlayingStatus() async {
+    _player.playing ? _pause() : _startPlaying();
+  }
+
+  @override
+  void dispose() {
+    _player.dispose();
+
+    super.dispose();
+  }
+}
+
+///
+class CustomTrackShape extends RoundedRectSliderTrackShape {
+  ///
+  @override
+  Rect getPreferredRect({
+    required RenderBox parentBox,
+    Offset offset = Offset.zero,
+    required SliderThemeData sliderTheme,
+    bool isEnabled = false,
+    bool isDiscrete = false,
+  }) {
+    const trackHeight = 10.0;
+    final double trackLeft = offset.dx,
+        trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
+    final trackWidth = parentBox.size.width;
+    return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
+  }
+}
+
+class Widgets {
+  static circle(
+    BuildContext context,
+    double width,
+    Color color, {
+    Widget child = const SizedBox(),
+  }) =>
+      Container(
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(2000), color: color),
+        width: width,
+        height: width,
+        child: child,
+      );
+}

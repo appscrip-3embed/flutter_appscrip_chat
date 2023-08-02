@@ -314,54 +314,61 @@ class _MicOrSendButton extends StatelessWidget {
               onLongPressEnd: controller.showSendButton
                   ? null
                   : (val) async {
-                      controller.isEnableRecordingAudio = false;
-                      controller.forVideoRecordTimer?.cancel();
-                      controller.seconds = 0;
-                      var path = await controller.recordAudio.stop();
-                      String? sizeMedia;
-                      WebMediaModel? webMediaModel;
-
-                      if (path != null) {
-                        if (kIsWeb) {
-                          final bytes =
-                              await IsmChatUtility.urlToUint8List(path);
-                          sizeMedia = IsmChatUtility.formatBytes(
-                            int.parse(bytes.length.toString()),
-                          );
-                          webMediaModel = WebMediaModel(
+                      if (await controller.recordAudio.hasPermission()) {
+                        controller.isEnableRecordingAudio = false;
+                        controller.forVideoRecordTimer?.cancel();
+                        var path = await controller.recordAudio.stop();
+                        String? sizeMedia;
+                        WebMediaModel? webMediaModel;
+                        if (path != null) {
+                          if (kIsWeb) {
+                            final bytes =
+                                await IsmChatUtility.urlToUint8List(path);
+                            sizeMedia = IsmChatUtility.formatBytes(
+                              int.parse(bytes.length.toString()),
+                            );
+                            webMediaModel = WebMediaModel(
                               platformFile: PlatformFile(
-                                  name:
-                                      '${DateTime.now().millisecondsSinceEpoch}.m4a',
-                                  size: bytes.length,
-                                  bytes: bytes,
-                                  path: path),
+                                name:
+                                    '${DateTime.now().millisecondsSinceEpoch}.mp3',
+                                size: bytes.length,
+                                bytes: bytes,
+                                path: path,
+                              ),
                               isVideo: false,
                               thumbnailBytes: Uint8List(0),
-                              dataSize: sizeMedia);
-                        } else {
-                          sizeMedia =
-                              await IsmChatUtility.fileToSize(File(path));
-                        }
-                        if (sizeMedia.size()) {
-                          controller.sendAudio(
-                            path: path,
-                            conversationId:
-                                controller.conversation?.conversationId ?? '',
-                            userId: controller
-                                    .conversation?.opponentDetails?.userId ??
-                                '',
-                            opponentName: controller
-                                    .conversation?.opponentDetails?.userName ??
-                                '',
-                            webMediaModel: kIsWeb ? webMediaModel : null,
-                          );
-                        } else {
-                          await Get.dialog(
-                            const IsmChatAlertDialogBox(
-                              title: 'You can not send audio more than 20 MB.',
-                              cancelLabel: 'Okay',
-                            ),
-                          );
+                              dataSize: sizeMedia,
+                              duration: Duration(
+                                seconds: controller.seconds,
+                              ),
+                            );
+                          } else {
+                            sizeMedia =
+                                await IsmChatUtility.fileToSize(File(path));
+                          }
+                          if (sizeMedia.size()) {
+                            controller.sendAudio(
+                              path: path,
+                              conversationId:
+                                  controller.conversation?.conversationId ?? '',
+                              userId: controller
+                                      .conversation?.opponentDetails?.userId ??
+                                  '',
+                              opponentName: controller.conversation
+                                      ?.opponentDetails?.userName ??
+                                  '',
+                              webMediaModel: kIsWeb ? webMediaModel : null,
+                            );
+                            controller.seconds = 0;
+                          } else {
+                            await Get.dialog(
+                              const IsmChatAlertDialogBox(
+                                title:
+                                    'You can not send audio more than 20 MB.',
+                                cancelLabel: 'Okay',
+                              ),
+                            );
+                          }
                         }
                       }
                     },

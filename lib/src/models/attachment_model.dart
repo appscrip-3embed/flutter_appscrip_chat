@@ -8,17 +8,10 @@ class AttachmentModel {
 
   factory AttachmentModel.fromMap(Map<String, dynamic> map) => AttachmentModel(
         thumbnailUrl: map['thumbnailUrl'] as String? ?? '',
-        // != null &&
-        //         (map['thumbnailUrl'] as String).isNotEmpty
-        //     ? IsmChatUtility.decodePayload(map['thumbnailUrl'] as String)
-        //     : '',
         size: (map['size'] as num).toDouble(),
         name: map['name'] as String? ?? '',
         mimeType: map['mimeType'] as String? ?? '',
         mediaUrl: map['mediaUrl'] as String? ?? '',
-        // map['mediaUrl'] != null && (map['mediaUrl'] as String).isNotEmpty
-        //     ? IsmChatUtility.decodePayload(map['mediaUrl'] as String)
-        //     : '',
         mediaId: map['mediaId'] as String? ?? '',
         extension: map['extension'] as String? ?? '',
         attachmentType: map['attachmentType'] == null

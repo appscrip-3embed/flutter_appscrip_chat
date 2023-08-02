@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:html' as html;
 
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/services.dart';
 // import 'package:html/html.dart' as html;
 
@@ -74,12 +75,19 @@ class IsmChatBlob {
     anchorElement.click();
   }
 
-  static void playAudioWithBlobUrl(String url) {
+  static void playAudioWithBlobUrl(Uint8List bytes) {
     // Create an audio element and set the Blob URL as the source
+    final blob = html.Blob([bytes]);
+    final url = html.Url.createObjectUrlFromBlob(blob);
     final audioElement = html.AudioElement();
     audioElement.src = url;
 
-    // Play the audio
+    audioElement.onLoadedData.listen((event) {
+      IsmChatLog.error(
+          'onlod ${Duration(seconds: audioElement.duration.toInt())}');
+    });
+
+    //Play the audio
     audioElement.play();
   }
 }

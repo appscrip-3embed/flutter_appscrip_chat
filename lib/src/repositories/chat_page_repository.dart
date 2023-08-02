@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/services.dart';
@@ -26,7 +27,7 @@ class IsmChatPageRepository {
           .map((e) => IsmChatMessageModel.fromMap(e as Map<String, dynamic>))
           .toList();
     } catch (e, st) {
-      IsmChatLog.error('GetChatMessages $e', st);
+      print('GetChatMessages $e, $st');
       return null;
     }
   }

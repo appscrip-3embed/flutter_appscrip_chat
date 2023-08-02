@@ -211,15 +211,16 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
   }
 
-  void sendAudio(
-      {String? path,
-      SendMessageType sendMessageType = SendMessageType.pendingMessage,
-      bool forwardMessgeForMulitpleUser = false,
-      IsmChatMessageModel? ismChatChatMessageModel,
-      required String conversationId,
-      required String userId,
-      required String opponentName,
-      WebMediaModel? webMediaModel}) async {
+  void sendAudio({
+    String? path,
+    SendMessageType sendMessageType = SendMessageType.pendingMessage,
+    bool forwardMessgeForMulitpleUser = false,
+    IsmChatMessageModel? ismChatChatMessageModel,
+    required String conversationId,
+    required String userId,
+    required String opponentName,
+    WebMediaModel? webMediaModel,
+  }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null) {
@@ -296,6 +297,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         sentAt: sentAt,
         sentByMe: true,
         isUploading: true,
+        metaData: IsmChatMetaData(
+          duration: webMediaModel?.duration,
+        ),
       );
     }
 
@@ -921,23 +925,24 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     );
   }
 
-  Future<void> ismPostMediaUrl(
-      {required IsmChatMessageModel ismChatChatMessageModel,
-      required String notificationBody,
-      required String notificationTitle,
-      required String nameWithExtension,
-      required int createdAt,
-      required int mediaType,
-      required Uint8List? bytes,
-      required bool? imageAndFile,
-      required String mediaId,
-      SendMessageType sendMessageType = SendMessageType.pendingMessage,
-      bool forwardMessgeForMulitpleUser = false,
-      bool isNetWorkUrl = false,
-      String? thumbnailNameWithExtension,
-      String? thumbnailMediaId,
-      int? thumbanilMediaType,
-      Uint8List? thumbnailBytes}) async {
+  Future<void> ismPostMediaUrl({
+    required IsmChatMessageModel ismChatChatMessageModel,
+    required String notificationBody,
+    required String notificationTitle,
+    required String nameWithExtension,
+    required int createdAt,
+    required int mediaType,
+    required Uint8List? bytes,
+    required bool? imageAndFile,
+    required String mediaId,
+    SendMessageType sendMessageType = SendMessageType.pendingMessage,
+    bool forwardMessgeForMulitpleUser = false,
+    bool isNetWorkUrl = false,
+    String? thumbnailNameWithExtension,
+    String? thumbnailMediaId,
+    int? thumbanilMediaType,
+    Uint8List? thumbnailBytes,
+  }) async {
     List<Map<String, dynamic>>? attachment;
     var mediaUrlPath = '';
     var thumbnailUrlPath = '';
@@ -1001,6 +1006,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           notificationTitle: notificationTitle,
           attachments: attachment,
           customType: ismChatChatMessageModel.customType!.name,
+          metaData: ismChatChatMessageModel.metaData,
         );
       }
     } else {
@@ -1063,18 +1069,18 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         ];
       }
       sendMessage(
-        forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
-        sendMessageType: sendMessageType,
-        body: ismChatChatMessageModel.body,
-        conversationId: ismChatChatMessageModel.conversationId!,
-        createdAt: createdAt,
-        deviceId: ismChatChatMessageModel.deviceId ?? '',
-        messageType: ismChatChatMessageModel.messageType?.value ?? 0,
-        notificationBody: notificationBody,
-        notificationTitle: notificationTitle,
-        attachments: attachment,
-        customType: ismChatChatMessageModel.customType!.name,
-      );
+          forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
+          sendMessageType: sendMessageType,
+          body: ismChatChatMessageModel.body,
+          conversationId: ismChatChatMessageModel.conversationId!,
+          createdAt: createdAt,
+          deviceId: ismChatChatMessageModel.deviceId ?? '',
+          messageType: ismChatChatMessageModel.messageType?.value ?? 0,
+          notificationBody: notificationBody,
+          notificationTitle: notificationTitle,
+          attachments: attachment,
+          customType: ismChatChatMessageModel.customType!.name,
+          metaData: ismChatChatMessageModel.metaData);
     }
   }
 
