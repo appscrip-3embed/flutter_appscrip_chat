@@ -55,7 +55,7 @@ class IsmChatDimens {
   static final double oneHundredSeventy = 170.sp;
   static final double hundredNintyThree = 193.sp;
   static final double twoHundred = 200.sp;
-
+  static final double twoHundredTwenty = 220.sp;
   static final double twoHundredFifty = 250.sp;
   static final double threeHundredFourtyThree = 343.sp;
 
