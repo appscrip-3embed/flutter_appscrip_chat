@@ -197,6 +197,8 @@ class IsmChatPageController extends GetxController
   int get assetsIndex => _assetsIndex.value;
   set assetsIndex(int value) => _assetsIndex.value = value;
 
+  LayerLink messageHoldLink = LayerLink();
+
   Timer? conversationDetailsApTimer;
 
   Timer? forVideoRecordTimer;
@@ -307,9 +309,15 @@ class IsmChatPageController extends GetxController
   RxList<WebMediaModel> get webMedia => _webMedia;
   set webMedia(List<WebMediaModel> value) => _webMedia.value = value;
 
-  final Rx<OverlayEntry?> _overlayEntry = Rx<OverlayEntry?>(null);
-  OverlayEntry? get overlayEntry => _overlayEntry.value;
-  set overlayEntry(OverlayEntry? value) => _overlayEntry.value = value;
+  final Rx<OverlayEntry?> _attchmentOverlayEntry = Rx<OverlayEntry?>(null);
+  OverlayEntry? get attchmentOverlayEntry => _attchmentOverlayEntry.value;
+  set attchmentOverlayEntry(OverlayEntry? value) =>
+      _attchmentOverlayEntry.value = value;
+
+  final Rx<OverlayEntry?> _messageHoldOverlayEntry = Rx<OverlayEntry?>(null);
+  OverlayEntry? get messageHoldOverlayEntry => _messageHoldOverlayEntry.value;
+  set messageHoldOverlayEntry(OverlayEntry? value) =>
+      _messageHoldOverlayEntry.value = value;
 
   // final RxInt _screenWidget = 0.obs;
   // int get screenWidget => _screenWidget.value;
@@ -382,6 +390,8 @@ class IsmChatPageController extends GetxController
 
   final ismChatDebounce = IsmChatDebounce();
 
+  late AnimationController holdController;
+
   @override
   void onInit() async {
     _generateReactionList();
@@ -436,9 +446,11 @@ class IsmChatPageController extends GetxController
     }
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
-    overlayEntry?.dispose();
+    attchmentOverlayEntry?.dispose();
+    messageHoldOverlayEntry?.dispose();
     fabAnimationController!.dispose();
-    overlayEntry = null;
+    attchmentOverlayEntry = null;
+    messageHoldOverlayEntry = null;
     ifTimerMounted();
     super.onClose();
   }
@@ -451,8 +463,11 @@ class IsmChatPageController extends GetxController
     }
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
-    overlayEntry?.dispose();
+    attchmentOverlayEntry?.dispose();
+    messageHoldOverlayEntry?.dispose();
     fabAnimationController!.dispose();
+    attchmentOverlayEntry = null;
+    messageHoldOverlayEntry = null;
     ifTimerMounted();
     super.dispose();
   }
@@ -742,6 +757,7 @@ class IsmChatPageController extends GetxController
               curve: Curves.easeInOutCubic,
             ),
           );
+
           return IsmChatFocusMenu(
             message,
             animation: animation,
@@ -755,12 +771,59 @@ class IsmChatPageController extends GetxController
     );
   }
 
+  Future<void> showOverlayWeb(
+    BuildContext context,
+    IsmChatMessageModel message,
+    Animation<double> animation,
+  ) async {
+    final renderBox = context.findRenderObject() as RenderBox?;
+    final size = renderBox!.size;
+    final offset = renderBox!.localToGlobal(Offset.zero);
+
+    OverlayState? overlayState = Overlay.of(context);
+    messageHoldOverlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        bottom: size.height,
+        child: CompositedTransformFollower(
+          followerAnchor:
+              message.sentByMe ? Alignment.centerRight : Alignment.centerLeft,
+          targetAnchor:
+              message.sentByMe ? Alignment.centerRight : Alignment.centerLeft,
+          showWhenUnlinked: false,
+          offset: Offset(0, offset.dx / 2),
+          link: messageHoldLink,
+          child: Material(
+            color: Colors.transparent,
+            child: AnimatedBuilder(
+              animation: animation,
+              builder: (_, child) {
+                animation = Tween<double>(begin: 0, end: 1).animate(
+                  CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.easeInOutCubic,
+                  ),
+                );
+                return IsmChatFocusMenu(
+                  message,
+                  animation: animation,
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+    overlayState.insert(messageHoldOverlayEntry!);
+  }
+
   void scrollListener() {
     messagesScrollController.addListener(() {
+      holdController.reverse();
+      messageHoldOverlayEntry?.remove();
       if (showAttachment) {
         fabAnimationController!.reverse();
         if (fabAnimationController!.isDismissed) {
-          overlayEntry?.remove();
+          attchmentOverlayEntry?.remove();
         }
         showAttachment = false;
       }

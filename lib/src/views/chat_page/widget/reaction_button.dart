@@ -16,10 +16,10 @@ class ReactionGrid extends StatelessWidget {
         borderRadius: BorderRadius.circular(IsmChatDimens.sixteen),
         child: SizedBox(
           height: Responsive.isWebAndTablet(context)
-              ? IsmChatDimens.percentHeight(.25)
+              ? IsmChatDimens.percentHeight(.1)
               : IsmChatDimens.ninty,
           width: Responsive.isWebAndTablet(context)
-              ? IsmChatDimens.percentWidth(.5)
+              ? IsmChatDimens.percentWidth(.2)
               : null,
           child: GridView.builder(
             physics: const NeverScrollableScrollPhysics(),
@@ -35,6 +35,8 @@ class ReactionGrid extends StatelessWidget {
                 emojiSize: IsmChatDimens.twenty,
                 onEmojiSelected: (_, emoji) {
                   Get.back();
+                  _controller.holdController.reverse();
+                  _controller.messageHoldOverlayEntry?.remove();
                   _controller.addReacton(
                     reaction: Reaction(
                       reactionType: IsmChatEmoji.fromEmoji(reaciton),

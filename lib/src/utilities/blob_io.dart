@@ -16,5 +16,7 @@ class IsmChatBlob {
 
   static void fileDownloadWithUrl(String url) {}
 
-  static void playAudioWithBlobUrl(Uint8List bytes) {}
+  static void permissionCamerAndAudio() async {}
+
+  static Future<String> checkPermission(String value) async => '';
 }

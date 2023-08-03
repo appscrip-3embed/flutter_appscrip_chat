@@ -75,19 +75,13 @@ class IsmChatBlob {
     anchorElement.click();
   }
 
-  static void playAudioWithBlobUrl(Uint8List bytes) {
-    // Create an audio element and set the Blob URL as the source
-    final blob = html.Blob([bytes]);
-    final url = html.Url.createObjectUrlFromBlob(blob);
-    final audioElement = html.AudioElement();
-    audioElement.src = url;
+  static void permissionCamerAndAudio() async {
+    await html.window.navigator.getUserMedia(audio: true, video: true);
+  }
 
-    audioElement.onLoadedData.listen((event) {
-      IsmChatLog.error(
-          'onlod ${Duration(seconds: audioElement.duration.toInt())}');
-    });
-
-    //Play the audio
-    audioElement.play();
+  static Future<String> checkPermission(String value) async {
+    final status =
+        await html.window.navigator.permissions?.query({'name': value});
+    return status?.state ?? '';
   }
 }

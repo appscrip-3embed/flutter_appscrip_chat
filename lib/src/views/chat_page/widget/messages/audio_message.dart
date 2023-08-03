@@ -25,7 +25,6 @@ class IsmChatAudioMessage extends StatelessWidget {
         children: [
           VoiceMessage(
             audioSrc: url,
-            played: false,
             me: message.sentByMe,
             meBgColor: IsmChatConfig.chatTheme.chatPageTheme?.selfMessageTheme
                     ?.backgroundColor ??
@@ -43,8 +42,6 @@ class IsmChatAudioMessage extends StatelessWidget {
                     ?.selfMessageTheme?.backgroundColor ??
                 IsmChatConfig.chatTheme.primaryColor!,
             duration: duration,
-            onPlay: () {},
-            radius: 50,
           ),
           if (message.isUploading == true)
             IsmChatUtility.circularProgressBar(
@@ -69,7 +66,7 @@ class Noises extends StatelessWidget {
 
   Widget _singleNoise(BuildContext context) {
     final height = 40 * math.Random().nextDouble() + 2;
-    IsmChatLog.error(height);
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: IsmChatDimens.one),
       width: IsmChatDimens.two,
@@ -91,8 +88,6 @@ class VoiceMessage extends StatefulWidget {
     this.audioSrc,
     this.audioFile,
     this.duration,
-    this.showDuration = false,
-    this.waveForm,
     this.noiseCount = 27,
     this.meBgColor = Colors.green,
     this.contactBgColor = const Color(0xffffffff),
@@ -100,19 +95,13 @@ class VoiceMessage extends StatefulWidget {
     this.contactCircleColor = Colors.red,
     this.mePlayIconColor = Colors.black,
     this.contactPlayIconColor = Colors.black26,
-    this.radius = 12,
     this.contactPlayIconBgColor = Colors.grey,
     this.meFgColor = const Color(0xffffffff),
-    this.played = false,
-    this.onPlay,
   }) : super(key: key);
 
   final String? audioSrc;
   Future<File>? audioFile;
   final Duration? duration;
-  final bool showDuration;
-  final List<double>? waveForm;
-  final double radius;
 
   final int noiseCount;
   final Color meBgColor,
@@ -123,8 +112,7 @@ class VoiceMessage extends StatefulWidget {
       mePlayIconColor,
       contactPlayIconColor,
       contactPlayIconBgColor;
-  final bool played, me;
-  Function()? onPlay;
+  final bool me;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -133,7 +121,7 @@ class VoiceMessage extends StatefulWidget {
 
 class _VoiceMessageState extends State<VoiceMessage>
     with SingleTickerProviderStateMixin {
-  // late StreamSubscription stream;
+  late StreamSubscription stream;
   final AudioPlayer _player = AudioPlayer();
   final double maxNoiseHeight = 60, noiseWidth = 120;
   Duration? _audioDuration;
@@ -145,13 +133,19 @@ class _VoiceMessageState extends State<VoiceMessage>
   final RxString _remainingTime = ''.obs;
   String get remainingTime => _remainingTime.value;
   set remainingTime(String value) => _remainingTime.value = value;
-  AnimationController? _controller;
+
+  final RxBool _audioConfigurationDone = false.obs;
+  bool get audioConfigurationDone => _audioConfigurationDone.value;
+  set audioConfigurationDone(bool value) =>
+      _audioConfigurationDone.value = value;
+
+  AnimationController? _animationController;
 
   @override
   void initState() {
     super.initState();
     _setDuration();
-    _player.onPlayerStateChanged.listen((event) {
+    stream = _player.onPlayerStateChanged.listen((event) {
       switch (event) {
         case PlayerState.stopped:
           break;
@@ -194,7 +188,11 @@ class _VoiceMessageState extends State<VoiceMessage>
       );
 
   Widget _playButton(BuildContext context) => IsmChatTapHandler(
-        onTap: _changePlayingStatus,
+        onTap: () {
+          if (audioConfigurationDone) {
+            _changePlayingStatus();
+          }
+        },
         child: Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
@@ -203,12 +201,22 @@ class _VoiceMessageState extends State<VoiceMessage>
           width: IsmChatDimens.fifty,
           height: IsmChatDimens.fifty,
           child: Obx(
-            () => Icon(
-              isPlaying ? Icons.pause : Icons.play_arrow,
-              color: widget.me
-                  ? widget.mePlayIconColor
-                  : widget.contactPlayIconColor,
-            ),
+            () => !audioConfigurationDone
+                ? Container(
+                    padding: IsmChatDimens.edgeInsets8,
+                    width: IsmChatDimens.ten,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 1,
+                      color:
+                          widget.me ? widget.meFgColor : widget.contactFgColor,
+                    ),
+                  )
+                : Icon(
+                    isPlaying ? Icons.pause : Icons.play_arrow,
+                    color: widget.me
+                        ? widget.mePlayIconColor
+                        : widget.contactPlayIconColor,
+                  ),
           ),
         ),
       );
@@ -218,22 +226,14 @@ class _VoiceMessageState extends State<VoiceMessage>
         mainAxisSize: MainAxisSize.min,
         children: [
           _noise(context),
-          Row(
-            children: [
-              if (!widget.played)
-                Widgets.circle(context, 1,
-                    widget.me ? widget.meFgColor : widget.contactCircleColor),
-              IsmChatDimens.boxWidth8,
-              Obx(
-                () => Text(
-                  remainingTime,
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: widget.me ? widget.meFgColor : widget.contactFgColor,
-                  ),
-                ),
-              )
-            ],
+          Obx(
+            () => Text(
+              remainingTime,
+              style: TextStyle(
+                fontSize: 10,
+                color: widget.me ? widget.meFgColor : widget.contactFgColor,
+              ),
+            ),
           ),
         ],
       );
@@ -247,20 +247,21 @@ class _VoiceMessageState extends State<VoiceMessage>
             Noises(
               color: widget.me ? Colors.white : Colors.grey,
             ),
-            AnimatedBuilder(
-              animation:
-                  CurvedAnimation(parent: _controller!, curve: Curves.ease),
-              builder: (context, child) => Positioned(
-                left: _controller!.value,
-                child: Container(
-                  height: IsmChatDimens.eighty,
-                  width: IsmChatDimens.oneHundredTwenty,
-                  color: widget.me
-                      ? widget.meBgColor.withOpacity(.4)
-                      : widget.contactBgColor.withOpacity(.35),
+            if (audioConfigurationDone)
+              AnimatedBuilder(
+                animation: CurvedAnimation(
+                    parent: _animationController!, curve: Curves.ease),
+                builder: (context, child) => Positioned(
+                  left: _animationController!.value,
+                  child: Container(
+                    height: IsmChatDimens.eighty,
+                    width: IsmChatDimens.oneHundredTwenty,
+                    color: widget.me
+                        ? widget.meBgColor.withOpacity(.4)
+                        : widget.contactBgColor.withOpacity(.35),
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       );
@@ -272,12 +273,12 @@ class _VoiceMessageState extends State<VoiceMessage>
     } else if (widget.audioSrc != null) {
       await _player.play(UrlSource(widget.audioSrc!));
     }
-    await _controller!.forward();
+    await _animationController!.forward();
   }
 
   _stopPlaying() async {
     await _player.pause();
-    _controller!.stop();
+    _animationController!.stop();
   }
 
   void _setDuration() async {
@@ -286,23 +287,23 @@ class _VoiceMessageState extends State<VoiceMessage>
     } else {
       _audioDuration = await jsaudio.AudioPlayer().setUrl(widget.audioSrc!);
     }
-    _controller = AnimationController(
+    _animationController = AnimationController(
       vsync: this,
       lowerBound: 0,
       upperBound: noiseWidth,
       duration: _audioDuration,
     );
 
-    ///
-    _controller!.addListener(() {
-      if (_controller!.isCompleted) {
-        _controller!.reset();
+    _animationController?.addListener(() {
+      if (_animationController!.isCompleted) {
+        _animationController!.reset();
         isPlaying = false;
         setState(() {});
       }
     });
 
     remainingTime = _audioDuration!.formatDuration();
+    audioConfigurationDone = true;
   }
 
   void _changePlayingStatus() async {
@@ -312,45 +313,13 @@ class _VoiceMessageState extends State<VoiceMessage>
 
   @override
   void dispose() {
+    stream.cancel();
     _player.dispose();
-    _controller?.dispose();
+    _animationController?.dispose();
     super.dispose();
   }
 }
 
 ///
-class CustomTrackShape extends RoundedRectSliderTrackShape {
-  ///
-  @override
-  Rect getPreferredRect({
-    required RenderBox parentBox,
-    Offset offset = Offset.zero,
-    required SliderThemeData sliderTheme,
-    bool isEnabled = false,
-    bool isDiscrete = false,
-  }) {
-    const trackHeight = 10.0;
-    final double trackLeft = offset.dx,
-        trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
-    final trackWidth = parentBox.size.width;
-    return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
-  }
-}
 
-///
-class Widgets {
-  ///
-  static circle(
-    BuildContext context,
-    double width,
-    Color color, {
-    Widget child = const SizedBox(),
-  }) =>
-      Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(shape: BoxShape.circle, color: color),
-        width: width,
-        height: width,
-        child: child,
-      );
-}
+

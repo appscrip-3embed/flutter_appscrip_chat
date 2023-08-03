@@ -119,6 +119,7 @@ class IsmChatConversationsController extends GetxController {
 
     if (users != null) {
       userDetails = UserDetails.fromJson(users);
+      IsmChatLog.error(userDetails?.profileUrl);
     } else {
       await getUserData();
     }

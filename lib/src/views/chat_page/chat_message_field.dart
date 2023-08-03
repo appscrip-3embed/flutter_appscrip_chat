@@ -1,8 +1,9 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
+    if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -44,13 +45,9 @@ class IsmChatMessageField extends StatelessWidget {
                         ),
                         IsmChatDimens.boxWidth32,
                         Text(
-                          controller.seconds.getTimerRecord(controller.seconds),
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                            controller.seconds
+                                .getTimerRecord(controller.seconds),
+                            style: IsmChatStyles.w600Black20),
                       ],
                     ),
                   ),
@@ -68,11 +65,6 @@ class IsmChatMessageField extends StatelessWidget {
                   ),
                   IsmChatDimens.boxWidth8,
                   if (attachments.isNotEmpty)
-                    // AvailabilityFloatingButton(
-                    //   onAddAvailability: () {},
-                    //   onAddEvent: () {},
-                    //   onRequestLeave: () {},
-                    // ),
                     Container(
                       margin: IsmChatDimens.edgeInsetsBottom4,
                       decoration: BoxDecoration(
@@ -291,21 +283,47 @@ class _MicOrSendButton extends StatelessWidget {
                       if (!controller.conversation!.isChattingAllowed) {
                         controller.showDialogCheckBlockUnBlock();
                       } else {
-                        if (!(controller.conversation?.lastMessageDetails
-                                    ?.customType ==
-                                IsmChatCustomMessageType.removeMember &&
-                            controller
-                                    .conversation?.lastMessageDetails?.userId ==
-                                IsmChatConfig
-                                    .communicationConfig.userConfig.userId)) {
-                          controller.isEnableRecordingAudio = true;
-                          controller.forVideoRecordTimer =
-                              Timer.periodic(const Duration(seconds: 1), (_) {
-                            controller.seconds++;
-                          });
-                          // Check and request permission
-
+                        var allowPermission = false;
+                        if (kIsWeb) {
+                          final state =
+                              await IsmChatBlob.checkPermission('microphone');
+                          if (state == 'prompt') {
+                            unawaited(Get.dialog(
+                              const IsmChatAlertDialogBox(
+                                title: IsmChatStrings.micePermission,
+                                cancelLabel: IsmChatStrings.ok,
+                              ),
+                            ));
+                            await controller.recordAudio.hasPermission();
+                            return;
+                          } else if (state == 'denied') {
+                            await Get.dialog(
+                              const IsmChatAlertDialogBox(
+                                title: IsmChatStrings.micePermissionBlock,
+                                cancelLabel: IsmChatStrings.ok,
+                              ),
+                            );
+                          } else {
+                            allowPermission = true;
+                          }
+                        } else {
                           if (await controller.recordAudio.hasPermission()) {
+                            allowPermission = true;
+                          }
+                        }
+                        if (allowPermission) {
+                          if (!(controller.conversation?.lastMessageDetails
+                                      ?.customType ==
+                                  IsmChatCustomMessageType.removeMember &&
+                              controller.conversation?.lastMessageDetails
+                                      ?.userId ==
+                                  IsmChatConfig
+                                      .communicationConfig.userConfig.userId)) {
+                            controller.isEnableRecordingAudio = true;
+                            controller.forVideoRecordTimer =
+                                Timer.periodic(const Duration(seconds: 1), (_) {
+                              controller.seconds++;
+                            });
                             await controller.recordAudio.start();
                           }
                         }
@@ -314,7 +332,19 @@ class _MicOrSendButton extends StatelessWidget {
               onLongPressEnd: controller.showSendButton
                   ? null
                   : (val) async {
-                      if (await controller.recordAudio.hasPermission()) {
+                      var allowPermission = false;
+                      if (kIsWeb) {
+                        final state =
+                            await IsmChatBlob.checkPermission('microphone');
+                        if (state == 'granted') {
+                          allowPermission = true;
+                        }
+                      } else {
+                        if (await controller.recordAudio.hasPermission()) {
+                          allowPermission = true;
+                        }
+                      }
+                      if (allowPermission) {
                         controller.isEnableRecordingAudio = false;
                         controller.forVideoRecordTimer?.cancel();
                         var path = await controller.recordAudio.stop();
@@ -436,7 +466,6 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
   final controller = Get.find<IsmChatPageController>();
   final layerLink = LayerLink();
 
-  late Animation<double> _animation;
   late Animation<double> curve;
   late Animation<double> _buttonAnimation;
   int? toolTipIndex;
@@ -452,7 +481,7 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
       parent: controller.fabAnimationController!,
       curve: Curves.easeInOut,
     );
-    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(curve);
+
     _buttonAnimation = Tween<double>(
       begin: 10,
       end: 0,
@@ -463,8 +492,8 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
   @override
   void dispose() {
     controller.fabAnimationController!.dispose();
-    controller.overlayEntry?.dispose();
-    controller.overlayEntry = null;
+    controller.attchmentOverlayEntry?.dispose();
+    controller.attchmentOverlayEntry = null;
     super.dispose();
   }
 
@@ -474,7 +503,7 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
     } else {
       await controller.fabAnimationController!.reverse();
       if (controller.fabAnimationController!.isDismissed) {
-        controller.overlayEntry?.remove();
+        controller.attchmentOverlayEntry?.remove();
       }
     }
   }
@@ -484,7 +513,7 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
     final size = renderBox!.size;
 
     OverlayState? overlayState = Overlay.of(context);
-    controller.overlayEntry = OverlayEntry(
+    controller.attchmentOverlayEntry = OverlayEntry(
       builder: (context) => Positioned(
         bottom: size.height + IsmChatDimens.twenty,
         child: CompositedTransformFollower(
@@ -577,7 +606,7 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
       overlayState.setState(() {});
     });
 
-    overlayState.insert(controller.overlayEntry!);
+    overlayState.insert(controller.attchmentOverlayEntry!);
     await controller.fabAnimationController?.forward();
   }
 
