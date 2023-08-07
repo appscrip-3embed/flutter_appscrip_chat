@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 class IsmChatConverstaionInfoView extends StatelessWidget {
   const IsmChatConverstaionInfoView({super.key});
 
+  static const String route = IsmPageRoutes.converstaionInfoView;
+
   @override
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
         initState: (_) async {

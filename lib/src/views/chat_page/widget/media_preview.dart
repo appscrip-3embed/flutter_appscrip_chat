@@ -9,22 +9,24 @@ import 'package:photo_view/photo_view.dart';
 class IsmMediaPreview extends StatefulWidget {
   const IsmMediaPreview({
     Key? key,
-    required this.messageData,
-    required this.mediaIndex,
-    required this.mediaUserName,
-    required this.initiated,
-    required this.mediaTime,
+    this.messageData,
+    this.mediaIndex,
+    this.mediaUserName,
+    this.initiated,
+    this.mediaTime,
   }) : super(key: key);
 
-  final List<IsmChatMessageModel> messageData;
+  final List<IsmChatMessageModel>? messageData;
 
-  final String mediaUserName;
+  final String? mediaUserName;
 
-  final bool initiated;
+  final bool? initiated;
 
-  final int mediaTime;
+  final int? mediaTime;
 
-  final int mediaIndex;
+  final int? mediaIndex;
+
+  static const String route = IsmPageRoutes.mediaPreviewView;
 
   @override
   State<IsmMediaPreview> createState() => _MediaPreviewState();
@@ -44,9 +46,10 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
   @override
   void initState() {
     super.initState();
-    initiated = widget.initiated;
-    mediaIndex = widget.mediaIndex;
-    final timeStamp = DateTime.fromMillisecondsSinceEpoch(widget.mediaTime);
+    initiated = widget.initiated ?? false;
+    mediaIndex = widget.mediaIndex ?? 0;
+    final timeStamp =
+        DateTime.fromMillisecondsSinceEpoch(widget.mediaTime ?? 0);
     final time = DateFormat.jm().format(timeStamp);
     final monthDay = DateFormat.MMMd().format(timeStamp);
     mediaTime = '$monthDay, $time';
@@ -105,7 +108,7 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
                       ],
                     ),
                   ),
-                  if (widget.messageData[mediaIndex].attachments!.first
+                  if (widget.messageData![mediaIndex].attachments!.first
                       .mediaUrl!.isValidUrl)
                     PopupMenuItem(
                       value: 2,
@@ -138,13 +141,13 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
                 onSelected: (value) async {
                   if (value == 1) {
                     await chatPageController
-                        .shareMedia(widget.messageData[mediaIndex]);
+                        .shareMedia(widget.messageData![mediaIndex]);
                   } else if (value == 2) {
                     await chatPageController
-                        .saveMedia(widget.messageData[mediaIndex]);
+                        .saveMedia(widget.messageData![mediaIndex]);
                   } else if (value == 3) {
                     await chatPageController.showDialogForMessageDelete(
-                        widget.messageData[mediaIndex],
+                        widget.messageData![mediaIndex],
                         fromMediaPrivew: true);
                   }
                 },
@@ -158,8 +161,8 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
           child: CarouselSlider.builder(
             itemBuilder: (BuildContext context, int index, int realIndex) {
               var url =
-                  widget.messageData[index].attachments!.first.mediaUrl ?? '';
-              return widget.messageData[index].customType ==
+                  widget.messageData![index].attachments!.first.mediaUrl ?? '';
+              return widget.messageData![index].customType ==
                       IsmChatCustomMessageType.image
                   ? PhotoView(
                       imageProvider: url.isValidUrl
@@ -175,22 +178,22 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
               height: IsmChatDimens.percentHeight(1),
               viewportFraction: 1,
               enlargeCenterPage: true,
-              initialPage: widget.mediaIndex,
+              initialPage: widget.mediaIndex ?? 0,
               enableInfiniteScroll: false,
               onPageChanged: (index, _) {
                 final timeStamp = DateTime.fromMillisecondsSinceEpoch(
-                    widget.messageData[index].sentAt);
+                    widget.messageData![index].sentAt);
                 final time = DateFormat.jm().format(timeStamp);
                 final monthDay = DateFormat.MMMd().format(timeStamp);
                 setState(
                   () {
-                    initiated = widget.messageData[index].sentByMe;
+                    initiated = widget.messageData![index].sentByMe;
                     mediaTime = '$monthDay, $time';
                   },
                 );
               },
             ),
-            itemCount: widget.messageData.length,
+            itemCount: widget.messageData?.length ?? 0,
           ),
         ),
       );

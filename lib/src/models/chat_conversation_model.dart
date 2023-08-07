@@ -28,8 +28,11 @@ class IsmChatConversationModel {
           ? (map['lastReadAt'] as List)
               .map((e) => IsmChatLastReadAt.fromMap(e as Map<String, dynamic>))
               .toList()
-          : IsmChatLastReadAt.fromNetworkMap(
-              map['lastReadAt'] as Map<String, dynamic>? ?? {}),
+          : map['lastReadAt'].runtimeType == Map
+              ? IsmChatLastReadAt.fromNetworkMap(
+                  map['lastReadAt'] as Map<String, dynamic>? ??
+                      <String, dynamic>{})
+              : [],
       lastMessageSentAt: map['lastMessageSentAt'] as int? ?? 0,
       lastMessageDetails: map['lastMessageDetails'] != null
           ? LastMessageDetails.fromMap(

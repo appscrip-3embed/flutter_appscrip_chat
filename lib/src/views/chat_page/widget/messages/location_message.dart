@@ -68,6 +68,7 @@ class _IsmChatLocationMessageState extends State<IsmChatLocationMessage> {
                           tiltGesturesEnabled: false,
                           zoomControlsEnabled: false,
                           zoomGesturesEnabled: false,
+                          trafficEnabled: false,
                         ),
                       ),
                     ),

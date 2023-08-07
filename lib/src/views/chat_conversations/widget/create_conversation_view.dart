@@ -15,6 +15,8 @@ class IsmChatCreateConversationView extends StatelessWidget {
 
   final converstaionController = Get.find<IsmChatConversationsController>();
 
+  static const String route = IsmPageRoutes.createChat;
+
   Widget _buildSusWidget(String susTag) => Container(
         padding: IsmChatDimens.edgeInsets10_0,
         height: IsmChatDimens.forty,

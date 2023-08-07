@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 class IsmChatBlockedUsersView extends StatelessWidget {
   const IsmChatBlockedUsersView({super.key});
 
+  static const String route = IsmPageRoutes.blockView;
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: IsmChatAppBar(

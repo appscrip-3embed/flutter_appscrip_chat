@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,6 +11,8 @@ class IsmChatWallpaperPreview extends StatelessWidget {
   final String? backgroundColor;
   final String? imagePath;
   final int? assetSrNo;
+
+  static const String route = IsmPageRoutes.wallpaperPreview;
 
   @override
   Widget build(BuildContext context) => Scaffold(

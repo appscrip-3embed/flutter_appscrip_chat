@@ -14,6 +14,7 @@ extension ScaffoldExtenstion on Scaffold {
   Widget withUnfocusGestureDetctor(BuildContext context) => GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
+          IsmChatLog.error('rahul');
         },
         child: this,
       );

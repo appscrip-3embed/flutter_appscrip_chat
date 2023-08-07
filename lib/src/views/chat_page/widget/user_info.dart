@@ -6,12 +6,14 @@ import 'package:get/get.dart';
 class IsmChatUserInfo extends StatefulWidget {
   const IsmChatUserInfo({
     super.key,
-    required this.user,
-    required this.conversationId,
+    this.user,
+    this.conversationId,
   });
 
-  final UserDetails user;
-  final String conversationId;
+  final UserDetails? user;
+  final String? conversationId;
+
+  static const String route = IsmPageRoutes.userInfoView;
 
   @override
   State<IsmChatUserInfo> createState() => _IsmChatUserInfoState();
@@ -28,19 +30,19 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
 
   @override
   void initState() {
-    if (widget.conversationId.isNotEmpty) {
+    if (widget.conversationId?.isNotEmpty == true) {
       getMessages();
     }
     if (!conversationController.blockUsers.isNullOrEmpty) {
       isUserBlock = conversationController.blockUsers
-          .any((e) => e.userId == widget.user.userId);
+          .any((e) => e.userId == widget.user?.userId);
     }
     super.initState();
   }
 
   void getMessages() async {
     var messages =
-        await IsmChatConfig.dbWrapper!.getMessage(widget.conversationId);
+        await IsmChatConfig.dbWrapper!.getMessage(widget.conversationId ?? '');
 
     if (messages?.isNotEmpty == true) {
       mediaList = messages!
@@ -84,16 +86,16 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
                 children: [
                   IsmChatDimens.boxHeight16,
                   IsmChatImage.profile(
-                    widget.user.profileUrl,
+                    widget.user?.profileUrl ?? '',
                     dimensions: IsmChatDimens.oneHundredFifty,
                   ),
                   IsmChatDimens.boxHeight5,
                   Text(
-                    widget.user.userName,
+                    widget.user?.userName ?? '',
                     style: IsmChatStyles.w600Black27,
                   ),
                   Text(
-                    widget.user.userIdentifier,
+                    widget.user?.userIdentifier ?? '',
                     style: IsmChatStyles.w500GreyLight17,
                   ),
                   IsmChatDimens.boxHeight16,
@@ -143,7 +145,7 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
                     ),
                   ),
                   if (IsmChatConfig.communicationConfig.userConfig.userId !=
-                      widget.user.userId)
+                      widget.user?.userId)
                     TextButton.icon(
                       onPressed: () async {
                         await Get.dialog(IsmChatAlertDialogBox(
@@ -160,12 +162,12 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
                               Get.back();
                               isUserBlock
                                   ? chatPageController.unblockUser(
-                                      opponentId: widget.user.userId,
+                                      opponentId: widget.user?.userId ?? '',
                                       lastMessageTimeStamp: 0,
                                       fromUser: true,
                                     )
                                   : chatPageController.blockUser(
-                                      opponentId: widget.user.userId,
+                                      opponentId: widget.user?.userId ?? '',
                                       lastMessageTimeStamp: 0,
                                     );
                             },

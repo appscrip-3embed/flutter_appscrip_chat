@@ -158,9 +158,7 @@ class IsmChatApp extends StatelessWidget {
   static void logout() async {
     await Get.find<IsmChatMqttController>().unSubscribe();
     await Get.find<IsmChatMqttController>().disconnect();
-
     await IsmChatConfig.dbWrapper?.deleteChatLocalDb();
-
     await Future.wait([
       Get.delete<IsmChatConversationsController>(force: true),
       Get.delete<IsmChatMqttController>(force: true),

@@ -61,26 +61,35 @@ class IsmChatDBWrapper {
   /// Create an instance of HiveBox to use throughout the presenter.
   static Future<IsmChatDBWrapper> create([String? databaseName]) async {
     var dbName = databaseName ?? IsmChatConfig.dbName;
-
+    BoxCollection? collection;
     Directory? directory;
     if (!kIsWeb) {
       directory = await getApplicationDocumentsDirectory();
+      collection = await BoxCollection.open(
+        dbName,
+        {
+          _userBox,
+          _conversationBox,
+          _pendingBox,
+          _forwardBox,
+        },
+        path: '${directory.path}/$dbName',
+      );
+    } else {
+      collection = await BoxCollection.open(
+        dbName,
+        {
+          _userBox,
+          _conversationBox,
+          _pendingBox,
+          _forwardBox,
+        },
+      );
     }
-    final collection = await BoxCollection.open(
-      dbName,
-      {
-        _userBox,
-        _conversationBox,
-        _pendingBox,
-        _forwardBox,
-      },
-      path: directory != null ? '${directory.path}/$dbName' : null,
-    );
     if (!kIsWeb) {
       IsmChatLog.success(
           '[CREATED] - Hive databse at ${directory?.path}/$dbName');
     }
-
     var instance = IsmChatDBWrapper._create(collection);
     await instance._createBox();
     return instance;

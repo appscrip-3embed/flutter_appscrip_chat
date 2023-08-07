@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 
 class IsmChatConversations extends StatefulWidget {
   const IsmChatConversations({
-    required this.onChatTap,
+    this.onChatTap,
     this.onSignOut,
     this.showAppBar = false,
     this.showCreateChatIcon = false,
@@ -35,7 +35,7 @@ class IsmChatConversations extends StatefulWidget {
 
   final bool isGroupChatEnabled;
 
-  final void Function(BuildContext, IsmChatConversationModel, bool) onChatTap;
+  final void Function(BuildContext, IsmChatConversationModel, bool)? onChatTap;
 
   final VoidCallback? onCreateChatTap;
   final bool showCreateChatIcon;
@@ -61,6 +61,8 @@ class IsmChatConversations extends StatefulWidget {
       isSlidableEnable;
 
   final Widget? emptyConversationPlaceholder;
+
+  static const String route = IsmPageRoutes.chatlist;
 
   @override
   State<IsmChatConversations> createState() => _IsmChatConversationsState();
@@ -89,14 +91,14 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
         appBar: widget.showAppBar
             ? IsmChatListHeader(
                 onSignOut: widget.onSignOut!,
-                onSearchTap: widget.onChatTap,
+                onSearchTap: widget.onChatTap!,
                 showSearch: widget.showSearch,
                 isGroupChatEnabled: widget.isGroupChatEnabled,
               )
             : null,
         body: SafeArea(
           child: IsmChatConversationList(
-            onChatTap: widget.onChatTap,
+            onChatTap: widget.onChatTap!,
             allowDelete: widget.allowDelete,
             actions: widget.actions,
             endActions: widget.endActions,

@@ -2,23 +2,49 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class MessageBubble extends StatelessWidget {
+class MessageBubble extends StatefulWidget {
   const MessageBubble({
     super.key,
     required this.message,
     required this.showMessageInCenter,
+    this.index,
   });
 
   final IsmChatMessageModel message;
   final bool showMessageInCenter;
+  final int? index;
+
+  @override
+  State<MessageBubble> createState() => _MessageBubbleState();
+}
+
+class _MessageBubbleState extends State<MessageBubble>
+    with TickerProviderStateMixin {
+  GlobalKey globalKey = GlobalKey();
+  var controller = Get.find<IsmChatPageController>();
+  late Animation<double> holdAnimation = CurvedAnimation(
+    parent: controller.holdController,
+    curve: Curves.easeInOutCubic,
+  );
+
+  @override
+  void initState() {
+    controller.holdController = AnimationController(
+      vsync: this,
+      duration: IsmChatConstants.transitionDuration,
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) => Container(
-        margin: message.reactions?.isNotEmpty == true && !showMessageInCenter
+        key: globalKey,
+        margin: widget.message.reactions?.isNotEmpty == true &&
+                !widget.showMessageInCenter
             ? IsmChatDimens.edgeInsetsB25
             : null,
-        padding: showMessageInCenter ? IsmChatDimens.edgeInsets4 : null,
-        constraints: showMessageInCenter
+        padding: widget.showMessageInCenter ? IsmChatDimens.edgeInsets4 : null,
+        constraints: widget.showMessageInCenter
             ? BoxConstraints(
                 maxWidth: context.width * .8,
                 minWidth: context.width * .1,
@@ -32,12 +58,12 @@ class MessageBubble extends StatelessWidget {
                       ? context.width * .06
                       : context.width * .25,
                 ),
-        decoration: showMessageInCenter
+        decoration: widget.showMessageInCenter
             ? null
             : BoxDecoration(
-                color: message.backgroundColor,
-                border: Border.all(color: message.borderColor!),
-                borderRadius: message.sentByMe
+                color: widget.message.backgroundColor,
+                border: Border.all(color: widget.message.borderColor!),
+                borderRadius: widget.message.sentByMe
                     ? IsmChatConfig.chatTheme.chatPageTheme?.selfMessageTheme
                             ?.borderRadius ??
                         BorderRadius.circular(IsmChatDimens.twelve).copyWith(
@@ -52,45 +78,45 @@ class MessageBubble extends StatelessWidget {
         child: Stack(
           children: [
             Padding(
-              padding: !showMessageInCenter
+              padding: !widget.showMessageInCenter
                   ? IsmChatDimens.edgeInsets5_5_5_20
                   : IsmChatDimens.edgeInsets0,
-              child: message.customType!.messageType(message),
+              child: widget.message.customType!.messageType(widget.message),
             ),
-            if (!showMessageInCenter)
+            if (!widget.showMessageInCenter) ...[
               Positioned(
                 bottom: IsmChatDimens.four,
                 right: IsmChatDimens.ten,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: message.sentByMe
+                  mainAxisAlignment: widget.message.sentByMe
                       ? MainAxisAlignment.end
                       : MainAxisAlignment.start,
                   children: [
                     Text(
-                      message.sentAt.toTimeString(),
-                      style: (message.sentByMe
+                      widget.message.sentAt.toTimeString(),
+                      style: (widget.message.sentByMe
                               ? IsmChatStyles.w400White10
                               : IsmChatStyles.w400Grey10)
                           .copyWith(
-                        color: message.style.color,
+                        color: widget.message.style.color,
                       ),
                     ),
-                    if (message.sentByMe &&
-                        message.customType !=
+                    if (widget.message.sentByMe &&
+                        widget.message.customType !=
                             IsmChatCustomMessageType.deletedForEveryone) ...[
                       IsmChatDimens.boxWidth2,
                       Icon(
-                        message.messageId!.isEmpty
+                        widget.message.messageId!.isEmpty
                             ? Icons.watch_later_outlined
-                            : message.deliveredToAll ?? false
+                            : widget.message.deliveredToAll ?? false
                                 ? Icons.done_all_rounded
                                 : Icons.done_rounded,
-                        color: message.messageId!.isEmpty
+                        color: widget.message.messageId!.isEmpty
                             ? IsmChatConfig.chatTheme.chatPageTheme
                                     ?.unreadCheckColor ??
                                 Colors.white
-                            : message.readByAll ?? false
+                            : widget.message.readByAll ?? false
                                 ? IsmChatConfig.chatTheme.chatPageTheme
                                         ?.readCheckColor ??
                                     Colors.blue
@@ -103,6 +129,34 @@ class MessageBubble extends StatelessWidget {
                   ],
                 ),
               ),
+              Obx(
+                () => (controller.onMessageHoverIndex == widget.index &&
+                        Responsive.isWebAndTablet(context))
+                    ? Positioned(
+                        top: IsmChatDimens.four,
+                        right: IsmChatDimens.five,
+                        child: IsmChatTapHandler(
+                          onTap: () {
+                            if (controller.holdController.isCompleted &&
+                                controller.messageHoldOverlayEntry != null) {
+                              controller.closeOveray();
+                            } else {
+                              controller.holdController.forward();
+                              controller.showOverlayWeb(
+                                  globalKey.currentContext!,
+                                  widget.message,
+                                  holdAnimation);
+                            }
+                          },
+                          child: Icon(
+                            Icons.expand_more_rounded,
+                            color: widget.message.textColor,
+                          ),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              )
+            ],
           ],
         ),
       );

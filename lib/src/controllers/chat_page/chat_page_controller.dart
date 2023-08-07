@@ -319,9 +319,9 @@ class IsmChatPageController extends GetxController
   set messageHoldOverlayEntry(OverlayEntry? value) =>
       _messageHoldOverlayEntry.value = value;
 
-  // final RxInt _screenWidget = 0.obs;
-  // int get screenWidget => _screenWidget.value;
-  // set screenWidget(int value) => _screenWidget.value = value;
+  final RxInt _onMessageHoverIndex = 0.obs;
+  int get onMessageHoverIndex => _onMessageHoverIndex.value;
+  set onMessageHoverIndex(int value) => _onMessageHoverIndex.value = value;
 
   final Rx<AnimationController?> _fabAnimationController =
       Rx<AnimationController?>(null);
@@ -448,7 +448,7 @@ class IsmChatPageController extends GetxController
     messagesScrollController.dispose();
     attchmentOverlayEntry?.dispose();
     messageHoldOverlayEntry?.dispose();
-    fabAnimationController!.dispose();
+    fabAnimationController?.dispose();
     attchmentOverlayEntry = null;
     messageHoldOverlayEntry = null;
     ifTimerMounted();
@@ -778,37 +778,30 @@ class IsmChatPageController extends GetxController
   ) async {
     final renderBox = context.findRenderObject() as RenderBox?;
     final size = renderBox!.size;
-    final offset = renderBox!.localToGlobal(Offset.zero);
-
+    final offset = renderBox.localToGlobal(Offset.zero);
     OverlayState? overlayState = Overlay.of(context);
     messageHoldOverlayEntry = OverlayEntry(
+      maintainState: true,
       builder: (context) => Positioned(
-        bottom: size.height,
-        child: CompositedTransformFollower(
-          followerAnchor:
-              message.sentByMe ? Alignment.centerRight : Alignment.centerLeft,
-          targetAnchor:
-              message.sentByMe ? Alignment.centerRight : Alignment.centerLeft,
-          showWhenUnlinked: false,
-          offset: Offset(0, offset.dx / 2),
-          link: messageHoldLink,
-          child: Material(
-            color: Colors.transparent,
-            child: AnimatedBuilder(
-              animation: animation,
-              builder: (_, child) {
-                animation = Tween<double>(begin: 0, end: 1).animate(
-                  CurvedAnimation(
-                    parent: animation,
-                    curve: Curves.easeInOutCubic,
-                  ),
-                );
-                return IsmChatFocusMenu(
-                  message,
-                  animation: animation,
-                );
-              },
-            ),
+        left: message.sentByMe ? null : offset.dx + size.width - 5,
+        right: message.sentByMe ? 0 + size.width + 5 : null,
+        top: offset.dy,
+        child: Material(
+          color: Colors.transparent,
+          child: AnimatedBuilder(
+            animation: animation,
+            builder: (_, child) {
+              animation = Tween<double>(begin: 0, end: 1).animate(
+                CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.easeInOutCubic,
+                ),
+              );
+              return IsmChatFocusMenu(
+                message,
+                animation: animation,
+              );
+            },
           ),
         ),
       ),
@@ -818,8 +811,10 @@ class IsmChatPageController extends GetxController
 
   void scrollListener() {
     messagesScrollController.addListener(() {
-      holdController.reverse();
-      messageHoldOverlayEntry?.remove();
+      if (holdController.isCompleted && messageHoldOverlayEntry != null) {
+        closeOveray();
+      }
+
       if (showAttachment) {
         fabAnimationController!.reverse();
         if (fabAnimationController!.isDismissed) {
@@ -840,6 +835,11 @@ class IsmChatPageController extends GetxController
         showDownSideButton = false;
       }
     });
+  }
+
+  void closeOveray() {
+    holdController.reverse();
+    messageHoldOverlayEntry?.remove();
   }
 
   Future<void> scrollDown() async {

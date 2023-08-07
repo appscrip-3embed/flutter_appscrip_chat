@@ -22,53 +22,62 @@ class MessageCard extends StatelessWidget {
   final MessageWidgetBuilder? messageWidgetBuilder;
 
   @override
-  Widget build(BuildContext context) => SwipeTo(
-        offsetDx: showMessageInCenter ? 0 : 0.8,
-        animationDuration: IsmChatConstants.swipeDuration,
-        iconColor: IsmChatConfig.chatTheme.primaryColor,
-        iconSize: 24,
-        onLeftSwipe: showMessageInCenter || !message.sentByMe
-            ? null
-            : !canReply
-                ? null
-                : () {
-                    controller.onReplyTap(
-                        controller.messages.reversed.toList()[index]);
-                  },
-        onRightSwipe: showMessageInCenter || message.sentByMe
-            ? null
-            : !canReply
-                ? null
-                : () {
-                    controller.onReplyTap(
-                        controller.messages.reversed.toList()[index]);
-                  },
-        child: GestureDetector(
-          onTap: () async {
-            if (message.messageType == IsmChatMessageType.reply) {
-              controller.scrollToMessage(message.parentMessageId ?? '');
-            } else if ([
-              IsmChatCustomMessageType.image,
-              IsmChatCustomMessageType.video,
-              IsmChatCustomMessageType.file
-            ].contains(message.customType)) {
-              controller.tapForMediaPreview(message);
-            }
-          },
-          child: AutoScrollTag(
-            controller: controller.messagesScrollController,
-            index: index,
-            key: Key('scroll-${message.messageId}'),
-            child: Hero(
-              tag: message,
-              child: messageWidgetBuilder?.call(context, message,
-                      message.customType!, showMessageInCenter) ??
-                  MessageBubble(
-                    message: message,
-                    showMessageInCenter: showMessageInCenter,
-                  ),
-            ),
+  Widget build(BuildContext context) {
+    var messageIndex = index;
+    return SwipeTo(
+      offsetDx: showMessageInCenter ? 0 : 0.8,
+      animationDuration: IsmChatConstants.swipeDuration,
+      iconColor: IsmChatConfig.chatTheme.primaryColor,
+      iconSize: 24,
+      onLeftSwipe: showMessageInCenter || !message.sentByMe
+          ? null
+          : !canReply
+              ? null
+              : () {
+                  controller
+                      .onReplyTap(controller.messages.reversed.toList()[index]);
+                },
+      onRightSwipe: showMessageInCenter || message.sentByMe
+          ? null
+          : !canReply
+              ? null
+              : () {
+                  controller
+                      .onReplyTap(controller.messages.reversed.toList()[index]);
+                },
+      child: InkWell(
+        onHover: (value) {
+          if (value) {
+            controller.onMessageHoverIndex = index;
+          }
+        },
+        onTap: () async {
+          if (message.messageType == IsmChatMessageType.reply) {
+            controller.scrollToMessage(message.parentMessageId ?? '');
+          } else if ([
+            IsmChatCustomMessageType.image,
+            IsmChatCustomMessageType.video,
+            IsmChatCustomMessageType.file
+          ].contains(message.customType)) {
+            controller.tapForMediaPreview(message);
+          }
+        },
+        child: AutoScrollTag(
+          controller: controller.messagesScrollController,
+          index: index,
+          key: Key('scroll-${message.messageId}'),
+          child: Hero(
+            tag: message,
+            child: messageWidgetBuilder?.call(context, message,
+                    message.customType!, showMessageInCenter) ??
+                MessageBubble(
+                  message: message,
+                  showMessageInCenter: showMessageInCenter,
+                  index: index,
+                ),
           ),
         ),
-      );
+      ),
+    );
+  }
 }

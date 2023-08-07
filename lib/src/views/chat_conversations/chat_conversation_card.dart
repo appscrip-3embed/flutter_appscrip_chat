@@ -46,9 +46,12 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
       onTap: widget.onTap,
       child: SizedBox(
         child: Ink(
-          color: widget.conversation.conversationId! ==
-                  Get.find<IsmChatConversationsController>().isConversationId
-              ? IsmChatConfig.chatTheme.primaryColor?.withOpacity(.2)
+          color: Responsive.isWebAndTablet(context)
+              ? widget.conversation.conversationId! ==
+                      Get.find<IsmChatConversationsController>()
+                          .isConversationId
+                  ? IsmChatConfig.chatTheme.primaryColor?.withOpacity(.2)
+                  : null
               : null,
           child: ListTile(
             dense: true,

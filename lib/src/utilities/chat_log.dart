@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:appscrip_chat_component/src/res/strings.dart';

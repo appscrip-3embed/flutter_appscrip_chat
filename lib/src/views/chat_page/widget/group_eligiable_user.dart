@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 class IsmChatGroupEligibleUser extends StatelessWidget {
   const IsmChatGroupEligibleUser({super.key});
 
+  static const String route = IsmPageRoutes.groupEligiableView;
+
   Widget _buildSusWidget(String susTag) => Container(
         padding: IsmChatDimens.edgeInsets10_0,
         height: IsmChatDimens.forty,

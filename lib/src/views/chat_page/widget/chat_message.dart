@@ -15,19 +15,12 @@ class IsmChatMessage extends StatefulWidget {
 }
 
 class _IsmChatMessageState extends State<IsmChatMessage>
-    with
-        AutomaticKeepAliveClientMixin<IsmChatMessage>,
-        SingleTickerProviderStateMixin {
+    with AutomaticKeepAliveClientMixin<IsmChatMessage> {
   @override
   bool get wantKeepAlive => mounted;
 
   final controller = Get.find<IsmChatPageController>();
   final coverstaionController = Get.find<IsmChatConversationsController>();
-
-  late Animation<double> holdAnimation = CurvedAnimation(
-    parent: controller.holdController,
-    curve: Curves.easeInOutCubic,
-  );
 
   late bool showMessageInCenter;
   late bool isGroup;
@@ -51,10 +44,6 @@ class _IsmChatMessageState extends State<IsmChatMessage>
 
   @override
   void initState() {
-    controller.holdController = AnimationController(
-      vsync: this,
-      duration: IsmChatConstants.transitionDuration,
-    );
     _updateWidget();
     super.initState();
   }
@@ -69,129 +58,116 @@ class _IsmChatMessageState extends State<IsmChatMessage>
   Widget build(BuildContext context) {
     super.build(context);
     var theme = IsmChatConfig.chatTheme.chatPageTheme;
-    return CompositedTransformTarget(
-      link: controller.messageHoldLink,
-      child: IsmChatTapHandler(
-        onLongPress: showMessageInCenter
-            ? null
-            : () {
-                if (widget.message.customType !=
-                    IsmChatCustomMessageType.deletedForEveryone) {
-                  if (Responsive.isWebAndTablet(context)) {
-                    controller.holdController.forward();
-                    controller.showOverlayWeb(
-                        context, widget.message, holdAnimation);
-                  } else {
-                    controller.showOverlay(context, widget.message);
-                  }
-                } else {
-                  controller.isMessageSeleted = true;
-                  controller.selectedMessage.add(widget.message);
+    return IsmChatTapHandler(
+      onLongPress: showMessageInCenter
+          ? null
+          : () {
+              if (widget.message.customType !=
+                  IsmChatCustomMessageType.deletedForEveryone) {
+                if (!Responsive.isWebAndTablet(context)) {
+                  controller.showOverlay(context, widget.message);
                 }
-              },
-        onTap: controller.holdController.isCompleted
-            ? () {
-                controller.holdController.reverse();
-                controller.messageHoldOverlayEntry?.remove();
+              } else {
+                controller.isMessageSeleted = true;
+                controller.selectedMessage.add(widget.message);
               }
-            : showMessageInCenter
-                ? null
-                : () {
-                    controller.onMessageSelect(widget.message);
-                  },
-        child: AbsorbPointer(
-          absorbing: controller.isMessageSeleted,
-          child: Container(
-            padding: IsmChatDimens.edgeInsets4_0,
-            color: controller.selectedMessage.contains(widget.message)
-                ? (IsmChatConfig
-                            .chatTheme.chatPageTheme?.messageSelectionColor ??
-                        IsmChatConfig.chatTheme.primaryColor!)
-                    .withOpacity(.2)
-                : null,
-            child: UnconstrainedBox(
-              clipBehavior: Clip.antiAlias,
-              alignment: showMessageInCenter
-                  ? Alignment.center
-                  : widget.message.sentByMe
-                      ? Alignment.centerRight
-                      : Alignment.centerLeft,
-              child: Padding(
-                padding: showMessageInCenter
-                    ? IsmChatDimens.edgeInsets0
-                    : IsmChatDimens.edgeInsets0_4,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    if (isGroup &&
+            },
+      onTap: showMessageInCenter
+          ? null
+          : () {
+              controller.onMessageSelect(widget.message);
+            },
+      child: AbsorbPointer(
+        absorbing: controller.isMessageSeleted,
+        child: Container(
+          padding: IsmChatDimens.edgeInsets4_0,
+          color: controller.selectedMessage.contains(widget.message)
+              ? (IsmChatConfig.chatTheme.chatPageTheme?.messageSelectionColor ??
+                      IsmChatConfig.chatTheme.primaryColor!)
+                  .withOpacity(.2)
+              : null,
+          child: UnconstrainedBox(
+            clipBehavior: Clip.antiAlias,
+            alignment: showMessageInCenter
+                ? Alignment.center
+                : widget.message.sentByMe
+                    ? Alignment.centerRight
+                    : Alignment.centerLeft,
+            child: Padding(
+              padding: showMessageInCenter
+                  ? IsmChatDimens.edgeInsets0
+                  : IsmChatDimens.edgeInsets0_4,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  if (isGroup &&
+                      !showMessageInCenter &&
+                      !widget.message.sentByMe) ...[
+                    IsmChatTapHandler(
+                      onTap: () async {
+                        await controller
+                            .showUserDetails(widget.message.senderInfo!);
+                      },
+                      child: IsmChatImage.profile(
+                        widget.message.senderInfo?.profileUrl ?? '',
+                        name: widget.message.senderInfo?.userName ?? '',
+                        dimensions: IsmChatConfig
+                                .chatTheme.chatPageTheme?.profileImageSize ??
+                            30,
+                      ),
+                    )
+                  ],
+                  if (theme?.opponentMessageTheme?.showProfile != null)
+                    if (theme?.opponentMessageTheme?.showProfile == true &&
+                        !isGroup &&
                         !showMessageInCenter &&
                         !widget.message.sentByMe) ...[
-                      IsmChatTapHandler(
-                        onTap: () async {
-                          await controller
-                              .showUserDetails(widget.message.senderInfo!);
-                        },
-                        child: IsmChatImage.profile(
-                          widget.message.senderInfo?.profileUrl ?? '',
-                          name: widget.message.senderInfo?.userName ?? '',
-                          dimensions: IsmChatConfig
-                                  .chatTheme.chatPageTheme?.profileImageSize ??
-                              30,
-                        ),
-                      )
-                    ],
-                    if (theme?.opponentMessageTheme?.showProfile != null)
-                      if (theme?.opponentMessageTheme?.showProfile == true &&
-                          !isGroup &&
-                          !showMessageInCenter &&
-                          !widget.message.sentByMe) ...[
-                        IsmChatImage.profile(
-                          IsmChatConfig.communicationConfig.userConfig
-                                      .imageBaseUrl !=
-                                  null
-                              ? '${IsmChatConfig.communicationConfig.userConfig.imageBaseUrl}/${controller.conversation?.profileUrl}'
-                              : controller.conversation?.profileUrl ?? '',
-                          name: controller.conversation?.chatName,
-                          dimensions: IsmChatConfig
-                                  .chatTheme.chatPageTheme?.profileImageSize ??
-                              30,
-                        ),
-                        if (widget.messageWidgetBuilder == null) ...[
-                          IsmChatDimens.boxWidth2,
-                        ],
+                      IsmChatImage.profile(
+                        IsmChatConfig.communicationConfig.userConfig
+                                    .imageBaseUrl !=
+                                null
+                            ? '${IsmChatConfig.communicationConfig.userConfig.imageBaseUrl}/${controller.conversation?.profileUrl}'
+                            : controller.conversation?.profileUrl ?? '',
+                        name: controller.conversation?.chatName,
+                        dimensions: IsmChatConfig
+                                .chatTheme.chatPageTheme?.profileImageSize ??
+                            30,
+                      ),
+                      if (widget.messageWidgetBuilder == null) ...[
+                        IsmChatDimens.boxWidth2,
                       ],
-                    _Message(
-                      message: widget.message,
-                      showMessageInCenter: showMessageInCenter,
-                      index: widget.index,
-                      messageWidgetBuilder: widget.messageWidgetBuilder,
-                    ),
-                    if (theme?.selfMessageTheme?.showProfile != null)
-                      if (theme?.selfMessageTheme?.showProfile == true &&
-                          !isGroup &&
-                          !showMessageInCenter &&
-                          widget.message.sentByMe) ...[
-                        if (widget.messageWidgetBuilder == null) ...[
-                          IsmChatDimens.boxWidth4,
-                        ],
-                        IsmChatImage.profile(
-                          IsmChatConfig
-                                  .communicationConfig.userConfig.userProfile ??
-                              coverstaionController
-                                  .userDetails?.userProfileImageUrl ??
-                              '',
-                          name: IsmChatConfig.communicationConfig.userConfig
-                                  .userName.isNotEmpty
-                              ? IsmChatConfig
-                                  .communicationConfig.userConfig.userName
-                              : coverstaionController.userDetails?.userName,
-                          dimensions: IsmChatConfig
-                                  .chatTheme.chatPageTheme?.profileImageSize ??
-                              30,
-                        ),
-                      ]
-                  ],
-                ),
+                    ],
+                  _Message(
+                    message: widget.message,
+                    showMessageInCenter: showMessageInCenter,
+                    index: widget.index,
+                    messageWidgetBuilder: widget.messageWidgetBuilder,
+                  ),
+                  if (theme?.selfMessageTheme?.showProfile != null)
+                    if (theme?.selfMessageTheme?.showProfile == true &&
+                        !isGroup &&
+                        !showMessageInCenter &&
+                        widget.message.sentByMe) ...[
+                      if (widget.messageWidgetBuilder == null) ...[
+                        IsmChatDimens.boxWidth4,
+                      ],
+                      IsmChatImage.profile(
+                        IsmChatConfig
+                                .communicationConfig.userConfig.userProfile ??
+                            coverstaionController
+                                .userDetails?.userProfileImageUrl ??
+                            '',
+                        name: IsmChatConfig.communicationConfig.userConfig
+                                .userName.isNotEmpty
+                            ? IsmChatConfig
+                                .communicationConfig.userConfig.userName
+                            : coverstaionController.userDetails?.userName,
+                        dimensions: IsmChatConfig
+                                .chatTheme.chatPageTheme?.profileImageSize ??
+                            30,
+                      ),
+                    ]
+                ],
               ),
             ),
           ),

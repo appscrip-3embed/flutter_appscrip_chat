@@ -1,3 +1,4 @@
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/controllers/controllers.dart';
 import 'package:chat_component_example/views/signup_view.dart';
 import 'package:chat_component_example/views/views.dart';
@@ -35,5 +36,6 @@ class AppPages {
       page: UserListPageView.new,
       binding: ChatConversationBinding(),
     ),
+    ...IsmChatPages.pages
   ];
 }

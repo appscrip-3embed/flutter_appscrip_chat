@@ -1,14 +1,30 @@
-# Appscrip Chat Component`                                                                                          
+# Appscrip Chat Component
 
-A new Flutter plugin project.
+[![Appscrip](./assets/logo/appscrip.png)](https://appscrip.com/)
+[![isometrik.io](./assets/logo/isometric.png)](https://isometrik.io/)
 
-## Getting Started
+`Appscrip Chat Component` is a package to support chat functionality in flutter projects using Isometric
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+## Setup
 
-For help getting started with Flutter development, view the
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* [Android](./README_android.md)
+* [iOS](./README_ios.md)
+* [Web](./README_web.md)
+
+## Initialization
+
+WidgetsFlutterBinding.ensureInitialized();
+AppscripChatComponent.initialize();
+LocalNoticeService().setup();
+
+## Code UseCase
+
+1. Get all conversation form db if you want
+2. Update conversation with meta data
+3. Get chat conversation with latest db
+4. Logout
+5. Delete chat
+6. InitializeMqtt if you want from outside,
+7. Add listener for Mqtt evetns
+8. Chat from outside with out coversation
+9. Chat form outside wiht conversation

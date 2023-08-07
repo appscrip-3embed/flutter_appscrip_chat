@@ -252,12 +252,17 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                                         style: IsmChatStyles.typing,
                                       ),
                               onTap: () {
-                                if (controller.isConversationId !=
-                                    conversation.conversationId) {
+                                widget.onChatTap(_, conversation, true);
+                                if (Responsive.isWebAndTablet(context) &&
+                                    controller.isConversationId !=
+                                        conversation.conversationId) {
                                   controller.navigateToMessages(conversation);
-                                  widget.onChatTap(_, conversation, true);
+                                  IsmChatRouteManagement.goToChatPage();
                                   controller.isConversationId =
                                       conversation.conversationId ?? '';
+                                } else {
+                                  controller.navigateToMessages(conversation);
+                                  IsmChatRouteManagement.goToChatPage();
                                 }
                               },
                             ),

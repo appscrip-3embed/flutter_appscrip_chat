@@ -1,8 +1,5 @@
 import 'dart:io';
-import 'dart:ui';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -48,6 +45,8 @@ class IsmChatPageView extends StatefulWidget {
   /// Defaults to all
   final List<IsmChatFeature> features;
 
+  static const String route = IsmPageRoutes.chatPage;
+
   @override
   State<IsmChatPageView> createState() => _IsmChatPageViewState();
 }
@@ -60,16 +59,6 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
   }
 
   IsmChatPageController get controller => Get.find<IsmChatPageController>();
-
-  // @override
-  // void didUpdateWidget(IsmChatPageView oldWidget) {
-  //   if (Get.isRegistered<IsmChatPageController>()) {
-  //     if (widget.header != oldWidget.header) {
-  //       controller.strtInit();
-  //     }
-  //   }
-  //   super.didUpdateWidget(oldWidget);
-  // }
 
   Future<bool> navigateBack() async {
     if (controller.isMessageSeleted) {
@@ -284,6 +273,7 @@ class _IsmChatPageView extends StatelessWidget {
                                             child: ListView.builder(
                                               controller: controller
                                                   .messagesScrollController,
+                                              scrollDirection: Axis.vertical,
                                               shrinkWrap: true,
                                               keyboardDismissBehavior:
                                                   ScrollViewKeyboardDismissBehavior
