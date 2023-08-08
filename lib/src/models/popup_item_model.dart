@@ -1,8 +1,8 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/widgets.dart';
 
-class IsmChatPopItem {
-  IsmChatPopItem({
+class IsmChatPopupMenuItem {
+  IsmChatPopupMenuItem({
     required this.label,
     required this.icon,
     this.color,

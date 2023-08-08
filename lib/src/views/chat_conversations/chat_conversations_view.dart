@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/views/chat_conversations/widget/blocked_users.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +92,6 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
                 onSignOut: widget.onSignOut!,
                 onSearchTap: widget.onChatTap!,
                 showSearch: widget.showSearch,
-                isGroupChatEnabled: widget.isGroupChatEnabled,
               )
             : null,
         body: SafeArea(
@@ -124,9 +122,11 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
                       elevation: 0,
                     );
                   } else {
-                    IsmChatUtility.openFullScreenBottomSheet(
-                      IsmChatCreateConversationView(),
-                    );
+                    IsmChatRouteManagement.goToCreateChat(
+                        isGroupConversation: false);
+                    // IsmChatUtility.openFullScreenBottomSheet(
+                    //   IsmChatCreateConversationView(),
+                    // );
                   }
                 },
               )
@@ -151,11 +151,7 @@ class _CreateChatBottomSheet extends StatelessWidget {
 
   void _startConversation([bool isGroup = false]) {
     Get.back();
-    IsmChatUtility.openFullScreenBottomSheet(
-      IsmChatCreateConversationView(
-        isGroupConversation: isGroup,
-      ),
-    );
+    IsmChatRouteManagement.goToCreateChat(isGroupConversation: isGroup);
   }
 
   @override

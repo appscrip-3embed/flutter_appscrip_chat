@@ -47,13 +47,17 @@ class IsmChatTextMessage extends StatelessWidget {
                                       var conversationId =
                                           controller.getConversationId(
                                               user!.first.userId);
-                                      await IsmChatUtility
-                                          .openFullScreenBottomSheet(
-                                        IsmChatUserInfo(
-                                          user: user.first,
-                                          conversationId: conversationId,
-                                        ),
+                                      IsmChatRouteManagement.goToUserInfo(
+                                        conversationId: conversationId,
+                                        user: user.first,
                                       );
+                                      // await IsmChatUtility
+                                      //     .openFullScreenBottomSheet(
+                                      //   IsmChatUserInfo(
+                                      //     user: user.first,
+                                      //     conversationId: conversationId,
+                                      //   ),
+                                      // );
                                     }
                                   }
                                 },

@@ -126,12 +126,16 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                       ImageSource.gallery);
 
                                   if (file != null) {
-                                    await Get.to(
-                                      IsmChatWallpaperPreview(
-                                        imagePath: file.path,
+                                    IsmChatRouteManagement.goToWallpaperPreview(
                                         assetSrNo: 100,
-                                      ),
-                                    );
+                                        backgroundColor: '',
+                                        imagePath: file.path);
+                                    // await Get.to(
+                                    //   IsmChatWallpaperPreview(
+                                    //     imagePath: file.path,
+                                    //     assetSrNo: 100,
+                                    //   ),
+                                    // );
                                   }
                                 },
                                 child: Container(
@@ -162,11 +166,16 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                 .backgroundImage[index - 1];
                             return IsmChatTapHandler(
                               onTap: () async {
-                                await Get.to(IsmChatWallpaperPreview(
-                                  imagePath:
-                                      '${IsmChatAssets.backgroundImages}/${image.path!}',
-                                  assetSrNo: image.srNo,
-                                ));
+                                IsmChatRouteManagement.goToWallpaperPreview(
+                                    assetSrNo: image.srNo,
+                                    backgroundColor: '',
+                                    imagePath:
+                                        '${IsmChatAssets.backgroundImages}/${image.path!}');
+                                // await Get.to(IsmChatWallpaperPreview(
+                                //   imagePath:
+                                //       '${IsmChatAssets.backgroundImages}/${image.path!}',
+                                //   assetSrNo: image.srNo,
+                                // ));
                               },
                               child: _BackgroundImage(image: image),
                             );
@@ -188,19 +197,31 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                             var color =
                                 conversationController.backgroundColor[index];
                             return IsmChatTapHandler(
-                                onTap: () async {
-                                  await Get.to(IsmChatWallpaperPreview(
-                                    backgroundColor: color.color,
-                                    assetSrNo: color.srNo,
-                                  ));
-                                },
-                                child: SizedBox(
-                                    height: IsmChatDimens.hundred,
-                                    width: IsmChatDimens.hundred,
-                                    child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: ColoredBox(
-                                            color: color.color!.toColor))));
+                              onTap: () async {
+                                IsmChatRouteManagement.goToWallpaperPreview(
+                                  backgroundColor: color.color,
+                                  imagePath: '',
+                                  assetSrNo: color.srNo,
+                                );
+                                // await Get.to(IsmChatWallpaperPreview(
+                                //   backgroundColor: color.color,
+                                //   assetSrNo: color.srNo,
+                                // ));
+                              },
+                              child: SizedBox(
+                                height: IsmChatDimens.hundred,
+                                width: IsmChatDimens.hundred,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: color.color != null
+                                      ? ColoredBox(
+                                          color: color.color?.toColor ??
+                                              Colors.transparent,
+                                        )
+                                      : null,
+                                ),
+                              ),
+                            );
                           },
                         ),
                 ],

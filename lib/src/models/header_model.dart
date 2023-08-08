@@ -28,7 +28,7 @@ class IsmChatHeader {
 
   final TextStyle? titleStyle;
   final TextStyle? subtitleStyle;
-  final List<IsmChatPopItem>? popupItems;
+  final List<IsmChatPopupMenuItem>? popupItems;
   final ShapeBorder? shape;
   final Widget? bottom;
   final ConversationWidgetCallback? onProfileWidget;

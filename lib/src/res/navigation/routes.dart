@@ -11,4 +11,6 @@ class IsmPageRoutes {
   static const String messageInfoView = '/messageInfoView';
   static const String userInfoView = '/userInfoView';
   static const String wallpaperPreview = '/wallpaperPreview';
+  static const String media = '/media';
+  static const String location = '/location';
 }

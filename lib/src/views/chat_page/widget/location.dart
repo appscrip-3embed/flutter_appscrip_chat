@@ -13,6 +13,8 @@ import 'package:uuid/uuid.dart';
 class IsmChatLocationWidget extends StatefulWidget {
   const IsmChatLocationWidget({Key? key}) : super(key: key);
 
+  static const String route = IsmPageRoutes.location;
+
   @override
   State<IsmChatLocationWidget> createState() => _IsmLocationWidgetViewState();
 }

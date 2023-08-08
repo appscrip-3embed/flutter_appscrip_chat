@@ -5,11 +5,15 @@ import 'package:get/get.dart';
 // / The view part of the [IsmChatPageView], which will be used to
 /// show the Message Information view page
 class IsmChatMessageInfo extends StatelessWidget {
-  const IsmChatMessageInfo({Key? key, this.message, this.isGroup})
-      : super(key: key);
+  IsmChatMessageInfo({super.key, IsmChatMessageModel? message, bool? isGroup})
+      : _isGroup = isGroup ??
+            (Get.arguments as Map<String, dynamic>?)?['isGroup'] ??
+            false,
+        _message = message ??
+            (Get.arguments as Map<String, dynamic>?)?['isGrmessageoup'];
 
-  final IsmChatMessageModel? message;
-  final bool? isGroup;
+  final IsmChatMessageModel? _message;
+  final bool? _isGroup;
 
   static const String route = IsmPageRoutes.messageInfoView;
 
@@ -47,7 +51,7 @@ class IsmChatMessageInfo extends StatelessWidget {
                       ),
                       padding: IsmChatDimens.edgeInsets8_4,
                       child: Text(
-                        message?.sentAt.toMessageDateString() ?? '',
+                        _message?.sentAt.toMessageDateString() ?? '',
                         style: IsmChatStyles.w500Black12.copyWith(
                           color: IsmChatConfig.chatTheme.primaryColor,
                         ),
@@ -56,12 +60,12 @@ class IsmChatMessageInfo extends StatelessWidget {
                   ),
                   IsmChatDimens.boxHeight16,
                   UnconstrainedBox(
-                    alignment: message?.sentByMe ?? false
+                    alignment: _message?.sentByMe ?? false
                         ? Alignment.centerRight
                         : Alignment.centerLeft,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: message?.sentByMe ?? false
+                      crossAxisAlignment: _message?.sentByMe ?? false
                           ? CrossAxisAlignment.end
                           : CrossAxisAlignment.start,
                       children: [
@@ -72,41 +76,42 @@ class IsmChatMessageInfo extends StatelessWidget {
                               minWidth: context.width * .1,
                             ),
                             decoration: BoxDecoration(
-                              color: message?.sentByMe ?? false
+                              color: _message?.sentByMe ?? false
                                   ? IsmChatConfig.chatTheme.primaryColor
                                   : IsmChatConfig.chatTheme.backgroundColor,
                               borderRadius: BorderRadius.only(
                                 topRight: Radius.circular(IsmChatDimens.twelve),
-                                topLeft: message?.sentByMe ?? false
+                                topLeft: _message?.sentByMe ?? false
                                     ? Radius.circular(IsmChatDimens.twelve)
                                     : Radius.circular(IsmChatDimens.four),
                                 bottomLeft:
                                     Radius.circular(IsmChatDimens.twelve),
-                                bottomRight: message?.sentByMe ?? false
+                                bottomRight: _message?.sentByMe ?? false
                                     ? Radius.circular(IsmChatDimens.four)
                                     : Radius.circular(IsmChatDimens.twelve),
                               ),
                             ),
-                            child: message?.customType!.messageType(message!)),
+                            child:
+                                _message?.customType!.messageType(_message!)),
                         Padding(
                           padding: IsmChatDimens.edgeInsets0_4,
                           child: Row(
                             children: [
                               Text(
-                                message?.sentAt.toTimeString() ?? '',
+                                _message?.sentAt.toTimeString() ?? '',
                                 style: IsmChatStyles.w400Grey10,
                               ),
-                              if (message?.sentByMe ?? false) ...[
+                              if (_message?.sentByMe ?? false) ...[
                                 IsmChatDimens.boxWidth2,
                                 Icon(
-                                  message?.messageId!.isEmpty == true
+                                  _message?.messageId!.isEmpty == true
                                       ? Icons.watch_later_rounded
-                                      : message?.deliveredToAll ?? false
+                                      : _message?.deliveredToAll ?? false
                                           ? Icons.done_all_rounded
                                           : Icons.done_rounded,
-                                  color: message?.messageId!.isEmpty == true
+                                  color: _message?.messageId!.isEmpty == true
                                       ? Colors.grey
-                                      : message?.readByAll ?? false
+                                      : _message?.readByAll ?? false
                                           ? Colors.blue
                                           : Colors.grey,
                                   size: IsmChatDimens.forteen,
@@ -119,7 +124,7 @@ class IsmChatMessageInfo extends StatelessWidget {
                     ),
                   ),
                   IsmChatDimens.boxHeight16,
-                  isGroup ?? false
+                  _isGroup ?? false
                       ? Obx(
                           () => Column(
                             children: [

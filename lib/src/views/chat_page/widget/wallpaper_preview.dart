@@ -5,12 +5,21 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class IsmChatWallpaperPreview extends StatelessWidget {
-  const IsmChatWallpaperPreview(
-      {super.key, this.backgroundColor, this.imagePath, this.assetSrNo});
+  IsmChatWallpaperPreview(
+      {super.key, String? backgroundColor, String? imagePath, int? assetSrNo})
+      : _backgroundColor = backgroundColor ??
+            (Get.arguments as Map<String, dynamic>?)?['backgroundColor'] ??
+            '',
+        _imagePath = imagePath ??
+            (Get.arguments as Map<String, dynamic>?)?['imagePath'] ??
+            '',
+        _assetSrNo = assetSrNo ??
+            (Get.arguments as Map<String, dynamic>?)?['assetSrNo'] ??
+            0;
 
-  final String? backgroundColor;
-  final String? imagePath;
-  final int? assetSrNo;
+  final String? _backgroundColor;
+  final String? _imagePath;
+  final int? _assetSrNo;
 
   static const String route = IsmPageRoutes.wallpaperPreview;
 
@@ -33,16 +42,18 @@ class IsmChatWallpaperPreview extends StatelessWidget {
         ),
         body: Container(
           decoration: BoxDecoration(
-            color: backgroundColor?.toColor,
-            image: imagePath != null
+            color: _backgroundColor?.isNotEmpty == true
+                ? _backgroundColor?.toColor
+                : null,
+            image: _imagePath != null
                 ? DecorationImage(
-                    image: imagePath!
+                    image: _imagePath!
                             .contains('packages/appscrip_chat_component/assets')
                         ? AssetImage(
-                            imagePath!,
+                            _imagePath!,
                           ) as ImageProvider
                         : FileImage(
-                            File(imagePath!),
+                            File(_imagePath!),
                           ),
                     fit: BoxFit.cover,
                   )
@@ -186,12 +197,12 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                     final pageController = Get.find<IsmChatPageController>();
                     final conversationController =
                         Get.find<IsmChatConversationsController>();
-                    if (imagePath != null) {
+                    if (_imagePath != null) {
                       IsmChatUtility.showLoader();
-                      pageController.backgroundImage = imagePath!;
+                      pageController.backgroundImage = _imagePath!;
                       pageController.backgroundColor = '';
-                      if (assetSrNo == 100) {
-                        var file = File(imagePath!);
+                      if (_assetSrNo == 100) {
+                        var file = File(_imagePath!);
                         var bytes = file.readAsBytesSync();
                         var fileExtension = file.path.split('.').last;
                         await conversationController.getPresignedUrl(
@@ -208,11 +219,11 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                           '${pageController.conversation?.conversationId}':
                               IsmChatBackgroundModel(
                             isImage: true,
-                            imageUrl: assetSrNo == 100
+                            imageUrl: _assetSrNo == 100
                                 ? conversationController.profileImage
-                                : imagePath!,
+                                : _imagePath!,
                             srNoBackgroundAssset:
-                                assetSrNo == 100 ? 100 : assetSrNo,
+                                _assetSrNo == 100 ? 100 : _assetSrNo,
                           )
                         };
                       } else {
@@ -220,11 +231,11 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                           '${pageController.conversation?.conversationId}':
                               IsmChatBackgroundModel(
                             isImage: true,
-                            imageUrl: assetSrNo == 100
+                            imageUrl: _assetSrNo == 100
                                 ? conversationController.profileImage
-                                : imagePath!,
+                                : _imagePath!,
                             srNoBackgroundAssset:
-                                assetSrNo == 100 ? 100 : assetSrNo,
+                                _assetSrNo == 100 ? 100 : _assetSrNo,
                           )
                         });
                       }
@@ -235,7 +246,7 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                       IsmChatUtility.closeLoader();
                     } else {
                       IsmChatUtility.showLoader();
-                      pageController.backgroundColor = backgroundColor!;
+                      pageController.backgroundColor = _backgroundColor!;
                       pageController.backgroundImage = '';
                       var assetList = conversationController
                               .userDetails?.metaData?.assetList ??
@@ -248,18 +259,18 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                         assetList[assetIndex] = {
                           '${pageController.conversation?.conversationId}':
                               IsmChatBackgroundModel(
-                            color: backgroundColor!,
+                            color: _backgroundColor!,
                             isImage: false,
-                            srNoBackgroundAssset: assetSrNo,
+                            srNoBackgroundAssset: _assetSrNo,
                           )
                         };
                       } else {
                         assetList.add({
                           '${pageController.conversation?.conversationId}':
                               IsmChatBackgroundModel(
-                            color: backgroundColor!,
+                            color: _backgroundColor!,
                             isImage: false,
-                            srNoBackgroundAssset: assetSrNo,
+                            srNoBackgroundAssset: _assetSrNo,
                           )
                         });
                       }
@@ -269,7 +280,7 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                       IsmChatUtility.closeLoader();
                     }
                     await conversationController.getUserData(isLoading: true);
-                    if (assetSrNo != 100) Get.back();
+                    if (_assetSrNo != 100) Get.back();
                     Get.back();
                   },
                   child: Container(

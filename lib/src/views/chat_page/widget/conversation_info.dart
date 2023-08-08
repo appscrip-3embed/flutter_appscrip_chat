@@ -152,11 +152,15 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                           ),
                           child: IsmChatTapHandler(
                             onTap: () {
-                              IsmChatUtility.openFullScreenBottomSheet(IsmMedia(
-                                mediaList: controller.mediaList,
-                                mediaListLinks: controller.mediaListLinks,
-                                mediaListDocs: controller.mediaListDocs,
-                              ));
+                              IsmChatRouteManagement.goToMedia(
+                                  mediaList: controller.mediaList,
+                                  mediaListLinks: controller.mediaListLinks,
+                                  mediaListDocs: controller.mediaListDocs);
+                              // IsmChatUtility.openFullScreenBottomSheet(IsmMedia(
+                              //   mediaList: controller.mediaList,
+                              //   mediaListLinks: controller.mediaListLinks,
+                              //   mediaListDocs: controller.mediaListDocs,
+                              // ));
                             },
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
@@ -209,8 +213,9 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                               onPressed: () {
                                 controller.participnatsEditingController
                                     .clear();
-                                IsmChatUtility.openFullScreenBottomSheet(
-                                    const IsmChatGroupEligibleUser());
+                                IsmChatRouteManagement.goToEligibleUser();
+                                // IsmChatUtility.openFullScreenBottomSheet(
+                                //     const IsmChatGroupEligibleUser());
                               },
                               icon: Icon(
                                 Icons.group_add_outlined,

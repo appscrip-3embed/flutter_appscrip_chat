@@ -60,7 +60,6 @@ class IsmChatConversationList extends StatefulWidget {
   ///
   /// Provide it like you are passing itemBuilder for `ListView` or any constructor of [ListView]
   final Widget? Function(BuildContext, int)? itemBuilder;
-
   final ConversationWidgetCallback? profileImageBuilder;
   final ConversationStringCallback? profileImageUrl;
   final ConversationWidgetCallback? nameBuilder;

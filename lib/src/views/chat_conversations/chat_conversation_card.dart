@@ -18,7 +18,6 @@ class IsmChatConversationCard extends StatefulWidget {
 
   final IsmChatConversationModel conversation;
   final VoidCallback? onTap;
-
   final ConversationWidgetCallback? profileImageBuilder;
   final ConversationStringCallback? profileImageUrl;
   final ConversationWidgetCallback? nameBuilder;

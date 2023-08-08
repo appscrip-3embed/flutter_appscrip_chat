@@ -60,5 +60,15 @@ class IsmChatPages {
       page: IsmChatWallpaperPreview.new,
       binding: IsmChatPageBinding(),
     ),
+    GetPage(
+      name: IsmMedia.route,
+      page: IsmMedia.new,
+      binding: IsmChatPageBinding(),
+    ),
+    GetPage(
+      name: IsmChatLocationWidget.route,
+      page: IsmChatLocationWidget.new,
+      binding: IsmChatPageBinding(),
+    ),
   ];
 }

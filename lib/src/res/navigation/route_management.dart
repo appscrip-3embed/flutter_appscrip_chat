@@ -8,16 +8,20 @@ class IsmChatRouteManagement {
     Get.toNamed(IsmChatPageView.route);
   }
 
-  static void goToCreateChat() {
-    Get.toNamed(IsmChatCreateConversationView.route);
-  }
-
-  static void goToForwardView() {
-    Get.toNamed(IsmChatForwardView.route);
+  static void goToCreateChat({required bool isGroupConversation}) {
+    Get.toNamed(IsmChatCreateConversationView.route,
+        arguments: {'isGroupConversation': isGroupConversation});
   }
 
   static void goToBlockView() {
     Get.toNamed(IsmChatBlockedUsersView.route);
+  }
+
+  static void goToForwardView(
+      {required IsmChatMessageModel message,
+      required IsmChatConversationModel conversation}) {
+    Get.toNamed(IsmChatForwardView.route,
+        arguments: {'message': message, 'conversation': conversation});
   }
 
   static void goToConversationInfo() {
@@ -28,19 +32,67 @@ class IsmChatRouteManagement {
     Get.toNamed(IsmChatGroupEligibleUser.route);
   }
 
-  static void goToMediaPreview() {
-    Get.toNamed(IsmMediaPreview.route);
+  static void goToLocation() {
+    Get.toNamed(IsmChatLocationWidget.route);
   }
 
-  static void goToMessageInfo() {
-    Get.toNamed(IsmChatMessageInfo.route);
+  static void goToMediaPreview({
+    required List<IsmChatMessageModel> messageData,
+    required String mediaUserName,
+    required bool initiated,
+    required int mediaTime,
+    required int mediaIndex,
+  }) {
+    Get.toNamed(IsmMediaPreview.route, arguments: {
+      'messageData': messageData,
+      'mediaUserName': mediaUserName,
+      'initiated': initiated,
+      'mediaTime': mediaTime,
+      'mediaIndex': mediaIndex,
+    });
   }
 
-  static void goToUserInfo() {
-    Get.toNamed(IsmChatUserInfo.route);
+  static void goToMessageInfo({
+    required IsmChatMessageModel? message,
+    required bool? isGroup,
+  }) {
+    Get.toNamed(IsmChatMessageInfo.route, arguments: {
+      'message': message,
+      'isGroup': isGroup,
+    });
   }
 
-  static void goToWallpaperPreview() {
-    Get.toNamed(IsmChatWallpaperPreview.route);
+  static void goToUserInfo(
+      {required UserDetails user, required String conversationId}) {
+    Get.toNamed(
+      IsmChatUserInfo.route,
+      arguments: {'user': user, 'conversationId': conversationId},
+    );
+  }
+
+  static void goToMedia(
+      {required List<IsmChatMessageModel>? mediaList,
+      required List<IsmChatMessageModel>? mediaListLinks,
+      required List<IsmChatMessageModel>? mediaListDocs,
+      d}) {
+    Get.toNamed(
+      IsmMedia.route,
+      arguments: {
+        'mediaList': mediaList,
+        'mediaListLinks': mediaListLinks,
+        'mediaListDocs': mediaListDocs
+      },
+    );
+  }
+
+  static void goToWallpaperPreview(
+      {required String? backgroundColor,
+      required String imagePath,
+      required int? assetSrNo}) {
+    Get.toNamed(IsmChatWallpaperPreview.route, arguments: {
+      'backgroundColor': backgroundColor,
+      'imagePath': imagePath,
+      'assetSrNo': assetSrNo
+    });
   }
 }

@@ -7,16 +7,26 @@ import 'package:get/get.dart';
 
 /// IsmMedia class is for showing the conversation media
 class IsmMedia extends StatefulWidget {
-  const IsmMedia(
-      {Key? key,
-      required this.mediaList,
-      required this.mediaListLinks,
-      required this.mediaListDocs})
-      : super(key: key);
+  IsmMedia({
+    super.key,
+    List<IsmChatMessageModel>? mediaList,
+    List<IsmChatMessageModel>? mediaListLinks,
+    List<IsmChatMessageModel>? mediaListDocs,
+  })  : _mediaList = mediaList ??
+            (Get.arguments as Map<String, dynamic>?)?['mediaList'] ??
+            [],
+        _mediaListDocs = mediaListDocs ??
+            (Get.arguments as Map<String, dynamic>?)?['mediaListDocs'] ??
+            [],
+        _mediaListLinks = mediaListLinks ??
+            (Get.arguments as Map<String, dynamic>?)?['mediaListLinks'] ??
+            [];
 
-  final List<IsmChatMessageModel> mediaList;
-  final List<IsmChatMessageModel> mediaListLinks;
-  final List<IsmChatMessageModel> mediaListDocs;
+  final List<IsmChatMessageModel>? _mediaList;
+  final List<IsmChatMessageModel>? _mediaListLinks;
+  final List<IsmChatMessageModel>? _mediaListDocs;
+
+  static const String route = IsmPageRoutes.media;
 
   @override
   State<IsmMedia> createState() => _IsmMediaState();
@@ -38,6 +48,12 @@ class _IsmMediaState extends State<IsmMedia> with TickerProviderStateMixin {
 
   void _handleTabSelection() {
     setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    super.dispose();
   }
 
   Widget getTabBar() => TabBar(
@@ -119,9 +135,9 @@ class _IsmMediaState extends State<IsmMedia> with TickerProviderStateMixin {
   Widget getTabBarView() => TabBarView(
         controller: _tabController,
         children: [
-          IsmMediaView(mediaList: widget.mediaList),
-          IsmLinksView(mediaListLinks: widget.mediaListLinks),
-          IsmDocsView(mediaListDocs: widget.mediaListDocs),
+          IsmMediaView(mediaList: widget._mediaList ?? []),
+          IsmLinksView(mediaListLinks: widget._mediaListLinks ?? []),
+          IsmDocsView(mediaListDocs: widget._mediaListDocs ?? []),
         ],
       );
 

@@ -669,7 +669,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     } else {
       if (webMediaModel == null) {
         compressedFile = await FlutterNativeImage.compressImage(
-            _controller.imagePath!.path,
+            imagePath?.path ?? '',
             quality: 60,
             percentage: 70);
         bytes = compressedFile.readAsBytesSync();

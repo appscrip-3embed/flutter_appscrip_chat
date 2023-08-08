@@ -4,14 +4,17 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class IsmChatUserInfo extends StatefulWidget {
-  const IsmChatUserInfo({
+  IsmChatUserInfo({
     super.key,
-    this.user,
-    this.conversationId,
-  });
+    UserDetails? user,
+    String? conversationId,
+  })  : _conversationId = conversationId ??
+            (Get.arguments as Map<String, dynamic>?)?['conversationId'] ??
+            '',
+        _user = user ?? (Get.arguments as Map<String, dynamic>?)?['user'];
 
-  final UserDetails? user;
-  final String? conversationId;
+  final UserDetails? _user;
+  final String _conversationId;
 
   static const String route = IsmPageRoutes.userInfoView;
 
@@ -27,22 +30,23 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
   final chatPageController = Get.find<IsmChatPageController>();
   final conversationController = Get.find<IsmChatConversationsController>();
   bool isUserBlock = false;
+  final argument = Get.arguments as Map<String, dynamic>? ?? {};
 
   @override
   void initState() {
-    if (widget.conversationId?.isNotEmpty == true) {
+    if (widget._conversationId.isNotEmpty) {
       getMessages();
     }
     if (!conversationController.blockUsers.isNullOrEmpty) {
       isUserBlock = conversationController.blockUsers
-          .any((e) => e.userId == widget.user?.userId);
+          .any((e) => e.userId == widget._user?.userId);
     }
     super.initState();
   }
 
   void getMessages() async {
     var messages =
-        await IsmChatConfig.dbWrapper!.getMessage(widget.conversationId ?? '');
+        await IsmChatConfig.dbWrapper!.getMessage(widget._conversationId);
 
     if (messages?.isNotEmpty == true) {
       mediaList = messages!
@@ -86,16 +90,16 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
                 children: [
                   IsmChatDimens.boxHeight16,
                   IsmChatImage.profile(
-                    widget.user?.profileUrl ?? '',
+                    widget._user?.profileUrl ?? '',
                     dimensions: IsmChatDimens.oneHundredFifty,
                   ),
                   IsmChatDimens.boxHeight5,
                   Text(
-                    widget.user?.userName ?? '',
+                    widget._user?.userName ?? '',
                     style: IsmChatStyles.w600Black27,
                   ),
                   Text(
-                    widget.user?.userIdentifier ?? '',
+                    widget._user?.userIdentifier ?? '',
                     style: IsmChatStyles.w500GreyLight17,
                   ),
                   IsmChatDimens.boxHeight16,
@@ -108,11 +112,16 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
                     ),
                     child: IsmChatTapHandler(
                       onTap: () {
-                        IsmChatUtility.openFullScreenBottomSheet(IsmMedia(
+                        IsmChatRouteManagement.goToMedia(
                           mediaList: mediaList,
                           mediaListLinks: mediaListLinks,
                           mediaListDocs: mediaListDocs,
-                        ));
+                        );
+                        // IsmChatUtility.openFullScreenBottomSheet(IsmMedia(
+                        //   mediaList: mediaList,
+                        //   mediaListLinks: mediaListLinks,
+                        //   mediaListDocs: mediaListDocs,
+                        // ));
                       },
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
@@ -145,7 +154,7 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
                     ),
                   ),
                   if (IsmChatConfig.communicationConfig.userConfig.userId !=
-                      widget.user?.userId)
+                      widget._user?.userId)
                     TextButton.icon(
                       onPressed: () async {
                         await Get.dialog(IsmChatAlertDialogBox(
@@ -162,12 +171,12 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
                               Get.back();
                               isUserBlock
                                   ? chatPageController.unblockUser(
-                                      opponentId: widget.user?.userId ?? '',
+                                      opponentId: widget._user?.userId ?? '',
                                       lastMessageTimeStamp: 0,
                                       fromUser: true,
                                     )
                                   : chatPageController.blockUser(
-                                      opponentId: widget.user?.userId ?? '',
+                                      opponentId: widget._user?.userId ?? '',
                                       lastMessageTimeStamp: 0,
                                     );
                             },

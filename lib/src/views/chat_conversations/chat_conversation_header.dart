@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/views/chat_conversations/widget/blocked_users.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,7 +13,6 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
     this.titleStyle,
     this.titleColor,
     this.showSearch = true,
-    this.isGroupChatEnabled = false,
     required this.onSearchTap,
     this.actions,
   });
@@ -27,7 +25,6 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
   final void Function(BuildContext, IsmChatConversationModel, bool) onSearchTap;
   final List<Widget>? actions;
   final VoidCallback? onSignOut;
-  final bool isGroupChatEnabled;
 
   /// Defines the height of the [IsmChatListHeader]
   final double? height;
@@ -124,9 +121,10 @@ class _MoreIcon extends StatelessWidget {
                   true;
               Scaffold.of(context).openDrawer();
             } else {
-              await IsmChatUtility.openFullScreenBottomSheet(
-                const IsmChatBlockedUsersView(),
-              );
+              IsmChatRouteManagement.goToBlockView();
+              // await IsmChatUtility.openFullScreenBottomSheet(
+              //   const IsmChatBlockedUsersView(),
+              // );
             }
           } else if (index == 2) {
             Get.find<IsmChatConversationsController>().isTapGroup = true;

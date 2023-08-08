@@ -14,7 +14,6 @@ extension ScaffoldExtenstion on Scaffold {
   Widget withUnfocusGestureDetctor(BuildContext context) => GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
-          IsmChatLog.error('rahul');
         },
         child: this,
       );
@@ -838,7 +837,7 @@ extension SizeOfMedia on String {
 }
 
 extension ColorExtension on String {
-  Color get toColor {
+  Color? get toColor {
     var hexString = this;
     final buffer = StringBuffer();
     if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');

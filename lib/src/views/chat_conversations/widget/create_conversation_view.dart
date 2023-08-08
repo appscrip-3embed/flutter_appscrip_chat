@@ -12,7 +12,6 @@ class IsmChatCreateConversationView extends StatelessWidget {
 
   final void Function(BuildContext, IsmChatConversationModel, bool)? onChatTap;
   final bool isGroupConversation;
-
   final converstaionController = Get.find<IsmChatConversationsController>();
 
   static const String route = IsmPageRoutes.createChat;
@@ -257,6 +256,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                         ismChatConversation);
                                     (onChatTap ?? IsmChatConfig.onChatTap)
                                         .call(_, ismChatConversation, false);
+                                    IsmChatRouteManagement.goToChatPage();
                                   }
                                 }
                               },
@@ -475,6 +475,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                       .navigateToMessages(ismChatConversation);
                                   (onChatTap ?? IsmChatConfig.onChatTap).call(
                                       context, ismChatConversation, false);
+                                  IsmChatRouteManagement.goToChatPage();
                                 }
                               },
                             ),

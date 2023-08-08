@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 import 'dart:math';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
     if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
@@ -626,7 +625,8 @@ class IsmChatPageController extends GetxController
             opponentName: conversation?.opponentDetails?.userName ?? '');
         break;
       case IsmChatAttachmentType.location:
-        await Get.to<void>(const IsmChatLocationWidget());
+        IsmChatRouteManagement.goToLocation();
+
         break;
     }
   }
@@ -706,12 +706,8 @@ class IsmChatPageController extends GetxController
         var chatConversationController =
             Get.find<IsmChatConversationsController>();
         chatConversationController.forwardedList.clear();
-        await Get.to(
-            IsmChatForwardView(
-              message: message,
-              conversation: conversation!,
-            ),
-            transition: Transition.downToUp);
+        IsmChatRouteManagement.goToForwardView(
+            message: message, conversation: conversation!);
 
         break;
       case IsmChatFocusMenuType.copy:
@@ -1019,13 +1015,13 @@ class IsmChatPageController extends GetxController
           mediaTime: message.sentAt,
         ));
       } else {
-        await Get.to<void>(IsmMediaPreview(
+        IsmChatRouteManagement.goToMediaPreview(
           mediaIndex: selectedMediaIndex,
           messageData: mediaList,
           mediaUserName: message.chatName,
           initiated: message.sentByMe,
           mediaTime: message.sentAt,
-        ));
+        );
       }
     } else if (message.customType == IsmChatCustomMessageType.file) {
       var localPath = message.attachments?.first.mediaUrl;
@@ -1515,16 +1511,15 @@ class IsmChatPageController extends GetxController
   Future<void> getMessageInformation(
     IsmChatMessageModel message,
   ) async {
-    await Future.wait<dynamic>(
+    unawaited(Future.wait<dynamic>(
       [
         getMessageReadTime(message),
         getMessageDeliverTime(message),
-        // Get.to(IsmChatMessageInfo(message: message))!,
-        IsmChatUtility.openFullScreenBottomSheet(IsmChatMessageInfo(
-          message: message,
-          isGroup: conversation?.isGroup ?? false,
-        )),
       ],
+    ));
+    IsmChatRouteManagement.goToMessageInfo(
+      message: message,
+      isGroup: conversation?.isGroup ?? false,
     );
   }
 
@@ -1707,10 +1702,14 @@ class IsmChatPageController extends GetxController
     } else {
       user = userDetails;
     }
-    await IsmChatUtility.openFullScreenBottomSheet(IsmChatUserInfo(
-      user: user!,
+    IsmChatRouteManagement.goToUserInfo(
       conversationId: conversation?.conversationId ?? '',
-    ));
+      user: user!,
+    );
+    // await IsmChatUtility.openFullScreenBottomSheet(IsmChatUserInfo(
+    //   user: user!,
+    //   conversationId: conversation?.conversationId ?? '',
+    // ));
   }
 
   Future<void> shareMedia(IsmChatMessageModel message) async {

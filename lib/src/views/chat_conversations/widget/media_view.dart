@@ -68,7 +68,7 @@ class _IsmMediaViewState extends State<IsmMediaView>
                         itemBuilder: (context, valueIndex) {
                           var url = value[valueIndex].customType ==
                                   IsmChatCustomMessageType.image
-                              ? value[valueIndex].attachments!.first.mediaUrl!
+                              ? value[valueIndex].attachments?.first.mediaUrl!
                               : value[valueIndex]
                                   .attachments!
                                   .first
@@ -86,7 +86,7 @@ class _IsmMediaViewState extends State<IsmMediaView>
                                 ConversationMediaWidget(
                                   media: value[valueIndex],
                                   iconData: iconData,
-                                  url: url,
+                                  url: url ?? '',
                                 ),
                                 if (value[valueIndex].customType ==
                                     IsmChatCustomMessageType.video)

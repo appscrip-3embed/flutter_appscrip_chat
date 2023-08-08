@@ -225,10 +225,12 @@ class _IsmChatPageView extends StatelessWidget {
                                               ?.lastMessageDetails?.userId ==
                                           IsmChatConfig.communicationConfig
                                               .userConfig.userId)) {
-                                    await IsmChatUtility
-                                        .openFullScreenBottomSheet(
-                                      const IsmChatConverstaionInfoView(),
-                                    );
+                                    IsmChatRouteManagement
+                                        .goToConversationInfo();
+                                    // await IsmChatUtility
+                                    //     .openFullScreenBottomSheet(
+                                    //   const IsmChatConverstaionInfoView(),
+                                    // );
                                   }
                                 }
                               }
