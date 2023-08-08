@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "997975426539",
+    "project_id": "isometrickchat",
+    "storage_bucket": "isometrickchat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:997975426539:android:71fbc9214e24103f29c5ae",
+        "android_client_info": {
+          "package_name": "com.example.chat_component_example"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "997975426539-r4hha192rt3h1otm5mj5b7qc522gnphp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chat_component_example",
+            "certificate_hash": "a1b7e52a1fd90d875d8333a57a5f176e0ec0aacf"
+          }
+        },
+        {
+          "client_id": "997975426539-h8hub35fbmcrlp59afumreebh5ae4dtn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAq2VqJn_zDpLDJJLJarscLsgKv-Myw1w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "997975426539-h8hub35fbmcrlp59afumreebh5ae4dtn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
