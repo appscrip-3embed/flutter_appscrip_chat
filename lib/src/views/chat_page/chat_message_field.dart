@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
     if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
 import 'package:file_picker/file_picker.dart';
@@ -12,12 +13,7 @@ import 'package:get/get.dart';
 class IsmChatMessageField extends StatelessWidget {
   const IsmChatMessageField({
     super.key,
-    required this.header,
-    this.attachments = IsmChatAttachmentType.values,
   });
-
-  final IsmChatHeader? header;
-  final List<IsmChatAttachmentType> attachments;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
@@ -64,7 +60,7 @@ class IsmChatMessageField extends StatelessWidget {
                     child: const _EmojiButton(IsmChatColors.whiteColor),
                   ),
                   IsmChatDimens.boxWidth8,
-                  if (attachments.isNotEmpty)
+                  if (IsmChatProperties.attachments.isNotEmpty)
                     Container(
                       margin: IsmChatDimens.edgeInsetsBottom4,
                       decoration: BoxDecoration(
@@ -73,9 +69,8 @@ class IsmChatMessageField extends StatelessWidget {
                       ),
                       child: Responsive.isWebAndTablet(context)
                           ? _AttachmentIconForWeb(
-                              attachments, IsmChatConfig.chatTheme.primaryColor)
-                          : _AttachmentIcon(
-                              attachments, IsmChatColors.whiteColor),
+                              IsmChatConfig.chatTheme.primaryColor)
+                          : const _AttachmentIcon(IsmChatColors.whiteColor),
                     ),
                   IsmChatDimens.boxWidth2,
                 ],
@@ -87,7 +82,9 @@ class IsmChatMessageField extends StatelessWidget {
                       border: Border.all(
                           color: IsmChatConfig.chatTheme.primaryColor!),
                       borderRadius: BorderRadius.circular(IsmChatDimens.twenty),
-                      color: header?.backgroundColor ??
+                      color:
+                          // Todo
+                          //  header?.backgroundColor ??
                           IsmChatConfig.chatTheme.backgroundColor,
                     ),
                     child: Column(
@@ -95,7 +92,6 @@ class IsmChatMessageField extends StatelessWidget {
                       children: [
                         if (controller.isreplying)
                           _ReplyMessage(
-                            header: header,
                             messageBody: messageBody,
                           ),
                         Row(
@@ -113,7 +109,9 @@ class IsmChatMessageField extends StatelessWidget {
                                 decoration: InputDecoration(
                                   isDense: true,
                                   filled: true,
-                                  fillColor: header?.backgroundColor ??
+                                  fillColor:
+                                      // Todo
+                                      //  header?.backgroundColor ??
                                       IsmChatConfig.chatTheme.backgroundColor,
                                   contentPadding:
                                       Responsive.isWebAndTablet(context)
@@ -152,9 +150,9 @@ class IsmChatMessageField extends StatelessWidget {
                                 // },
                               ),
                             ),
-                            if (attachments.isNotEmpty &&
+                            if (IsmChatProperties.attachments.isNotEmpty &&
                                 !Responsive.isWebAndTablet(context)) ...[
-                              _AttachmentIcon(attachments, null)
+                              const _AttachmentIcon()
                             ]
                           ],
                         ),
@@ -173,11 +171,9 @@ class IsmChatMessageField extends StatelessWidget {
 
 class _ReplyMessage extends StatelessWidget {
   _ReplyMessage({
-    required this.header,
     required this.messageBody,
   }) : controller = Get.find<IsmChatPageController>();
 
-  final IsmChatHeader? header;
   final String messageBody;
   final IsmChatPageController controller;
 
@@ -205,8 +201,9 @@ class _ReplyMessage extends StatelessWidget {
                 Text(
                   controller.chatMessageModel?.sentByMe ?? false
                       ? IsmChatStrings.you
-                      : header?.name?.call(context, controller.conversation!,
-                              controller.conversation!.chatName) ??
+                      : IsmChatProperties.chatPageProperties.header?.title
+                              ?.call(context, controller.conversation!,
+                                  controller.conversation!.chatName) ??
                           controller.conversation?.chatName.capitalizeFirst ??
                           '',
                   style: IsmChatStyles.w600White14,
@@ -452,9 +449,8 @@ class _MicOrSendButton extends StatelessWidget {
 }
 
 class _AttachmentIconForWeb extends StatefulWidget {
-  const _AttachmentIconForWeb(this.attachments, this.backgroundColor);
+  const _AttachmentIconForWeb(this.backgroundColor);
 
-  final List<IsmChatAttachmentType> attachments;
   final Color? backgroundColor;
 
   @override
@@ -526,13 +522,13 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: List.generate(
-                widget.attachments.length * 2 - 1,
+                IsmChatProperties.attachments.length * 2 - 1,
                 (i) {
                   if (i % 2 != 0) {
                     return IsmChatDimens.boxHeight10;
                   }
                   var index = i ~/ 2;
-                  var data = widget.attachments[index];
+                  var data = IsmChatProperties.attachments[index];
                   return Transform(
                     transform: Matrix4.translationValues(
                       0.0,
@@ -642,9 +638,8 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
 }
 
 class _AttachmentIcon extends GetView<IsmChatPageController> {
-  const _AttachmentIcon(this.attachments, this.color);
+  const _AttachmentIcon([this.color]);
 
-  final List<IsmChatAttachmentType> attachments;
   final Color? color;
 
   @override
@@ -654,7 +649,7 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
             controller.showDialogCheckBlockUnBlock();
           } else {
             await Get.bottomSheet(
-              IsmChatAttachmentCard(attachments),
+              const IsmChatAttachmentCard(),
               enterBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
               exitBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
               elevation: 0,

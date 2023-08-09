@@ -1,49 +1,14 @@
 import 'dart:io';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatPageView extends StatefulWidget {
-  IsmChatPageView({
-    this.onTitleTap,
-    this.height,
-    this.header,
-    this.onBackTap,
-    this.emptyChatPlaceholder,
-    this.messageWidgetBuilder,
-    this.chatPageBackGroundDecoration,
-    this.textFieldBackGroundDecoration,
-    this.textFieldPadding,
-    this.bodyBackGroundColor,
-    this.attachments = IsmChatAttachmentType.values,
-    this.features = IsmChatFeature.values,
+  const IsmChatPageView({
     super.key,
-  }) {
-    IsmChatConfig.features = features;
-  }
-
-  final void Function(IsmChatConversationModel)? onTitleTap;
-  final VoidCallback? onBackTap;
-  final double? height;
-  final IsmChatHeader? header;
-  final Widget? emptyChatPlaceholder;
-  final MessageWidgetBuilder? messageWidgetBuilder;
-  final EdgeInsetsGeometry? textFieldPadding;
-  final Decoration? textFieldBackGroundDecoration;
-  final Decoration? chatPageBackGroundDecoration;
-  final Color? bodyBackGroundColor;
-
-  /// It it an optional parameter which take List of `IsmChatAttachmentType` which is an enum.
-  /// Pass in the types of attachments that you want to allow.
-  ///
-  /// Defaults to all
-  final List<IsmChatAttachmentType> attachments;
-
-  /// It it an optional parameter which take List of `IsmChatFeature` which is an enum.
-  /// Pass in the types of features that you want to allow.
-  ///
-  /// Defaults to all
-  final List<IsmChatFeature> features;
+  });
 
   static const String route = IsmPageRoutes.chatPage;
 
@@ -67,10 +32,11 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
       return false;
     } else {
       Get.back<void>();
-      await controller.updateLastMessage();
-      if (widget.onBackTap != null) {
-        widget.onBackTap!.call();
+
+      if (IsmChatProperties.chatPageProperties.header?.onBackTap != null) {
+        IsmChatProperties.chatPageProperties.header?.onBackTap!.call();
       }
+      await controller.updateLastMessage();
       return true;
     }
   }
@@ -90,66 +56,14 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                     navigateBack();
                   }
                 },
-                child: _IsmChatPageView(
-                  onTitleTap: widget.onTitleTap,
-                  onBackTap: widget.onBackTap,
-                  header: widget.header,
-                  height: widget.height,
-                  emptyChatPlaceholder: widget.emptyChatPlaceholder,
-                  attachments: widget.attachments,
-                  messageWidgetBuilder: widget.messageWidgetBuilder,
-                  textFieldBackGroundDecoration:
-                      widget.textFieldBackGroundDecoration,
-                  textFieldPadding: widget.textFieldPadding,
-                  chatPageBackGroundDecoration:
-                      widget.chatPageBackGroundDecoration,
-                  bodyBackGroundColor: widget.bodyBackGroundColor,
-                ),
+                child: const _IsmChatPageView(),
               )
-            : _IsmChatPageView(
-                onTitleTap: widget.onTitleTap,
-                onBackTap: widget.onBackTap,
-                header: widget.header,
-                height: widget.height,
-                emptyChatPlaceholder: widget.emptyChatPlaceholder,
-                attachments: widget.attachments,
-                messageWidgetBuilder: widget.messageWidgetBuilder,
-                textFieldBackGroundDecoration:
-                    widget.textFieldBackGroundDecoration,
-                textFieldPadding: widget.textFieldPadding,
-                chatPageBackGroundDecoration:
-                    widget.chatPageBackGroundDecoration,
-                bodyBackGroundColor: widget.bodyBackGroundColor,
-              ),
+            : const _IsmChatPageView(),
       );
 }
 
 class _IsmChatPageView extends StatelessWidget {
-  const _IsmChatPageView({
-    this.onTitleTap,
-    this.onBackTap,
-    this.height,
-    this.header,
-    this.emptyChatPlaceholder,
-    this.messageWidgetBuilder,
-    this.textFieldBackGroundDecoration,
-    this.textFieldPadding,
-    this.chatPageBackGroundDecoration,
-    this.bodyBackGroundColor,
-    this.attachments = IsmChatAttachmentType.values,
-  });
-
-  final void Function(IsmChatConversationModel)? onTitleTap;
-  final VoidCallback? onBackTap;
-  final double? height;
-  final IsmChatHeader? header;
-  final Widget? emptyChatPlaceholder;
-  final List<IsmChatAttachmentType> attachments;
-  final MessageWidgetBuilder? messageWidgetBuilder;
-  final EdgeInsetsGeometry? textFieldPadding;
-  final Decoration? textFieldBackGroundDecoration;
-  final Decoration? chatPageBackGroundDecoration;
-  final Color? bodyBackGroundColor;
+  const _IsmChatPageView();
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
@@ -175,7 +89,9 @@ class _IsmChatPageView extends StatelessWidget {
           ),
           child: Scaffold(
             drawerEnableOpenDragGesture: false,
-            backgroundColor: bodyBackGroundColor ?? Colors.transparent,
+            backgroundColor:
+                IsmChatConfig.chatTheme.chatPageTheme?.backgroundColor ??
+                    Colors.transparent,
             resizeToAvoidBottomInset: true,
             appBar: controller.isMessageSeleted
                 ? AppBar(
@@ -210,34 +126,21 @@ class _IsmChatPageView extends StatelessWidget {
                     ],
                   )
                 : IsmChatPageHeader(
-                    onTap: onTitleTap != null
-                        ? () => onTitleTap?.call(controller.conversation!)
-                        : controller.isActionAllowed == false
-                            ? () async {
-                                if (controller.isActionAllowed == false) {
-                                  if (!(controller
-                                              .conversation
-                                              ?.lastMessageDetails
-                                              ?.customType ==
-                                          IsmChatCustomMessageType
-                                              .removeMember &&
-                                      controller.conversation
-                                              ?.lastMessageDetails?.userId ==
-                                          IsmChatConfig.communicationConfig
-                                              .userConfig.userId)) {
-                                    IsmChatRouteManagement
-                                        .goToConversationInfo();
-                                    // await IsmChatUtility
-                                    //     .openFullScreenBottomSheet(
-                                    //   const IsmChatConverstaionInfoView(),
-                                    // );
-                                  }
-                                }
+                    onTap: controller.isActionAllowed == false
+                        ? () async {
+                            if (controller.isActionAllowed == false) {
+                              if (!(controller.conversation?.lastMessageDetails
+                                          ?.customType ==
+                                      IsmChatCustomMessageType.removeMember &&
+                                  controller.conversation?.lastMessageDetails
+                                          ?.userId ==
+                                      IsmChatConfig.communicationConfig
+                                          .userConfig.userId)) {
+                                IsmChatRouteManagement.goToConversationInfo();
                               }
-                            : null,
-                    onBackTap: onBackTap,
-                    header: header,
-                    height: height,
+                            }
+                          }
+                        : null,
                   ),
             body: controller.webMedia.isNotEmpty
                 ? const WebMediaPreview()
@@ -247,7 +150,8 @@ class _IsmChatPageView extends StatelessWidget {
                         alignment: Alignment.bottomRight,
                         children: [
                           Container(
-                            decoration: chatPageBackGroundDecoration,
+                            decoration: IsmChatConfig
+                                .chatTheme.chatPageTheme?.pageDecoration,
                             height: MediaQuery.of(context).size.height,
                             width: MediaQuery.of(context).size.width,
                             child: Column(
@@ -265,7 +169,9 @@ class _IsmChatPageView extends StatelessWidget {
                                           visible: controller
                                                   .messages.isNotEmpty &&
                                               controller.messages.length != 1,
-                                          replacement: emptyChatPlaceholder ??
+                                          replacement: IsmChatProperties
+                                                  .chatPageProperties
+                                                  .placeholder ??
                                               const IsmChatEmptyView(
                                                 icon: Icon(Icons.chat_outlined),
                                                 text: IsmChatStrings.noMessages,
@@ -287,8 +193,11 @@ class _IsmChatPageView extends StatelessWidget {
                                               itemCount:
                                                   controller.messages.length,
                                               itemBuilder: (_, index) =>
-                                                  IsmChatMessage(index,
-                                                      messageWidgetBuilder),
+                                                  IsmChatMessage(
+                                                      index,
+                                                      IsmChatProperties
+                                                          .chatPageProperties
+                                                          .messageBuilder),
                                             ),
                                           ),
                                         ),
@@ -355,14 +264,14 @@ class _IsmChatPageView extends StatelessWidget {
                                             ),
                                           )
                                         : Container(
-                                            padding: textFieldPadding,
-                                            decoration:
-                                                textFieldBackGroundDecoration,
-                                            child: SafeArea(
-                                              child: IsmChatMessageField(
-                                                header: header,
-                                                attachments: attachments,
-                                              ),
+                                            padding: IsmChatConfig.chatTheme
+                                                .chatPageTheme?.textfieldInsets,
+                                            decoration: IsmChatConfig
+                                                .chatTheme
+                                                .chatPageTheme
+                                                ?.textfieldDecoration,
+                                            child: const SafeArea(
+                                              child: IsmChatMessageField(),
                                             ),
                                           ),
                                 Offstage(

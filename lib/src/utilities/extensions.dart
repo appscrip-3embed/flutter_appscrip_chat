@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -764,10 +765,10 @@ extension MentionMessage on IsmChatMessageModel {
     ].contains(customType)) {
       menu.remove(IsmChatFocusMenuType.copy);
     }
-    if (!IsmChatConfig.features.contains(IsmChatFeature.reply)) {
+    if (!IsmChatProperties.features.contains(IsmChatFeature.reply)) {
       menu.remove(IsmChatFocusMenuType.reply);
     }
-    if (!IsmChatConfig.features.contains(IsmChatFeature.forward)) {
+    if (!IsmChatProperties.features.contains(IsmChatFeature.forward)) {
       menu.remove(IsmChatFocusMenuType.forward);
     }
     return menu;

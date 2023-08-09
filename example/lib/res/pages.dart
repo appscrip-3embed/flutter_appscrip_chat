@@ -22,11 +22,6 @@ class AppPages {
       binding: ChatConversationBinding(),
     ),
     GetPage(
-      name: ChatMessageView.route,
-      page: ChatMessageView.new,
-      binding: ChatConversationBinding(),
-    ),
-    GetPage(
       name: WebChatView.route,
       page: WebChatView.new,
       binding: ChatConversationBinding(),

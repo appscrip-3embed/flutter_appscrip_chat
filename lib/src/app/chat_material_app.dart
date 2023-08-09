@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,31 +8,14 @@ class IsmChatApp extends StatelessWidget {
   IsmChatApp({
     super.key,
     this.communicationConfig,
-    required this.onChatTap,
-    this.onCreateChatTap,
-    this.showCreateChatIcon = false,
+    this.chatPageProperties,
+    this.conversationProperties,
     this.chatTheme,
     this.chatDarkTheme,
     this.loadingDialog,
     this.databaseName,
-    this.onSignOut,
-    this.showAppBar = false,
     this.enableGroupChat = false,
-    this.createChatIcon,
-    this.name,
-    this.nameBuilder,
-    this.profileImageUrl,
-    this.profileImageBuilder,
-    this.subtitle,
-    this.subtitleBuilder,
-    this.actions,
-    this.endActions,
-    this.onProfileWidget,
-    this.isSlidableEnable,
-    this.emptyConversationPlaceholder,
-    this.allowDelete = false,
     this.useDataBase = true,
-    this.showSearch = true,
   }) {
     assert(IsmChatConfig.isInitialized,
         'ChatHiveBox is not initialized\nYou are getting this error because the Database class is not initialized, to initialize ChatHiveBox class call AppscripChatComponent.initialize() before your runApp()');
@@ -40,16 +24,13 @@ class IsmChatApp extends StatelessWidget {
     1. Either initialize using IsmChatApp.initializeMqtt() by passing  communicationConfig.
     2. Or Pass  communicationConfig in IsmChatApp
     ''');
-    assert(
-      (showCreateChatIcon && onCreateChatTap != null) || !showCreateChatIcon,
-      'If showCreateChatIcon is set to true then a non null callback must be passed to onCreateChatTap parameter',
-    );
-    assert(
-      (showAppBar && onSignOut != null) || (!showAppBar),
-      'If showAppBar is set to true then a non-null callback must be passed to onSignOut parameter',
-    );
+
+    // assert(
+    //   (showAppBar && onSignOut != null) || (!showAppBar),
+    //   'If showAppBar is set to true then a non-null callback must be passed to onSignOut parameter',
+    // );
     IsmChatConfig.dbName = databaseName ?? IsmChatStrings.dbname;
-    IsmChatConfig.loadingDialog = loadingDialog;
+    IsmChatProperties.loadingDialog = loadingDialog;
     if (communicationConfig != null) {
       IsmChatConfig.communicationConfig = communicationConfig!;
       IsmChatConfig.configInitilized = true;
@@ -58,8 +39,13 @@ class IsmChatApp extends StatelessWidget {
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
-    IsmChatConfig.onChatTap = onChatTap;
-    IsmChatConfig.isGroupChatEnabled = enableGroupChat;
+    IsmChatProperties.isGroupChatEnabled = enableGroupChat;
+    if (chatPageProperties != null) {
+      IsmChatProperties.chatPageProperties = chatPageProperties!;
+    }
+    if (conversationProperties != null) {
+      IsmChatProperties.conversationProperties = conversationProperties!;
+    }
   }
 
   /// Required field
@@ -73,16 +59,7 @@ class IsmChatApp extends StatelessWidget {
 
   final IsmChatThemeData? chatDarkTheme;
 
-  final Widget? createChatIcon;
-
   final bool enableGroupChat;
-
-  final ConversationWidgetCallback? profileImageBuilder;
-  final ConversationStringCallback? profileImageUrl;
-  final ConversationWidgetCallback? nameBuilder;
-  final ConversationStringCallback? name;
-  final ConversationWidgetCallback? subtitleBuilder;
-  final ConversationStringCallback? subtitle;
 
   /// Opitonal field
   ///
@@ -94,49 +71,12 @@ class IsmChatApp extends StatelessWidget {
   /// If not provided `appscrip_chat_component` will be used by default
   final String? databaseName;
 
-  /// Required parameter
-  ///
-  /// Primarily designed for nagivating to Message screen
-  ///
-  /// `onChatTap` takes a non-null callback function that takes 2 arguments in its parameter list
-  ///
-  /// ```dart
-  /// void Function(BuildContext, IsmChatConversationModel) onChatTap;
-  /// ```
-  ///
-  /// `IsmChatConversationModel` gives data of current chat, it could be used for local storage or state variables
-  ///
-  final void Function(BuildContext, IsmChatConversationModel, bool) onChatTap;
-
-  /// A callback for `navigating` to the create chat screen
-  ///
-  /// A non-null callback should be passed, if showCreateChatIcon is set to `true`
-  final VoidCallback? onCreateChatTap;
-
-  /// This signifies whether or not to show [FloatingActionButton] that will navigate to the create chat screen
-  ///
-  /// Defaults to `false`
-  ///
-  /// If set to `true`, then onCreateChatTap callback must be passed to `navigate` to the screen
-  final bool showCreateChatIcon;
-
-  final bool showAppBar;
-  final VoidCallback? onSignOut;
-  final bool showSearch;
-
-  final bool allowDelete;
-
-  final Widget? Function(BuildContext, IsmChatConversationModel)?
-      onProfileWidget;
-
-  final List<IsmChatConversationAction>? actions;
-  final List<IsmChatConversationAction>? endActions;
-
-  final bool? Function(BuildContext, IsmChatConversationModel)?
-      isSlidableEnable;
-  final Widget? emptyConversationPlaceholder;
-
   final bool useDataBase;
+
+  // final IsmChatProperties? chatProperties;
+
+  final IsmChatConversationProperties? conversationProperties;
+  final IsmChatPageProperties? chatPageProperties;
 
   /// Call this function for Get all Conversation List
   static Future<List<IsmChatConversationModel>?> getAllConversation() async =>
@@ -213,8 +153,7 @@ class IsmChatApp extends StatelessWidget {
     String? email,
     required String userId,
     IsmChatMetaData? metaData,
-    void Function(BuildContext, IsmChatConversationModel, bool)?
-        onNavigateToChat,
+    void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
     Duration duration = const Duration(milliseconds: 500),
   }) async {
     assert(
@@ -268,8 +207,8 @@ class IsmChatApp extends StatelessWidget {
     }
     controller.navigateToMessages(conversation);
 
-    (onNavigateToChat ?? IsmChatConfig.onChatTap)
-        .call(Get.context!, conversation, false);
+    (onNavigateToChat ?? IsmChatProperties.conversationProperties.onChatTap)!
+        .call(Get.context!, conversation);
   }
 
   /// This function can be used to directly go to chatting page and start chatting from anywhere in the app
@@ -302,7 +241,7 @@ class IsmChatApp extends StatelessWidget {
     }
     var controller = Get.find<IsmChatConversationsController>();
     controller.navigateToMessages(ismChatConversation);
-    (onNavigateToChat ?? IsmChatConfig.onChatTap)
+    (onNavigateToChat ?? IsmChatProperties.conversationProperties.onChatTap)!
         .call(Get.context!, ismChatConversation);
   }
 
@@ -318,8 +257,7 @@ class IsmChatApp extends StatelessWidget {
   /// * `isLoading` - This variable will be executed to show loading to the specific chat screen of the selected user. If not provided, the `onChatTap` callback will be used which is passed to `defalut false`.
   static Future<void> chatFromChatListWithConversation(
       {required IsmChatConversationModel ismChatConversation,
-      void Function(BuildContext, IsmChatConversationModel, bool)?
-          onNavigateToChat,
+      void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
       Duration duration = const Duration(milliseconds: 500),
       bool isLoading = false}) async {
     await Get.delete<IsmChatPageController>(force: true);
@@ -332,8 +270,8 @@ class IsmChatApp extends StatelessWidget {
     }
     var controller = Get.find<IsmChatConversationsController>();
     controller.navigateToMessages(ismChatConversation);
-    (onNavigateToChat ?? IsmChatConfig.onChatTap)
-        .call(Get.context!, ismChatConversation, true);
+    (onNavigateToChat ?? IsmChatProperties.conversationProperties.onChatTap)!
+        .call(Get.context!, ismChatConversation);
   }
 
   static final RxString _unReadConversationMessages = ''.obs;
@@ -347,26 +285,5 @@ class IsmChatApp extends StatelessWidget {
   static set isMqttConnected(bool value) => _isMqttConnected.value = value;
 
   @override
-  Widget build(BuildContext context) => IsmChatConversations(
-        onChatTap: onChatTap,
-        onCreateChatTap: onCreateChatTap,
-        showCreateChatIcon: showCreateChatIcon,
-        showAppBar: showAppBar,
-        showSearch: showSearch,
-        onSignOut: onSignOut,
-        isGroupChatEnabled: enableGroupChat,
-        createChatIcon: createChatIcon,
-        allowDelete: allowDelete,
-        actions: actions,
-        endActions: endActions,
-        onProfileWidget: onProfileWidget,
-        name: name,
-        nameBuilder: nameBuilder,
-        profileImageUrl: profileImageUrl,
-        profileImageBuilder: profileImageBuilder,
-        subtitle: subtitle,
-        subtitleBuilder: subtitleBuilder,
-        isSlidableEnable: isSlidableEnable,
-        emptyConversationPlaceholder: emptyConversationPlaceholder,
-      );
+  Widget build(BuildContext context) => const IsmChatConversations();
 }

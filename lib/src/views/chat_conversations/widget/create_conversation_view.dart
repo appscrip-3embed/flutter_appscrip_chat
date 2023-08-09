@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,7 +11,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
     this.isGroupConversation = false,
   });
 
-  final void Function(BuildContext, IsmChatConversationModel, bool)? onChatTap;
+  final void Function(BuildContext, IsmChatConversationModel)? onChatTap;
   final bool isGroupConversation;
   final converstaionController = Get.find<IsmChatConversationsController>();
 
@@ -254,8 +255,11 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                   } else {
                                     controller.navigateToMessages(
                                         ismChatConversation);
-                                    (onChatTap ?? IsmChatConfig.onChatTap)
-                                        .call(_, ismChatConversation, false);
+                                    (onChatTap ??
+                                            IsmChatProperties
+                                                .conversationProperties
+                                                .onChatTap)!
+                                        .call(_, ismChatConversation);
                                     IsmChatRouteManagement.goToChatPage();
                                   }
                                 }
@@ -473,8 +477,11 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                 } else {
                                   controller
                                       .navigateToMessages(ismChatConversation);
-                                  (onChatTap ?? IsmChatConfig.onChatTap).call(
-                                      context, ismChatConversation, false);
+                                  (onChatTap ??
+                                          IsmChatProperties
+                                              .conversationProperties
+                                              .onChatTap)!
+                                      .call(context, ismChatConversation);
                                   IsmChatRouteManagement.goToChatPage();
                                 }
                               },

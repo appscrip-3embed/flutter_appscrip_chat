@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 
 class IsmChatLoadingDialog extends StatelessWidget {
@@ -6,7 +7,7 @@ class IsmChatLoadingDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      IsmChatConfig.loadingDialog ??
+      IsmChatProperties.loadingDialog ??
       Center(
         child: SizedBox(
           height: 60,

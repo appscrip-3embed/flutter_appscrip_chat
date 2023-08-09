@@ -1,24 +1,22 @@
+import 'dart:async';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
   IsmChatPageHeader({
-    this.height,
     this.onTap,
-    this.header,
-    this.onBackTap,
     super.key,
   });
 
-  final double? height;
   final VoidCallback? onTap;
-  final VoidCallback? onBackTap;
-  final IsmChatHeader? header;
 
   @override
   Size get preferredSize =>
-      Size.fromHeight(height ?? IsmChatDimens.appBarHeight);
+      Size.fromHeight(IsmChatProperties.chatPageProperties.header?.height ??
+          IsmChatDimens.appBarHeight);
 
   final issmChatConversationsController =
       Get.find<IsmChatConversationsController>();
@@ -28,75 +26,73 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
         builder: (controller) => Theme(
           data: ThemeData.light(useMaterial3: true).copyWith(
             appBarTheme: AppBarTheme(
-                backgroundColor: header?.backgroundColor ??
+                backgroundColor: IsmChatProperties
+                        .chatPageProperties.header?.backgroundColor ??
                     IsmChatConfig.chatTheme.primaryColor,
                 iconTheme: IconThemeData(
-                  color: header?.iconColor ?? IsmChatColors.whiteColor,
+                  color:
+                      IsmChatProperties.chatPageProperties.header?.iconColor ??
+                          IsmChatColors.whiteColor,
                 ),
                 actionsIconTheme: IconThemeData(
-                  color: header?.iconColor ?? IsmChatColors.whiteColor,
+                  color:
+                      IsmChatProperties.chatPageProperties.header?.iconColor ??
+                          IsmChatColors.whiteColor,
                 )),
           ),
           child: AppBar(
             leadingWidth: Responsive.isWebAndTablet(context)
                 ? IsmChatDimens.twenty
                 : null,
-            shadowColor: header?.shadowColors,
+            shadowColor:
+                IsmChatProperties.chatPageProperties.header?.shadowColor,
             surfaceTintColor:
-                header?.backgroundColor ?? IsmChatConfig.chatTheme.primaryColor,
+                IsmChatProperties.chatPageProperties.header?.backgroundColor ??
+                    IsmChatConfig.chatTheme.primaryColor,
             leading: !Responsive.isWebAndTablet(context)
                 ? IsmChatTapHandler(
                     onTap: () async {
                       Get.back<void>();
-                      await controller.updateLastMessage();
-                      if (onBackTap != null) {
-                        onBackTap!.call();
+                      if (IsmChatProperties
+                              .chatPageProperties.header?.onBackTap !=
+                          null) {
+                        IsmChatProperties.chatPageProperties.header?.onBackTap!
+                            .call();
                       }
+                      unawaited(controller.updateLastMessage());
                     },
                     child: const Icon(Icons.arrow_back_rounded),
                   )
                 : const SizedBox.shrink(),
             titleSpacing: IsmChatDimens.two,
             centerTitle: false,
-            shape: header?.shape,
-            elevation: header?.elevation,
+            shape: IsmChatProperties.chatPageProperties.header?.shape,
+            elevation: IsmChatProperties.chatPageProperties.header?.elevation,
             title: IsmChatTapHandler(
               onTap: onTap,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Stack(
-                    alignment: Alignment.bottomLeft,
-                    children: [
-                      header?.profileImageBuilder?.call(
-                              context,
-                              controller.conversation!,
+                  IsmChatProperties
+                          .chatPageProperties.header?.profileImageBuilder
+                          ?.call(context, controller.conversation!,
                               controller.conversation?.profileUrl ?? '') ??
-                          IsmChatImage.profile(
-                            header?.profileImageUrl?.call(
+                      IsmChatImage.profile(
+                        IsmChatProperties
+                                .chatPageProperties.header?.profileImageUrl
+                                ?.call(
                                     context,
                                     controller.conversation!,
                                     controller.conversation?.profileUrl ??
                                         '') ??
-                                controller.conversation?.profileUrl ??
-                                '',
-                            name: header?.name?.call(
-                                    context,
-                                    controller.conversation!,
+                            controller.conversation?.profileUrl ??
+                            '',
+                        name: IsmChatProperties.chatPageProperties.header?.title
+                                ?.call(context, controller.conversation!,
                                     controller.conversation?.chatName ?? '') ??
-                                controller.conversation?.chatName,
-                            dimensions: IsmChatDimens.forty,
-                          ),
-                      Positioned(
-                        top: IsmChatDimens.twenty,
-                        child: header?.onProfileWidget?.call(
-                                context,
-                                controller.conversation!,
-                                controller.conversation!.profileUrl) ??
-                            IsmChatDimens.box0,
-                      )
-                    ],
-                  ),
+                            controller.conversation?.chatName,
+                        dimensions: IsmChatDimens.forty,
+                      ),
                   IsmChatDimens.boxWidth8,
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -105,11 +101,17 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                     children: [
                       Flexible(
                         child: Text(
-                          header?.name?.call(context, controller.conversation!,
-                                  controller.conversation?.chatName ?? '') ??
+                          IsmChatProperties.chatPageProperties.header?.title
+                                  ?.call(
+                                      context,
+                                      controller.conversation!,
+                                      controller.conversation?.chatName ??
+                                          '') ??
                               controller.conversation!.chatName,
                           style:
-                              header?.titleStyle ?? IsmChatStyles.w600White16,
+                              // Todo
+                              //  header?.titleStyle ??
+                              IsmChatStyles.w600White16,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -122,7 +124,9 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                       controller.conversation!.typingUsers,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: header?.subtitleStyle ??
+                                      style:
+                                          // Todo
+                                          // header?.subtitleStyle ??
                                           IsmChatStyles.w400White12,
                                     )
                                   : controller.conversation!.isGroup == true
@@ -144,7 +148,10 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                                         .map((e) => e.userName)
                                                         .join(', ') ??
                                                     '',
-                                            style: header?.subtitleStyle ??
+                                            style:
+                                                // Todo
+                                                // header?.subtitleStyle ??
+
                                                 IsmChatStyles.w400White12,
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 1,
@@ -157,7 +164,10 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                               IsmChatStrings.online,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
-                                              style: header?.subtitleStyle ??
+                                              style:
+                                                  // Todo
+                                                  //  header?.subtitleStyle ??
+
                                                   IsmChatStyles.w400White12,
                                             )
                                           : Flexible(
@@ -170,7 +180,10 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                                     '',
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
-                                                style: header?.subtitleStyle ??
+                                                style:
+                                                    // Todo
+                                                    //  header?.subtitleStyle ??
+
                                                     IsmChatStyles.w400White12,
                                               ),
                                             ),
@@ -180,30 +193,26 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                 ],
               ),
             ),
-            bottom: header?.bottom == null
+            bottom: IsmChatProperties.chatPageProperties.header?.bottom == null
                 ? null
                 : PreferredSize(
                     preferredSize: preferredSize,
                     child: Padding(
                       padding: IsmChatDimens.edgeInsets4,
-                      child: InkWell(
-                          onTap: () {
-                            if (header?.bottomOnTap != null) {
-                              header?.bottomOnTap
-                                  ?.call(controller.conversation!);
-                            }
-                          },
-                          child: header?.bottom),
+                      child: IsmChatProperties.chatPageProperties.header?.bottom
+                          ?.call(context, controller.conversation!),
                     ),
                   ),
             actions: [
               PopupMenuButton(
                 icon: Icon(
                   Icons.more_vert,
-                  color: header?.iconColor ?? IsmChatColors.whiteColor,
+                  color:
+                      IsmChatProperties.chatPageProperties.header?.iconColor ??
+                          IsmChatColors.whiteColor,
                 ),
                 itemBuilder: (context) => [
-                  if (IsmChatConfig.features
+                  if (IsmChatProperties.features
                       .contains(IsmChatFeature.chageWallpaper))
                     PopupMenuItem(
                       value: 4,
@@ -276,28 +285,30 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                         ],
                       ),
                     ),
-                  if (header?.onProfileWidget?.call(
-                          context,
-                          controller.conversation!,
-                          controller.conversation!.profileUrl) !=
-                      null)
-                    ...(header?.popupItems ?? []).map(
-                      (e) => PopupMenuItem(
-                        value: header!.popupItems!.indexOf(e) + 5,
-                        child: Row(
-                          children: [
-                            Icon(
-                              e.icon,
-                              color: e.color ?? IsmChatColors.blackColor,
-                            ),
-                            IsmChatDimens.boxWidth8,
-                            Text(
-                              e.label,
-                            )
-                          ],
-                        ),
-                      ),
-                    )
+
+                  // Todo
+                  // if (header?.onProfileWidget?.call(
+                  //         context,
+                  //         controller.conversation!,
+                  //         controller.conversation!.profileUrl) !=
+                  //     null)
+                  //   ...(header?.popupItems ?? []).map(
+                  //     (e) => PopupMenuItem(
+                  //       value: header!.popupItems!.indexOf(e) + 5,
+                  //       child: Row(
+                  //         children: [
+                  //           Icon(
+                  //             e.icon,
+                  //             color: e.color ?? IsmChatColors.blackColor,
+                  //           ),
+                  //           IsmChatDimens.boxWidth8,
+                  //           Text(
+                  //             e.label,
+                  //           )
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   )
                 ],
                 elevation: 2,
                 onSelected: (value) {
@@ -309,12 +320,17 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                   } else if (value == 4) {
                     controller.addWallpaper();
                   } else {
-                    if (header == null) {
+                    if (IsmChatProperties.chatPageProperties.header == null) {
                       return;
                     }
-                    if (header!.popupItems != null ||
-                        header!.popupItems!.isNotEmpty) {
-                      header!.popupItems![value - 5]
+                    if (IsmChatProperties
+                                .chatPageProperties.header?.popupItems !=
+                            null ||
+                        IsmChatProperties.chatPageProperties.header?.popupItems
+                                ?.isNotEmpty ==
+                            true) {
+                      IsmChatProperties
+                          .chatPageProperties.header?.popupItems?[value - 5]
                           .onTap(controller.conversation!);
                     }
                   }

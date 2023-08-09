@@ -1,11 +1,10 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatAttachmentCard extends StatelessWidget {
-  const IsmChatAttachmentCard(this.attachments, {super.key});
-
-  final List<IsmChatAttachmentType> attachments;
+  const IsmChatAttachmentCard({super.key});
 
   @override
   Widget build(BuildContext context) => SafeArea(
@@ -21,7 +20,8 @@ class IsmChatAttachmentCard extends StatelessWidget {
           child: GetBuilder<IsmChatPageController>(
             builder: (controller) {
               var allowedAttachments = controller.attachments
-                  .where((e) => attachments.contains(e.attachmentType))
+                  .where((e) =>
+                      IsmChatProperties.attachments.contains(e.attachmentType))
                   .toList();
               return GridView.builder(
                 itemCount: allowedAttachments.length,

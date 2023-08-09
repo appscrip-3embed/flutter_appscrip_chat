@@ -25,10 +25,6 @@ class RouteManagement {
     }
   }
 
-  static void goToChatMessages() {
-    Get.toNamed(ChatMessageView.route);
-  }
-
   static void goToUserList() {
     Get.toNamed(UserListPageView.route);
   }

@@ -10,7 +10,21 @@ class IsmChatPageThemeData {
     this.constraints,
     this.unreadCheckColor,
     this.readCheckColor,
+    this.textfieldInsets,
+    this.textfieldDecoration,
+    this.pageDecoration,
+    this.backgroundColor,
   });
+
+  // const IsmChatPageThemeData.light()
+  //     : profileImageSize = 50,
+  //       messageSelectionColor = IsmChatColors.backgroundColorDark,
+  //       dividerThickness = _kDividerThickness;
+
+  // const IsmChatPageThemeData.dark()
+  //     : tileColor = IsmChatColors.backgroundColorDark,
+  //       dividerColor = IsmChatColors.backgroundColorLight,
+  //       dividerThickness = _kDividerThickness;
 
   final double? profileImageSize;
   final Color? messageSelectionColor;
@@ -19,4 +33,8 @@ class IsmChatPageThemeData {
   final BoxConstraints? constraints;
   final Color? unreadCheckColor;
   final Color? readCheckColor;
+  final EdgeInsetsGeometry? textfieldInsets;
+  final Decoration? textfieldDecoration;
+  final Decoration? pageDecoration;
+  final Color? backgroundColor;
 }

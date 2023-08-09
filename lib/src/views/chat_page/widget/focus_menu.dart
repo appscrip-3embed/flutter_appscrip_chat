@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,7 +12,7 @@ class IsmChatFocusMenu extends StatelessWidget {
     required this.animation,
     this.blur,
     this.blurBackgroundColor,
-  }) : canReact = IsmChatConfig.features.contains(IsmChatFeature.reaction);
+  }) : canReact = IsmChatProperties.features.contains(IsmChatFeature.reaction);
 
   final double? blur;
   final Color? blurBackgroundColor;

@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -6,60 +7,8 @@ import 'package:get/get.dart';
 
 class IsmChatConversations extends StatefulWidget {
   const IsmChatConversations({
-    this.onChatTap,
-    this.onSignOut,
-    this.showAppBar = false,
-    this.showCreateChatIcon = false,
-    this.onCreateChatTap,
-    this.createChatIcon,
-    this.isGroupChatEnabled = false,
-    this.allowDelete = false,
-    this.actions,
-    this.endActions,
-    this.onProfileWidget,
-    this.name,
-    this.nameBuilder,
-    this.profileImageBuilder,
-    this.profileImageUrl,
-    this.subtitle,
-    this.subtitleBuilder,
-    this.isSlidableEnable,
-    this.emptyConversationPlaceholder,
-    this.showSearch = true,
     super.key,
   });
-
-  final bool showAppBar;
-  final VoidCallback? onSignOut;
-
-  final bool isGroupChatEnabled;
-
-  final void Function(BuildContext, IsmChatConversationModel, bool)? onChatTap;
-
-  final VoidCallback? onCreateChatTap;
-  final bool showCreateChatIcon;
-  final Widget? createChatIcon;
-  final bool showSearch;
-
-  final bool allowDelete;
-
-  final Widget? Function(BuildContext, IsmChatConversationModel)?
-      onProfileWidget;
-
-  final List<IsmChatConversationAction>? actions;
-  final List<IsmChatConversationAction>? endActions;
-
-  final ConversationWidgetCallback? profileImageBuilder;
-  final ConversationStringCallback? profileImageUrl;
-  final ConversationWidgetCallback? nameBuilder;
-  final ConversationStringCallback? name;
-  final ConversationWidgetCallback? subtitleBuilder;
-  final ConversationStringCallback? subtitle;
-
-  final bool? Function(BuildContext, IsmChatConversationModel)?
-      isSlidableEnable;
-
-  final Widget? emptyConversationPlaceholder;
 
   static const String route = IsmPageRoutes.chatlist;
 
@@ -87,46 +36,27 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: widget.showAppBar
-            ? IsmChatListHeader(
-                onSignOut: widget.onSignOut!,
-                onSearchTap: widget.onChatTap!,
-                showSearch: widget.showSearch,
-              )
-            : null,
-        body: SafeArea(
-          child: IsmChatConversationList(
-            onChatTap: widget.onChatTap!,
-            allowDelete: widget.allowDelete,
-            actions: widget.actions,
-            endActions: widget.endActions,
-            onProfileWidget: widget.onProfileWidget,
-            profileImageBuilder: widget.profileImageBuilder,
-            profileImageUrl: widget.profileImageUrl,
-            name: widget.name,
-            nameBuilder: widget.nameBuilder,
-            subtitle: widget.subtitle,
-            subtitleBuilder: widget.subtitleBuilder,
-            isSlidableEnable: widget.isSlidableEnable,
-            emptyConversationPlaceholder: widget.emptyConversationPlaceholder,
-          ),
+        body: const SafeArea(
+          child: IsmChatConversationList(),
         ),
-        floatingActionButton: widget.showCreateChatIcon && !kIsWeb
+        floatingActionButton: IsmChatProperties
+                    .conversationProperties.showCreateChatIcon &&
+                !kIsWeb
             ? IsmChatStartChatFAB(
-                icon: widget.createChatIcon,
+                icon: IsmChatProperties.conversationProperties.createChatIcon,
                 onTap: () {
-                  if (widget.isGroupChatEnabled) {
+                  if (IsmChatProperties
+                      .conversationProperties.enableGroupChat) {
                     Get.bottomSheet(
                       const _CreateChatBottomSheet(),
                       backgroundColor: Colors.transparent,
                       elevation: 0,
                     );
                   } else {
+                    IsmChatProperties.conversationProperties.onCreateTap
+                        ?.call();
                     IsmChatRouteManagement.goToCreateChat(
                         isGroupConversation: false);
-                    // IsmChatUtility.openFullScreenBottomSheet(
-                    //   IsmChatCreateConversationView(),
-                    // );
                   }
                 },
               )

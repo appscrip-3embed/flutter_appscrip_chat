@@ -1,6 +1,11 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
+typedef ConversationCallback = Widget Function(
+  BuildContext,
+  IsmChatConversationModel,
+);
+
 typedef ConversationCardCallback = Widget Function(
   BuildContext,
   IsmChatConversationModel,
@@ -16,7 +21,6 @@ typedef ConversationWidgetCallback = Widget? Function(
 typedef ConversationVoidCallback = void Function(
   BuildContext,
   IsmChatConversationModel,
-  String,
 );
 
 typedef ConversationStringCallback = String? Function(
@@ -26,4 +30,8 @@ typedef ConversationStringCallback = String? Function(
 );
 
 typedef MessageWidgetBuilder = Widget? Function(
-    BuildContext, IsmChatMessageModel, IsmChatCustomMessageType, bool);
+  BuildContext,
+  IsmChatMessageModel,
+  IsmChatCustomMessageType,
+  bool,
+);

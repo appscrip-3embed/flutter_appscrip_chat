@@ -1,10 +1,11 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/res/dimens.dart';
+import 'package:chat_component_example/res/res.dart';
 import 'package:chat_component_example/views/views.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_component_example/res/res.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+
 import '../controllers/controllers.dart';
 
 class WebChatView extends StatelessWidget {
@@ -50,7 +51,7 @@ class WebChatView extends StatelessWidget {
                           )
                         : !Get.isRegistered<IsmChatPageController>()
                             ? const IsmChatLoadingDialog()
-                            : const ChatMessageView(),
+                            : const Text(''),
                   )
                 ],
               )

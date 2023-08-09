@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
@@ -20,69 +21,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 class IsmChatConversationList extends StatefulWidget {
   const IsmChatConversationList({
     super.key,
-    required this.onChatTap,
-    this.childBuilder,
-    this.itemBuilder,
-    this.profileImageBuilder,
-    this.height,
-    this.actions,
-    this.endActions,
-    this.onProfileWidget,
-    this.name,
-    this.nameBuilder,
-    this.subtitle,
-    this.subtitleBuilder,
-    this.profileImageUrl,
-    this.isSlidableEnable,
-    this.emptyConversationPlaceholder,
-    this.allowDelete = false,
   });
-
-  final void Function(BuildContext, IsmChatConversationModel, bool) onChatTap;
-
-  /// `itemBuilder` will handle how child items are rendered on the screen.
-  ///
-  /// You can pass `childBuilder` callback to change the UI for each child item.
-  ///
-  /// It takes 3 parameters
-  /// ```dart
-  /// final BuildContext context;
-  /// final int index;
-  /// final ChatConversationModel conversation;
-  /// ```
-  /// `conversation` of type [IsmChatConversationModel] will provide you with data of single chat item
-  ///
-  /// You can playaround with index parameter for your logics.
-  final Widget? Function(BuildContext, int, IsmChatConversationModel)?
-      childBuilder;
-
-  /// The `itemBuilder` callback can be provided if you want to change how the chat items are rendered on the screen.
-  ///
-  /// Provide it like you are passing itemBuilder for `ListView` or any constructor of [ListView]
-  final Widget? Function(BuildContext, int)? itemBuilder;
-  final ConversationWidgetCallback? profileImageBuilder;
-  final ConversationStringCallback? profileImageUrl;
-  final ConversationWidgetCallback? nameBuilder;
-  final ConversationStringCallback? name;
-  final ConversationWidgetCallback? subtitleBuilder;
-  final ConversationStringCallback? subtitle;
-
-  /// Provide this height parameter to set the maximum height for conversation list
-  ///
-  /// If not provided, Screen height will be taken
-  final double? height;
-
-  final bool allowDelete;
-
-  final Widget? Function(BuildContext, IsmChatConversationModel)?
-      onProfileWidget;
-
-  final List<IsmChatConversationAction>? actions;
-  final List<IsmChatConversationAction>? endActions;
-
-  final bool? Function(BuildContext, IsmChatConversationModel)?
-      isSlidableEnable;
-  final Widget? emptyConversationPlaceholder;
 
   @override
   State<IsmChatConversationList> createState() =>
@@ -118,7 +57,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                 controller.getChatConversations(origin: ApiCallOrigin.referesh);
               },
               child: Center(
-                child: widget.emptyConversationPlaceholder ??
+                child: IsmChatProperties.conversationProperties.placeholder ??
                     const IsmChatEmptyView(
                       icon: Icon(Icons.chat_outlined),
                       text: IsmChatStrings.noConversation,
@@ -127,7 +66,8 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
             );
           }
           return SizedBox(
-            height: widget.height ?? Get.height,
+            height:
+                IsmChatProperties.conversationProperties.height ?? Get.height,
             child: SmartRefresher(
               physics: const ClampingScrollPhysics(),
               controller: controller.refreshController,
@@ -152,23 +92,32 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                   controller: controller.conversationScrollController,
                   separatorBuilder: (_, __) => IsmChatDimens.boxHeight8,
                   addAutomaticKeepAlives: true,
-                  itemBuilder: widget.itemBuilder ??
-                      (_, index) {
-                        var conversation = controller.conversations[index];
-                        return Slidable(
+                  itemBuilder: (_, index) {
+                    var conversation = controller.conversations[index];
+
+                    return IsmChatProperties.conversationProperties.cardBuilder
+                            ?.call(_, conversation, index) ??
+                        Slidable(
                           direction: Axis.horizontal,
                           closeOnScroll: true,
-                          enabled: widget.isSlidableEnable
+                          enabled: IsmChatProperties
+                                  .conversationProperties.isSlidableEnable
                                   ?.call(context, conversation) ??
                               true,
-                          startActionPane: widget.actions == null ||
-                                  widget.actions!.isEmpty
+                          startActionPane: IsmChatProperties
+                                          .conversationProperties.actions ==
+                                      null ||
+                                  IsmChatProperties.conversationProperties
+                                          .actions?.isEmpty ==
+                                      true
                               ? null
                               : ActionPane(
                                   extentRatio: 0.3,
                                   motion: const ScrollMotion(),
                                   children: [
-                                      ...widget.actions?.map(
+                                      ...IsmChatProperties
+                                              .conversationProperties.actions
+                                              ?.map(
                                             (e) => SlidableAction(
                                               onPressed: (_) =>
                                                   e.onTap(conversation),
@@ -187,15 +136,22 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                                           ) ??
                                           [],
                                     ]),
-                          endActionPane: !widget.allowDelete &&
-                                  (widget.endActions == null ||
-                                      widget.endActions!.isEmpty)
+                          endActionPane: !IsmChatProperties
+                                      .conversationProperties.allowDelete &&
+                                  (IsmChatProperties
+                                              .conversationProperties.actions ==
+                                          null ||
+                                      IsmChatProperties.conversationProperties
+                                              .actions?.isEmpty ==
+                                          true)
                               ? null
                               : ActionPane(
                                   extentRatio: 0.3,
                                   motion: const StretchMotion(),
                                   children: [
-                                    ...widget.endActions?.map(
+                                    ...IsmChatProperties
+                                            .conversationProperties.actions
+                                            ?.map(
                                           (e) => SlidableAction(
                                             onPressed: (_) =>
                                                 e.onTap(conversation),
@@ -213,7 +169,8 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                                           ),
                                         ) ??
                                         [],
-                                    if (widget.allowDelete)
+                                    if (IsmChatProperties
+                                        .conversationProperties.allowDelete)
                                       SlidableAction(
                                         onPressed: (_) async {
                                           await Get.bottomSheet(
@@ -235,15 +192,26 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                                 ),
                           child: Obx(
                             () => IsmChatConversationCard(
-                              name: widget.name,
-                              nameBuilder: widget.nameBuilder,
-                              profileImageUrl: widget.profileImageUrl,
-                              subtitle: widget.subtitle,
-                              onProfileWidget: widget.onProfileWidget,
+                              name: IsmChatProperties.conversationProperties
+                                  .cardElementBuilders?.name,
+                              nameBuilder: IsmChatProperties
+                                  .conversationProperties
+                                  .cardElementBuilders
+                                  ?.nameBuilder,
+                              profileImageUrl: IsmChatProperties
+                                  .conversationProperties
+                                  .cardElementBuilders
+                                  ?.profileImageUrl,
+                              subtitle: IsmChatProperties.conversationProperties
+                                  .cardElementBuilders?.subtitle,
                               conversation,
-                              profileImageBuilder: widget.profileImageBuilder,
+                              profileImageBuilder: IsmChatProperties
+                                  .conversationProperties
+                                  .cardElementBuilders
+                                  ?.profileImageBuilder,
                               subtitleBuilder: !conversation.isSomeoneTyping
-                                  ? widget.subtitleBuilder
+                                  ? IsmChatProperties.conversationProperties
+                                      .cardElementBuilders?.subtitleBuilder
                                   : (_, __, ___) => Text(
                                         conversation.typingUsers,
                                         maxLines: 1,
@@ -251,7 +219,8 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                                         style: IsmChatStyles.typing,
                                       ),
                               onTap: () {
-                                widget.onChatTap(_, conversation, true);
+                                IsmChatProperties.conversationProperties
+                                    .onChatTap!(_, conversation);
                                 if (Responsive.isWebAndTablet(context) &&
                                     controller.isConversationId !=
                                         conversation.conversationId) {
@@ -267,7 +236,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                             ),
                           ),
                         );
-                      },
+                  },
                 ),
               ),
             ),

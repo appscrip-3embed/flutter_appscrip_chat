@@ -9,7 +9,6 @@ class IsmChatConversationCard extends StatefulWidget {
     this.nameBuilder,
     this.subtitleBuilder,
     this.onTap,
-    this.onProfileWidget,
     this.name,
     this.profileImageUrl,
     this.subtitle,
@@ -24,9 +23,6 @@ class IsmChatConversationCard extends StatefulWidget {
   final ConversationStringCallback? name;
   final ConversationWidgetCallback? subtitleBuilder;
   final ConversationStringCallback? subtitle;
-
-  final Widget? Function(BuildContext, IsmChatConversationModel)?
-      onProfileWidget;
 
   @override
   State<IsmChatConversationCard> createState() =>
@@ -54,27 +50,14 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
               : null,
           child: ListTile(
             dense: true,
-            leading: Stack(
-              alignment: Alignment.bottomLeft,
-              children: [
-                widget.profileImageBuilder?.call(context, widget.conversation,
-                        widget.conversation.profileUrl) ??
-                    IsmChatImage.profile(
-                      widget.profileImageUrl?.call(context, widget.conversation,
-                              widget.conversation.profileUrl) ??
-                          widget.conversation.profileUrl,
-                      name: widget.conversation.chatName,
-                    ),
-
-                // Todo
-                Positioned(
-                  top: IsmChatDimens.twentyEight,
-                  child: widget.onProfileWidget
-                          ?.call(context, widget.conversation) ??
-                      IsmChatDimens.box0,
-                )
-              ],
-            ),
+            leading: widget.profileImageBuilder?.call(context,
+                    widget.conversation, widget.conversation.profileUrl) ??
+                IsmChatImage.profile(
+                  widget.profileImageUrl?.call(context, widget.conversation,
+                          widget.conversation.profileUrl) ??
+                      widget.conversation.profileUrl,
+                  name: widget.conversation.chatName,
+                ),
             title: widget.nameBuilder?.call(context, widget.conversation,
                     widget.conversation.chatName) ??
                 Text(

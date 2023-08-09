@@ -14,10 +14,10 @@ class IsmChatPageHeaderProperties {
     this.popupItems,
     this.shape,
     this.bottom,
-    this.onProfileWidget,
-    this.onBottomTap,
     this.elevation,
     this.shadowColor,
+    this.onBackTap,
+    this.height,
   });
 
   final ConversationWidgetCallback? profileImageBuilder;
@@ -26,13 +26,13 @@ class IsmChatPageHeaderProperties {
   final ConversationStringCallback? title;
   final ConversationWidgetCallback? subtitleBuilder;
   final ConversationStringCallback? subtitle;
+  final ConversationCallback? bottom;
   final Color? backgroundColor;
   final Color? iconColor;
   final List<IsmChatPopupMenuItem>? popupItems;
   final ShapeBorder? shape;
-  final Widget? bottom;
-  final ConversationWidgetCallback? onProfileWidget;
-  final void Function(IsmChatConversationModel)? onBottomTap;
   final double? elevation;
   final Color? shadowColor;
+  final VoidCallback? onBackTap;
+  final double? height;
 }

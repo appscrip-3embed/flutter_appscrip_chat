@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,7 +21,7 @@ class IsmChatForwardView extends StatelessWidget {
   /// (Optional)
   ///
   /// This callback can be provided if there's a need to change the trigger when the chat is tapped to forward the message
-  final void Function(BuildContext, IsmChatConversationModel, bool)? onChatTap;
+  final void Function(BuildContext, IsmChatConversationModel)? onChatTap;
 
   final converstaionController = Get.find<IsmChatConversationsController>();
 
@@ -325,8 +326,11 @@ class IsmChatForwardView extends StatelessWidget {
                                   ismChatPageController.conversation =
                                       ismChatConversation;
 
-                                  (onChatTap ?? IsmChatConfig.onChatTap).call(
-                                      context, ismChatConversation, false);
+                                  (onChatTap ??
+                                          IsmChatProperties
+                                              .conversationProperties
+                                              .onChatTap)!
+                                      .call(context, ismChatConversation);
                                   await ismChatPageController.getMessagesFromDB(
                                       ismChatConversation.conversationId ?? '');
                                   await Future.delayed(
@@ -440,8 +444,11 @@ class IsmChatForwardView extends StatelessWidget {
                                 } else {
                                   Get.back<void>();
                                   controller.navigateToMessages(conversation!);
-                                  (onChatTap ?? IsmChatConfig.onChatTap)
-                                      .call(context, conversation!, false);
+                                  (onChatTap ??
+                                          IsmChatProperties
+                                              .conversationProperties
+                                              .onChatTap)!
+                                      .call(context, conversation!);
                                   await Future.delayed(
                                       const Duration(milliseconds: 1000));
 

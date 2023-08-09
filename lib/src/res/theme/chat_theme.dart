@@ -23,6 +23,7 @@ class IsmChatThemeData with Diagnosticable {
   factory IsmChatThemeData.fallback() => IsmChatThemeData.light();
 
   factory IsmChatThemeData.light() => IsmChatThemeData(
+        chatPageTheme: IsmChatPageThemeData(),
         chatListTheme: const IsmChatListThemeData.light(),
         primaryColor: IsmChatColors.primaryColorLight,
         backgroundColor: IsmChatColors.backgroundColorLight,
@@ -37,6 +38,7 @@ class IsmChatThemeData with Diagnosticable {
       );
 
   factory IsmChatThemeData.dark() => IsmChatThemeData(
+        chatPageTheme: IsmChatPageThemeData(),
         chatListTheme: const IsmChatListThemeData.dark(),
         primaryColor: IsmChatColors.primaryColorDark,
         mentionColor: IsmChatColors.yellowColor,
