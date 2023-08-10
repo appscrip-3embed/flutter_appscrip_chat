@@ -8,6 +8,7 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     this.onSignOut,
     this.height,
+    this.width,
     this.profileImage,
     this.title,
     this.titleStyle,
@@ -29,9 +30,11 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
   /// Defines the height of the [IsmChatListHeader]
   final double? height;
 
+  final double? width;
+
   @override
-  Size get preferredSize =>
-      Size.fromHeight(height ?? IsmChatDimens.appBarHeight);
+  Size get preferredSize => Size(width ?? IsmChatDimens.percentWidth(.3),
+      height ?? IsmChatDimens.appBarHeight);
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
@@ -91,8 +94,9 @@ class _StartMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IconButton(
       onPressed: () {
-        Get.find<IsmChatConversationsController>().isTapGroup = false;
-        Get.find<IsmChatConversationsController>().isTapBlockUserList = false;
+        Get.find<IsmChatConversationsController>().isRenderScreen =
+            IsRenderScreen.userView;
+
         Scaffold.of(context).openDrawer();
       },
       icon: Icon(
@@ -117,8 +121,8 @@ class _MoreIcon extends StatelessWidget {
         onSelected: (index) async {
           if (index == 1) {
             if (Responsive.isWebAndTablet(context)) {
-              Get.find<IsmChatConversationsController>().isTapBlockUserList =
-                  true;
+              Get.find<IsmChatConversationsController>().isRenderScreen =
+                  IsRenderScreen.blockView;
               Scaffold.of(context).openDrawer();
             } else {
               IsmChatRouteManagement.goToBlockView();
@@ -127,9 +131,9 @@ class _MoreIcon extends StatelessWidget {
               // );
             }
           } else if (index == 2) {
-            Get.find<IsmChatConversationsController>().isTapGroup = true;
-            Get.find<IsmChatConversationsController>().isTapBlockUserList =
-                false;
+            Get.find<IsmChatConversationsController>().isRenderScreen =
+                IsRenderScreen.groupUserView;
+
             Scaffold.of(context).openDrawer();
           } else if (index == 3) {
             await Get.dialog(IsmChatAlertDialogBox(

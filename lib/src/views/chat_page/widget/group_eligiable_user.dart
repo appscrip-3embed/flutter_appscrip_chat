@@ -14,6 +14,7 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
         width: double.infinity,
         alignment: Alignment.centerLeft,
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
@@ -22,7 +23,8 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
               style: IsmChatStyles.w600Black14,
             ),
             SizedBox(
-                width: IsmChatDimens.percentWidth(.7),
+                width: IsmChatDimens.percentWidth(
+                    Responsive.isWebAndTablet(Get.context!) ? .24 : .7),
                 child: Divider(
                   height: .0,
                   indent: IsmChatDimens.ten,
@@ -45,6 +47,10 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
         builder: (controller) => Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: IsmChatAppBar(
+            onBack: !Responsive.isWebAndTablet(context)
+                ? null
+                : () => Get.find<IsmChatConversationsController>()
+                    .isRenderScreen = IsRenderScreen.coversationInfoView,
             title: controller.isMemberSearch
                 ? IsmChatInputField(
                     fillColor: IsmChatConfig.chatTheme.primaryColor,

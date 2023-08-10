@@ -6,7 +6,7 @@ class AppRoutes {
   static const String register = '/register';
   static const String chatList = '/chatList';
   static const String chatView = '/chatView';
-  static const String webView = '/';
+
   static const String messageInfo = '/messageInfo';
   static const String userListPage = '/userListPage';
 }

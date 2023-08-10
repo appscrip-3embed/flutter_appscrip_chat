@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 import 'dart:math';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
     if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
@@ -392,7 +393,12 @@ class IsmChatPageController extends GetxController
   late AnimationController holdController;
 
   @override
-  void onInit() async {
+  void onInit() {
+    startInit();
+    super.onInit();
+  }
+
+  void startInit() async {
     _generateReactionList();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
@@ -433,7 +439,6 @@ class IsmChatPageController extends GetxController
     });
     scrollListener();
     unawaited(updateUnreadMessgaeCount());
-    super.onInit();
   }
 
   @override
@@ -1532,7 +1537,6 @@ class IsmChatPageController extends GetxController
           t.cancel();
           conversationDetailsApTimer?.cancel();
         }
-
         getConverstaionDetails(
             conversationId: conversation?.conversationId ?? '',
             includeMembers: conversation?.isGroup == true ? true : false);

@@ -9,15 +9,11 @@ class IsmChatPageHeaderProperties {
     this.title,
     this.subtitleBuilder,
     this.subtitle,
-    this.backgroundColor,
-    this.iconColor,
     this.popupItems,
-    this.shape,
     this.bottom,
-    this.elevation,
-    this.shadowColor,
     this.onBackTap,
     this.height,
+    this.shape,
   });
 
   final ConversationWidgetCallback? profileImageBuilder;
@@ -27,12 +23,8 @@ class IsmChatPageHeaderProperties {
   final ConversationWidgetCallback? subtitleBuilder;
   final ConversationStringCallback? subtitle;
   final ConversationCallback? bottom;
-  final Color? backgroundColor;
-  final Color? iconColor;
   final List<IsmChatPopupMenuItem>? popupItems;
-  final ShapeBorder? shape;
-  final double? elevation;
-  final Color? shadowColor;
   final VoidCallback? onBackTap;
   final double? height;
+  final ShapeBorder? shape;
 }

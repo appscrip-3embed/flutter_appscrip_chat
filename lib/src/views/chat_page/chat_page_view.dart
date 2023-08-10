@@ -127,7 +127,7 @@ class _IsmChatPageView extends StatelessWidget {
                   )
                 : IsmChatPageHeader(
                     onTap: controller.isActionAllowed == false
-                        ? () async {
+                        ? () {
                             if (controller.isActionAllowed == false) {
                               if (!(controller.conversation?.lastMessageDetails
                                           ?.customType ==
@@ -136,7 +136,13 @@ class _IsmChatPageView extends StatelessWidget {
                                           ?.userId ==
                                       IsmChatConfig.communicationConfig
                                           .userConfig.userId)) {
-                                IsmChatRouteManagement.goToConversationInfo();
+                                if (Responsive.isWebAndTablet(context)) {
+                                  Get.find<IsmChatConversationsController>()
+                                          .isRenderScreen =
+                                      IsRenderScreen.coversationInfoView;
+                                } else {
+                                  IsmChatRouteManagement.goToConversationInfo();
+                                }
                               }
                             }
                           }

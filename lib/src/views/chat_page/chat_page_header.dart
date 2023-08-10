@@ -26,17 +26,17 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
         builder: (controller) => Theme(
           data: ThemeData.light(useMaterial3: true).copyWith(
             appBarTheme: AppBarTheme(
-                backgroundColor: IsmChatProperties
-                        .chatPageProperties.header?.backgroundColor ??
+                backgroundColor: IsmChatConfig
+                        .chatTheme.chatPageHeaderTheme?.backgroundColor ??
                     IsmChatConfig.chatTheme.primaryColor,
                 iconTheme: IconThemeData(
                   color:
-                      IsmChatProperties.chatPageProperties.header?.iconColor ??
+                      IsmChatConfig.chatTheme.chatPageHeaderTheme?.iconColor ??
                           IsmChatColors.whiteColor,
                 ),
                 actionsIconTheme: IconThemeData(
                   color:
-                      IsmChatProperties.chatPageProperties.header?.iconColor ??
+                      IsmChatConfig.chatTheme.chatPageHeaderTheme?.iconColor ??
                           IsmChatColors.whiteColor,
                 )),
           ),
@@ -45,9 +45,9 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                 ? IsmChatDimens.twenty
                 : null,
             shadowColor:
-                IsmChatProperties.chatPageProperties.header?.shadowColor,
+                IsmChatConfig.chatTheme.chatPageHeaderTheme?.shadowColor,
             surfaceTintColor:
-                IsmChatProperties.chatPageProperties.header?.backgroundColor ??
+                IsmChatConfig.chatTheme.chatPageHeaderTheme?.backgroundColor ??
                     IsmChatConfig.chatTheme.primaryColor,
             leading: !Responsive.isWebAndTablet(context)
                 ? IsmChatTapHandler(
@@ -67,7 +67,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
             titleSpacing: IsmChatDimens.two,
             centerTitle: false,
             shape: IsmChatProperties.chatPageProperties.header?.shape,
-            elevation: IsmChatProperties.chatPageProperties.header?.elevation,
+            elevation: IsmChatConfig.chatTheme.chatPageHeaderTheme?.elevation,
             title: IsmChatTapHandler(
               onTap: onTap,
               child: Row(
@@ -99,7 +99,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Flexible(
+                      FittedBox(
                         child: Text(
                           IsmChatProperties.chatPageProperties.header?.title
                                   ?.call(
@@ -108,9 +108,8 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                       controller.conversation?.chatName ??
                                           '') ??
                               controller.conversation!.chatName,
-                          style:
-                              // Todo
-                              //  header?.titleStyle ??
+                          style: IsmChatConfig
+                                  .chatTheme.chatPageHeaderTheme?.titleStyle ??
                               IsmChatStyles.w600White16,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -124,9 +123,10 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                       controller.conversation!.typingUsers,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style:
-                                          // Todo
-                                          // header?.subtitleStyle ??
+                                      style: IsmChatConfig
+                                              .chatTheme
+                                              .chatPageHeaderTheme
+                                              ?.titleStyle ??
                                           IsmChatStyles.w400White12,
                                     )
                                   : controller.conversation!.isGroup == true
@@ -148,10 +148,10 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                                         .map((e) => e.userName)
                                                         .join(', ') ??
                                                     '',
-                                            style:
-                                                // Todo
-                                                // header?.subtitleStyle ??
-
+                                            style: IsmChatConfig
+                                                    .chatTheme
+                                                    .chatPageHeaderTheme
+                                                    ?.subtileStyle ??
                                                 IsmChatStyles.w400White12,
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 1,
@@ -164,10 +164,10 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                               IsmChatStrings.online,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
-                                              style:
-                                                  // Todo
-                                                  //  header?.subtitleStyle ??
-
+                                              style: IsmChatConfig
+                                                      .chatTheme
+                                                      .chatPageHeaderTheme
+                                                      ?.subtileStyle ??
                                                   IsmChatStyles.w400White12,
                                             )
                                           : Flexible(
@@ -180,10 +180,10 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                                     '',
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
-                                                style:
-                                                    // Todo
-                                                    //  header?.subtitleStyle ??
-
+                                                style: IsmChatConfig
+                                                        .chatTheme
+                                                        .chatPageHeaderTheme
+                                                        ?.subtileStyle ??
                                                     IsmChatStyles.w400White12,
                                               ),
                                             ),
@@ -208,7 +208,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                 icon: Icon(
                   Icons.more_vert,
                   color:
-                      IsmChatProperties.chatPageProperties.header?.iconColor ??
+                      IsmChatConfig.chatTheme.chatPageHeaderTheme?.iconColor ??
                           IsmChatColors.whiteColor,
                 ),
                 itemBuilder: (context) => [

@@ -22,6 +22,12 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
         builder: (controller) => Scaffold(
           backgroundColor: IsmChatColors.blueGreyColor,
           appBar: IsmChatAppBar(
+            onBack: !Responsive.isWebAndTablet(context)
+                ? null
+                : () {
+                    Get.find<IsmChatConversationsController>().isRenderScreen =
+                        IsRenderScreen.none;
+                  },
             title: Text(
               controller.conversation?.isGroup ?? false
                   ? IsmChatStrings.groupInfo
@@ -156,11 +162,6 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                   mediaList: controller.mediaList,
                                   mediaListLinks: controller.mediaListLinks,
                                   mediaListDocs: controller.mediaListDocs);
-                              // IsmChatUtility.openFullScreenBottomSheet(IsmMedia(
-                              //   mediaList: controller.mediaList,
-                              //   mediaListLinks: controller.mediaListLinks,
-                              //   mediaListDocs: controller.mediaListDocs,
-                              // ));
                             },
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
@@ -213,9 +214,13 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                               onPressed: () {
                                 controller.participnatsEditingController
                                     .clear();
-                                IsmChatRouteManagement.goToEligibleUser();
-                                // IsmChatUtility.openFullScreenBottomSheet(
-                                //     const IsmChatGroupEligibleUser());
+                                if (Responsive.isWebAndTablet(context)) {
+                                  Get.find<IsmChatConversationsController>()
+                                          .isRenderScreen =
+                                      IsRenderScreen.groupEligibleView;
+                                } else {
+                                  IsmChatRouteManagement.goToEligibleUser();
+                                }
                               },
                               icon: Icon(
                                 Icons.group_add_outlined,

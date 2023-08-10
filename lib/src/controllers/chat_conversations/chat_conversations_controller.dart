@@ -6,6 +6,7 @@ import 'package:azlistview/azlistview.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -38,7 +39,13 @@ class IsmChatConversationsController extends GetxController {
   UserDetails? get userDetails => _userDetails.value;
   set userDetails(UserDetails? value) => _userDetails.value = value;
 
-  IsmChatConversationModel? currentConversation;
+  final Rx<IsmChatConversationModel?> _currentConversation =
+      Rx<IsmChatConversationModel?>(null);
+  IsmChatConversationModel? get currentConversation =>
+      _currentConversation.value;
+  set currentConversation(IsmChatConversationModel? value) {
+    _currentConversation.value = value;
+  }
 
   /// Refresh Controller
   final refreshController = RefreshController(
@@ -90,17 +97,15 @@ class IsmChatConversationsController extends GetxController {
   bool get showSearchField => _showSearchField.value;
   set showSearchField(bool value) => _showSearchField.value = value;
 
-  final RxBool _isTapGroup = false.obs;
-  bool get isTapGroup => _isTapGroup.value;
-  set isTapGroup(bool value) => _isTapGroup.value = value;
-
-  final RxBool _isTapBlockUserList = false.obs;
-  bool get isTapBlockUserList => _isTapBlockUserList.value;
-  set isTapBlockUserList(bool value) => _isTapBlockUserList.value = value;
-
   final RxString _isConversationId = ''.obs;
   String get isConversationId => _isConversationId.value;
   set isConversationId(String value) => _isConversationId.value = value;
+
+  final Rx<IsRenderScreen> _isRenderScreen = IsRenderScreen.none.obs;
+  IsRenderScreen get isRenderScreen => _isRenderScreen.value;
+  set isRenderScreen(IsRenderScreen value) {
+    _isRenderScreen.value = value;
+  }
 
   List<Emoji> reactions = [];
 
@@ -113,7 +118,6 @@ class IsmChatConversationsController extends GetxController {
   @override
   onInit() async {
     await _generateReactionList();
-
     var users = await IsmChatConfig.dbWrapper?.userDetailsBox
         .get(IsmChatStrings.userData);
 
@@ -140,6 +144,35 @@ class IsmChatConversationsController extends GetxController {
   void dispose() {
     conversationScrollController.dispose();
     super.dispose();
+  }
+
+  Widget isRenderScreenWidget() {
+    IsmChatLog.error(isRenderScreen);
+    switch (isRenderScreen) {
+      case IsRenderScreen.none:
+        return const SizedBox.shrink();
+      case IsRenderScreen.blockView:
+        return const IsmChatBlockedUsersView();
+
+      case IsRenderScreen.groupUserView:
+        return IsmChatCreateConversationView(
+          isGroupConversation: true,
+        );
+      case IsRenderScreen.userView:
+        return IsmChatCreateConversationView();
+      case IsRenderScreen.coversationInfoView:
+        return const IsmChatConverstaionInfoView();
+
+      case IsRenderScreen.wallpaperView:
+        // TODO: Handle this case.
+        break;
+      case IsRenderScreen.messgaeInfoView:
+        // TODO: Handle this case.
+        break;
+      case IsRenderScreen.groupEligibleView:
+        return const IsmChatGroupEligibleUser();
+    }
+    return const SizedBox.shrink();
   }
 
   Future<AssetsModel?> getAssetFilesList() async {

@@ -244,14 +244,8 @@ class IsmChatCreateConversationView extends StatelessWidget {
 
                                   Get.back<void>();
                                   if (Responsive.isWebAndTablet(context)) {
-                                    await IsmChatApp
-                                        .chatFromChatListWithConversation(
-                                      ismChatConversation: ismChatConversation,
-                                      isLoading: false,
-                                      duration: const Duration(
-                                        milliseconds: 100,
-                                      ),
-                                    );
+                                    // Todo
+                                    // add routing go to chatpage
                                   } else {
                                     controller.navigateToMessages(
                                         ismChatConversation);
@@ -469,11 +463,8 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                 );
                                 Get.back<void>();
                                 if (Responsive.isWebAndTablet(context)) {
-                                  await IsmChatApp
-                                      .chatFromChatListWithConversation(
-                                    ismChatConversation: ismChatConversation,
-                                    isLoading: false,
-                                  );
+                                  // Todo
+                                  //  Add routing for go to chat page
                                 } else {
                                   controller
                                       .navigateToMessages(ismChatConversation);

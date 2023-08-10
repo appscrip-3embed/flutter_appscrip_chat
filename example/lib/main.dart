@@ -73,11 +73,8 @@ class _MyAppState extends State<MyApp> {
         //     .copyWith(primaryColor: AppColors.primaryColorDark),
         debugShowCheckedModeBanner: false,
         translations: AppTranslations(),
-        initialRoute: AppConfig.userDetail != null
-            ? Responsive.isWeb(context)
-                ? WebChatView.route
-                : ChatList.route
-            : LoginView.route,
+        initialRoute:
+            AppConfig.userDetail != null ? ChatList.route : LoginView.route,
         getPages: AppPages.pages,
       ),
     );

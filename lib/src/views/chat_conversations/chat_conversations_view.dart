@@ -1,8 +1,8 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class IsmChatConversations extends StatefulWidget {
@@ -35,44 +35,97 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: const SafeArea(
-          child: IsmChatConversationList(),
+  Widget build(BuildContext context) =>
+      GetBuilder<IsmChatConversationsController>(
+        builder: (controller) => Scaffold(
+          drawerScrimColor: Colors.transparent,
+          body: SafeArea(
+            child: !Responsive.isWebAndTablet(context)
+                ? const IsmChatConversationList()
+                : Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      SizedBox(
+                        width: IsmChatDimens.percentWidth(.3),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            IsmChatListHeader(
+                              onSearchTap: (p0, p1, p2) {},
+                              showSearch: false,
+                            ),
+                            const Expanded(child: IsmChatConversationList()),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Obx(
+                          () => controller.currentConversation != null
+                              ? const IsmChatPageView()
+                              : Center(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SvgPicture.asset(
+                                        IsmChatAssets.placeHolderSvg,
+                                      ),
+                                      Text(
+                                        'Isometrik Chat',
+                                        style: IsmChatStyles.w600Black27,
+                                      ),
+                                      SizedBox(
+                                        width: IsmChatDimens.percentWidth(.5),
+                                        child: Text(
+                                          'Isometrik web chat is fully sync with mobile isomterik chat , all charts are synced when connected to the network',
+                                          style: IsmChatStyles.w400Black12,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                        ),
+                      ),
+                      Obx(
+                        () => controller.isRenderScreen != IsRenderScreen.none
+                            ? SizedBox(
+                                width: IsmChatDimens.percentWidth(.3),
+                                child: controller.isRenderScreenWidget(),
+                              )
+                            : const SizedBox.shrink(),
+                      )
+                    ],
+                  ),
+          ),
+          floatingActionButton: IsmChatProperties
+                      .conversationProperties.showCreateChatIcon &&
+                  !Responsive.isWebAndTablet(context)
+              ? IsmChatStartChatFAB(
+                  icon: IsmChatProperties.conversationProperties.createChatIcon,
+                  onTap: () {
+                    if (IsmChatProperties
+                        .conversationProperties.enableGroupChat) {
+                      Get.bottomSheet(
+                        const _CreateChatBottomSheet(),
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                      );
+                    } else {
+                      IsmChatProperties.conversationProperties.onCreateTap
+                          ?.call();
+                      IsmChatRouteManagement.goToCreateChat(
+                          isGroupConversation: false);
+                    }
+                  },
+                )
+              : null,
+          drawer: Obx(
+            () => SizedBox(
+              width: IsmChatDimens.percentWidth(.3),
+              child: controller.isRenderScreenWidget(),
+            ),
+          ),
         ),
-        floatingActionButton: IsmChatProperties
-                    .conversationProperties.showCreateChatIcon &&
-                !kIsWeb
-            ? IsmChatStartChatFAB(
-                icon: IsmChatProperties.conversationProperties.createChatIcon,
-                onTap: () {
-                  if (IsmChatProperties
-                      .conversationProperties.enableGroupChat) {
-                    Get.bottomSheet(
-                      const _CreateChatBottomSheet(),
-                      backgroundColor: Colors.transparent,
-                      elevation: 0,
-                    );
-                  } else {
-                    IsmChatProperties.conversationProperties.onCreateTap
-                        ?.call();
-                    IsmChatRouteManagement.goToCreateChat(
-                        isGroupConversation: false);
-                  }
-                },
-              )
-            : null,
-        drawer: Get.isRegistered<IsmChatConversationsController>()
-            ? Obx(
-                () => Get.find<IsmChatConversationsController>()
-                        .isTapBlockUserList
-                    ? const IsmChatBlockedUsersView()
-                    : Get.find<IsmChatConversationsController>().isTapGroup
-                        ? IsmChatCreateConversationView(
-                            isGroupConversation: true,
-                          )
-                        : IsmChatCreateConversationView(),
-              )
-            : null,
       );
 }
 

@@ -35,12 +35,6 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
   var mqttController = Get.find<IsmChatMqttController>();
 
   @override
-  void initState() {
-    IsmChatConversationsBinding().dependencies();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
         builder: (controller) {
           if (controller.isConversationsLoading) {
@@ -190,50 +184,52 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                                       ),
                                   ],
                                 ),
-                          child: Obx(
-                            () => IsmChatConversationCard(
-                              name: IsmChatProperties.conversationProperties
-                                  .cardElementBuilders?.name,
-                              nameBuilder: IsmChatProperties
-                                  .conversationProperties
-                                  .cardElementBuilders
-                                  ?.nameBuilder,
-                              profileImageUrl: IsmChatProperties
-                                  .conversationProperties
-                                  .cardElementBuilders
-                                  ?.profileImageUrl,
-                              subtitle: IsmChatProperties.conversationProperties
-                                  .cardElementBuilders?.subtitle,
-                              conversation,
-                              profileImageBuilder: IsmChatProperties
-                                  .conversationProperties
-                                  .cardElementBuilders
-                                  ?.profileImageBuilder,
-                              subtitleBuilder: !conversation.isSomeoneTyping
-                                  ? IsmChatProperties.conversationProperties
-                                      .cardElementBuilders?.subtitleBuilder
-                                  : (_, __, ___) => Text(
-                                        conversation.typingUsers,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: IsmChatStyles.typing,
-                                      ),
-                              onTap: () {
-                                IsmChatProperties.conversationProperties
-                                    .onChatTap!(_, conversation);
-                                if (Responsive.isWebAndTablet(context) &&
-                                    controller.isConversationId !=
-                                        conversation.conversationId) {
-                                  controller.navigateToMessages(conversation);
-                                  IsmChatRouteManagement.goToChatPage();
-                                  controller.isConversationId =
-                                      conversation.conversationId ?? '';
-                                } else {
-                                  controller.navigateToMessages(conversation);
-                                  IsmChatRouteManagement.goToChatPage();
+                          child: IsmChatConversationCard(
+                            name: IsmChatProperties.conversationProperties
+                                .cardElementBuilders?.name,
+                            nameBuilder: IsmChatProperties
+                                .conversationProperties
+                                .cardElementBuilders
+                                ?.nameBuilder,
+                            profileImageUrl: IsmChatProperties
+                                .conversationProperties
+                                .cardElementBuilders
+                                ?.profileImageUrl,
+                            subtitle: IsmChatProperties.conversationProperties
+                                .cardElementBuilders?.subtitle,
+                            conversation,
+                            profileImageBuilder: IsmChatProperties
+                                .conversationProperties
+                                .cardElementBuilders
+                                ?.profileImageBuilder,
+                            subtitleBuilder: !conversation.isSomeoneTyping
+                                ? IsmChatProperties.conversationProperties
+                                    .cardElementBuilders?.subtitleBuilder
+                                : (_, __, ___) => Text(
+                                      conversation.typingUsers,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: IsmChatStyles.typing,
+                                    ),
+                            onTap: () {
+                              IsmChatProperties.conversationProperties
+                                  .onChatTap!(_, conversation);
+                              if (Responsive.isWebAndTablet(context)) {
+                                controller.isConversationId =
+                                    conversation.conversationId ?? '';
+                                controller.navigateToMessages(conversation);
+
+                                if (!Get.isRegistered<
+                                    IsmChatPageController>()) {
+                                  IsmChatPageBinding().dependencies();
                                 }
-                              },
-                            ),
+
+                                Get.find<IsmChatPageController>().startInit();
+                              } else {
+                                controller.navigateToMessages(conversation);
+                                IsmChatRouteManagement.goToChatPage();
+                              }
+                            },
                           ),
                         );
                   },

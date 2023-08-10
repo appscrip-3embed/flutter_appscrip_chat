@@ -16,16 +16,6 @@ class IsmChatPageThemeData {
     this.backgroundColor,
   });
 
-  // const IsmChatPageThemeData.light()
-  //     : profileImageSize = 50,
-  //       messageSelectionColor = IsmChatColors.backgroundColorDark,
-  //       dividerThickness = _kDividerThickness;
-
-  // const IsmChatPageThemeData.dark()
-  //     : tileColor = IsmChatColors.backgroundColorDark,
-  //       dividerColor = IsmChatColors.backgroundColorLight,
-  //       dividerThickness = _kDividerThickness;
-
   final double? profileImageSize;
   final Color? messageSelectionColor;
   final IsmChatMessageThemeData? selfMessageTheme;

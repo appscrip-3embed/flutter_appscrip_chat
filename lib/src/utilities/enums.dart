@@ -573,3 +573,14 @@ enum IsmChatDbBox {
   pending,
   forward;
 }
+
+enum IsRenderScreen {
+  none,
+  blockView,
+  groupUserView,
+  userView,
+  coversationInfoView,
+  wallpaperView,
+  messgaeInfoView,
+  groupEligibleView
+}
