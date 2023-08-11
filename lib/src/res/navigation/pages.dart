@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/src/controllers/controllers.dart';
-import 'package:appscrip_chat_component/src/views/chat_conversations/widget/blocked_users.dart';
 import 'package:appscrip_chat_component/src/views/views.dart';
 import 'package:get/get.dart';
 
@@ -68,6 +67,16 @@ class IsmChatPages {
     GetPage(
       name: IsmChatLocationWidget.route,
       page: IsmChatLocationWidget.new,
+      binding: IsmChatPageBinding(),
+    ),
+    GetPage(
+      name: IsmWebMessageMediaPreview.route,
+      page: IsmWebMessageMediaPreview.new,
+      binding: IsmChatPageBinding(),
+    ),
+    GetPage(
+      name: WebMediaPreview.route,
+      page: WebMediaPreview.new,
       binding: IsmChatPageBinding(),
     ),
   ];

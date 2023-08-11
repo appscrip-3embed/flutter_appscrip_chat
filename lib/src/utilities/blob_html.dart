@@ -4,7 +4,6 @@ import 'dart:html' as html;
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/services.dart';
-// import 'package:html/html.dart' as html;
 
 class IsmChatBlob {
   /// call function for create blob url with bytes
@@ -83,5 +82,20 @@ class IsmChatBlob {
     final status =
         await html.window.navigator.permissions?.query({'name': value});
     return status?.state ?? '';
+  }
+
+  static listenTabAndRefesh() => html.window.onBeforeUnload.listen((event) {
+        IsmChatLog.error('radsffds');
+
+        // Future.delayed(const Duration(milliseconds: 100), () {
+        //   html.window.history.replaceState(
+        //     null,
+        //     '',
+        //   );
+        // });
+      });
+
+  static listenTabAndRefeshOne() {
+    html.window.onUnload.listen((event) {});
   }
 }

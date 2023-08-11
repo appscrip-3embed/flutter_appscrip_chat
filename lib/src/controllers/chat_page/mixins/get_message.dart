@@ -106,7 +106,7 @@ mixin IsmChatPageGetMessageMixin {
             data.data.copyWith(conversationId: conversationId);
 
         // controller.medialist is storing media i.e. Image, Video and Audio. //
-        _controller.mediaList = _controller.messages
+        _controller.conversationController.mediaList = _controller.messages
             .where((e) => [
                   IsmChatCustomMessageType.image,
                   IsmChatCustomMessageType.video,
@@ -116,7 +116,7 @@ mixin IsmChatPageGetMessageMixin {
             .toList();
 
         // controller.mediaListLinks is storing links //
-        _controller.mediaListLinks = _controller.messages
+        _controller.conversationController.mediaListLinks = _controller.messages
             .where((e) => [
                   IsmChatCustomMessageType.link,
                   IsmChatCustomMessageType.location,
@@ -124,7 +124,7 @@ mixin IsmChatPageGetMessageMixin {
             .toList();
 
         // controller.mediaListDocs is storing docs //
-        _controller.mediaListDocs = _controller.messages
+        _controller.conversationController.mediaListDocs = _controller.messages
             .where((e) => [
                   IsmChatCustomMessageType.file,
                 ].contains(e.customType))

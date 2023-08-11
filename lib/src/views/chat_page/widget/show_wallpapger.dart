@@ -108,7 +108,7 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                       : GridView.builder(
                           cacheExtent: 999999,
                           shrinkWrap: true,
-                          padding: IsmChatDimens.edgeInsets10_0,
+                          padding: IsmChatDimens.edgeInsets10,
                           itemCount:
                               conversationController.backgroundImage.length + 1,
                           addAutomaticKeepAlives: true,
@@ -126,16 +126,22 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                       ImageSource.gallery);
 
                                   if (file != null) {
-                                    IsmChatRouteManagement.goToWallpaperPreview(
+                                    if (Responsive.isWebAndTablet(
+                                        Get.context!)) {
+                                      await Get.dialog(IsmChatPageDailog(
+                                          child: IsmChatWallpaperPreview(
                                         assetSrNo: 100,
                                         backgroundColor: '',
-                                        imagePath: file.path);
-                                    // await Get.to(
-                                    //   IsmChatWallpaperPreview(
-                                    //     imagePath: file.path,
-                                    //     assetSrNo: 100,
-                                    //   ),
-                                    // );
+                                        imagePath: file.path,
+                                      )));
+                                    } else {
+                                      IsmChatRouteManagement
+                                          .goToWallpaperPreview(
+                                        assetSrNo: 100,
+                                        backgroundColor: '',
+                                        imagePath: file.path,
+                                      );
+                                    }
                                   }
                                 },
                                 child: Container(
@@ -166,16 +172,23 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                 .backgroundImage[index - 1];
                             return IsmChatTapHandler(
                               onTap: () async {
-                                IsmChatRouteManagement.goToWallpaperPreview(
-                                    assetSrNo: image.srNo,
-                                    backgroundColor: '',
-                                    imagePath:
-                                        '${IsmChatAssets.backgroundImages}/${image.path!}');
-                                // await Get.to(IsmChatWallpaperPreview(
-                                //   imagePath:
-                                //       '${IsmChatAssets.backgroundImages}/${image.path!}',
-                                //   assetSrNo: image.srNo,
-                                // ));
+                                if (Responsive.isWebAndTablet(Get.context!)) {
+                                  await Get.dialog(
+                                    IsmChatPageDailog(
+                                      child: IsmChatWallpaperPreview(
+                                          assetSrNo: image.srNo,
+                                          backgroundColor: '',
+                                          imagePath:
+                                              '${IsmChatAssets.backgroundImages}/${image.path!}'),
+                                    ),
+                                  );
+                                } else {
+                                  IsmChatRouteManagement.goToWallpaperPreview(
+                                      assetSrNo: image.srNo,
+                                      backgroundColor: '',
+                                      imagePath:
+                                          '${IsmChatAssets.backgroundImages}/${image.path!}');
+                                }
                               },
                               child: _BackgroundImage(image: image),
                             );
@@ -203,10 +216,6 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                   imagePath: '',
                                   assetSrNo: color.srNo,
                                 );
-                                // await Get.to(IsmChatWallpaperPreview(
-                                //   backgroundColor: color.color,
-                                //   assetSrNo: color.srNo,
-                                // ));
                               },
                               child: SizedBox(
                                 height: IsmChatDimens.hundred,
@@ -251,7 +260,6 @@ class _BackgroundImageState extends State<_BackgroundImage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
     return SizedBox(
       height: IsmChatDimens.hundred,
       width: IsmChatDimens.hundred,

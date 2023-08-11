@@ -81,7 +81,7 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
           ),
           actions: [
             if (showSearch) _SearchAction(onTap: onSearchTap),
-            if (kIsWeb) const _StartMessage(),
+            if (kIsWeb) _StartMessage(),
             _MoreIcon(onSignOut),
           ],
         ),
@@ -89,13 +89,14 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class _StartMessage extends StatelessWidget {
-  const _StartMessage();
+  _StartMessage();
+
+  final controller = Get.find<IsmChatConversationsController>();
 
   @override
   Widget build(BuildContext context) => IconButton(
       onPressed: () {
-        Get.find<IsmChatConversationsController>().isRenderScreen =
-            IsRenderScreen.userView;
+        controller.isRenderScreen = IsRenderConversationScreen.userView;
 
         Scaffold.of(context).openDrawer();
       },
@@ -106,10 +107,10 @@ class _StartMessage extends StatelessWidget {
 }
 
 class _MoreIcon extends StatelessWidget {
-  const _MoreIcon(this.onSignOut);
+  _MoreIcon(this.onSignOut);
 
   final VoidCallback? onSignOut;
-
+  final controller = Get.find<IsmChatConversationsController>();
   @override
   Widget build(BuildContext context) => PopupMenuButton(
         color: IsmChatColors.whiteColor,
@@ -121,19 +122,14 @@ class _MoreIcon extends StatelessWidget {
         onSelected: (index) async {
           if (index == 1) {
             if (Responsive.isWebAndTablet(context)) {
-              Get.find<IsmChatConversationsController>().isRenderScreen =
-                  IsRenderScreen.blockView;
+              controller.isRenderScreen = IsRenderConversationScreen.blockView;
               Scaffold.of(context).openDrawer();
             } else {
               IsmChatRouteManagement.goToBlockView();
-              // await IsmChatUtility.openFullScreenBottomSheet(
-              //   const IsmChatBlockedUsersView(),
-              // );
             }
           } else if (index == 2) {
-            Get.find<IsmChatConversationsController>().isRenderScreen =
-                IsRenderScreen.groupUserView;
-
+            controller.isRenderScreen =
+                IsRenderConversationScreen.groupUserView;
             Scaffold.of(context).openDrawer();
           } else if (index == 3) {
             await Get.dialog(IsmChatAlertDialogBox(

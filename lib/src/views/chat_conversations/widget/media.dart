@@ -158,9 +158,17 @@ class _IsmMediaState extends State<IsmMedia> with TickerProviderStateMixin {
             ),
             centerTitle: GetPlatform.isAndroid ? true : false,
             leading: IconButton(
-              onPressed: Get.back,
-              icon: const Icon(
-                Icons.arrow_back_rounded,
+              onPressed: Responsive.isWebAndTablet(context)
+                  ? () {
+                      Get.find<IsmChatConversationsController>()
+                              .isRenderChatPageaScreen =
+                          IsRenderChatPageScreen.none;
+                    }
+                  : Get.back,
+              icon: Icon(
+                Responsive.isWebAndTablet(context)
+                    ? Icons.close_rounded
+                    : Icons.arrow_back_rounded,
               ),
             ),
           ),

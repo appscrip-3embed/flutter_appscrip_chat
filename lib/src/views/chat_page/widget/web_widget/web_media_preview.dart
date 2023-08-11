@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 class WebMediaPreview extends StatelessWidget {
   const WebMediaPreview({super.key});
 
+  static const String route = IsmPageRoutes.webMediaPreivew;
+
   @override
   Widget build(BuildContext context) =>
       GetX<IsmChatPageController>(builder: (controller) {

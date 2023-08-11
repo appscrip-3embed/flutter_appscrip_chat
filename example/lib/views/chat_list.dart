@@ -4,25 +4,33 @@ import 'package:chat_component_example/res/res.dart';
 import 'package:chat_component_example/utilities/utilities.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-class ChatList extends StatelessWidget {
+class ChatList extends StatefulWidget {
   const ChatList({super.key});
 
   static const String route = AppRoutes.chatList;
 
   @override
+  State<ChatList> createState() => _ChatListState();
+}
+
+class _ChatListState extends State<ChatList> {
+  @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatListController>(builder: (controller) {
       return Scaffold(
-        // appBar: IsmChatListHeader(
-        //   onSignOut: () {
-        //     controller.onSignOut();
-        //   },
-        //   onSearchTap: (p0, p1, p2) {},
-        //   showSearch: false,
-        //   width: IsmChatDimens.percentWidth(.3),
-        // ),
+        appBar: kIsWeb
+            ? null
+            : IsmChatListHeader(
+                onSignOut: () {
+                  controller.onSignOut();
+                },
+                onSearchTap: (p0, p1, p2) {},
+                showSearch: true,
+                width: IsmChatDimens.percentWidth(.3),
+              ),
         body: IsmChatApp(
           chatTheme: IsmChatThemeData(
             primaryColor: AppColors.primaryColorLight,
@@ -70,6 +78,28 @@ class ChatList extends StatelessWidget {
               IsmChatAttachmentType.document,
               if (!kIsWeb) IsmChatAttachmentType.location,
             ],
+          ),
+          startConversationWidget: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SvgPicture.asset(
+                  IsmChatAssets.placeHolderSvg,
+                ),
+                Text(
+                  'Isometrik Chat',
+                  style: IsmChatStyles.w600Black27,
+                ),
+                SizedBox(
+                  width: IsmChatDimens.percentWidth(.5),
+                  child: Text(
+                    'Isometrik web chat is fully sync with mobile isomterik chat , all charts are synced when connected to the network',
+                    style: IsmChatStyles.w400Black12,
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              ],
+            ),
           ),
           conversationProperties: IsmChatConversationProperties(
             showCreateChatIcon: true,

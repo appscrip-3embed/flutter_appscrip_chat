@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
+    if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -101,11 +102,38 @@ class IsmChatConversationsController extends GetxController {
   String get isConversationId => _isConversationId.value;
   set isConversationId(String value) => _isConversationId.value = value;
 
-  final Rx<IsRenderScreen> _isRenderScreen = IsRenderScreen.none.obs;
-  IsRenderScreen get isRenderScreen => _isRenderScreen.value;
-  set isRenderScreen(IsRenderScreen value) {
+  final Rx<IsRenderConversationScreen> _isRenderScreen =
+      IsRenderConversationScreen.none.obs;
+  IsRenderConversationScreen get isRenderScreen => _isRenderScreen.value;
+  set isRenderScreen(IsRenderConversationScreen value) {
     _isRenderScreen.value = value;
   }
+
+  final Rx<IsRenderChatPageScreen> _isRenderChatPageaScreen =
+      IsRenderChatPageScreen.none.obs;
+  IsRenderChatPageScreen get isRenderChatPageaScreen =>
+      _isRenderChatPageaScreen.value;
+  set isRenderChatPageaScreen(IsRenderChatPageScreen value) {
+    _isRenderChatPageaScreen.value = value;
+  }
+
+  final RxList<IsmChatMessageModel> _mediaList = <IsmChatMessageModel>[].obs;
+  List<IsmChatMessageModel> get mediaList => _mediaList;
+  set mediaList(List<IsmChatMessageModel> value) => _mediaList.value = value;
+
+  final RxList<IsmChatMessageModel> _mediaListLinks =
+      <IsmChatMessageModel>[].obs;
+  List<IsmChatMessageModel> get mediaListLinks => _mediaListLinks;
+  set mediaListLinks(List<IsmChatMessageModel> value) =>
+      _mediaListLinks.value = value;
+
+  final RxList<IsmChatMessageModel> _mediaListDocs =
+      <IsmChatMessageModel>[].obs;
+  List<IsmChatMessageModel> get mediaListDocs => _mediaListDocs;
+  set mediaListDocs(List<IsmChatMessageModel> value) =>
+      _mediaListDocs.value = value;
+
+  IsmChatMessageModel? message;
 
   List<Emoji> reactions = [];
 
@@ -117,6 +145,7 @@ class IsmChatConversationsController extends GetxController {
 
   @override
   onInit() async {
+    IsmChatBlob.listenTabAndRefesh();
     await _generateReactionList();
     var users = await IsmChatConfig.dbWrapper?.userDetailsBox
         .get(IsmChatStrings.userData);
@@ -147,30 +176,43 @@ class IsmChatConversationsController extends GetxController {
   }
 
   Widget isRenderScreenWidget() {
-    IsmChatLog.error(isRenderScreen);
     switch (isRenderScreen) {
-      case IsRenderScreen.none:
+      case IsRenderConversationScreen.none:
         return const SizedBox.shrink();
-      case IsRenderScreen.blockView:
+      case IsRenderConversationScreen.blockView:
         return const IsmChatBlockedUsersView();
 
-      case IsRenderScreen.groupUserView:
+      case IsRenderConversationScreen.groupUserView:
         return IsmChatCreateConversationView(
           isGroupConversation: true,
         );
-      case IsRenderScreen.userView:
+      case IsRenderConversationScreen.userView:
         return IsmChatCreateConversationView();
-      case IsRenderScreen.coversationInfoView:
-        return const IsmChatConverstaionInfoView();
+    }
+  }
 
-      case IsRenderScreen.wallpaperView:
+  Widget isRenderChatScreenWidget() {
+    switch (isRenderChatPageaScreen) {
+      case IsRenderChatPageScreen.coversationInfoView:
+        return IsmChatConverstaionInfoView();
+      case IsRenderChatPageScreen.wallpaperView:
         // TODO: Handle this case.
         break;
-      case IsRenderScreen.messgaeInfoView:
-        // TODO: Handle this case.
-        break;
-      case IsRenderScreen.groupEligibleView:
+      case IsRenderChatPageScreen.messgaeInfoView:
+        return IsmChatMessageInfo(
+          isGroup: currentConversation?.isGroup,
+          message: message,
+        );
+      case IsRenderChatPageScreen.groupEligibleView:
         return const IsmChatGroupEligibleUser();
+      case IsRenderChatPageScreen.none:
+        return const SizedBox.shrink();
+      case IsRenderChatPageScreen.coversationMediaView:
+        return IsmMedia(
+          mediaList: mediaList,
+          mediaListDocs: mediaListDocs,
+          mediaListLinks: mediaListLinks,
+        );
     }
     return const SizedBox.shrink();
   }

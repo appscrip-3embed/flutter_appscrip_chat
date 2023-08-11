@@ -7,11 +7,9 @@ import 'package:get/get.dart';
 class IsmChatCreateConversationView extends StatelessWidget {
   IsmChatCreateConversationView({
     super.key,
-    this.onChatTap,
     this.isGroupConversation = false,
   });
 
-  final void Function(BuildContext, IsmChatConversationModel)? onChatTap;
   final bool isGroupConversation;
   final converstaionController = Get.find<IsmChatConversationsController>();
 
@@ -241,19 +239,23 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                       user.userDetails.userId,
                                     ),
                                   );
-
                                   Get.back<void>();
+                                  IsmChatProperties
+                                      .conversationProperties.onChatTap!
+                                      .call(_, ismChatConversation);
                                   if (Responsive.isWebAndTablet(context)) {
-                                    // Todo
-                                    // add routing go to chatpage
+                                    if (Get.isRegistered<
+                                        IsmChatPageController>()) {
+                                      IsmChatPageBinding().dependencies();
+                                    }
+                                    controller.navigateToMessages(
+                                        ismChatConversation);
+
+                                    Get.find<IsmChatPageController>()
+                                        .startInit();
                                   } else {
                                     controller.navigateToMessages(
                                         ismChatConversation);
-                                    (onChatTap ??
-                                            IsmChatProperties
-                                                .conversationProperties
-                                                .onChatTap)!
-                                        .call(_, ismChatConversation);
                                     IsmChatRouteManagement.goToChatPage();
                                   }
                                 }
@@ -462,17 +464,20 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                       .forwardedList.selectedUsers.length,
                                 );
                                 Get.back<void>();
+                                IsmChatProperties
+                                    .conversationProperties.onChatTap!
+                                    .call(context, ismChatConversation);
                                 if (Responsive.isWebAndTablet(context)) {
-                                  // Todo
-                                  //  Add routing for go to chat page
+                                  controller
+                                      .navigateToMessages(ismChatConversation);
+                                  if (Get.isRegistered<
+                                      IsmChatPageController>()) {
+                                    IsmChatPageBinding().dependencies();
+                                  }
+                                  Get.find<IsmChatPageController>().startInit();
                                 } else {
                                   controller
                                       .navigateToMessages(ismChatConversation);
-                                  (onChatTap ??
-                                          IsmChatProperties
-                                              .conversationProperties
-                                              .onChatTap)!
-                                      .call(context, ismChatConversation);
                                   IsmChatRouteManagement.goToChatPage();
                                 }
                               },

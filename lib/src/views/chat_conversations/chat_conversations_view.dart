@@ -2,7 +2,6 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class IsmChatConversations extends StatefulWidget {
@@ -45,7 +44,13 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
                 : Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      SizedBox(
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            right: BorderSide(
+                                color: IsmChatConfig.chatTheme.primaryColor!),
+                          ),
+                        ),
                         width: IsmChatDimens.percentWidth(.3),
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
@@ -62,35 +67,28 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
                         child: Obx(
                           () => controller.currentConversation != null
                               ? const IsmChatPageView()
-                              : Center(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      SvgPicture.asset(
-                                        IsmChatAssets.placeHolderSvg,
-                                      ),
-                                      Text(
-                                        'Isometrik Chat',
-                                        style: IsmChatStyles.w600Black27,
-                                      ),
-                                      SizedBox(
-                                        width: IsmChatDimens.percentWidth(.5),
-                                        child: Text(
-                                          'Isometrik web chat is fully sync with mobile isomterik chat , all charts are synced when connected to the network',
-                                          style: IsmChatStyles.w400Black12,
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      )
-                                    ],
+                              : IsmChatProperties.startConversationWidget ??
+                                  Center(
+                                    child: Text(
+                                      IsmChatStrings.startConversation,
+                                      style: IsmChatStyles.w400White18,
+                                    ),
                                   ),
-                                ),
                         ),
                       ),
                       Obx(
-                        () => controller.isRenderScreen != IsRenderScreen.none
-                            ? SizedBox(
+                        () => controller.isRenderChatPageaScreen !=
+                                IsRenderChatPageScreen.none
+                            ? Container(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    left: BorderSide(
+                                        color: IsmChatConfig
+                                            .chatTheme.primaryColor!),
+                                  ),
+                                ),
                                 width: IsmChatDimens.percentWidth(.3),
-                                child: controller.isRenderScreenWidget(),
+                                child: controller.isRenderChatScreenWidget(),
                               )
                             : const SizedBox.shrink(),
                       )

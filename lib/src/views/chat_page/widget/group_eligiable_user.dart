@@ -50,7 +50,8 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
             onBack: !Responsive.isWebAndTablet(context)
                 ? null
                 : () => Get.find<IsmChatConversationsController>()
-                    .isRenderScreen = IsRenderScreen.coversationInfoView,
+                        .isRenderChatPageaScreen =
+                    IsRenderChatPageScreen.coversationInfoView,
             title: controller.isMemberSearch
                 ? IsmChatInputField(
                     fillColor: IsmChatConfig.chatTheme.primaryColor,

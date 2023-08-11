@@ -95,4 +95,25 @@ class IsmChatRouteManagement {
       'assetSrNo': assetSrNo
     });
   }
+
+  static void goToWebMediaMessagePreview({
+    required List<IsmChatMessageModel>? messageData,
+    required String? mediaUserName,
+    required bool? initiated,
+    required int? mediaTime,
+    final int? mediaIndex,
+  }) {
+    Get.toNamed(IsmWebMessageMediaPreview.route, arguments: {
+      'messageData': messageData,
+      'mediaUserName': mediaUserName,
+      'mediaTime': mediaTime,
+      'mediaIndex': mediaIndex,
+    });
+  }
+
+  static void goToWebMediaPreview() {
+    Get.toNamed(
+      WebMediaPreview.route,
+    );
+  }
 }

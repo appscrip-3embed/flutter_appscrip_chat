@@ -13,4 +13,6 @@ class IsmPageRoutes {
   static const String wallpaperPreview = '/wallpaperPreview';
   static const String media = '/media';
   static const String location = '/location';
+  static const String webMediaPreivew = '/webMediaPreivew';
+  static const String messageMediaPreivew = '/messageMediaPreivew';
 }

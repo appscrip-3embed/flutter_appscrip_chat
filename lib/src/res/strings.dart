@@ -43,6 +43,7 @@ class IsmChatStrings {
   static const String wallpaper = 'Wallpaper';
   static const String newGroup = 'New Group';
   static const String logout = 'Logout';
+  static const String startConversation = 'Start Conversation';
 
   static const String changeGroupTitle = 'Change group title';
   static const String changeGroupPhoto = 'Change group photo';

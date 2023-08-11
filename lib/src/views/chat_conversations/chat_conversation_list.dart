@@ -218,12 +218,10 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                                 controller.isConversationId =
                                     conversation.conversationId ?? '';
                                 controller.navigateToMessages(conversation);
-
                                 if (!Get.isRegistered<
                                     IsmChatPageController>()) {
                                   IsmChatPageBinding().dependencies();
                                 }
-
                                 Get.find<IsmChatPageController>().startInit();
                               } else {
                                 controller.navigateToMessages(conversation);

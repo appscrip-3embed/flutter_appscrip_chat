@@ -9,8 +9,8 @@ class IsmChatMessageInfo extends StatelessWidget {
       : _isGroup = isGroup ??
             (Get.arguments as Map<String, dynamic>?)?['isGroup'] ??
             false,
-        _message = message ??
-            (Get.arguments as Map<String, dynamic>?)?['isGrmessageoup'];
+        _message =
+            message ?? (Get.arguments as Map<String, dynamic>?)?['message'];
 
   final IsmChatMessageModel? _message;
   final bool? _isGroup;
@@ -24,9 +24,17 @@ class IsmChatMessageInfo extends StatelessWidget {
           appBar: AppBar(
             elevation: 0,
             leading: IconButton(
-              onPressed: Get.back,
-              icon: const Icon(
-                Icons.arrow_back_rounded,
+              onPressed: Responsive.isWebAndTablet(context)
+                  ? () {
+                      Get.find<IsmChatConversationsController>()
+                              .isRenderChatPageaScreen =
+                          IsRenderChatPageScreen.none;
+                    }
+                  : Get.back,
+              icon: Icon(
+                Responsive.isWebAndTablet(context)
+                    ? Icons.close_rounded
+                    : Icons.arrow_back_rounded,
                 color: IsmChatColors.whiteColor,
               ),
             ),
@@ -72,8 +80,12 @@ class IsmChatMessageInfo extends StatelessWidget {
                         Container(
                             padding: IsmChatDimens.edgeInsets4,
                             constraints: BoxConstraints(
-                              maxWidth: context.width * .8,
-                              minWidth: context.width * .1,
+                              maxWidth: (Responsive.isWebAndTablet(context))
+                                  ? context.width * .25
+                                  : context.width * .8,
+                              minWidth: Responsive.isWebAndTablet(context)
+                                  ? context.width * .06
+                                  : context.width * .1,
                             ),
                             decoration: BoxDecoration(
                               color: _message?.sentByMe ?? false

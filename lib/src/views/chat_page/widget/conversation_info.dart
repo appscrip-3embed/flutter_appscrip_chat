@@ -4,9 +4,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 class IsmChatConverstaionInfoView extends StatelessWidget {
-  const IsmChatConverstaionInfoView({super.key});
+  IsmChatConverstaionInfoView({super.key});
 
   static const String route = IsmPageRoutes.converstaionInfoView;
+
+  final conversationController = Get.find<IsmChatConversationsController>();
 
   @override
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
@@ -25,8 +27,8 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
             onBack: !Responsive.isWebAndTablet(context)
                 ? null
                 : () {
-                    Get.find<IsmChatConversationsController>().isRenderScreen =
-                        IsRenderScreen.none;
+                    Get.find<IsmChatConversationsController>()
+                        .isRenderChatPageaScreen = IsRenderChatPageScreen.none;
                   },
             title: Text(
               controller.conversation?.isGroup ?? false
@@ -158,10 +160,19 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                           ),
                           child: IsmChatTapHandler(
                             onTap: () {
-                              IsmChatRouteManagement.goToMedia(
-                                  mediaList: controller.mediaList,
-                                  mediaListLinks: controller.mediaListLinks,
-                                  mediaListDocs: controller.mediaListDocs);
+                              if (Responsive.isWebAndTablet(context)) {
+                                Get.find<IsmChatConversationsController>()
+                                        .isRenderChatPageaScreen =
+                                    IsRenderChatPageScreen.coversationMediaView;
+                              } else {
+                                IsmChatRouteManagement.goToMedia(
+                                  mediaList: conversationController.mediaList,
+                                  mediaListLinks:
+                                      conversationController.mediaListLinks,
+                                  mediaListDocs:
+                                      conversationController.mediaListDocs,
+                                );
+                              }
                             },
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
@@ -178,7 +189,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                 Row(
                                   children: [
                                     Text(
-                                      '${controller.mediaList.length + controller.mediaListLinks.length + controller.mediaListDocs.length}',
+                                      '${conversationController.mediaList.length + conversationController.mediaListLinks.length + conversationController.mediaListDocs.length}',
                                       style: IsmChatStyles.w500GreyLight17,
                                     ),
                                     IsmChatDimens.boxWidth4,
@@ -216,8 +227,8 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                     .clear();
                                 if (Responsive.isWebAndTablet(context)) {
                                   Get.find<IsmChatConversationsController>()
-                                          .isRenderScreen =
-                                      IsRenderScreen.groupEligibleView;
+                                          .isRenderChatPageaScreen =
+                                      IsRenderChatPageScreen.groupEligibleView;
                                 } else {
                                   IsmChatRouteManagement.goToEligibleUser();
                                 }

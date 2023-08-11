@@ -7,21 +7,18 @@ import 'package:get/get.dart';
 class IsmChatForwardView extends StatelessWidget {
   IsmChatForwardView({
     super.key,
-    this.onChatTap,
-    this.message,
-    this.conversation,
-  });
+    IsmChatMessageModel? message,
+    IsmChatConversationModel? conversation,
+  })  : _conversation = conversation ??
+            (Get.arguments as Map<String, dynamic>?)?['conversation'],
+        _message =
+            message ?? (Get.arguments as Map<String, dynamic>?)?['message'];
 
-  /// The selected [message] which is to be forwarded
-  final IsmChatMessageModel? message;
+  /// The selected [_message] which is to be forwarded
+  final IsmChatMessageModel? _message;
 
-  /// The [conversation] to which the selected [message] is to be forwarded
-  final IsmChatConversationModel? conversation;
-
-  /// (Optional)
-  ///
-  /// This callback can be provided if there's a need to change the trigger when the chat is tapped to forward the message
-  final void Function(BuildContext, IsmChatConversationModel)? onChatTap;
+  /// The [_conversation] to which the selected [_message] is to be forwarded
+  final IsmChatConversationModel? _conversation;
 
   final converstaionController = Get.find<IsmChatConversationsController>();
 
@@ -41,7 +38,9 @@ class IsmChatForwardView extends StatelessWidget {
               style: IsmChatStyles.w600Black14,
             ),
             SizedBox(
-                width: IsmChatDimens.percentWidth(.7),
+                width: IsmChatDimens.percentWidth(
+                  Responsive.isWebAndTablet(Get.context!) ? .23 : .7,
+                ),
                 child: Divider(
                   height: .0,
                   indent: IsmChatDimens.ten,
@@ -58,7 +57,7 @@ class IsmChatForwardView extends StatelessWidget {
           converstaionController.showSearchField = false;
           converstaionController.isLoadingUsers = false;
           converstaionController.getNonBlockUserList(
-            opponentId: conversation?.opponentDetails?.userId,
+            opponentId: _conversation?.opponentDetails?.userId,
           );
         },
         builder: (controller) => Scaffold(
@@ -325,18 +324,15 @@ class IsmChatForwardView extends StatelessWidget {
                                       Get.find<IsmChatPageController>();
                                   ismChatPageController.conversation =
                                       ismChatConversation;
-
-                                  (onChatTap ??
-                                          IsmChatProperties
-                                              .conversationProperties
-                                              .onChatTap)!
+                                  IsmChatProperties
+                                      .conversationProperties.onChatTap!
                                       .call(context, ismChatConversation);
                                   await ismChatPageController.getMessagesFromDB(
                                       ismChatConversation.conversationId ?? '');
                                   await Future.delayed(
                                       const Duration(milliseconds: 1000));
 
-                                  if (message?.customType ==
+                                  if (_message?.customType ==
                                       IsmChatCustomMessageType.text) {
                                     ismChatPageController.sendTextMessage(
                                         conversationId: ismChatConversation
@@ -350,8 +346,8 @@ class IsmChatForwardView extends StatelessWidget {
                                             '',
                                         sendMessageType:
                                             SendMessageType.forwardMessage,
-                                        messageBody: message?.body);
-                                  } else if (message?.customType ==
+                                        messageBody: _message?.body);
+                                  } else if (_message?.customType ==
                                       IsmChatCustomMessageType.location) {
                                     ismChatPageController.sendLocation(
                                       conversationId:
@@ -367,16 +363,16 @@ class IsmChatForwardView extends StatelessWidget {
                                       longitude: 0,
                                       placeId: '',
                                       locationName:
-                                          message?.metaData?.locationAddress ??
+                                          _message?.metaData?.locationAddress ??
                                               '',
-                                      locationSubName: message
+                                      locationSubName: _message
                                               ?.metaData?.locationSubAddress ??
                                           '',
                                       sendMessageType:
                                           SendMessageType.forwardMessage,
-                                      messageBody: message?.body,
+                                      messageBody: _message?.body,
                                     );
-                                  } else if (message?.customType ==
+                                  } else if (_message?.customType ==
                                       IsmChatCustomMessageType.image) {
                                     await ismChatPageController.sendImage(
                                       conversationId:
@@ -388,11 +384,11 @@ class IsmChatForwardView extends StatelessWidget {
                                       opponentName: ismChatConversation
                                               .opponentDetails?.userName ??
                                           '',
-                                      ismChatChatMessageModel: message,
+                                      ismChatChatMessageModel: _message,
                                       sendMessageType:
                                           SendMessageType.forwardMessage,
                                     );
-                                  } else if (message?.customType ==
+                                  } else if (_message?.customType ==
                                       IsmChatCustomMessageType.video) {
                                     await ismChatPageController.sendVideo(
                                       conversationId:
@@ -404,11 +400,11 @@ class IsmChatForwardView extends StatelessWidget {
                                       opponentName: ismChatConversation
                                               .opponentDetails?.userName ??
                                           '',
-                                      ismChatChatMessageModel: message,
+                                      ismChatChatMessageModel: _message,
                                       sendMessageType:
                                           SendMessageType.forwardMessage,
                                     );
-                                  } else if (message?.customType ==
+                                  } else if (_message?.customType ==
                                       IsmChatCustomMessageType.file) {
                                     ismChatPageController.sendDocument(
                                       conversationId:
@@ -420,11 +416,11 @@ class IsmChatForwardView extends StatelessWidget {
                                       opponentName: ismChatConversation
                                               .opponentDetails?.userName ??
                                           '',
-                                      message: message,
+                                      message: _message,
                                       sendMessageType:
                                           SendMessageType.forwardMessage,
                                     );
-                                  } else if (message?.customType ==
+                                  } else if (_message?.customType ==
                                       IsmChatCustomMessageType.audio) {
                                     ismChatPageController.sendAudio(
                                       conversationId:
@@ -436,22 +432,19 @@ class IsmChatForwardView extends StatelessWidget {
                                       opponentName: ismChatConversation
                                               .opponentDetails?.userName ??
                                           '',
-                                      ismChatChatMessageModel: message,
+                                      ismChatChatMessageModel: _message,
                                       sendMessageType:
                                           SendMessageType.forwardMessage,
                                     );
                                   }
                                 } else {
                                   Get.back<void>();
-                                  controller.navigateToMessages(conversation!);
-                                  (onChatTap ??
-                                          IsmChatProperties
-                                              .conversationProperties
-                                              .onChatTap)!
-                                      .call(context, conversation!);
+                                  controller.navigateToMessages(_conversation!);
+                                  IsmChatProperties
+                                      .conversationProperties.onChatTap!
+                                      .call(context, _conversation!);
                                   await Future.delayed(
                                       const Duration(milliseconds: 1000));
-
                                   var ismChatPageController =
                                       Get.find<IsmChatPageController>();
                                   for (var x in controller
@@ -463,7 +456,7 @@ class IsmChatForwardView extends StatelessWidget {
                                             x.userDetails.userId);
                                     await Future.delayed(
                                         const Duration(milliseconds: 1000));
-                                    if (message?.customType ==
+                                    if (_message?.customType ==
                                         IsmChatCustomMessageType.text) {
                                       ismChatPageController.sendTextMessage(
                                           conversationId: conversationId,
@@ -472,8 +465,8 @@ class IsmChatForwardView extends StatelessWidget {
                                           sendMessageType:
                                               SendMessageType.forwardMessage,
                                           forwardMessgeForMulitpleUser: true,
-                                          messageBody: message?.body);
-                                    } else if (message?.customType ==
+                                          messageBody: _message?.body);
+                                    } else if (_message?.customType ==
                                         IsmChatCustomMessageType.location) {
                                       ismChatPageController.sendLocation(
                                           conversationId: conversationId,
@@ -487,47 +480,47 @@ class IsmChatForwardView extends StatelessWidget {
                                           sendMessageType:
                                               SendMessageType.forwardMessage,
                                           forwardMessgeForMulitpleUser: true,
-                                          messageBody: message?.body);
-                                    } else if (message?.customType ==
+                                          messageBody: _message?.body);
+                                    } else if (_message?.customType ==
                                         IsmChatCustomMessageType.image) {
                                       await ismChatPageController.sendImage(
                                         conversationId: conversationId,
                                         userId: x.userDetails.userId,
                                         opponentName: x.userDetails.userName,
-                                        ismChatChatMessageModel: message,
+                                        ismChatChatMessageModel: _message,
                                         forwardMessgeForMulitpleUser: true,
                                         sendMessageType:
                                             SendMessageType.forwardMessage,
                                       );
-                                    } else if (message?.customType ==
+                                    } else if (_message?.customType ==
                                         IsmChatCustomMessageType.video) {
                                       await ismChatPageController.sendVideo(
                                         conversationId: conversationId,
                                         userId: x.userDetails.userId,
                                         opponentName: x.userDetails.userName,
-                                        ismChatChatMessageModel: message,
+                                        ismChatChatMessageModel: _message,
                                         forwardMessgeForMulitpleUser: true,
                                         sendMessageType:
                                             SendMessageType.forwardMessage,
                                       );
-                                    } else if (message?.customType ==
+                                    } else if (_message?.customType ==
                                         IsmChatCustomMessageType.file) {
                                       ismChatPageController.sendDocument(
                                         conversationId: conversationId,
                                         userId: x.userDetails.userId,
                                         opponentName: x.userDetails.userName,
-                                        message: message,
+                                        message: _message,
                                         forwardMessgeForMulitpleUser: true,
                                         sendMessageType:
                                             SendMessageType.forwardMessage,
                                       );
-                                    } else if (message?.customType ==
+                                    } else if (_message?.customType ==
                                         IsmChatCustomMessageType.audio) {
                                       ismChatPageController.sendAudio(
                                         conversationId: conversationId,
                                         userId: x.userDetails.userId,
                                         opponentName: x.userDetails.userName,
-                                        ismChatChatMessageModel: message,
+                                        ismChatChatMessageModel: _message,
                                         forwardMessgeForMulitpleUser: true,
                                         sendMessageType:
                                             SendMessageType.forwardMessage,

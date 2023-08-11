@@ -19,4 +19,7 @@ class IsmChatBlob {
   static void permissionCamerAndAudio() async {}
 
   static Future<String> checkPermission(String value) async => '';
+
+  static listenTabAndRefesh() {}
+  static listenTabAndRefeshOne() {}
 }

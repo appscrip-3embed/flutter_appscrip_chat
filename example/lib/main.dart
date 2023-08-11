@@ -55,6 +55,7 @@ class _MyAppState extends State<MyApp> {
       splitScreenMode: true,
       builder: (_, child) => child!,
       child: GetMaterialApp(
+        navigatorObservers: [],
         key: const Key('ChatApp'),
         navigatorKey: navigatorKey,
         locale: const Locale('en', 'US'),

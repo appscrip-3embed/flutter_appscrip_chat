@@ -574,13 +574,18 @@ enum IsmChatDbBox {
   forward;
 }
 
-enum IsRenderScreen {
+enum IsRenderConversationScreen {
   none,
   blockView,
   groupUserView,
   userView,
+}
+
+enum IsRenderChatPageScreen {
+  none,
   coversationInfoView,
   wallpaperView,
   messgaeInfoView,
-  groupEligibleView
+  groupEligibleView,
+  coversationMediaView
 }

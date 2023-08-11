@@ -100,7 +100,9 @@ class _IsmChatPageView extends StatelessWidget {
                         controller.isMessageSeleted = false;
                         controller.selectedMessage.clear();
                       },
-                      child: const Icon(Icons.arrow_back_rounded),
+                      child: Icon(Responsive.isWebAndTablet(context)
+                          ? Icons.close_rounded
+                          : Icons.arrow_back_rounded),
                     ),
                     titleSpacing: IsmChatDimens.four,
                     title: Text(
@@ -138,8 +140,9 @@ class _IsmChatPageView extends StatelessWidget {
                                           .userConfig.userId)) {
                                 if (Responsive.isWebAndTablet(context)) {
                                   Get.find<IsmChatConversationsController>()
-                                          .isRenderScreen =
-                                      IsRenderScreen.coversationInfoView;
+                                          .isRenderChatPageaScreen =
+                                      IsRenderChatPageScreen
+                                          .coversationInfoView;
                                 } else {
                                   IsmChatRouteManagement.goToConversationInfo();
                                 }

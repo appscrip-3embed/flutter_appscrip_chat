@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/services.dart';
@@ -27,7 +26,7 @@ class IsmChatPageRepository {
           .map((e) => IsmChatMessageModel.fromMap(e as Map<String, dynamic>))
           .toList();
     } catch (e, st) {
-      print('GetChatMessages $e, $st');
+      IsmChatLog.error('GetChatMessages $e, $st');
       return null;
     }
   }
@@ -216,14 +215,15 @@ class IsmChatPageRepository {
   }
 
   /// Get eligible members to add to a conversation
-  Future<List<UserDetails>?> getEligibleMembers(
-      {required String conversationId,
-      bool isLoading = false,
-      int limit = 20,
-      int skip = 0}) async {
+  Future<List<UserDetails>?> getEligibleMembers({
+    required String conversationId,
+    bool isLoading = false,
+    int limit = 20,
+    int skip = 0,
+  }) async {
     try {
       var response = await _apiWrapper.get(
-        '${IsmChatAPI.eligibleMembers}?conversationId=$conversationId&limit=$limit&skip=$skip',
+        '${IsmChatAPI.eligibleMembers}?conversationId=$conversationId&sort=1&limit=$limit&skip=$skip',
         headers: IsmChatUtility.tokenCommonHeader(),
         showLoader: isLoading,
       );

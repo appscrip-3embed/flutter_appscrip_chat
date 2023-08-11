@@ -129,22 +129,6 @@ class IsmChatPageController extends GetxController
   set mentionSuggestions(List<UserDetails> value) =>
       _mentionSuggestions.value = value;
 
-  final RxList<IsmChatMessageModel> _mediaList = <IsmChatMessageModel>[].obs;
-  List<IsmChatMessageModel> get mediaList => _mediaList;
-  set mediaList(List<IsmChatMessageModel> value) => _mediaList.value = value;
-
-  final RxList<IsmChatMessageModel> _mediaListLinks =
-      <IsmChatMessageModel>[].obs;
-  List<IsmChatMessageModel> get mediaListLinks => _mediaListLinks;
-  set mediaListLinks(List<IsmChatMessageModel> value) =>
-      _mediaListLinks.value = value;
-
-  final RxList<IsmChatMessageModel> _mediaListDocs =
-      <IsmChatMessageModel>[].obs;
-  List<IsmChatMessageModel> get mediaListDocs => _mediaListDocs;
-  set mediaListDocs(List<IsmChatMessageModel> value) =>
-      _mediaListDocs.value = value;
-
   final Completer<GoogleMapController> googleMapCompleter =
       Completer<GoogleMapController>();
 
@@ -545,19 +529,27 @@ class IsmChatPageController extends GetxController
   }
 
   void addWallpaper() async {
-    await Get.bottomSheet(
-      const ImsChatShowWallpaper(),
-      isDismissible: true,
-      isScrollControlled: true,
-      ignoreSafeArea: true,
-      enableDrag: true,
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(IsmChatDimens.ten),
+    if (Responsive.isWebAndTablet(Get.context!)) {
+      await Get.dialog(
+        const IsmChatPageDailog(
+          child: ImsChatShowWallpaper(),
         ),
-      ),
-    );
+      );
+    } else {
+      await Get.bottomSheet(
+        const ImsChatShowWallpaper(),
+        isDismissible: true,
+        isScrollControlled: true,
+        ignoreSafeArea: true,
+        enableDrag: true,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(IsmChatDimens.ten),
+          ),
+        ),
+      );
+    }
   }
 
   Future<void> getMentionedUserList(String data) async {
@@ -703,6 +695,7 @@ class IsmChatPageController extends GetxController
     switch (menuType) {
       case IsmChatFocusMenuType.info:
         await getMessageInformation(message);
+
         break;
       case IsmChatFocusMenuType.reply:
         onReplyTap(message);
@@ -711,8 +704,20 @@ class IsmChatPageController extends GetxController
         var chatConversationController =
             Get.find<IsmChatConversationsController>();
         chatConversationController.forwardedList.clear();
-        IsmChatRouteManagement.goToForwardView(
-            message: message, conversation: conversation!);
+
+        if (Responsive.isWeb(Get.context!)) {
+          await Get.dialog(
+            IsmChatPageDailog(
+              child: IsmChatForwardView(
+                message: message,
+                conversation: conversation,
+              ),
+            ),
+          );
+        } else {
+          IsmChatRouteManagement.goToForwardView(
+              message: message, conversation: conversation!);
+        }
 
         break;
       case IsmChatFocusMenuType.copy:
@@ -1012,13 +1017,15 @@ class IsmChatPageController extends GetxController
           .toList();
       var selectedMediaIndex = mediaList.indexOf(message);
       if (Responsive.isWebAndTablet(Get.context!)) {
-        await Get.to<void>(IsmWebMessageMediaPreview(
-          mediaIndex: selectedMediaIndex,
-          messageData: mediaList,
-          mediaUserName: message.chatName,
-          initiated: message.sentByMe,
-          mediaTime: message.sentAt,
-        ));
+        {
+          await Get.dialog(IsmWebMessageMediaPreview(
+            mediaIndex: selectedMediaIndex,
+            messageData: mediaList,
+            mediaUserName: message.chatName,
+            initiated: message.sentByMe,
+            mediaTime: message.sentAt,
+          ));
+        }
       } else {
         IsmChatRouteManagement.goToMediaPreview(
           mediaIndex: selectedMediaIndex,
@@ -1522,10 +1529,16 @@ class IsmChatPageController extends GetxController
         getMessageDeliverTime(message),
       ],
     ));
-    IsmChatRouteManagement.goToMessageInfo(
-      message: message,
-      isGroup: conversation?.isGroup ?? false,
-    );
+    if (Responsive.isWebAndTablet(Get.context!)) {
+      conversationController.message = message;
+      conversationController.isRenderChatPageaScreen =
+          IsRenderChatPageScreen.messgaeInfoView;
+    } else {
+      IsmChatRouteManagement.goToMessageInfo(
+        message: message,
+        isGroup: conversation?.isGroup ?? false,
+      );
+    }
   }
 
   /// Call function for Get Chat Conversation Detailss
