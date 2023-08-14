@@ -10,6 +10,7 @@ class IsmChatPageThemeData {
     this.constraints,
     this.unreadCheckColor,
     this.readCheckColor,
+    this.centerMessageColor,
   });
 
   final double? profileImageSize;
@@ -19,4 +20,5 @@ class IsmChatPageThemeData {
   final BoxConstraints? constraints;
   final Color? unreadCheckColor;
   final Color? readCheckColor;
+  final Color? centerMessageColor;
 }

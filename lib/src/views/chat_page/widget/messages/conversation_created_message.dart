@@ -16,7 +16,7 @@ class IsmChatConversationCreatedMessage extends StatelessWidget {
         child: Text(
           '${message.userName} created group',
           style: IsmChatStyles.w500Black12.copyWith(
-            color: IsmChatConfig.chatTheme.primaryColor,
+            color: message.centerMessageColor,
           ),
         ),
       );

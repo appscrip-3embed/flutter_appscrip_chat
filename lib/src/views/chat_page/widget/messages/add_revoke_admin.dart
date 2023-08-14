@@ -28,7 +28,7 @@ class IsmChatAddRevokeAdmin extends StatelessWidget {
               .trim(), //'${message.initiator} ${isAdded ? 'added' : 'removed'} $_user ${isAdded ? 'as' : 'as an '} Admin'.trim()
           textAlign: TextAlign.center,
           style: IsmChatStyles.w500Black12.copyWith(
-            color: IsmChatConfig.chatTheme.primaryColor,
+            color: message.centerMessageColor,
           ),
         ),
       );

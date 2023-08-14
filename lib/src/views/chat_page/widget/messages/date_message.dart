@@ -16,7 +16,7 @@ class IsmChatDateMessage extends StatelessWidget {
         child: Text(
           message.body,
           style: IsmChatStyles.w500Black12.copyWith(
-            color: IsmChatConfig.chatTheme.primaryColor,
+            color: message.centerMessageColor,
           ),
         ),
       );

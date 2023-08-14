@@ -26,7 +26,7 @@ class IsmChatAddRemoveMember extends StatelessWidget {
               : '${message.initiator} ${isAdded ? 'added' : 'removed'} ${message.members?.map((e) => e.memberName).join(', ')}',
           textAlign: TextAlign.center,
           style: IsmChatStyles.w500Black12.copyWith(
-            color: IsmChatConfig.chatTheme.primaryColor,
+            color: message.centerMessageColor,
           ),
         ),
       );

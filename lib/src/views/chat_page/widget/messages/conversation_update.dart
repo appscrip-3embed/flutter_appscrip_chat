@@ -20,7 +20,7 @@ class IsmChatConversationUpdate extends StatelessWidget {
           '${message.initiator} changed this group ${message.customType == IsmChatCustomMessageType.conversationTitleUpdated ? 'title' : 'profile'}',
           textAlign: TextAlign.center,
           style: IsmChatStyles.w500Black12.copyWith(
-            color: IsmChatConfig.chatTheme.primaryColor,
+            color: message.centerMessageColor,
           ),
         ),
       );
