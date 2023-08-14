@@ -12,6 +12,8 @@ import 'package:get/get.dart';
 class IsmChatCameraView extends StatefulWidget {
   const IsmChatCameraView({Key? key}) : super(key: key);
 
+  static const String route = IsmPageRoutes.cameraView;
+
   @override
   State<IsmChatCameraView> createState() => _CameraScreenViewState();
 }
@@ -57,7 +59,7 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                       padding: IsmChatDimens.edgeInsetsTop20.copyWith(top: 40),
                       child: IconButton(
                         onPressed: () {
-                          if (kIsWeb) {
+                          if (Responsive.isWebAndTablet(context)) {
                             controller.isCameraView = false;
                           } else {
                             Get.back();

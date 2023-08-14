@@ -606,12 +606,13 @@ class IsmChatPageController extends GetxController
     switch (attachmentType) {
       case IsmChatAttachmentType.camera:
         await initializeCamera();
-        kIsWeb
+        Responsive.isWebAndTablet(Get.context!)
             ? isCameraView = true
-            : await Get.to<void>(const IsmChatCameraView());
+            : IsmChatRouteManagement.goToCameraView();
 
         break;
       case IsmChatAttachmentType.gallery:
+        // Todo We will remvoe assets package
         listOfAssetsPath.clear();
         kIsWeb
             ? getMediaWithWeb()
@@ -625,7 +626,6 @@ class IsmChatPageController extends GetxController
         break;
       case IsmChatAttachmentType.location:
         IsmChatRouteManagement.goToLocation();
-
         break;
     }
   }
@@ -633,51 +633,48 @@ class IsmChatPageController extends GetxController
   void getMediaWithWeb() async {
     webMedia.clear();
     assetsIndex = 0;
-    final result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-      type: FileType.custom,
-      allowedExtensions: [
-        ...IsmChatConstants.imageExtensions,
-        ...IsmChatConstants.videoExtensions
-      ],
-      withData: true,
-      onFileLoading: (value) {
-        if (FilePickerStatus.picking == value) {
-          IsmChatUtility.showLoader();
-        } else if (FilePickerStatus.done == value) {
-          IsmChatUtility.closeLoader();
-        }
-      },
-      allowCompression: true,
+    final result = await IsmChatUtility.pickMedia(
+      ImageSource.gallery,
+      isVideoAndImage: true,
     );
-    if (result == null) {
-      IsmChatUtility.closeLoader();
+
+    if (result.isEmpty) {
       return;
     }
 
-    if (result.files.isNotEmpty) {
-      for (var x in result.files) {
-        var dataSize = IsmChatUtility.formatBytes(x.bytes?.length ?? 0);
-        if (IsmChatConstants.videoExtensions.contains(x.extension)) {
+    if (result.isNotEmpty) {
+      for (var x in result) {
+        var bytes = await x?.readAsBytes();
+        var extension = x?.name.split('.').last;
+        var dataSize = IsmChatUtility.formatBytes(bytes?.length ?? 0);
+        var platformFile = PlatformFile(
+          name: x?.name ?? '',
+          size: bytes?.length ?? 0,
+          bytes: bytes,
+          path: x?.path,
+        );
+        if (IsmChatConstants.videoExtensions.contains(extension)) {
           var thumbnailBytes =
-              await IsmChatBlob.getVideoThumbnailBytes(x.bytes!);
+              await IsmChatBlob.getVideoThumbnailBytes(bytes ?? Uint8List(0));
+
           if (thumbnailBytes != null) {
             webMedia.add(
               WebMediaModel(
-                  isVideo:
-                      IsmChatConstants.videoExtensions.contains(x.extension),
-                  platformFile: x,
-                  thumbnailBytes: thumbnailBytes,
-                  dataSize: dataSize),
+                isVideo: IsmChatConstants.videoExtensions.contains(extension),
+                platformFile: platformFile,
+                thumbnailBytes: thumbnailBytes,
+                dataSize: dataSize,
+              ),
             );
           }
         } else {
           webMedia.add(
             WebMediaModel(
-                isVideo: IsmChatConstants.videoExtensions.contains(x.extension),
-                platformFile: x,
-                thumbnailBytes: Uint8List(0),
-                dataSize: dataSize),
+              isVideo: IsmChatConstants.videoExtensions.contains(extension),
+              platformFile: platformFile,
+              thumbnailBytes: Uint8List(0),
+              dataSize: dataSize,
+            ),
           );
         }
       }
@@ -848,6 +845,7 @@ class IsmChatPageController extends GetxController
   void closeOveray() {
     holdController.reverse();
     messageHoldOverlayEntry?.remove();
+    messageHoldOverlayEntry = null;
   }
 
   Future<void> scrollDown() async {
@@ -1064,7 +1062,7 @@ class IsmChatPageController extends GetxController
 
   void toggleCamera() async {
     areCamerasInitialized = false;
-    if (!kIsWeb) {
+    if (!Responsive.isWebAndTablet(Get.context!)) {
       isFrontCameraSelected = !isFrontCameraSelected;
     }
     if (isFrontCameraSelected) {
@@ -1283,83 +1281,94 @@ class IsmChatPageController extends GetxController
   }
 
   /// function to show dialog for changing the group profile
-  Future<void> showDialogForChangeGroupProfile() async =>
-      await Get.dialog(IsmChatAlertDialogBox(
-        title: IsmChatStrings.chooseNewGroupProfile,
-        content: SizedBox(
-          height: IsmChatDimens.eighty,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Column(
-                children: [
-                  GestureDetector(
-                    onTap: () async {
-                      await _conversationController
-                          .ismChangeImage(ImageSource.camera);
-                      await changeGroupProfile(
-                          conversationImageUrl:
-                              _conversationController.profileImage,
-                          conversationId: conversation?.conversationId ?? '',
-                          isLoading: true);
-                    },
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.blueAccent,
-                      ),
-                      width: IsmChatDimens.forty,
-                      height: IsmChatDimens.forty,
-                      child: const Icon(
-                        Icons.camera_alt_rounded,
-                        color: IsmChatColors.whiteColor,
-                      ),
-                    ),
-                  ),
-                  IsmChatDimens.boxHeight8,
-                  Text(
-                    'Camera',
-                    style: IsmChatStyles.w500Black16,
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  GestureDetector(
-                    onTap: () async {
-                      await _conversationController
-                          .ismChangeImage(ImageSource.gallery);
-                      await changeGroupProfile(
-                          conversationImageUrl:
-                              _conversationController.profileImage,
-                          conversationId: conversation?.conversationId ?? '',
-                          isLoading: true);
-                    },
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.purpleAccent,
-                      ),
-                      width: IsmChatDimens.forty,
-                      height: IsmChatDimens.forty,
-                      child: const Icon(
-                        Icons.photo_rounded,
-                        color: IsmChatColors.whiteColor,
+  Future<void> showDialogForChangeGroupProfile() async {
+    if (kIsWeb) {
+      await _conversationController.ismChangeImage(ImageSource.gallery);
+      await changeGroupProfile(
+          conversationImageUrl: _conversationController.profileImage,
+          conversationId: conversation?.conversationId ?? '',
+          isLoading: true);
+    } else {
+      await Get.dialog(
+        IsmChatAlertDialogBox(
+          title: IsmChatStrings.chooseNewGroupProfile,
+          content: SizedBox(
+            height: IsmChatDimens.eighty,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        await _conversationController
+                            .ismChangeImage(ImageSource.camera);
+                        await changeGroupProfile(
+                            conversationImageUrl:
+                                _conversationController.profileImage,
+                            conversationId: conversation?.conversationId ?? '',
+                            isLoading: true);
+                      },
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.blueAccent,
+                        ),
+                        width: IsmChatDimens.forty,
+                        height: IsmChatDimens.forty,
+                        child: const Icon(
+                          Icons.camera_alt_rounded,
+                          color: IsmChatColors.whiteColor,
+                        ),
                       ),
                     ),
-                  ),
-                  IsmChatDimens.boxHeight8,
-                  Text(
-                    'Gallery',
-                    style: IsmChatStyles.w500Black16,
-                  ),
-                ],
-              ),
-            ],
+                    IsmChatDimens.boxHeight8,
+                    Text(
+                      'Camera',
+                      style: IsmChatStyles.w500Black16,
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        await _conversationController
+                            .ismChangeImage(ImageSource.gallery);
+                        await changeGroupProfile(
+                            conversationImageUrl:
+                                _conversationController.profileImage,
+                            conversationId: conversation?.conversationId ?? '',
+                            isLoading: true);
+                      },
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.purpleAccent,
+                        ),
+                        width: IsmChatDimens.forty,
+                        height: IsmChatDimens.forty,
+                        child: const Icon(
+                          Icons.photo_rounded,
+                          color: IsmChatColors.whiteColor,
+                        ),
+                      ),
+                    ),
+                    IsmChatDimens.boxHeight8,
+                    Text(
+                      'Gallery',
+                      style: IsmChatStyles.w500Black16,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-      ));
+      );
+    }
+  }
 
   void showDialogForBlockUnBlockUser(
     bool userBlockOrNot, [

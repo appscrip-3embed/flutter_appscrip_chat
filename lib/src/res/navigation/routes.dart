@@ -15,4 +15,5 @@ class IsmPageRoutes {
   static const String location = '/location';
   static const String webMediaPreivew = '/webMediaPreivew';
   static const String messageMediaPreivew = '/messageMediaPreivew';
+  static const String cameraView = '/cameraView';
 }

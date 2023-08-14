@@ -110,27 +110,28 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                                   extentRatio: 0.3,
                                   motion: const ScrollMotion(),
                                   children: [
-                                      ...IsmChatProperties
-                                              .conversationProperties.actions
-                                              ?.map(
-                                            (e) => SlidableAction(
-                                              onPressed: (_) =>
-                                                  e.onTap(conversation),
-                                              flex: 1,
-                                              backgroundColor:
-                                                  e.backgroundColor ??
-                                                      IsmChatConfig.chatTheme
-                                                          .primaryColor!,
-                                              icon: e.icon,
-                                              foregroundColor: e.style?.color,
-                                              label: e.label,
-                                              borderRadius: e.borderRadius ??
-                                                  BorderRadius.circular(
-                                                      IsmChatDimens.eight),
-                                            ),
-                                          ) ??
-                                          [],
-                                    ]),
+                                    ...IsmChatProperties
+                                            .conversationProperties.actions
+                                            ?.map(
+                                          (e) => SlidableAction(
+                                            onPressed: (_) =>
+                                                e.onTap(conversation),
+                                            flex: 1,
+                                            backgroundColor:
+                                                e.backgroundColor ??
+                                                    IsmChatConfig.chatTheme
+                                                        .primaryColor!,
+                                            icon: e.icon,
+                                            foregroundColor: e.style?.color,
+                                            label: e.label,
+                                            borderRadius: e.borderRadius ??
+                                                BorderRadius.circular(
+                                                    IsmChatDimens.eight),
+                                          ),
+                                        ) ??
+                                        [],
+                                  ],
+                                ),
                           endActionPane: !IsmChatProperties
                                       .conversationProperties.allowDelete &&
                                   (IsmChatProperties
@@ -239,21 +240,4 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
           );
         },
       );
-}
-
-class AppState extends InheritedWidget {
-  const AppState({
-    Key? key,
-    required this.direction,
-    required Widget child,
-  }) : super(key: key, child: child);
-
-  final Axis direction;
-
-  @override
-  bool updateShouldNotify(covariant AppState oldWidget) =>
-      direction != oldWidget.direction;
-
-  static AppState? of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<AppState>();
 }

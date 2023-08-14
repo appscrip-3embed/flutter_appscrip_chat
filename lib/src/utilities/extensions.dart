@@ -588,7 +588,7 @@ extension LastMessageBody on LastMessageDetails {
       case IsmChatCustomMessageType.audio:
         return 'Audio';
       case IsmChatCustomMessageType.file:
-        return 'File';
+        return 'Document';
       case IsmChatCustomMessageType.location:
         return 'Location';
       case IsmChatCustomMessageType.block:

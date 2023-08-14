@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:chat_component_example/res/dimens.dart';
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/res/res.dart';
 import 'package:chat_component_example/utilities/utilities.dart';
 import 'package:chat_component_example/view_models/view_models.dart';
@@ -106,8 +106,6 @@ class AuthController extends GetxController {
     _isConfirmPasswared.value = value;
   }
 
-  Uint8List? bytes;
-
   void ismUploadImage(ImageSource imageSource) async {
     XFile? result;
     if (imageSource == ImageSource.gallery) {
@@ -119,53 +117,53 @@ class AuthController extends GetxController {
         source: ImageSource.camera,
       );
     }
+    Uint8List? bytes;
+    String? extension;
     if (result != null) {
-      var croppedFile = await ImageCropper().cropImage(
-        sourcePath: result.path,
-        cropStyle: CropStyle.circle,
-        compressQuality: 100,
-        uiSettings: [
-          AndroidUiSettings(
-            toolbarTitle: 'Cropper'.tr,
-            toolbarColor: Colors.black,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false,
-          ),
-          IOSUiSettings(
-            title: 'Cropper',
-          ),
-          WebUiSettings(
-            context: Get.context!,
-            customDialogBuilder: (cropper, crop, rotate) {
-              return Dialog(
-                child: Builder(
-                  builder: (context) {
-                    return SizedBox(
-                      height: Dimens.percentHeight(.7),
-                      child: Column(mainAxisSize: MainAxisSize.min, children: [
-                        SizedBox(height: 300, child: cropper),
-                        TextButton(
-                          onPressed: () async {
-                            /// it is important to call crop() function and return
-                            /// result data to plugin, for example:
-                            final result = await crop();
-                            Navigator.of(Get.context!).pop(result);
-                          },
-                          child: const Text('Crop'),
-                        )
-                      ]),
-                    );
-                  },
-                ),
-              );
-            },
-          )
-        ],
-      );
-      bytes = File(croppedFile!.path).readAsBytesSync();
-      var extension = result.name.split('.').last;
-      await ismGetPresignedUrl(extension, bytes!);
+      if (!Responsive.isWebAndTablet(Get.context!)) {
+        var croppedFile = await ImageCropper().cropImage(
+          sourcePath: result.path,
+          cropStyle: CropStyle.circle,
+          compressQuality: 100,
+          uiSettings: [
+            AndroidUiSettings(
+              toolbarTitle: 'Cropper'.tr,
+              toolbarColor: Colors.black,
+              toolbarWidgetColor: Colors.white,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false,
+            ),
+            IOSUiSettings(
+              title: 'Cropper',
+            ),
+            WebUiSettings(
+              context: Get.context!,
+              customDialogBuilder: (cropper, crop, rotate) {
+                return Dialog(
+                  child: Builder(
+                    builder: (context) {
+                      return SizedBox(
+                        height: 200,
+                        width: 200,
+                        child: cropper,
+                      );
+                    },
+                  ),
+                );
+              },
+            )
+          ],
+        );
+        bytes = File(croppedFile!.path).readAsBytesSync();
+        extension = result.name.split('.').last;
+      } else {
+        bytes = await result.readAsBytes();
+        extension = 'jpg';
+      }
+
+      if (Responsive.isWebAndTablet(Get.context!)) Utility.showLoader();
+      await ismGetPresignedUrl(extension, bytes);
+      if (Responsive.isWebAndTablet(Get.context!)) Get.back();
     }
   }
 

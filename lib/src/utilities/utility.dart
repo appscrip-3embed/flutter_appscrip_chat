@@ -1,17 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:permission_handler/permission_handler.dart';
 
@@ -122,15 +121,28 @@ class IsmChatUtility {
     );
   }
 
-  static Future<File?> pickImage(ImageSource source) async {
-    XFile? result;
-    result = await ImagePicker().pickImage(imageQuality: 25, source: source);
+  static Future<List<XFile?>> pickMedia(ImageSource source,
+      {bool isVideoAndImage = false}) async {
+    List<XFile?> result;
+    if (isVideoAndImage) {
+      result = await ImagePicker().pickMultipleMedia(
+        imageQuality: 25,
+        requestFullMetadata: true,
+      );
+    } else {
+      result = [
+        await ImagePicker().pickImage(imageQuality: 25, source: source)
+      ];
+    }
 
-    if (result == null) {
-      return null;
+    if (result.isEmpty) {
+      return [];
+    }
+    if (kIsWeb) {
+      return result;
     }
     var croppedFile = await ImageCropper().cropImage(
-      sourcePath: result.path,
+      sourcePath: result.first!.path,
       cropStyle: CropStyle.circle,
       compressQuality: 100,
       uiSettings: [
@@ -146,7 +158,7 @@ class IsmChatUtility {
         )
       ],
     );
-    return File(croppedFile!.path);
+    return [XFile(croppedFile!.path)];
   }
 
   /// Returns text representation of a provided bytes value (e.g. 1kB, 1GB)

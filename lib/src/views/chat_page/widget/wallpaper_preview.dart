@@ -3,23 +3,24 @@ import 'dart:io';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class IsmChatWallpaperPreview extends StatelessWidget {
   IsmChatWallpaperPreview(
-      {super.key, String? backgroundColor, String? imagePath, int? assetSrNo})
+      {super.key, String? backgroundColor, XFile? imagePath, int? assetSrNo})
       : _backgroundColor = backgroundColor ??
             (Get.arguments as Map<String, dynamic>?)?['backgroundColor'] ??
             '',
         _imagePath = imagePath ??
             (Get.arguments as Map<String, dynamic>?)?['imagePath'] ??
-            '',
+            XFile,
         _assetSrNo = assetSrNo ??
             (Get.arguments as Map<String, dynamic>?)?['assetSrNo'] ??
             0;
 
   final String? _backgroundColor;
-  final String? _imagePath;
+  final XFile? _imagePath;
   final int? _assetSrNo;
 
   static const String route = IsmPageRoutes.wallpaperPreview;
@@ -48,14 +49,16 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                 : null,
             image: _imagePath != null
                 ? DecorationImage(
-                    image: _imagePath!
-                            .contains('packages/appscrip_chat_component/assets')
-                        ? AssetImage(
-                            _imagePath!,
-                          ) as ImageProvider
-                        : FileImage(
-                            File(_imagePath!),
-                          ),
+                    image: _imagePath!.path.contains('blob')
+                        ? NetworkImage(_imagePath!.path)
+                        : _imagePath!.path.contains(
+                                'packages/appscrip_chat_component/assets')
+                            ? AssetImage(
+                                _imagePath!.path,
+                              ) as ImageProvider
+                            : FileImage(
+                                File(_imagePath!.path),
+                              ),
                     fit: BoxFit.cover,
                   )
                 : null,
@@ -203,14 +206,14 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                         Get.find<IsmChatConversationsController>();
                     if (_imagePath != null) {
                       IsmChatUtility.showLoader();
-                      pageController.backgroundImage = _imagePath!;
+                      pageController.backgroundImage = _imagePath!.path;
                       pageController.backgroundColor = '';
                       if (_assetSrNo == 100) {
-                        var file = File(_imagePath!);
-                        var bytes = file.readAsBytesSync();
-                        var fileExtension = file.path.split('.').last;
+                        var file = _imagePath;
+                        var bytes = await file?.readAsBytes();
+                        var fileExtension = file?.path.split('.').last;
                         await conversationController.getPresignedUrl(
-                            fileExtension, bytes);
+                            fileExtension!, bytes!);
                       }
                       var assetList = conversationController
                               .userDetails?.metaData?.assetList ??
@@ -225,7 +228,7 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                             isImage: true,
                             imageUrl: _assetSrNo == 100
                                 ? conversationController.profileImage
-                                : _imagePath!,
+                                : _imagePath!.path,
                             srNoBackgroundAssset:
                                 _assetSrNo == 100 ? 100 : _assetSrNo,
                           )
@@ -237,7 +240,7 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                             isImage: true,
                             imageUrl: _assetSrNo == 100
                                 ? conversationController.profileImage
-                                : _imagePath!,
+                                : _imagePath!.path,
                             srNoBackgroundAssset:
                                 _assetSrNo == 100 ? 100 : _assetSrNo,
                           )

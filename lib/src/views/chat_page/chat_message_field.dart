@@ -8,7 +8,12 @@ import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+
+class SendMessageIntent extends Intent {
+  const SendMessageIntent();
+}
 
 class IsmChatMessageField extends StatelessWidget {
   const IsmChatMessageField({
@@ -69,94 +74,137 @@ class IsmChatMessageField extends StatelessWidget {
                       ),
                       child: Responsive.isWebAndTablet(context)
                           ? _AttachmentIconForWeb(
-                              IsmChatConfig.chatTheme.primaryColor)
+                              IsmChatConfig.chatTheme.primaryColor,
+                            )
                           : const _AttachmentIcon(IsmChatColors.whiteColor),
                     ),
                   IsmChatDimens.boxWidth2,
                 ],
                 Expanded(
-                  child: Container(
-                    margin: IsmChatDimens.edgeInsets4
-                        .copyWith(bottom: IsmChatDimens.eight),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: IsmChatConfig.chatTheme.primaryColor!),
-                      borderRadius: BorderRadius.circular(IsmChatDimens.twenty),
-                      color:
-                          // Todo
-                          //  header?.backgroundColor ??
-                          IsmChatConfig.chatTheme.backgroundColor,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (controller.isreplying)
-                          _ReplyMessage(
-                            messageBody: messageBody,
+                  child: Shortcuts(
+                    shortcuts: {
+                      LogicalKeySet(
+                        LogicalKeyboardKey.enter,
+                      ): const SendMessageIntent(),
+                    },
+                    child: Actions(
+                      actions: {
+                        SendMessageIntent: CallbackAction<SendMessageIntent>(
+                            onInvoke: (SendMessageIntent intent) async {
+                          if (controller.showSendButton) {
+                            if (!controller.conversation!.isChattingAllowed) {
+                              controller.showDialogCheckBlockUnBlock();
+                            } else {
+                              await controller.getMentionedUserList(
+                                  controller.chatInputController.text.trim());
+                              controller.sendTextMessage(
+                                  conversationId:
+                                      controller.conversation?.conversationId ??
+                                          '',
+                                  userId: controller.conversation
+                                          ?.opponentDetails?.userId ??
+                                      '',
+                                  opponentName: controller.conversation
+                                          ?.opponentDetails?.userName ??
+                                      '');
+                            }
+                          }
+                          return null;
+                        }),
+                      },
+                      child: Focus(
+                        autofocus: true,
+                        child: Container(
+                          margin: IsmChatDimens.edgeInsets4
+                              .copyWith(bottom: IsmChatDimens.eight),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: IsmChatConfig.chatTheme.primaryColor!),
+                            borderRadius:
+                                BorderRadius.circular(IsmChatDimens.twenty),
+                            color:
+                                // Todo
+                                //  header?.backgroundColor ??
+                                IsmChatConfig.chatTheme.backgroundColor,
                           ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                maxLines: 4,
-                                minLines: 1,
-                                focusNode: controller.messageFieldFocusNode,
-                                controller: controller.chatInputController,
-                                cursorColor:
-                                    IsmChatConfig.chatTheme.primaryColor,
-                                textCapitalization:
-                                    TextCapitalization.sentences,
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  filled: true,
-                                  fillColor:
-                                      // Todo
-                                      //  header?.backgroundColor ??
-                                      IsmChatConfig.chatTheme.backgroundColor,
-                                  contentPadding:
-                                      Responsive.isWebAndTablet(context)
-                                          ? IsmChatDimens.edgeInsets12
-                                          : IsmChatDimens.edgeInsets8,
-                                  prefixIcon: Responsive.isWebAndTablet(context)
-                                      ? null
-                                      : const _EmojiButton(null),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        IsmChatDimens.twenty),
-                                    borderSide: const BorderSide(
-                                        color: Colors.transparent),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        IsmChatDimens.twenty),
-                                    borderSide: const BorderSide(
-                                      color: Colors.transparent,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (controller.isreplying)
+                                _ReplyMessage(
+                                  messageBody: messageBody,
+                                ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: TextFormField(
+                                      maxLines: 4,
+                                      minLines: 1,
+                                      focusNode:
+                                          controller.messageFieldFocusNode,
+                                      controller:
+                                          controller.chatInputController,
+                                      cursorColor:
+                                          IsmChatConfig.chatTheme.primaryColor,
+                                      textCapitalization:
+                                          TextCapitalization.sentences,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        filled: true,
+                                        fillColor:
+                                            // Todo
+                                            //  header?.backgroundColor ??
+                                            IsmChatConfig
+                                                .chatTheme.backgroundColor,
+                                        contentPadding:
+                                            Responsive.isWebAndTablet(context)
+                                                ? IsmChatDimens.edgeInsets12
+                                                : IsmChatDimens.edgeInsets8,
+                                        prefixIcon:
+                                            Responsive.isWebAndTablet(context)
+                                                ? null
+                                                : const _EmojiButton(null),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              IsmChatDimens.twenty),
+                                          borderSide: const BorderSide(
+                                              color: Colors.transparent),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              IsmChatDimens.twenty),
+                                          borderSide: const BorderSide(
+                                            color: Colors.transparent,
+                                          ),
+                                        ),
+                                      ),
+                                      onChanged: (_) {
+                                        if (controller.conversation
+                                                ?.conversationId?.isNotEmpty ??
+                                            false) {
+                                          controller.notifyTyping();
+                                          controller.showMentionsUserList(_);
+                                        }
+                                      },
+                                      // onTap: () {
+                                      //   controller.messageFieldFocusNode
+                                      //       .requestFocus();
+                                      //   FocusManager.instance.primaryFocus!
+                                      //       .requestFocus();
+                                      // },
                                     ),
                                   ),
-                                ),
-                                onChanged: (_) {
-                                  if (controller.conversation?.conversationId
-                                          ?.isNotEmpty ??
-                                      false) {
-                                    controller.notifyTyping();
-                                    controller.showMentionsUserList(_);
-                                  }
-                                },
-                                // onTap: () {
-                                //   controller.messageFieldFocusNode
-                                //       .requestFocus();
-                                //   FocusManager.instance.primaryFocus!
-                                //       .requestFocus();
-                                // },
+                                  if (IsmChatProperties
+                                          .attachments.isNotEmpty &&
+                                      !Responsive.isWebAndTablet(context)) ...[
+                                    const _AttachmentIcon()
+                                  ]
+                                ],
                               ),
-                            ),
-                            if (IsmChatProperties.attachments.isNotEmpty &&
-                                !Responsive.isWebAndTablet(context)) ...[
-                              const _AttachmentIcon()
-                            ]
-                          ],
+                            ],
+                          ),
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
@@ -258,7 +306,13 @@ class _EmojiButton extends StatelessWidget {
                     key: UniqueKey(),
                   ),
           ),
-          onPressed: controller.toggleEmojiBoard,
+          onPressed: () {
+            if (!controller.conversation!.isChattingAllowed) {
+              controller.showDialogCheckBlockUnBlock();
+            } else {
+              controller.toggleEmojiBoard();
+            }
+          },
         ),
       );
 }
@@ -629,8 +683,12 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
                     ),
             ),
             onPressed: () {
-              controller.showAttachment = !controller.showAttachment;
-              _toggle(context);
+              if (!controller.conversation!.isChattingAllowed) {
+                controller.showDialogCheckBlockUnBlock();
+              } else {
+                controller.showAttachment = !controller.showAttachment;
+                _toggle(context);
+              }
             },
           ),
         ),

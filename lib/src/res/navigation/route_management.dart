@@ -1,5 +1,6 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class IsmChatRouteManagement {
   const IsmChatRouteManagement._();
@@ -87,7 +88,7 @@ class IsmChatRouteManagement {
 
   static void goToWallpaperPreview(
       {required String? backgroundColor,
-      required String imagePath,
+      required XFile? imagePath,
       required int? assetSrNo}) {
     Get.toNamed(IsmChatWallpaperPreview.route, arguments: {
       'backgroundColor': backgroundColor,
@@ -114,6 +115,12 @@ class IsmChatRouteManagement {
   static void goToWebMediaPreview() {
     Get.toNamed(
       WebMediaPreview.route,
+    );
+  }
+
+  static void goToCameraView() {
+    Get.toNamed(
+      IsmChatCameraView.route,
     );
   }
 }

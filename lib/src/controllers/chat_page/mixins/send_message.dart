@@ -368,11 +368,12 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       documentMessage = message;
     } else {
       final result = await FilePicker.platform.pickFiles(
-          allowMultiple: true,
-          type: FileType.custom,
-          allowedExtensions: ['pdf'],
-          allowCompression: true,
-          withData: true);
+        allowMultiple: true,
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+        allowCompression: true,
+        withData: true,
+      );
       if (result?.files.isNotEmpty ?? false) {
         final chatConversationResponse = await IsmChatConfig.dbWrapper!
             .getConversation(conversationId: conversationId);

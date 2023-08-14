@@ -122,23 +122,24 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                             if (index == 0) {
                               return IsmChatTapHandler(
                                 onTap: () async {
-                                  var file = await IsmChatUtility.pickImage(
-                                      ImageSource.gallery);
-                                  if (file != null) {
+                                  var file = await IsmChatUtility.pickMedia(
+                                    ImageSource.gallery,
+                                  );
+                                  if (file.isNotEmpty) {
                                     if (Responsive.isWebAndTablet(
                                         Get.context!)) {
                                       await Get.dialog(IsmChatPageDailog(
                                           child: IsmChatWallpaperPreview(
                                         assetSrNo: 100,
                                         backgroundColor: '',
-                                        imagePath: file.path,
+                                        imagePath: file.first,
                                       )));
                                     } else {
                                       IsmChatRouteManagement
                                           .goToWallpaperPreview(
                                         assetSrNo: 100,
                                         backgroundColor: '',
-                                        imagePath: file.path,
+                                        imagePath: file.first,
                                       );
                                     }
                                   }
@@ -175,18 +176,20 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                   await Get.dialog(
                                     IsmChatPageDailog(
                                       child: IsmChatWallpaperPreview(
-                                          assetSrNo: image.srNo,
-                                          backgroundColor: '',
-                                          imagePath:
-                                              '${IsmChatAssets.backgroundImages}/${image.path!}'),
+                                        assetSrNo: image.srNo,
+                                        backgroundColor: '',
+                                        imagePath: XFile(
+                                            '${IsmChatAssets.backgroundImages}/${image.path!}'),
+                                      ),
                                     ),
                                   );
                                 } else {
                                   IsmChatRouteManagement.goToWallpaperPreview(
-                                      assetSrNo: image.srNo,
-                                      backgroundColor: '',
-                                      imagePath:
-                                          '${IsmChatAssets.backgroundImages}/${image.path!}');
+                                    assetSrNo: image.srNo,
+                                    backgroundColor: '',
+                                    imagePath: XFile(
+                                        '${IsmChatAssets.backgroundImages}/${image.path!}'),
+                                  );
                                 }
                               },
                               child: _BackgroundImage(image: image),
@@ -215,7 +218,7 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                     IsmChatPageDailog(
                                       child: IsmChatWallpaperPreview(
                                         backgroundColor: color.color,
-                                        imagePath: '',
+                                        imagePath: null,
                                         assetSrNo: color.srNo,
                                       ),
                                     ),
@@ -223,7 +226,7 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                 } else {
                                   IsmChatRouteManagement.goToWallpaperPreview(
                                     backgroundColor: color.color,
-                                    imagePath: '',
+                                    imagePath: null,
                                     assetSrNo: color.srNo,
                                   );
                                 }

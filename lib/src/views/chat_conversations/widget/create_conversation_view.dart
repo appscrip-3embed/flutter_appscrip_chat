@@ -1,8 +1,10 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:azlistview/azlistview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class IsmChatCreateConversationView extends StatelessWidget {
   IsmChatCreateConversationView({
@@ -129,15 +131,19 @@ class IsmChatCreateConversationView extends StatelessWidget {
                     Expanded(
                       child: NotificationListener<ScrollNotification>(
                         onNotification: (scrollNotification) {
-                          if (scrollNotification is ScrollEndNotification) {
-                            if (scrollNotification.metrics.pixels >
-                                scrollNotification.metrics.maxScrollExtent *
-                                    0.7) {
-                              controller.getNonBlockUserList(
-                                  opponentId: IsmChatConfig
-                                      .communicationConfig.userConfig.userId);
+                          if (controller
+                              .userSearchNameController.text.isEmpty) {
+                            if (scrollNotification is ScrollEndNotification) {
+                              if (scrollNotification.metrics.pixels >
+                                  scrollNotification.metrics.maxScrollExtent *
+                                      0.7) {
+                                controller.getNonBlockUserList(
+                                    opponentId: IsmChatConfig
+                                        .communicationConfig.userConfig.userId);
+                              }
                             }
                           }
+
                           return true;
                         },
                         child: AzListView(
@@ -517,19 +523,35 @@ class _GroupChatImageAndName extends StatelessWidget {
                     ),
                   )
                 else
-                  IsmChatImage.profile(
-                    controller.profileImage,
-                    dimensions: IsmChatDimens.hundred,
+                  IsmChatTapHandler(
+                    onTap: () {
+                      if (kIsWeb) {
+                        controller.ismUploadImage(ImageSource.gallery);
+                      } else {
+                        Get.bottomSheet<void>(
+                          const IsmChatProfilePhotoBottomSheet(),
+                          elevation: 0,
+                        );
+                      }
+                    },
+                    child: IsmChatImage.profile(
+                      controller.profileImage,
+                      dimensions: IsmChatDimens.hundred,
+                    ),
                   ),
                 Positioned(
                   bottom: IsmChatDimens.four,
                   right: IsmChatDimens.four,
                   child: IsmChatTapHandler(
                     onTap: () {
-                      Get.bottomSheet<void>(
-                        const IsmChatProfilePhotoBottomSheet(),
-                        elevation: 0,
-                      );
+                      if (kIsWeb) {
+                        controller.ismUploadImage(ImageSource.gallery);
+                      } else {
+                        Get.bottomSheet<void>(
+                          const IsmChatProfilePhotoBottomSheet(),
+                          elevation: 0,
+                        );
+                      }
                     },
                     child: Container(
                       alignment: Alignment.center,

@@ -272,24 +272,31 @@ class IsmChatConversationsController extends GetxController {
   }
 
   void ismUploadImage(ImageSource imageSource) async {
-    var file = await IsmChatUtility.pickImage(imageSource);
-    if (file == null) {
+    var file = await IsmChatUtility.pickMedia(imageSource);
+    if (file.isEmpty) {
       return;
     }
-    var bytes = file.readAsBytesSync();
-    var fileExtension = file.path.split('.').last;
-    await getPresignedUrl(fileExtension, bytes);
+    Uint8List? bytes;
+    String? extension;
+    if (kIsWeb) {
+      bytes = await file.first?.readAsBytes();
+      extension = 'jpg';
+    } else {
+      bytes = await file.first?.readAsBytes();
+      extension = file.first?.path.split('.').last;
+    }
+    await getPresignedUrl(extension!, bytes!);
   }
 
   /// function to pick image for group profile
   Future<void> ismChangeImage(ImageSource imageSource) async {
-    var file = await IsmChatUtility.pickImage(imageSource);
-    if (file == null) {
+    var file = await IsmChatUtility.pickMedia(imageSource);
+    if (file.isEmpty) {
       return;
     }
-    var bytes = file.readAsBytesSync();
-    var fileExtension = file.path.split('.').last;
-    await getPresignedUrl(fileExtension, bytes);
+    var bytes = await file.first?.readAsBytes();
+    var fileExtension = file.first?.path.split('.').last;
+    await getPresignedUrl(fileExtension!, bytes!);
   }
 
   // / get Api for presigned Url.....
@@ -308,7 +315,6 @@ class IsmChatConversationsController extends GetxController {
     var responseCode = await updatePresignedUrl(response.presignedUrl, bytes);
     if (responseCode == 200) {
       profileImage = response.mediaUrl!;
-      Get.back();
     }
   }
 

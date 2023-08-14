@@ -79,5 +79,10 @@ class IsmChatPages {
       page: WebMediaPreview.new,
       binding: IsmChatPageBinding(),
     ),
+    GetPage(
+      name: IsmChatCameraView.route,
+      page: IsmChatCameraView.new,
+      binding: IsmChatPageBinding(),
+    ),
   ];
 }

@@ -96,9 +96,11 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                   children: [
                     IsmChatDimens.boxHeight16,
                     IsmChatTapHandler(
-                      onTap: () {
-                        controller.showDialogForChangeGroupProfile();
-                      },
+                      onTap: controller.conversation?.isGroup ?? false
+                          ? () {
+                              controller.showDialogForChangeGroupProfile();
+                            }
+                          : null,
                       child: Stack(
                         alignment: Alignment.bottomRight,
                         children: [
@@ -106,33 +108,38 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                             controller.conversation?.profileUrl ?? '',
                             dimensions: IsmChatDimens.hundred,
                           ),
-                          CircleAvatar(
-                            radius: IsmChatDimens.forteen,
-                            child: Icon(
-                              Icons.edit_outlined,
-                              size: IsmChatDimens.eighteen,
-                            ),
-                          )
+                          if (controller.conversation?.isGroup ?? false)
+                            CircleAvatar(
+                              radius: IsmChatDimens.forteen,
+                              child: Icon(
+                                Icons.edit_outlined,
+                                size: IsmChatDimens.eighteen,
+                              ),
+                            )
                         ],
                       ),
                     ),
                     IsmChatDimens.boxHeight5,
                     IsmChatTapHandler(
-                        onTap: () {
-                          controller.groupTitleController.text =
-                              controller.conversation!.chatName;
-                          controller.showDialogForChangeGroupTitle();
-                        },
+                        onTap: controller.conversation?.isGroup ?? false
+                            ? () {
+                                controller.groupTitleController.text =
+                                    controller.conversation!.chatName;
+                                controller.showDialogForChangeGroupTitle();
+                              }
+                            : null,
                         child: Text(
                           controller.conversation!.chatName,
                           style: IsmChatStyles.w600Black27,
                         )),
-                    Text(
-                      controller
-                              .conversation!.opponentDetails?.userIdentifier ??
-                          '',
-                      style: IsmChatStyles.w500GreyLight17,
-                    ),
+                    if (!(controller.conversation?.isGroup ?? false)) ...[
+                      Text(
+                        controller.conversation!.opponentDetails
+                                ?.userIdentifier ??
+                            '',
+                        style: IsmChatStyles.w500GreyLight17,
+                      ),
+                    ],
                     if (controller.conversation?.isGroup ?? false) ...[
                       Text(
                         '${controller.conversation?.membersCount} ${IsmChatStrings.participants}',
