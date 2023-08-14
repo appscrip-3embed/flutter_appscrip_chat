@@ -162,32 +162,25 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                           enabled: widget.isSlidableEnable
                                   ?.call(context, conversation) ??
                               true,
-                          startActionPane: widget.actions == null ||
-                                  widget.actions!.isEmpty
-                              ? null
-                              : ActionPane(
-                                  extentRatio: 0.3,
-                                  motion: const ScrollMotion(),
-                                  children: [
-                                      ...widget.actions?.map(
-                                            (e) => SlidableAction(
-                                              onPressed: (_) =>
-                                                  e.onTap(conversation),
-                                              flex: 1,
-                                              backgroundColor:
-                                                  e.backgroundColor ??
-                                                      IsmChatConfig.chatTheme
-                                                          .primaryColor!,
-                                              icon: e.icon,
-                                              foregroundColor: e.style?.color,
-                                              label: e.label,
-                                              borderRadius: e.borderRadius ??
-                                                  BorderRadius.circular(
-                                                      IsmChatDimens.eight),
-                                            ),
-                                          ) ??
-                                          [],
-                                    ]),
+                          startActionPane:
+                              widget.actions == null || widget.actions!.isEmpty
+                                  ? null
+                                  : ActionPane(
+                                      extentRatio: 0.3,
+                                      motion: const ScrollMotion(),
+                                      children: [
+                                          ...widget.actions?.map(
+                                                (e) => IsmChatActionWidget(
+                                                  onTap: () =>
+                                                      e.onTap(conversation),
+                                                  decoration: e.decoration,
+                                                  icon: e.icon,
+                                                  label: e.label,
+                                                  labelStyle: e.labelStyle,
+                                                ),
+                                              ) ??
+                                              [],
+                                        ]),
                           endActionPane: !widget.allowDelete &&
                                   (widget.endActions == null ||
                                       widget.endActions!.isEmpty)
@@ -197,20 +190,12 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                                   motion: const StretchMotion(),
                                   children: [
                                     ...widget.endActions?.map(
-                                          (e) => SlidableAction(
-                                            onPressed: (_) =>
-                                                e.onTap(conversation),
-                                            flex: 1,
-                                            backgroundColor:
-                                                e.backgroundColor ??
-                                                    IsmChatConfig.chatTheme
-                                                        .primaryColor!,
+                                          (e) => IsmChatActionWidget(
+                                            onTap: () => e.onTap(conversation),
+                                            decoration: e.decoration,
                                             icon: e.icon,
-                                            foregroundColor: e.style?.color,
                                             label: e.label,
-                                            borderRadius: e.borderRadius ??
-                                                BorderRadius.circular(
-                                                    IsmChatDimens.eight),
+                                            labelStyle: e.labelStyle,
                                           ),
                                         ) ??
                                         [],

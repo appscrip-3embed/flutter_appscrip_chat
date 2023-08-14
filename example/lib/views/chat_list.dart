@@ -19,9 +19,10 @@ class ChatList extends StatelessWidget {
           primaryColor: AppColors.primaryColorLight,
           chatPageTheme: IsmChatPageThemeData(
             selfMessageTheme: IsmChatMessageThemeData(
-                // backgroundColor: Colors.white,
-                borderColor: Colors.grey,
-                showProfile: false),
+              // backgroundColor: Colors.white,
+              borderColor: Colors.grey,
+              showProfile: false,
+            ),
             opponentMessageTheme: IsmChatMessageThemeData(
               // backgroundColor: Colors.white,
               borderColor: AppColors.primaryColorLight,
@@ -50,6 +51,7 @@ class ChatList extends StatelessWidget {
           ),
         ),
         showAppBar: true,
+
         onSignOut: controller.onSignOut,
         onChatTap: (_, __) => RouteManagement.goToChatMessages(),
         showCreateChatIcon: true,
