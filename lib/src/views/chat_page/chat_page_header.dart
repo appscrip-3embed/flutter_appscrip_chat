@@ -154,17 +154,24 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                                   IsmChatStyles.w400White12,
                                             )
                                           : Flexible(
-                                              child: Text(
-                                                controller
-                                                        .conversation
-                                                        ?.opponentDetails
-                                                        ?.lastSeen
-                                                        .toCurrentTimeStirng() ??
-                                                    '',
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: header?.subtitleStyle ??
-                                                    IsmChatStyles.w400White12,
+                                              child: SizedBox(
+                                                width:
+                                                    IsmChatDimens.percentWidth(
+                                                        .6),
+                                                child: Text(
+                                                  controller
+                                                          .conversation
+                                                          ?.opponentDetails
+                                                          ?.lastSeen
+                                                          .toCurrentTimeStirng() ??
+                                                      '',
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: header
+                                                          ?.subtitleStyle ??
+                                                      IsmChatStyles.w400White12,
+                                                ),
                                               ),
                                             ),
                             ),
