@@ -3,15 +3,15 @@ import 'package:flutter/widgets.dart';
 
 class IsmChatConversationAction {
   IsmChatConversationAction(
-      {required this.label,
+      {this.label,
       required this.onTap,
       required this.icon,
       required this.decoration,
-      required this.labelStyle});
+      this.labelStyle});
 
   final Decoration decoration;
   final Widget icon;
-  final String label;
-  final TextStyle labelStyle;
+  final String? label;
+  final TextStyle? labelStyle;
   final void Function(IsmChatConversationModel) onTap;
 }
