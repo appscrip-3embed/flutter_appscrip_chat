@@ -6,10 +6,10 @@ class IsmChatConversationAction {
       {this.label,
       required this.onTap,
       required this.icon,
-      required this.decoration,
+      this.decoration,
       this.labelStyle});
 
-  final Decoration decoration;
+  final Decoration? decoration;
   final Widget icon;
   final String? label;
   final TextStyle? labelStyle;
