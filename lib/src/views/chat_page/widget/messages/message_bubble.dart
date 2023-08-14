@@ -69,7 +69,7 @@ class MessageBubble extends StatelessWidget {
                               ? IsmChatStyles.w400White10
                               : IsmChatStyles.w400Grey10)
                           .copyWith(
-                        color: message.style.color,
+                        color: message.textColor,
                       ),
                     ),
                     if (message.sentByMe &&
