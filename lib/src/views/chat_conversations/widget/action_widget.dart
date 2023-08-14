@@ -6,17 +6,17 @@ class IsmChatActionWidget extends StatelessWidget {
   const IsmChatActionWidget({
     Key? key,
     required this.onTap,
-    required this.decoration,
+    this.decoration,
     required this.icon,
-    required this.label,
-    required this.labelStyle,
+    this.label,
+    this.labelStyle,
   }) : super(key: key);
 
   final VoidCallback onTap;
-  final Decoration decoration;
+  final Decoration? decoration;
   final Widget icon;
-  final String label;
-  final TextStyle labelStyle;
+  final String? label;
+  final TextStyle? labelStyle;
 
   @override
   Widget build(BuildContext context) => Expanded(
@@ -32,10 +32,11 @@ class IsmChatActionWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 icon,
-                Text(
-                  label,
-                  style: labelStyle,
-                )
+                if (label != null && labelStyle != null)
+                  Text(
+                    label!,
+                    style: labelStyle,
+                  )
               ],
             ),
           ),
