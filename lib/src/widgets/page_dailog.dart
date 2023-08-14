@@ -14,7 +14,7 @@ class IsmChatPageDailog extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: IsmChatDimens.percentWidth(.3),
+            maxWidth: IsmChatDimens.percentWidth(.35),
             maxHeight: IsmChatDimens.percentHeight(.9),
           ),
           child: child,

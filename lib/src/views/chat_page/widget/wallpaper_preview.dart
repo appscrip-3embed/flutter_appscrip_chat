@@ -111,7 +111,7 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                               children: [
                                 Padding(
                                   padding: IsmChatDimens.edgeInsetsR4
-                                      .copyWith(right: 70),
+                                      .copyWith(right: 50),
                                   child: Text(
                                     'Hiiiiii',
                                     style: IsmChatStyles.w400Black14,

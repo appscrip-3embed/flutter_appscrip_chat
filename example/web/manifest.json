@@ -1,6 +1,6 @@
 {
-  "name": "chat_component_example",
-  "short_name": "chat_component_example",
+  "name": "Flutter chat",
+  "short_name": "Flutter chat",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#0175C2",

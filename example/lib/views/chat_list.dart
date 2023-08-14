@@ -21,16 +21,6 @@ class _ChatListState extends State<ChatList> {
   Widget build(BuildContext context) {
     return GetBuilder<ChatListController>(builder: (controller) {
       return Scaffold(
-        appBar: kIsWeb
-            ? null
-            : IsmChatListHeader(
-                onSignOut: () {
-                  controller.onSignOut();
-                },
-                onSearchTap: (p0, p1, p2) {},
-                showSearch: true,
-                width: IsmChatDimens.percentWidth(.3),
-              ),
         body: IsmChatApp(
           chatTheme: IsmChatThemeData(
             primaryColor: AppColors.primaryColorLight,
@@ -100,6 +90,16 @@ class _ChatListState extends State<ChatList> {
                 )
               ],
             ),
+          ),
+          conversationHeaderWidget: IsmChatListHeader(
+            onSignOut: () {
+              controller.onSignOut();
+            },
+            onSearchTap: (p0, p1, p2) {},
+            showSearch: false,
+            width: Responsive.isWebAndTablet(context)
+                ? IsmChatDimens.percentWidth(.3)
+                : null,
           ),
           conversationProperties: IsmChatConversationProperties(
             showCreateChatIcon: true,

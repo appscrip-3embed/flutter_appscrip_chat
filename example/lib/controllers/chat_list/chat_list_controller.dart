@@ -1,7 +1,3 @@
-// ignore_for_file: unused_field
-
-import 'dart:html' as html;
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/main.dart';
 import 'package:chat_component_example/models/models.dart';
@@ -28,37 +24,8 @@ class ChatListController extends GetxController {
   @override
   void onInit() {
     userDetails = AppConfig.userDetail!;
-    listenTabAndRefesh();
-
     super.onInit();
   }
-
-  listenTabAndRefesh() => html.window.onBeforeUnload.listen((event) async {
-        // Future.delayed(const Duration(milliseconds: 100), () {
-        //   html.window.history.replaceState(
-        //     null,
-        //     '',
-        //     ChatList.route,
-        //   );
-        // });
-
-        // IsmChatBlob
-
-        IsmChatLog.error(event);
-
-        // Get.back();
-
-        // Get.back(result: ChatList.route);
-
-        // navigatorKey.currentState!.re(ChatList.route);
-        // Navigator.of(Get.context!).pop();
-        // Navigator.pushReplacement(
-        //   Get.context!,
-        //   MaterialPageRoute(
-        //     builder: (context) => const ChatList(),
-        //   ),
-        // );
-      });
 
   void onSignOut() {
     dbWrapper?.deleteChatLocalDb();

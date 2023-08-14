@@ -17,6 +17,7 @@ class IsmChatApp extends StatelessWidget {
     this.enableGroupChat = false,
     this.useDataBase = true,
     this.startConversationWidget,
+    this.conversationHeaderWidget,
   }) {
     assert(IsmChatConfig.isInitialized,
         'ChatHiveBox is not initialized\nYou are getting this error because the Database class is not initialized, to initialize ChatHiveBox class call AppscripChatComponent.initialize() before your runApp()');
@@ -33,6 +34,7 @@ class IsmChatApp extends StatelessWidget {
     IsmChatConfig.dbName = databaseName ?? IsmChatStrings.dbname;
     IsmChatProperties.loadingDialog = loadingDialog;
     IsmChatProperties.startConversationWidget = startConversationWidget;
+    IsmChatProperties.conversationHeaderWidget = conversationHeaderWidget;
     if (communicationConfig != null) {
       IsmChatConfig.communicationConfig = communicationConfig!;
       IsmChatConfig.configInitilized = true;
@@ -80,6 +82,8 @@ class IsmChatApp extends StatelessWidget {
 
   ///  It is showing you have no tap any converstaion
   final Widget? startConversationWidget;
+
+  final Widget? conversationHeaderWidget;
 
   /// Call this function for Get all Conversation List
   static Future<List<IsmChatConversationModel>?> getAllConversation() async =>

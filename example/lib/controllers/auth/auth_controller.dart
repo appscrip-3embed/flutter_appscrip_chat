@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:chat_component_example/res/dimens.dart';
 import 'package:chat_component_example/res/res.dart';
 import 'package:chat_component_example/utilities/utilities.dart';
 import 'package:chat_component_example/view_models/view_models.dart';
@@ -111,7 +112,7 @@ class AuthController extends GetxController {
     XFile? result;
     if (imageSource == ImageSource.gallery) {
       result = await ImagePicker()
-          .pickImage(imageQuality: 25, source: ImageSource.gallery);
+          .pickImage(imageQuality: 25, source: ImageSource.camera);
     } else {
       result = await ImagePicker().pickImage(
         imageQuality: 25,
@@ -133,6 +134,32 @@ class AuthController extends GetxController {
           ),
           IOSUiSettings(
             title: 'Cropper',
+          ),
+          WebUiSettings(
+            context: Get.context!,
+            customDialogBuilder: (cropper, crop, rotate) {
+              return Dialog(
+                child: Builder(
+                  builder: (context) {
+                    return SizedBox(
+                      height: Dimens.percentHeight(.7),
+                      child: Column(mainAxisSize: MainAxisSize.min, children: [
+                        SizedBox(height: 300, child: cropper),
+                        TextButton(
+                          onPressed: () async {
+                            /// it is important to call crop() function and return
+                            /// result data to plugin, for example:
+                            final result = await crop();
+                            Navigator.of(Get.context!).pop(result);
+                          },
+                          child: const Text('Crop'),
+                        )
+                      ]),
+                    );
+                  },
+                ),
+              );
+            },
           )
         ],
       );

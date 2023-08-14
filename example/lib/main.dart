@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 import 'data/data.dart';
 import 'views/views.dart';
@@ -17,11 +18,13 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   await initialize();
+
   runApp(const MyApp());
 }
 
 Future<void> initialize() async {
   WidgetsFlutterBinding.ensureInitialized();
+  setPathUrlStrategy();
 
   dbWrapper = await DBWrapper.create();
   await AppConfig.getUserData();
@@ -55,9 +58,9 @@ class _MyAppState extends State<MyApp> {
       splitScreenMode: true,
       builder: (_, child) => child!,
       child: GetMaterialApp(
-        navigatorObservers: [],
         key: const Key('ChatApp'),
         navigatorKey: navigatorKey,
+        title: 'Flutter chat',
         locale: const Locale('en', 'US'),
         localizationsDelegates: const [
           ...GlobalMaterialLocalizations.delegates,

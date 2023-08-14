@@ -45,7 +45,8 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
             onTap: !kIsWeb
                 ? () => Get.bottomSheet(
                       IsmChatLogutBottomSheet(
-                          signOutTap: () => onSignOut?.call()),
+                        signOutTap: () => onSignOut?.call(),
+                      ),
                       elevation: IsmChatDimens.twenty,
                       enableDrag: true,
                       backgroundColor: IsmChatColors.whiteColor,

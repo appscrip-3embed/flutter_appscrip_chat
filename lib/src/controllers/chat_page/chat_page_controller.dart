@@ -45,7 +45,11 @@ class IsmChatPageController extends GetxController
 
   final _deviceConfig = Get.find<IsmChatDeviceConfig>();
 
-  IsmChatConversationModel? conversation;
+  final Rx<IsmChatConversationModel?> _conversation =
+      Rx<IsmChatConversationModel?>(null);
+  IsmChatConversationModel? get conversation => _conversation.value;
+  set conversation(IsmChatConversationModel? value) =>
+      _conversation.value = value;
 
   var messageFieldFocusNode = FocusNode();
 
@@ -82,9 +86,7 @@ class IsmChatPageController extends GetxController
 
   final RxBool _isLocaionSearch = false.obs;
   bool get isLocaionSearch => _isLocaionSearch.value;
-  set isLocaionSearch(bool value) {
-    _isLocaionSearch.value = value;
-  }
+  set isLocaionSearch(bool value) => _isLocaionSearch.value = value;
 
   final RxBool _showSendButton = false.obs;
   bool get showSendButton => _showSendButton.value;
@@ -96,9 +98,7 @@ class IsmChatPageController extends GetxController
 
   final RxBool _isMemberSearch = false.obs;
   bool get isMemberSearch => _isMemberSearch.value;
-  set isMemberSearch(bool value) {
-    _isMemberSearch.value = value;
-  }
+  set isMemberSearch(bool value) => _isMemberSearch.value = value;
 
   final Rx<IsmChatMessageModel?> _chatMessageModel =
       Rx<IsmChatMessageModel?>(null);
@@ -406,13 +406,15 @@ class IsmChatPageController extends GetxController
         );
         checkUserStatus();
       } else {
+        if (Responsive.isWebAndTablet(Get.context!)) {
+          messages.clear();
+        }
         if (conversation!.isGroup ?? false) {
           await createConversation(userId: [], isGroup: true);
         }
         isMessagesLoading = false;
       }
     }
-
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
     });

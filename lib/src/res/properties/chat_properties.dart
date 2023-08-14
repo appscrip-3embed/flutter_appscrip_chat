@@ -11,4 +11,5 @@ class IsmChatProperties {
   static List<IsmChatAttachmentType> attachments = IsmChatAttachmentType.values;
   static Widget? loadingDialog;
   static Widget? startConversationWidget;
+  static Widget? conversationHeaderWidget;
 }

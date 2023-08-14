@@ -1,5 +1,6 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
@@ -212,19 +213,20 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                                       style: IsmChatStyles.typing,
                                     ),
                             onTap: () {
-                              IsmChatProperties.conversationProperties
-                                  .onChatTap!(_, conversation);
-                              if (Responsive.isWebAndTablet(context)) {
+                              if (kIsWeb) {
                                 controller.isConversationId =
                                     conversation.conversationId ?? '';
-                                controller.navigateToMessages(conversation);
+                              }
+                              IsmChatProperties.conversationProperties
+                                  .onChatTap!(_, conversation);
+                              controller.navigateToMessages(conversation);
+                              if (Responsive.isWebAndTablet(context)) {
                                 if (!Get.isRegistered<
                                     IsmChatPageController>()) {
                                   IsmChatPageBinding().dependencies();
                                 }
                                 Get.find<IsmChatPageController>().startInit();
                               } else {
-                                controller.navigateToMessages(conversation);
                                 IsmChatRouteManagement.goToChatPage();
                               }
                             },

@@ -124,7 +124,6 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                 onTap: () async {
                                   var file = await IsmChatUtility.pickImage(
                                       ImageSource.gallery);
-
                                   if (file != null) {
                                     if (Responsive.isWebAndTablet(
                                         Get.context!)) {
@@ -211,11 +210,23 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                 conversationController.backgroundColor[index];
                             return IsmChatTapHandler(
                               onTap: () async {
-                                IsmChatRouteManagement.goToWallpaperPreview(
-                                  backgroundColor: color.color,
-                                  imagePath: '',
-                                  assetSrNo: color.srNo,
-                                );
+                                if (Responsive.isWebAndTablet(context)) {
+                                  await Get.dialog(
+                                    IsmChatPageDailog(
+                                      child: IsmChatWallpaperPreview(
+                                        backgroundColor: color.color,
+                                        imagePath: '',
+                                        assetSrNo: color.srNo,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  IsmChatRouteManagement.goToWallpaperPreview(
+                                    backgroundColor: color.color,
+                                    imagePath: '',
+                                    assetSrNo: color.srNo,
+                                  );
+                                }
                               },
                               child: SizedBox(
                                 height: IsmChatDimens.hundred,

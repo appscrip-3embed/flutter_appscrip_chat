@@ -1,3 +1,4 @@
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/controllers/auth/auth_controller.dart';
 import 'package:chat_component_example/res/res.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,12 @@ class SignupView extends StatelessWidget {
                           Center(
                             child: GestureDetector(
                               onTap: () {
-                                Get.bottomSheet<void>(
+                                if (Responsive.isWebAndTablet(context)) {
+                                  controller.ismUploadImage(
+                                    ImageSource.gallery,
+                                  );
+                                } else {
+                                  Get.bottomSheet<void>(
                                     Container(
                                         padding: const EdgeInsets.all(20),
                                         height: 180,
@@ -144,10 +150,13 @@ class SignupView extends StatelessWidget {
                                     enableDrag: true,
                                     backgroundColor: Colors.white,
                                     shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(25),
-                                      topRight: Radius.circular(25),
-                                    )));
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(25),
+                                        topRight: Radius.circular(25),
+                                      ),
+                                    ),
+                                  );
+                                }
                               },
                               child: Stack(
                                 children: [
