@@ -5,7 +5,6 @@ class IsmChatConversationAction {
   IsmChatConversationAction(
       {required this.label,
       required this.onTap,
-      required this.lableStyle,
       required this.icon,
       required this.decoration,
       required this.labelStyle});
@@ -15,5 +14,4 @@ class IsmChatConversationAction {
   final String label;
   final TextStyle labelStyle;
   final void Function(IsmChatConversationModel) onTap;
-  final TextStyle? lableStyle;
 }
