@@ -190,6 +190,7 @@ class IsmChatPageViewModel {
 
   List<IsmChatMessageModel> sortMessages(List<IsmChatMessageModel> messages) {
     messages.sort((a, b) => a.sentAt.compareTo(b.sentAt));
+
     return _parseMessagesWithDate(messages);
   }
 
@@ -199,6 +200,7 @@ class IsmChatPageViewModel {
     var result = <List<IsmChatMessageModel>>[];
     var list1 = <IsmChatMessageModel>[];
     var allMessages = <IsmChatMessageModel>[];
+
     for (var x = 0; x < messages.length; x++) {
       if (x == 0) {
         list1.add(messages[x]);
@@ -223,6 +225,7 @@ class IsmChatPageViewModel {
       );
       allMessages.addAll(messages);
     }
+
     return allMessages;
   }
 

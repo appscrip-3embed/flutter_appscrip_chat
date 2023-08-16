@@ -54,6 +54,7 @@ class MessageCard extends StatelessWidget {
           },
           hoverColor: Colors.transparent,
           onTap: () async {
+            controller.closeOveray();
             if (message.messageType == IsmChatMessageType.reply) {
               controller.scrollToMessage(message.parentMessageId ?? '');
             } else if ([

@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
@@ -164,12 +163,12 @@ class IsmChatDBWrapper {
       if (map == null) {
         return null;
       }
-
       return IsmChatConversationModel.fromJson(map);
     }
     if (listMap == null || listMap.isEmpty) {
       return null;
     }
+
     conversations = IsmChatConversationModel(
       conversationId: conversationId,
       messages: listMap.map(IsmChatMessageModel.fromJson).toList(),

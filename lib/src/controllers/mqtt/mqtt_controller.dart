@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/controllers/mqtt/clients/mobile_client.dart'
     if (dart.library.html) 'clients/web_client.dart';
@@ -413,6 +414,7 @@ class IsmChatMqttController extends GetxController {
       if (lastMessage.messageId == actionModel.messageId) {
         var isDelivered = lastMessage.deliveredTo
             ?.any((e) => e.userId == actionModel.userDetails?.userId);
+
         if (isDelivered == false) {
           lastMessage.deliveredTo?.add(
             MessageStatus(
@@ -423,13 +425,14 @@ class IsmChatMqttController extends GetxController {
         }
 
         lastMessage.deliveredToAll = lastMessage.deliveredTo?.length ==
-                (conversation.membersCount ?? 0) - 1
-            ? true
-            : false;
+            (conversation.membersCount ?? 0) - 1;
         conversation.messages?.last = lastMessage;
 
-        conversation.lastMessageDetails?.copyWith(
-          readCount: lastMessage.deliveredTo?.length,
+        conversation = conversation.copyWith(
+          lastMessageDetails: conversation.lastMessageDetails?.copyWith(
+            deliverCount: lastMessage.deliveredTo?.length,
+            deliveredTo: lastMessage.deliveredTo,
+          ),
         );
 
         await IsmChatConfig.dbWrapper!
@@ -466,13 +469,14 @@ class IsmChatMqttController extends GetxController {
           );
         }
         lastMessage.readByAll =
-            lastMessage.readBy?.length == (conversation.membersCount ?? 0) - 1
-                ? true
-                : false;
+            lastMessage.readBy?.length == (conversation.membersCount ?? 0) - 1;
         conversation.messages?.last = lastMessage;
 
-        conversation.lastMessageDetails?.copyWith(
-          readCount: lastMessage.readBy?.length,
+        conversation = conversation.copyWith(
+          lastMessageDetails: conversation.lastMessageDetails?.copyWith(
+            readCount: lastMessage.readBy?.length,
+            readBy: lastMessage.readBy,
+          ),
         );
         await IsmChatConfig.dbWrapper!
             .saveConversation(conversation: conversation);
@@ -545,11 +549,14 @@ class IsmChatMqttController extends GetxController {
       }
     }
     conversation = conversation.copyWith(
-        messages: modifiedMessages,
-        lastMessageDetails: conversation.lastMessageDetails?.copyWith(
-          deliverCount: modifiedMessages.last.deliveredTo?.length,
-          readCount: modifiedMessages.last.readBy?.length,
-        ));
+      messages: modifiedMessages,
+      lastMessageDetails: conversation.lastMessageDetails?.copyWith(
+        deliverCount: modifiedMessages.last.deliveredTo?.length,
+        readCount: modifiedMessages.last.readBy?.length,
+        readBy: modifiedMessages.last.readBy,
+        deliveredTo: modifiedMessages.last.deliveredTo,
+      ),
+    );
 
     await IsmChatConfig.dbWrapper!.saveConversation(conversation: conversation);
     if (Get.isRegistered<IsmChatPageController>()) {

@@ -14,10 +14,11 @@ class ReactionGrid extends StatelessWidget {
   Widget build(BuildContext context) => Material(
         elevation: IsmChatDimens.four,
         borderRadius: BorderRadius.circular(IsmChatDimens.sixteen),
-        child: SizedBox(
+        child: Container(
+          alignment: Alignment.center,
           height: Responsive.isWebAndTablet(context)
               ? IsmChatDimens.percentHeight(.1)
-              : IsmChatDimens.ninty,
+              : IsmChatDimens.hundred + IsmChatDimens.eight,
           width: Responsive.isWebAndTablet(context)
               ? IsmChatDimens.percentWidth(.2)
               : null,

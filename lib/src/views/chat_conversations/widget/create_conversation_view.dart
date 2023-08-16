@@ -9,10 +9,12 @@ import 'package:image_picker/image_picker.dart';
 class IsmChatCreateConversationView extends StatelessWidget {
   IsmChatCreateConversationView({
     super.key,
-    this.isGroupConversation = false,
-  });
+    bool? isGroupConversation,
+  }) : _isGroupConversation = isGroupConversation ??
+            (Get.arguments as Map<String, dynamic>?)?['isGroupConversation'] ??
+            false;
 
-  final bool isGroupConversation;
+  final bool? _isGroupConversation;
   final converstaionController = Get.find<IsmChatConversationsController>();
 
   static const String route = IsmPageRoutes.createChat;
@@ -82,7 +84,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                     },
                   )
                 : Text(
-                    isGroupConversation
+                    _isGroupConversation ?? false
                         ? 'New Group Conversation'
                         : 'New Conversation',
                     style: IsmChatStyles.w600White18,
@@ -122,7 +124,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                   : const IsmChatLoadingDialog()
               : Column(
                   children: [
-                    if (isGroupConversation) ...[
+                    if (_isGroupConversation ?? false) ...[
                       Container(
                           width: Get.width,
                           color: IsmChatColors.whiteColor,
@@ -165,7 +167,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                               ),
                             ),
                           ),
-                          indexBarData: isGroupConversation
+                          indexBarData: _isGroupConversation ?? false
                               ? const []
                               : SuspensionUtil.getTagIndexList(
                                   controller.forwardedList)
@@ -223,7 +225,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                             }
                             return IsmChatTapHandler(
                               onTap: () async {
-                                if (isGroupConversation) {
+                                if (_isGroupConversation ?? false) {
                                   controller.onForwardUserTap(index);
                                 } else {
                                   var ismChatConversation =
@@ -292,7 +294,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                       overflow: TextOverflow.ellipsis,
                                       style: IsmChatStyles.w400Black12,
                                     ),
-                                    trailing: !isGroupConversation
+                                    trailing: !_isGroupConversation!
                                         ? null
                                         : Container(
                                             padding:
@@ -325,7 +327,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                       ),
                     ),
                     if (controller.forwardedList.selectedUsers.isNotEmpty &&
-                        isGroupConversation)
+                        _isGroupConversation!)
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.white,

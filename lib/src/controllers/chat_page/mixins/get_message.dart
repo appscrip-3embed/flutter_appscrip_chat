@@ -4,11 +4,15 @@ mixin IsmChatPageGetMessageMixin {
   IsmChatPageController get _controller => Get.find<IsmChatPageController>();
 
   Future<void> getMessagesFromDB(String conversationId) async {
+    if (_controller.messageHoldOverlayEntry != null) {
+      _controller.closeOveray();
+    }
     _controller.messages.clear();
     var messages = await IsmChatConfig.dbWrapper!.getMessage(conversationId);
     if (messages?.isEmpty ?? false || messages == null) {
       return;
     }
+
     _controller.messages = _controller._viewModel.sortMessages(messages!);
 
     if (_controller.messages.isEmpty) {
@@ -32,6 +36,7 @@ mixin IsmChatPageGetMessageMixin {
         (_controller.messages.isEmpty
             ? 0
             : _controller.messages.last.sentAt + 2000);
+
     var messagesList = List.from(_controller.messages);
     messagesList.removeWhere(
         (element) => element.customType == IsmChatCustomMessageType.date);
@@ -159,23 +164,73 @@ mixin IsmChatPageGetMessageMixin {
       return;
     }
 
-    conversation = conversation.copyWith(
-      unreadMessagesCount: 0,
-      lastMessageDetails: conversation.lastMessageDetails?.copyWith(
-        sentByMe: message.sentByMe,
-        showInConversation: true,
-        sentAt: message.sentAt,
-        senderName: message.senderInfo?.userName,
-        messageType: message.messageType?.value ?? 0,
-        messageId: message.messageId ?? '',
-        conversationId: message.conversationId ?? '',
-        body: message.body,
-        customType: message.customType,
-        action: '',
-      ),
-    );
+    if (!_controller.didReactedLast) {
+      if (message.customType != IsmChatCustomMessageType.removeMember) {
+        conversation = conversation.copyWith(
+          lastMessageDetails: conversation.lastMessageDetails?.copyWith(
+            sentByMe: message.sentByMe,
+            showInConversation: true,
+            sentAt: conversation.lastMessageDetails?.reactionType?.isNotEmpty ==
+                    true
+                ? conversation.lastMessageDetails?.sentAt
+                : message.sentAt,
+            senderName: [
+              IsmChatCustomMessageType.removeAdmin,
+              IsmChatCustomMessageType.addAdmin
+            ].contains(message.customType)
+                ? message.initiatorName ?? ''
+                : message.chatName,
+            messageType: message.messageType?.value ?? 0,
+            messageId: message.messageId ?? '',
+            conversationId: message.conversationId ?? '',
+            body: message.body,
+            customType: message.customType,
+            readBy: [],
+            deliveredTo: [],
+            readCount: conversation.isGroup!
+                ? message.readByAll!
+                    ? conversation.membersCount!
+                    : message.lastReadAt!.length
+                : message.readByAll!
+                    ? 1
+                    : 0,
+            deliverCount: conversation.isGroup!
+                ? message.deliveredToAll!
+                    ? conversation.membersCount!
+                    : 0
+                : message.deliveredToAll!
+                    ? 1
+                    : 0,
+            members:
+                message.members?.map((e) => e.memberName ?? '').toList() ?? [],
+            action: '',
+          ),
+          unreadMessagesCount: 0,
+        );
+        await IsmChatConfig.dbWrapper!
+            .saveConversation(conversation: conversation);
+        await conversationController.getConversationsFromDB();
+      }
+    } else {
+      await conversationController.getChatConversations();
+    }
 
-    await IsmChatConfig.dbWrapper!.saveConversation(conversation: conversation);
-    unawaited(conversationController.getConversationsFromDB());
+    // conversation = conversation.copyWith(
+    //   unreadMessagesCount: 0,
+    //   lastMessageDetails: conversation.lastMessageDetails?.copyWith(
+    //     sentByMe: message.sentByMe,
+    //     showInConversation: true,
+    //     sentAt: message.sentAt,
+    //     senderName: message.senderInfo?.userName,
+    //     messageType: message.messageType?.value ?? 0,
+    //     messageId: message.messageId ?? '',
+    //     conversationId: message.conversationId ?? '',
+    //     body: message.body,
+    //     customType: message.customType,
+    //     deliveredTo: message.deliveredTo,
+    //     readBy: message.readBy,
+    //     action: '',
+    //   ),
+    // );
   }
 }

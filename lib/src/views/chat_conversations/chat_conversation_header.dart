@@ -42,8 +42,13 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
           automaticallyImplyLeading: false,
           elevation: IsmChatDimens.appBarElevation,
           title: IsmChatTapHandler(
-            onTap: !kIsWeb
-                ? () => Get.bottomSheet(
+            onTap: Responsive.isWebAndTablet(context)
+                ? () {
+                    controller.isRenderScreen =
+                        IsRenderConversationScreen.userView;
+                    Scaffold.of(context).openDrawer();
+                  }
+                : () => Get.bottomSheet(
                       IsmChatLogutBottomSheet(
                         signOutTap: () => onSignOut?.call(),
                       ),
@@ -55,8 +60,7 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
                           top: Radius.circular(IsmChatDimens.twenty),
                         ),
                       ),
-                    )
-                : null,
+                    ),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -97,8 +101,8 @@ class _StartMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IconButton(
       onPressed: () {
-        controller.isRenderScreen = IsRenderConversationScreen.userView;
-
+        controller.isRenderScreen =
+            IsRenderConversationScreen.createConverstaionView;
         Scaffold.of(context).openDrawer();
       },
       icon: Icon(

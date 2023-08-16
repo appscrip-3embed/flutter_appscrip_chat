@@ -89,7 +89,6 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                   addAutomaticKeepAlives: true,
                   itemBuilder: (_, index) {
                     var conversation = controller.conversations[index];
-
                     return IsmChatProperties.conversationProperties.cardBuilder
                             ?.call(_, conversation, index) ??
                         Slidable(
@@ -226,7 +225,14 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                                     IsmChatPageController>()) {
                                   IsmChatPageBinding().dependencies();
                                 }
-                                Get.find<IsmChatPageController>().startInit();
+                                final chatPagecontroller =
+                                    Get.find<IsmChatPageController>();
+                                chatPagecontroller.startInit();
+                                if (chatPagecontroller
+                                        .messageHoldOverlayEntry !=
+                                    null) {
+                                  chatPagecontroller.closeOveray();
+                                }
                               } else {
                                 IsmChatRouteManagement.goToChatPage();
                               }

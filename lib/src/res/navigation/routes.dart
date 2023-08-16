@@ -5,6 +5,7 @@ class IsmPageRoutes {
   static const String createChat = '/createChat';
   static const String forwardView = '/forwardView';
   static const String blockView = '/blockView';
+  static const String userView = '/userView';
   static const String converstaionInfoView = '/converstaionInfoView';
   static const String groupEligiableView = '/groupEligiableView';
   static const String mediaPreviewView = '/mediaPreviewView';

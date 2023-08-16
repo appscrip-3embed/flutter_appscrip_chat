@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
     if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
 import 'package:azlistview/azlistview.dart';
@@ -784,13 +785,23 @@ class IsmChatPageController extends GetxController
     final renderBox = context.findRenderObject() as RenderBox?;
     final size = renderBox!.size;
     final offset = renderBox.localToGlobal(Offset.zero);
+    // Get hight of Overlay widget which is rendor on message tap
+    var overlayHeight = message.focusMenuList.length * IsmChatDimens.forty +
+        (IsmChatProperties.features.contains(IsmChatFeature.reaction)
+            ? IsmChatDimens.percentHeight(.1)
+            : 0);
+    var isOverFlowing = (overlayHeight + offset.dy) > Get.height;
+    var topPosition = offset.dy;
+    if (isOverFlowing) {
+      topPosition = (Get.height - overlayHeight) - IsmChatDimens.twenty;
+    }
     OverlayState? overlayState = Overlay.of(context);
     messageHoldOverlayEntry = OverlayEntry(
       maintainState: true,
       builder: (context) => Positioned(
         left: message.sentByMe ? null : offset.dx + size.width - 5,
         right: message.sentByMe ? 0 + size.width + 5 : null,
-        top: offset.dy,
+        top: topPosition,
         child: Material(
           color: Colors.transparent,
           child: AnimatedBuilder(
@@ -1132,6 +1143,8 @@ class IsmChatPageController extends GetxController
                   : messages.last.readByAll!
                       ? 1
                       : 0,
+              deliveredTo: messages.last.deliveredTo,
+              readBy: messages.last.readBy,
               deliverCount: chatConversation.isGroup!
                   ? messages.last.deliveredToAll!
                       ? chatConversation.membersCount!
@@ -1147,7 +1160,6 @@ class IsmChatPageController extends GetxController
             unreadMessagesCount: 0,
           );
         }
-
         await IsmChatConfig.dbWrapper!
             .saveConversation(conversation: chatConversation);
         await chatConversationController.getConversationsFromDB();
@@ -1730,14 +1742,16 @@ class IsmChatPageController extends GetxController
     } else {
       user = userDetails;
     }
-    IsmChatRouteManagement.goToUserInfo(
-      conversationId: conversation?.conversationId ?? '',
-      user: user!,
-    );
-    // await IsmChatUtility.openFullScreenBottomSheet(IsmChatUserInfo(
-    //   user: user!,
-    //   conversationId: conversation?.conversationId ?? '',
-    // ));
+    conversationController.contactDetails = user;
+    if (Responsive.isWebAndTablet(Get.context!)) {
+      conversationController.isRenderChatPageaScreen =
+          IsRenderChatPageScreen.userInfoView;
+    } else {
+      IsmChatRouteManagement.goToUserInfo(
+        conversationId: conversation?.conversationId ?? '',
+        user: user!,
+      );
+    }
   }
 
   Future<void> shareMedia(IsmChatMessageModel message) async {

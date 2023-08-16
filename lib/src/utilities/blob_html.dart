@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:html' as html;
 
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/services.dart';
 
 class IsmChatBlob {
@@ -85,8 +84,6 @@ class IsmChatBlob {
   }
 
   static listenTabAndRefesh() => html.window.onBeforeUnload.listen((event) {
-        IsmChatLog.error('radsffds');
-
         // Future.delayed(const Duration(milliseconds: 100), () {
         //   html.window.history.replaceState(
         //     null,

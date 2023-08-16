@@ -148,9 +148,21 @@ class _MessageBubbleState extends State<MessageBubble>
                                   holdAnimation);
                             }
                           },
-                          child: Icon(
-                            Icons.expand_more_rounded,
-                            color: widget.message.textColor,
+                          child: Container(
+                            width: IsmChatDimens.thirty,
+                            height: IsmChatDimens.thirty,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.circular(IsmChatDimens.fifty),
+                              color: IsmChatColors.whiteColor.withOpacity(.5),
+                              border: Border.all(
+                                color: IsmChatColors.blackColor,
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.expand_more_rounded,
+                              color: widget.message.textColor,
+                            ),
                           ),
                         ),
                       )

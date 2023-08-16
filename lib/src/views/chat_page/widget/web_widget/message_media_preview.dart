@@ -192,47 +192,50 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    CarouselSlider.builder(
-                      carouselController: carouselController,
-                      itemBuilder:
-                          (BuildContext context, int index, int realIndex) {
-                        var url = widget._messageData?[index].attachments!.first
-                                .mediaUrl ??
-                            '';
-                        return widget._messageData?[index].customType ==
-                                IsmChatCustomMessageType.image
-                            ? PhotoView(
-                                imageProvider: url.isValidUrl
-                                    ? NetworkImage(url)
-                                    : kIsWeb
-                                        ? MemoryImage(url.strigToUnit8List)
-                                            as ImageProvider
-                                        : AssetImage(url),
-                                loadingBuilder: (context, event) =>
-                                    const IsmChatLoadingDialog(),
-                                wantKeepAlive: true,
-                              )
-                            : VideoViewPage(path: url);
-                      },
-                      options: CarouselOptions(
-                        height: IsmChatDimens.percentHeight(1),
-                        aspectRatio: 16 / 9,
-                        viewportFraction: 1,
-                        enlargeCenterPage: true,
-                        initialPage: widget._mediaIndex ?? 0,
-                        enableInfiniteScroll: false,
-                        animateToClosest: false,
-                        onPageChanged: (index, _) {
-                          initiated =
-                              widget._messageData?[index].sentByMe ?? false;
-                          mediaTime =
-                              widget._messageData?[index].sentAt.deliverTime ??
-                                  '';
-                          chatPageController.assetsIndex = index;
-                          updateState();
+                    Ink(
+                      color: Colors.red,
+                      child: CarouselSlider.builder(
+                        carouselController: carouselController,
+                        itemBuilder:
+                            (BuildContext context, int index, int realIndex) {
+                          var url = widget._messageData?[index].attachments!
+                                  .first.mediaUrl ??
+                              '';
+                          return widget._messageData?[index].customType ==
+                                  IsmChatCustomMessageType.image
+                              ? PhotoView(
+                                  imageProvider: url.isValidUrl
+                                      ? NetworkImage(url)
+                                      : kIsWeb
+                                          ? MemoryImage(url.strigToUnit8List)
+                                              as ImageProvider
+                                          : AssetImage(url),
+                                  loadingBuilder: (context, event) =>
+                                      const IsmChatLoadingDialog(),
+                                  wantKeepAlive: true,
+                                )
+                              : VideoViewPage(path: url);
                         },
+                        options: CarouselOptions(
+                          height: IsmChatDimens.percentHeight(1),
+                          aspectRatio: 16 / 9,
+                          viewportFraction: 1,
+                          enlargeCenterPage: true,
+                          initialPage: widget._mediaIndex ?? 0,
+                          enableInfiniteScroll: false,
+                          animateToClosest: false,
+                          onPageChanged: (index, _) {
+                            initiated =
+                                widget._messageData?[index].sentByMe ?? false;
+                            mediaTime = widget
+                                    ._messageData?[index].sentAt.deliverTime ??
+                                '';
+                            chatPageController.assetsIndex = index;
+                            updateState();
+                          },
+                        ),
+                        itemCount: widget._messageData?.length ?? 0,
                       ),
-                      itemCount: widget._messageData?.length ?? 0,
                     ),
                     Padding(
                       padding: IsmChatDimens.edgeInsets0_20,

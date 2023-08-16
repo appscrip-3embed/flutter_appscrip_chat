@@ -75,6 +75,12 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: IsmChatColors.whiteColor,
         appBar: IsmChatAppBar(
+          onBack: Responsive.isWebAndTablet(context)
+              ? () {
+                  Get.find<IsmChatConversationsController>()
+                      .isRenderChatPageaScreen = IsRenderChatPageScreen.none;
+                }
+              : null,
           title: Text(
             IsmChatStrings.contactInfo,
             style: IsmChatStyles.w600White18,

@@ -79,6 +79,7 @@ class IsmChatConversationsRepository {
         return null;
       }
       var data = jsonDecode(response.data);
+
       var listData = (data['conversations'] as List)
           .map((e) =>
               IsmChatConversationModel.fromMap(e as Map<String, dynamic>))
@@ -219,10 +220,12 @@ class IsmChatConversationsRepository {
         '${IsmChatAPI.blockUser}?skip=$skip&limit=$limit',
         headers: IsmChatUtility.tokenCommonHeader(),
       );
+
       if (response.hasError) {
         return null;
       }
       var data = jsonDecode(response.data) as Map<String, dynamic>;
+
       var user = IsmChatUserListModel.fromMap(data);
       return user;
     } catch (e, st) {

@@ -578,6 +578,7 @@ enum IsRenderConversationScreen {
   none,
   blockView,
   groupUserView,
+  createConverstaionView,
   userView,
 }
 
@@ -587,5 +588,6 @@ enum IsRenderChatPageScreen {
   wallpaperView,
   messgaeInfoView,
   groupEligibleView,
-  coversationMediaView
+  coversationMediaView,
+  userInfoView,
 }

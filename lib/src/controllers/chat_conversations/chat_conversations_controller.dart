@@ -40,6 +40,10 @@ class IsmChatConversationsController extends GetxController {
   UserDetails? get userDetails => _userDetails.value;
   set userDetails(UserDetails? value) => _userDetails.value = value;
 
+  final Rx<UserDetails?> _contactDetails = Rx<UserDetails?>(null);
+  UserDetails? get contactDetails => _contactDetails.value;
+  set contactDetails(UserDetails? value) => _contactDetails.value = value;
+
   final Rx<IsmChatConversationModel?> _currentConversation =
       Rx<IsmChatConversationModel?>(null);
   IsmChatConversationModel? get currentConversation =>
@@ -105,17 +109,15 @@ class IsmChatConversationsController extends GetxController {
   final Rx<IsRenderConversationScreen> _isRenderScreen =
       IsRenderConversationScreen.none.obs;
   IsRenderConversationScreen get isRenderScreen => _isRenderScreen.value;
-  set isRenderScreen(IsRenderConversationScreen value) {
-    _isRenderScreen.value = value;
-  }
+  set isRenderScreen(IsRenderConversationScreen value) =>
+      _isRenderScreen.value = value;
 
   final Rx<IsRenderChatPageScreen> _isRenderChatPageaScreen =
       IsRenderChatPageScreen.none.obs;
   IsRenderChatPageScreen get isRenderChatPageaScreen =>
       _isRenderChatPageaScreen.value;
-  set isRenderChatPageaScreen(IsRenderChatPageScreen value) {
-    _isRenderChatPageaScreen.value = value;
-  }
+  set isRenderChatPageaScreen(IsRenderChatPageScreen value) =>
+      _isRenderChatPageaScreen.value = value;
 
   final RxList<IsmChatMessageModel> _mediaList = <IsmChatMessageModel>[].obs;
   List<IsmChatMessageModel> get mediaList => _mediaList;
@@ -143,16 +145,16 @@ class IsmChatConversationsController extends GetxController {
 
   List<BackGroundAsset> backgroundColor = [];
 
+  TextEditingController nameController = TextEditingController();
+
   @override
   onInit() async {
     IsmChatBlob.listenTabAndRefesh();
     await _generateReactionList();
     var users = await IsmChatConfig.dbWrapper?.userDetailsBox
         .get(IsmChatStrings.userData);
-
     if (users != null) {
       userDetails = UserDetails.fromJson(users);
-      IsmChatLog.error(userDetails?.profileUrl);
     } else {
       await getUserData();
     }
@@ -186,8 +188,10 @@ class IsmChatConversationsController extends GetxController {
         return IsmChatCreateConversationView(
           isGroupConversation: true,
         );
-      case IsRenderConversationScreen.userView:
+      case IsRenderConversationScreen.createConverstaionView:
         return IsmChatCreateConversationView();
+      case IsRenderConversationScreen.userView:
+        return const IsmChatUserView();
     }
   }
 
@@ -212,6 +216,11 @@ class IsmChatConversationsController extends GetxController {
           mediaList: mediaList,
           mediaListDocs: mediaListDocs,
           mediaListLinks: mediaListLinks,
+        );
+      case IsRenderChatPageScreen.userInfoView:
+        return IsmChatUserInfo(
+          user: contactDetails,
+          conversationId: currentConversation?.conversationId ?? '',
         );
     }
     return const SizedBox.shrink();
@@ -243,6 +252,24 @@ class IsmChatConversationsController extends GetxController {
             .first,
       ),
     );
+  }
+
+  /// function to show dialog for changing the group title
+  void showDialogForNameAndUserName() async {
+    await Get.dialog(IsmChatAlertDialogBox(
+      title: IsmChatStrings.enterNewGroupTitle,
+      content: TextFormField(
+        controller: nameController,
+      ),
+      actionLabels: const [IsmChatStrings.ok],
+      callbackActions: const [
+        // () => changeGroupTitle(
+        //       conversationTitle: groupTitleController.text,
+        //       conversationId: conversation?.conversationId ?? '',
+        //       isLoading: true,
+        //     ),
+      ],
+    ));
   }
 
   /// This function will be used in [Forward Screen] to Select or Unselect users
@@ -287,6 +314,8 @@ class IsmChatConversationsController extends GetxController {
     }
     await getPresignedUrl(extension!, bytes!);
   }
+
+  void updateUserExistingDetails() {}
 
   /// function to pick image for group profile
   Future<void> ismChangeImage(ImageSource imageSource) async {
