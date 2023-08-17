@@ -95,11 +95,12 @@ mixin IsmChatPageGetMessageMixin {
       int? membersSkip,
       int? membersLimit,
       bool? isLoading}) async {
-    var data = await _controller._viewModel.getConverstaionDetails(
-        conversationId: conversationId,
-        includeMembers: includeMembers,
-        isLoading: isLoading);
     if (Get.isRegistered<IsmChatPageController>()) {
+      var data = await _controller._viewModel.getConverstaionDetails(
+          conversationId: conversationId,
+          includeMembers: includeMembers,
+          isLoading: isLoading);
+
       if (data.data != null &&
           (_controller.conversation?.conversationId == conversationId)) {
         _controller.conversation =
