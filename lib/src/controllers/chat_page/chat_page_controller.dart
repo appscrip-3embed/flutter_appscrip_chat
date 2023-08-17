@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 import 'dart:math';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:camera/camera.dart';
@@ -390,9 +391,9 @@ class IsmChatPageController extends GetxController
       }
 
       if (newMeessageFromOutside != null ||
-          newMeessageFromOutside!.isNotEmpty) {
+          newMeessageFromOutside?.isNotEmpty == true) {
         await Future.delayed(const Duration(milliseconds: 100));
-        chatInputController.text = newMeessageFromOutside;
+        chatInputController.text = newMeessageFromOutside ?? '';
         sendTextMessage(
           conversationId: conversation?.conversationId ?? '',
           userId: conversation?.opponentDetails?.userId ?? '',
