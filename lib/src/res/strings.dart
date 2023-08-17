@@ -74,6 +74,7 @@ class IsmChatStrings {
   static const String deleteForMe = 'Delete for me';
   static const String deleteFromUser = 'Delete message from';
   static const String delete = 'Delete';
+  static const String details = 'User details';
   static const String save = 'Save';
   static const String share = 'Share';
 
@@ -105,6 +106,7 @@ class IsmChatStrings {
   static const String youAreOnlyAdmin =
       "You're the only admin of the group, make a group admin or a random person will be assigned as group admin";
   static const String contactInfo = 'Contact Info';
+  static const String userInfo = 'User Info';
   static const String audio = 'audio';
   static const String video = 'video';
   static const String loremIpsum =

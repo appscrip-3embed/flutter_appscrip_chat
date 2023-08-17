@@ -16,7 +16,7 @@ class IsmChatUserView extends StatelessWidget {
             appBar: IsmChatAppBar(
               onBack: Get.back,
               title: Text(
-                IsmChatStrings.contactInfo,
+                IsmChatStrings.userInfo,
                 style: IsmChatStyles.w600White18,
               ),
             ),
@@ -70,7 +70,7 @@ class IsmChatUserView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Details',
+                            IsmChatStrings.details,
                             style: IsmChatStyles.w400White16.copyWith(
                               color: IsmChatConfig.chatTheme.primaryColor,
                             ),

@@ -126,7 +126,7 @@ class IsmChatMessageModel {
           ? (map['reactions'] as List)
               .map((e) => MessageReactionModel.fromJson(e as String))
               .toList()
-          : (map['reactions'].runtimeType == Map)
+          : (map['reactions'].runtimeType.toString().contains('Map'))
               ? (map['reactions'] as Map<String, dynamic>?)
                   ?.keys
                   .map(

@@ -292,10 +292,28 @@ class IsmChatConversationsController extends GetxController {
     }
     unawaited(getBlockUser());
     IsmChatUtility.showToast(IsmChatStrings.unBlockedSuccessfully);
+
     if (fromUser) {
       return false;
     }
     return true;
+  }
+
+  void unblockUserForWeb(String opponentId) {
+    if (Get.isRegistered<IsmChatPageController>()) {
+      var conversationId = getConversationId(opponentId);
+      final chatPageController = Get.find<IsmChatPageController>();
+      if (conversationId == chatPageController.conversation?.conversationId) {
+        chatPageController.unblockUser(
+          lastMessageTimeStamp: chatPageController.messages.isEmpty
+              ? DateTime.now().millisecondsSinceEpoch
+              : chatPageController.messages.last.sentAt,
+          opponentId: opponentId,
+          includeMembers: true,
+          isLoading: false,
+        );
+      }
+    }
   }
 
   void ismUploadImage(ImageSource imageSource) async {

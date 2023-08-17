@@ -37,8 +37,13 @@ class IsmChatBlockedUsersView extends StatelessWidget {
                       // TODO: Implement unblock API here
                       trailing: ElevatedButton(
                         onPressed: () {
-                          controller.unblockUser(
-                              opponentId: user.userId, isLoading: true);
+                          if (!Responsive.isWebAndTablet(context)) {
+                            controller.unblockUser(
+                                opponentId: user.userId, isLoading: true);
+                          } else {
+                            controller.unblockUserForWeb(user.userId);
+                            Get.back();
+                          }
                         },
                         child: const Text(
                           IsmChatStrings.unblock,

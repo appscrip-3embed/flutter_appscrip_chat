@@ -214,23 +214,5 @@ mixin IsmChatPageGetMessageMixin {
     } else {
       await conversationController.getChatConversations();
     }
-
-    // conversation = conversation.copyWith(
-    //   unreadMessagesCount: 0,
-    //   lastMessageDetails: conversation.lastMessageDetails?.copyWith(
-    //     sentByMe: message.sentByMe,
-    //     showInConversation: true,
-    //     sentAt: message.sentAt,
-    //     senderName: message.senderInfo?.userName,
-    //     messageType: message.messageType?.value ?? 0,
-    //     messageId: message.messageId ?? '',
-    //     conversationId: message.conversationId ?? '',
-    //     body: message.body,
-    //     customType: message.customType,
-    //     deliveredTo: message.deliveredTo,
-    //     readBy: message.readBy,
-    //     action: '',
-    //   ),
-    // );
   }
 }
