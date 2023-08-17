@@ -135,6 +135,10 @@ class IsmChatConversationsController extends GetxController {
   set mediaListDocs(List<IsmChatMessageModel> value) =>
       _mediaListDocs.value = value;
 
+  final RxBool _callApiNonBlock = true.obs;
+  bool get callApiNonBlock => _callApiNonBlock.value;
+  set callApiNonBlock(bool value) => _callApiNonBlock.value = value;
+
   IsmChatMessageModel? message;
 
   List<Emoji> reactions = [];
@@ -183,7 +187,6 @@ class IsmChatConversationsController extends GetxController {
         return const SizedBox.shrink();
       case IsRenderConversationScreen.blockView:
         return const IsmChatBlockedUsersView();
-
       case IsRenderConversationScreen.groupUserView:
         return IsmChatCreateConversationView(
           isGroupConversation: true,
@@ -386,6 +389,8 @@ class IsmChatConversationsController extends GetxController {
     String? opponentId,
     bool isLoading = false,
   }) async {
+    if (!callApiNonBlock) return;
+    callApiNonBlock = false;
     var response = await _viewModel.getNonBlockUserList(
       sort: sort,
       skip: searchTag.isNotEmpty
@@ -427,6 +432,7 @@ class IsmChatConversationsController extends GetxController {
           .toList();
     }
     handleList(forwardedList);
+    callApiNonBlock = true;
   }
 
   void handleList(List<SelectedForwardUser> list) {

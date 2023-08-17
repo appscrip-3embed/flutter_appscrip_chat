@@ -52,6 +52,7 @@ class IsmChatForwardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
         initState: (_) {
+          converstaionController.callApiNonBlock = true;
           converstaionController.forwardedList.clear();
           converstaionController.userSearchNameController.clear();
           converstaionController.showSearchField = false;

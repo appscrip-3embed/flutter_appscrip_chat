@@ -46,6 +46,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
         initState: (_) {
+          converstaionController.callApiNonBlock = true;
           converstaionController.profileImage = '';
           converstaionController.forwardedList.clear();
           converstaionController.addGrouNameController.clear();
