@@ -353,7 +353,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                 itemBuilder: (context, index) {
                                   var conversation = controller.forwardedList
                                       .selectedUsers[index].userDetails;
-                                  return IsmChatTapHandler(
+                                  return InkWell(
                                     onTap: () => controller.onForwardUserTap(
                                       controller.forwardedList.indexOf(
                                         controller

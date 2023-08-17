@@ -55,7 +55,7 @@ class _MessageBubbleState extends State<MessageBubble>
                       ? context.width * .25
                       : context.width * .8,
                   minWidth: Responsive.isWebAndTablet(context)
-                      ? context.width * .06
+                      ? IsmChatDimens.ninty
                       : context.width * .25,
                 ),
         decoration: widget.showMessageInCenter

@@ -67,34 +67,48 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
                 ),
                 if (Responsive.isWebAndTablet(context)) ...[
                   Expanded(
-                    child: Obx(
-                      () => controller.currentConversation != null
-                          ? const IsmChatPageView()
-                          : IsmChatProperties.startConversationWidget ??
-                              Center(
-                                child: Text(
-                                  IsmChatStrings.startConversation,
-                                  style: IsmChatStyles.w400White18,
-                                ),
-                              ),
+                    child: Stack(
+                      children: [
+                        Obx(
+                          () => controller.currentConversation != null
+                              ? const IsmChatPageView()
+                              : IsmChatProperties.startConversationWidget ??
+                                  Center(
+                                    child: Text(
+                                      IsmChatStrings.startConversation,
+                                      style: IsmChatStyles.w400White18,
+                                    ),
+                                  ),
+                        ),
+                        if (Responsive.isTablet(context)) ...[
+                          Obx(
+                            () => controller.isRenderChatPageaScreen !=
+                                    IsRenderChatPageScreen.none
+                                ? controller.isRenderChatScreenWidget()
+                                : const SizedBox.shrink(),
+                          )
+                        ]
+                      ],
                     ),
                   ),
-                  Obx(
-                    () => controller.isRenderChatPageaScreen !=
-                            IsRenderChatPageScreen.none
-                        ? Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                left: BorderSide(
-                                    color:
-                                        IsmChatConfig.chatTheme.primaryColor!),
+                  if (Responsive.isWeb(context)) ...[
+                    Obx(
+                      () => controller.isRenderChatPageaScreen !=
+                              IsRenderChatPageScreen.none
+                          ? Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  left: BorderSide(
+                                      color: IsmChatConfig
+                                          .chatTheme.primaryColor!),
+                                ),
                               ),
-                            ),
-                            width: IsmChatDimens.percentWidth(.3),
-                            child: controller.isRenderChatScreenWidget(),
-                          )
-                        : const SizedBox.shrink(),
-                  )
+                              width: IsmChatDimens.percentWidth(.3),
+                              child: controller.isRenderChatScreenWidget(),
+                            )
+                          : const SizedBox.shrink(),
+                    )
+                  ]
                 ]
               ],
             ),
@@ -124,7 +138,7 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
           drawer: Responsive.isWebAndTablet(context)
               ? Obx(
                   () => SizedBox(
-                    width: IsmChatDimens.percentWidth(.3),
+                    width: IsmChatDimens.percentWidth(.299),
                     child: controller.isRenderScreenWidget(),
                   ),
                 )

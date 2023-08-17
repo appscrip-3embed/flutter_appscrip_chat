@@ -518,17 +518,29 @@ class IsmChatPageController extends GetxController
       required String reactionType,
       required int index}) async {
     userReactionList.clear();
-    await Get.bottomSheet(
-      ImsChatShowUserReaction(
-        message: message,
-        reactionType: reactionType,
-        index: index,
-      ),
-      isDismissible: true,
-      isScrollControlled: true,
-      ignoreSafeArea: true,
-      enableDrag: true,
-    );
+    if (Responsive.isWebAndTablet(Get.context!)) {
+      await Get.dialog(
+        IsmChatPageDailog(
+          child: ImsChatShowUserReaction(
+            message: message,
+            reactionType: reactionType,
+            index: index,
+          ),
+        ),
+      );
+    } else {
+      await Get.bottomSheet(
+        ImsChatShowUserReaction(
+          message: message,
+          reactionType: reactionType,
+          index: index,
+        ),
+        isDismissible: true,
+        isScrollControlled: true,
+        ignoreSafeArea: true,
+        enableDrag: true,
+      );
+    }
   }
 
   void addWallpaper() async {
@@ -1726,8 +1738,12 @@ class IsmChatPageController extends GetxController
     predictionList = response;
   }
 
-  Future<void> deleteReacton({required Reaction reaction}) async =>
-      _viewModel.deleteReacton(reaction: reaction);
+  Future<void> deleteReacton({required Reaction reaction}) async {
+    await _viewModel.deleteReacton(reaction: reaction);
+    if (Responsive.isWebAndTablet(Get.context!)) {
+      await _controller._conversationController.getChatConversations();
+    }
+  }
 
   Future<void> showUserDetails(UserDetails userDetails) async {
     var conversationController = Get.find<IsmChatConversationsController>();
