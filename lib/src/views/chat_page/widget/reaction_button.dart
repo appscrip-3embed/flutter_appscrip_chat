@@ -17,10 +17,10 @@ class ReactionGrid extends StatelessWidget {
         child: Container(
           alignment: Alignment.center,
           height: Responsive.isWebAndTablet(context)
-              ? IsmChatDimens.percentHeight(.1)
+              ? IsmChatDimens.seventy
               : IsmChatDimens.hundred + IsmChatDimens.eight,
           width: Responsive.isWebAndTablet(context)
-              ? IsmChatDimens.percentWidth(.2)
+              ? IsmChatDimens.twoHundredFifty
               : null,
           child: GridView.builder(
             physics: const NeverScrollableScrollPhysics(),

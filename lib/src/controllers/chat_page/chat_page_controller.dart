@@ -1071,15 +1071,15 @@ class IsmChatPageController extends GetxController
         if (path.path.isNotEmpty) {
           localPath = path.path;
         }
-
         await OpenFilex.open(localPath);
       } catch (e) {
         IsmChatLog.error('$e');
       }
     } else if (message.customType == IsmChatCustomMessageType.audio) {
-      await Get.dialog(IsmChatAudioPlayer(
-        message: message,
-      ));
+      // Todo add audio player
+      // await Get.dialog(IsmChatAudioPlayer(
+      //   message: message,
+      // ));
     }
   }
 

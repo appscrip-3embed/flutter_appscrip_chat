@@ -17,24 +17,19 @@ class IsmChatTextMessage extends StatelessWidget {
             minHeight: 36,
           ),
           padding: IsmChatDimens.edgeInsets4,
-          child: AbsorbPointer(
-            absorbing: message.mentionedUsers.isNullOrEmpty,
-            ignoringSemantics: true,
-            child: GestureDetector(
-              child: RichText(
-                text: TextSpan(
-                  text: message.mentionedUsers.isNullOrEmpty
-                      ? message.body
-                      : null,
-                  style: message.style,
-                  children: message.mentionedUsers.isNullOrEmpty
-                      ? null
-                      : message.mentionList
-                          .map(
-                            (e) => TextSpan(
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () async {
-                                  if (e.isMentioned) {
+          child: RichText(
+            text: TextSpan(
+              text: message.mentionedUsers.isNullOrEmpty ? message.body : null,
+              style: message.style,
+              children: message.mentionedUsers.isNullOrEmpty
+                  ? null
+                  : message.mentionList
+                      .map(
+                        (e) => TextSpan(
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = !e.isMentioned
+                                ? null
+                                : () async {
                                     var user = message.mentionedUsers
                                         ?.where((user) =>
                                             user.userName.toLowerCase() ==
@@ -42,15 +37,25 @@ class IsmChatTextMessage extends StatelessWidget {
                                         .toList();
 
                                     if (!user.isNullOrEmpty) {
-                                      var controller = Get.find<
+                                      var conversationcontroller = Get.find<
                                           IsmChatConversationsController>();
                                       var conversationId =
-                                          controller.getConversationId(
-                                              user!.first.userId);
-                                      IsmChatRouteManagement.goToUserInfo(
-                                        conversationId: conversationId,
-                                        user: user.first,
-                                      );
+                                          conversationcontroller
+                                              .getConversationId(
+                                                  user!.first.userId);
+                                      conversationcontroller.contactDetails =
+                                          user.first;
+                                      if (Responsive.isWebAndTablet(context)) {
+                                        conversationcontroller
+                                                .isRenderChatPageaScreen =
+                                            IsRenderChatPageScreen.userInfoView;
+                                      } else {
+                                        IsmChatRouteManagement.goToUserInfo(
+                                          conversationId: conversationId,
+                                          user: user.first,
+                                        );
+                                      }
+
                                       // await IsmChatUtility
                                       //     .openFullScreenBottomSheet(
                                       //   IsmChatUserInfo(
@@ -59,24 +64,21 @@ class IsmChatTextMessage extends StatelessWidget {
                                       //   ),
                                       // );
                                     }
-                                  }
-                                },
-                              text: e.text,
-                              style: (message.style).copyWith(
-                                color: e.isMentioned
-                                    ? message.sentByMe
-                                        ? IsmChatConfig.chatTheme.mentionColor
-                                        : IsmChatConfig.chatTheme.primaryColor
-                                    : null,
-                              ),
-                            ),
-                          )
-                          .toList(),
-                ),
-                softWrap: true,
-                maxLines: null,
-              ),
+                                  },
+                          text: e.text,
+                          style: (message.style).copyWith(
+                            color: e.isMentioned
+                                ? message.sentByMe
+                                    ? IsmChatConfig.chatTheme.mentionColor
+                                    : IsmChatConfig.chatTheme.primaryColor
+                                : null,
+                          ),
+                        ),
+                      )
+                      .toList(),
             ),
+            softWrap: true,
+            maxLines: null,
           ),
         ),
       );

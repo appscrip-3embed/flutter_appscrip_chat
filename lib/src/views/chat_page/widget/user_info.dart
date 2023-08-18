@@ -77,8 +77,8 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
         appBar: IsmChatAppBar(
           onBack: Responsive.isWebAndTablet(context)
               ? () {
-                  Get.find<IsmChatConversationsController>()
-                      .isRenderChatPageaScreen = IsRenderChatPageScreen.none;
+                  conversationController.isRenderChatPageaScreen =
+                      IsRenderChatPageScreen.none;
                 }
               : null,
           title: Text(
@@ -118,16 +118,20 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
                     ),
                     child: IsmChatTapHandler(
                       onTap: () {
-                        IsmChatRouteManagement.goToMedia(
-                          mediaList: mediaList,
-                          mediaListLinks: mediaListLinks,
-                          mediaListDocs: mediaListDocs,
-                        );
-                        // IsmChatUtility.openFullScreenBottomSheet(IsmMedia(
-                        //   mediaList: mediaList,
-                        //   mediaListLinks: mediaListLinks,
-                        //   mediaListDocs: mediaListDocs,
-                        // ));
+                        if (Responsive.isWebAndTablet(context)) {
+                          conversationController.mediaList = mediaList;
+                          conversationController.mediaListDocs = mediaListDocs;
+                          conversationController.mediaListLinks =
+                              mediaListLinks;
+                          conversationController.isRenderChatPageaScreen =
+                              IsRenderChatPageScreen.coversationMediaView;
+                        } else {
+                          IsmChatRouteManagement.goToMedia(
+                            mediaList: mediaList,
+                            mediaListLinks: mediaListLinks,
+                            mediaListDocs: mediaListDocs,
+                          );
+                        }
                       },
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
