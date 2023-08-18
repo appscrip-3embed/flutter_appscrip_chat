@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/foundation.dart';
@@ -10,9 +9,6 @@ class IsmChatMessageModel {
       IsmChatMessageModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   factory IsmChatMessageModel.fromMap(Map<String, dynamic> map) {
-    print('check reaction ${map['reactions'].runtimeType}');
-    log('check reaction ${map['reactions'].runtimeType}');
-    IsmChatLog('check reaction ${map['reactions'].runtimeType}');
     var model = IsmChatMessageModel(
       body: map['body'] != null && (map['body'] as String).isNotEmpty
           ? IsmChatUtility.decodePayload(map['body'] as String)
@@ -126,11 +122,11 @@ class IsmChatMessageModel {
             ),
       notificationTitle: map['notificationTitle'] as String? ?? '',
       notificationBody: map['notificationBody'] as String? ?? '',
-      reactions: (map['reactions'].runtimeType == List)
+      reactions: (map['reactions'] is List)
           ? (map['reactions'] as List)
               .map((e) => MessageReactionModel.fromJson(e as String))
               .toList()
-          : (map['reactions'].runtimeType.toString().contains('Map'))
+          : (map['reactions'] is Map)
               ? (map['reactions'] as Map<String, dynamic>?)
                   ?.keys
                   .map(
