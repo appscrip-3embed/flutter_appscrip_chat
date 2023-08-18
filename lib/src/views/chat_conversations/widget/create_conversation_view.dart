@@ -259,7 +259,6 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                     }
                                     controller.navigateToMessages(
                                         ismChatConversation);
-
                                     Get.find<IsmChatPageController>()
                                         .startInit();
                                   } else {

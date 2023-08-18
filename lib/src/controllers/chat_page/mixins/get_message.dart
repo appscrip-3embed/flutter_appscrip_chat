@@ -144,7 +144,7 @@ mixin IsmChatPageGetMessageMixin {
         _controller.update();
         IsmChatLog.success('Updated conversation');
       }
-      if (data.statusCode == 400) {
+      if (data.statusCode == 400 && conversationId.isNotEmpty) {
         _controller.isActionAllowed = true;
       }
     }

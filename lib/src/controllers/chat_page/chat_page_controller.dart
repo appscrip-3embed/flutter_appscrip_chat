@@ -1585,9 +1585,12 @@ class IsmChatPageController extends GetxController
           t.cancel();
           conversationDetailsApTimer?.cancel();
         }
-        getConverstaionDetails(
-            conversationId: conversation?.conversationId ?? '',
-            includeMembers: conversation?.isGroup == true ? true : false);
+        if (conversation?.conversationId != null ||
+            conversation?.conversationId?.isNotEmpty == true) {
+          getConverstaionDetails(
+              conversationId: conversation?.conversationId ?? '',
+              includeMembers: conversation?.isGroup == true ? true : false);
+        }
       },
     );
   }
