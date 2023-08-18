@@ -384,6 +384,7 @@ class IsmChatPageController extends GetxController
   }
 
   void startInit() async {
+    isActionAllowed = false;
     _generateReactionList();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
