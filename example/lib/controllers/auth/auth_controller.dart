@@ -204,14 +204,16 @@ class AuthController extends GetxController {
   Future<void> ismGetPresignedUrl(
       String mediaExtension, Uint8List bytes) async {
     var response = await _viewModel.ismGetPresignedUrl(
-        isLoading: false,
+        isLoading: true,
         userIdentifier: emailController.text,
         mediaExtension: mediaExtension);
     if (response != null) {
+      Get.back();
       var urlResponse =
           await updatePresignedUrl(response.presignedUrl ?? '', bytes);
       if (urlResponse == 200) {
         profileImage = response.mediaUrl!;
+        Get.back();
       }
     }
   }
@@ -219,7 +221,7 @@ class AuthController extends GetxController {
   /// put Api for updatePresignedUrl...
   Future<int?> updatePresignedUrl(String presignedUrl, Uint8List bytes) async {
     var response = await _viewModel.updatePresignedUrl(
-        isLoading: false, presignedUrl: presignedUrl, file: bytes);
+        isLoading: true, presignedUrl: presignedUrl, file: bytes);
     if (response!.errorCode == 200) {
       return response.errorCode;
     } else {
