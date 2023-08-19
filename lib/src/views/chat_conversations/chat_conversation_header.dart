@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -86,7 +85,7 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
           ),
           actions: [
             if (showSearch) _SearchAction(onTap: onSearchTap),
-            if (kIsWeb) _StartMessage(),
+            if (Responsive.isWebAndTablet(context)) _StartMessage(),
             _MoreIcon(onSignOut),
           ],
         ),
@@ -152,7 +151,7 @@ class _MoreIcon extends StatelessWidget {
           }
         },
         itemBuilder: (_) => [
-          if (kIsWeb) ...[
+          if (Responsive.isWebAndTablet(context)) ...[
             PopupMenuItem(
               value: 2,
               child: Row(
@@ -180,7 +179,7 @@ class _MoreIcon extends StatelessWidget {
               ],
             ),
           ),
-          if (kIsWeb) ...[
+          if (Responsive.isWebAndTablet(context)) ...[
             PopupMenuItem(
               value: 3,
               child: Row(

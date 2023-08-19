@@ -151,9 +151,10 @@ class _IsmChatPageView extends StatelessWidget {
                           }
                         : null,
                   ),
-            body: controller.webMedia.isNotEmpty
+            body: Responsive.isWebAndTablet(context) &&
+                    controller.webMedia.isNotEmpty
                 ? const WebMediaPreview()
-                : controller.isCameraView
+                : Responsive.isWebAndTablet(context) && controller.isCameraView
                     ? const IsmChatCameraView()
                     : Stack(
                         alignment: Alignment.bottomRight,

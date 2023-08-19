@@ -692,6 +692,9 @@ class IsmChatPageController extends GetxController
           );
         }
       }
+      if (Responsive.isMobile(Get.context!)) {
+        IsmChatRouteManagement.goToWebMediaPreview();
+      }
     }
   }
 
