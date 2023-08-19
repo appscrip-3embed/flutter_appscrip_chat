@@ -1247,6 +1247,9 @@ class IsmChatPageController extends GetxController
           thumbnailBytes: Uint8List(0),
         ),
       );
+      if (Responsive.isMobile(Get.context!)) {
+        IsmChatRouteManagement.goToWebMediaPreview();
+      }
     } else {
       imagePath = File(file.path);
       fileSize = await IsmChatUtility.fileToSize(imagePath!);
