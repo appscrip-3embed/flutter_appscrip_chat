@@ -22,4 +22,6 @@ class IsmChatBlob {
 
   static listenTabAndRefesh() {}
   static listenTabAndRefeshOne() {}
+
+  static openNewTab(String route) {}
 }

@@ -1,5 +1,6 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -69,16 +70,22 @@ class MessageCard extends StatelessWidget {
             controller: controller.messagesScrollController,
             index: index,
             key: Key('scroll-${message.messageId}'),
-            child: Hero(
-              tag: message,
-              child: messageWidgetBuilder?.call(context, message,
-                      message.customType!, showMessageInCenter) ??
-                  MessageBubble(
+            child: kIsWeb
+                ? MessageBubble(
                     message: message,
                     showMessageInCenter: showMessageInCenter,
                     index: index,
+                  )
+                : Hero(
+                    tag: message,
+                    child: messageWidgetBuilder?.call(context, message,
+                            message.customType!, showMessageInCenter) ??
+                        MessageBubble(
+                          message: message,
+                          showMessageInCenter: showMessageInCenter,
+                          index: index,
+                        ),
                   ),
-            ),
           ),
         ),
       );

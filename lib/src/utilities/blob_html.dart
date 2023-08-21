@@ -83,14 +83,7 @@ class IsmChatBlob {
     return status?.state ?? '';
   }
 
-  static listenTabAndRefesh() => html.window.onBeforeUnload.listen((event) {
-        // Future.delayed(const Duration(milliseconds: 100), () {
-        //   html.window.history.replaceState(
-        //     null,
-        //     '',
-        //   );
-        // });
-      });
+  static listenTabAndRefesh() => html.window.onBeforeUnload.listen((event) {});
 
   static listenTabAndRefeshOne() {
     html.window.onUnload.listen((event) {});

@@ -7,6 +7,7 @@ class IsmPageRoutes {
   static const String blockView = '/blockView';
   static const String userView = '/userView';
   static const String converstaionInfoView = '/converstaionInfoView';
+
   static const String groupEligiableView = '/groupEligiableView';
   static const String mediaPreviewView = '/mediaPreviewView';
   static const String messageInfoView = '/messageInfoView';

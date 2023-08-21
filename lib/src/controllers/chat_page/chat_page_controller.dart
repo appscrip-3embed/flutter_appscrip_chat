@@ -1068,14 +1068,28 @@ class IsmChatPageController extends GetxController
         return;
       }
       try {
-        final path = await IsmChatUtility.makeDirectoryWithUrl(
-            urlPath: message.attachments?.first.mediaUrl ?? '',
-            fileName: message.attachments?.first.name ?? '');
+        if (!kIsWeb) {
+          final path = await IsmChatUtility.makeDirectoryWithUrl(
+              urlPath: message.attachments?.first.mediaUrl ?? '',
+              fileName: message.attachments?.first.name ?? '');
 
-        if (path.path.isNotEmpty) {
-          localPath = path.path;
+          if (path.path.isNotEmpty) {
+            localPath = path.path;
+          }
         }
-        await OpenFilex.open(localPath);
+
+        if (kIsWeb) {
+          if (localPath.isValidUrl) {
+            IsmChatBlob.fileDownloadWithUrl(localPath);
+          } else {
+            IsmChatBlob.fileDownloadWithBytes(
+              localPath.strigToUnit8List,
+              downloadName: message.attachments?.first.name,
+            );
+          }
+        } else {
+          await OpenFilex.open(localPath);
+        }
       } catch (e) {
         IsmChatLog.error('$e');
       }
