@@ -626,7 +626,6 @@ class IsmChatPageController extends GetxController
 
         break;
       case IsmChatAttachmentType.gallery:
-        // Todo We will remvoe assets package
         listOfAssetsPath.clear();
         kIsWeb
             ? getMediaWithWeb()
@@ -657,6 +656,7 @@ class IsmChatPageController extends GetxController
     }
 
     if (result.isNotEmpty) {
+      IsmChatUtility.showLoader();
       for (var x in result) {
         var bytes = await x?.readAsBytes();
         var extension = x?.name.split('.').last;
@@ -692,6 +692,7 @@ class IsmChatPageController extends GetxController
           );
         }
       }
+      IsmChatUtility.closeLoader();
       if (Responsive.isMobile(Get.context!)) {
         IsmChatRouteManagement.goToWebMediaPreview();
       }

@@ -218,41 +218,38 @@ class IsmChatForwardView extends StatelessWidget {
                                           .userId) {
                                     return const SizedBox.shrink();
                                   }
-                                  return IsmChatTapHandler(
-                                    onTap: () =>
-                                        controller.onForwardUserTap(index),
-                                    child: Column(
-                                      children: [
-                                        Offstage(
-                                          offstage:
-                                              user.isShowSuspension != true,
-                                          child: _buildSusWidget(susTag),
+                                  return Column(
+                                    children: [
+                                      Offstage(
+                                        offstage: user.isShowSuspension != true,
+                                        child: _buildSusWidget(susTag),
+                                      ),
+                                      ListTile(
+                                        onTap: () =>
+                                            controller.onForwardUserTap(index),
+                                        dense: true,
+                                        mouseCursor: SystemMouseCursors.click,
+                                        tileColor: user.isUserSelected
+                                            ? IsmChatConfig
+                                                .chatTheme.primaryColor!
+                                                .withOpacity(.2)
+                                            : null,
+                                        leading: IsmChatImage.profile(
+                                          user.userDetails.userProfileImageUrl,
+                                          name: user.userDetails.userName,
                                         ),
-                                        ListTile(
-                                          dense: true,
-                                          tileColor: user.isUserSelected
-                                              ? IsmChatConfig
-                                                  .chatTheme.primaryColor!
-                                                  .withOpacity(.2)
-                                              : null,
-                                          leading: IsmChatImage.profile(
-                                            user.userDetails
-                                                .userProfileImageUrl,
-                                            name: user.userDetails.userName,
-                                          ),
-                                          title: Text(
-                                            user.userDetails.userName,
-                                            style: IsmChatStyles.w600Black14,
-                                          ),
-                                          subtitle: Text(
-                                            user.userDetails.userIdentifier,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: IsmChatStyles.w400Black12,
-                                          ),
+                                        title: Text(
+                                          user.userDetails.userName,
+                                          style: IsmChatStyles.w600Black14,
                                         ),
-                                      ],
-                                    ),
+                                        subtitle: Text(
+                                          user.userDetails.userIdentifier,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: IsmChatStyles.w400Black12,
+                                        ),
+                                      ),
+                                    ],
                                   );
                                 },
                               ),

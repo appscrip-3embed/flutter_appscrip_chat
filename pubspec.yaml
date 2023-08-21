@@ -18,6 +18,7 @@ dependencies:
   connectivity_plus: ^3.0.6
   device_info_plus: ^9.0.3
   dio: ^5.2.1+1
+  elegant_notification: ^1.11.0
   emoji_picker_flutter: ^1.5.4
   file_picker: ^5.2.10
   flutter:

@@ -27,61 +27,59 @@ class _IsmChatFileMessageState extends State<IsmChatFileMessage> {
           borderRadius: BorderRadius.circular(IsmChatDimens.ten),
         ),
         clipBehavior: Clip.antiAlias,
-        child: AspectRatio(
-          aspectRatio: 5 / 3,
-          child: kIsWeb
-              ? Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      height: double.maxFinite,
-                      width: IsmChatDimens.percentWidth(.14),
-                      color: widget.message.backgroundColor,
-                      child: Container(
-                        color: (widget.message.sentByMe
-                                ? IsmChatColors.whiteColor
-                                : IsmChatColors.greyColor)
-                            .withOpacity(0.2),
-                        padding: IsmChatDimens.edgeInsets4,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // const Icon(
-                            //   Icons.picture_as_pdf_rounded,
-                            //   color: Colors.red,
-                            // ),
-                            SvgPicture.asset(
-                              IsmChatAssets.pdfSvg,
-                              height: IsmChatDimens.thirtyTwo,
-                              width: IsmChatDimens.thirtyTwo,
-                            ),
-                            IsmChatDimens.boxWidth4,
-                            Flexible(
-                              child: Text(
-                                widget.message.attachments?.first.name ?? '',
-                                style: (widget.message.sentByMe
-                                        ? IsmChatStyles.w400White12
-                                        : IsmChatStyles.w400Black12)
-                                    .copyWith(
-                                  color: widget.message.style.color,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+        child: kIsWeb
+            ? Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  Container(
+                    alignment: Alignment.topCenter,
+                    width: double.maxFinite,
+                    height: IsmChatDimens.twoHundredTwenty,
+                    child: IsmChatPdfView(
+                      filePath: widget.message.attachments?.first.mediaUrl,
+                    ),
+                  ),
+                  Container(
+                    height: IsmChatDimens.fifty,
+                    width: double.maxFinite,
+                    color: widget.message.backgroundColor,
+                    child: Container(
+                      color: (widget.message.sentByMe
+                              ? IsmChatColors.whiteColor
+                              : IsmChatColors.greyColor)
+                          .withOpacity(0.2),
+                      padding: IsmChatDimens.edgeInsets4,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SvgPicture.asset(
+                            IsmChatAssets.pdfSvg,
+                            height: IsmChatDimens.thirtyTwo,
+                            width: IsmChatDimens.thirtyTwo,
+                          ),
+                          IsmChatDimens.boxWidth4,
+                          Flexible(
+                            child: Text(
+                              widget.message.attachments?.first.name ?? '',
+                              style: (widget.message.sentByMe
+                                      ? IsmChatStyles.w400White12
+                                      : IsmChatStyles.w400Black12)
+                                  .copyWith(
+                                color: widget.message.style.color,
                               ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(
-                      width: IsmChatDimens.percentWidth(.1),
-                      child: IsmChatPdfView(
-                        filePath: widget.message.attachments?.first.mediaUrl,
-                      ),
-                    ),
-                  ],
-                )
-              : Stack(
+                  ),
+                ],
+              )
+            : AspectRatio(
+                aspectRatio: 5 / 3,
+                child: Stack(
                   alignment: Alignment.bottomCenter,
                   children: [
                     if (widget
@@ -185,7 +183,7 @@ class _IsmChatFileMessageState extends State<IsmChatFileMessage> {
                       )
                   ],
                 ),
-        ),
+              ),
       );
 }
 
@@ -242,6 +240,7 @@ class _IsmChatPdfViewState extends State<IsmChatPdfView> {
         backgroundColor: Colors.transparent,
         body: PdfView(
           scrollDirection: Axis.vertical,
+          physics: const NeverScrollableScrollPhysics(),
           builders: PdfViewBuilders<DefaultBuilderOptions>(
             options: const DefaultBuilderOptions(),
             documentLoaderBuilder: (_) =>

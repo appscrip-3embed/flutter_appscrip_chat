@@ -88,7 +88,7 @@ class _ReplyMessage extends StatelessWidget {
                         ),
                         ConstrainedBox(
                           constraints: BoxConstraints(
-                            maxWidth: Get.width * 0.7,
+                            maxWidth: IsmChatDimens.percentWidth(.2),
                           ),
                           child: Text(
                             message.metaData?.parentMessageBody ?? '',

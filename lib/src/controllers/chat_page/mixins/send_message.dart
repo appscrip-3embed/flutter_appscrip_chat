@@ -132,6 +132,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
 
   void sendMediaWeb() async {
     var isMaxSize = false;
+    IsmChatUtility.showLoader();
     for (var x in _controller.webMedia) {
       if (!x.dataSize.size()) {
         isMaxSize = true;
@@ -139,9 +140,11 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       }
     }
     if (isMaxSize == false) {
+      IsmChatUtility.closeLoader();
       Get.back<void>();
       sendPhotoAndVideoForWeb();
     } else {
+      IsmChatUtility.closeLoader();
       await Get.dialog(
         const IsmChatAlertDialogBox(
           title: 'You can not send image and video more than 20 MB.',

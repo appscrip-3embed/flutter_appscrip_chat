@@ -94,7 +94,7 @@ class IsmChatUtility {
       'appSecret': IsmChatConfig.communicationConfig.projectConfig.appSecret,
       'userToken': IsmChatConfig.communicationConfig.userConfig.userToken,
     };
-    print('header $header');
+
     return header;
   }
 

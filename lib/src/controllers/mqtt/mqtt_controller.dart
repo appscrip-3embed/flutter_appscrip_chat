@@ -5,7 +5,8 @@ import 'dart:io';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/controllers/mqtt/clients/mobile_client.dart'
     if (dart.library.html) 'clients/web_client.dart';
-import 'package:flutter/foundation.dart';
+import 'package:elegant_notification/elegant_notification.dart';
+import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -143,9 +144,9 @@ class IsmChatMqttController extends GetxController {
         actionStreamController.add(payload);
       } else {
         var message = IsmChatMessageModel.fromMap(payload);
-        if (!kIsWeb) {
-          _handleLocalNotification(message);
-        }
+
+        _handleLocalNotification(message);
+
         _handleMessage(message);
       }
     });
@@ -342,14 +343,33 @@ class IsmChatMqttController extends GetxController {
     } else {
       mqttMessage = message.notificationBody;
     }
-    if (Get.isRegistered<IsmChatPageController>()) {
-      var chatController = Get.find<IsmChatPageController>();
-      if (chatController.conversation?.conversationId !=
-          message.conversationId) {
+    if (!Responsive.isWebAndTablet(Get.context!)) {
+      if (Get.isRegistered<IsmChatPageController>()) {
+        var chatController = Get.find<IsmChatPageController>();
+        if (chatController.conversation?.conversationId !=
+            message.conversationId) {
+          LocalNoticeService().cancelAllNotification();
+          LocalNoticeService().addNotification(
+            message.notificationTitle ?? '', // Add the  sender user name here
+            mqttMessage ?? '', // MessageName
+            DateTime.now().millisecondsSinceEpoch + 1 * 1000,
+            sound: '',
+            channel: 'message',
+          );
+          if (Platform.isAndroid) {
+            Get.snackbar(
+              message.notificationTitle ?? '',
+              mqttMessage ?? '',
+              icon: const Icon(Icons.message),
+            );
+          }
+          messageId = message.messageId!;
+        }
+      } else {
         LocalNoticeService().cancelAllNotification();
         LocalNoticeService().addNotification(
-          message.notificationTitle ?? '', // Add the  sender user name here
-          mqttMessage ?? '', // MessageName
+          message.notificationTitle ?? '',
+          mqttMessage ?? '',
           DateTime.now().millisecondsSinceEpoch + 1 * 1000,
           sound: '',
           channel: 'message',
@@ -364,22 +384,17 @@ class IsmChatMqttController extends GetxController {
         messageId = message.messageId!;
       }
     } else {
-      LocalNoticeService().cancelAllNotification();
-      LocalNoticeService().addNotification(
-        message.notificationTitle ?? '',
-        mqttMessage ?? '',
-        DateTime.now().millisecondsSinceEpoch + 1 * 1000,
-        sound: '',
-        channel: 'message',
-      );
-      if (Platform.isAndroid) {
-        Get.snackbar(
-          message.notificationTitle ?? '',
-          mqttMessage ?? '',
-          icon: const Icon(Icons.message),
-        );
-      }
-      messageId = message.messageId!;
+      ElegantNotification.info(
+        width: 360,
+        notificationPosition: NotificationPosition.topRight,
+        animation: AnimationType.fromTop,
+        title: const Text('Info'),
+        description: const Text(
+          'This account will be updated once you exit',
+        ),
+        showProgressIndicator: true,
+        autoDismiss: true,
+      ).show(Get.context!);
     }
   }
 
@@ -495,6 +510,9 @@ class IsmChatMqttController extends GetxController {
         _communicationConfig.userConfig.userId) {
       return;
     }
+    if (IsmChatConfig.dbWrapper == null) {
+      return;
+    }
     var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: actionModel.conversationId!);
 
@@ -551,8 +569,8 @@ class IsmChatMqttController extends GetxController {
     conversation = conversation.copyWith(
       messages: modifiedMessages,
       lastMessageDetails: conversation.lastMessageDetails?.copyWith(
-        deliverCount: modifiedMessages.last.deliveredTo?.length,
-        readCount: modifiedMessages.last.readBy?.length,
+        deliverCount: modifiedMessages.last.deliveredTo?.length ?? 0,
+        readCount: modifiedMessages.last.readBy?.length ?? 0,
         readBy: modifiedMessages.last.readBy,
         deliveredTo: modifiedMessages.last.deliveredTo,
       ),

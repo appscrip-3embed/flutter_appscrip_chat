@@ -113,74 +113,49 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
               },
             ),
             actions: [
-              Padding(
-                padding: EdgeInsets.only(
-                    right: IsmChatDimens.five, top: IsmChatDimens.two),
-                child: PopupMenuButton(
-                  icon: const Icon(
-                    Icons.more_vert,
-                    color: IsmChatColors.blackColor,
-                  ),
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      value: 1,
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.save_rounded,
-                            color: IsmChatColors.blackColor,
-                          ),
-                          IsmChatDimens.boxWidth8,
-                          const Text(IsmChatStrings.save)
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: 2,
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.delete_rounded,
-                            color: IsmChatColors.blackColor,
-                          ),
-                          IsmChatDimens.boxWidth8,
-                          const Text(IsmChatStrings.delete)
-                        ],
-                      ),
-                    ),
-                  ],
-                  elevation: 1,
-                  onSelected: (value) async {
-                    if (value == 1) {
-                      if (widget._messageData?[chatPageController.assetsIndex]
-                              .attachments!.first.mediaUrl!.isValidUrl ??
-                          false) {
-                        IsmChatBlob.fileDownloadWithUrl(widget
-                            ._messageData![chatPageController.assetsIndex]
-                            .attachments!
-                            .first
-                            .mediaUrl!);
-                      } else {
-                        IsmChatBlob.fileDownloadWithBytes(
-                            widget
-                                    ._messageData?[
-                                        chatPageController.assetsIndex]
-                                    .attachments!
-                                    .first
-                                    .mediaUrl!
-                                    .strigToUnit8List ??
-                                List.empty(),
-                            downloadName:
-                                '${widget._messageData?[chatPageController.assetsIndex].attachments!.first.name}.${widget._messageData?[chatPageController.assetsIndex].attachments!.first.extension}');
-                      }
-                    } else if (value == 2) {
-                      await chatPageController.showDialogForMessageDelete(
-                          widget._messageData![chatPageController.assetsIndex],
-                          fromMediaPrivew: true);
+              Tooltip(
+                message: 'Save media',
+                triggerMode: TooltipTriggerMode.tap,
+                child: IconButton(
+                  onPressed: () async {
+                    if (widget._messageData?[chatPageController.assetsIndex]
+                            .attachments!.first.mediaUrl!.isValidUrl ??
+                        false) {
+                      IsmChatBlob.fileDownloadWithUrl(widget
+                          ._messageData![chatPageController.assetsIndex]
+                          .attachments!
+                          .first
+                          .mediaUrl!);
+                    } else {
+                      IsmChatBlob.fileDownloadWithBytes(
+                          widget
+                                  ._messageData?[chatPageController.assetsIndex]
+                                  .attachments!
+                                  .first
+                                  .mediaUrl!
+                                  .strigToUnit8List ??
+                              List.empty(),
+                          downloadName:
+                              '${widget._messageData?[chatPageController.assetsIndex].attachments!.first.name}.${widget._messageData?[chatPageController.assetsIndex].attachments!.first.extension}');
                     }
                   },
+                  icon: const Icon(Icons.save_rounded),
                 ),
               ),
+              IsmChatDimens.boxWidth8,
+              Tooltip(
+                message: 'Delete media',
+                triggerMode: TooltipTriggerMode.tap,
+                child: IconButton(
+                  onPressed: () async {
+                    await chatPageController.showDialogForMessageDelete(
+                        widget._messageData![chatPageController.assetsIndex],
+                        fromMediaPrivew: true);
+                  },
+                  icon: const Icon(Icons.delete_rounded),
+                ),
+              ),
+              IsmChatDimens.boxWidth32
             ],
           ),
           body: Column(
@@ -188,54 +163,53 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: IsmChatDimens.percentHeight(.7),
+                height: IsmChatDimens.percentHeight(.75),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    Ink(
-                      color: Colors.red,
-                      child: CarouselSlider.builder(
-                        carouselController: carouselController,
-                        itemBuilder:
-                            (BuildContext context, int index, int realIndex) {
-                          var url = widget._messageData?[index].attachments!
-                                  .first.mediaUrl ??
-                              '';
-                          return widget._messageData?[index].customType ==
-                                  IsmChatCustomMessageType.image
-                              ? PhotoView(
-                                  imageProvider: url.isValidUrl
-                                      ? NetworkImage(url)
-                                      : kIsWeb
-                                          ? MemoryImage(url.strigToUnit8List)
-                                              as ImageProvider
-                                          : AssetImage(url),
-                                  loadingBuilder: (context, event) =>
-                                      const IsmChatLoadingDialog(),
-                                  wantKeepAlive: true,
-                                )
-                              : VideoViewPage(path: url);
+                    CarouselSlider.builder(
+                      carouselController: carouselController,
+                      itemBuilder:
+                          (BuildContext context, int index, int realIndex) {
+                        var url = widget._messageData?[index].attachments!.first
+                                .mediaUrl ??
+                            '';
+                        return widget._messageData?[index].customType ==
+                                IsmChatCustomMessageType.image
+                            ? PhotoView(
+                                backgroundDecoration: const BoxDecoration(
+                                    color: Colors.transparent),
+                                imageProvider: url.isValidUrl
+                                    ? NetworkImage(url)
+                                    : kIsWeb
+                                        ? MemoryImage(url.strigToUnit8List)
+                                            as ImageProvider
+                                        : AssetImage(url),
+                                loadingBuilder: (context, event) =>
+                                    const IsmChatLoadingDialog(),
+                                wantKeepAlive: true,
+                              )
+                            : VideoViewPage(path: url);
+                      },
+                      options: CarouselOptions(
+                        height: IsmChatDimens.percentHeight(1),
+                        aspectRatio: 16 / 9,
+                        viewportFraction: 1,
+                        enlargeCenterPage: true,
+                        initialPage: widget._mediaIndex ?? 0,
+                        enableInfiniteScroll: false,
+                        animateToClosest: false,
+                        onPageChanged: (index, _) {
+                          initiated =
+                              widget._messageData?[index].sentByMe ?? false;
+                          mediaTime =
+                              widget._messageData?[index].sentAt.deliverTime ??
+                                  '';
+                          chatPageController.assetsIndex = index;
+                          updateState();
                         },
-                        options: CarouselOptions(
-                          height: IsmChatDimens.percentHeight(1),
-                          aspectRatio: 16 / 9,
-                          viewportFraction: 1,
-                          enlargeCenterPage: true,
-                          initialPage: widget._mediaIndex ?? 0,
-                          enableInfiniteScroll: false,
-                          animateToClosest: false,
-                          onPageChanged: (index, _) {
-                            initiated =
-                                widget._messageData?[index].sentByMe ?? false;
-                            mediaTime = widget
-                                    ._messageData?[index].sentAt.deliverTime ??
-                                '';
-                            chatPageController.assetsIndex = index;
-                            updateState();
-                          },
-                        ),
-                        itemCount: widget._messageData?.length ?? 0,
                       ),
+                      itemCount: widget._messageData?.length ?? 0,
                     ),
                     Padding(
                       padding: IsmChatDimens.edgeInsets0_20,
