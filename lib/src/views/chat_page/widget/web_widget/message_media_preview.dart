@@ -56,6 +56,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
   late CarouselController carouselController;
 
   String mediaTime = '';
+  String mediaSize = '';
 
   bool initiated = false;
 
@@ -74,6 +75,10 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
     final time = DateFormat.jm().format(timeStamp);
     final monthDay = DateFormat.MMMd().format(timeStamp);
     mediaTime = '$monthDay, $time';
+    mediaSize = IsmChatUtility.formatBytes(
+      int.parse(
+          '${widget._messageData![widget._mediaIndex ?? 0].attachments?.first.size}'),
+    );
   }
 
   void updateState() {
@@ -87,30 +92,46 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
         onWillPop: () async => false,
         child: Scaffold(
           appBar: AppBar(
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  initiated
-                      ? IsmChatStrings.you
-                      : widget._mediaUserName.toString(),
-                  style: IsmChatStyles.w400Black16,
-                ),
-                Text(
-                  mediaTime,
-                  style: IsmChatStyles.w400Black14,
-                )
-              ],
-            ),
-            centerTitle: false,
-            leading: InkWell(
-              child: Icon(
-                Icons.adaptive.arrow_back,
-                color: IsmChatColors.blackColor,
+            shadowColor: Colors.grey,
+            elevation: 1,
+            leadingWidth: IsmChatDimens.twoHundredFifty,
+            title: Text(mediaSize),
+            centerTitle: true,
+            leading: Padding(
+              padding: IsmChatDimens.edgeInsetsLeft10
+                  .copyWith(left: IsmChatDimens.ten),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  IconButton(
+                    alignment: Alignment.center,
+                    icon: Icon(
+                      Icons.adaptive.arrow_back,
+                      color: IsmChatColors.blackColor,
+                    ),
+                    onPressed: () {
+                      Get.back<void>();
+                    },
+                  ),
+                  IsmChatDimens.boxWidth20,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        initiated
+                            ? IsmChatStrings.you
+                            : widget._mediaUserName.toString(),
+                        style: IsmChatStyles.w400Black16,
+                      ),
+                      Text(
+                        mediaTime,
+                        style: IsmChatStyles.w400Black14,
+                      )
+                    ],
+                  ),
+                ],
               ),
-              onTap: () {
-                Get.back<void>();
-              },
             ),
             actions: [
               Tooltip(
@@ -206,6 +227,10 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                               widget._messageData?[index].sentAt.deliverTime ??
                                   '';
                           chatPageController.assetsIndex = index;
+                          mediaSize = IsmChatUtility.formatBytes(
+                            int.parse(
+                                '${widget._messageData![index].attachments?.first.size}'),
+                          );
                           updateState();
                         },
                       ),
