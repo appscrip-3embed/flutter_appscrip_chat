@@ -365,6 +365,9 @@ class IsmChatApp extends StatelessWidget {
     assert(IsmChatConfig.configInitilized,
         '''MQTT Controller must be initialized before adding listener.
     Either call IsmChatApp.initializeMqtt() or add listener after IsmChatApp is called''');
+    if (!Get.isRegistered<IsmChatMqttController>()) {
+      IsmChatMqttBinding().dependencies();
+    }
     var mqttController = Get.find<IsmChatMqttController>();
     mqttController.actionListeners.add(listener);
     return mqttController.actionStreamController.stream.listen(listener);
