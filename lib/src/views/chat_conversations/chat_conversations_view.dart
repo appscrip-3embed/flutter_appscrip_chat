@@ -62,7 +62,8 @@ class IsmChatConversations extends StatefulWidget {
   /// The `itemBuilder` callback can be provided if you want to change how the chat items are rendered on the screen.
   ///
   /// Provide it like you are passing itemBuilder for `ListView` or any constructor of [ListView]
-  final Widget? Function(BuildContext, int)? itemBuilder;
+  final Widget? Function(BuildContext, int, IsmChatConversationModel)?
+      itemBuilder;
 
   @override
   State<IsmChatConversations> createState() => _IsmChatConversationsState();
