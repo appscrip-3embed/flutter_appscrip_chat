@@ -94,7 +94,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
           appBar: AppBar(
             shadowColor: Colors.grey,
             elevation: 1,
-            leadingWidth: IsmChatDimens.twoHundredFifty,
+            leadingWidth: IsmChatDimens.twoHundredFifty + IsmChatDimens.fifty,
             title: Text(mediaSize),
             centerTitle: true,
             leading: Padding(
@@ -113,7 +113,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                       Get.back<void>();
                     },
                   ),
-                  IsmChatDimens.boxWidth20,
+                  IsmChatDimens.boxWidth8,
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
