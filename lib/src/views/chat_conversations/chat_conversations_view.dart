@@ -24,6 +24,7 @@ class IsmChatConversations extends StatefulWidget {
     this.subtitleBuilder,
     this.isSlidableEnable,
     this.emptyConversationPlaceholder,
+    this.itemBuilder,
     super.key,
   });
 
@@ -57,6 +58,11 @@ class IsmChatConversations extends StatefulWidget {
       isSlidableEnable;
 
   final Widget? emptyConversationPlaceholder;
+
+  /// The `itemBuilder` callback can be provided if you want to change how the chat items are rendered on the screen.
+  ///
+  /// Provide it like you are passing itemBuilder for `ListView` or any constructor of [ListView]
+  final Widget? Function(BuildContext, int)? itemBuilder;
 
   @override
   State<IsmChatConversations> createState() => _IsmChatConversationsState();
@@ -94,6 +100,7 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
             subtitleBuilder: widget.subtitleBuilder,
             isSlidableEnable: widget.isSlidableEnable,
             emptyConversationPlaceholder: widget.emptyConversationPlaceholder,
+            itemBuilder: widget.itemBuilder,
           ),
         ),
         floatingActionButton: widget.showCreateChatIcon

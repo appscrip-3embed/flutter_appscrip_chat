@@ -31,6 +31,7 @@ class IsmChatApp extends StatelessWidget {
       this.emptyConversationPlaceholder,
       this.allowDelete = false,
       this.useDataBase = true,
+      this.itemBuilder,
       this.fontFamily}) {
     assert(IsmChatConfig.isInitialized,
         'ChatHiveBox is not initialized\nYou are getting this error because the Database class is not initialized, to initialize ChatHiveBox class call AppscripChatComponent.initialize() before your runApp()');
@@ -138,6 +139,11 @@ class IsmChatApp extends StatelessWidget {
   final bool useDataBase;
 
   final String? fontFamily;
+
+  /// The `itemBuilder` callback can be provided if you want to change how the chat items are rendered on the screen.
+  ///
+  /// Provide it like you are passing itemBuilder for `ListView` or any constructor of [ListView]
+  final Widget? Function(BuildContext, int)? itemBuilder;
 
   /// Call this function for Get all Conversation List
   static Future<List<IsmChatConversationModel>?> getAllConversation() async =>
@@ -345,5 +351,6 @@ class IsmChatApp extends StatelessWidget {
         subtitleBuilder: subtitleBuilder,
         isSlidableEnable: isSlidableEnable,
         emptyConversationPlaceholder: emptyConversationPlaceholder,
+        itemBuilder: itemBuilder,
       );
 }
