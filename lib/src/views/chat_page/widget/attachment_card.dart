@@ -7,6 +7,15 @@ class IsmChatAttachmentCard extends StatelessWidget {
 
   final List<IsmChatAttachmentType> attachments;
 
+  double getWidgetHight() {
+    var maxPerLine = IsmChatConfig.attachmentConfig?.attachmentShowperLine ??
+        IsmChatConstants.attachmentShowLine;
+    var height = IsmChatConfig.attachmentConfig?.attachmentHight ??
+        IsmChatConstants.attachmentShowLine;
+    var result = (attachments.length / maxPerLine).ceil();
+    return (result * height).toDouble();
+  }
+
   @override
   Widget build(BuildContext context) => SafeArea(
         child: Container(
@@ -16,7 +25,7 @@ class IsmChatAttachmentCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(IsmChatDimens.twentyFour),
           ),
           padding: IsmChatDimens.edgeInsets10,
-          height: 250,
+          height: getWidgetHight(),
           alignment: Alignment.center,
           child: GetBuilder<IsmChatPageController>(
             builder: (controller) {

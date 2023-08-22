@@ -18,9 +18,14 @@ class IsmChatPageView extends StatefulWidget {
     this.bodyBackGroundColor,
     this.attachments = IsmChatAttachmentType.values,
     this.features = IsmChatFeature.values,
+    this.attachmentConfig,
     super.key,
   }) {
     IsmChatConfig.features = features;
+    IsmChatConfig.attachmentConfig = attachmentConfig ??
+        AttachmentConfig(
+            attachmentHight: IsmChatConstants.attachmentHight,
+            attachmentShowperLine: IsmChatConstants.attachmentShowLine);
   }
 
   final void Function(IsmChatConversationModel)? onTitleTap;
@@ -39,6 +44,8 @@ class IsmChatPageView extends StatefulWidget {
   ///
   /// Defaults to all
   final List<IsmChatAttachmentType> attachments;
+
+  final AttachmentConfig? attachmentConfig;
 
   /// It it an optional parameter which take List of `IsmChatFeature` which is an enum.
   /// Pass in the types of features that you want to allow.

@@ -29,6 +29,7 @@ class IsmChatConfig {
   static set chatDarkTheme(IsmChatThemeData data) => _chatDarkTheme = data;
 
   static List<IsmChatFeature> features = IsmChatFeature.values;
+  static AttachmentConfig? attachmentConfig;
 
   static String? fontFamily;
 }
