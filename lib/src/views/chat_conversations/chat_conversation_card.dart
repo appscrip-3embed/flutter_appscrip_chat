@@ -57,14 +57,10 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
                         widget.conversation.profileUrl,
                     name: widget.conversation.chatName,
                   ),
-
-              // Todo
-              Positioned(
-                top: IsmChatDimens.twentyEight,
-                child: widget.onProfileWidget
-                        ?.call(context, widget.conversation) ??
-                    IsmChatDimens.box0,
-              )
+              if (widget.onProfileWidget != null) ...[
+                widget.onProfileWidget?.call(context, widget.conversation) ??
+                    IsmChatDimens.box0
+              ]
             ],
           ),
           title: widget.nameBuilder?.call(
