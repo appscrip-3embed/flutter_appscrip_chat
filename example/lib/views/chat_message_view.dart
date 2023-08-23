@@ -1,6 +1,7 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/res/res.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ChatMessageView extends StatelessWidget {
   const ChatMessageView({super.key});
@@ -17,6 +18,42 @@ class ChatMessageView extends StatelessWidget {
           color: IsmChatColors.greyColor,
         ),
         text: 'No Messages',
+      ),
+      messageAllowedConfig: MessageAllowedConfig(
+        isMessgeAllowed: (_, conversation) async {
+          bool isValue = false;
+          await Get.dialog(
+            AlertDialog(
+              title: const Text('Alert message...'),
+              content: const Text('Incorrect userIdentifier or password.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    isValue = true;
+                    Get.back();
+                  },
+                  child: const Text(
+                    'Yes',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    isValue = false;
+                    Get.back();
+                  },
+                  child: const Text(
+                    'No',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                )
+              ],
+            ),
+          );
+
+          return isValue;
+        },
+        shwoMessage: 'Message not allowd',
       ),
     );
   }

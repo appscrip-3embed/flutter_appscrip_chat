@@ -10,10 +10,12 @@ class IsmChatMessageField extends StatelessWidget {
     super.key,
     required this.header,
     this.attachments = IsmChatAttachmentType.values,
+    this.messageAllowedConfig,
   });
 
   final IsmChatHeader? header;
   final List<IsmChatAttachmentType> attachments;
+  final MessageAllowedConfig? messageAllowedConfig;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
@@ -122,7 +124,7 @@ class IsmChatMessageField extends StatelessWidget {
                               ),
                             ),
                             if (attachments.isNotEmpty)
-                              _AttachmentIcon(attachments)
+                              _AttachmentIcon(attachments, messageAllowedConfig)
                           ],
                         ),
                       ],
@@ -130,7 +132,7 @@ class IsmChatMessageField extends StatelessWidget {
                   ),
                 ),
               ],
-              const _MicOrSendButton(),
+              _MicOrSendButton(messageAllowedConfig),
               IsmChatDimens.boxWidth4,
             ],
           );
@@ -233,7 +235,9 @@ class _EmojiButton extends StatelessWidget {
 }
 
 class _MicOrSendButton extends StatelessWidget {
-  const _MicOrSendButton();
+  const _MicOrSendButton(this.messageAllowedConfig);
+
+  final MessageAllowedConfig? messageAllowedConfig;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -250,22 +254,32 @@ class _MicOrSendButton extends StatelessWidget {
                       if (!controller.conversation!.isChattingAllowed) {
                         controller.showDialogCheckBlockUnBlock();
                       } else {
-                        if (!(controller.conversation?.lastMessageDetails
-                                    ?.customType ==
-                                IsmChatCustomMessageType.removeMember &&
-                            controller
-                                    .conversation?.lastMessageDetails?.userId ==
-                                IsmChatConfig
-                                    .communicationConfig.userConfig.userId)) {
-                          controller.isEnableRecordingAudio = true;
-                          controller.forVideoRecordTimer =
-                              Timer.periodic(const Duration(seconds: 1), (_) {
-                            controller.seconds++;
-                          });
-                          // Check and request permission
-
-                          if (await controller.recordAudio.hasPermission()) {
-                            await controller.recordAudio.start();
+                        // Todo we need change logic for voice recording
+                        var isMessageSend = false;
+                        if (messageAllowedConfig == null) {
+                          isMessageSend = true;
+                        } else if (messageAllowedConfig != null &&
+                            await messageAllowedConfig!.isMessgeAllowed
+                                .call(context, controller.conversation!)) {
+                          isMessageSend = true;
+                        }
+                        if (isMessageSend) {
+                          if (!(controller.conversation?.lastMessageDetails
+                                      ?.customType ==
+                                  IsmChatCustomMessageType.removeMember &&
+                              controller.conversation?.lastMessageDetails
+                                      ?.userId ==
+                                  IsmChatConfig
+                                      .communicationConfig.userConfig.userId)) {
+                            controller.isEnableRecordingAudio = true;
+                            controller.forVideoRecordTimer =
+                                Timer.periodic(const Duration(seconds: 1), (_) {
+                              controller.seconds++;
+                            });
+                            // Check and request permission
+                            if (await controller.recordAudio.hasPermission()) {
+                              await controller.recordAudio.start();
+                            }
                           }
                         }
                       }
@@ -307,17 +321,27 @@ class _MicOrSendButton extends StatelessWidget {
                   if (!controller.conversation!.isChattingAllowed) {
                     controller.showDialogCheckBlockUnBlock();
                   } else {
-                    await controller.getMentionedUserList(
-                        controller.chatInputController.text.trim());
-                    controller.sendTextMessage(
-                        conversationId:
-                            controller.conversation?.conversationId ?? '',
-                        userId:
-                            controller.conversation?.opponentDetails?.userId ??
-                                '',
-                        opponentName: controller
-                                .conversation?.opponentDetails?.userName ??
-                            '');
+                    var isMessageSend = false;
+                    if (messageAllowedConfig == null) {
+                      isMessageSend = true;
+                    } else if (messageAllowedConfig != null &&
+                        await messageAllowedConfig!.isMessgeAllowed
+                            .call(context, controller.conversation!)) {
+                      isMessageSend = true;
+                    }
+                    if (isMessageSend) {
+                      await controller.getMentionedUserList(
+                          controller.chatInputController.text.trim());
+                      controller.sendTextMessage(
+                          conversationId:
+                              controller.conversation?.conversationId ?? '',
+                          userId: controller
+                                  .conversation?.opponentDetails?.userId ??
+                              '',
+                          opponentName: controller
+                                  .conversation?.opponentDetails?.userName ??
+                              '');
+                    }
                   }
                 }
               },
@@ -352,9 +376,10 @@ class _MicOrSendButton extends StatelessWidget {
 }
 
 class _AttachmentIcon extends GetView<IsmChatPageController> {
-  const _AttachmentIcon(this.attachments);
+  const _AttachmentIcon(this.attachments, this.messageAllowedConfig);
 
   final List<IsmChatAttachmentType> attachments;
+  final MessageAllowedConfig? messageAllowedConfig;
 
   @override
   Widget build(BuildContext context) => IconButton(
@@ -362,12 +387,22 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
           if (!controller.conversation!.isChattingAllowed) {
             controller.showDialogCheckBlockUnBlock();
           } else {
-            await Get.bottomSheet(
-              IsmChatAttachmentCard(attachments),
-              enterBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
-              exitBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
-              elevation: 0,
-            );
+            var isMessageSend = false;
+            if (messageAllowedConfig == null) {
+              isMessageSend = true;
+            } else if (messageAllowedConfig != null &&
+                await messageAllowedConfig!.isMessgeAllowed
+                    .call(context, controller.conversation!)) {
+              isMessageSend = true;
+            }
+            if (isMessageSend) {
+              await Get.bottomSheet(
+                IsmChatAttachmentCard(attachments),
+                enterBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
+                exitBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
+                elevation: 0,
+              );
+            }
           }
         },
         color: IsmChatConfig.chatTheme.primaryColor,

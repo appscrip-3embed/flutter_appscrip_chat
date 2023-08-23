@@ -319,24 +319,18 @@ class _IsmChatPageView extends StatelessWidget {
                                   showMessage:
                                       IsmChatStrings.removeGroupMessage,
                                 )
-                              : messageAllowedConfig != null &&
-                                      messageAllowedConfig!.isMessgeAllowed
-                                          .call(
-                                              context, controller.conversation!)
-                                  ? _MessgeNotAllowdWidget(
-                                      showMessage:
-                                          messageAllowedConfig!.shwoMessage,
-                                    )
-                                  : Container(
-                                      padding: textFieldPadding,
-                                      decoration: textFieldBackGroundDecoration,
-                                      child: SafeArea(
-                                        child: IsmChatMessageField(
-                                          header: header,
-                                          attachments: attachments,
-                                        ),
-                                      ),
+                              : Container(
+                                  padding: textFieldPadding,
+                                  decoration: textFieldBackGroundDecoration,
+                                  child: SafeArea(
+                                    child: IsmChatMessageField(
+                                      header: header,
+                                      attachments: attachments,
+                                      messageAllowedConfig:
+                                          messageAllowedConfig,
                                     ),
+                                  ),
+                                ),
                       Offstage(
                         offstage: !controller.showEmojiBoard,
                         child: const EmojiBoard(),

@@ -6,6 +6,6 @@ class MessageAllowedConfig {
     required this.isMessgeAllowed,
     required this.shwoMessage,
   });
-  bool Function(BuildContext, IsmChatConversationModel) isMessgeAllowed;
+  Future<bool> Function(BuildContext, IsmChatConversationModel) isMessgeAllowed;
   String shwoMessage;
 }
