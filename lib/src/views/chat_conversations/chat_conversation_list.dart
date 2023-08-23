@@ -224,7 +224,10 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                                 if (!Get.isRegistered<
                                     IsmChatPageController>()) {
                                   IsmChatPageBinding().dependencies();
+
+                                  return;
                                 }
+
                                 final chatPagecontroller =
                                     Get.find<IsmChatPageController>();
                                 chatPagecontroller.startInit();
