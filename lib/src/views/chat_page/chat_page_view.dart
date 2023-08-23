@@ -241,25 +241,15 @@ class _IsmChatPageView extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                controller.isActionAllowed == true
-                                    ? Container(
-                                        color: IsmChatConfig
-                                            .chatTheme.backgroundColor!,
-                                        height: IsmChatDimens.sixty,
-                                        width: double.maxFinite,
-                                        child: SafeArea(
-                                          child: Center(
-                                            child: Text(
-                                              IsmChatStrings.removeGroupMessage,
-                                              style: IsmChatStyles.w600Black12,
-                                              overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.center,
-                                              maxLines: 2,
-                                            ),
-                                          ),
-                                        ),
+                                controller.isActionAllowed == true &&
+                                        controller.conversation?.isGroup == true
+                                    ? const _MessgeNotAllowdWidget(
+                                        showMessage:
+                                            IsmChatStrings.removeGroupMessage,
                                       )
                                     : controller.isActionAllowed == false &&
+                                            controller.conversation?.isGroup ==
+                                                true &&
                                             controller
                                                     .conversation
                                                     ?.lastMessageDetails
@@ -274,37 +264,40 @@ class _IsmChatPageView extends StatelessWidget {
                                                     .communicationConfig
                                                     .userConfig
                                                     .userId
-                                        ? Container(
-                                            color: IsmChatConfig
-                                                .chatTheme.backgroundColor!,
-                                            height: IsmChatDimens.sixty,
-                                            width: double.maxFinite,
-                                            child: SafeArea(
-                                              child: Center(
-                                                child: Text(
-                                                  IsmChatStrings
-                                                      .removeGroupMessage,
-                                                  style:
-                                                      IsmChatStyles.w600Black12,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  textAlign: TextAlign.center,
-                                                  maxLines: 2,
+                                        ? const _MessgeNotAllowdWidget(
+                                            showMessage: IsmChatStrings
+                                                .removeGroupMessage,
+                                          )
+                                        : IsmChatProperties.chatPageProperties
+                                                        .messageAllowedConfig !=
+                                                    null &&
+                                                IsmChatProperties
+                                                    .chatPageProperties
+                                                    .messageAllowedConfig!
+                                                    .isMessgeAllowed
+                                                    .call(
+                                                        context,
+                                                        controller
+                                                            .conversation!)
+                                            ? _MessgeNotAllowdWidget(
+                                                showMessage: IsmChatProperties
+                                                    .chatPageProperties
+                                                    .messageAllowedConfig!
+                                                    .shwoMessage,
+                                              )
+                                            : Container(
+                                                padding: IsmChatConfig
+                                                    .chatTheme
+                                                    .chatPageTheme
+                                                    ?.textfieldInsets,
+                                                decoration: IsmChatConfig
+                                                    .chatTheme
+                                                    .chatPageTheme
+                                                    ?.textfieldDecoration,
+                                                child: const SafeArea(
+                                                  child: IsmChatMessageField(),
                                                 ),
                                               ),
-                                            ),
-                                          )
-                                        : Container(
-                                            padding: IsmChatConfig.chatTheme
-                                                .chatPageTheme?.textfieldInsets,
-                                            decoration: IsmChatConfig
-                                                .chatTheme
-                                                .chatPageTheme
-                                                ?.textfieldDecoration,
-                                            child: const SafeArea(
-                                              child: IsmChatMessageField(),
-                                            ),
-                                          ),
                                 Offstage(
                                   offstage: !controller.showEmojiBoard,
                                   child: const EmojiBoard(),
@@ -345,6 +338,30 @@ class _IsmChatPageView extends StatelessWidget {
                         ],
                       ),
           ).withUnfocusGestureDetctor(context),
+        ),
+      );
+}
+
+class _MessgeNotAllowdWidget extends StatelessWidget {
+  const _MessgeNotAllowdWidget({required this.showMessage});
+
+  final String showMessage;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        color: IsmChatConfig.chatTheme.backgroundColor!,
+        height: IsmChatDimens.sixty,
+        width: double.maxFinite,
+        child: SafeArea(
+          child: Center(
+            child: Text(
+              showMessage,
+              style: IsmChatStyles.w600Black12,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+            ),
+          ),
         ),
       );
 }

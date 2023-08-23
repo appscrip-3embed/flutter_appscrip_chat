@@ -212,7 +212,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                           IsmChatColors.whiteColor,
                 ),
                 itemBuilder: (context) => [
-                  if (IsmChatProperties.features
+                  if (IsmChatProperties.chatPageProperties.features
                       .contains(IsmChatFeature.chageWallpaper))
                     PopupMenuItem(
                       value: 4,

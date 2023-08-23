@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
     if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';

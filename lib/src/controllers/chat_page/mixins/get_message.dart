@@ -100,6 +100,10 @@ mixin IsmChatPageGetMessageMixin {
       int? membersSkip,
       int? membersLimit,
       bool? isLoading}) async {
+    if (!_controller.isCoverationApiDetails) {
+      return;
+    }
+    _controller.isCoverationApiDetails = false;
     var data = await _controller._viewModel.getConverstaionDetails(
         conversationId: conversationId,
         includeMembers: includeMembers,
@@ -147,6 +151,7 @@ mixin IsmChatPageGetMessageMixin {
       if (data.statusCode == 400 && conversationId.isNotEmpty) {
         _controller.isActionAllowed = true;
       }
+      _controller.isCoverationApiDetails = true;
     }
   }
 
@@ -187,18 +192,18 @@ mixin IsmChatPageGetMessageMixin {
             customType: message.customType,
             readBy: [],
             deliveredTo: [],
-            readCount: conversation.isGroup!
-                ? message.readByAll!
-                    ? conversation.membersCount!
-                    : message.lastReadAt!.length
-                : message.readByAll!
+            readCount: conversation.isGroup == true
+                ? message.readByAll == true
+                    ? conversation.membersCount ?? 0
+                    : message.lastReadAt?.length
+                : message.readByAll == true
                     ? 1
                     : 0,
-            deliverCount: conversation.isGroup!
-                ? message.deliveredToAll!
-                    ? conversation.membersCount!
+            deliverCount: conversation.isGroup == true
+                ? message.deliveredToAll == true
+                    ? conversation.membersCount ?? 0
                     : 0
-                : message.deliveredToAll!
+                : message.deliveredToAll == true
                     ? 1
                     : 0,
             members:
@@ -207,6 +212,7 @@ mixin IsmChatPageGetMessageMixin {
           ),
           unreadMessagesCount: 0,
         );
+        IsmChatLog.error(conversation.lastMessageDetails?.body);
         await IsmChatConfig.dbWrapper!
             .saveConversation(conversation: conversation);
         await conversationController.getConversationsFromDB();

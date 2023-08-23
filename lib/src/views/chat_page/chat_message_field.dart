@@ -65,19 +65,17 @@ class IsmChatMessageField extends StatelessWidget {
                     child: const _EmojiButton(IsmChatColors.whiteColor),
                   ),
                   IsmChatDimens.boxWidth8,
-                  if (IsmChatProperties.attachments.isNotEmpty)
+                  if (IsmChatProperties
+                      .chatPageProperties.attachments.isNotEmpty)
                     Container(
-                      margin: IsmChatDimens.edgeInsetsBottom4,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: IsmChatConfig.chatTheme.primaryColor,
-                      ),
-                      child: Responsive.isWebAndTablet(context)
-                          ? _AttachmentIconForWeb(
-                              IsmChatConfig.chatTheme.primaryColor,
-                            )
-                          : const _AttachmentIcon(IsmChatColors.whiteColor),
-                    ),
+                        margin: IsmChatDimens.edgeInsetsBottom4,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: IsmChatConfig.chatTheme.primaryColor,
+                        ),
+                        child: _AttachmentIconForWeb(
+                          IsmChatConfig.chatTheme.primaryColor,
+                        )),
                   IsmChatDimens.boxWidth2,
                 ],
                 Expanded(
@@ -186,15 +184,9 @@ class IsmChatMessageField extends StatelessWidget {
                                           controller.showMentionsUserList(_);
                                         }
                                       },
-                                      // onTap: () {
-                                      //   controller.messageFieldFocusNode
-                                      //       .requestFocus();
-                                      //   FocusManager.instance.primaryFocus!
-                                      //       .requestFocus();
-                                      // },
                                     ),
                                   ),
-                                  if (IsmChatProperties
+                                  if (IsmChatProperties.chatPageProperties
                                           .attachments.isNotEmpty &&
                                       !Responsive.isWebAndTablet(context)) ...[
                                     const _AttachmentIcon()
@@ -580,13 +572,14 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: List.generate(
-                IsmChatProperties.attachments.length * 2 - 1,
+                IsmChatProperties.chatPageProperties.attachments.length * 2 - 1,
                 (i) {
                   if (i % 2 != 0) {
                     return IsmChatDimens.boxHeight10;
                   }
                   var index = i ~/ 2;
-                  var data = IsmChatProperties.attachments[index];
+                  var data =
+                      IsmChatProperties.chatPageProperties.attachments[index];
                   return Transform(
                     transform: Matrix4.translationValues(
                       0.0,
@@ -700,9 +693,7 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
 }
 
 class _AttachmentIcon extends GetView<IsmChatPageController> {
-  const _AttachmentIcon([this.color]);
-
-  final Color? color;
+  const _AttachmentIcon();
 
   @override
   Widget build(BuildContext context) => IconButton(
@@ -718,7 +709,7 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
             );
           }
         },
-        color: color ?? IsmChatConfig.chatTheme.primaryColor,
+        color: IsmChatConfig.chatTheme.primaryColor,
         icon: const Icon(Icons.attach_file_rounded),
       );
 }

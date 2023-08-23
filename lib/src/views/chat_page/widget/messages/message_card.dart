@@ -14,7 +14,8 @@ class MessageCard extends StatelessWidget {
     required this.index,
     this.messageWidgetBuilder,
   })  : controller = Get.find<IsmChatPageController>(),
-        canReply = IsmChatProperties.features.contains(IsmChatFeature.reply);
+        canReply = IsmChatProperties.chatPageProperties.features
+            .contains(IsmChatFeature.reply);
 
   final bool showMessageInCenter;
   final IsmChatMessageModel message;

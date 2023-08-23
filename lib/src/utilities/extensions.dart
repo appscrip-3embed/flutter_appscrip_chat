@@ -765,10 +765,12 @@ extension MentionMessage on IsmChatMessageModel {
     ].contains(customType)) {
       menu.remove(IsmChatFocusMenuType.copy);
     }
-    if (!IsmChatProperties.features.contains(IsmChatFeature.reply)) {
+    if (!IsmChatProperties.chatPageProperties.features
+        .contains(IsmChatFeature.reply)) {
       menu.remove(IsmChatFocusMenuType.reply);
     }
-    if (!IsmChatProperties.features.contains(IsmChatFeature.forward)) {
+    if (!IsmChatProperties.chatPageProperties.features
+        .contains(IsmChatFeature.forward)) {
       menu.remove(IsmChatFocusMenuType.forward);
     }
     return menu;

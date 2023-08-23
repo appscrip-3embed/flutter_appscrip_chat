@@ -78,6 +78,8 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
                     if (!widget.conversation.isGroup!)
                       widget.conversation.readCheck,
                     widget.conversation.sender,
+                    if (widget.conversation.isGroup!)
+                      widget.conversation.readCheck,
                     widget.conversation.lastMessageDetails!.icon,
                     IsmChatDimens.boxWidth4,
                   ],

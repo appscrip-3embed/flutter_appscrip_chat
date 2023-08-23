@@ -290,6 +290,11 @@ class IsmChatPageController extends GetxController
   bool get isActionAllowed => _isActionAllowed.value;
   set isActionAllowed(bool value) => _isActionAllowed.value = value;
 
+  final RxBool _isCoverationApiDetails = true.obs;
+  bool get isCoverationApiDetails => _isCoverationApiDetails.value;
+  set isCoverationApiDetails(bool value) =>
+      _isCoverationApiDetails.value = value;
+
   final RxList<WebMediaModel> _webMedia = <WebMediaModel>[].obs;
   RxList<WebMediaModel> get webMedia => _webMedia;
   set webMedia(List<WebMediaModel> value) => _webMedia.value = value;
@@ -804,7 +809,8 @@ class IsmChatPageController extends GetxController
     final offset = renderBox.localToGlobal(Offset.zero);
     // Get hight of Overlay widget which is rendor on message tap
     var overlayHeight = message.focusMenuList.length * IsmChatDimens.forty +
-        (IsmChatProperties.features.contains(IsmChatFeature.reaction)
+        (IsmChatProperties.chatPageProperties.features
+                .contains(IsmChatFeature.reaction)
             ? IsmChatDimens.percentHeight(.1)
             : 0);
     var isOverFlowing = (overlayHeight + offset.dy) > Get.height;

@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 
 class IsmChatPageProperties {
@@ -9,10 +8,9 @@ class IsmChatPageProperties {
     this.messageBuilder,
     this.attachments = IsmChatAttachmentType.values,
     this.features = IsmChatFeature.values,
-  }) {
-    IsmChatProperties.features = features;
-    IsmChatProperties.attachments = attachments;
-  }
+    this.attachmentConfig,
+    this.messageAllowedConfig,
+  });
 
   final Widget? placeholder;
   final MessageWidgetBuilder? messageBuilder;
@@ -30,4 +28,9 @@ class IsmChatPageProperties {
   final List<IsmChatFeature> features;
 
   final IsmChatPageHeaderProperties? header;
+
+  /// It is an optional parameter you can you for meessage send allow or not
+  final MessageAllowedConfig? messageAllowedConfig;
+
+  final AttachmentConfig? attachmentConfig;
 }

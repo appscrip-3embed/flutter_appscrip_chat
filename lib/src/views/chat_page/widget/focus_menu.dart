@@ -12,7 +12,8 @@ class IsmChatFocusMenu extends StatelessWidget {
     required this.animation,
     this.blur,
     this.blurBackgroundColor,
-  }) : canReact = IsmChatProperties.features.contains(IsmChatFeature.reaction);
+  }) : canReact = IsmChatProperties.chatPageProperties.features
+            .contains(IsmChatFeature.reaction);
 
   final double? blur;
   final Color? blurBackgroundColor;

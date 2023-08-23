@@ -6,6 +6,19 @@ import 'package:get/get.dart';
 class IsmChatAttachmentCard extends StatelessWidget {
   const IsmChatAttachmentCard({super.key});
 
+  double getWidgetHight() {
+    var maxPerLine = IsmChatProperties
+            .chatPageProperties.attachmentConfig?.attachmentShowperLine ??
+        IsmChatConstants.attachmentShowLine;
+    var height = IsmChatProperties
+            .chatPageProperties.attachmentConfig?.attachmentHight ??
+        IsmChatConstants.attachmentShowLine;
+    var result =
+        (IsmChatProperties.chatPageProperties.attachments.length / maxPerLine)
+            .ceil();
+    return (result * height).toDouble();
+  }
+
   @override
   Widget build(BuildContext context) => SafeArea(
         child: Container(
@@ -15,13 +28,13 @@ class IsmChatAttachmentCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(IsmChatDimens.twentyFour),
           ),
           padding: IsmChatDimens.edgeInsets10,
-          height: 250,
+          height: getWidgetHight(),
           alignment: Alignment.center,
           child: GetBuilder<IsmChatPageController>(
             builder: (controller) {
               var allowedAttachments = controller.attachments
-                  .where((e) =>
-                      IsmChatProperties.attachments.contains(e.attachmentType))
+                  .where((e) => IsmChatProperties.chatPageProperties.attachments
+                      .contains(e.attachmentType))
                   .toList();
               return GridView.builder(
                 itemCount: allowedAttachments.length,

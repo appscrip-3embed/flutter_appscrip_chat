@@ -7,8 +7,7 @@ class IsmChatProperties {
       IsmChatConversationProperties();
   static IsmChatPageProperties chatPageProperties = IsmChatPageProperties();
   static bool isGroupChatEnabled = false;
-  static List<IsmChatFeature> features = IsmChatFeature.values;
-  static List<IsmChatAttachmentType> attachments = IsmChatAttachmentType.values;
+
   static Widget? loadingDialog;
   static Widget? startConversationWidget;
   static Widget? conversationHeaderWidget;
