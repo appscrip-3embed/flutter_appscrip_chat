@@ -520,16 +520,18 @@ class IsmChatPageViewModel {
     bool isLoading = false,
   }) async =>
       await _repository.createConversation(
-          typingEvents: typingEvents,
-          readEvents: readEvents,
-          pushNotifications: pushNotifications,
-          members: members,
-          isGroup: isGroup,
-          metaData: metaData,
-          conversationType: conversationType,
-          conversationImageUrl: conversationImageUrl,
-          conversationTitle: conversationTitle,
-          isLoading: isLoading);
+        typingEvents: typingEvents,
+        readEvents: readEvents,
+        pushNotifications: pushNotifications,
+        members: members,
+        isGroup: isGroup,
+        metaData: metaData,
+        conversationType: conversationType,
+        conversationImageUrl: conversationImageUrl,
+        conversationTitle: conversationTitle,
+        searchableTags: searchableTags,
+        isLoading: isLoading,
+      );
 
   Map<String, int> generateIndexedMessageList(
       List<IsmChatMessageModel> messages) {

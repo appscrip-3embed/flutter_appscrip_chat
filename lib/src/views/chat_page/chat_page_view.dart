@@ -19,6 +19,7 @@ class IsmChatPageView extends StatefulWidget {
     this.attachments = IsmChatAttachmentType.values,
     this.features = IsmChatFeature.values,
     this.attachmentConfig,
+    this.messageAllowedConfig,
     super.key,
   }) {
     IsmChatConfig.features = features;
@@ -38,6 +39,9 @@ class IsmChatPageView extends StatefulWidget {
   final Decoration? textFieldBackGroundDecoration;
   final Decoration? chatPageBackGroundDecoration;
   final Color? bodyBackGroundColor;
+
+  /// It is an optional parameter you can you for meessage send allow or not
+  final MessageAllowedConfig? messageAllowedConfig;
 
   /// It it an optional parameter which take List of `IsmChatAttachmentType` which is an enum.
   /// Pass in the types of attachments that you want to allow.
@@ -110,6 +114,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                   chatPageBackGroundDecoration:
                       widget.chatPageBackGroundDecoration,
                   bodyBackGroundColor: widget.bodyBackGroundColor,
+                  messageAllowedConfig: widget.messageAllowedConfig,
                 ),
               )
             : _IsmChatPageView(
@@ -126,6 +131,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                 chatPageBackGroundDecoration:
                     widget.chatPageBackGroundDecoration,
                 bodyBackGroundColor: widget.bodyBackGroundColor,
+                messageAllowedConfig: widget.messageAllowedConfig,
               ),
       );
 }
@@ -142,6 +148,7 @@ class _IsmChatPageView extends StatelessWidget {
     this.textFieldPadding,
     this.chatPageBackGroundDecoration,
     this.bodyBackGroundColor,
+    this.messageAllowedConfig,
     this.attachments = IsmChatAttachmentType.values,
   });
 
@@ -156,6 +163,7 @@ class _IsmChatPageView extends StatelessWidget {
   final Decoration? textFieldBackGroundDecoration;
   final Decoration? chatPageBackGroundDecoration;
   final Color? bodyBackGroundColor;
+  final MessageAllowedConfig? messageAllowedConfig;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
@@ -296,21 +304,8 @@ class _IsmChatPageView extends StatelessWidget {
                         ),
                       ),
                       controller.isActionAllowed == true
-                          ? Container(
-                              color: IsmChatConfig.chatTheme.backgroundColor!,
-                              height: IsmChatDimens.sixty,
-                              width: double.maxFinite,
-                              child: SafeArea(
-                                child: Center(
-                                  child: Text(
-                                    IsmChatStrings.removeGroupMessage,
-                                    style: IsmChatStyles.w600Black12,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
-                                    maxLines: 2,
-                                  ),
-                                ),
-                              ),
+                          ? const _MessgeNotAllowdWidget(
+                              showMessage: IsmChatStrings.removeGroupMessage,
                             )
                           : controller.isActionAllowed == false &&
                                   controller.conversation?.lastMessageDetails
@@ -320,33 +315,28 @@ class _IsmChatPageView extends StatelessWidget {
                                           ?.userId ==
                                       IsmChatConfig
                                           .communicationConfig.userConfig.userId
-                              ? Container(
-                                  color:
-                                      IsmChatConfig.chatTheme.backgroundColor!,
-                                  height: IsmChatDimens.sixty,
-                                  width: double.maxFinite,
-                                  child: SafeArea(
-                                    child: Center(
-                                      child: Text(
-                                        IsmChatStrings.removeGroupMessage,
-                                        style: IsmChatStyles.w600Black12,
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.center,
-                                        maxLines: 2,
+                              ? const _MessgeNotAllowdWidget(
+                                  showMessage:
+                                      IsmChatStrings.removeGroupMessage,
+                                )
+                              : messageAllowedConfig != null &&
+                                      messageAllowedConfig!.isMessgeAllowed
+                                          .call(
+                                              context, controller.conversation!)
+                                  ? _MessgeNotAllowdWidget(
+                                      showMessage:
+                                          messageAllowedConfig!.shwoMessage,
+                                    )
+                                  : Container(
+                                      padding: textFieldPadding,
+                                      decoration: textFieldBackGroundDecoration,
+                                      child: SafeArea(
+                                        child: IsmChatMessageField(
+                                          header: header,
+                                          attachments: attachments,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                )
-                              : Container(
-                                  padding: textFieldPadding,
-                                  decoration: textFieldBackGroundDecoration,
-                                  child: SafeArea(
-                                    child: IsmChatMessageField(
-                                      header: header,
-                                      attachments: attachments,
-                                    ),
-                                  ),
-                                ),
                       Offstage(
                         offstage: !controller.showEmojiBoard,
                         child: const EmojiBoard(),
@@ -384,6 +374,30 @@ class _IsmChatPageView extends StatelessWidget {
               ],
             ),
           ).withUnfocusGestureDetctor(context),
+        ),
+      );
+}
+
+class _MessgeNotAllowdWidget extends StatelessWidget {
+  const _MessgeNotAllowdWidget({required this.showMessage});
+
+  final String showMessage;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        color: IsmChatConfig.chatTheme.backgroundColor!,
+        height: IsmChatDimens.sixty,
+        width: double.maxFinite,
+        child: SafeArea(
+          child: Center(
+            child: Text(
+              showMessage,
+              style: IsmChatStyles.w600Black12,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+            ),
+          ),
         ),
       );
 }

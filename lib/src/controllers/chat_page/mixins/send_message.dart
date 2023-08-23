@@ -10,7 +10,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     IsmChatMetaData? metaData,
     bool isGroup = false,
     bool isLoading = true,
-    List<String> searchableTags = const [' '],
+    List<String> searchableTags = const [],
   }) async {
     if (isGroup) {
       userId = _controller.conversation!.userIds ?? [];
@@ -171,9 +171,13 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null) {
       conversationId = await createConversation(
-          userId: [userId],
-          metaData: _controller.conversation?.metaData,
-          searchableTags: [opponentName]);
+        userId: [userId],
+        metaData: _controller.conversation?.metaData,
+        searchableTags: [
+          opponentName,
+          _controller.conversation?.chatName ?? ''
+        ],
+      );
     }
     IsmChatMessageModel? audioMessage;
     String? nameWithExtension;
@@ -307,9 +311,13 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             .getConversation(conversationId: conversationId);
         if (chatConversationResponse == null) {
           conversationId = await createConversation(
-              userId: [userId],
-              metaData: _controller.conversation?.metaData,
-              searchableTags: [opponentName]);
+            userId: [userId],
+            metaData: _controller.conversation?.metaData,
+            searchableTags: [
+              opponentName,
+              _controller.conversation?.chatName ?? ''
+            ],
+          );
         }
         for (var x in result!.files) {
           var sizeMedia = await IsmChatUtility.fileToSize(File(x.path!));
@@ -401,9 +409,13 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null) {
       conversationId = await createConversation(
-          userId: [userId],
-          metaData: _controller.conversation?.metaData,
-          searchableTags: [opponentName]);
+        userId: [userId],
+        metaData: _controller.conversation?.metaData,
+        searchableTags: [
+          opponentName,
+          _controller.conversation?.chatName ?? ''
+        ],
+      );
     }
     IsmChatMessageModel? videoMessage;
     String? nameWithExtension;
@@ -539,7 +551,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       conversationId = await createConversation(
         userId: [userId],
         metaData: _controller.conversation?.metaData,
-        searchableTags: [opponentName],
+        searchableTags: [
+          opponentName,
+          _controller.conversation?.chatName ?? ''
+        ],
       );
     }
     IsmChatMessageModel? imageMessage;
@@ -649,9 +664,13 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null) {
       conversationId = await createConversation(
-          userId: [userId],
-          metaData: _controller.conversation?.metaData,
-          searchableTags: [opponentName]);
+        userId: [userId],
+        metaData: _controller.conversation?.metaData,
+        searchableTags: [
+          opponentName,
+          _controller.conversation?.chatName ?? ''
+        ],
+      );
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatMessageModel(
@@ -720,7 +739,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       conversationId = await createConversation(
         userId: [userId],
         metaData: _controller.conversation?.metaData,
-        searchableTags: [opponentName],
+        searchableTags: [
+          opponentName,
+          _controller.conversation?.chatName ?? ''
+        ],
       );
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
