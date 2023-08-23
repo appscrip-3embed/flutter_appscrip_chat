@@ -268,36 +268,17 @@ class _IsmChatPageView extends StatelessWidget {
                                             showMessage: IsmChatStrings
                                                 .removeGroupMessage,
                                           )
-                                        : IsmChatProperties.chatPageProperties
-                                                        .messageAllowedConfig !=
-                                                    null &&
-                                                IsmChatProperties
-                                                    .chatPageProperties
-                                                    .messageAllowedConfig!
-                                                    .isMessgeAllowed
-                                                    .call(
-                                                        context,
-                                                        controller
-                                                            .conversation!)
-                                            ? _MessgeNotAllowdWidget(
-                                                showMessage: IsmChatProperties
-                                                    .chatPageProperties
-                                                    .messageAllowedConfig!
-                                                    .shwoMessage,
-                                              )
-                                            : Container(
-                                                padding: IsmChatConfig
-                                                    .chatTheme
-                                                    .chatPageTheme
-                                                    ?.textfieldInsets,
-                                                decoration: IsmChatConfig
-                                                    .chatTheme
-                                                    .chatPageTheme
-                                                    ?.textfieldDecoration,
-                                                child: const SafeArea(
-                                                  child: IsmChatMessageField(),
-                                                ),
-                                              ),
+                                        : Container(
+                                            padding: IsmChatConfig.chatTheme
+                                                .chatPageTheme?.textfieldInsets,
+                                            decoration: IsmChatConfig
+                                                .chatTheme
+                                                .chatPageTheme
+                                                ?.textfieldDecoration,
+                                            child: const SafeArea(
+                                              child: IsmChatMessageField(),
+                                            ),
+                                          ),
                                 Offstage(
                                   offstage: !controller.showEmojiBoard,
                                   child: const EmojiBoard(),

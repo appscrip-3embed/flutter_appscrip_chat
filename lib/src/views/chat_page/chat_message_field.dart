@@ -453,17 +453,32 @@ class _MicOrSendButton extends StatelessWidget {
                     if (!controller.conversation!.isChattingAllowed) {
                       controller.showDialogCheckBlockUnBlock();
                     } else {
-                      await controller.getMentionedUserList(
-                          controller.chatInputController.text.trim());
-                      controller.sendTextMessage(
-                          conversationId:
-                              controller.conversation?.conversationId ?? '',
-                          userId: controller
-                                  .conversation?.opponentDetails?.userId ??
-                              '',
-                          opponentName: controller
-                                  .conversation?.opponentDetails?.userName ??
-                              '');
+                      var isMessageSend = false;
+                      if (IsmChatProperties
+                              .chatPageProperties.messageAllowedConfig ==
+                          null) {
+                        isMessageSend = true;
+                      } else if (IsmChatProperties
+                                  .chatPageProperties.messageAllowedConfig !=
+                              null &&
+                          await IsmChatProperties.chatPageProperties
+                              .messageAllowedConfig!.isMessgeAllowed
+                              .call(context, controller.conversation!)) {
+                        isMessageSend = true;
+                      }
+                      if (isMessageSend) {
+                        await controller.getMentionedUserList(
+                            controller.chatInputController.text.trim());
+                        controller.sendTextMessage(
+                            conversationId:
+                                controller.conversation?.conversationId ?? '',
+                            userId: controller
+                                    .conversation?.opponentDetails?.userId ??
+                                '',
+                            opponentName: controller
+                                    .conversation?.opponentDetails?.userName ??
+                                '');
+                      }
                     }
                   }
                 },
@@ -701,12 +716,26 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
           if (!controller.conversation!.isChattingAllowed) {
             controller.showDialogCheckBlockUnBlock();
           } else {
-            await Get.bottomSheet(
-              const IsmChatAttachmentCard(),
-              enterBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
-              exitBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
-              elevation: 0,
-            );
+            var isMessageSend = false;
+            if (IsmChatProperties.chatPageProperties.messageAllowedConfig ==
+                null) {
+              isMessageSend = true;
+            } else if (IsmChatProperties
+                        .chatPageProperties.messageAllowedConfig !=
+                    null &&
+                await IsmChatProperties
+                    .chatPageProperties.messageAllowedConfig!.isMessgeAllowed
+                    .call(context, controller.conversation!)) {
+              isMessageSend = true;
+            }
+            if (isMessageSend) {
+              await Get.bottomSheet(
+                const IsmChatAttachmentCard(),
+                enterBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
+                exitBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
+                elevation: 0,
+              );
+            }
           }
         },
         color: IsmChatConfig.chatTheme.primaryColor,
