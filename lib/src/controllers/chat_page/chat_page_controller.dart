@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 import 'dart:math';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:camera/camera.dart';
@@ -364,7 +363,6 @@ class IsmChatPageController extends GetxController
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
       final newMeessageFromOutside = conversation?.messageFromOutSide;
-
       await Future.delayed(Duration.zero);
       if (conversation?.conversationId?.isNotEmpty ?? false) {
         _getBackGroundAsset();
@@ -384,7 +382,12 @@ class IsmChatPageController extends GetxController
         checkUserStatus();
       } else {
         if (conversation!.isGroup ?? false) {
-          await createConversation(userId: [], isGroup: true);
+          await createConversation(
+            userId: [],
+            isGroup: true,
+            searchableTags: [conversation?.chatName ?? ''],
+          );
+          await getMessagesFromAPI();
         }
 
         isMessagesLoading = false;

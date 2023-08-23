@@ -78,7 +78,7 @@ class IsmChatPageRepository {
         'attachments': attachments,
         'notificationBody': notificationBody,
         'notificationTitle': notificationTitle,
-        'searchableTags': [body],
+        'searchableTags': [IsmChatUtility.decodePayload(body)],
         if (mentionedUsers?.isNotEmpty == true) 'mentionedUsers': mentionedUsers
       };
       var response = await _apiWrapper.post(
