@@ -19,7 +19,7 @@ class ChatMessageView extends StatelessWidget {
         text: 'No Messages',
       ),
       // isMessgeAllowed: (_, conversation) async {
-      //   bool isValue = false;
+      //   bool? isValue;
       //   await Get.dialog(
       //     AlertDialog(
       //       title: const Text('Alert message...'),
@@ -37,7 +37,6 @@ class ChatMessageView extends StatelessWidget {
       //         ),
       //         TextButton(
       //           onPressed: () {
-      //             isValue = false;
       //             Get.back();
       //           },
       //           child: const Text(
