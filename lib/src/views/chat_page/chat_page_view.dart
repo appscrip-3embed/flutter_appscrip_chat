@@ -31,7 +31,7 @@ class IsmChatPageView extends StatefulWidget {
 
   final void Function(IsmChatConversationModel)? onTitleTap;
   final VoidCallback? onBackTap;
-  final double? height;
+  final double? Function(BuildContext, IsmChatConversationModel)? height;
   final IsmChatHeader? header;
   final Widget? emptyChatPlaceholder;
   final MessageWidgetBuilder? messageWidgetBuilder;
@@ -154,7 +154,7 @@ class _IsmChatPageView extends StatelessWidget {
 
   final void Function(IsmChatConversationModel)? onTitleTap;
   final VoidCallback? onBackTap;
-  final double? height;
+  final double? Function(BuildContext, IsmChatConversationModel)? height;
   final IsmChatHeader? header;
   final Widget? emptyChatPlaceholder;
   final List<IsmChatAttachmentType> attachments;
