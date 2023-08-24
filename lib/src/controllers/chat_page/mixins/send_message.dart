@@ -80,10 +80,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     List<Map<String, dynamic>>? attachments,
   }) async {
     var isSendMessage = false;
-    if (IsmChatConfig.isMessgeAllowed == null) {
+    if (IsmChatConfig.messageAllowedConfig?.isMessgeAllowed == null) {
       isSendMessage = true;
     } else {
-      if (await IsmChatConfig.isMessgeAllowed?.call(
+      if (await IsmChatConfig.messageAllowedConfig?.isMessgeAllowed?.call(
               Get.context!, Get.find<IsmChatPageController>().conversation!) ??
           true) {
         isSendMessage = true;

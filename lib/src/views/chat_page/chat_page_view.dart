@@ -19,7 +19,7 @@ class IsmChatPageView extends StatefulWidget {
     this.attachments = IsmChatAttachmentType.values,
     this.features = IsmChatFeature.values,
     this.attachmentConfig,
-    this.isMessgeAllowed,
+    this.messageAllowedConfig,
     super.key,
   }) {
     IsmChatConfig.features = features;
@@ -27,7 +27,7 @@ class IsmChatPageView extends StatefulWidget {
         AttachmentConfig(
             attachmentHight: IsmChatConstants.attachmentHight,
             attachmentShowperLine: IsmChatConstants.attachmentShowLine);
-    IsmChatConfig.isMessgeAllowed = isMessgeAllowed;
+    IsmChatConfig.messageAllowedConfig = messageAllowedConfig;
   }
 
   final void Function(IsmChatConversationModel)? onTitleTap;
@@ -42,8 +42,7 @@ class IsmChatPageView extends StatefulWidget {
   final Color? bodyBackGroundColor;
 
   /// It is an optional parameter you can you for meessage send allow or not
-  final Future<bool?>? Function(BuildContext, IsmChatConversationModel)?
-      isMessgeAllowed;
+  final MessageAllowedConfig? messageAllowedConfig;
 
   /// It it an optional parameter which take List of `IsmChatAttachmentType` which is an enum.
   /// Pass in the types of attachments that you want to allow.
@@ -317,16 +316,32 @@ class _IsmChatPageView extends StatelessWidget {
                                   showMessage:
                                       IsmChatStrings.removeGroupMessage,
                                 )
-                              : Container(
-                                  padding: textFieldPadding,
-                                  decoration: textFieldBackGroundDecoration,
-                                  child: SafeArea(
-                                    child: IsmChatMessageField(
-                                      header: header,
-                                      attachments: attachments,
+                              : IsmChatConfig.messageAllowedConfig
+                                              ?.isShowTextfiledConfig !=
+                                          null &&
+                                      IsmChatConfig
+                                          .messageAllowedConfig!
+                                          .isShowTextfiledConfig!
+                                          .isShowMeesageAllowed
+                                          .call(
+                                              context, controller.conversation!)
+                                  ? _MessgeNotAllowdWidget(
+                                      showMessage: IsmChatConfig
+                                              .messageAllowedConfig
+                                              ?.isShowTextfiledConfig
+                                              ?.shwoMessage ??
+                                          '',
+                                    )
+                                  : Container(
+                                      padding: textFieldPadding,
+                                      decoration: textFieldBackGroundDecoration,
+                                      child: SafeArea(
+                                        child: IsmChatMessageField(
+                                          header: header,
+                                          attachments: attachments,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
                       Offstage(
                         offstage: !controller.showEmojiBoard,
                         child: const EmojiBoard(),
