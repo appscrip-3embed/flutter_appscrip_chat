@@ -11,9 +11,9 @@ class MessageAllowedConfig {
 
 class IsShowTextfiledConfig {
   IsShowTextfiledConfig({
-    required this.isShowMeesageAllowed,
+    required this.isShowMessageAllowed,
     required this.shwoMessage,
   });
-  bool Function(BuildContext, IsmChatConversationModel) isShowMeesageAllowed;
+  bool Function(BuildContext, IsmChatConversationModel) isShowMessageAllowed;
   String shwoMessage;
 }

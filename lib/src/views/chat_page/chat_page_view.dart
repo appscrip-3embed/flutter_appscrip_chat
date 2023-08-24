@@ -319,10 +319,10 @@ class _IsmChatPageView extends StatelessWidget {
                               : IsmChatConfig.messageAllowedConfig
                                               ?.isShowTextfiledConfig !=
                                           null &&
-                                      IsmChatConfig
+                                      !IsmChatConfig
                                           .messageAllowedConfig!
                                           .isShowTextfiledConfig!
-                                          .isShowMeesageAllowed
+                                          .isShowMessageAllowed
                                           .call(
                                               context, controller.conversation!)
                                   ? _MessgeNotAllowdWidget(

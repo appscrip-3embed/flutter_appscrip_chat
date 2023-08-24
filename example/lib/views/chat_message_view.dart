@@ -20,7 +20,7 @@ class ChatMessageView extends StatelessWidget {
       ),
       // messageAllowedConfig: MessageAllowedConfig(
       //   isShowTextfiledConfig: IsShowTextfiledConfig(
-      //       isShowMeesageAllowed: (_, conversation) => tru,
+      //       isShowMessageAllowed: (_, conversation) => true,
       //       shwoMessage: 'fsdsf'),
       //   isMessgeAllowed: (_, conversation) async {
       //     bool? isValue;
