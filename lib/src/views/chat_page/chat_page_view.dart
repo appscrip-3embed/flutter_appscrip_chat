@@ -19,7 +19,7 @@ class IsmChatPageView extends StatefulWidget {
     this.attachments = IsmChatAttachmentType.values,
     this.features = IsmChatFeature.values,
     this.attachmentConfig,
-    this.messageAllowedConfig,
+    this.isMessgeAllowed,
     super.key,
   }) {
     IsmChatConfig.features = features;
@@ -27,6 +27,7 @@ class IsmChatPageView extends StatefulWidget {
         AttachmentConfig(
             attachmentHight: IsmChatConstants.attachmentHight,
             attachmentShowperLine: IsmChatConstants.attachmentShowLine);
+    IsmChatConfig.isMessgeAllowed = isMessgeAllowed;
   }
 
   final void Function(IsmChatConversationModel)? onTitleTap;
@@ -41,7 +42,8 @@ class IsmChatPageView extends StatefulWidget {
   final Color? bodyBackGroundColor;
 
   /// It is an optional parameter you can you for meessage send allow or not
-  final MessageAllowedConfig? messageAllowedConfig;
+  final Future<bool>? Function(BuildContext, IsmChatConversationModel)?
+      isMessgeAllowed;
 
   /// It it an optional parameter which take List of `IsmChatAttachmentType` which is an enum.
   /// Pass in the types of attachments that you want to allow.
@@ -114,7 +116,6 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                   chatPageBackGroundDecoration:
                       widget.chatPageBackGroundDecoration,
                   bodyBackGroundColor: widget.bodyBackGroundColor,
-                  messageAllowedConfig: widget.messageAllowedConfig,
                 ),
               )
             : _IsmChatPageView(
@@ -131,7 +132,6 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
                 chatPageBackGroundDecoration:
                     widget.chatPageBackGroundDecoration,
                 bodyBackGroundColor: widget.bodyBackGroundColor,
-                messageAllowedConfig: widget.messageAllowedConfig,
               ),
       );
 }
@@ -148,7 +148,6 @@ class _IsmChatPageView extends StatelessWidget {
     this.textFieldPadding,
     this.chatPageBackGroundDecoration,
     this.bodyBackGroundColor,
-    this.messageAllowedConfig,
     this.attachments = IsmChatAttachmentType.values,
   });
 
@@ -163,7 +162,6 @@ class _IsmChatPageView extends StatelessWidget {
   final Decoration? textFieldBackGroundDecoration;
   final Decoration? chatPageBackGroundDecoration;
   final Color? bodyBackGroundColor;
-  final MessageAllowedConfig? messageAllowedConfig;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
@@ -326,8 +324,6 @@ class _IsmChatPageView extends StatelessWidget {
                                     child: IsmChatMessageField(
                                       header: header,
                                       attachments: attachments,
-                                      messageAllowedConfig:
-                                          messageAllowedConfig,
                                     ),
                                   ),
                                 ),
