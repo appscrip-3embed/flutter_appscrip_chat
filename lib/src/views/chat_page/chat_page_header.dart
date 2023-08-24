@@ -190,13 +190,14 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                     child: Padding(
                       padding: IsmChatDimens.edgeInsets4,
                       child: InkWell(
-                          onTap: () {
-                            if (header?.bottomOnTap != null) {
-                              header?.bottomOnTap
-                                  ?.call(controller.conversation!);
-                            }
-                          },
-                          child: header?.bottom),
+                        onTap: () {
+                          if (header?.bottomOnTap != null) {
+                            header?.bottomOnTap?.call(controller.conversation!);
+                          }
+                        },
+                        child: header?.bottom
+                            ?.call(context, controller.conversation!),
+                      ),
                     ),
                   ),
             actions: [

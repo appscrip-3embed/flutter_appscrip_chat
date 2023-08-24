@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 import 'dart:math';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:camera/camera.dart';
@@ -355,6 +356,10 @@ class IsmChatPageController extends GetxController
   final Dio dio = Dio();
 
   final ismChatDebounce = IsmChatDebounce();
+
+  final RxString _audioPaht = ''.obs;
+  String get audioPaht => _audioPaht.value;
+  set audioPaht(String value) => _audioPaht.value = value;
 
   @override
   void onInit() async {

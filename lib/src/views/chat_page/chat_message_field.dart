@@ -32,11 +32,26 @@ class IsmChatMessageField extends StatelessWidget {
               if (controller.isEnableRecordingAudio) ...[
                 Expanded(
                   child: Container(
+                    alignment: Alignment.center,
                     width: MediaQuery.of(context).size.width * 0.8,
                     padding: const EdgeInsets.all(20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        IsmChatTapHandler(
+                          onTap: () async {
+                            controller.isEnableRecordingAudio = false;
+                            controller.showSendButton = false;
+                            await controller.recordAudio.dispose();
+                            controller.seconds = 0;
+                          },
+                          child: Icon(
+                            Icons.delete_outlined,
+                            size: IsmChatDimens.twentyFive,
+                          ),
+                        ),
+                        IsmChatDimens.boxWidth8,
                         const Icon(
                           Icons.radio_button_checked_outlined,
                           color: Colors.red,
@@ -115,12 +130,6 @@ class IsmChatMessageField extends StatelessWidget {
                                     controller.showMentionsUserList(_);
                                   }
                                 },
-                                // onTap: () {
-                                //   controller.messageFieldFocusNode
-                                //       .requestFocus();
-                                //   FocusManager.instance.primaryFocus!
-                                //       .requestFocus();
-                                // },
                               ),
                             ),
                             if (attachments.isNotEmpty)
@@ -247,75 +256,51 @@ class _MicOrSendButton extends StatelessWidget {
           aspectRatio: 1,
           child: GetX<IsmChatPageController>(
             builder: (controller) => GestureDetector(
-              onLongPressStart: controller.showSendButton ||
+              onLongPressStart: (controller.showSendButton &&
+                          controller.isEnableRecordingAudio) ||
                       controller.isActionAllowed
                   ? null
                   : (val) async {
                       if (!controller.conversation!.isChattingAllowed) {
                         controller.showDialogCheckBlockUnBlock();
                       } else {
-                        // Todo we need change logic for voice recording
-                        var isMessageSend = false;
-                        if (messageAllowedConfig == null) {
-                          isMessageSend = true;
-                        } else if (messageAllowedConfig != null &&
-                            await messageAllowedConfig!.isMessgeAllowed
-                                .call(context, controller.conversation!)) {
-                          isMessageSend = true;
+                        var isPermission = false;
+                        if (await controller.recordAudio.hasPermission()) {
+                          isPermission = true;
                         }
-                        if (isMessageSend) {
-                          if (!(controller.conversation?.lastMessageDetails
-                                      ?.customType ==
-                                  IsmChatCustomMessageType.removeMember &&
-                              controller.conversation?.lastMessageDetails
-                                      ?.userId ==
-                                  IsmChatConfig
-                                      .communicationConfig.userConfig.userId)) {
+                        if (!(controller.conversation?.lastMessageDetails
+                                    ?.customType ==
+                                IsmChatCustomMessageType.removeMember &&
+                            controller
+                                    .conversation?.lastMessageDetails?.userId ==
+                                IsmChatConfig
+                                    .communicationConfig.userConfig.userId)) {
+                          if (isPermission) {
                             controller.isEnableRecordingAudio = true;
                             controller.forVideoRecordTimer =
                                 Timer.periodic(const Duration(seconds: 1), (_) {
                               controller.seconds++;
                             });
-                            // Check and request permission
-                            if (await controller.recordAudio.hasPermission()) {
-                              await controller.recordAudio.start();
-                            }
+                            await controller.recordAudio.start();
                           }
                         }
                       }
                     },
-              onLongPressEnd: controller.showSendButton
-                  ? null
-                  : (val) async {
-                      controller.isEnableRecordingAudio = false;
-                      controller.forVideoRecordTimer?.cancel();
-                      controller.seconds = 0;
-                      var path = await controller.recordAudio.stop();
-                      if (path != null) {
-                        var sizeMedia =
-                            await IsmChatUtility.fileToSize(File(path));
-                        if (sizeMedia.size()) {
-                          controller.sendAudio(
-                            path: path,
-                            conversationId:
-                                controller.conversation?.conversationId ?? '',
-                            userId: controller
-                                    .conversation?.opponentDetails?.userId ??
-                                '',
-                            opponentName: controller
-                                    .conversation?.opponentDetails?.userName ??
-                                '',
-                          );
-                        } else {
-                          await Get.dialog(
-                            const IsmChatAlertDialogBox(
-                              title: 'You can not send audio more than 20 MB.',
-                              cancelLabel: 'Okay',
-                            ),
-                          );
-                        }
-                      }
-                    },
+              onLongPressEnd:
+                  controller.showSendButton && controller.isEnableRecordingAudio
+                      ? null
+                      : (val) async {
+                          var allowPermission = false;
+                          if (await controller.recordAudio.hasPermission()) {
+                            allowPermission = true;
+                          }
+                          if (allowPermission) {
+                            controller.forVideoRecordTimer?.cancel();
+                            controller.showSendButton = true;
+                            controller.audioPaht =
+                                await controller.recordAudio.stop() ?? '';
+                          }
+                        },
               onTap: () async {
                 if (controller.showSendButton) {
                   if (!controller.conversation!.isChattingAllowed) {
@@ -330,17 +315,49 @@ class _MicOrSendButton extends StatelessWidget {
                       isMessageSend = true;
                     }
                     if (isMessageSend) {
-                      await controller.getMentionedUserList(
-                          controller.chatInputController.text.trim());
-                      controller.sendTextMessage(
-                          conversationId:
-                              controller.conversation?.conversationId ?? '',
-                          userId: controller
-                                  .conversation?.opponentDetails?.userId ??
-                              '',
-                          opponentName: controller
-                                  .conversation?.opponentDetails?.userName ??
-                              '');
+                      if (controller.isEnableRecordingAudio) {
+                        if (controller.audioPaht.isNotEmpty) {
+                          controller.isEnableRecordingAudio = false;
+                          controller.showSendButton = false;
+                          await controller.recordAudio.dispose();
+                          controller.seconds = 0;
+                          var sizeMedia = await IsmChatUtility.fileToSize(
+                              File(controller.audioPaht));
+                          if (sizeMedia.size()) {
+                            controller.sendAudio(
+                              path: controller.audioPaht,
+                              conversationId:
+                                  controller.conversation?.conversationId ?? '',
+                              userId: controller
+                                      .conversation?.opponentDetails?.userId ??
+                                  '',
+                              opponentName: controller.conversation
+                                      ?.opponentDetails?.userName ??
+                                  '',
+                            );
+                          } else {
+                            await Get.dialog(
+                              const IsmChatAlertDialogBox(
+                                title:
+                                    'You can not send audio more than 20 MB.',
+                                cancelLabel: 'Okay',
+                              ),
+                            );
+                          }
+                        }
+                      } else {
+                        await controller.getMentionedUserList(
+                            controller.chatInputController.text.trim());
+                        controller.sendTextMessage(
+                            conversationId:
+                                controller.conversation?.conversationId ?? '',
+                            userId: controller
+                                    .conversation?.opponentDetails?.userId ??
+                                '',
+                            opponentName: controller
+                                    .conversation?.opponentDetails?.userName ??
+                                '');
+                      }
                     }
                   }
                 }
