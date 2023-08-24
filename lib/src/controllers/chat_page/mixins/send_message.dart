@@ -85,7 +85,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     } else {
       if (await IsmChatConfig.isMessgeAllowed?.call(
               Get.context!, Get.find<IsmChatPageController>().conversation!) ??
-          false) {
+          true) {
         isSendMessage = true;
       }
     }

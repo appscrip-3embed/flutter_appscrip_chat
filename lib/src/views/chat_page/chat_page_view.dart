@@ -42,7 +42,7 @@ class IsmChatPageView extends StatefulWidget {
   final Color? bodyBackGroundColor;
 
   /// It is an optional parameter you can you for meessage send allow or not
-  final Future<bool>? Function(BuildContext, IsmChatConversationModel)?
+  final Future<bool?>? Function(BuildContext, IsmChatConversationModel)?
       isMessgeAllowed;
 
   /// It it an optional parameter which take List of `IsmChatAttachmentType` which is an enum.

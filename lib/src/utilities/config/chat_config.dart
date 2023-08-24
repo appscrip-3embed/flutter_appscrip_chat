@@ -30,7 +30,7 @@ class IsmChatConfig {
 
   static List<IsmChatFeature> features = IsmChatFeature.values;
   static AttachmentConfig? attachmentConfig;
-  static Future<bool>? Function(BuildContext, IsmChatConversationModel)?
+  static Future<bool?>? Function(BuildContext, IsmChatConversationModel)?
       isMessgeAllowed;
 
   static String? fontFamily;
