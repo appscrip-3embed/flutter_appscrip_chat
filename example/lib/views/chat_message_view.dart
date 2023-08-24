@@ -18,38 +18,43 @@ class ChatMessageView extends StatelessWidget {
         ),
         text: 'No Messages',
       ),
-      // isMessgeAllowed: (_, conversation) async {
-      //   bool? isValue;
-      //   await Get.dialog(
-      //     AlertDialog(
-      //       title: const Text('Alert message...'),
-      //       content: const Text('Incorrect userIdentifier or password.'),
-      //       actions: [
-      //         TextButton(
-      //           onPressed: () {
-      //             isValue = true;
-      //             Get.back();
-      //           },
-      //           child: const Text(
-      //             'Yes',
-      //             style: TextStyle(fontSize: 15),
+      // messageAllowedConfig: MessageAllowedConfig(
+      //   isShowTextfiledConfig: IsShowTextfiledConfig(
+      //       isShowMeesageAllowed: (_, conversation) => tru,
+      //       shwoMessage: 'fsdsf'),
+      //   isMessgeAllowed: (_, conversation) async {
+      //     bool? isValue;
+      //     await Get.dialog(
+      //       AlertDialog(
+      //         title: const Text('Alert message...'),
+      //         content: const Text('Incorrect userIdentifier or password.'),
+      //         actions: [
+      //           TextButton(
+      //             onPressed: () {
+      //               isValue = true;
+      //               Get.back();
+      //             },
+      //             child: const Text(
+      //               'Yes',
+      //               style: TextStyle(fontSize: 15),
+      //             ),
       //           ),
-      //         ),
-      //         TextButton(
-      //           onPressed: () {
-      //             Get.back();
-      //           },
-      //           child: const Text(
-      //             'No',
-      //             style: TextStyle(fontSize: 15),
-      //           ),
-      //         )
-      //       ],
-      //     ),
-      //   );
+      //           TextButton(
+      //             onPressed: () {
+      //               Get.back();
+      //             },
+      //             child: const Text(
+      //               'No',
+      //               style: TextStyle(fontSize: 15),
+      //             ),
+      //           )
+      //         ],
+      //       ),
+      //     );
 
-      //   return isValue;
-      // },
+      //     return isValue;
+      //   },
+      // )
     );
   }
 }
