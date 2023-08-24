@@ -10,12 +10,10 @@ class IsmChatMessageField extends StatelessWidget {
     super.key,
     required this.header,
     this.attachments = IsmChatAttachmentType.values,
-    this.messageAllowedConfig,
   });
 
   final IsmChatHeader? header;
   final List<IsmChatAttachmentType> attachments;
-  final MessageAllowedConfig? messageAllowedConfig;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
@@ -133,7 +131,7 @@ class IsmChatMessageField extends StatelessWidget {
                               ),
                             ),
                             if (attachments.isNotEmpty)
-                              _AttachmentIcon(attachments, messageAllowedConfig)
+                              _AttachmentIcon(attachments)
                           ],
                         ),
                       ],
@@ -141,7 +139,7 @@ class IsmChatMessageField extends StatelessWidget {
                   ),
                 ),
               ],
-              _MicOrSendButton(messageAllowedConfig),
+              const _MicOrSendButton(),
               IsmChatDimens.boxWidth4,
             ],
           );
@@ -244,9 +242,7 @@ class _EmojiButton extends StatelessWidget {
 }
 
 class _MicOrSendButton extends StatelessWidget {
-  const _MicOrSendButton(this.messageAllowedConfig);
-
-  final MessageAllowedConfig? messageAllowedConfig;
+  const _MicOrSendButton();
 
   @override
   Widget build(BuildContext context) => Container(
@@ -306,49 +302,17 @@ class _MicOrSendButton extends StatelessWidget {
                   if (!controller.conversation!.isChattingAllowed) {
                     controller.showDialogCheckBlockUnBlock();
                   } else {
-                    var isMessageSend = false;
-                    if (messageAllowedConfig == null) {
-                      isMessageSend = true;
-                    } else if (messageAllowedConfig != null &&
-                        await messageAllowedConfig!.isMessgeAllowed
-                            .call(context, controller.conversation!)) {
-                      isMessageSend = true;
-                    }
-                    if (isMessageSend) {
-                      if (controller.isEnableRecordingAudio) {
-                        if (controller.audioPaht.isNotEmpty) {
-                          controller.isEnableRecordingAudio = false;
-                          controller.showSendButton = false;
-                          await controller.recordAudio.dispose();
-                          controller.seconds = 0;
-                          var sizeMedia = await IsmChatUtility.fileToSize(
-                              File(controller.audioPaht));
-                          if (sizeMedia.size()) {
-                            controller.sendAudio(
-                              path: controller.audioPaht,
-                              conversationId:
-                                  controller.conversation?.conversationId ?? '',
-                              userId: controller
-                                      .conversation?.opponentDetails?.userId ??
-                                  '',
-                              opponentName: controller.conversation
-                                      ?.opponentDetails?.userName ??
-                                  '',
-                            );
-                          } else {
-                            await Get.dialog(
-                              const IsmChatAlertDialogBox(
-                                title:
-                                    'You can not send audio more than 20 MB.',
-                                cancelLabel: 'Okay',
-                              ),
-                            );
-                          }
-                        }
-                      } else {
-                        await controller.getMentionedUserList(
-                            controller.chatInputController.text.trim());
-                        controller.sendTextMessage(
+                    if (controller.isEnableRecordingAudio) {
+                      if (controller.audioPaht.isNotEmpty) {
+                        controller.isEnableRecordingAudio = false;
+                        controller.showSendButton = false;
+                        await controller.recordAudio.dispose();
+                        controller.seconds = 0;
+                        var sizeMedia = await IsmChatUtility.fileToSize(
+                            File(controller.audioPaht));
+                        if (sizeMedia.size()) {
+                          controller.sendAudio(
+                            path: controller.audioPaht,
                             conversationId:
                                 controller.conversation?.conversationId ?? '',
                             userId: controller
@@ -356,8 +320,29 @@ class _MicOrSendButton extends StatelessWidget {
                                 '',
                             opponentName: controller
                                     .conversation?.opponentDetails?.userName ??
-                                '');
+                                '',
+                          );
+                        } else {
+                          await Get.dialog(
+                            const IsmChatAlertDialogBox(
+                              title: 'You can not send audio more than 20 MB.',
+                              cancelLabel: 'Okay',
+                            ),
+                          );
+                        }
                       }
+                    } else {
+                      await controller.getMentionedUserList(
+                          controller.chatInputController.text.trim());
+                      controller.sendTextMessage(
+                          conversationId:
+                              controller.conversation?.conversationId ?? '',
+                          userId: controller
+                                  .conversation?.opponentDetails?.userId ??
+                              '',
+                          opponentName: controller
+                                  .conversation?.opponentDetails?.userName ??
+                              '');
                     }
                   }
                 }
@@ -393,10 +378,11 @@ class _MicOrSendButton extends StatelessWidget {
 }
 
 class _AttachmentIcon extends GetView<IsmChatPageController> {
-  const _AttachmentIcon(this.attachments, this.messageAllowedConfig);
+  const _AttachmentIcon(
+    this.attachments,
+  );
 
   final List<IsmChatAttachmentType> attachments;
-  final MessageAllowedConfig? messageAllowedConfig;
 
   @override
   Widget build(BuildContext context) => IconButton(
@@ -404,22 +390,12 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
           if (!controller.conversation!.isChattingAllowed) {
             controller.showDialogCheckBlockUnBlock();
           } else {
-            var isMessageSend = false;
-            if (messageAllowedConfig == null) {
-              isMessageSend = true;
-            } else if (messageAllowedConfig != null &&
-                await messageAllowedConfig!.isMessgeAllowed
-                    .call(context, controller.conversation!)) {
-              isMessageSend = true;
-            }
-            if (isMessageSend) {
-              await Get.bottomSheet(
-                IsmChatAttachmentCard(attachments),
-                enterBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
-                exitBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
-                elevation: 0,
-              );
-            }
+            await Get.bottomSheet(
+              IsmChatAttachmentCard(attachments),
+              enterBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
+              exitBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
+              elevation: 0,
+            );
           }
         },
         color: IsmChatConfig.chatTheme.primaryColor,
