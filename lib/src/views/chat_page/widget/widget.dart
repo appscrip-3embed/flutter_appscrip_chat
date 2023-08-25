@@ -10,6 +10,7 @@ export 'group_admin_dialog.dart';
 export 'group_eligiable_user.dart';
 export 'location.dart';
 export 'media_preview.dart';
+export 'media_view/media_views.dart';
 export 'mention_user_list.dart';
 export 'message_info.dart';
 export 'messages/messages.dart';

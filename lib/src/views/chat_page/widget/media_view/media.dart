@@ -1,7 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/views/chat_conversations/widget/docs_view.dart';
-import 'package:appscrip_chat_component/src/views/chat_conversations/widget/links_view.dart';
-import 'package:appscrip_chat_component/src/views/chat_conversations/widget/media_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:appscrip_chat_component/src/res/res.dart';
 import 'package:appscrip_chat_component/src/utilities/utilities.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -48,7 +49,11 @@ class IsmChatImage extends StatelessWidget {
                   imageUrl: imageUrl,
                   isProfileImage: _isProfileImage,
                   name: _name)
-              : _AssetImage(imageUrl: imageUrl),
+              : kIsWeb
+                  ? _MemeroyImage(
+                      imageUrl: imageUrl,
+                    )
+                  : _AssetImage(imageUrl: imageUrl),
         ),
       );
 }
@@ -60,6 +65,17 @@ class _AssetImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Image.file(
         File(imageUrl),
+        fit: BoxFit.cover,
+      );
+}
+
+class _MemeroyImage extends StatelessWidget {
+  const _MemeroyImage({required this.imageUrl});
+  final String imageUrl;
+
+  @override
+  Widget build(BuildContext context) => Image.memory(
+        imageUrl.strigToUnit8List,
         fit: BoxFit.cover,
       );
 }

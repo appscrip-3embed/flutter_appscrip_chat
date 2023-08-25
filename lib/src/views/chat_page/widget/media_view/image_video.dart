@@ -68,11 +68,13 @@ class _IsmMediaViewState extends State<IsmMediaView>
                         itemBuilder: (context, valueIndex) {
                           var url = value[valueIndex].customType ==
                                   IsmChatCustomMessageType.image
-                              ? value[valueIndex].attachments?.first.mediaUrl!
+                              ? value[valueIndex].attachments?.first.mediaUrl ??
+                                  ''
                               : value[valueIndex]
-                                  .attachments!
-                                  .first
-                                  .thumbnailUrl!;
+                                      .attachments!
+                                      .first
+                                      .thumbnailUrl ??
+                                  '';
                           var iconData = value[valueIndex].customType ==
                                   IsmChatCustomMessageType.audio
                               ? Icons.audio_file_rounded
@@ -86,7 +88,7 @@ class _IsmMediaViewState extends State<IsmMediaView>
                                 ConversationMediaWidget(
                                   media: value[valueIndex],
                                   iconData: iconData,
-                                  url: url ?? '',
+                                  url: url,
                                 ),
                                 if (value[valueIndex].customType ==
                                     IsmChatCustomMessageType.video)

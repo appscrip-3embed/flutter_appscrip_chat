@@ -132,6 +132,7 @@ class IsmChatMqttController extends GetxController {
       var payload = jsonDecode(
               MqttPublishPayload.bytesToStringAsString(recMess.payload.message))
           as Map<String, dynamic>;
+
       IsmChatLog('Mqtt event $payload');
       if (payload['action'] != null) {
         var action = payload['action'];

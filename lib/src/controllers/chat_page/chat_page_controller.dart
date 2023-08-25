@@ -1102,9 +1102,9 @@ class IsmChatPageController extends GetxController
       }
     } else if (message.customType == IsmChatCustomMessageType.audio) {
       // Todo add audio player
-      // await Get.dialog(IsmChatAudioPlayer(
-      //   message: message,
-      // ));
+      await Get.dialog(IsmChatAudioPlayer(
+        message: message,
+      ));
     }
   }
 

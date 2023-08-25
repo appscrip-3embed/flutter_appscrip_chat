@@ -81,6 +81,7 @@ class IsmChatPageRepository {
         'searchableTags': [body],
         if (mentionedUsers?.isNotEmpty == true) 'mentionedUsers': mentionedUsers
       };
+
       var response = await _apiWrapper.post(
         IsmChatAPI.sendMessage,
         payload: payload,
