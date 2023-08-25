@@ -4,10 +4,14 @@ import 'package:get/get.dart';
 
 class IsmChatMessage extends StatefulWidget {
   IsmChatMessage(this.index, this.messageWidgetBuilder, {super.key})
-      : message =
-            Get.find<IsmChatPageController>().messages.reversed.toList()[index];
+      : message = Get.isRegistered<IsmChatPageController>()
+            ? Get.find<IsmChatPageController>()
+                .messages
+                .reversed
+                .toList()[index]
+            : null;
 
-  final IsmChatMessageModel message;
+  final IsmChatMessageModel? message;
   final int index;
   final MessageWidgetBuilder? messageWidgetBuilder;
   @override
@@ -38,7 +42,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
       IsmChatCustomMessageType.memberLeave,
       IsmChatCustomMessageType.conversationImageUpdated,
       IsmChatCustomMessageType.conversationTitleUpdated
-    ].contains(widget.message.customType!);
+    ].contains(widget.message?.customType!);
     isGroup = controller.conversation!.isGroup ?? false;
   }
 
@@ -62,18 +66,18 @@ class _IsmChatMessageState extends State<IsmChatMessage>
       onLongPress: showMessageInCenter
           ? null
           : () {
-              if (widget.message.customType !=
+              if (widget.message?.customType !=
                   IsmChatCustomMessageType.deletedForEveryone) {
-                controller.showOverlay(context, widget.message);
+                controller.showOverlay(context, widget.message!);
               } else {
                 controller.isMessageSeleted = true;
-                controller.selectedMessage.add(widget.message);
+                controller.selectedMessage.add(widget.message!);
               }
             },
       onTap: showMessageInCenter
           ? null
           : () {
-              controller.onMessageSelect(widget.message);
+              controller.onMessageSelect(widget.message!);
             },
       child: AbsorbPointer(
         absorbing: controller.isMessageSeleted,
@@ -88,7 +92,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
             clipBehavior: Clip.antiAlias,
             alignment: showMessageInCenter
                 ? Alignment.center
-                : widget.message.sentByMe
+                : widget.message?.sentByMe == true
                     ? Alignment.centerRight
                     : Alignment.centerLeft,
             child: Padding(
@@ -100,15 +104,15 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                 children: [
                   if (isGroup &&
                       !showMessageInCenter &&
-                      !widget.message.sentByMe) ...[
+                      !widget.message!.sentByMe) ...[
                     IsmChatTapHandler(
                       onTap: () async {
                         await controller
-                            .showUserDetails(widget.message.senderInfo!);
+                            .showUserDetails(widget.message!.senderInfo!);
                       },
                       child: IsmChatImage.profile(
-                        widget.message.senderInfo?.profileUrl ?? '',
-                        name: widget.message.senderInfo?.userName ?? '',
+                        widget.message?.senderInfo?.profileUrl ?? '',
+                        name: widget.message?.senderInfo?.userName ?? '',
                         dimensions: IsmChatConfig
                                 .chatTheme.chatPageTheme?.profileImageSize ??
                             30,
@@ -119,7 +123,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                     if (theme?.opponentMessageTheme?.showProfile == true &&
                         !isGroup &&
                         !showMessageInCenter &&
-                        !widget.message.sentByMe) ...[
+                        !widget.message!.sentByMe) ...[
                       IsmChatImage.profile(
                         IsmChatConfig.communicationConfig.userConfig
                                     .imageBaseUrl !=
@@ -136,7 +140,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                       ],
                     ],
                   _Message(
-                    message: widget.message,
+                    message: widget.message!,
                     showMessageInCenter: showMessageInCenter,
                     index: widget.index,
                     messageWidgetBuilder: widget.messageWidgetBuilder,
@@ -145,7 +149,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                     if (theme?.selfMessageTheme?.showProfile == true &&
                         !isGroup &&
                         !showMessageInCenter &&
-                        widget.message.sentByMe) ...[
+                        widget.message!.sentByMe) ...[
                       if (widget.messageWidgetBuilder == null) ...[
                         IsmChatDimens.boxWidth4,
                       ],
