@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatMessage extends StatefulWidget {
-  IsmChatMessage(this.index, this.messageWidgetBuilder, {super.key})
-      : message =
-            Get.find<IsmChatPageController>().messages.reversed.toList()[index];
+  const IsmChatMessage(this.index, this.messageWidgetBuilder, this.message,
+      {super.key});
 
   final IsmChatMessageModel message;
   final int index;

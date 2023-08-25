@@ -10,6 +10,7 @@ mixin IsmChatPageGetMessageMixin {
       return;
     }
     _controller.messages = _controller._viewModel.sortMessages(messages!);
+    _controller.messages = _controller.messages.reversed.toList();
 
     if (_controller.messages.isEmpty) {
       return;
