@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
     if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,6 +38,19 @@ class IsmChatMessageField extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
+                        IsmChatTapHandler(
+                          onTap: () async {
+                            controller.isEnableRecordingAudio = false;
+                            controller.showSendButton = false;
+                            await controller.recordAudio.dispose();
+                            controller.seconds = 0;
+                          },
+                          child: Icon(
+                            Icons.delete_outlined,
+                            size: IsmChatDimens.twentyFive,
+                          ),
+                        ),
+                        IsmChatDimens.boxWidth8,
                         const Icon(
                           Icons.radio_button_checked_outlined,
                           color: Colors.red,
@@ -321,152 +332,171 @@ class _MicOrSendButton extends StatelessWidget {
             builder: (controller) => MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
-                onLongPressStart: controller.showSendButton ||
-                        controller.isActionAllowed
-                    ? null
-                    : (val) async {
-                        if (!controller.conversation!.isChattingAllowed) {
-                          controller.showDialogCheckBlockUnBlock();
-                        } else {
-                          var allowPermission = false;
-                          if (kIsWeb) {
-                            final state =
-                                await IsmChatBlob.checkPermission('microphone');
-                            if (state == 'prompt') {
-                              unawaited(Get.dialog(
-                                const IsmChatAlertDialogBox(
-                                  title: IsmChatStrings.micePermission,
-                                  cancelLabel: IsmChatStrings.ok,
-                                ),
-                              ));
-                              await controller.recordAudio.hasPermission();
-                              return;
-                            } else if (state == 'denied') {
-                              await Get.dialog(
-                                const IsmChatAlertDialogBox(
-                                  title: IsmChatStrings.micePermissionBlock,
-                                  cancelLabel: IsmChatStrings.ok,
-                                ),
-                              );
-                            } else {
-                              allowPermission = true;
-                            }
-                          } else {
-                            if (await controller.recordAudio.hasPermission()) {
-                              allowPermission = true;
-                            }
-                          }
-                          if (allowPermission) {
-                            if (!(controller.conversation?.lastMessageDetails
-                                        ?.customType ==
-                                    IsmChatCustomMessageType.removeMember &&
-                                controller.conversation?.lastMessageDetails
-                                        ?.userId ==
-                                    IsmChatConfig.communicationConfig.userConfig
-                                        .userId)) {
-                              controller.isEnableRecordingAudio = true;
-                              controller.forVideoRecordTimer = Timer.periodic(
-                                  const Duration(seconds: 1), (_) {
-                                controller.seconds++;
-                              });
-                              await controller.recordAudio.start();
-                            }
-                          }
-                        }
-                      },
-                onLongPressEnd: controller.showSendButton
-                    ? null
-                    : (val) async {
-                        var allowPermission = false;
-                        if (kIsWeb) {
-                          final state =
-                              await IsmChatBlob.checkPermission('microphone');
-                          if (state == 'granted') {
-                            allowPermission = true;
-                          }
-                        } else {
-                          if (await controller.recordAudio.hasPermission()) {
-                            allowPermission = true;
-                          }
-                        }
-                        if (allowPermission) {
-                          controller.isEnableRecordingAudio = false;
-                          controller.forVideoRecordTimer?.cancel();
-                          var path = await controller.recordAudio.stop();
-                          String? sizeMedia;
-                          WebMediaModel? webMediaModel;
-                          if (path != null) {
-                            if (kIsWeb) {
-                              final bytes =
-                                  await IsmChatUtility.urlToUint8List(path);
-                              sizeMedia = IsmChatUtility.formatBytes(
-                                int.parse(bytes.length.toString()),
-                              );
-                              webMediaModel = WebMediaModel(
-                                platformFile: PlatformFile(
-                                  name:
-                                      '${DateTime.now().millisecondsSinceEpoch}.mp3',
-                                  size: bytes.length,
-                                  bytes: bytes,
-                                  path: path,
-                                ),
-                                isVideo: false,
-                                thumbnailBytes: Uint8List(0),
-                                dataSize: sizeMedia,
-                                duration: Duration(
-                                  seconds: controller.seconds,
-                                ),
-                              );
-                            } else {
-                              sizeMedia =
-                                  await IsmChatUtility.fileToSize(File(path));
-                            }
-                            if (sizeMedia.size()) {
-                              controller.sendAudio(
-                                path: path,
-                                conversationId:
-                                    controller.conversation?.conversationId ??
-                                        '',
-                                userId: controller.conversation?.opponentDetails
-                                        ?.userId ??
-                                    '',
-                                opponentName: controller.conversation
-                                        ?.opponentDetails?.userName ??
-                                    '',
-                                webMediaModel: kIsWeb ? webMediaModel : null,
-                              );
-                              controller.seconds = 0;
-                            } else {
-                              await Get.dialog(
-                                const IsmChatAlertDialogBox(
-                                  title:
-                                      'You can not send audio more than 20 MB.',
-                                  cancelLabel: 'Okay',
-                                ),
-                              );
-                            }
-                          }
-                        }
-                      },
+                // onLongPressStart: controller.showSendButton ||
+                //         controller.isActionAllowed
+                //     ? null
+                //     : (val) async {
+                //         if (!controller.conversation!.isChattingAllowed) {
+                //           controller.showDialogCheckBlockUnBlock();
+                //         } else {
+                //           var allowPermission = false;
+                //           if (kIsWeb) {
+                //             final state =
+                //                 await IsmChatBlob.checkPermission('microphone');
+                //             if (state == 'prompt') {
+                //               unawaited(Get.dialog(
+                //                 const IsmChatAlertDialogBox(
+                //                   title: IsmChatStrings.micePermission,
+                //                   cancelLabel: IsmChatStrings.ok,
+                //                 ),
+                //               ));
+                //               await controller.recordAudio.hasPermission();
+                //               return;
+                //             } else if (state == 'denied') {
+                //               await Get.dialog(
+                //                 const IsmChatAlertDialogBox(
+                //                   title: IsmChatStrings.micePermissionBlock,
+                //                   cancelLabel: IsmChatStrings.ok,
+                //                 ),
+                //               );
+                //             } else {
+                //               allowPermission = true;
+                //             }
+                //           } else {
+                //             if (await controller.recordAudio.hasPermission()) {
+                //               allowPermission = true;
+                //             }
+                //           }
+                //           if (allowPermission) {
+                //             if (!(controller.conversation?.lastMessageDetails
+                //                         ?.customType ==
+                //                     IsmChatCustomMessageType.removeMember &&
+                //                 controller.conversation?.lastMessageDetails
+                //                         ?.userId ==
+                //                     IsmChatConfig.communicationConfig.userConfig
+                //                         .userId)) {
+                //               controller.isEnableRecordingAudio = true;
+                //               controller.forVideoRecordTimer = Timer.periodic(
+                //                   const Duration(seconds: 1), (_) {
+                //                 controller.seconds++;
+                //               });
+                //               await controller.recordAudio.start();
+                //             }
+                //           }
+                //         }
+                //       },
+                // onLongPressEnd: controller.showSendButton
+                //     ? null
+                //     : (val) async {
+                //         var allowPermission = false;
+                //         if (kIsWeb) {
+                //           final state =
+                //               await IsmChatBlob.checkPermission('microphone');
+                //           if (state == 'granted') {
+                //             allowPermission = true;
+                //           }
+                //         } else {
+                //           if (await controller.recordAudio.hasPermission()) {
+                //             allowPermission = true;
+                //           }
+                //         }
+                //         if (allowPermission) {
+                //           controller.isEnableRecordingAudio = false;
+                //           controller.forVideoRecordTimer?.cancel();
+                //           var path = await controller.recordAudio.stop();
+                //           String? sizeMedia;
+                //           WebMediaModel? webMediaModel;
+                //           if (path != null) {
+                //             if (kIsWeb) {
+                //               final bytes =
+                //                   await IsmChatUtility.urlToUint8List(path);
+                //               sizeMedia = IsmChatUtility.formatBytes(
+                //                 int.parse(bytes.length.toString()),
+                //               );
+                //               webMediaModel = WebMediaModel(
+                //                 platformFile: PlatformFile(
+                //                   name:
+                //                       '${DateTime.now().millisecondsSinceEpoch}.mp3',
+                //                   size: bytes.length,
+                //                   bytes: bytes,
+                //                   path: path,
+                //                 ),
+                //                 isVideo: false,
+                //                 thumbnailBytes: Uint8List(0),
+                //                 dataSize: sizeMedia,
+                //                 duration: Duration(
+                //                   seconds: controller.seconds,
+                //                 ),
+                //               );
+                //             } else {
+                //               sizeMedia =
+                //                   await IsmChatUtility.fileToSize(File(path));
+                //             }
+                //             if (sizeMedia.size()) {
+                //               controller.sendAudio(
+                //                 path: path,
+                //                 conversationId:
+                //                     controller.conversation?.conversationId ??
+                //                         '',
+                //                 userId: controller.conversation?.opponentDetails
+                //                         ?.userId ??
+                //                     '',
+                //                 opponentName: controller.conversation
+                //                         ?.opponentDetails?.userName ??
+                //                     '',
+                //                 webMediaModel: kIsWeb ? webMediaModel : null,
+                //               );
+                //               controller.seconds = 0;
+                //             } else {
+                //               await Get.dialog(
+                //                 const IsmChatAlertDialogBox(
+                //                   title:
+                //                       'You can not send audio more than 20 MB.',
+                //                   cancelLabel: 'Okay',
+                //                 ),
+                //               );
+                //             }
+                //           }
+                //         }
+                //       },
                 onTap: () async {
                   if (controller.showSendButton) {
                     if (!controller.conversation!.isChattingAllowed) {
                       controller.showDialogCheckBlockUnBlock();
                     } else {
-                      var isMessageSend = false;
-                      if (IsmChatProperties
-                              .chatPageProperties.messageAllowedConfig ==
-                          null) {
-                        isMessageSend = true;
-                      } else if (IsmChatProperties
-                                  .chatPageProperties.messageAllowedConfig !=
-                              null &&
-                          await IsmChatProperties.chatPageProperties
-                              .messageAllowedConfig!.isMessgeAllowed
-                              .call(context, controller.conversation!)) {
-                        isMessageSend = true;
-                      }
-                      if (isMessageSend) {
+                      if (controller.isEnableRecordingAudio) {
+                        var audioPaht =
+                            await controller.recordAudio.stop() ?? '';
+                        controller.forVideoRecordTimer?.cancel();
+                        controller.showSendButton = false;
+                        controller.seconds = 0;
+                        controller.isEnableRecordingAudio = false;
+                        var bytes = await IsmChatUtility.fetchBytesFromBlobUrl(
+                            audioPaht);
+
+                        var sizeMedia = await IsmChatUtility.bytesToSize(bytes);
+
+                        if (sizeMedia.size()) {
+                          controller.sendAudio(
+                            path: audioPaht,
+                            conversationId:
+                                controller.conversation?.conversationId ?? '',
+                            userId: controller
+                                    .conversation?.opponentDetails?.userId ??
+                                '',
+                            opponentName: controller
+                                    .conversation?.opponentDetails?.userName ??
+                                '',
+                          );
+                        } else {
+                          await Get.dialog(
+                            const IsmChatAlertDialogBox(
+                              title: 'You can not send audio more than 20 MB.',
+                              cancelLabel: 'Okay',
+                            ),
+                          );
+                        }
+                      } else {
                         await controller.getMentionedUserList(
                             controller.chatInputController.text.trim());
                         controller.sendTextMessage(
@@ -478,6 +508,51 @@ class _MicOrSendButton extends StatelessWidget {
                             opponentName: controller
                                     .conversation?.opponentDetails?.userName ??
                                 '');
+                      }
+                    }
+                  } else {
+                    var allowPermission = false;
+                    if (kIsWeb) {
+                      final state =
+                          await IsmChatBlob.checkPermission('microphone');
+                      if (state == 'prompt') {
+                        unawaited(Get.dialog(
+                          const IsmChatAlertDialogBox(
+                            title: IsmChatStrings.micePermission,
+                            cancelLabel: IsmChatStrings.ok,
+                          ),
+                        ));
+                        await controller.recordAudio.hasPermission();
+                        return;
+                      } else if (state == 'denied') {
+                        await Get.dialog(
+                          const IsmChatAlertDialogBox(
+                            title: IsmChatStrings.micePermissionBlock,
+                            cancelLabel: IsmChatStrings.ok,
+                          ),
+                        );
+                      } else {
+                        allowPermission = true;
+                      }
+                    } else {
+                      if (await controller.recordAudio.hasPermission()) {
+                        allowPermission = true;
+                      }
+                    }
+                    if (allowPermission) {
+                      if (!(controller.conversation?.lastMessageDetails
+                                  ?.customType ==
+                              IsmChatCustomMessageType.removeMember &&
+                          controller.conversation?.lastMessageDetails?.userId ==
+                              IsmChatConfig
+                                  .communicationConfig.userConfig.userId)) {
+                        controller.isEnableRecordingAudio = true;
+                        controller.showSendButton = true;
+                        controller.forVideoRecordTimer =
+                            Timer.periodic(const Duration(seconds: 1), (_) {
+                          controller.seconds++;
+                        });
+                        await controller.recordAudio.start();
                       }
                     }
                   }

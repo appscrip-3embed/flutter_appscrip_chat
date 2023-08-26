@@ -194,6 +194,24 @@ class IsmChatUtility {
     return dataSize;
   }
 
+  /// Returns data size representation of a provided file
+  static Future<String> bytesToSize(List<int> bytes) async {
+    var dataSize = IsmChatUtility.formatBytes(
+      int.parse(bytes.length.toString()),
+    );
+    return dataSize;
+  }
+
+  static Future<List<int>> fetchBytesFromBlobUrl(String blobUrl) async {
+    final response = await http.get(Uri.parse(blobUrl));
+
+    if (response.statusCode == 200) {
+      return response.bodyBytes;
+    } else {
+      throw Exception('Failed to fetch bytes from Blob URL');
+    }
+  }
+
   static Future<File> makeDirectoryWithUrl(
       {required String urlPath, required String fileName}) async {
     File? file;

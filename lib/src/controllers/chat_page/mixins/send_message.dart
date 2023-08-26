@@ -56,7 +56,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           .createAndUpdateConversation(dbConversationModel);
       return conversationId.toString();
     }
-
     return '';
   }
 
@@ -262,8 +261,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         return;
       }
       if (webMediaModel == null) {
-        bytes = Uint8List.fromList(
-            await File.fromUri(Uri.parse(path)).readAsBytes());
+        bytes = kIsWeb
+            ? await IsmChatUtility.fetchBytesFromBlobUrl(path) as Uint8List
+            : Uint8List.fromList(
+                await File.fromUri(Uri.parse(path)).readAsBytes());
         nameWithExtension = path.split('/').last;
         extension = nameWithExtension.split('.').last;
         mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');

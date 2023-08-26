@@ -376,6 +376,10 @@ class IsmChatPageController extends GetxController
     return allMessages;
   }
 
+  final RxString _audioPaht = ''.obs;
+  String get audioPaht => _audioPaht.value;
+  set audioPaht(String value) => _audioPaht.value = value;
+
   final Dio dio = Dio();
 
   final ismChatDebounce = IsmChatDebounce();
@@ -418,6 +422,7 @@ class IsmChatPageController extends GetxController
         }
         if (conversation!.isGroup ?? false) {
           await createConversation(userId: [], isGroup: true);
+          await getMessagesFromAPI();
         }
         isMessagesLoading = false;
       }
