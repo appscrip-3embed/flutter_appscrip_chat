@@ -79,6 +79,7 @@ class _IsmMediaViewState extends State<IsmMediaView>
                                   IsmChatCustomMessageType.audio
                               ? Icons.audio_file_rounded
                               : Icons.description_rounded;
+
                           return GestureDetector(
                             onTap: () => Get.find<IsmChatPageController>()
                                 .tapForMediaPreview(value[valueIndex]),

@@ -229,12 +229,17 @@ class _IsmChatPageView extends StatelessWidget {
                                                 ),
                                               ),
                                             ),
-                                            Obx(
-                                              () =>
-                                                  controller.showMentionUserList
+                                            Obx(() => Align(
+                                                  alignment: Responsive
+                                                          .isWebAndTablet(
+                                                              context)
+                                                      ? Alignment.bottomCenter
+                                                      : Alignment.bottomLeft,
+                                                  child: controller
+                                                          .showMentionUserList
                                                       ? const MentionUserList()
                                                       : const SizedBox.shrink(),
-                                            ),
+                                                )),
                                           ],
                                         ),
                                       ),

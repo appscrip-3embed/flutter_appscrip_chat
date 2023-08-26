@@ -24,10 +24,11 @@ class MentionUserList extends StatelessWidget {
               // ? IsmChatDimens.percentHeight(0.08)
               : controller.mentionSuggestions.take(4).length *
                   IsmChatDimens.percentHeight(0.07),
-          width: IsmChatDimens.percentWidth(.8),
+          width: Responsive.isWebAndTablet(context)
+              ? IsmChatDimens.percentWidth(.4)
+              : IsmChatDimens.percentWidth(.8),
           child: controller.mentionSuggestions.isEmpty
               ? const SizedBox.shrink()
-              // ? const _NoSuggestions()
               : ListView.separated(
                   shrinkWrap: true,
                   padding: IsmChatDimens.edgeInsets0_4,
@@ -40,8 +41,9 @@ class MentionUserList extends StatelessWidget {
                         controller.updateMentionUser(member.userName);
                       },
                       child: ListTile(
+                        mouseCursor: SystemMouseCursors.click,
                         dense: true,
-                        horizontalTitleGap: IsmChatDimens.four,
+                        horizontalTitleGap: IsmChatDimens.ten,
                         title: Text(
                           member.userName.capitalizeFirst ?? '',
                           maxLines: 1,
@@ -59,14 +61,3 @@ class MentionUserList extends StatelessWidget {
         ),
       );
 }
-
-// class _NoSuggestions extends StatelessWidget {
-//   const _NoSuggestions();
-
-//   @override
-//   Widget build(BuildContext context) => ListTile(
-//         horizontalTitleGap: IsmChatDimens.four,
-//         leading: const Icon(Icons.no_accounts_rounded),
-//         title: const Text('No match found'),
-//       );
-// }

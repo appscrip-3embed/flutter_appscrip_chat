@@ -495,7 +495,6 @@ class IsmChatPageController extends GetxController
       return;
     }
     showMentionUserList = value.split(' ').last.contains('@');
-
     if (!showMentionUserList) {
       mentionSuggestions.clear();
       return;
@@ -1790,12 +1789,13 @@ class IsmChatPageController extends GetxController
       user = userDetails;
     }
     conversationController.contactDetails = user;
+    conversationController.userConversationId = conversationId;
     if (Responsive.isWebAndTablet(Get.context!)) {
       conversationController.isRenderChatPageaScreen =
           IsRenderChatPageScreen.userInfoView;
     } else {
       IsmChatRouteManagement.goToUserInfo(
-        conversationId: conversation?.conversationId ?? '',
+        conversationId: conversationId,
         user: user!,
       );
     }

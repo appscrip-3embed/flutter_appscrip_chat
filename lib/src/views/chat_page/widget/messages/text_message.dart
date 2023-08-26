@@ -45,6 +45,8 @@ class IsmChatTextMessage extends StatelessWidget {
                                                   user!.first.userId);
                                       conversationcontroller.contactDetails =
                                           user.first;
+                                      conversationcontroller
+                                          .userConversationId = conversationId;
                                       if (Responsive.isWebAndTablet(context)) {
                                         conversationcontroller
                                                 .isRenderChatPageaScreen =
@@ -55,14 +57,6 @@ class IsmChatTextMessage extends StatelessWidget {
                                           user: user.first,
                                         );
                                       }
-
-                                      // await IsmChatUtility
-                                      //     .openFullScreenBottomSheet(
-                                      //   IsmChatUserInfo(
-                                      //     user: user.first,
-                                      //     conversationId: conversationId,
-                                      //   ),
-                                      // );
                                     }
                                   },
                           text: e.text,

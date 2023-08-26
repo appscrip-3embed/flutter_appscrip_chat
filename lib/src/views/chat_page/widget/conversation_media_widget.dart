@@ -33,7 +33,7 @@ class ConversationMediaWidget extends StatelessWidget {
               )
             : IsmChatImage(
                 url,
-                isNetworkImage: url.contains('http'),
+                isNetworkImage: url.isValidUrl,
               ),
       );
 }

@@ -49,6 +49,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
           converstaionController.callApiNonBlock = true;
           converstaionController.profileImage = '';
           converstaionController.forwardedList.clear();
+          converstaionController.selectedUserList.clear();
           converstaionController.addGrouNameController.clear();
           converstaionController.forwardedList.selectedUsers.clear();
           converstaionController.userSearchNameController.clear();
@@ -79,7 +80,16 @@ class IsmChatCreateConversationView extends StatelessWidget {
                       });
                       if (value.trim().isEmpty) {
                         controller.forwardedList =
-                            controller.forwardedListDuplicat;
+                            controller.forwardedListDuplicat
+                                .map((e) => SelectedForwardUser(
+                                      isUserSelected:
+                                          controller.selectedUserList.any((d) =>
+                                              d.userId == e.userDetails.userId),
+                                      userDetails: e.userDetails,
+                                      isBlocked: e.isBlocked,
+                                      tagIndex: e.tagIndex,
+                                    ))
+                                .toList();
                         controller.handleList(controller.forwardedList);
                       }
                     },
@@ -95,10 +105,16 @@ class IsmChatCreateConversationView extends StatelessWidget {
                 onPressed: () {
                   controller.showSearchField = !controller.showSearchField;
                   controller.userSearchNameController.clear();
-
                   if (!controller.showSearchField &&
                       controller.forwardedListDuplicat.isNotEmpty) {
-                    controller.forwardedList = controller.forwardedListDuplicat;
+                    controller.forwardedList = controller.forwardedListDuplicat
+                        .map((e) => SelectedForwardUser(
+                            isUserSelected: controller.selectedUserList
+                                .any((d) => d.userId == e.userDetails.userId),
+                            userDetails: e.userDetails,
+                            isBlocked: e.isBlocked,
+                            tagIndex: e.tagIndex))
+                        .toList();
                     controller.handleList(controller.forwardedList);
                   }
                   if (controller.isLoadingUsers) {
@@ -234,6 +250,8 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                   onTap: () async {
                                     if (_isGroupConversation ?? false) {
                                       controller.onForwardUserTap(index);
+                                      controller
+                                          .isSelectedUser(user.userDetails);
                                     } else {
                                       var ismChatConversation =
                                           IsmChatConversationModel(
@@ -258,18 +276,18 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                       IsmChatProperties
                                           .conversationProperties.onChatTap!
                                           .call(_, ismChatConversation);
+                                      controller.navigateToMessages(
+                                          ismChatConversation);
                                       if (Responsive.isWebAndTablet(context)) {
-                                        if (Get.isRegistered<
+                                        if (!Get.isRegistered<
                                             IsmChatPageController>()) {
                                           IsmChatPageBinding().dependencies();
+                                          return;
                                         }
-                                        controller.navigateToMessages(
-                                            ismChatConversation);
+
                                         Get.find<IsmChatPageController>()
                                             .startInit();
                                       } else {
-                                        controller.navigateToMessages(
-                                            ismChatConversation);
                                         IsmChatRouteManagement.goToChatPage();
                                       }
                                     }
@@ -322,7 +340,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (controller.forwardedList.selectedUsers.isNotEmpty &&
+                    if (controller.selectedUserList.isNotEmpty &&
                         _isGroupConversation!)
                       Container(
                         decoration: BoxDecoration(
@@ -341,20 +359,21 @@ class IsmChatCreateConversationView extends StatelessWidget {
                             Expanded(
                               child: ListView.separated(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: controller
-                                    .forwardedList.selectedUsers.length,
+                                itemCount: controller.selectedUserList.length,
                                 separatorBuilder: (_, __) =>
                                     IsmChatDimens.boxWidth8,
                                 itemBuilder: (context, index) {
-                                  var conversation = controller.forwardedList
-                                      .selectedUsers[index].userDetails;
+                                  var user = controller.selectedUserList[index];
                                   return InkWell(
-                                    onTap: () => controller.onForwardUserTap(
-                                      controller.forwardedList.indexOf(
-                                        controller
-                                            .forwardedList.selectedUsers[index],
-                                      ),
-                                    ),
+                                    onTap: () {
+                                      controller.isSelectedUser(user);
+                                      controller.onForwardUserTap(
+                                        controller.forwardedList.indexOf(
+                                          controller.forwardedList
+                                              .selectedUsers[index],
+                                        ),
+                                      );
+                                    },
                                     child: SizedBox(
                                       width: IsmChatDimens.fifty,
                                       child: Column(
@@ -371,9 +390,8 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                                 width: IsmChatDimens.forty,
                                                 height: IsmChatDimens.forty,
                                                 child: IsmChatImage.profile(
-                                                  conversation
-                                                      .userProfileImageUrl,
-                                                  name: conversation.userName,
+                                                  user.userProfileImageUrl,
+                                                  name: user.userName,
                                                 ),
                                               ),
                                               Positioned(
@@ -397,7 +415,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                           SizedBox(
                                             height: IsmChatDimens.twentyEight,
                                             child: Text(
-                                              conversation.userName,
+                                              user.userName,
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 2,
                                               textAlign: TextAlign.center,
@@ -422,8 +440,9 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                 color: IsmChatColors.whiteColor,
                               ),
                               onPressed: () async {
-                                if (controller
-                                        .forwardedList.selectedUsers.isEmpty ||
+                                if ((controller.forwardedList.selectedUsers
+                                            .isEmpty &&
+                                        controller.selectedUserList.isEmpty) ||
                                     controller.profileImage.isEmpty ||
                                     controller
                                         .addGrouNameController.text.isEmpty) {
@@ -436,10 +455,8 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                   return;
                                 }
                                 var userIds = <String>[];
-                                for (var x in controller.forwardedList) {
-                                  if (x.isUserSelected == true) {
-                                    userIds.add(x.userDetails.userId);
-                                  }
+                                for (var x in controller.selectedUserList) {
+                                  userIds.add(x.userId);
                                 }
                                 var ismChatConversation =
                                     IsmChatConversationModel(
@@ -452,15 +469,16 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                   opponentDetails: controller.userDetails,
                                   unreadMessagesCount: 0,
                                   lastMessageDetails: LastMessageDetails(
-                                      sentByMe: true,
-                                      showInConversation: true,
-                                      sentAt:
-                                          DateTime.now().millisecondsSinceEpoch,
-                                      senderName: '',
-                                      messageType: 0,
-                                      messageId: '',
-                                      conversationId: '',
-                                      body: ''),
+                                    sentByMe: true,
+                                    showInConversation: true,
+                                    sentAt:
+                                        DateTime.now().millisecondsSinceEpoch,
+                                    senderName: '',
+                                    messageType: 0,
+                                    messageId: '',
+                                    conversationId: '',
+                                    body: '',
+                                  ),
                                   lastMessageSentAt: 0,
                                   conversationType:
                                       IsmChatConversationType.private,
@@ -471,17 +489,18 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                 IsmChatProperties
                                     .conversationProperties.onChatTap!
                                     .call(context, ismChatConversation);
+                                controller
+                                    .navigateToMessages(ismChatConversation);
                                 if (Responsive.isWebAndTablet(context)) {
                                   controller
                                       .navigateToMessages(ismChatConversation);
-                                  if (Get.isRegistered<
+                                  if (!Get.isRegistered<
                                       IsmChatPageController>()) {
                                     IsmChatPageBinding().dependencies();
+                                    return;
                                   }
                                   Get.find<IsmChatPageController>().startInit();
                                 } else {
-                                  controller
-                                      .navigateToMessages(ismChatConversation);
                                   IsmChatRouteManagement.goToChatPage();
                                 }
                               },

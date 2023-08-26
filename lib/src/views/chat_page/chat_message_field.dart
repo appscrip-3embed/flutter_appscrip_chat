@@ -36,7 +36,7 @@ class IsmChatMessageField extends StatelessWidget {
                 Expanded(
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.8,
-                    padding: const EdgeInsets.all(20),
+                    padding: IsmChatDimens.edgeInsets20,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [

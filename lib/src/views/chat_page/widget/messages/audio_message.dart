@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
@@ -198,8 +199,12 @@ class _VoiceMessageState extends State<VoiceMessage>
             shape: BoxShape.circle,
             color: widget.me ? widget.meFgColor : widget.contactPlayIconBgColor,
           ),
-          width: IsmChatDimens.fifty,
-          height: IsmChatDimens.fifty,
+          width: Responsive.isMobile(context)
+              ? IsmChatDimens.forty
+              : IsmChatDimens.fifty,
+          height: Responsive.isMobile(context)
+              ? IsmChatDimens.forty
+              : IsmChatDimens.fifty,
           child: Obx(
             () => !audioConfigurationDone
                 ? Container(
@@ -230,7 +235,7 @@ class _VoiceMessageState extends State<VoiceMessage>
             () => Text(
               remainingTime,
               style: TextStyle(
-                fontSize: 10,
+                fontSize: IsmChatDimens.ten,
                 color: widget.me ? widget.meFgColor : widget.contactFgColor,
               ),
             ),
@@ -240,7 +245,9 @@ class _VoiceMessageState extends State<VoiceMessage>
 
   /// Noise widget of audio.
   Widget _noise(BuildContext context) => SizedBox(
-        width: IsmChatDimens.oneHundredTwenty,
+        width: Responsive.isMobile(context)
+            ? IsmChatDimens.hundred
+            : IsmChatDimens.oneHundredTwenty,
         child: Stack(
           clipBehavior: Clip.hardEdge,
           children: [

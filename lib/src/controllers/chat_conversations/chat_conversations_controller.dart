@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
     if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
@@ -43,6 +44,10 @@ class IsmChatConversationsController extends GetxController {
   UserDetails? get contactDetails => _contactDetails.value;
   set contactDetails(UserDetails? value) => _contactDetails.value = value;
 
+  final Rx<String?> _userConversationId = ''.obs;
+  String? get userConversationId => _userConversationId.value;
+  set userConversationId(String? value) => _userConversationId.value = value;
+
   final Rx<IsmChatConversationModel?> _currentConversation =
       Rx<IsmChatConversationModel?>(null);
   IsmChatConversationModel? get currentConversation =>
@@ -75,6 +80,12 @@ class IsmChatConversationsController extends GetxController {
   List<SelectedForwardUser> get forwardedList => _forwardedList;
   set forwardedList(List<SelectedForwardUser> value) {
     _forwardedList.value = value;
+  }
+
+  final _selectedUserList = <UserDetails>[].obs;
+  List<UserDetails> get selectedUserList => _selectedUserList;
+  set selectedUserList(List<UserDetails> value) {
+    _selectedUserList.value = value;
   }
 
   final _forwardedListDuplicat = <SelectedForwardUser>[].obs;
@@ -202,7 +213,6 @@ class IsmChatConversationsController extends GetxController {
       case IsRenderChatPageScreen.coversationInfoView:
         return IsmChatConverstaionInfoView();
       case IsRenderChatPageScreen.wallpaperView:
-        // TODO: Handle this case.
         break;
       case IsRenderChatPageScreen.messgaeInfoView:
         return IsmChatMessageInfo(
@@ -222,7 +232,7 @@ class IsmChatConversationsController extends GetxController {
       case IsRenderChatPageScreen.userInfoView:
         return IsmChatUserInfo(
           user: contactDetails,
-          conversationId: currentConversation?.conversationId ?? '',
+          conversationId: userConversationId,
         );
     }
     return const SizedBox.shrink();
@@ -274,9 +284,22 @@ class IsmChatConversationsController extends GetxController {
     ));
   }
 
-  /// This function will be used in [Forward Screen] to Select or Unselect users
+  /// This function will be used in [Forward Screen and New conversation screen] to Select or Unselect users
   void onForwardUserTap(int index) {
     forwardedList[index].isUserSelected = !forwardedList[index].isUserSelected;
+  }
+
+  /// This function will be used in [Forward Screen and New conversation screen] to Select users
+  void isSelectedUser(UserDetails userDetails) {
+    if (selectedUserList.isEmpty) {
+      selectedUserList.add(userDetails);
+    } else {
+      if (selectedUserList.any((e) => e.userId == userDetails.userId)) {
+        selectedUserList.removeWhere((e) => e.userId == userDetails.userId);
+      } else {
+        selectedUserList.add(userDetails);
+      }
+    }
   }
 
   /// api to unblock user
@@ -415,21 +438,29 @@ class IsmChatConversationsController extends GetxController {
     if (searchTag.isEmpty) {
       forwardedList.addAll(List.from(users)
           .map((e) => SelectedForwardUser(
-                isUserSelected: false,
+                isUserSelected: selectedUserList.isEmpty
+                    ? false
+                    : selectedUserList
+                        .any((d) => d.userId == (e as UserDetails).userId),
                 userDetails: e as UserDetails,
                 isBlocked: false,
               ))
           .toList());
+
       forwardedListDuplicat = List<SelectedForwardUser>.from(forwardedList);
     } else {
       forwardedList = List.from(users)
           .map((e) => SelectedForwardUser(
-                isUserSelected: false,
+                isUserSelected: selectedUserList.isEmpty
+                    ? false
+                    : selectedUserList
+                        .any((d) => d.userId == (e as UserDetails).userId),
                 userDetails: e as UserDetails,
                 isBlocked: false,
               ))
           .toList();
     }
+
     handleList(forwardedList);
     callApiNonBlock = true;
   }

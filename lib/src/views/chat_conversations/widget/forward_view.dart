@@ -54,6 +54,7 @@ class IsmChatForwardView extends StatelessWidget {
         initState: (_) {
           converstaionController.callApiNonBlock = true;
           converstaionController.forwardedList.clear();
+          converstaionController.selectedUserList.clear();
           converstaionController.userSearchNameController.clear();
           converstaionController.showSearchField = false;
           converstaionController.isLoadingUsers = false;
@@ -82,13 +83,22 @@ class IsmChatForwardView extends StatelessWidget {
                       });
                       if (value.trim().isEmpty) {
                         controller.forwardedList =
-                            controller.forwardedListDuplicat;
+                            controller.forwardedListDuplicat
+                                .map((e) => SelectedForwardUser(
+                                      isUserSelected:
+                                          controller.selectedUserList.any((d) =>
+                                              d.userId == e.userDetails.userId),
+                                      userDetails: e.userDetails,
+                                      isBlocked: e.isBlocked,
+                                      tagIndex: e.tagIndex,
+                                    ))
+                                .toList();
                         controller.handleList(controller.forwardedList);
                       }
                     },
                   )
                 : Text(
-                    'Forward to...  ${controller.forwardedList.selectedUsers.isEmpty ? '' : controller.forwardedList.selectedUsers.length}',
+                    'Forward to...  ${controller.selectedUserList.isEmpty ? '' : controller.selectedUserList.length}',
                     style: IsmChatStyles.w600White18,
                   ),
             action: [
@@ -98,7 +108,16 @@ class IsmChatForwardView extends StatelessWidget {
                   controller.userSearchNameController.clear();
                   if (!controller.showSearchField &&
                       controller.forwardedListDuplicat.isNotEmpty) {
-                    controller.forwardedList = controller.forwardedListDuplicat;
+                    controller.forwardedList = controller.forwardedListDuplicat
+                        .map(
+                          (e) => SelectedForwardUser(
+                              isUserSelected: controller.selectedUserList
+                                  .any((d) => d.userId == e.userDetails.userId),
+                              userDetails: e.userDetails,
+                              isBlocked: e.isBlocked,
+                              tagIndex: e.tagIndex),
+                        )
+                        .toList();
                     controller.handleList(controller.forwardedList);
                   }
                   if (controller.isLoadingUsers) {
@@ -225,8 +244,11 @@ class IsmChatForwardView extends StatelessWidget {
                                         child: _buildSusWidget(susTag),
                                       ),
                                       ListTile(
-                                        onTap: () =>
-                                            controller.onForwardUserTap(index),
+                                        onTap: () {
+                                          controller.onForwardUserTap(index);
+                                          controller
+                                              .isSelectedUser(user.userDetails);
+                                        },
                                         dense: true,
                                         mouseCursor: SystemMouseCursors.click,
                                         tileColor: user.isUserSelected
@@ -255,7 +277,7 @@ class IsmChatForwardView extends StatelessWidget {
                               ),
                       ),
                     ),
-                    if (controller.forwardedList.selectedUsers.isNotEmpty)
+                    if (controller.selectedUserList.isNotEmpty)
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -276,8 +298,8 @@ class IsmChatForwardView extends StatelessWidget {
                                 scrollDirection: Axis.horizontal,
                                 padding: IsmChatDimens.edgeInsets10,
                                 child: Text(
-                                  controller.forwardedList.selectedUsers
-                                      .map((e) => e.userDetails.userName)
+                                  controller.selectedUserList
+                                      .map((e) => e.userName)
                                       .join(', '),
                                   maxLines: 1,
                                   style: IsmChatStyles.w600Black12,
@@ -287,21 +309,17 @@ class IsmChatForwardView extends StatelessWidget {
                             FloatingActionButton(
                               onPressed: () async {
                                 //TODO: Refactor this onTap
-                                if (controller
-                                        .forwardedList.selectedUsers.length ==
-                                    1) {
+                                if (controller.selectedUserList.length == 1) {
                                   var ismChatConversation =
                                       IsmChatConversationModel(
                                     messagingDisabled: false,
                                     conversationImageUrl: controller
-                                        .forwardedList
-                                        .selectedUsers
+                                        .selectedUserList
                                         .first
-                                        .userDetails
                                         .userProfileImageUrl,
                                     isGroup: false,
-                                    opponentDetails: controller.forwardedList
-                                        .selectedUsers.first.userDetails,
+                                    opponentDetails:
+                                        controller.selectedUserList.first,
                                     unreadMessagesCount: 0,
                                     lastMessageDetails: null,
                                     lastMessageSentAt: 0,
@@ -311,8 +329,7 @@ class IsmChatForwardView extends StatelessWidget {
                                       ismChatConversation.copyWith(
                                     conversationId:
                                         controller.getConversationId(
-                                      controller.forwardedList.selectedUsers
-                                          .first.userDetails.userId,
+                                      controller.selectedUserList.first.userId,
                                     ),
                                   );
                                   Get.back<void>();
@@ -445,21 +462,19 @@ class IsmChatForwardView extends StatelessWidget {
                                       const Duration(milliseconds: 1000));
                                   var ismChatPageController =
                                       Get.find<IsmChatPageController>();
-                                  for (var x in controller
-                                      .forwardedList.selectedUsers) {
+                                  for (var x in controller.selectedUserList) {
                                     IsmChatLog.success(
-                                        'Forward Message sent to ${x.userDetails.userName}');
+                                        'Forward Message sent to ${x.userName}');
                                     var conversationId =
-                                        controller.getConversationId(
-                                            x.userDetails.userId);
+                                        controller.getConversationId(x.userId);
                                     await Future.delayed(
                                         const Duration(milliseconds: 1000));
                                     if (_message?.customType ==
                                         IsmChatCustomMessageType.text) {
                                       ismChatPageController.sendTextMessage(
                                           conversationId: conversationId,
-                                          userId: x.userDetails.userId,
-                                          opponentName: x.userDetails.userName,
+                                          userId: x.userId,
+                                          opponentName: x.userName,
                                           sendMessageType:
                                               SendMessageType.forwardMessage,
                                           forwardMessgeForMulitpleUser: true,
@@ -468,8 +483,8 @@ class IsmChatForwardView extends StatelessWidget {
                                         IsmChatCustomMessageType.location) {
                                       ismChatPageController.sendLocation(
                                           conversationId: conversationId,
-                                          userId: x.userDetails.userId,
-                                          opponentName: x.userDetails.userName,
+                                          userId: x.userId,
+                                          opponentName: x.userName,
                                           latitude: 0,
                                           longitude: 0,
                                           placeId: '',
@@ -483,8 +498,8 @@ class IsmChatForwardView extends StatelessWidget {
                                         IsmChatCustomMessageType.image) {
                                       await ismChatPageController.sendImage(
                                         conversationId: conversationId,
-                                        userId: x.userDetails.userId,
-                                        opponentName: x.userDetails.userName,
+                                        userId: x.userId,
+                                        opponentName: x.userName,
                                         ismChatChatMessageModel: _message,
                                         forwardMessgeForMulitpleUser: true,
                                         sendMessageType:
@@ -494,8 +509,8 @@ class IsmChatForwardView extends StatelessWidget {
                                         IsmChatCustomMessageType.video) {
                                       await ismChatPageController.sendVideo(
                                         conversationId: conversationId,
-                                        userId: x.userDetails.userId,
-                                        opponentName: x.userDetails.userName,
+                                        userId: x.userId,
+                                        opponentName: x.userName,
                                         ismChatChatMessageModel: _message,
                                         forwardMessgeForMulitpleUser: true,
                                         sendMessageType:
@@ -505,8 +520,8 @@ class IsmChatForwardView extends StatelessWidget {
                                         IsmChatCustomMessageType.file) {
                                       ismChatPageController.sendDocument(
                                         conversationId: conversationId,
-                                        userId: x.userDetails.userId,
-                                        opponentName: x.userDetails.userName,
+                                        userId: x.userId,
+                                        opponentName: x.userName,
                                         message: _message,
                                         forwardMessgeForMulitpleUser: true,
                                         sendMessageType:
@@ -516,8 +531,8 @@ class IsmChatForwardView extends StatelessWidget {
                                         IsmChatCustomMessageType.audio) {
                                       ismChatPageController.sendAudio(
                                         conversationId: conversationId,
-                                        userId: x.userDetails.userId,
-                                        opponentName: x.userDetails.userName,
+                                        userId: x.userId,
+                                        opponentName: x.userName,
                                         ismChatChatMessageModel: _message,
                                         forwardMessgeForMulitpleUser: true,
                                         sendMessageType:

@@ -10,19 +10,20 @@ class SelectedForwardUser extends ISuspensionBean {
 
   factory SelectedForwardUser.fromMap(Map<String, dynamic> map) =>
       SelectedForwardUser(
-          isUserSelected: map['isUserSelected'] as bool? ?? false,
-          userDetails: map['userDetails'] != null
-              ? UserDetails.fromMap(map['userDetails'] as Map<String, dynamic>)
-              : UserDetails(
-                  online: false,
-                  userName: '',
-                  lastSeen: 0,
-                  userId: '',
-                  userIdentifier: '',
-                  userProfileImageUrl: '',
-                ),
-          isBlocked: map['isBlocked'] as bool? ?? false,
-          tagIndex: map['tagIndex'] as String? ?? '');
+        isUserSelected: map['isUserSelected'] as bool? ?? false,
+        userDetails: map['userDetails'] != null
+            ? UserDetails.fromMap(map['userDetails'] as Map<String, dynamic>)
+            : UserDetails(
+                online: false,
+                userName: '',
+                lastSeen: 0,
+                userId: '',
+                userIdentifier: '',
+                userProfileImageUrl: '',
+              ),
+        isBlocked: map['isBlocked'] as bool? ?? false,
+        tagIndex: map['tagIndex'] as String? ?? '',
+      );
 
   SelectedForwardUser({
     required bool isUserSelected,
