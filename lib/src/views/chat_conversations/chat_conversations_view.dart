@@ -36,114 +36,118 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
   @override
   Widget build(BuildContext context) =>
       GetBuilder<IsmChatConversationsController>(
-        builder: (controller) => Scaffold(
-          drawerScrimColor: Colors.transparent,
-          body: SafeArea(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    border: Responsive.isWebAndTablet(context)
-                        ? Border(
-                            right: BorderSide(
-                                color: IsmChatConfig.chatTheme.primaryColor!),
-                          )
-                        : null,
-                  ),
-                  width: Responsive.isWebAndTablet(context)
-                      ? IsmChatDimens.percentWidth(.3)
-                      : IsmChatDimens.percentWidth(1),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      if (IsmChatProperties.conversationHeaderWidget !=
-                          null) ...[
-                        IsmChatProperties.conversationHeaderWidget!,
-                      ],
-                      const Expanded(child: IsmChatConversationList()),
-                    ],
-                  ),
-                ),
-                if (Responsive.isWebAndTablet(context)) ...[
-                  Expanded(
-                    child: Stack(
+        builder: (controller) {
+          controller.context = context;
+          return Scaffold(
+            drawerScrimColor: Colors.transparent,
+            body: SafeArea(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Responsive.isWebAndTablet(context)
+                          ? Border(
+                              right: BorderSide(
+                                  color: IsmChatConfig.chatTheme.primaryColor!),
+                            )
+                          : null,
+                    ),
+                    width: Responsive.isWebAndTablet(context)
+                        ? IsmChatDimens.percentWidth(.3)
+                        : IsmChatDimens.percentWidth(1),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
                       children: [
-                        Obx(
-                          () => controller.currentConversation != null
-                              ? const IsmChatPageView()
-                              : IsmChatProperties.startConversationWidget ??
-                                  Center(
-                                    child: Text(
-                                      IsmChatStrings.startConversation,
-                                      style: IsmChatStyles.w400White18,
-                                    ),
-                                  ),
-                        ),
-                        if (Responsive.isTablet(context)) ...[
-                          Obx(
-                            () => controller.isRenderChatPageaScreen !=
-                                    IsRenderChatPageScreen.none
-                                ? controller.isRenderChatScreenWidget()
-                                : const SizedBox.shrink(),
-                          )
-                        ]
+                        if (IsmChatProperties.conversationHeaderWidget !=
+                            null) ...[
+                          IsmChatProperties.conversationHeaderWidget!,
+                        ],
+                        const Expanded(child: IsmChatConversationList()),
                       ],
                     ),
                   ),
-                  if (Responsive.isWeb(context)) ...[
-                    Obx(
-                      () => controller.isRenderChatPageaScreen !=
-                              IsRenderChatPageScreen.none
-                          ? Container(
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  left: BorderSide(
-                                      color: IsmChatConfig
-                                          .chatTheme.primaryColor!),
-                                ),
-                              ),
-                              width: IsmChatDimens.percentWidth(.3),
-                              child: controller.isRenderChatScreenWidget(),
+                  if (Responsive.isWebAndTablet(context)) ...[
+                    Expanded(
+                      child: Stack(
+                        children: [
+                          Obx(
+                            () => controller.currentConversation != null
+                                ? const IsmChatPageView()
+                                : IsmChatProperties.startConversationWidget ??
+                                    Center(
+                                      child: Text(
+                                        IsmChatStrings.startConversation,
+                                        style: IsmChatStyles.w400White18,
+                                      ),
+                                    ),
+                          ),
+                          if (Responsive.isTablet(context)) ...[
+                            Obx(
+                              () => controller.isRenderChatPageaScreen !=
+                                      IsRenderChatPageScreen.none
+                                  ? controller.isRenderChatScreenWidget()
+                                  : const SizedBox.shrink(),
                             )
-                          : const SizedBox.shrink(),
-                    )
+                          ]
+                        ],
+                      ),
+                    ),
+                    if (Responsive.isWeb(context)) ...[
+                      Obx(
+                        () => controller.isRenderChatPageaScreen !=
+                                IsRenderChatPageScreen.none
+                            ? Container(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    left: BorderSide(
+                                        color: IsmChatConfig
+                                            .chatTheme.primaryColor!),
+                                  ),
+                                ),
+                                width: IsmChatDimens.percentWidth(.3),
+                                child: controller.isRenderChatScreenWidget(),
+                              )
+                            : const SizedBox.shrink(),
+                      )
+                    ]
                   ]
-                ]
-              ],
+                ],
+              ),
             ),
-          ),
-          floatingActionButton: IsmChatProperties
-                      .conversationProperties.showCreateChatIcon &&
-                  !Responsive.isWebAndTablet(context)
-              ? IsmChatStartChatFAB(
-                  icon: IsmChatProperties.conversationProperties.createChatIcon,
-                  onTap: () {
-                    if (IsmChatProperties
-                        .conversationProperties.enableGroupChat) {
-                      Get.bottomSheet(
-                        const _CreateChatBottomSheet(),
-                        backgroundColor: Colors.transparent,
-                        elevation: 0,
-                      );
-                    } else {
-                      IsmChatProperties.conversationProperties.onCreateTap
-                          ?.call();
-                      IsmChatRouteManagement.goToCreateChat(
-                          isGroupConversation: false);
-                    }
-                  },
-                )
-              : null,
-          drawer: Responsive.isWebAndTablet(context)
-              ? Obx(
-                  () => SizedBox(
-                    width: IsmChatDimens.percentWidth(.299),
-                    child: controller.isRenderScreenWidget(),
-                  ),
-                )
-              : null,
-        ),
+            floatingActionButton: IsmChatProperties
+                        .conversationProperties.showCreateChatIcon &&
+                    !Responsive.isWebAndTablet(context)
+                ? IsmChatStartChatFAB(
+                    icon:
+                        IsmChatProperties.conversationProperties.createChatIcon,
+                    onTap: () {
+                      if (IsmChatProperties
+                          .conversationProperties.enableGroupChat) {
+                        Get.bottomSheet(
+                          const _CreateChatBottomSheet(),
+                          backgroundColor: Colors.transparent,
+                          elevation: 0,
+                        );
+                      } else {
+                        IsmChatProperties.conversationProperties.onCreateTap
+                            ?.call();
+                        IsmChatRouteManagement.goToCreateChat(
+                            isGroupConversation: false);
+                      }
+                    },
+                  )
+                : null,
+            drawer: Responsive.isWebAndTablet(context)
+                ? Obx(
+                    () => SizedBox(
+                      width: IsmChatDimens.percentWidth(.299),
+                      child: controller.isRenderScreenWidget(),
+                    ),
+                  )
+                : null,
+          );
+        },
       );
 }
 

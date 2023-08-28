@@ -74,7 +74,9 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
         _controller.pause();
         _controller = kIsWeb
             ? VideoPlayerController.network(
-                IsmChatBlob.blobToUrl(widget.path.strigToUnit8List),
+                widget.path.isValidUrl
+                    ? widget.path
+                    : IsmChatBlob.blobToUrl(widget.path.strigToUnit8List),
               )
             : widget.path.isValidUrl
                 ? VideoPlayerController.network(widget.path)

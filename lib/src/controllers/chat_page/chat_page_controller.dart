@@ -668,18 +668,20 @@ class IsmChatPageController extends GetxController
       IsmChatUtility.showLoader();
       for (var x in result) {
         var bytes = await x?.readAsBytes();
-        var extension = x?.name.split('.').last;
+        // var bytes = await IsmChatUtility.fetchBytesFromBlobUrl(x?.path ?? '')
+        // as Uint8List;
+        var extension = x?.mimeType?.split('/').last;
         var dataSize = IsmChatUtility.formatBytes(bytes?.length ?? 0);
-        var platformFile = PlatformFile(
+        var platformFile = IsmchPlatformFile(
           name: x?.name ?? '',
-          size: bytes?.length ?? 0,
+          size: double.tryParse((bytes?.length ?? 0).toString()),
           bytes: bytes,
           path: x?.path,
+          extension: extension,
         );
         if (IsmChatConstants.videoExtensions.contains(extension)) {
           var thumbnailBytes =
               await IsmChatBlob.getVideoThumbnailBytes(bytes ?? Uint8List(0));
-
           if (thumbnailBytes != null) {
             webMedia.add(
               WebMediaModel(
@@ -1105,7 +1107,6 @@ class IsmChatPageController extends GetxController
         IsmChatLog.error('$e');
       }
     } else if (message.customType == IsmChatCustomMessageType.audio) {
-      // Todo add audio player
       await Get.dialog(IsmChatAudioPlayer(
         message: message,
       ));
@@ -1263,11 +1264,12 @@ class IsmChatPageController extends GetxController
         WebMediaModel(
           dataSize: fileSize,
           isVideo: false,
-          platformFile: PlatformFile(
+          platformFile: IsmchPlatformFile(
             name: '${DateTime.now().millisecondsSinceEpoch}.png',
             bytes: bytes,
             path: file.path,
-            size: 0,
+            size: double.tryParse((bytes.length).toString()),
+            extension: 'png',
           ),
           thumbnailBytes: Uint8List(0),
         ),

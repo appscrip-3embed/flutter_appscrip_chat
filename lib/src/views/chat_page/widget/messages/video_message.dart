@@ -18,7 +18,7 @@ class IsmChatVideoMessage extends StatelessWidget {
                     ? IsmChatDimens.percentHeight(.3)
                     : null,
             child: kIsWeb
-                ? message.attachments?.first.mediaUrl?.isValidUrl == true
+                ? message.attachments?.first.thumbnailUrl?.isValidUrl == true
                     ? IsmChatImage(
                         message.attachments?.first.thumbnailUrl ?? '',
                         isNetworkImage:

@@ -161,6 +161,8 @@ class IsmChatConversationsController extends GetxController {
 
   TextEditingController nameController = TextEditingController();
 
+  BuildContext? context;
+
   @override
   onInit() async {
     IsmChatBlob.listenTabAndRefesh();

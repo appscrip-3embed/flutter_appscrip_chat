@@ -376,21 +376,21 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                               borderRadius: BorderRadius.all(
                                 Radius.circular(IsmChatDimens.ten),
                               ),
-                              child: media?.first.mediaUrl?.isValidUrl == true
-                                  ? Image.network(
-                                      isVideo
-                                          ? media?.first.thumbnailUrl ?? ''
-                                          : media?.first.mediaUrl ?? '',
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.memory(
-                                      isVideo
-                                          ? media?.first.thumbnailUrl!
-                                                  .strigToUnit8List ??
-                                              Uint8List(0)
-                                          : media?.first.mediaUrl!
+                              child: isVideo
+                                  ? media?.first.thumbnailUrl?.isValidUrl ==
+                                          true
+                                      ? Image.network(
+                                          media?.first.thumbnailUrl ?? '',
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Image.memory(
+                                          media?.first.thumbnailUrl!
                                                   .strigToUnit8List ??
                                               Uint8List(0),
+                                          fit: BoxFit.cover,
+                                        )
+                                  : Image.network(
+                                      media?.first.mediaUrl ?? '',
                                       fit: BoxFit.cover,
                                     ),
                             ),

@@ -526,7 +526,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       }
       videoMessage = ismChatChatMessageModel;
     } else {
-      if (webMediaModel == null && !kIsWeb) {
+      if (webMediaModel == null) {
         videoCopress = await VideoCompress.compressVideo(file!.path,
             quality: VideoQuality.MediumQuality, includeAudio: true);
         thumbnailFile = isThumbnail
@@ -546,32 +546,34 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           extension = nameWithExtension.split('.').last;
         }
       } else {
-        bytes = webMediaModel?.platformFile.bytes;
-        thumbnailBytes = webMediaModel?.thumbnailBytes;
+        bytes = webMediaModel.platformFile.bytes;
+        thumbnailBytes = webMediaModel.thumbnailBytes;
         thumbnailNameWithExtension = '$sentAt.png';
         thumbnailMediaId = '$sentAt';
-        nameWithExtension = webMediaModel?.platformFile.name;
+        nameWithExtension = webMediaModel.platformFile.name;
         mediaId = '$sentAt';
-        extension = webMediaModel?.platformFile.extension;
+        extension = webMediaModel.platformFile.extension;
       }
+
       videoMessage = IsmChatMessageModel(
         body: 'Video',
         conversationId: conversationId,
         customType: IsmChatCustomMessageType.video,
         attachments: [
           AttachmentModel(
-              attachmentType: IsmChatMediaType.video,
-              thumbnailUrl: webMediaModel != null
-                  ? thumbnailBytes.toString()
-                  : thumbnailFile?.path,
-              size: double.parse(bytes!.length.toString()),
-              name: nameWithExtension,
-              mimeType: extension,
-              mediaUrl: webMediaModel != null
-                  ? webMediaModel.platformFile.bytes.toString()
-                  : videoCopress!.file!.path,
-              mediaId: mediaId,
-              extension: extension)
+            attachmentType: IsmChatMediaType.video,
+            thumbnailUrl: webMediaModel != null
+                ? thumbnailBytes.toString()
+                : thumbnailFile?.path,
+            size: double.parse(bytes!.length.toString()),
+            name: nameWithExtension,
+            mimeType: extension,
+            mediaUrl: webMediaModel != null
+                ? webMediaModel.platformFile.path
+                : videoCopress?.file?.path,
+            mediaId: mediaId,
+            extension: extension,
+          )
         ],
         deliveredToAll: false,
         messageId: '',
@@ -593,13 +595,18 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       }
     }
 
-    if (sendMessageType == SendMessageType.pendingMessage) {
-      await IsmChatConfig.dbWrapper!
-          .saveMessage(videoMessage, IsmChatDbBox.pending);
-    } else {
-      await IsmChatConfig.dbWrapper!
-          .saveMessage(videoMessage, IsmChatDbBox.forward);
+    try {
+      if (sendMessageType == SendMessageType.pendingMessage) {
+        await IsmChatConfig.dbWrapper!
+            .saveMessage(videoMessage, IsmChatDbBox.pending);
+      } else {
+        await IsmChatConfig.dbWrapper!
+            .saveMessage(videoMessage, IsmChatDbBox.forward);
+      }
+    } catch (e, st) {
+      IsmChatLog.error('error $e\n$st');
     }
+
     if (Responsive.isWebAndTablet(Get.context!)) {
       _controller.updateLastMessagOnCurrentTime(videoMessage);
     }
@@ -696,13 +703,17 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             AttachmentModel(
               attachmentType: IsmChatMediaType.image,
               thumbnailUrl: kIsWeb
-                  ? webMediaModel?.platformFile.bytes.toString()
+                  ? webMediaModel?.platformFile.path
                   : compressedFile?.path,
-              size: double.parse(bytes!.length.toString()),
+              size: kIsWeb
+                  ? webMediaModel?.platformFile.size
+                  : double.parse(
+                      bytes!.length.toString(),
+                    ),
               name: nameWithExtension,
               mimeType: 'image/jpeg',
               mediaUrl: kIsWeb
-                  ? webMediaModel?.platformFile.bytes.toString()
+                  ? webMediaModel?.platformFile.path
                   : compressedFile?.path,
               mediaId: mediaId,
               extension: extension,

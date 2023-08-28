@@ -4,7 +4,6 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
     if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
 import 'package:camera/camera.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -118,6 +117,9 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                                 });
 
                                 if (kIsWeb) {
+                                  IsmChatLog.error(file.path);
+                                  IsmChatLog.error(file.name);
+                                  IsmChatLog.error(file.mimeType);
                                   var bytes = await file.readAsBytes();
                                   var fileSize = IsmChatUtility.formatBytes(
                                     int.parse(bytes.length.toString()),
@@ -129,12 +131,13 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                                     WebMediaModel(
                                       dataSize: fileSize,
                                       isVideo: true,
-                                      platformFile: PlatformFile(
+                                      platformFile: IsmchPlatformFile(
                                         name:
                                             '${DateTime.now().millisecondsSinceEpoch}.mp4',
                                         bytes: bytes,
                                         path: file.path,
                                         size: 0,
+                                        extension: 'mp4',
                                       ),
                                       thumbnailBytes: thumbnailBytes!,
                                     ),

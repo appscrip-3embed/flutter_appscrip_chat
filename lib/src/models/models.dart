@@ -14,6 +14,7 @@ export 'mention.dart';
 export 'message_reaction.dart';
 export 'meta_data_model.dart';
 export 'mqtt_models/mqtt_models.dart';
+export 'platformfile_model.dart';
 export 'popup_item_model.dart';
 export 'presigned_url_model.dart';
 export 'reaction_model.dart';

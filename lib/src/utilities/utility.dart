@@ -204,11 +204,11 @@ class IsmChatUtility {
 
   static Future<List<int>> fetchBytesFromBlobUrl(String blobUrl) async {
     final response = await http.get(Uri.parse(blobUrl));
-
     if (response.statusCode == 200) {
       return response.bodyBytes;
     } else {
-      throw Exception('Failed to fetch bytes from Blob URL');
+      return [0];
+      // throw Exception('Failed to fetch bytes from Blob URL');
     }
   }
 

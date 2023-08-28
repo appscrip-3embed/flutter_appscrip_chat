@@ -7,8 +7,11 @@ import 'package:appscrip_chat_component/src/controllers/mqtt/clients/mobile_clie
     if (dart.library.html) 'clients/web_client.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
+// import 'package:elegant_notification/elegant_notification.dart';
+// import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+// import 'package:motion_toast/resources/arrays.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 
 class IsmChatMqttController extends GetxController {
@@ -387,17 +390,26 @@ class IsmChatMqttController extends GetxController {
         messageId = message.messageId!;
       }
     } else {
-      ElegantNotification.info(
-        width: 360,
-        notificationPosition: NotificationPosition.topRight,
-        animation: AnimationType.fromTop,
-        title: const Text('Info'),
-        description: const Text(
-          'This account will be updated once you exit',
-        ),
-        showProgressIndicator: true,
-        autoDismiss: true,
-      ).show(Get.context!);
+      if (Get.isRegistered<IsmChatConversationsController>()) {
+        ElegantNotification(
+          icon: Icon(
+            Icons.message_rounded,
+            color: IsmChatConfig.chatTheme.primaryColor ?? Colors.blue,
+          ),
+          width: IsmChatDimens.twoHundredFifty,
+          notificationPosition: NotificationPosition.topRight,
+          animation: AnimationType.fromRight,
+          title: Text(message.notificationTitle ?? ''),
+          description: Text(
+            mqttMessage ?? '',
+          ),
+          showProgressIndicator: true,
+          autoDismiss: true,
+          progressIndicatorColor:
+              IsmChatConfig.chatTheme.primaryColor ?? Colors.blue,
+          toastDuration: const Duration(seconds: 3),
+        ).show(Get.find<IsmChatConversationsController>().context!);
+      }
     }
   }
 

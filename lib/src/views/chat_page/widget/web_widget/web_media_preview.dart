@@ -75,9 +75,9 @@ class WebMediaPreview extends StatelessWidget {
                       height: IsmChatDimens.percentHeight(.5),
                       child: VideoViewPage(
                         showVideoPlaying: true,
-                        path: controller
-                            .webMedia[controller.assetsIndex].platformFile.bytes
-                            .toString(),
+                        path: controller.webMedia[controller.assetsIndex]
+                                .platformFile.path ??
+                            '',
                       ),
                     ),
                   ],

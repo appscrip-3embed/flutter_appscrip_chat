@@ -1,14 +1,8 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:typed_data';
 
-import 'package:file_picker/file_picker.dart';
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 
 class WebMediaModel {
-  final PlatformFile platformFile;
-  final bool isVideo;
-  final Uint8List thumbnailBytes;
-  final String dataSize;
-  Duration? duration;
   WebMediaModel({
     required this.platformFile,
     required this.isVideo,
@@ -16,9 +10,14 @@ class WebMediaModel {
     required this.dataSize,
     this.duration,
   });
+  final IsmchPlatformFile platformFile;
+  final bool isVideo;
+  final Uint8List thumbnailBytes;
+  final String dataSize;
+  Duration? duration;
 
   WebMediaModel copyWith({
-    PlatformFile? platformFile,
+    IsmchPlatformFile? platformFile,
     bool? isVideo,
     Uint8List? thumbnailBytes,
     String? dataSize,
