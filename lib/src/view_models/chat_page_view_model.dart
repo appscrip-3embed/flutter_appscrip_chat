@@ -6,20 +6,20 @@ class IsmChatPageViewModel {
   IsmChatPageViewModel(this._repository);
 
   final IsmChatPageRepository _repository;
-  var messageSkip = 0;
-  var messageLimit = 20;
 
   Future<List<IsmChatMessageModel>?> getChatMessages({
     required String conversationId,
     required int lastMessageTimestamp,
     int? pagination,
     required bool isGroup,
+    int limit = 20,
+    int skip = 0,
   }) async {
     var messages = await _repository.getChatMessages(
       conversationId: conversationId,
       lastMessageTimestamp: lastMessageTimestamp,
-      limit: messageLimit,
-      skip: pagination ?? messageSkip,
+      limit: limit,
+      skip: pagination ?? 0,
     );
 
     if (messages == null) {

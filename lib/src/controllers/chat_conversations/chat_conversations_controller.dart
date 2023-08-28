@@ -70,12 +70,6 @@ class IsmChatConversationsController extends GetxController {
 
   var conversationScrollController = ScrollController();
 
-  final RxInt _conversationPage = 0.obs;
-  int get conversationPage => _conversationPage.value;
-  set conversationPage(int value) {
-    _conversationPage.value = value;
-  }
-
   final _forwardedList = <SelectedForwardUser>[].obs;
   List<SelectedForwardUser> get forwardedList => _forwardedList;
   set forwardedList(List<SelectedForwardUser> value) {
@@ -165,6 +159,7 @@ class IsmChatConversationsController extends GetxController {
 
   @override
   onInit() async {
+    super.onInit();
     IsmChatBlob.listenTabAndRefesh();
     await _generateReactionList();
     var users = await IsmChatConfig.dbWrapper?.userDetailsBox
@@ -177,8 +172,16 @@ class IsmChatConversationsController extends GetxController {
     await getConversationsFromDB();
     await getChatConversations();
     await Get.find<IsmChatMqttController>().getChatConversationsUnreadCount();
+
     await getBackGroundAssets();
-    super.onInit();
+    conversationScrollController.addListener(() async {
+      if (conversationScrollController.offset.toInt() ==
+          conversationScrollController.position.maxScrollExtent.toInt()) {
+        await getChatConversations(
+          skip: conversations.length.pagination(),
+        );
+      }
+    });
   }
 
   @override
@@ -540,15 +543,13 @@ class IsmChatConversationsController extends GetxController {
   }
 
   Future<void> getChatConversations(
-      {int noOfConvesation = 0,
-      ApiCallOrigin? origin,
-      int chatLimit = 20}) async {
+      {int skip = 0, ApiCallOrigin? origin, int chatLimit = 20}) async {
     if (conversations.isEmpty) {
       isConversationsLoading = true;
     }
 
     await _viewModel.getChatConversations(
-      noOfConvesation,
+      skip,
       chatLimit: chatLimit,
     );
 
@@ -565,7 +566,6 @@ class IsmChatConversationsController extends GetxController {
     }
 
     unawaited(getBlockUser());
-    conversationPage = conversationPage + 20;
     await getConversationsFromDB();
     if (conversations.isEmpty) {
       isConversationsLoading = false;

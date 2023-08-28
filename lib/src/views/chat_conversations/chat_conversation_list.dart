@@ -48,8 +48,10 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
               enablePullDown: true,
               enablePullUp: true,
               onRefresh: () {
-                controller.conversationPage = 0;
-                controller.getChatConversations(origin: ApiCallOrigin.referesh);
+                controller.getChatConversations(
+                  skip: 0,
+                  origin: ApiCallOrigin.referesh,
+                );
               },
               child: Center(
                 child: IsmChatProperties.conversationProperties.placeholder ??
@@ -63,190 +65,187 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
           return SizedBox(
             height:
                 IsmChatProperties.conversationProperties.height ?? Get.height,
-            child: SmartRefresher(
-              physics: const ClampingScrollPhysics(),
-              controller: controller.refreshController,
-              enablePullDown: true,
-              enablePullUp: true,
-              onRefresh: () {
-                controller.conversationPage = 0;
-                controller.getChatConversations(origin: ApiCallOrigin.referesh);
-                Get.find<IsmChatMqttController>()
-                    .getChatConversationsUnreadCount();
-              },
-              onLoading: () {
-                controller.getChatConversations(
-                    noOfConvesation: controller.conversationPage,
-                    origin: ApiCallOrigin.loadMore);
-              },
-              child: SlidableAutoCloseBehavior(
-                child: ListView.separated(
-                  padding: IsmChatDimens.edgeInsets0_10,
-                  shrinkWrap: true,
-                  itemCount: controller.conversations.length,
-                  controller: controller.conversationScrollController,
-                  separatorBuilder: (_, __) => IsmChatDimens.boxHeight8,
-                  addAutomaticKeepAlives: true,
-                  itemBuilder: (_, index) {
-                    var conversation = controller.conversations[index];
-                    return IsmChatProperties.conversationProperties.cardBuilder
-                            ?.call(_, conversation, index) ??
-                        Slidable(
-                          direction: Axis.horizontal,
-                          closeOnScroll: true,
-                          enabled: IsmChatProperties
-                                  .conversationProperties.isSlidableEnable
-                                  ?.call(context, conversation) ??
-                              true,
-                          startActionPane: IsmChatProperties
-                                          .conversationProperties.actions ==
-                                      null ||
-                                  IsmChatProperties.conversationProperties
-                                          .actions?.isEmpty ==
-                                      true
-                              ? null
-                              : ActionPane(
-                                  extentRatio: 0.3,
-                                  motion: const ScrollMotion(),
-                                  children: [
-                                    ...IsmChatProperties
-                                            .conversationProperties.actions
-                                            ?.map(
-                                          (e) => SlidableAction(
-                                            onPressed: (_) =>
-                                                e.onTap(conversation),
-                                            flex: 1,
-                                            backgroundColor:
-                                                e.backgroundColor ??
-                                                    IsmChatConfig.chatTheme
-                                                        .primaryColor!,
-                                            icon: e.icon,
-                                            foregroundColor: e.style?.color,
-                                            label: e.label,
-                                            borderRadius: e.borderRadius ??
-                                                BorderRadius.circular(
-                                                    IsmChatDimens.eight),
-                                          ),
-                                        ) ??
-                                        [],
-                                  ],
-                                ),
-                          endActionPane: !IsmChatProperties
-                                      .conversationProperties.allowDelete &&
-                                  (IsmChatProperties
-                                              .conversationProperties.actions ==
-                                          null ||
-                                      IsmChatProperties.conversationProperties
-                                              .actions?.isEmpty ==
-                                          true)
-                              ? null
-                              : ActionPane(
-                                  extentRatio: 0.3,
-                                  motion: const StretchMotion(),
-                                  children: [
-                                    ...IsmChatProperties
-                                            .conversationProperties.actions
-                                            ?.map(
-                                          (e) => SlidableAction(
-                                            onPressed: (_) =>
-                                                e.onTap(conversation),
-                                            flex: 1,
-                                            backgroundColor:
-                                                e.backgroundColor ??
-                                                    IsmChatConfig.chatTheme
-                                                        .primaryColor!,
-                                            icon: e.icon,
-                                            foregroundColor: e.style?.color,
-                                            label: e.label,
-                                            borderRadius: e.borderRadius ??
-                                                BorderRadius.circular(
-                                                    IsmChatDimens.eight),
-                                          ),
-                                        ) ??
-                                        [],
-                                    if (IsmChatProperties
-                                        .conversationProperties.allowDelete)
-                                      SlidableAction(
-                                        onPressed: (_) async {
-                                          await Get.bottomSheet(
-                                            IsmChatClearConversationBottomSheet(
-                                              controller.conversations[index],
-                                            ),
-                                            isDismissible: false,
-                                            elevation: 0,
-                                          );
-                                        },
-                                        flex: 1,
-                                        backgroundColor: IsmChatColors.redColor,
-                                        foregroundColor:
-                                            IsmChatColors.whiteColor,
-                                        icon: Icons.delete_rounded,
-                                        label: IsmChatStrings.delete,
-                                      ),
-                                  ],
-                                ),
-                          child: IsmChatConversationCard(
-                            name: IsmChatProperties.conversationProperties
-                                .cardElementBuilders?.name,
-                            nameBuilder: IsmChatProperties
-                                .conversationProperties
-                                .cardElementBuilders
-                                ?.nameBuilder,
-                            profileImageUrl: IsmChatProperties
-                                .conversationProperties
-                                .cardElementBuilders
-                                ?.profileImageUrl,
-                            subtitle: IsmChatProperties.conversationProperties
-                                .cardElementBuilders?.subtitle,
-                            conversation,
-                            profileImageBuilder: IsmChatProperties
-                                .conversationProperties
-                                .cardElementBuilders
-                                ?.profileImageBuilder,
-                            subtitleBuilder: !conversation.isSomeoneTyping
-                                ? IsmChatProperties.conversationProperties
-                                    .cardElementBuilders?.subtitleBuilder
-                                : (_, __, ___) => Text(
-                                      conversation.typingUsers,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: IsmChatStyles.typing,
-                                    ),
-                            onTap: () {
-                              if (kIsWeb) {
-                                controller.isConversationId =
-                                    conversation.conversationId ?? '';
-                              }
-                              IsmChatProperties.conversationProperties
-                                  .onChatTap!(_, conversation);
-                              controller.navigateToMessages(conversation);
-                              if (Responsive.isWebAndTablet(context)) {
-                                if (!Get.isRegistered<
-                                    IsmChatPageController>()) {
-                                  IsmChatPageBinding().dependencies();
+            child: kIsWeb
+                ? SlidableAutoCloseBehavior(
+                    child: _ConversationList(),
+                  )
+                : SmartRefresher(
+                    physics: const ClampingScrollPhysics(),
+                    controller: controller.refreshController,
+                    enablePullDown: true,
+                    enablePullUp: true,
+                    onRefresh: () {
+                      controller.getChatConversations(
+                        skip: 0,
+                        origin: ApiCallOrigin.referesh,
+                      );
+                      Get.find<IsmChatMqttController>()
+                          .getChatConversationsUnreadCount();
+                    },
+                    onLoading: () {
+                      controller.getChatConversations(
+                        skip: controller.conversations.length.pagination(),
+                        origin: ApiCallOrigin.loadMore,
+                      );
+                    },
+                    child: SlidableAutoCloseBehavior(
+                      child: _ConversationList(),
+                    ),
+                  ),
+          );
+        },
+      );
+}
 
-                                  return;
-                                }
+class _ConversationList extends StatelessWidget {
+  _ConversationList();
 
-                                final chatPagecontroller =
-                                    Get.find<IsmChatPageController>();
-                                chatPagecontroller.startInit();
-                                if (chatPagecontroller
-                                        .messageHoldOverlayEntry !=
-                                    null) {
-                                  chatPagecontroller.closeOveray();
-                                }
-                              } else {
-                                IsmChatRouteManagement.goToChatPage();
-                              }
-                            },
+  final controller = Get.find<IsmChatConversationsController>();
+
+  @override
+  Widget build(BuildContext context) => ListView.separated(
+        padding: IsmChatDimens.edgeInsets0_10,
+        shrinkWrap: true,
+        itemCount: controller.conversations.length,
+        controller: controller.conversationScrollController,
+        separatorBuilder: (_, __) => IsmChatDimens.boxHeight8,
+        addAutomaticKeepAlives: true,
+        itemBuilder: (_, index) {
+          var conversation = controller.conversations[index];
+          return IsmChatProperties.conversationProperties.cardBuilder
+                  ?.call(_, conversation, index) ??
+              Slidable(
+                direction: Axis.horizontal,
+                closeOnScroll: true,
+                enabled: IsmChatProperties
+                        .conversationProperties.isSlidableEnable
+                        ?.call(context, conversation) ??
+                    true,
+                startActionPane: IsmChatProperties
+                                .conversationProperties.actions ==
+                            null ||
+                        IsmChatProperties
+                                .conversationProperties.actions?.isEmpty ==
+                            true
+                    ? null
+                    : ActionPane(
+                        extentRatio: 0.3,
+                        motion: const ScrollMotion(),
+                        children: [
+                          ...IsmChatProperties.conversationProperties.actions
+                                  ?.map(
+                                (e) => SlidableAction(
+                                  onPressed: (_) => e.onTap(conversation),
+                                  flex: 1,
+                                  backgroundColor: e.backgroundColor ??
+                                      IsmChatConfig.chatTheme.primaryColor!,
+                                  icon: e.icon,
+                                  foregroundColor: e.style?.color,
+                                  label: e.label,
+                                  borderRadius: e.borderRadius ??
+                                      BorderRadius.circular(
+                                          IsmChatDimens.eight),
+                                ),
+                              ) ??
+                              [],
+                        ],
+                      ),
+                endActionPane: !IsmChatProperties
+                            .conversationProperties.allowDelete &&
+                        (IsmChatProperties.conversationProperties.actions ==
+                                null ||
+                            IsmChatProperties
+                                    .conversationProperties.actions?.isEmpty ==
+                                true)
+                    ? null
+                    : ActionPane(
+                        extentRatio: 0.3,
+                        motion: const StretchMotion(),
+                        children: [
+                          ...IsmChatProperties.conversationProperties.actions
+                                  ?.map(
+                                (e) => SlidableAction(
+                                  onPressed: (_) => e.onTap(conversation),
+                                  flex: 1,
+                                  backgroundColor: e.backgroundColor ??
+                                      IsmChatConfig.chatTheme.primaryColor!,
+                                  icon: e.icon,
+                                  foregroundColor: e.style?.color,
+                                  label: e.label,
+                                  borderRadius: e.borderRadius ??
+                                      BorderRadius.circular(
+                                          IsmChatDimens.eight),
+                                ),
+                              ) ??
+                              [],
+                          if (IsmChatProperties
+                              .conversationProperties.allowDelete)
+                            SlidableAction(
+                              onPressed: (_) async {
+                                await Get.bottomSheet(
+                                  IsmChatClearConversationBottomSheet(
+                                    controller.conversations[index],
+                                  ),
+                                  isDismissible: false,
+                                  elevation: 0,
+                                );
+                              },
+                              flex: 1,
+                              backgroundColor: IsmChatColors.redColor,
+                              foregroundColor: IsmChatColors.whiteColor,
+                              icon: Icons.delete_rounded,
+                              label: IsmChatStrings.delete,
+                            ),
+                        ],
+                      ),
+                child: IsmChatConversationCard(
+                  name: IsmChatProperties
+                      .conversationProperties.cardElementBuilders?.name,
+                  nameBuilder: IsmChatProperties
+                      .conversationProperties.cardElementBuilders?.nameBuilder,
+                  profileImageUrl: IsmChatProperties.conversationProperties
+                      .cardElementBuilders?.profileImageUrl,
+                  subtitle: IsmChatProperties
+                      .conversationProperties.cardElementBuilders?.subtitle,
+                  conversation,
+                  profileImageBuilder: IsmChatProperties.conversationProperties
+                      .cardElementBuilders?.profileImageBuilder,
+                  subtitleBuilder: !conversation.isSomeoneTyping
+                      ? IsmChatProperties.conversationProperties
+                          .cardElementBuilders?.subtitleBuilder
+                      : (_, __, ___) => Text(
+                            conversation.typingUsers,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: IsmChatStyles.typing,
                           ),
-                        );
+                  onTap: () {
+                    if (kIsWeb) {
+                      controller.isConversationId =
+                          conversation.conversationId ?? '';
+                    }
+                    IsmChatProperties.conversationProperties.onChatTap!(
+                        _, conversation);
+                    controller.navigateToMessages(conversation);
+                    if (Responsive.isWebAndTablet(context)) {
+                      if (!Get.isRegistered<IsmChatPageController>()) {
+                        IsmChatPageBinding().dependencies();
+
+                        return;
+                      }
+
+                      final chatPagecontroller =
+                          Get.find<IsmChatPageController>();
+                      chatPagecontroller.startInit();
+                      if (chatPagecontroller.messageHoldOverlayEntry != null) {
+                        chatPagecontroller.closeOveray();
+                      }
+                    } else {
+                      IsmChatRouteManagement.goToChatPage();
+                    }
                   },
                 ),
-              ),
-            ),
-          );
+              );
         },
       );
 }
