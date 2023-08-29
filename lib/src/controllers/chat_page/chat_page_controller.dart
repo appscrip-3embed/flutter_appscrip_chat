@@ -962,6 +962,8 @@ class IsmChatPageController extends GetxController
               conversationId: messages.last.conversationId ?? '',
               body: messages.last.body,
               customType: messages.last.customType,
+              deliveredTo: messages.last.deliveredTo,
+              readBy: messages.last.readBy,
               readCount: chatConversation.isGroup!
                   ? messages.last.readByAll!
                       ? chatConversation.membersCount!
@@ -984,9 +986,6 @@ class IsmChatPageController extends GetxController
             unreadMessagesCount: 0,
           );
         }
-
-        IsmChatLog.error(chatConversation.lastMessageDetails?.deliverCount);
-        IsmChatLog.error(chatConversation.lastMessageDetails?.readCount);
 
         await IsmChatConfig.dbWrapper!
             .saveConversation(conversation: chatConversation);

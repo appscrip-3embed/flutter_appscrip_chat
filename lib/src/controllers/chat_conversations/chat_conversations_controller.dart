@@ -348,8 +348,6 @@ class IsmChatConversationsController extends GetxController {
     }
     conversations.sort((a, b) =>
         b.lastMessageDetails!.sentAt.compareTo(a.lastMessageDetails!.sentAt));
-    IsmChatLog.error(conversations.first.lastMessageDetails?.deliverCount);
-    IsmChatLog.error(conversations.first.lastMessageDetails?.readCount);
   }
 
   String getConversationId(String userId) {

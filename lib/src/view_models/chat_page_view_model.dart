@@ -28,7 +28,6 @@ class IsmChatPageViewModel {
 
     messages.removeWhere((e) => [
           IsmChatActionEvents.clearConversation.name,
-          if (!isGroup) IsmChatActionEvents.conversationCreated.name,
           IsmChatActionEvents.deleteConversationLocally.name,
           IsmChatActionEvents.reactionAdd.name,
           IsmChatActionEvents.reactionRemove.name,

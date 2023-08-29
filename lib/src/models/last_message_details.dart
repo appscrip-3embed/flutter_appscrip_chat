@@ -77,6 +77,7 @@ class LastMessageDetails {
               IsmChatConfig.communicationConfig.userConfig.userId
           : true,
     );
+
     return details;
   }
 

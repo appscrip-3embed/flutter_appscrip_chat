@@ -424,8 +424,11 @@ class IsmChatMqttController extends GetxController {
             : false;
         conversation.messages?.last = lastMessage;
 
-        conversation.lastMessageDetails?.copyWith(
-          readCount: lastMessage.deliveredTo?.length,
+        conversation = conversation.copyWith(
+          lastMessageDetails: conversation.lastMessageDetails?.copyWith(
+            deliverCount: lastMessage.deliveredTo?.length,
+            deliveredTo: lastMessage.readBy,
+          ),
         );
 
         await IsmChatConfig.dbWrapper!
@@ -467,9 +470,13 @@ class IsmChatMqttController extends GetxController {
                 : false;
         conversation.messages?.last = lastMessage;
 
-        conversation.lastMessageDetails?.copyWith(
-          readCount: lastMessage.readBy?.length,
+        conversation = conversation.copyWith(
+          lastMessageDetails: conversation.lastMessageDetails?.copyWith(
+            readCount: lastMessage.readBy?.length,
+            readBy: lastMessage.readBy,
+          ),
         );
+
         await IsmChatConfig.dbWrapper!
             .saveConversation(conversation: conversation);
         if (Get.isRegistered<IsmChatPageController>()) {
@@ -541,11 +548,14 @@ class IsmChatMqttController extends GetxController {
       }
     }
     conversation = conversation.copyWith(
-        messages: modifiedMessages,
-        lastMessageDetails: conversation.lastMessageDetails?.copyWith(
-          deliverCount: modifiedMessages.last.deliveredTo?.length,
-          readCount: modifiedMessages.last.readBy?.length,
-        ));
+      messages: modifiedMessages,
+      lastMessageDetails: conversation.lastMessageDetails?.copyWith(
+        deliverCount: modifiedMessages.last.deliveredTo?.length,
+        readCount: modifiedMessages.last.readBy?.length,
+        readBy: modifiedMessages.last.readBy,
+        deliveredTo: modifiedMessages.last.deliveredTo,
+      ),
+    );
 
     await IsmChatConfig.dbWrapper!.saveConversation(conversation: conversation);
     if (Get.isRegistered<IsmChatPageController>()) {
