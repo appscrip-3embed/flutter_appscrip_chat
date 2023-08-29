@@ -28,7 +28,6 @@ class IsmChatPageViewModel {
 
     messages.removeWhere((e) => [
           IsmChatActionEvents.clearConversation.name,
-          if (!isGroup) IsmChatActionEvents.conversationCreated.name,
           IsmChatActionEvents.deleteConversationLocally.name,
           IsmChatActionEvents.reactionAdd.name,
           IsmChatActionEvents.reactionRemove.name,
@@ -485,15 +484,6 @@ class IsmChatPageViewModel {
           .clearAllMessage(conversationId: conversationId);
     }
   }
-
-  Future<void> readAllMessages({
-    required String conversationId,
-    required int timestamp,
-  }) async =>
-      await _repository.readAllMessages(
-        conversationId: conversationId,
-        timestamp: timestamp,
-      );
 
   Future<List<IsmChatPrediction>?> getLocation({
     required String latitude,

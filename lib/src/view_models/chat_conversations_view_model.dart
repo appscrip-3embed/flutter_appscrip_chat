@@ -167,4 +167,13 @@ class IsmChatConversationsViewModel {
           conversationId: conversationId,
           metaData: metaData,
           isLoading: isLoading);
+
+  Future<void> readAllMessages({
+    required String conversationId,
+    required int timestamp,
+  }) async =>
+      await _repository.readAllMessages(
+        conversationId: conversationId,
+        timestamp: timestamp,
+      );
 }

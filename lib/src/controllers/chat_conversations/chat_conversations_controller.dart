@@ -474,4 +474,12 @@ class IsmChatConversationsController extends GetxController {
         metaData: metaData,
         isLoading: isLoading);
   }
+
+  Future<void> readAllMessages({
+    required String conversationId,
+    required int timestamp,
+  }) async {
+    await _viewModel.readAllMessages(
+        conversationId: conversationId, timestamp: timestamp);
+  }
 }
