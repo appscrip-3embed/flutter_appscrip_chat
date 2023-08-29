@@ -12,11 +12,13 @@ class IsmChatAttachmentCard extends StatelessWidget {
         IsmChatConstants.attachmentShowLine;
     var height = IsmChatProperties
             .chatPageProperties.attachmentConfig?.attachmentHight ??
-        IsmChatConstants.attachmentShowLine;
+        IsmChatConstants.attachmentHight;
     var result =
         (IsmChatProperties.chatPageProperties.attachments.length / maxPerLine)
             .ceil();
-    return (result * height).toDouble();
+
+    var x = (result * height).toDouble();
+    return x;
   }
 
   @override
@@ -36,6 +38,7 @@ class IsmChatAttachmentCard extends StatelessWidget {
                   .where((e) => IsmChatProperties.chatPageProperties.attachments
                       .contains(e.attachmentType))
                   .toList();
+
               return GridView.builder(
                 itemCount: allowedAttachments.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

@@ -485,6 +485,11 @@ extension SelectedUsers on List<SelectedForwardUser> {
       where((e) => e.isUserSelected).toList();
 }
 
+extension SelectedContacts on List<SelectedContact> {
+  List<SelectedContact> get selectedContact =>
+      where((e) => e.isConotactSelected).toList();
+}
+
 extension UniqueElements<T> on List<T> {
   List<T> unique() => [
         ...{...this}
@@ -861,6 +866,9 @@ extension AttachmentIcon on IsmChatAttachmentType {
         return Icons.description;
       case IsmChatAttachmentType.location:
         return Icons.pin_drop;
+
+      case IsmChatAttachmentType.contact:
+        return Icons.person_rounded;
     }
   }
 }

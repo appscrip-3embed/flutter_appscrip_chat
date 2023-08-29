@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/res/res.dart';
 import 'package:chat_component_example/utilities/utilities.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,6 +18,7 @@ DBWrapper? dbWrapper;
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
+  await Firebase.initializeApp();
   await initialize();
 
   runApp(const MyApp());

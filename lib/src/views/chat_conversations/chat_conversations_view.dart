@@ -59,9 +59,8 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        if (IsmChatProperties.conversationHeaderWidget !=
-                            null) ...[
-                          IsmChatProperties.conversationHeaderWidget!,
+                        if (IsmChatProperties.header != null) ...[
+                          IsmChatProperties.header!,
                         ],
                         const Expanded(child: IsmChatConversationList()),
                       ],
@@ -74,7 +73,7 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
                           Obx(
                             () => controller.currentConversation != null
                                 ? const IsmChatPageView()
-                                : IsmChatProperties.startConversationWidget ??
+                                : IsmChatProperties.noChatSelectedPlaceholder ??
                                     Center(
                                       child: Text(
                                         IsmChatStrings.startConversation,

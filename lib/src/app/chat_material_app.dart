@@ -33,8 +33,8 @@ class IsmChatApp extends StatelessWidget {
     // );
     IsmChatConfig.dbName = databaseName ?? IsmChatStrings.dbname;
     IsmChatProperties.loadingDialog = loadingDialog;
-    IsmChatProperties.startConversationWidget = startConversationWidget;
-    IsmChatProperties.conversationHeaderWidget = conversationHeaderWidget;
+    IsmChatProperties.noChatSelectedPlaceholder = startConversationWidget;
+    IsmChatProperties.header = conversationHeaderWidget;
     if (communicationConfig != null) {
       IsmChatConfig.communicationConfig = communicationConfig!;
       IsmChatConfig.configInitilized = true;

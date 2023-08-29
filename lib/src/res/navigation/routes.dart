@@ -4,6 +4,8 @@ class IsmPageRoutes {
   static const String chatPage = '/chatPage';
   static const String createChat = '/createChat';
   static const String forwardView = '/forwardView';
+  static const String contact = '/contact';
+
   static const String blockView = '/blockView';
   static const String userView = '/userView';
   static const String converstaionInfoView = '/converstaionInfoView';

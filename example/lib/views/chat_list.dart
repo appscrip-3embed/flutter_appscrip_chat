@@ -67,6 +67,7 @@ class _ChatListState extends State<ChatList> {
               IsmChatAttachmentType.gallery,
               IsmChatAttachmentType.document,
               if (!kIsWeb) IsmChatAttachmentType.location,
+              if (!kIsWeb) IsmChatAttachmentType.contact,
             ],
           ),
           startConversationWidget: Center(

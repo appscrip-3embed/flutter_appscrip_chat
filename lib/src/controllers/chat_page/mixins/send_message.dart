@@ -78,28 +78,44 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     String? customType,
     List<Map<String, dynamic>>? attachments,
   }) async {
-    var isMessageSent = await _controller._viewModel.sendMessage(
-      sendMessageType: sendMessageType,
-      showInConversation: showInConversation,
-      attachments: attachments,
-      events: events,
-      mentionedUsers: mentionedUsers,
-      metaData: metaData,
-      messageType: messageType,
-      customType: customType,
-      parentMessageId: parentMessageId,
-      encrypted: encrypted,
-      deviceId: deviceId,
-      conversationId: conversationId,
-      notificationBody: notificationBody,
-      notificationTitle: notificationTitle,
-      body: IsmChatUtility.encodePayload(body),
-      createdAt: createdAt,
-    );
+    var isSendMessage = false;
+    if (IsmChatProperties
+            .chatPageProperties.messageAllowedConfig?.isMessgeAllowed ==
+        null) {
+      isSendMessage = true;
+    } else {
+      if (await IsmChatProperties
+              .chatPageProperties.messageAllowedConfig?.isMessgeAllowed
+              ?.call(Get.context!,
+                  Get.find<IsmChatPageController>().conversation!) ??
+          true) {
+        isSendMessage = true;
+      }
+    }
+    if (isSendMessage) {
+      var isMessageSent = await _controller._viewModel.sendMessage(
+        sendMessageType: sendMessageType,
+        showInConversation: showInConversation,
+        attachments: attachments,
+        events: events,
+        mentionedUsers: mentionedUsers,
+        metaData: metaData,
+        messageType: messageType,
+        customType: customType,
+        parentMessageId: parentMessageId,
+        encrypted: encrypted,
+        deviceId: deviceId,
+        conversationId: conversationId,
+        notificationBody: notificationBody,
+        notificationTitle: notificationTitle,
+        body: IsmChatUtility.encodePayload(body),
+        createdAt: createdAt,
+      );
 
-    if (isMessageSent && !forwardMessgeForMulitpleUser) {
-      _controller.didReactedLast = false;
-      await _controller.getMessagesFromDB(conversationId);
+      if (isMessageSent && !forwardMessgeForMulitpleUser) {
+        _controller.didReactedLast = false;
+        await _controller.getMessagesFromDB(conversationId);
+      }
     }
   }
 

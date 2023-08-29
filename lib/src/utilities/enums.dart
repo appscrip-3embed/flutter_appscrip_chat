@@ -470,7 +470,8 @@ enum IsmChatAttachmentType {
   camera(1),
   gallery(2),
   document(3),
-  location(4);
+  location(4),
+  contact(5);
 
   const IsmChatAttachmentType(this.value);
   final int value;

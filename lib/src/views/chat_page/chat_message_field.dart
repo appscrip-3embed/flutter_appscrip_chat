@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
@@ -472,10 +473,17 @@ class _MicOrSendButton extends StatelessWidget {
                         controller.showSendButton = false;
                         controller.seconds = 0;
                         controller.isEnableRecordingAudio = false;
-                        var bytes = await IsmChatUtility.fetchBytesFromBlobUrl(
-                            audioPaht);
+                        String? sizeMedia;
+                        if (kIsWeb) {
+                          var bytes =
+                              await IsmChatUtility.fetchBytesFromBlobUrl(
+                                  audioPaht);
 
-                        var sizeMedia = await IsmChatUtility.bytesToSize(bytes);
+                          sizeMedia = await IsmChatUtility.bytesToSize(bytes);
+                        } else {
+                          sizeMedia =
+                              await IsmChatUtility.fileToSize(File(audioPaht));
+                        }
 
                         if (sizeMedia.size()) {
                           controller.sendAudio(
@@ -792,26 +800,12 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
           if (!controller.conversation!.isChattingAllowed) {
             controller.showDialogCheckBlockUnBlock();
           } else {
-            var isMessageSend = false;
-            if (IsmChatProperties.chatPageProperties.messageAllowedConfig ==
-                null) {
-              isMessageSend = true;
-            } else if (IsmChatProperties
-                        .chatPageProperties.messageAllowedConfig !=
-                    null &&
-                await IsmChatProperties
-                    .chatPageProperties.messageAllowedConfig!.isMessgeAllowed
-                    .call(context, controller.conversation!)) {
-              isMessageSend = true;
-            }
-            if (isMessageSend) {
-              await Get.bottomSheet(
-                const IsmChatAttachmentCard(),
-                enterBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
-                exitBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
-                elevation: 0,
-              );
-            }
+            await Get.bottomSheet(
+              const IsmChatAttachmentCard(),
+              enterBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
+              exitBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
+              elevation: 0,
+            );
           }
         },
         color: IsmChatConfig.chatTheme.primaryColor,

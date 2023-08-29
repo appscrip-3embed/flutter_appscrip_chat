@@ -10,6 +10,7 @@ import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
     if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:camera/camera.dart';
+import 'package:contacts_service/contacts_service.dart';
 import 'package:dio/dio.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
@@ -129,6 +130,10 @@ class IsmChatPageController extends GetxController
   List<UserDetails> get mentionSuggestions => _mentionSuggestions;
   set mentionSuggestions(List<UserDetails> value) =>
       _mentionSuggestions.value = value;
+
+  final RxList<SelectedContact> _contactList = <SelectedContact>[].obs;
+  List<SelectedContact> get contactList => _contactList;
+  set contactList(List<SelectedContact> value) => _contactList.value = value;
 
   final Completer<GoogleMapController> googleMapCompleter =
       Completer<GoogleMapController>();
@@ -256,6 +261,12 @@ class IsmChatPageController extends GetxController
       backgroundColor: Colors.greenAccent,
       icon: Icons.location_on_rounded,
       attachmentType: IsmChatAttachmentType.location,
+    ),
+    const IsmChatBottomSheetAttachmentModel(
+      label: 'Contact',
+      backgroundColor: Colors.orangeAccent,
+      icon: Icons.person_outlined,
+      attachmentType: IsmChatAttachmentType.contact,
     ),
   ];
 
@@ -495,6 +506,23 @@ class IsmChatPageController extends GetxController
     }
   }
 
+  void handleList(List<SelectedContact> list) {
+    if (list.isEmpty) return;
+    for (var i = 0, length = list.length; i < length; i++) {
+      var tag = list[i].contact.displayName![0].toUpperCase();
+      if (RegExp('[A-Z]').hasMatch(tag)) {
+        list[i].tagIndex = tag;
+      } else {
+        list[i].tagIndex = '#';
+      }
+    }
+    // A-Z sort.
+    SuspensionUtil.sortListBySuspensionTag(contactList);
+
+    // show sus tag.
+    SuspensionUtil.setShowSuspensionStatus(contactList);
+  }
+
   showMentionsUserList(String value) async {
     if (!conversation!.isGroup!) {
       return;
@@ -648,6 +676,15 @@ class IsmChatPageController extends GetxController
         break;
       case IsmChatAttachmentType.location:
         IsmChatRouteManagement.goToLocation();
+        break;
+      case IsmChatAttachmentType.contact:
+        IsmChatRouteManagement.goToContactView();
+        var contacts = await ContactsService.getContacts(withThumbnails: false);
+
+        contactList = contacts
+            .map((e) => SelectedContact(isConotactSelected: false, contact: e))
+            .toList();
+        handleList(contactList);
         break;
     }
   }
@@ -1188,10 +1225,10 @@ class IsmChatPageController extends GetxController
               deliveredTo: messages.last.deliveredTo,
               readBy: messages.last.readBy,
               deliverCount: chatConversation.isGroup!
-                  ? messages.last.deliveredToAll!
+                  ? messages.last.deliveredToAll ?? false
                       ? chatConversation.membersCount!
                       : 0
-                  : messages.last.deliveredToAll!
+                  : messages.last.deliveredToAll ?? false
                       ? 1
                       : 0,
               members: messages.last.members

@@ -123,4 +123,8 @@ class IsmChatRouteManagement {
       IsmChatCameraView.route,
     );
   }
+
+  static void goToContactView() {
+    Get.toNamed(IsmChatContactView.route);
+  }
 }

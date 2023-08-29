@@ -90,5 +90,7 @@
   	<true/>
   	<key>com.apple.security.network.client</key>
   	<true/>
+	<key>NSContactsUsageDescription</key>  
+	<string>This app requires contacts access to function properly.</string>
 </dict>
 </plist>

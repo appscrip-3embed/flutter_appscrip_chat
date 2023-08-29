@@ -16,6 +16,7 @@ dependencies:
   camera: ^0.10.3+2
   carousel_slider: ^4.2.1
   connectivity_plus: ^3.0.6
+  contacts_service: ^0.6.3
   device_info_plus: ^9.0.3
   dio: ^5.2.1+1
   elegant_notification: ^1.11.0

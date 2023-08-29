@@ -84,5 +84,10 @@ class IsmChatPages {
       page: IsmChatCameraView.new,
       binding: IsmChatPageBinding(),
     ),
+    GetPage(
+      name: IsmChatContactView.route,
+      page: IsmChatContactView.new,
+      binding: IsmChatPageBinding(),
+    ),
   ];
 }
