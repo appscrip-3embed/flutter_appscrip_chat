@@ -378,7 +378,7 @@ class IsmChatPageController extends GetxController
               conversationId: conversation?.conversationId ?? '',
               includeMembers: conversation?.isGroup == true ? true : false),
         ]);
-        await readAllMessages(
+        await _conversationController.readAllMessages(
           conversationId: conversation?.conversationId ?? '',
           timestamp: messages.isNotEmpty
               ? DateTime.now().millisecondsSinceEpoch
@@ -970,10 +970,10 @@ class IsmChatPageController extends GetxController
                       ? 1
                       : 0,
               deliverCount: chatConversation.isGroup!
-                  ? messages.last.deliveredToAll!
-                      ? chatConversation.membersCount!
+                  ? messages.last.deliveredToAll ?? false
+                      ? chatConversation.membersCount
                       : 0
-                  : messages.last.deliveredToAll!
+                  : messages.last.deliveredToAll ?? false
                       ? 1
                       : 0,
               members: messages.last.members
@@ -984,6 +984,9 @@ class IsmChatPageController extends GetxController
             unreadMessagesCount: 0,
           );
         }
+
+        IsmChatLog.error(chatConversation.lastMessageDetails?.deliverCount);
+        IsmChatLog.error(chatConversation.lastMessageDetails?.readCount);
 
         await IsmChatConfig.dbWrapper!
             .saveConversation(conversation: chatConversation);
@@ -1423,14 +1426,6 @@ class IsmChatPageController extends GetxController
       conversationId: conversationId,
       messageId: messageId,
     );
-  }
-
-  Future<void> readAllMessages({
-    required String conversationId,
-    required int timestamp,
-  }) async {
-    await _viewModel.readAllMessages(
-        conversationId: conversationId, timestamp: timestamp);
   }
 
   Future<void> deleteMessageForEveryone(

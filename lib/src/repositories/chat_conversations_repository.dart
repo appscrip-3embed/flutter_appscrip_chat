@@ -301,4 +301,26 @@ class IsmChatConversationsRepository {
       return null;
     }
   }
+
+  Future<void> readAllMessages({
+    required String conversationId,
+    required int timestamp,
+  }) async {
+    try {
+      var payload = {
+        'timestamp': timestamp,
+        'conversationId': conversationId,
+      };
+      var response = await _apiWrapper.put(
+        IsmChatAPI.readAllMessages,
+        payload: payload,
+        headers: IsmChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return;
+      }
+    } catch (e, st) {
+      IsmChatLog.error('Read all message $e', st);
+    }
+  }
 }

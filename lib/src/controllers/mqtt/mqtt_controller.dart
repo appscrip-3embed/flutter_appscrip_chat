@@ -783,6 +783,10 @@ class IsmChatMqttController extends GetxController {
 
     var ismChatConversationController =
         Get.find<IsmChatConversationsController>();
+    await ismChatConversationController.readAllMessages(
+      conversationId: actionModel.conversationId ?? '',
+      timestamp: actionModel.sentAt,
+    );
     await ismChatConversationController.getChatConversations();
   }
 

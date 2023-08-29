@@ -348,6 +348,8 @@ class IsmChatConversationsController extends GetxController {
     }
     conversations.sort((a, b) =>
         b.lastMessageDetails!.sentAt.compareTo(a.lastMessageDetails!.sentAt));
+    IsmChatLog.error(conversations.first.lastMessageDetails?.deliverCount);
+    IsmChatLog.error(conversations.first.lastMessageDetails?.readCount);
   }
 
   String getConversationId(String userId) {
@@ -473,5 +475,13 @@ class IsmChatConversationsController extends GetxController {
         conversationId: conversationId,
         metaData: metaData,
         isLoading: isLoading);
+  }
+
+  Future<void> readAllMessages({
+    required String conversationId,
+    required int timestamp,
+  }) async {
+    await _viewModel.readAllMessages(
+        conversationId: conversationId, timestamp: timestamp);
   }
 }
