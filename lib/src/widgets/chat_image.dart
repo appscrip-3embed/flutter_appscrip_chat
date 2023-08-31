@@ -1,9 +1,9 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:appscrip_chat_component/src/res/res.dart';
 import 'package:appscrip_chat_component/src/utilities/utilities.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,6 +13,7 @@ class IsmChatImage extends StatelessWidget {
     this.name,
     this.dimensions,
     this.isNetworkImage = true,
+    this.isBytes = false,
     super.key,
     this.radius,
   })  : _name = name ?? 'U',
@@ -22,6 +23,7 @@ class IsmChatImage extends StatelessWidget {
       {this.name,
       this.dimensions = 48,
       this.isNetworkImage = true,
+      this.isBytes = false,
       super.key,
       this.radius})
       : _name = name ?? 'U',
@@ -33,7 +35,7 @@ class IsmChatImage extends StatelessWidget {
   final double? dimensions;
   final bool isNetworkImage;
   final double? radius;
-
+  final bool isBytes;
   final String _name;
   final bool _isProfileImage;
 
@@ -49,9 +51,10 @@ class IsmChatImage extends StatelessWidget {
                   imageUrl: imageUrl,
                   isProfileImage: _isProfileImage,
                   name: _name)
-              : kIsWeb
+              : isBytes
                   ? _MemeroyImage(
                       imageUrl: imageUrl,
+                      name: _name,
                     )
                   : _AssetImage(imageUrl: imageUrl),
         ),
@@ -70,14 +73,36 @@ class _AssetImage extends StatelessWidget {
 }
 
 class _MemeroyImage extends StatelessWidget {
-  const _MemeroyImage({required this.imageUrl});
+  const _MemeroyImage({required this.imageUrl, required this.name});
   final String imageUrl;
+  final String name;
 
   @override
-  Widget build(BuildContext context) => Image.memory(
-        imageUrl.strigToUnit8List,
-        fit: BoxFit.cover,
-      );
+  Widget build(BuildContext context) {
+    Uint8List? bytes;
+    if (imageUrl.isNotEmpty) {
+      bytes = imageUrl.strigToUnit8List;
+    }
+
+    return bytes == null
+        ? Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: IsmChatConfig.chatTheme.primaryColor!.withOpacity(0.2),
+              shape: BoxShape.circle,
+            ),
+            child: Text(
+              name[0],
+              style: IsmChatStyles.w600Black24.copyWith(
+                color: IsmChatConfig.chatTheme.primaryColor,
+              ),
+            ),
+          )
+        : Image.memory(
+            bytes,
+            fit: BoxFit.cover,
+          );
+  }
 }
 
 class _NetworkImage extends StatelessWidget {
@@ -124,9 +149,7 @@ class _NetworkImage extends StatelessWidget {
           child: _isProfileImage
               ? Text(
                   _name[0],
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
+                  style: IsmChatStyles.w600Black24.copyWith(
                     color: IsmChatConfig.chatTheme.primaryColor,
                   ),
                 )

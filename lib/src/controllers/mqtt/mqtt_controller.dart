@@ -148,9 +148,7 @@ class IsmChatMqttController extends GetxController {
         actionStreamController.add(payload);
       } else {
         var message = IsmChatMessageModel.fromMap(payload);
-
         _handleLocalNotification(message);
-
         _handleMessage(message);
       }
     });

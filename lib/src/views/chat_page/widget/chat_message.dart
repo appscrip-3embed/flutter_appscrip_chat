@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatMessage extends StatefulWidget {
-  IsmChatMessage(this.index, this.messageWidgetBuilder, {super.key})
-      : message = Get.isRegistered<IsmChatPageController>()
+  IsmChatMessage(
+      this.index, this.messageWidgetBuilder, IsmChatMessageModel? message,
+      {super.key})
+      : _message = Get.isRegistered<IsmChatPageController>()
             ? Get.find<IsmChatPageController>()
                 .messages
                 .reversed
                 .toList()[index]
-            : null;
+            : message;
 
-  final IsmChatMessageModel? message;
+  final IsmChatMessageModel? _message;
   final int index;
   final MessageWidgetBuilder? messageWidgetBuilder;
   @override
@@ -42,7 +44,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
       IsmChatCustomMessageType.memberLeave,
       IsmChatCustomMessageType.conversationImageUpdated,
       IsmChatCustomMessageType.conversationTitleUpdated
-    ].contains(widget.message?.customType!);
+    ].contains(widget._message?.customType!);
     isGroup = controller.conversation!.isGroup ?? false;
   }
 
@@ -66,24 +68,24 @@ class _IsmChatMessageState extends State<IsmChatMessage>
       onLongPress: showMessageInCenter
           ? null
           : () {
-              if (widget.message?.customType !=
+              if (widget._message?.customType !=
                   IsmChatCustomMessageType.deletedForEveryone) {
-                controller.showOverlay(context, widget.message!);
+                controller.showOverlay(context, widget._message!);
               } else {
                 controller.isMessageSeleted = true;
-                controller.selectedMessage.add(widget.message!);
+                controller.selectedMessage.add(widget._message!);
               }
             },
       onTap: showMessageInCenter
           ? null
           : () {
-              controller.onMessageSelect(widget.message!);
+              controller.onMessageSelect(widget._message!);
             },
       child: AbsorbPointer(
         absorbing: controller.isMessageSeleted,
         child: Container(
           padding: IsmChatDimens.edgeInsets4_0,
-          color: controller.selectedMessage.contains(widget.message)
+          color: controller.selectedMessage.contains(widget._message)
               ? (IsmChatConfig.chatTheme.chatPageTheme?.messageSelectionColor ??
                       IsmChatConfig.chatTheme.primaryColor!)
                   .withOpacity(.2)
@@ -92,7 +94,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
             clipBehavior: Clip.antiAlias,
             alignment: showMessageInCenter
                 ? Alignment.center
-                : widget.message?.sentByMe == true
+                : widget._message?.sentByMe == true
                     ? Alignment.centerRight
                     : Alignment.centerLeft,
             child: Padding(
@@ -104,15 +106,15 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                 children: [
                   if (isGroup &&
                       !showMessageInCenter &&
-                      !widget.message!.sentByMe) ...[
+                      !widget._message!.sentByMe) ...[
                     IsmChatTapHandler(
                       onTap: () async {
                         await controller
-                            .showUserDetails(widget.message!.senderInfo!);
+                            .showUserDetails(widget._message!.senderInfo!);
                       },
                       child: IsmChatImage.profile(
-                        widget.message?.senderInfo?.profileUrl ?? '',
-                        name: widget.message?.senderInfo?.userName ?? '',
+                        widget._message?.senderInfo?.profileUrl ?? '',
+                        name: widget._message?.senderInfo?.userName ?? '',
                         dimensions: IsmChatConfig
                                 .chatTheme.chatPageTheme?.profileImageSize ??
                             30,
@@ -123,7 +125,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                     if (theme?.opponentMessageTheme?.showProfile == true &&
                         !isGroup &&
                         !showMessageInCenter &&
-                        !widget.message!.sentByMe) ...[
+                        !widget._message!.sentByMe) ...[
                       IsmChatImage.profile(
                         IsmChatConfig.communicationConfig.userConfig
                                     .imageBaseUrl !=
@@ -140,7 +142,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                       ],
                     ],
                   _Message(
-                    message: widget.message!,
+                    message: widget._message!,
                     showMessageInCenter: showMessageInCenter,
                     index: widget.index,
                     messageWidgetBuilder: widget.messageWidgetBuilder,
@@ -149,7 +151,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                     if (theme?.selfMessageTheme?.showProfile == true &&
                         !isGroup &&
                         !showMessageInCenter &&
-                        widget.message!.sentByMe) ...[
+                        widget._message!.sentByMe) ...[
                       if (widget.messageWidgetBuilder == null) ...[
                         IsmChatDimens.boxWidth4,
                       ],
@@ -180,69 +182,71 @@ class _IsmChatMessageState extends State<IsmChatMessage>
 }
 
 class _Message extends StatelessWidget {
-  _Message({
+  const _Message({
     required this.message,
     required this.showMessageInCenter,
     required this.index,
     this.messageWidgetBuilder,
-  }) : controller = Get.find<IsmChatPageController>();
+  });
 
   final IsmChatMessageModel message;
   final bool showMessageInCenter;
-  final IsmChatPageController controller;
+
   final int index;
   final MessageWidgetBuilder? messageWidgetBuilder;
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: IsmChatDimens.edgeInsetsL4,
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: message.sentByMe
-                  ? CrossAxisAlignment.end
-                  : CrossAxisAlignment.start,
+  Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
+      builder: (controller) => Padding(
+            padding: IsmChatDimens.edgeInsetsL4,
+            child: Stack(
+              clipBehavior: Clip.none,
               children: [
-                if (!showMessageInCenter &&
-                    (controller.conversation!.isGroup ?? false) &&
-                    !message.sentByMe) ...[
-                  SizedBox(
-                    width: IsmChatDimens.percentWidth(0.4),
-                    child: Padding(
-                      padding: IsmChatDimens.edgeInsetsL2,
-                      child: Text(
-                        message.senderInfo?.userName ?? '',
-                        style: IsmChatStyles.w400Black10,
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign:
-                            message.sentByMe ? TextAlign.end : TextAlign.start,
-                        maxLines: 1,
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: message.sentByMe
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.start,
+                  children: [
+                    if (!showMessageInCenter &&
+                        (controller.conversation!.isGroup ?? false) &&
+                        !message.sentByMe) ...[
+                      SizedBox(
+                        width: IsmChatDimens.percentWidth(0.4),
+                        child: Padding(
+                          padding: IsmChatDimens.edgeInsetsL2,
+                          child: Text(
+                            message.senderInfo?.userName ?? '',
+                            style: IsmChatStyles.w400Black10,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: message.sentByMe
+                                ? TextAlign.end
+                                : TextAlign.start,
+                            maxLines: 1,
+                          ),
+                        ),
                       ),
+                      IsmChatDimens.boxHeight2,
+                    ],
+                    MessageCard(
+                      showMessageInCenter: showMessageInCenter,
+                      message: message,
+                      index: index,
+                      messageWidgetBuilder: messageWidgetBuilder,
+                    ),
+                  ],
+                ),
+                if (message.reactions?.isNotEmpty == true)
+                  Positioned(
+                    right: message.sentByMe ? 0 : null,
+                    left: message.sentByMe ? null : 0,
+                    bottom: IsmChatDimens.six,
+                    child: ImsChatReaction(
+                      message: message,
                     ),
                   ),
-                  IsmChatDimens.boxHeight2,
-                ],
-                MessageCard(
-                  showMessageInCenter: showMessageInCenter,
-                  message: message,
-                  index: index,
-                  messageWidgetBuilder: messageWidgetBuilder,
-                ),
               ],
             ),
-            if (message.reactions?.isNotEmpty == true)
-              Positioned(
-                right: message.sentByMe ? 0 : null,
-                left: message.sentByMe ? null : 0,
-                bottom: IsmChatDimens.six,
-                child: ImsChatReaction(
-                  message: message,
-                ),
-              ),
-          ],
-        ),
-      );
+          ));
 }

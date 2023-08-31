@@ -26,6 +26,7 @@ class ChatListController extends GetxController {
   void onInit() {
     super.onInit();
     userDetails = AppConfig.userDetail!;
+    subscribeToTopic();
   }
 
   subscribeToTopic() async {

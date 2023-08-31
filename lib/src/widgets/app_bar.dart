@@ -10,11 +10,13 @@ class IsmChatAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onBack,
     this.height,
     this.action,
+    this.backIcon,
     super.key,
   });
 
   final double? height;
   final Widget title;
+  final IconData? backIcon;
 
   final VoidCallback? onBack;
 
@@ -32,7 +34,7 @@ class IsmChatAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: Icon(
             Responsive.isWebAndTablet(context)
                 ? Icons.close_rounded
-                : Icons.arrow_back_rounded,
+                : backIcon ?? Icons.arrow_back_rounded,
             color: IsmChatColors.whiteColor,
           ),
         ),

@@ -10,13 +10,13 @@ import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
     if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:camera/camera.dart';
-import 'package:contacts_service/contacts_service.dart';
 import 'package:dio/dio.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -134,6 +134,11 @@ class IsmChatPageController extends GetxController
   final RxList<SelectedContact> _contactList = <SelectedContact>[].obs;
   List<SelectedContact> get contactList => _contactList;
   set contactList(List<SelectedContact> value) => _contactList.value = value;
+
+  final RxList<SelectedContact> _searchContactList = <SelectedContact>[].obs;
+  List<SelectedContact> get searchContactList => _searchContactList;
+  set searchContactList(List<SelectedContact> value) =>
+      _searchContactList.value = value;
 
   final Completer<GoogleMapController> googleMapCompleter =
       Completer<GoogleMapController>();
@@ -331,6 +336,10 @@ class IsmChatPageController extends GetxController
   set fabAnimationController(AnimationController? value) =>
       _fabAnimationController.value = value;
 
+  final RxBool _isLoadingContact = false.obs;
+  bool get isLoadingContact => _isLoadingContact.value;
+  set isLoadingContact(bool value) => _isLoadingContact.value = value;
+
   bool didReactedLast = false;
 
   List<Map<String, List<IsmChatMessageModel>>> sortMediaList(
@@ -391,6 +400,9 @@ class IsmChatPageController extends GetxController
   String get audioPaht => _audioPaht.value;
   set audioPaht(String value) => _audioPaht.value = value;
 
+  Future<List<IsmChatMessageModel>> searchMessages = Future.value([]);
+  List<IsmChatMessageModel> searchedMessagesList = [];
+
   final Dio dio = Dio();
 
   final ismChatDebounce = IsmChatDebounce();
@@ -410,6 +422,7 @@ class IsmChatPageController extends GetxController
       conversation = _conversationController.currentConversation!;
       _conversationController.isConversationId =
           conversation?.conversationId ?? '';
+      // final newMeessageFromOutside = conversation?.messageFromOutSide;
       await Future.delayed(Duration.zero);
       if (conversation?.conversationId?.isNotEmpty ?? false) {
         _getBackGroundAsset();
@@ -432,11 +445,29 @@ class IsmChatPageController extends GetxController
           messages.clear();
         }
         if (conversation!.isGroup ?? false) {
-          await createConversation(userId: [], isGroup: true);
+          await createConversation(
+            userId: [],
+            isGroup: true,
+            searchableTags: [
+              conversation?.opponentDetails?.userName ?? '',
+              conversation?.chatName ?? ''
+            ],
+          );
           await getMessagesFromAPI();
         }
         isMessagesLoading = false;
       }
+      // Todo add feature send message form outside
+      // if (newMeessageFromOutside != null ||
+      //     newMeessageFromOutside?.isNotEmpty == true) {
+      //   await Future.delayed(const Duration(milliseconds: 100));
+      //   chatInputController.text = newMeessageFromOutside ?? '';
+      //   sendTextMessage(
+      //     conversationId: conversation?.conversationId ?? '',
+      //     userId: conversation?.opponentDetails?.userId ?? '',
+      //     opponentName: conversation?.opponentDetails?.userName ?? '',
+      //   );
+      // }
     }
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;
@@ -462,8 +493,8 @@ class IsmChatPageController extends GetxController
     attchmentOverlayEntry?.dispose();
     messageHoldOverlayEntry?.dispose();
     fabAnimationController?.dispose();
-    attchmentOverlayEntry = null;
-    messageHoldOverlayEntry = null;
+    // attchmentOverlayEntry = null;
+    // messageHoldOverlayEntry = null;
     ifTimerMounted();
     super.onClose();
   }
@@ -509,7 +540,8 @@ class IsmChatPageController extends GetxController
   void handleList(List<SelectedContact> list) {
     if (list.isEmpty) return;
     for (var i = 0, length = list.length; i < length; i++) {
-      var tag = list[i].contact.displayName![0].toUpperCase();
+      var tag = list[i].contact.displayName[0].toUpperCase();
+
       if (RegExp('[A-Z]').hasMatch(tag)) {
         list[i].tagIndex = tag;
       } else {
@@ -521,6 +553,25 @@ class IsmChatPageController extends GetxController
 
     // show sus tag.
     SuspensionUtil.setShowSuspensionStatus(contactList);
+  }
+
+  void onContactSearch(String query) {
+    if (query.trim().isEmpty) {
+      contactList = searchContactList;
+      isLoadingContact = false;
+    } else {
+      contactList = searchContactList
+          .where(
+            (e) =>
+                (e.contact.displayName.didMatch(query)) ||
+                e.contact.phones.first.number.didMatch(query),
+          )
+          .toList();
+      if (contactList.isEmpty) {
+        isLoadingContact = true;
+      }
+    }
+    handleList(contactList);
   }
 
   showMentionsUserList(String value) async {
@@ -644,6 +695,12 @@ class IsmChatPageController extends GetxController
     showAttachment = !showAttachment;
   }
 
+  /// This function will be used in [Forward Screen and New conversation screen] to Select or Unselect users
+  void onSelectedContactTap(int index) {
+    contactList[index].isConotactSelected =
+        !contactList[index].isConotactSelected;
+  }
+
   /// This function will be used in [Add participants Screen] to Select or Unselect users
   void onGrouEligibleUserTap(int index) {
     groupEligibleUser[index].isUserSelected =
@@ -678,13 +735,49 @@ class IsmChatPageController extends GetxController
         IsmChatRouteManagement.goToLocation();
         break;
       case IsmChatAttachmentType.contact:
-        IsmChatRouteManagement.goToContactView();
-        var contacts = await ContactsService.getContacts(withThumbnails: false);
+        contactList.clear();
+        textEditingController.clear();
+        isSearchSelect = false;
+        isLoadingContact = false;
+        if (await IsmChatUtility.requestPermission(Permission.contacts)) {
+          IsmChatRouteManagement.goToContactView();
+          var contacts = await FlutterContacts.getContacts(
+              withProperties: true, withPhoto: true);
+          for (var x in contacts) {
+            if (x.phones.isNotEmpty) {
+              if (!((x.phones.first.number.contains('@')) &&
+                      (x.phones.first.number.contains('.com'))) &&
+                  x.displayName.isNotEmpty) {
+                contactList.add(
+                  SelectedContact(isConotactSelected: false, contact: x),
+                );
+              }
+            }
+          }
 
-        contactList = contacts
-            .map((e) => SelectedContact(isConotactSelected: false, contact: e))
-            .toList();
-        handleList(contactList);
+          searchContactList = List.from(contactList);
+
+          // try {
+          //   print('rasfddsf');
+          //   var url = Uri(
+          //     scheme: 'tel',
+          //     path: '+1234567890',
+          //   );
+          //   if (await canLaunchUrl(url)) {
+          //     await launchUrl(url);
+          //   }
+          // } catch (e) {
+          //   debugPrint(e.toString());
+          // }
+          // final contact = await FlutterContacts.openExternalPick();
+
+          if (contactList.isEmpty) {
+            isLoadingContact = true;
+          }
+
+          handleList(contactList);
+        }
+
         break;
     }
   }
@@ -1147,6 +1240,31 @@ class IsmChatPageController extends GetxController
       await Get.dialog(IsmChatAudioPlayer(
         message: message,
       ));
+    } else if (message.customType == IsmChatCustomMessageType.contact) {
+      IsmChatRouteManagement.goToContactInfoView(contacts: message.contacts);
+// Import contact from vCard
+
+      // try {
+      //   print('rasfddsf');
+
+      // var contact =
+      //     // await ContactsService.openContactForm(iOSLocalizedLabels: true);
+      //     IsmChatLog.error(contact.displayName);
+      // IsmChatLog.error(contact.avatar);
+      // var contactName = <Contact>[];
+      // if (message.metaData!.customType != null) {
+      //   var contact = message.metaData!.customType!['contact'] as List;
+      //   contactName = contact
+      //       .map((e) => Contact.fromMap(Map<String, dynamic>.from(e)))
+      //       .toList();
+      // }
+      //  await launchUrl(Uri.parse('tel:+97798345348734'));
+
+      // var x = await ContactsService.addContact(contactName.first);
+
+      // var list = await ContactsService.openContactForm();
+      // IsmChatLog.error(list.displayName ?? '');
+      // IsmChatLog.error(x);
     }
   }
 
@@ -1722,7 +1840,7 @@ class IsmChatPageController extends GetxController
         conversationId: conversation?.conversationId ?? '',
         includeMembers: includeMembers,
       ),
-      getMessagesFromAPI(fromBlockUnblock: true),
+      getMessagesFromAPI(),
     ]);
   }
 

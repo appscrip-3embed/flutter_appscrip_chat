@@ -2,6 +2,7 @@ export 'add_remove_member.dart';
 export 'add_revoke_admin.dart';
 export 'audio_message.dart';
 export 'blocked_message.dart';
+export 'contact_message.dart';
 export 'conversation_created_message.dart';
 export 'conversation_update.dart';
 export 'date_message.dart';

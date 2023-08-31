@@ -18,7 +18,6 @@ DBWrapper? dbWrapper;
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
-  await Firebase.initializeApp();
   await initialize();
 
   runApp(const MyApp());
@@ -27,7 +26,7 @@ void main() async {
 Future<void> initialize() async {
   WidgetsFlutterBinding.ensureInitialized();
   setPathUrlStrategy();
-
+  await Firebase.initializeApp();
   dbWrapper = await DBWrapper.create();
   await AppConfig.getUserData();
   await Future.wait(

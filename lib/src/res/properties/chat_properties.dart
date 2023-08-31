@@ -10,5 +10,4 @@ class IsmChatProperties {
 
   static Widget? loadingDialog;
   static Widget? noChatSelectedPlaceholder;
-  static Widget? header;
 }

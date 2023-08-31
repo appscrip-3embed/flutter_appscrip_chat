@@ -222,10 +222,12 @@ class _IsmChatPageView extends StatelessWidget {
                                                       .messages.length,
                                                   itemBuilder: (_, index) =>
                                                       IsmChatMessage(
-                                                          index,
-                                                          IsmChatProperties
-                                                              .chatPageProperties
-                                                              .messageBuilder),
+                                                    index,
+                                                    IsmChatProperties
+                                                        .chatPageProperties
+                                                        .messageBuilder,
+                                                    controller.messages[index],
+                                                  ),
                                                 ),
                                               ),
                                             ),

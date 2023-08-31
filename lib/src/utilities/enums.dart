@@ -54,6 +54,7 @@ enum IsmChatCustomMessageType {
   memberLeave(19),
   conversationTitleUpdated(20),
   conversationImageUpdated(21),
+  contact(22),
   date(100);
 
   const IsmChatCustomMessageType(this.value);
@@ -102,6 +103,8 @@ enum IsmChatCustomMessageType {
         return IsmChatCustomMessageType.conversationTitleUpdated;
       case 21:
         return IsmChatCustomMessageType.conversationImageUpdated;
+      case 22:
+        return IsmChatCustomMessageType.contact;
       case 100:
         return IsmChatCustomMessageType.date;
       default:
@@ -133,7 +136,8 @@ enum IsmChatCustomMessageType {
       'conversationTitleUpdated':
           IsmChatCustomMessageType.conversationTitleUpdated,
       'conversationImageUpdated':
-          IsmChatCustomMessageType.conversationImageUpdated
+          IsmChatCustomMessageType.conversationImageUpdated,
+      'contact': IsmChatCustomMessageType.contact
     };
 
     var type = value.split('.').last;

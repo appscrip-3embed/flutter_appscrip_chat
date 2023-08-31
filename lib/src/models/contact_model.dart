@@ -1,20 +1,16 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 import 'package:azlistview/azlistview.dart';
-import 'package:contacts_service/contacts_service.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:get/get.dart';
 
 class SelectedContact extends ISuspensionBean {
-  final RxBool _isConotactSelected;
-  final Contact contact;
-  String? tagIndex;
-
   SelectedContact({
     required bool isConotactSelected,
     required this.contact,
     this.tagIndex,
   }) : _isConotactSelected = isConotactSelected.obs;
+  final RxBool _isConotactSelected;
+  final Contact contact;
+  String? tagIndex;
 
   bool get isConotactSelected => _isConotactSelected.value;
   set isConotactSelected(bool value) => _isConotactSelected.value = value;
@@ -30,22 +26,22 @@ class SelectedContact extends ISuspensionBean {
         tagIndex: tagIndex ?? this.tagIndex,
       );
 
-  Map<String, dynamic> toMap() => <String, dynamic>{
-        'isConotactSelected': isConotactSelected,
-        'contact': contact.toMap(),
-        'tagIndex': tagIndex,
-      };
+  // Map<String, dynamic> toMap() => <String, dynamic>{
+  //       'isConotactSelected': isConotactSelected,
+  //       'contact': contact.toMap(),
+  //       'tagIndex': tagIndex,
+  //     };
 
-  factory SelectedContact.fromMap(Map<String, dynamic> map) => SelectedContact(
-        isConotactSelected: map['isConotactSelected'] as bool? ?? false,
-        contact: Contact.fromMap(map['contact'] as Map<String, dynamic>),
-        tagIndex: map['tagIndex'] as String? ?? '',
-      );
+  // factory SelectedContact.fromMap(Map<String, dynamic> map) => SelectedContact(
+  //       isConotactSelected: map['isConotactSelected'] as bool? ?? false,
+  //       contact: Contact.fromMap(map['contact'] as Map<String, dynamic>),
+  //       tagIndex: map['tagIndex'] as String? ?? '',
+  //     );
 
-  String toJson() => json.encode(toMap());
+  // String toJson() => json.encode(toMap());
 
-  factory SelectedContact.fromJson(String source) =>
-      SelectedContact.fromMap(json.decode(source) as Map<String, dynamic>);
+  // factory SelectedContact.fromJson(String source) =>
+  //     SelectedContact.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() =>

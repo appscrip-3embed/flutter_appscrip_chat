@@ -38,44 +38,45 @@ class IsmChatContactView extends StatelessWidget {
         builder: (controller) => Scaffold(
           backgroundColor: IsmChatColors.whiteColor,
           appBar: IsmChatAppBar(
-            title:
-                // controller.showSearchField
-                //     ? IsmChatInputField(
-                //         fillColor: IsmChatConfig.chatTheme.primaryColor,
-                //         controller: controller.textEditingController,
-                //         style: IsmChatStyles.w400White16,
-                //         hint: 'Search user...',
-                //         hintStyle: IsmChatStyles.w400White16,
-                //         onChanged: (value) {},
-                //       )
-                //     :
-                Text(
-              'Contacts to send ...  ${controller.contactList.selectedContact.isEmpty ? '' : controller.contactList.selectedContact.length}',
-              style: IsmChatStyles.w600White18,
-            ),
-            // action: [
-            //   IconButton(
-            //     onPressed: () {},
-            //     icon: Icon(
-            //       controller.showSearchField
-            //           ? Icons.clear_rounded
-            //           : Icons.search_rounded,
-            //       color: IsmChatColors.whiteColor,
-            //     ),
-            //   )
-            // ],
+            title: controller.isSearchSelect
+                ? IsmChatInputField(
+                    fillColor: IsmChatConfig.chatTheme.primaryColor,
+                    controller: controller.textEditingController,
+                    style: IsmChatStyles.w400White16,
+                    hint: 'Search user...',
+                    hintStyle: IsmChatStyles.w400White16,
+                    onChanged: (value) {
+                      controller.onContactSearch(value);
+                    },
+                  )
+                : Text(
+                    'Contacts to send ...  ${controller.contactList.selectedContact.isEmpty ? '' : controller.contactList.selectedContact.length}',
+                    style: IsmChatStyles.w600White18,
+                  ),
+            action: [
+              IconButton(
+                onPressed: () {
+                  controller.isSearchSelect = !controller.isSearchSelect;
+                  controller.textEditingController.clear();
+                },
+                icon: Icon(
+                  controller.isSearchSelect
+                      ? Icons.clear_rounded
+                      : Icons.search_rounded,
+                  color: IsmChatColors.whiteColor,
+                ),
+              )
+            ],
           ),
           body: controller.contactList.isEmpty
-              ?
-              //  controller.isLoadingUsers
-              //     ? Center(
-              //         child: Text(
-              //           'No user found',
-              //           style: IsmChatStyles.w600Black16,
-              //         ),
-              //       )
-              //     :
-              const IsmChatLoadingDialog()
+              ? controller.isLoadingContact
+                  ? Center(
+                      child: Text(
+                        'No contact found',
+                        style: IsmChatStyles.w600Black16,
+                      ),
+                    )
+                  : const IsmChatLoadingDialog()
               : Column(
                   children: [
                     Expanded(
@@ -145,8 +146,45 @@ class IsmChatContactView extends StatelessWidget {
                           indexHintHeight: IsmChatDimens.percentHeight(.2),
                         ),
                         itemBuilder: (_, int index) {
+                          var searchText =
+                              controller.textEditingController.text;
                           var user = controller.contactList[index];
+                          var subTitle = user.contact.phones.first.number;
                           var susTag = user.getSuspensionTag();
+                          if (!user.contact.displayName.didMatch(searchText)) {
+                            return const SizedBox.shrink();
+                          }
+
+                          var before = user.contact.displayName.substring(
+                            0,
+                            user.contact.displayName.toLowerCase().indexOf(
+                                  searchText.toLowerCase(),
+                                ),
+                          );
+                          var match = user.contact.displayName.substring(
+                              before.length,
+                              (before.length) + searchText.length);
+                          var after = user.contact.displayName
+                              .substring((before.length) + (match.length));
+                          // String? subBefore;
+                          // String? subMatch;
+                          // String? subAfter;
+                          // if (searchText.isAlphabet) {
+                          //   subBefore = subTitle?.substring(
+                          //     0,
+                          //     subTitle.toLowerCase().indexOf(
+                          //           searchText.toLowerCase(),
+                          //         ),
+                          //   );
+                          //   subMatch = subTitle?.substring(
+                          //       subBefore?.length ?? 0,
+                          //       (subBefore?.length ?? 0) + searchText.length);
+                          //   subAfter = subTitle?.substring(
+                          //     (subBefore?.length ?? 0) +
+                          //         (subMatch?.length ?? 0),
+                          //   );
+                          // }
+
                           return Column(
                             children: [
                               Offstage(
@@ -154,24 +192,68 @@ class IsmChatContactView extends StatelessWidget {
                                 child: _buildSusWidget(susTag),
                               ),
                               ListTile(
-                                onTap: () {},
-                                dense: true,
-                                mouseCursor: SystemMouseCursors.click,
-                                leading: IsmChatImage.profile(
-                                  user.contact.androidAccountName ?? '',
-                                  name: user.contact.displayName ?? '',
-                                ),
-                                title: Text(
-                                  user.contact.displayName ?? '',
-                                  style: IsmChatStyles.w600Black14,
-                                ),
-                                subtitle: Text(
-                                  user.contact.givenName ?? '',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: IsmChatStyles.w400Black12,
-                                ),
-                              ),
+                                  selected: user.isConotactSelected,
+                                  selectedTileColor: IsmChatConfig
+                                      .chatTheme.primaryColor!
+                                      .withOpacity(0.2),
+                                  onTap: () {
+                                    controller.onSelectedContactTap(index);
+                                  },
+                                  dense: true,
+                                  leading: IsmChatImage.profile(
+                                    user.contact.photo != null
+                                        ? user.contact.photo!.toString()
+                                        : '',
+                                    name: user.contact.displayName,
+                                    isNetworkImage: false,
+                                    isBytes: true,
+                                  ),
+                                  title: RichText(
+                                    text: TextSpan(
+                                      text: before,
+                                      style: IsmChatStyles.w600Black14,
+                                      children: [
+                                        TextSpan(
+                                          text: match,
+                                          style: TextStyle(
+                                              color: IsmChatConfig
+                                                  .chatTheme.primaryColor),
+                                        ),
+                                        TextSpan(
+                                          text: after,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    subTitle,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: IsmChatStyles.w400Black12,
+                                  )
+                                  // :
+                                  //  RichText(
+                                  //     text: TextSpan(
+                                  //       text: subBefore,
+                                  //       style: IsmChatStyles.w400Black12,
+                                  //       children: [
+                                  //         TextSpan(
+                                  //           text: subMatch,
+                                  //           style: TextStyle(
+                                  //             color: IsmChatConfig
+                                  //                 .chatTheme.primaryColor,
+                                  //             fontWeight: FontWeight.w600,
+                                  //           ),
+                                  //         ),
+                                  //         TextSpan(
+                                  //           text: subAfter,
+                                  //         ),
+                                  //       ],
+                                  //     ),
+                                  //     maxLines: 1,
+                                  //     overflow: TextOverflow.ellipsis,
+                                  //   ),
+                                  )
                             ],
                           );
                         },
@@ -187,28 +269,112 @@ class IsmChatContactView extends StatelessWidget {
                             ),
                           ),
                         ),
-                        height: IsmChatDimens.sixty,
-                        padding: IsmChatDimens.edgeInsets0_10,
+                        height: IsmChatDimens.eighty,
+                        margin: IsmChatDimens.edgeInsets10,
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
-                              child: SingleChildScrollView(
+                              child: ListView.separated(
                                 scrollDirection: Axis.horizontal,
-                                padding: IsmChatDimens.edgeInsets10,
-                                child: Text(
-                                  '',
-                                  // controller.selectedUserList
-                                  //     .map((e) => e.userName)
-                                  //     .join(', '),
-                                  maxLines: 1,
-                                  style: IsmChatStyles.w600Black12,
-                                ),
+                                itemCount: controller
+                                    .contactList.selectedContact.length,
+                                separatorBuilder: (_, __) =>
+                                    IsmChatDimens.boxWidth8,
+                                itemBuilder: (context, index) {
+                                  var user = controller
+                                      .contactList.selectedContact[index];
+                                  return InkWell(
+                                    onTap: () {
+                                      controller.onSelectedContactTap(
+                                        controller.contactList.indexOf(
+                                          controller.contactList
+                                              .selectedContact[index],
+                                        ),
+                                      );
+                                    },
+                                    child: SizedBox(
+                                      width: IsmChatDimens.fifty,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Stack(
+                                            clipBehavior: Clip.none,
+                                            children: [
+                                              SizedBox(
+                                                width: IsmChatDimens.forty,
+                                                height: IsmChatDimens.forty,
+                                                child: IsmChatImage.profile(
+                                                  user.contact.photo != null
+                                                      ? user.contact.photo!
+                                                          .toString()
+                                                      : '',
+                                                  name:
+                                                      user.contact.displayName,
+                                                  isNetworkImage: false,
+                                                  isBytes: true,
+                                                ),
+                                              ),
+                                              Positioned(
+                                                top: IsmChatDimens.twentySeven,
+                                                left: IsmChatDimens.twentySeven,
+                                                child: CircleAvatar(
+                                                  backgroundColor: IsmChatConfig
+                                                      .chatTheme
+                                                      .backgroundColor,
+                                                  radius: IsmChatDimens.eight,
+                                                  child: Icon(
+                                                    Icons.close_rounded,
+                                                    color: IsmChatConfig
+                                                        .chatTheme.primaryColor,
+                                                    size: IsmChatDimens.twelve,
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: IsmChatDimens.twentyEight,
+                                            child: Text(
+                                              user.contact.displayName,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                              textAlign: TextAlign.center,
+                                              style: IsmChatStyles.w600Black10,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
+                            IsmChatDimens.boxWidth8,
                             FloatingActionButton(
-                              onPressed: () async {},
+                              onPressed: () async {
+                                Get.back();
+                                controller.sendContact(
+                                  conversationId:
+                                      controller.conversation?.conversationId ??
+                                          '',
+                                  userId: controller.conversation
+                                          ?.opponentDetails?.userId ??
+                                      '',
+                                  opponentName: controller.conversation
+                                          ?.opponentDetails?.userName ??
+                                      '',
+                                  contacts: controller
+                                      .contactList.selectedContact
+                                      .map((e) => e.contact)
+                                      .toList(),
+                                );
+                              },
                               elevation: 0,
                               shape: const CircleBorder(),
                               backgroundColor:

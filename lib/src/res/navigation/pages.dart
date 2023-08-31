@@ -89,5 +89,15 @@ class IsmChatPages {
       page: IsmChatContactView.new,
       binding: IsmChatPageBinding(),
     ),
+    GetPage(
+      name: IsmChatContactsInfoView.route,
+      page: IsmChatContactsInfoView.new,
+      binding: IsmChatPageBinding(),
+    ),
+    GetPage(
+      name: IsmChatSearchMessgae.route,
+      page: IsmChatSearchMessgae.new,
+      binding: IsmChatPageBinding(),
+    ),
   ];
 }

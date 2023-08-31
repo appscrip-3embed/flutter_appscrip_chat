@@ -8,6 +8,7 @@ class IsmChatConversationCreatedMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
+        alignment: Alignment.center,
         decoration: BoxDecoration(
           color: IsmChatConfig.chatTheme.backgroundColor,
           borderRadius: BorderRadius.circular(IsmChatDimens.eight),
@@ -20,6 +21,7 @@ class IsmChatConversationCreatedMessage extends StatelessWidget {
           style: IsmChatStyles.w500Black12.copyWith(
             color: IsmChatConfig.chatTheme.primaryColor,
           ),
+          textAlign: TextAlign.center,
         ),
       );
 }

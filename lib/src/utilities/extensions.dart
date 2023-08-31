@@ -34,6 +34,8 @@ extension MatchString on String {
       toLowerCase().contains('https') ||
       toLowerCase().contains('http') ||
       toLowerCase().contains('www');
+
+  bool get isAlphabet => RegExp(r'^[A-Za-z]+$').hasMatch(this);
 }
 
 extension MessagePagination on int {
@@ -314,6 +316,8 @@ extension ChildWidget on IsmChatCustomMessageType {
       case IsmChatCustomMessageType.conversationTitleUpdated:
       case IsmChatCustomMessageType.conversationImageUpdated:
         return IsmChatConversationUpdate(message);
+      case IsmChatCustomMessageType.contact:
+        return IsmChatContactMessage(message);
     }
   }
 
@@ -598,6 +602,8 @@ extension LastMessageBody on LastMessageDetails {
         return 'Location';
       case IsmChatCustomMessageType.block:
         return 'Blocked';
+      case IsmChatCustomMessageType.contact:
+        return 'Contact';
       case IsmChatCustomMessageType.unblock:
         return 'Unblocked';
       case IsmChatCustomMessageType.conversationCreated:

@@ -40,6 +40,18 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
           controller.context = context;
           return Scaffold(
             drawerScrimColor: Colors.transparent,
+            appBar: IsmChatProperties.conversationProperties.appBar ??
+                (IsmChatProperties.conversationProperties.isHeaderAppBar
+                    ? PreferredSize(
+                        preferredSize: Size(
+                          Get.width,
+                          IsmChatProperties
+                                  .conversationProperties.headerHeight ??
+                              IsmChatDimens.sixty,
+                        ),
+                        child: IsmChatProperties.conversationProperties.header!,
+                      )
+                    : null),
             body: SafeArea(
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -59,8 +71,11 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        if (IsmChatProperties.header != null) ...[
-                          IsmChatProperties.header!,
+                        if (!IsmChatProperties
+                                .conversationProperties.isHeaderAppBar &&
+                            IsmChatProperties.conversationProperties.header !=
+                                null) ...[
+                          IsmChatProperties.conversationProperties.header!,
                         ],
                         const Expanded(child: IsmChatConversationList()),
                       ],

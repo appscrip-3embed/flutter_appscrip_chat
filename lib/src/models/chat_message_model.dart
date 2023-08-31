@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 
 class IsmChatMessageModel {
   factory IsmChatMessageModel.fromJson(String source) =>
@@ -299,6 +300,12 @@ class IsmChatMessageModel {
     this.deliveredTo,
     this.isUploading,
   });
+
+  List<Contact> get contacts => customType == IsmChatCustomMessageType.contact
+      ? (jsonDecode(body) as List)
+          .map((e) => Contact.fromJson(e as Map<String, dynamic>))
+          .toList()
+      : [];
 
   String body;
   String? action;

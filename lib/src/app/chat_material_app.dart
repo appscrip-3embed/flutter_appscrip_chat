@@ -17,7 +17,6 @@ class IsmChatApp extends StatelessWidget {
     this.enableGroupChat = false,
     this.useDataBase = true,
     this.startConversationWidget,
-    this.conversationHeaderWidget,
   }) {
     assert(IsmChatConfig.isInitialized,
         'ChatHiveBox is not initialized\nYou are getting this error because the Database class is not initialized, to initialize ChatHiveBox class call AppscripChatComponent.initialize() before your runApp()');
@@ -34,7 +33,6 @@ class IsmChatApp extends StatelessWidget {
     IsmChatConfig.dbName = databaseName ?? IsmChatStrings.dbname;
     IsmChatProperties.loadingDialog = loadingDialog;
     IsmChatProperties.noChatSelectedPlaceholder = startConversationWidget;
-    IsmChatProperties.header = conversationHeaderWidget;
     if (communicationConfig != null) {
       IsmChatConfig.communicationConfig = communicationConfig!;
       IsmChatConfig.configInitilized = true;
@@ -82,8 +80,6 @@ class IsmChatApp extends StatelessWidget {
 
   ///  It is showing you have no tap any converstaion
   final Widget? startConversationWidget;
-
-  final Widget? conversationHeaderWidget;
 
   /// Call this function for Get all Conversation List
   static Future<List<IsmChatConversationModel>?> getAllConversation() async =>
@@ -154,15 +150,16 @@ class IsmChatApp extends StatelessWidget {
   /// * `profileImageUrl` - The image url of the user (`Optional`)
   /// * `duration` - The duration for which the loading dialog will be displayed, this is to make sure all the controllers and variables are initialized before executing any statement and/or calling the APIs for data. (default `Duration(milliseconds: 500)`)
   /// * `onNavigateToChat` - This function will be executed to navigate to the specific chat screen of the selected user. If not provided, the `onChatTap` callback will be used which is passed to `IsmChatApp`.
-  static Future<void> chatFromOutside({
-    String profileImageUrl = '',
-    required String name,
-    String? email,
-    required String userId,
-    IsmChatMetaData? metaData,
-    void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
-    Duration duration = const Duration(milliseconds: 500),
-  }) async {
+  static Future<void> chatFromOutside(
+      {String profileImageUrl = '',
+      required String name,
+      String? email,
+      required String userId,
+      IsmChatMetaData? metaData,
+      void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
+      Duration duration = const Duration(milliseconds: 500),
+      String? messageFromOutSide,
+      searchBarColor}) async {
     assert(
       [name, userId].every((e) => e.isNotEmpty),
       '''Input Error: Please make sure that all required fields are filled out.
@@ -206,11 +203,15 @@ class IsmChatApp extends StatelessWidget {
         lastMessageSentAt: 0,
         membersCount: 1,
         metaData: metaData,
+        messageFromOutSide: messageFromOutSide,
       );
     } else {
       conversation = controller.conversations
           .firstWhere((e) => e.conversationId == conversationId);
-      conversation = conversation.copyWith(metaData: metaData);
+      conversation = conversation.copyWith(
+        metaData: metaData,
+        messageFromOutSide: messageFromOutSide,
+      );
     }
     controller.navigateToMessages(conversation);
 
