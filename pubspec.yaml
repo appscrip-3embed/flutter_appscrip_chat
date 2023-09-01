@@ -15,7 +15,7 @@ dependencies:
   cached_network_image: ^3.2.3
   camera: ^0.10.3+2
   carousel_slider: ^4.2.1
-  connectivity_plus: ^3.0.6
+  connectivity_plus: ^4.0.0
   device_info_plus: ^9.0.0
   dio: ^5.2.1+1
   elegant_notification: ^1.11.0
