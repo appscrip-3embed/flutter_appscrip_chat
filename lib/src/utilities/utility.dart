@@ -260,6 +260,17 @@ class IsmChatUtility {
     return false;
   }
 
+  // void _handleInvalidPermissions(PermissionStatus permissionStatus) {
+  //   if (permissionStatus == PermissionStatus.denied) {
+  //     final snackBar = SnackBar(content: Text('Access to contact data denied'));
+  //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  //   } else if (permissionStatus == PermissionStatus.permanentlyDenied) {
+  //     final snackBar =
+  //         SnackBar(content: Text('Contact data not available on device'));
+  //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  //   }
+  // }
+
   static Widget circularProgressBar(
           [Color? backgroundColor, Color? animatedColor]) =>
       DecoratedBox(

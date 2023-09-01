@@ -17,6 +17,7 @@ import 'package:mqtt_client/mqtt_client.dart';
 class IsmChatMqttController extends GetxController {
   IsmChatMqttController(this._viewModel);
   final IsmChatMqttViewModel _viewModel;
+
   final _deviceConfig = Get.find<IsmChatDeviceConfig>();
 
   var client = IsmChatMqttClient.client;
@@ -148,9 +149,7 @@ class IsmChatMqttController extends GetxController {
         actionStreamController.add(payload);
       } else {
         var message = IsmChatMessageModel.fromMap(payload);
-
         _handleLocalNotification(message);
-
         _handleMessage(message);
       }
     });

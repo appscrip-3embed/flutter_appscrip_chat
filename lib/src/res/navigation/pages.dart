@@ -30,6 +30,11 @@ class IsmChatPages {
       binding: IsmChatConversationsBinding(),
     ),
     GetPage(
+      name: IsmChatBroadCastView.route,
+      page: IsmChatBroadCastView.new,
+      binding: IsmChatConversationsBinding(),
+    ),
+    GetPage(
       name: IsmChatConverstaionInfoView.route,
       page: IsmChatConverstaionInfoView.new,
       binding: IsmChatPageBinding(),
@@ -82,6 +87,21 @@ class IsmChatPages {
     GetPage(
       name: IsmChatCameraView.route,
       page: IsmChatCameraView.new,
+      binding: IsmChatPageBinding(),
+    ),
+    GetPage(
+      name: IsmChatContactView.route,
+      page: IsmChatContactView.new,
+      binding: IsmChatPageBinding(),
+    ),
+    GetPage(
+      name: IsmChatContactsInfoView.route,
+      page: IsmChatContactsInfoView.new,
+      binding: IsmChatPageBinding(),
+    ),
+    GetPage(
+      name: IsmChatSearchMessgae.route,
+      page: IsmChatSearchMessgae.new,
       binding: IsmChatPageBinding(),
     ),
   ];

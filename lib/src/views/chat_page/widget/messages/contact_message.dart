@@ -1,0 +1,106 @@
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:flutter/material.dart';
+
+class IsmChatContactMessage extends StatelessWidget {
+  const IsmChatContactMessage(
+    this.message, {
+    super.key,
+  });
+
+  final IsmChatMessageModel message;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        width: message.contacts.length == 1
+            ? IsmChatDimens.oneHundredSeventy
+            : null,
+        decoration: BoxDecoration(
+          color: IsmChatConfig.chatTheme.backgroundColor,
+          borderRadius: BorderRadius.circular(IsmChatDimens.eight),
+        ),
+        padding: IsmChatDimens.edgeInsets10,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: message.contacts.length == 1
+                      ? IsmChatDimens.fifty
+                      : IsmChatDimens.seventy,
+                  child: Stack(
+                    children: List.generate(
+                        message.contacts.length <= 3
+                            ? message.contacts.length
+                            : 3, (index) {
+                      var data = message.contacts[index];
+                      if (index == 0) {
+                        return data.photo != null
+                            ? IsmChatImage.profile(
+                                (data.photo).toString(),
+                                name: data.displayName,
+                                isNetworkImage: false,
+                                isBytes: true,
+                              )
+                            : const _NoImageWidget();
+                      }
+
+                      return Positioned(
+                        left: index * IsmChatDimens.fifteen,
+                        child: data.photo != null
+                            ? IsmChatImage.profile(
+                                (data.photo).toString(),
+                                name: data.displayName,
+                                isNetworkImage: false,
+                                isBytes: true,
+                              )
+                            : const _NoImageWidget(),
+                      );
+                    }),
+                  ),
+                ),
+                Flexible(
+                  child: Text(
+                    message.contacts.length == 1
+                        ? message.contacts.first.displayName
+                        : '${message.contacts.first.displayName} and ${message.contacts.length - 1} other contact',
+                    style: IsmChatStyles.w600Black14,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                )
+              ],
+            ),
+            const Divider(
+              thickness: 1,
+            ),
+            Center(
+              child: Text(
+                'View ${message.contacts.length != 1 ? 'All' : ''}',
+                style: IsmChatStyles.w600Black12,
+              ),
+            )
+          ],
+        ),
+      );
+}
+
+class _NoImageWidget extends StatelessWidget {
+  const _NoImageWidget();
+
+  @override
+  Widget build(BuildContext context) => Container(
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.black),
+            borderRadius: BorderRadius.circular(IsmChatDimens.fifty)),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(IsmChatDimens.fifty),
+          child: Image.asset(
+            IsmChatAssets.noImage,
+            width: IsmChatDimens.thirty,
+            height: IsmChatDimens.thirty,
+          ),
+        ),
+      );
+}

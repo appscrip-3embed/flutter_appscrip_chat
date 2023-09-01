@@ -34,6 +34,8 @@ extension MatchString on String {
       toLowerCase().contains('https') ||
       toLowerCase().contains('http') ||
       toLowerCase().contains('www');
+
+  bool get isAlphabet => RegExp(r'^[A-Za-z]+$').hasMatch(this);
 }
 
 extension MessagePagination on int {
@@ -314,6 +316,8 @@ extension ChildWidget on IsmChatCustomMessageType {
       case IsmChatCustomMessageType.conversationTitleUpdated:
       case IsmChatCustomMessageType.conversationImageUpdated:
         return IsmChatConversationUpdate(message);
+      case IsmChatCustomMessageType.contact:
+        return IsmChatContactMessage(message);
     }
   }
 
@@ -485,6 +489,11 @@ extension SelectedUsers on List<SelectedForwardUser> {
       where((e) => e.isUserSelected).toList();
 }
 
+extension SelectedContacts on List<SelectedContact> {
+  List<SelectedContact> get selectedContact =>
+      where((e) => e.isConotactSelected).toList();
+}
+
 extension UniqueElements<T> on List<T> {
   List<T> unique() => [
         ...{...this}
@@ -593,6 +602,8 @@ extension LastMessageBody on LastMessageDetails {
         return 'Location';
       case IsmChatCustomMessageType.block:
         return 'Blocked';
+      case IsmChatCustomMessageType.contact:
+        return 'Contact';
       case IsmChatCustomMessageType.unblock:
         return 'Unblocked';
       case IsmChatCustomMessageType.conversationCreated:
@@ -861,6 +872,9 @@ extension AttachmentIcon on IsmChatAttachmentType {
         return Icons.description;
       case IsmChatAttachmentType.location:
         return Icons.pin_drop;
+
+      case IsmChatAttachmentType.contact:
+        return Icons.person_rounded;
     }
   }
 }

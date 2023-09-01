@@ -2,10 +2,17 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
 class MessageAllowedConfig {
-  MessageAllowedConfig({
-    required this.isMessgeAllowed,
+  MessageAllowedConfig({this.isShowTextfiledConfig, this.isMessgeAllowed});
+  Future<bool?>? Function(BuildContext, IsmChatConversationModel)?
+      isMessgeAllowed;
+  IsShowTextfiledConfig? isShowTextfiledConfig;
+}
+
+class IsShowTextfiledConfig {
+  IsShowTextfiledConfig({
+    required this.isShowMessageAllowed,
     required this.shwoMessage,
   });
-  Future<bool> Function(BuildContext, IsmChatConversationModel) isMessgeAllowed;
+  bool Function(BuildContext, IsmChatConversationModel) isShowMessageAllowed;
   String shwoMessage;
 }

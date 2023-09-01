@@ -9,15 +9,23 @@ class IsmChatPageRepository {
 
   Future<List<IsmChatMessageModel>?> getChatMessages({
     required String conversationId,
-    required int lastMessageTimestamp,
-    required int limit,
-    required int skip,
+    int lastMessageTimestamp = 0,
+    int limit = 20,
+    int skip = 0,
+    String? searchText,
+    bool isLoading = false,
   }) async {
     try {
-      var response = await _apiWrapper.get(
-        '${IsmChatAPI.chatMessages}?conversationId=$conversationId&limit=$limit&skip=$skip&lastMessageTimestamp=$lastMessageTimestamp',
-        headers: IsmChatUtility.tokenCommonHeader(),
-      );
+      String? url;
+      if (searchText != null || searchText?.isNotEmpty == true) {
+        url =
+            '${IsmChatAPI.chatMessages}?conversationId=$conversationId&searchTag=$searchText&sort=-1&limit=$limit&skip=$skip';
+      } else {
+        url =
+            '${IsmChatAPI.chatMessages}?conversationId=$conversationId&limit=$limit&skip=$skip&lastMessageTimestamp=$lastMessageTimestamp';
+      }
+      var response = await _apiWrapper.get(url,
+          headers: IsmChatUtility.tokenCommonHeader(), showLoader: isLoading);
       if (response.hasError) {
         return null;
       }
@@ -78,7 +86,7 @@ class IsmChatPageRepository {
         'attachments': attachments,
         'notificationBody': notificationBody,
         'notificationTitle': notificationTitle,
-        'searchableTags': [body],
+        'searchableTags': [IsmChatUtility.decodePayload(body)],
         if (mentionedUsers?.isNotEmpty == true) 'mentionedUsers': mentionedUsers
       };
 

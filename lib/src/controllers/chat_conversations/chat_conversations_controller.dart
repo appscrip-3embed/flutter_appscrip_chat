@@ -21,6 +21,10 @@ class IsmChatConversationsController extends GetxController {
 
   var userSearchNameController = TextEditingController();
 
+  final _deviceConfig = Get.find<IsmChatDeviceConfig>();
+
+  TextEditingController broadcastMessageController = TextEditingController();
+
   final _conversations = <IsmChatConversationModel>[].obs;
   List<IsmChatConversationModel> get conversations => _conversations;
   set conversations(List<IsmChatConversationModel> value) =>
@@ -153,8 +157,6 @@ class IsmChatConversationsController extends GetxController {
 
   List<BackGroundAsset> backgroundColor = [];
 
-  TextEditingController nameController = TextEditingController();
-
   BuildContext? context;
 
   @override
@@ -269,24 +271,6 @@ class IsmChatConversationsController extends GetxController {
             .first,
       ),
     );
-  }
-
-  /// function to show dialog for changing the group title
-  void showDialogForNameAndUserName() async {
-    await Get.dialog(IsmChatAlertDialogBox(
-      title: IsmChatStrings.enterNewGroupTitle,
-      content: TextFormField(
-        controller: nameController,
-      ),
-      actionLabels: const [IsmChatStrings.ok],
-      callbackActions: const [
-        // () => changeGroupTitle(
-        //       conversationTitle: groupTitleController.text,
-        //       conversationId: conversation?.conversationId ?? '',
-        //       isLoading: true,
-        //     ),
-      ],
-    ));
   }
 
   /// This function will be used in [Forward Screen and New conversation screen] to Select or Unselect users
@@ -654,5 +638,22 @@ class IsmChatConversationsController extends GetxController {
         conversationId: conversationId,
         metaData: metaData,
         isLoading: isLoading);
+  }
+
+  Future<void> sendBroadcastMessage({
+    required List<String> userIds,
+    required String body,
+  }) async {
+    var response = await _viewModel.sendBroadcastMessage(
+      userIds: userIds,
+      showInConversation: true,
+      messageType: 0,
+      encrypted: true,
+      deviceId: _deviceConfig.deviceId ?? '',
+      body: body,
+      notificationBody: body,
+      notificationTitle: userDetails?.userName ?? '',
+    );
+    if (response?.hasError == false) {}
   }
 }

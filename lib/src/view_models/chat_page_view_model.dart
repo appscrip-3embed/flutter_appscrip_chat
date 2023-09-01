@@ -7,28 +7,28 @@ class IsmChatPageViewModel {
 
   final IsmChatPageRepository _repository;
 
-  Future<List<IsmChatMessageModel>?> getChatMessages({
+  Future<List<IsmChatMessageModel>> getChatMessages({
     required String conversationId,
     required int lastMessageTimestamp,
     int? pagination,
-    required bool isGroup,
     int limit = 20,
     int skip = 0,
+    String? searchText,
+    bool isLoading = false,
   }) async {
     var messages = await _repository.getChatMessages(
-      conversationId: conversationId,
-      lastMessageTimestamp: lastMessageTimestamp,
-      limit: limit,
-      skip: pagination ?? 0,
-    );
+        conversationId: conversationId,
+        lastMessageTimestamp: lastMessageTimestamp,
+        limit: limit,
+        skip: pagination ?? 0,
+        searchText: searchText,
+        isLoading: isLoading);
 
     if (messages == null) {
-      return null;
+      return [];
     }
-
     messages.removeWhere((e) => [
           IsmChatActionEvents.clearConversation.name,
-          if (!isGroup) IsmChatActionEvents.conversationCreated.name,
           IsmChatActionEvents.deleteConversationLocally.name,
           IsmChatActionEvents.reactionAdd.name,
           IsmChatActionEvents.reactionRemove.name,
@@ -39,19 +39,23 @@ class IsmChatPageViewModel {
             IsmChatActionEvents.addAdmin.name,
           ]
         ].contains(e.action));
-    if (Get.find<IsmChatPageController>().messages.isNotEmpty) {
-      messages.removeWhere((e) =>
-          e.messageId ==
-          Get.find<IsmChatPageController>().messages.last.messageId);
-    }
+    if (searchText == null || searchText.isEmpty) {
+      if (Get.find<IsmChatPageController>().messages.isNotEmpty) {
+        messages.removeWhere((e) =>
+            e.messageId ==
+            Get.find<IsmChatPageController>().messages.last.messageId);
+      }
 
-    var conversation = await IsmChatConfig.dbWrapper!
-        .getConversation(conversationId: conversationId);
+      var conversation = await IsmChatConfig.dbWrapper!
+          .getConversation(conversationId: conversationId);
 
-    if (conversation != null) {
-      conversation.messages?.addAll(messages);
-      await IsmChatConfig.dbWrapper!
-          .saveConversation(conversation: conversation);
+      if (conversation != null) {
+        conversation.messages?.addAll(messages);
+        await IsmChatConfig.dbWrapper!
+            .saveConversation(conversation: conversation);
+      }
+    } else {
+      messages = sortMessages(messages);
     }
 
     return messages;
@@ -532,7 +536,8 @@ class IsmChatPageViewModel {
           conversationType: conversationType,
           conversationImageUrl: conversationImageUrl,
           conversationTitle: conversationTitle,
-          isLoading: isLoading);
+          isLoading: isLoading,
+          searchableTags: searchableTags);
 
   Map<String, int> generateIndexedMessageList(
       List<IsmChatMessageModel> messages) {

@@ -26,7 +26,6 @@ mixin IsmChatPageGetMessageMixin {
     String conversationId = '',
     bool forPagination = false,
     int? lastMessageTimestamp,
-    bool? fromBlockUnblock,
   }) async {
     if (_controller.messages.isEmpty) {
       _controller.isMessagesLoading = true;
@@ -47,15 +46,36 @@ mixin IsmChatPageGetMessageMixin {
       pagination: forPagination ? messagesList.length.pagination() : 0,
       conversationId: conversationID,
       lastMessageTimestamp: timeStamp,
-      isGroup: _controller.conversation?.isGroup ?? false,
     );
     if (_controller.messages.isEmpty) {
       _controller.isMessagesLoading = false;
     }
-
-    if (data != null) {
+    if (data.isNotEmpty) {
       await getMessagesFromDB(conversationID);
     }
+  }
+
+  void searchedMessages(String query) async {
+    if (query.trim().isEmpty) {
+      _controller.searchMessages.clear();
+      return;
+    }
+    if (_controller.canCallCurrentApi) return;
+    _controller.canCallCurrentApi = true;
+
+    var messages = await _controller._viewModel.getChatMessages(
+      pagination: _controller.searchMessages.isEmpty
+          ? 0
+          : _controller.searchMessages.length.pagination(),
+      conversationId: _controller.conversation?.conversationId ?? '',
+      lastMessageTimestamp: 0,
+      searchText: query,
+      isLoading: true,
+    );
+    if (messages.isNotEmpty) {
+      _controller.searchMessages.addAll(messages);
+    }
+    _controller.canCallCurrentApi = false;
   }
 
   Future<void> updateConversationMessage() async {

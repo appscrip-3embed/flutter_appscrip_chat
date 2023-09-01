@@ -9,6 +9,5 @@ class IsmChatProperties {
   static bool isGroupChatEnabled = false;
 
   static Widget? loadingDialog;
-  static Widget? startConversationWidget;
-  static Widget? conversationHeaderWidget;
+  static Widget? noChatSelectedPlaceholder;
 }

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:appscrip_chat_component/src/models/user_details_model.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:get/get.dart';

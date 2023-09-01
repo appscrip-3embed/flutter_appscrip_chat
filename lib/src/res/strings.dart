@@ -39,8 +39,11 @@ class IsmChatStrings {
   static const String blockUser = 'Block User';
   static const String unBlockUser = 'Unblock User';
   static const String blockedUsers = 'Blocked Users';
+  static const String boradcastMessge = 'Broadcast Messgaes';
+
   static const String clearChat = 'Clear chat';
   static const String wallpaper = 'Wallpaper';
+  static const String search = 'Search';
   static const String newGroup = 'New Group';
   static const String logout = 'Logout';
   static const String startConversation = 'Start Conversation';
@@ -120,6 +123,9 @@ class IsmChatStrings {
   static const String deletedMessage = 'You deleted this message';
   static const String wasDeletedMessage = 'This message was deleted';
   static const String noDataFound = 'No data found';
+  static const String noUserFound = 'No user found';
+
+  static const String logoutMessage = 'Are you sure you want to logout';
 
   static const String removeGroupMessage =
       'You have been removed out of the group...!';

@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 
 class IsmChatConfig {
   const IsmChatConfig._();
-
   static late IsmChatCommunicationConfig communicationConfig;
   static bool configInitilized = false;
   static IsmChatThemeData? _chatLightTheme;

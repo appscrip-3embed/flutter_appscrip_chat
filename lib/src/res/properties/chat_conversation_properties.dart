@@ -18,12 +18,18 @@ class IsmChatConversationProperties {
     this.isSlidableEnable,
     this.placeholder,
     this.height,
+    this.appBar,
+    this.header,
+    this.isHeaderAppBar = false,
+    this.headerHeight,
   }) {
     assert(useCallbackOnForward && onForwardTap != null);
     assert(
       (showCreateChatIcon && onCreateTap != null) || !showCreateChatIcon,
       'If showCreateChatIcon is set to true then a non null callback must be passed to onCreateChatTap parameter',
     );
+    assert(!isHeaderAppBar || (isHeaderAppBar && header != null),
+        'If isHeaderAppBar is set to true then a widget must be passed to header parameter');
   }
 
   /// Required parameter
@@ -86,4 +92,14 @@ class IsmChatConversationProperties {
   ///
   /// If not provided, Screen height will be taken
   final double? height;
+
+  /// This widget will be visible above the conversation list inside the conversation view
+  final Widget? header;
+
+  final PreferredSizeWidget? appBar;
+
+  final bool isHeaderAppBar;
+
+  /// This height will be use for when you use header on AppBar of coversation list
+  final double? headerHeight;
 }

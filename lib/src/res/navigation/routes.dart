@@ -4,6 +4,11 @@ class IsmPageRoutes {
   static const String chatPage = '/chatPage';
   static const String createChat = '/createChat';
   static const String forwardView = '/forwardView';
+  static const String broadcastView = '/broadcastView';
+
+  static const String contact = '/contact';
+  static const String contactInfoView = '/contactInfoView';
+
   static const String blockView = '/blockView';
   static const String userView = '/userView';
   static const String converstaionInfoView = '/converstaionInfoView';
@@ -18,4 +23,5 @@ class IsmPageRoutes {
   static const String webMediaPreivew = '/webMediaPreivew';
   static const String messageMediaPreivew = '/messageMediaPreivew';
   static const String cameraView = '/cameraView';
+  static const String searchMessage = '/searchMessage';
 }

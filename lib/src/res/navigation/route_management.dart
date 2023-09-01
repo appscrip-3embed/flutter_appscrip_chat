@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -23,6 +24,10 @@ class IsmChatRouteManagement {
       required IsmChatConversationModel conversation}) {
     Get.toNamed(IsmChatForwardView.route,
         arguments: {'message': message, 'conversation': conversation});
+  }
+
+  static void goToBroadcastView() {
+    Get.toNamed(IsmChatBroadCastView.route);
   }
 
   static void goToConversationInfo() {
@@ -122,5 +127,20 @@ class IsmChatRouteManagement {
     Get.toNamed(
       IsmChatCameraView.route,
     );
+  }
+
+  static void goToContactView() {
+    Get.toNamed(IsmChatContactView.route);
+  }
+
+  static void goToContactInfoView({required List<Contact> contacts}) {
+    Get.toNamed(
+      IsmChatContactsInfoView.route,
+      arguments: {'contacts': contacts},
+    );
+  }
+
+  static void goToSearchMessageView() {
+    Get.toNamed(IsmChatSearchMessgae.route);
   }
 }

@@ -59,10 +59,12 @@ class Noises extends StatelessWidget {
   final Color? color;
 
   @override
-  Widget build(BuildContext context) => Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [for (int i = 0; i < 27; i++) _singleNoise(context)],
+  Widget build(BuildContext context) => FittedBox(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [for (int i = 0; i < 27; i++) _singleNoise(context)],
+        ),
       );
 
   Widget _singleNoise(BuildContext context) {
@@ -80,10 +82,8 @@ class Noises extends StatelessWidget {
   }
 }
 
-/// This is the main widget.
-// ignore: must_be_immutable
 class VoiceMessage extends StatefulWidget {
-  VoiceMessage({
+  const VoiceMessage({
     Key? key,
     required this.me,
     this.audioSrc,
@@ -101,7 +101,7 @@ class VoiceMessage extends StatefulWidget {
   }) : super(key: key);
 
   final String? audioSrc;
-  Future<File>? audioFile;
+  final Future<File>? audioFile;
   final Duration? duration;
 
   final int noiseCount;

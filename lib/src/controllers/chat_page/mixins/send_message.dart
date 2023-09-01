@@ -78,28 +78,44 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     String? customType,
     List<Map<String, dynamic>>? attachments,
   }) async {
-    var isMessageSent = await _controller._viewModel.sendMessage(
-      sendMessageType: sendMessageType,
-      showInConversation: showInConversation,
-      attachments: attachments,
-      events: events,
-      mentionedUsers: mentionedUsers,
-      metaData: metaData,
-      messageType: messageType,
-      customType: customType,
-      parentMessageId: parentMessageId,
-      encrypted: encrypted,
-      deviceId: deviceId,
-      conversationId: conversationId,
-      notificationBody: notificationBody,
-      notificationTitle: notificationTitle,
-      body: IsmChatUtility.encodePayload(body),
-      createdAt: createdAt,
-    );
+    var isSendMessage = false;
+    if (IsmChatProperties
+            .chatPageProperties.messageAllowedConfig?.isMessgeAllowed ==
+        null) {
+      isSendMessage = true;
+    } else {
+      if (await IsmChatProperties
+              .chatPageProperties.messageAllowedConfig?.isMessgeAllowed
+              ?.call(Get.context!,
+                  Get.find<IsmChatPageController>().conversation!) ??
+          true) {
+        isSendMessage = true;
+      }
+    }
+    if (isSendMessage) {
+      var isMessageSent = await _controller._viewModel.sendMessage(
+        sendMessageType: sendMessageType,
+        showInConversation: showInConversation,
+        attachments: attachments,
+        events: events,
+        mentionedUsers: mentionedUsers,
+        metaData: metaData,
+        messageType: messageType,
+        customType: customType,
+        parentMessageId: parentMessageId,
+        encrypted: encrypted,
+        deviceId: deviceId,
+        conversationId: conversationId,
+        notificationBody: notificationBody,
+        notificationTitle: notificationTitle,
+        body: IsmChatUtility.encodePayload(body),
+        createdAt: createdAt,
+      );
 
-    if (isMessageSent && !forwardMessgeForMulitpleUser) {
-      _controller.didReactedLast = false;
-      await _controller.getMessagesFromDB(conversationId);
+      if (isMessageSent && !forwardMessgeForMulitpleUser) {
+        _controller.didReactedLast = false;
+        await _controller.getMessagesFromDB(conversationId);
+      }
     }
   }
 
@@ -229,7 +245,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       conversationId = await createConversation(
           userId: [userId],
           metaData: _controller.conversation?.metaData,
-          searchableTags: [opponentName]);
+          searchableTags: [
+            opponentName,
+            _controller.conversation?.chatName ?? ''
+          ]);
     }
     IsmChatMessageModel? audioMessage;
     String? nameWithExtension;
@@ -385,7 +404,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           conversationId = await createConversation(
               userId: [userId],
               metaData: _controller.conversation?.metaData,
-              searchableTags: [opponentName]);
+              searchableTags: [
+                opponentName,
+                _controller.conversation?.chatName ?? ''
+              ]);
         }
         for (var x in result!.files) {
           var sizeMedia = kIsWeb
@@ -486,7 +508,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       conversationId = await createConversation(
           userId: [userId],
           metaData: _controller.conversation?.metaData,
-          searchableTags: [opponentName]);
+          searchableTags: [
+            opponentName,
+            _controller.conversation?.chatName ?? ''
+          ]);
     }
     IsmChatMessageModel? videoMessage;
     String? nameWithExtension;
@@ -649,7 +674,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       conversationId = await createConversation(
         userId: [userId],
         metaData: _controller.conversation?.metaData,
-        searchableTags: [opponentName],
+        searchableTags: [
+          opponentName,
+          _controller.conversation?.chatName ?? ''
+        ],
       );
     }
     IsmChatMessageModel? imageMessage;
@@ -696,39 +724,40 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       }
 
       imageMessage = IsmChatMessageModel(
-          body: 'Image',
-          conversationId: conversationId,
-          customType: IsmChatCustomMessageType.image,
-          attachments: [
-            AttachmentModel(
-              attachmentType: IsmChatMediaType.image,
-              thumbnailUrl: kIsWeb
-                  ? webMediaModel?.platformFile.path
-                  : compressedFile?.path,
-              size: kIsWeb
-                  ? webMediaModel?.platformFile.size
-                  : double.parse(
-                      bytes!.length.toString(),
-                    ),
-              name: nameWithExtension,
-              mimeType: 'image/jpeg',
-              mediaUrl: kIsWeb
-                  ? webMediaModel?.platformFile.path
-                  : compressedFile?.path,
-              mediaId: mediaId,
-              extension: extension,
-            )
-          ],
-          deliveredToAll: false,
-          messageId: '',
-          deviceId: _controller._deviceConfig.deviceId!,
-          messageType: IsmChatMessageType.normal,
-          messagingDisabled: false,
-          parentMessageId: '',
-          readByAll: false,
-          sentAt: sentAt,
-          sentByMe: true,
-          isUploading: true);
+        body: 'Image',
+        conversationId: conversationId,
+        customType: IsmChatCustomMessageType.image,
+        attachments: [
+          AttachmentModel(
+            attachmentType: IsmChatMediaType.image,
+            thumbnailUrl: kIsWeb
+                ? webMediaModel?.platformFile.path
+                : compressedFile?.path,
+            size: kIsWeb
+                ? webMediaModel?.platformFile.size
+                : double.parse(
+                    bytes!.length.toString(),
+                  ),
+            name: nameWithExtension,
+            mimeType: 'image/jpeg',
+            mediaUrl: kIsWeb
+                ? webMediaModel?.platformFile.path
+                : compressedFile?.path,
+            mediaId: mediaId,
+            extension: extension,
+          )
+        ],
+        deliveredToAll: false,
+        messageId: '',
+        deviceId: _controller._deviceConfig.deviceId!,
+        messageType: IsmChatMessageType.normal,
+        messagingDisabled: false,
+        parentMessageId: '',
+        readByAll: false,
+        sentAt: sentAt,
+        sentByMe: true,
+        isUploading: true,
+      );
     }
     if (!forwardMessgeForMulitpleUser) {
       _controller.messages.add(imageMessage);
@@ -784,7 +813,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       conversationId = await createConversation(
           userId: [userId],
           metaData: _controller.conversation?.metaData,
-          searchableTags: [opponentName]);
+          searchableTags: [
+            opponentName,
+            _controller.conversation?.chatName ?? ''
+          ]);
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatMessageModel(
@@ -829,16 +861,82 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             ? IsmChatConfig.communicationConfig.userConfig.userName
             : conversationController.userDetails?.userName ?? '';
     sendMessage(
-        metaData: textMessage.metaData,
-        forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
-        deviceId: _controller._deviceConfig.deviceId!,
-        body: textMessage.body,
-        customType: textMessage.customType!.name,
-        createdAt: sentAt,
-        conversationId: textMessage.conversationId ?? '',
-        messageType: textMessage.messageType?.value ?? 0,
-        notificationBody: 'Sent you a location',
-        notificationTitle: notificationTitle);
+      metaData: textMessage.metaData,
+      forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
+      deviceId: _controller._deviceConfig.deviceId!,
+      body: textMessage.body,
+      customType: textMessage.customType!.name,
+      createdAt: sentAt,
+      conversationId: textMessage.conversationId ?? '',
+      messageType: textMessage.messageType?.value ?? 0,
+      notificationBody: 'Sent you a location',
+      notificationTitle: notificationTitle,
+    );
+  }
+
+  void sendContact({
+    SendMessageType sendMessageType = SendMessageType.pendingMessage,
+    bool forwardMessgeForMulitpleUser = false,
+    required String conversationId,
+    required String userId,
+    required String opponentName,
+    required List<Contact> contacts,
+  }) async {
+    final chatConversationResponse = await IsmChatConfig.dbWrapper!
+        .getConversation(conversationId: conversationId);
+
+    if (chatConversationResponse == null) {
+      conversationId = await createConversation(
+        userId: [userId],
+        metaData: _controller.conversation?.metaData,
+        searchableTags: [
+          opponentName,
+          _controller.conversation?.chatName ?? ''
+        ],
+      );
+    }
+    var sentAt = DateTime.now().millisecondsSinceEpoch;
+    var textMessage = IsmChatMessageModel(
+      body: jsonEncode(contacts.map((e) => e.toJson()).toList()),
+      conversationId: conversationId,
+      customType: IsmChatCustomMessageType.contact,
+      deliveredToAll: false,
+      messageId: '',
+      messageType: IsmChatMessageType.normal,
+      messagingDisabled: false,
+      parentMessageId: '',
+      readByAll: false,
+      sentAt: sentAt,
+      sentByMe: true,
+    );
+
+    if (!forwardMessgeForMulitpleUser) {
+      _controller.messages.add(textMessage);
+    }
+    if (sendMessageType == SendMessageType.pendingMessage) {
+      await IsmChatConfig.dbWrapper!
+          .saveMessage(textMessage, IsmChatDbBox.pending);
+    } else {
+      await IsmChatConfig.dbWrapper!
+          .saveMessage(textMessage, IsmChatDbBox.forward);
+    }
+    var notificationTitle =
+        IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+            ? IsmChatConfig.communicationConfig.userConfig.userName
+            : conversationController.userDetails?.userName ?? '';
+    sendMessage(
+      metaData: textMessage.metaData,
+      forwardMessgeForMulitpleUser: forwardMessgeForMulitpleUser,
+      deviceId: _controller._deviceConfig.deviceId!,
+      body: textMessage.body,
+      customType: textMessage.customType!.name,
+      createdAt: sentAt,
+      conversationId: textMessage.conversationId ?? '',
+      messageType: textMessage.messageType?.value ?? 0,
+      notificationBody: 'Sent you a contact',
+      notificationTitle: notificationTitle,
+      sendMessageType: sendMessageType,
+    );
   }
 
   void sendTextMessage({
@@ -856,7 +954,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       conversationId = await createConversation(
         userId: [userId],
         metaData: _controller.conversation?.metaData,
-        searchableTags: [opponentName],
+        searchableTags: [
+          opponentName,
+          _controller.conversation?.chatName ?? ''
+        ],
       );
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;

@@ -67,6 +67,7 @@ class _ChatListState extends State<ChatList> {
               IsmChatAttachmentType.gallery,
               IsmChatAttachmentType.document,
               if (!kIsWeb) IsmChatAttachmentType.location,
+              if (!kIsWeb) IsmChatAttachmentType.contact,
             ],
           ),
           startConversationWidget: Center(
@@ -91,16 +92,6 @@ class _ChatListState extends State<ChatList> {
               ],
             ),
           ),
-          conversationHeaderWidget: IsmChatListHeader(
-            onSignOut: () {
-              controller.onSignOut();
-            },
-            onSearchTap: (p0, p1, p2) {},
-            showSearch: false,
-            width: Responsive.isWebAndTablet(context)
-                ? IsmChatDimens.percentWidth(.3)
-                : null,
-          ),
           conversationProperties: IsmChatConversationProperties(
             showCreateChatIcon: true,
             enableGroupChat: true,
@@ -109,6 +100,19 @@ class _ChatListState extends State<ChatList> {
             onCreateTap: () {},
             onChatTap: (_, conversation) {},
             useCallbackOnForward: true,
+            isHeaderAppBar: true,
+
+            // appBar: AppBar(title: const Text('data')),
+            header: IsmChatListHeader(
+              onSignOut: () {
+                controller.onSignOut();
+              },
+              onSearchTap: (p0, p1, p2) {},
+              showSearch: false,
+              width: Responsive.isWebAndTablet(context)
+                  ? IsmChatDimens.percentWidth(.3)
+                  : null,
+            ),
             placeholder: const IsmChatEmptyView(
               text: 'Create conversation',
               icon: Icon(

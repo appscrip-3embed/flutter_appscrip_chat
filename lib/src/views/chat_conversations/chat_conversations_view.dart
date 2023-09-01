@@ -40,6 +40,18 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
           controller.context = context;
           return Scaffold(
             drawerScrimColor: Colors.transparent,
+            appBar: IsmChatProperties.conversationProperties.appBar ??
+                (IsmChatProperties.conversationProperties.isHeaderAppBar
+                    ? PreferredSize(
+                        preferredSize: Size(
+                          Get.width,
+                          IsmChatProperties
+                                  .conversationProperties.headerHeight ??
+                              IsmChatDimens.sixty,
+                        ),
+                        child: IsmChatProperties.conversationProperties.header!,
+                      )
+                    : null),
             body: SafeArea(
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -59,9 +71,11 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        if (IsmChatProperties.conversationHeaderWidget !=
-                            null) ...[
-                          IsmChatProperties.conversationHeaderWidget!,
+                        if (!IsmChatProperties
+                                .conversationProperties.isHeaderAppBar &&
+                            IsmChatProperties.conversationProperties.header !=
+                                null) ...[
+                          IsmChatProperties.conversationProperties.header!,
                         ],
                         const Expanded(child: IsmChatConversationList()),
                       ],
@@ -74,7 +88,7 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
                           Obx(
                             () => controller.currentConversation != null
                                 ? const IsmChatPageView()
-                                : IsmChatProperties.startConversationWidget ??
+                                : IsmChatProperties.noChatSelectedPlaceholder ??
                                     Center(
                                       child: Text(
                                         IsmChatStrings.startConversation,
