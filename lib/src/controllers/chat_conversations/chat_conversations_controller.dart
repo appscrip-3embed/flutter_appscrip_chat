@@ -642,33 +642,17 @@ class IsmChatConversationsController extends GetxController {
 
   Future<void> sendBroadcastMessage({
     required List<String> userIds,
-    required bool showInConversation,
-    required int messageType,
-    required bool encrypted,
-    required String deviceId,
     required String body,
-    required String notificationBody,
-    required String notificationTitle,
-    List<String>? searchableTags,
-    IsmChatMetaData? metaData,
-    Map<String, dynamic>? events,
-    String? customType,
-    List<Map<String, dynamic>>? attachments,
   }) async {
     var response = await _viewModel.sendBroadcastMessage(
       userIds: userIds,
-      showInConversation: showInConversation,
-      messageType: messageType,
-      encrypted: encrypted,
-      deviceId: deviceId,
+      showInConversation: true,
+      messageType: 0,
+      encrypted: true,
+      deviceId: _deviceConfig.deviceId ?? '',
       body: body,
-      notificationBody: notificationBody,
-      notificationTitle: notificationTitle,
-      attachments: attachments,
-      customType: customType,
-      events: events,
-      metaData: metaData,
-      searchableTags: searchableTags,
+      notificationBody: body,
+      notificationTitle: userDetails?.userName ?? '',
     );
     if (response?.hasError == false) {}
   }

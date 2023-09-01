@@ -136,30 +136,6 @@ class IsmChatBroadCastView extends StatelessWidget {
                         style: IsmChatStyles.w400White16,
                         hint: 'Broadcast message...',
                         hintStyle: IsmChatStyles.w400White16,
-                        onChanged: (value) {
-                          controller.debounce.run(() {
-                            controller.isLoadingUsers = false;
-                            controller.getNonBlockUserList(
-                              searchTag: value,
-                              opponentId: IsmChatConfig
-                                  .communicationConfig.userConfig.userId,
-                            );
-                          });
-                          if (value.trim().isEmpty) {
-                            controller.forwardedList = controller
-                                .forwardedListDuplicat
-                                .map((e) => SelectedForwardUser(
-                                      isUserSelected:
-                                          controller.selectedUserList.any((d) =>
-                                              d.userId == e.userDetails.userId),
-                                      userDetails: e.userDetails,
-                                      isBlocked: e.isBlocked,
-                                      tagIndex: e.tagIndex,
-                                    ))
-                                .toList();
-                            controller.handleList(controller.forwardedList);
-                          }
-                        },
                       ),
                     ),
                     FloatingActionButton(
@@ -170,13 +146,7 @@ class IsmChatBroadCastView extends StatelessWidget {
                                 .map((e) => e.userDetails.userId)
                                 .join(',')
                           ],
-                          showInConversation: true,
-                          messageType: 0,
-                          encrypted: true,
-                          deviceId: controller._deviceConfig.,
-                          body: body,
-                          notificationBody: notificationBody,
-                          notificationTitle: notificationTitle,
+                          body: controller.broadcastMessageController.text,
                         );
                       },
                       elevation: 0,
