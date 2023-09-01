@@ -15,6 +15,9 @@ class IsmChatInputField extends StatelessWidget {
     this.autofocus,
     this.hintStyle,
     this.onFieldSubmitted,
+    this.maxLines,
+    this.minLines,
+    this.textCapitalization,
     super.key,
   });
 
@@ -29,12 +32,19 @@ class IsmChatInputField extends StatelessWidget {
   final TextStyle? style;
   final TextStyle? hintStyle;
   final bool? autofocus;
-  final  Function(String)? onFieldSubmitted;
+  final Function(String)? onFieldSubmitted;
+  final int? maxLines;
+  final int? minLines;
+  final TextCapitalization? textCapitalization;
 
   @override
   Widget build(BuildContext context) => Padding(
         padding: padding ?? IsmChatDimens.edgeInsets10_4,
         child: TextFormField(
+          maxLines: maxLines,
+          minLines: minLines,
+          textCapitalization:
+              textCapitalization ?? TextCapitalization.sentences,
           cursorColor: cursorColor ?? IsmChatColors.whiteColor,
           controller: controller,
           textInputAction: textInputAction ?? TextInputAction.search,

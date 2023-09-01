@@ -126,50 +126,66 @@ class IsmChatBroadCastView extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
-                padding: IsmChatDimens.edgeInsets10,
+                padding: IsmChatDimens.edgeInsets5,
                 child: Row(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: MainAxisSize.max,
                   children: [
                     Expanded(
                       child: IsmChatInputField(
+                        maxLines: 4,
+                        minLines: 1,
+                        padding: IsmChatDimens.edgeInsets4,
+                        textCapitalization: TextCapitalization.sentences,
                         fillColor: IsmChatConfig.chatTheme.primaryColor,
                         style: IsmChatStyles.w400White16,
                         hint: 'Broadcast message...',
-                        hintStyle: IsmChatStyles.w400White16,
+                        hintStyle: IsmChatStyles.w600White14,
                         onChanged: (value) {
                           controller.broadcastMessage = value;
                         },
+                        suffixIcon: Icon(
+                          Icons.attach_file_rounded,
+                          color: IsmChatColors.whiteColor,
+                          size: IsmChatDimens.twentyFive,
+                        ),
                       ),
                     ),
-                    FloatingActionButton(
-                      onPressed: () async {
-                        if (controller.broadcastMessage.isNotEmpty &&
-                            controller.forwardedList.selectedUsers.isNotEmpty) {
-                          await controller.sendBroadcastMessage(
-                            userIds: controller.forwardedList.selectedUsers
-                                .map((e) => e.userDetails.userId)
-                                .toList(),
-                            body: controller.broadcastMessage,
-                            isLoading: true,
-                          );
-                        } else {
-                          await Get.dialog(
-                            const IsmChatAlertDialogBox(
-                              title: IsmChatStrings.broadcastAlert,
-                              cancelLabel: 'Okay',
-                            ),
-                          );
-                        }
-                      },
-                      elevation: 0,
-                      shape: const CircleBorder(),
-                      backgroundColor: controller.broadcastMessage.isNotEmpty &&
-                              controller.forwardedList.selectedUsers.isNotEmpty
-                          ? IsmChatConfig.chatTheme.primaryColor
-                          : IsmChatColors.greyColorLight,
-                      child: const Icon(
-                        Icons.send_rounded,
-                        color: IsmChatColors.whiteColor,
+                    SizedBox(
+                      height: IsmChatDimens.forty + IsmChatDimens.three,
+                      width: IsmChatDimens.forty + IsmChatDimens.three,
+                      child: FloatingActionButton(
+                        onPressed: () async {
+                          if (controller.broadcastMessage.isNotEmpty &&
+                              controller
+                                  .forwardedList.selectedUsers.isNotEmpty) {
+                            await controller.sendBroadcastMessage(
+                              userIds: controller.forwardedList.selectedUsers
+                                  .map((e) => e.userDetails.userId)
+                                  .toList(),
+                              body: controller.broadcastMessage,
+                              isLoading: true,
+                            );
+                          } else {
+                            await Get.dialog(
+                              const IsmChatAlertDialogBox(
+                                title: IsmChatStrings.broadcastAlert,
+                                cancelLabel: 'Okay',
+                              ),
+                            );
+                          }
+                        },
+                        elevation: 0,
+                        shape: const CircleBorder(),
+                        backgroundColor:
+                            controller.broadcastMessage.isNotEmpty &&
+                                    controller
+                                        .forwardedList.selectedUsers.isNotEmpty
+                                ? IsmChatConfig.chatTheme.primaryColor
+                                : IsmChatColors.greyColorLight,
+                        child: const Icon(
+                          Icons.send_rounded,
+                          color: IsmChatColors.whiteColor,
+                        ),
                       ),
                     ),
                   ],
