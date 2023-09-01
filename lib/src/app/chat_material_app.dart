@@ -159,7 +159,6 @@ class IsmChatApp extends StatelessWidget {
     void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
     Duration duration = const Duration(milliseconds: 500),
     String? messageFromOutSide,
-    searchBarColor,
   }) async {
     assert(
       [name, userId].every((e) => e.isNotEmpty),
