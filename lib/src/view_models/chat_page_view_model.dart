@@ -14,14 +14,15 @@ class IsmChatPageViewModel {
     int limit = 20,
     int skip = 0,
     String? searchText,
+    bool isLoading = false,
   }) async {
     var messages = await _repository.getChatMessages(
-      conversationId: conversationId,
-      lastMessageTimestamp: lastMessageTimestamp,
-      limit: limit,
-      skip: pagination ?? 0,
-      searchText: searchText,
-    );
+        conversationId: conversationId,
+        lastMessageTimestamp: lastMessageTimestamp,
+        limit: limit,
+        skip: pagination ?? 0,
+        searchText: searchText,
+        isLoading: isLoading);
 
     if (messages == null) {
       return [];
@@ -53,8 +54,10 @@ class IsmChatPageViewModel {
         await IsmChatConfig.dbWrapper!
             .saveConversation(conversation: conversation);
       }
+    } else {
+      messages = sortMessages(messages);
     }
-    IsmChatLog.info('messge View $messages');
+
     return messages;
   }
 

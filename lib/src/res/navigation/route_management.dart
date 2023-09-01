@@ -26,6 +26,10 @@ class IsmChatRouteManagement {
         arguments: {'message': message, 'conversation': conversation});
   }
 
+  static void goToBroadcastView() {
+    Get.toNamed(IsmChatBroadCastView.route);
+  }
+
   static void goToConversationInfo() {
     Get.toNamed(IsmChatConverstaionInfoView.route);
   }

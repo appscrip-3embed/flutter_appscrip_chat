@@ -96,8 +96,8 @@ mixin IsmChatGroupAdminMixin {
       bool isLoading = false,
       int limit = 20,
       int skip = 0}) async {
-    if (_controller.canCallEligibleApi) return;
-    _controller.canCallEligibleApi = true;
+    if (_controller.canCallCurrentApi) return;
+    _controller.canCallCurrentApi = true;
 
     var response = await _controller._viewModel.getEligibleMembers(
         conversationId: conversationId,
@@ -120,7 +120,7 @@ mixin IsmChatGroupAdminMixin {
         .compareTo(b.userDetails.userName.toLowerCase()));
     _controller.groupEligibleUserDuplicate =
         List.from(_controller.groupEligibleUser);
-    _controller.canCallEligibleApi = false;
+    _controller.canCallCurrentApi = false;
     _handleList(_controller.groupEligibleUser);
   }
 

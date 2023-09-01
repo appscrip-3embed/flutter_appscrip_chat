@@ -21,6 +21,8 @@ class IsmChatConversationsController extends GetxController {
 
   var userSearchNameController = TextEditingController();
 
+  TextEditingController broadcastMessageController = TextEditingController();
+
   final _conversations = <IsmChatConversationModel>[].obs;
   List<IsmChatConversationModel> get conversations => _conversations;
   set conversations(List<IsmChatConversationModel> value) =>
@@ -153,8 +155,6 @@ class IsmChatConversationsController extends GetxController {
 
   List<BackGroundAsset> backgroundColor = [];
 
-  TextEditingController nameController = TextEditingController();
-
   BuildContext? context;
 
   @override
@@ -269,24 +269,6 @@ class IsmChatConversationsController extends GetxController {
             .first,
       ),
     );
-  }
-
-  /// function to show dialog for changing the group title
-  void showDialogForNameAndUserName() async {
-    await Get.dialog(IsmChatAlertDialogBox(
-      title: IsmChatStrings.enterNewGroupTitle,
-      content: TextFormField(
-        controller: nameController,
-      ),
-      actionLabels: const [IsmChatStrings.ok],
-      callbackActions: const [
-        // () => changeGroupTitle(
-        //       conversationTitle: groupTitleController.text,
-        //       conversationId: conversation?.conversationId ?? '',
-        //       isLoading: true,
-        //     ),
-      ],
-    ));
   }
 
   /// This function will be used in [Forward Screen and New conversation screen] to Select or Unselect users
@@ -654,5 +636,38 @@ class IsmChatConversationsController extends GetxController {
         conversationId: conversationId,
         metaData: metaData,
         isLoading: isLoading);
+  }
+
+  Future<void> sendBroadcastMessage({
+    required List<String> userIds,
+    required bool showInConversation,
+    required int messageType,
+    required bool encrypted,
+    required String deviceId,
+    required String body,
+    required String notificationBody,
+    required String notificationTitle,
+    List<String>? searchableTags,
+    IsmChatMetaData? metaData,
+    Map<String, dynamic>? events,
+    String? customType,
+    List<Map<String, dynamic>>? attachments,
+  }) async {
+    var response = await _viewModel.sendBroadcastMessage(
+      userIds: userIds,
+      showInConversation: showInConversation,
+      messageType: messageType,
+      encrypted: encrypted,
+      deviceId: deviceId,
+      body: body,
+      notificationBody: notificationBody,
+      notificationTitle: notificationTitle,
+      attachments: attachments,
+      customType: customType,
+      events: events,
+      metaData: metaData,
+      searchableTags: searchableTags,
+    );
+    if (response?.hasError == false) {}
   }
 }

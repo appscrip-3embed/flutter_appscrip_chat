@@ -57,17 +57,25 @@ mixin IsmChatPageGetMessageMixin {
 
   void searchedMessages(String query) async {
     if (query.trim().isEmpty) {
-      _controller.searchMessages = Future.value([]);
+      _controller.searchMessages.clear();
       return;
     }
-    _controller.searchMessages = _controller._viewModel.getChatMessages(
-      pagination: 0,
+    if (_controller.canCallCurrentApi) return;
+    _controller.canCallCurrentApi = true;
+
+    var messages = await _controller._viewModel.getChatMessages(
+      pagination: _controller.searchMessages.isEmpty
+          ? 0
+          : _controller.searchMessages.length.pagination(),
       conversationId: _controller.conversation?.conversationId ?? '',
       lastMessageTimestamp: 0,
       searchText: query,
+      isLoading: true,
     );
-    _controller.searchedMessagesList = await _controller.searchMessages;
-    IsmChatLog.error(_controller.searchContactList.length);
+    if (messages.isNotEmpty) {
+      _controller.searchMessages.addAll(messages);
+    }
+    _controller.canCallCurrentApi = false;
   }
 
   Future<void> updateConversationMessage() async {

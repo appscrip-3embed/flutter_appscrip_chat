@@ -134,7 +134,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
               ? controller.isLoadingUsers
                   ? Center(
                       child: Text(
-                        'No user found',
+                        IsmChatStrings.noUserFound,
                         style: IsmChatStyles.w600Black16,
                       ),
                     )

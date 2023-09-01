@@ -125,20 +125,22 @@ class _MoreIcon extends StatelessWidget {
         ),
         onSelected: (index) async {
           if (index == 1) {
+            IsmChatRouteManagement.goToBroadcastView();
+          } else if (index == 2) {
             if (Responsive.isWebAndTablet(context)) {
               controller.isRenderScreen = IsRenderConversationScreen.blockView;
               Scaffold.of(context).openDrawer();
             } else {
               IsmChatRouteManagement.goToBlockView();
             }
-          } else if (index == 2) {
+          } else if (index == 3) {
             controller.isRenderScreen =
                 IsRenderConversationScreen.groupUserView;
             Scaffold.of(context).openDrawer();
-          } else if (index == 3) {
+          } else if (index == 4) {
             await Get.dialog(IsmChatAlertDialogBox(
               title: '${IsmChatStrings.logout}?',
-              content: const Text('Are you sure you want to logout'),
+              content: const Text(IsmChatStrings.logoutMessage),
               actionLabels: const [
                 IsmChatStrings.logout,
               ],
@@ -151,23 +153,21 @@ class _MoreIcon extends StatelessWidget {
           }
         },
         itemBuilder: (_) => [
-          if (Responsive.isWebAndTablet(context)) ...[
-            PopupMenuItem(
-              value: 2,
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.diversity_3_outlined,
-                    color: IsmChatConfig.chatTheme.primaryColor,
-                  ),
-                  IsmChatDimens.boxWidth8,
-                  const Text(IsmChatStrings.newGroup),
-                ],
-              ),
-            ),
-          ],
           PopupMenuItem(
             value: 1,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.groups_rounded,
+                  color: IsmChatConfig.chatTheme.primaryColor,
+                ),
+                IsmChatDimens.boxWidth8,
+                const Text(IsmChatStrings.boradcastMessge),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: 2,
             child: Row(
               children: [
                 Icon(
@@ -182,6 +182,21 @@ class _MoreIcon extends StatelessWidget {
           if (Responsive.isWebAndTablet(context)) ...[
             PopupMenuItem(
               value: 3,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.diversity_3_outlined,
+                    color: IsmChatConfig.chatTheme.primaryColor,
+                  ),
+                  IsmChatDimens.boxWidth8,
+                  const Text(IsmChatStrings.newGroup),
+                ],
+              ),
+            ),
+          ],
+          if (Responsive.isWebAndTablet(context)) ...[
+            PopupMenuItem(
+              value: 4,
               child: Row(
                 children: [
                   Icon(

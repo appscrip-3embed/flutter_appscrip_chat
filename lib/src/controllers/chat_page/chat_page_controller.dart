@@ -61,6 +61,8 @@ class IsmChatPageController extends GetxController
 
   var messagesScrollController = AutoScrollController();
 
+  var searchMessageScrollController = ScrollController();
+
   final textEditingController = TextEditingController();
 
   final participnatsEditingController = TextEditingController();
@@ -275,7 +277,11 @@ class IsmChatPageController extends GetxController
     ),
   ];
 
-  bool canCallEligibleApi = false;
+  final RxBool _canCallCurrentApi = false.obs;
+  bool get canCallCurrentApi => _canCallCurrentApi.value;
+  set canCallCurrentApi(bool value) {
+    _canCallCurrentApi.value = value;
+  }
 
   final _groupEligibleUser = <SelectedForwardUser>[].obs;
   List<SelectedForwardUser> get groupEligibleUser => _groupEligibleUser;
@@ -400,8 +406,10 @@ class IsmChatPageController extends GetxController
   String get audioPaht => _audioPaht.value;
   set audioPaht(String value) => _audioPaht.value = value;
 
-  Future<List<IsmChatMessageModel>> searchMessages = Future.value([]);
-  List<IsmChatMessageModel> searchedMessagesList = [];
+  final _searchMessages = <IsmChatMessageModel>[].obs;
+  List<IsmChatMessageModel> get searchMessages => _searchMessages;
+  set searchMessages(List<IsmChatMessageModel> value) =>
+      _searchMessages.value = value;
 
   final Dio dio = Dio();
 
@@ -485,16 +493,15 @@ class IsmChatPageController extends GetxController
   void onClose() {
     if (areCamerasInitialized) {
       _frontCameraController.dispose();
-
       _backCameraController.dispose();
     }
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
+    searchMessageScrollController.dispose();
     attchmentOverlayEntry?.dispose();
     messageHoldOverlayEntry?.dispose();
     fabAnimationController?.dispose();
-    // attchmentOverlayEntry = null;
-    // messageHoldOverlayEntry = null;
+
     ifTimerMounted();
     super.onClose();
   }
@@ -507,6 +514,7 @@ class IsmChatPageController extends GetxController
     }
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
+    searchMessageScrollController.dispose();
     attchmentOverlayEntry?.dispose();
     messageHoldOverlayEntry?.dispose();
     fabAnimationController!.dispose();
@@ -985,31 +993,44 @@ class IsmChatPageController extends GetxController
   }
 
   void scrollListener() {
-    messagesScrollController.addListener(() {
-      if (holdController.isCompleted && messageHoldOverlayEntry != null) {
-        closeOveray();
-      }
-
-      if (showAttachment) {
-        fabAnimationController!.reverse();
-        if (fabAnimationController!.isDismissed) {
-          attchmentOverlayEntry?.remove();
+    /// This method for messgae scrolling
+    messagesScrollController.addListener(
+      () {
+        if (holdController.isCompleted && messageHoldOverlayEntry != null) {
+          closeOveray();
         }
-        showAttachment = false;
-      }
 
-      if (messagesScrollController.offset.toInt() ==
-          messagesScrollController.position.maxScrollExtent.toInt()) {
-        getMessagesFromAPI(forPagination: true, lastMessageTimestamp: 0);
-      }
-      toggleEmojiBoard(false, false);
+        if (showAttachment) {
+          fabAnimationController!.reverse();
+          if (fabAnimationController!.isDismissed) {
+            attchmentOverlayEntry?.remove();
+          }
+          showAttachment = false;
+        }
 
-      if (Get.height * 0.3 < messagesScrollController.offset) {
-        showDownSideButton = true;
-      } else {
-        showDownSideButton = false;
-      }
-    });
+        if (messagesScrollController.offset.toInt() ==
+            messagesScrollController.position.maxScrollExtent.toInt()) {
+          getMessagesFromAPI(forPagination: true, lastMessageTimestamp: 0);
+        }
+        toggleEmojiBoard(false, false);
+
+        if (Get.height * 0.3 < messagesScrollController.offset) {
+          showDownSideButton = true;
+        } else {
+          showDownSideButton = false;
+        }
+      },
+    );
+
+    /// This method for search  messgae scrolling
+    searchMessageScrollController.addListener(
+      () {
+        if (searchMessageScrollController.offset.toInt() ==
+            searchMessageScrollController.position.maxScrollExtent.toInt()) {
+          searchedMessages(textEditingController.text);
+        }
+      },
+    );
   }
 
   void closeOveray() {

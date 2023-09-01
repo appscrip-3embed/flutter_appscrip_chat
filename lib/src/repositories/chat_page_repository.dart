@@ -13,20 +13,19 @@ class IsmChatPageRepository {
     int limit = 20,
     int skip = 0,
     String? searchText,
+    bool isLoading = false,
   }) async {
     try {
       String? url;
       if (searchText != null || searchText?.isNotEmpty == true) {
         url =
-            '${IsmChatAPI.chatMessages}?conversationId=$conversationId&searchTag=$searchText&sort=1';
+            '${IsmChatAPI.chatMessages}?conversationId=$conversationId&searchTag=$searchText&sort=-1&limit=$limit&skip=$skip';
       } else {
         url =
             '${IsmChatAPI.chatMessages}?conversationId=$conversationId&limit=$limit&skip=$skip&lastMessageTimestamp=$lastMessageTimestamp';
       }
-      var response = await _apiWrapper.get(
-        url,
-        headers: IsmChatUtility.tokenCommonHeader(),
-      );
+      var response = await _apiWrapper.get(url,
+          headers: IsmChatUtility.tokenCommonHeader(), showLoader: isLoading);
       if (response.hasError) {
         return null;
       }

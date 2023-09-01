@@ -36,6 +36,7 @@ class IsmChatAPI {
   static const String createProfilePic = '$_profilePic/create';
 
   static const String sendMessage = '$baseUrl/chat/message';
+  static const String sendBroadcastMessage = '$baseUrl/chat/message/broadcast';
   static const String chatStatus = '$sendMessage/status';
   static const String readStatus = '$chatStatus/read';
   static const String deliverStatus = '$chatStatus/delivery';
