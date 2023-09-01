@@ -140,6 +140,8 @@ class IsmChatMessageModel {
                   .toList()
               : [],
       isUploading: map['isUploading'] as bool? ?? false,
+      conversationDetails:
+          map['conversationDetails'] as Map<String, dynamic>? ?? {},
     );
 
     if (IsmChatConfig.configInitilized) {
@@ -156,7 +158,10 @@ class IsmChatMessageModel {
                           model.memberId
                       ? false
                       : true
-                  : true);
+                  : true,
+          isGroup: model.conversationDetails?.isNotEmpty == true
+              ? model.conversationDetails!['isGroup']
+              : false);
     }
 
     return model;
@@ -205,6 +210,7 @@ class IsmChatMessageModel {
         deliveredTo: [],
         readBy: [],
         isUploading: false,
+        conversationDetails: {},
       );
 
   factory IsmChatMessageModel.fromMonth(int sentAt) => IsmChatMessageModel(
@@ -250,6 +256,7 @@ class IsmChatMessageModel {
         readBy: [],
         deliveredTo: [],
         isUploading: false,
+        conversationDetails: {},
       );
 
   IsmChatMessageModel({
@@ -299,6 +306,7 @@ class IsmChatMessageModel {
     this.readBy,
     this.deliveredTo,
     this.isUploading,
+    this.conversationDetails,
   });
 
   List<Contact> get contacts => customType == IsmChatCustomMessageType.contact
@@ -353,6 +361,7 @@ class IsmChatMessageModel {
   List<MessageStatus>? readBy;
   List<MessageStatus>? deliveredTo;
   bool? isUploading;
+  Map<String, dynamic>? conversationDetails;
 
   String get chatName => conversationTitle ?? senderInfo?.userName ?? '';
 
@@ -361,56 +370,56 @@ class IsmChatMessageModel {
           ? 'You'
           : userName!;
 
-  IsmChatMessageModel copyWith({
-    String? body,
-    String? action,
-    int? sentAt,
-    int? updatedAt,
-    int? unreadMessagesCount,
-    String? userId,
-    String? userName,
-    List<String>? searchableTags,
-    bool? privateOneToOne,
-    bool? showInConversation,
-    bool? readByAll,
-    UserDetails? senderInfo,
-    IsmChatMetaData? metaData,
-    bool? messagingDisabled,
-    int? membersCount,
-    List<IsmChatLastReadAt>? lastReadAt,
-    List<AttachmentModel>? attachments,
-    LastMessageDetails? lastMessageDetails,
-    int? lastMessageSentAt,
-    bool? isGroup,
-    bool? deliveredToAll,
-    IsmChatCustomMessageType? customType,
-    String? createdByUserName,
-    String? createdByUserImageUrl,
-    String? createdBy,
-    int? conversationType,
-    String? conversationTitle,
-    String? conversationImageUrl,
-    String? conversationId,
-    String? parentMessageId,
-    String? initiatorId,
-    String? messageId,
-    String? initiatorName,
-    String? deviceId,
-    ConversationConfigModel? config,
-    int? adminCount,
-    IsmChatMessageType? messageType,
-    bool? sentByMe,
-    List<UserDetails>? mentionedUsers,
-    List<UserDetails>? members,
-    String? memberId,
-    String? memberName,
-    List<MessageReactionModel>? reactions,
-    String? notificationBody,
-    String? notificationTitle,
-    List<MessageStatus>? readBy,
-    List<MessageStatus>? deliveredTo,
-    bool? isUploading,
-  }) =>
+  IsmChatMessageModel copyWith(
+          {String? body,
+          String? action,
+          int? sentAt,
+          int? updatedAt,
+          int? unreadMessagesCount,
+          String? userId,
+          String? userName,
+          List<String>? searchableTags,
+          bool? privateOneToOne,
+          bool? showInConversation,
+          bool? readByAll,
+          UserDetails? senderInfo,
+          IsmChatMetaData? metaData,
+          bool? messagingDisabled,
+          int? membersCount,
+          List<IsmChatLastReadAt>? lastReadAt,
+          List<AttachmentModel>? attachments,
+          LastMessageDetails? lastMessageDetails,
+          int? lastMessageSentAt,
+          bool? isGroup,
+          bool? deliveredToAll,
+          IsmChatCustomMessageType? customType,
+          String? createdByUserName,
+          String? createdByUserImageUrl,
+          String? createdBy,
+          int? conversationType,
+          String? conversationTitle,
+          String? conversationImageUrl,
+          String? conversationId,
+          String? parentMessageId,
+          String? initiatorId,
+          String? messageId,
+          String? initiatorName,
+          String? deviceId,
+          ConversationConfigModel? config,
+          int? adminCount,
+          IsmChatMessageType? messageType,
+          bool? sentByMe,
+          List<UserDetails>? mentionedUsers,
+          List<UserDetails>? members,
+          String? memberId,
+          String? memberName,
+          List<MessageReactionModel>? reactions,
+          String? notificationBody,
+          String? notificationTitle,
+          List<MessageStatus>? readBy,
+          List<MessageStatus>? deliveredTo,
+          bool? isUploading,
+          Map<String, dynamic>? conversationDetails}) =>
       IsmChatMessageModel(
           body: body ?? this.body,
           action: action ?? this.action,
@@ -459,7 +468,8 @@ class IsmChatMessageModel {
           notificationTitle: notificationTitle ?? this.notificationTitle,
           readBy: readBy ?? this.readBy,
           deliveredTo: deliveredTo ?? this.deliveredTo,
-          isUploading: isUploading ?? this.isUploading);
+          isUploading: isUploading ?? this.isUploading,
+          conversationDetails: conversationDetails ?? this.conversationDetails);
 
   Map<String, dynamic> toMap() => {
         'body': IsmChatUtility.encodePayload(body),
@@ -507,14 +517,15 @@ class IsmChatMessageModel {
         'notificationTitle': notificationTitle,
         'readBy': readBy?.map((e) => e.toMap()).toList(),
         'deliveredTo': deliveredTo?.map((e) => e.toMap()).toList(),
-        'isUploading': isUploading
+        'isUploading': isUploading,
+        'conversationDetails': conversationDetails
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'IsmChatMessageModel(body: $body, action: $action, updatedAt: $updatedAt, sentAt: $sentAt, unreadMessagesCount: $unreadMessagesCount, userName: $userName, userId: $userId, searchableTags: $searchableTags, privateOneToOne: $privateOneToOne, showInConversation: $showInConversation, readByAll: $readByAll, senderInfo: $senderInfo, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, attachments: $attachments, lastMessageSentAt: $lastMessageSentAt, isGroup: $isGroup, deliveredToAll: $deliveredToAll, customType: $customType, createdByUserName: $createdByUserName, createdByUserImageUrl: $createdByUserImageUrl, createdBy: $createdBy, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, parentMessageId: $parentMessageId, initiatorId : $initiatorId  messageId: $messageId, deviceId: $deviceId, adminCount: $adminCount, messageType: $messageType, sentByMe: $sentByMe, mentionedUsers: $mentionedUsers, initiatorName : $initiatorName, members: $members, memberId: $memberId, memberName: $memberName, reactions : $reactions, readBy : $readBy, deliveredTo : $deliveredTo, isUploading : $isUploading)';
+      'IsmChatMessageModel(body: $body, action: $action, updatedAt: $updatedAt, sentAt: $sentAt, unreadMessagesCount: $unreadMessagesCount, userName: $userName, userId: $userId, searchableTags: $searchableTags, privateOneToOne: $privateOneToOne, showInConversation: $showInConversation, readByAll: $readByAll, senderInfo: $senderInfo, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, attachments: $attachments, lastMessageSentAt: $lastMessageSentAt, isGroup: $isGroup, deliveredToAll: $deliveredToAll, customType: $customType, createdByUserName: $createdByUserName, createdByUserImageUrl: $createdByUserImageUrl, createdBy: $createdBy, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, parentMessageId: $parentMessageId, initiatorId : $initiatorId  messageId: $messageId, deviceId: $deviceId, adminCount: $adminCount, messageType: $messageType, sentByMe: $sentByMe, mentionedUsers: $mentionedUsers, initiatorName : $initiatorName, members: $members, memberId: $memberId, memberName: $memberName, reactions : $reactions, readBy : $readBy, deliveredTo : $deliveredTo, isUploading : $isUploading, conversationDetails : $conversationDetails)';
 
   @override
   bool operator ==(Object other) {
@@ -560,6 +571,7 @@ class IsmChatMessageModel {
         other.initiatorName == initiatorName &&
         other.memberId == memberId &&
         other.memberName == memberName &&
+        other.conversationDetails == conversationDetails &&
         other.adminCount == adminCount &&
         other.reactions == reactions &&
         other.isUploading == isUploading &&
@@ -612,6 +624,7 @@ class IsmChatMessageModel {
       reactions.hashCode ^
       deliveredTo.hashCode ^
       isUploading.hashCode ^
+      conversationDetails.hashCode ^
       readBy.hashCode;
 }
 

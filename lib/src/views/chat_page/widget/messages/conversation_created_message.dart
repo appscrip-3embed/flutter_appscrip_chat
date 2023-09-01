@@ -7,21 +7,22 @@ class IsmChatConversationCreatedMessage extends StatelessWidget {
   final IsmChatMessageModel message;
 
   @override
-  Widget build(BuildContext context) => Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: IsmChatConfig.chatTheme.backgroundColor,
-          borderRadius: BorderRadius.circular(IsmChatDimens.eight),
-        ),
-        padding: IsmChatDimens.edgeInsets8_4,
-        child: Text(
-          message.isGroup == true
-              ? '${message.userName} created group'
-              : 'Messages are end to end encrypted. No one outside of this chat can read to them.',
-          style: IsmChatStyles.w500Black12.copyWith(
-            color: IsmChatConfig.chatTheme.primaryColor,
+  Widget build(BuildContext context) => Center(
+        child: Container(
+          decoration: BoxDecoration(
+            color: IsmChatConfig.chatTheme.backgroundColor,
+            borderRadius: BorderRadius.circular(IsmChatDimens.eight),
           ),
-          textAlign: TextAlign.center,
+          padding: IsmChatDimens.edgeInsets8_4,
+          child: Text(
+            message.isGroup == true
+                ? '${message.userName} created group'
+                : 'Messages are end to end encrypted. No one outside of this chat can read to them.',
+            style: IsmChatStyles.w500Black12.copyWith(
+              color: IsmChatConfig.chatTheme.primaryColor,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ),
       );
 }

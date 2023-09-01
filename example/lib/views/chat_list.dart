@@ -100,7 +100,7 @@ class _ChatListState extends State<ChatList> {
             onCreateTap: () {},
             onChatTap: (_, conversation) {},
             useCallbackOnForward: true,
-            isHeaderAppBar: Responsive.isWebAndTablet(context) ? false : false,
+            isHeaderAppBar: Responsive.isWebAndTablet(context) ? false : true,
             header: IsmChatListHeader(
               onSignOut: () {
                 controller.onSignOut();
