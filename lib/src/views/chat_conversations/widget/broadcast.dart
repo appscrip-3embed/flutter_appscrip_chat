@@ -42,8 +42,9 @@ class IsmChatBroadCastView extends StatelessWidget {
               Get.find<IsmChatConversationsController>();
           converstaionController.callApiNonBlock = true;
           converstaionController.forwardedList.clear();
+          converstaionController.selectedUserList.clear();
           converstaionController.userSearchNameController.clear();
-          converstaionController.broadcastMessageController.clear();
+          converstaionController.broadcastMessage = '';
           converstaionController.showSearchField = false;
           converstaionController.isLoadingUsers = false;
           converstaionController.getNonBlockUserList(
@@ -86,7 +87,7 @@ class IsmChatBroadCastView extends StatelessWidget {
                     },
                   )
                 : Text(
-                    'Bradcast message to...  ${controller.selectedUserList.isEmpty ? '' : controller.selectedUserList.length}',
+                    'Broadcast message to...  ${controller.selectedUserList.isEmpty ? '' : controller.selectedUserList.length}',
                     style: IsmChatStyles.w600White18,
                   ),
             action: [
@@ -132,26 +133,40 @@ class IsmChatBroadCastView extends StatelessWidget {
                     Expanded(
                       child: IsmChatInputField(
                         fillColor: IsmChatConfig.chatTheme.primaryColor,
-                        controller: controller.broadcastMessageController,
                         style: IsmChatStyles.w400White16,
                         hint: 'Broadcast message...',
                         hintStyle: IsmChatStyles.w400White16,
+                        onChanged: (value) {
+                          controller.broadcastMessage = value;
+                        },
                       ),
                     ),
                     FloatingActionButton(
                       onPressed: () async {
-                        await controller.sendBroadcastMessage(
-                          userIds: [
-                            controller.forwardedList.selectedUsers
+                        if (controller.broadcastMessage.isNotEmpty &&
+                            controller.forwardedList.selectedUsers.isNotEmpty) {
+                          await controller.sendBroadcastMessage(
+                            userIds: controller.forwardedList.selectedUsers
                                 .map((e) => e.userDetails.userId)
-                                .join(',')
-                          ],
-                          body: controller.broadcastMessageController.text,
-                        );
+                                .toList(),
+                            body: controller.broadcastMessage,
+                            isLoading: true,
+                          );
+                        } else {
+                          await Get.dialog(
+                            const IsmChatAlertDialogBox(
+                              title: IsmChatStrings.broadcastAlert,
+                              cancelLabel: 'Okay',
+                            ),
+                          );
+                        }
                       },
                       elevation: 0,
                       shape: const CircleBorder(),
-                      backgroundColor: IsmChatConfig.chatTheme.primaryColor,
+                      backgroundColor: controller.broadcastMessage.isNotEmpty &&
+                              controller.forwardedList.selectedUsers.isNotEmpty
+                          ? IsmChatConfig.chatTheme.primaryColor
+                          : IsmChatColors.greyColorLight,
                       child: const Icon(
                         Icons.send_rounded,
                         color: IsmChatColors.whiteColor,

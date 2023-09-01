@@ -585,6 +585,7 @@ enum IsRenderConversationScreen {
   groupUserView,
   createConverstaionView,
   userView,
+  broadcastView
 }
 
 enum IsRenderChatPageScreen {
@@ -595,4 +596,5 @@ enum IsRenderChatPageScreen {
   groupEligibleView,
   coversationMediaView,
   userInfoView,
+  messageSearchView
 }

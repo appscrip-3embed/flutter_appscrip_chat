@@ -100,9 +100,11 @@ class _IsmChatPageView extends StatelessWidget {
                         controller.isMessageSeleted = false;
                         controller.selectedMessage.clear();
                       },
-                      child: Icon(Responsive.isWebAndTablet(context)
-                          ? Icons.close_rounded
-                          : Icons.arrow_back_rounded),
+                      child: Icon(
+                        Responsive.isWebAndTablet(context)
+                            ? Icons.close_rounded
+                            : Icons.arrow_back_rounded,
+                      ),
                     ),
                     titleSpacing: IsmChatDimens.four,
                     title: Text(

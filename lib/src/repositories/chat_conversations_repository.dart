@@ -305,21 +305,21 @@ class IsmChatConversationsRepository {
     }
   }
 
-  Future<IsmChatResponseModel?> sendBroadcastMessage({
-    required List<String> userIds,
-    required bool showInConversation,
-    required int messageType,
-    required bool encrypted,
-    required String deviceId,
-    required String body,
-    required String notificationBody,
-    required String notificationTitle,
-    List<String>? searchableTags,
-    IsmChatMetaData? metaData,
-    Map<String, dynamic>? events,
-    String? customType,
-    List<Map<String, dynamic>>? attachments,
-  }) async {
+  Future<IsmChatResponseModel?> sendBroadcastMessage(
+      {required List<String> userIds,
+      required bool showInConversation,
+      required int messageType,
+      required bool encrypted,
+      required String deviceId,
+      required String body,
+      required String notificationBody,
+      required String notificationTitle,
+      List<String>? searchableTags,
+      IsmChatMetaData? metaData,
+      Map<String, dynamic>? events,
+      String? customType,
+      List<Map<String, dynamic>>? attachments,
+      bool isLoading = false}) async {
     try {
       final payload = {
         'userIds': userIds,
@@ -341,6 +341,7 @@ class IsmChatConversationsRepository {
         IsmChatAPI.sendBroadcastMessage,
         payload: payload,
         headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading,
       );
       if (response.hasError) {
         return null;

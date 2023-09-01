@@ -19,6 +19,12 @@ class IsmChatSearchMessgae extends StatelessWidget {
         builder: (controller) => Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: IsmChatAppBar(
+            onBack: !Responsive.isWebAndTablet(context)
+                ? null
+                : () {
+                    Get.find<IsmChatConversationsController>()
+                        .isRenderChatPageaScreen = IsRenderChatPageScreen.none;
+                  },
             backIcon: Icons.close_rounded,
             title: IsmChatInputField(
               fillColor: IsmChatConfig.chatTheme.primaryColor,

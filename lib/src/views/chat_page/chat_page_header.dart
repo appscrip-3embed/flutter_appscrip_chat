@@ -333,7 +333,13 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                   } else if (value == 2) {
                     controller.addWallpaper();
                   } else if (value == 1) {
-                    IsmChatRouteManagement.goToSearchMessageView();
+                    if (Responsive.isWebAndTablet(context)) {
+                      Get.find<IsmChatConversationsController>()
+                              .isRenderChatPageaScreen =
+                          IsRenderChatPageScreen.messageSearchView;
+                    } else {
+                      IsmChatRouteManagement.goToSearchMessageView();
+                    }
                   } else {
                     if (IsmChatProperties.chatPageProperties.header == null) {
                       return;

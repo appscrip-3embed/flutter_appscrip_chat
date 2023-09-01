@@ -169,21 +169,21 @@ class IsmChatConversationsViewModel {
         isLoading: isLoading,
       );
 
-  Future<IsmChatResponseModel?> sendBroadcastMessage({
-    required List<String> userIds,
-    required bool showInConversation,
-    required int messageType,
-    required bool encrypted,
-    required String deviceId,
-    required String body,
-    required String notificationBody,
-    required String notificationTitle,
-    List<String>? searchableTags,
-    IsmChatMetaData? metaData,
-    Map<String, dynamic>? events,
-    String? customType,
-    List<Map<String, dynamic>>? attachments,
-  }) async =>
+  Future<IsmChatResponseModel?> sendBroadcastMessage(
+          {required List<String> userIds,
+          required bool showInConversation,
+          required int messageType,
+          required bool encrypted,
+          required String deviceId,
+          required String body,
+          required String notificationBody,
+          required String notificationTitle,
+          List<String>? searchableTags,
+          IsmChatMetaData? metaData,
+          Map<String, dynamic>? events,
+          String? customType,
+          List<Map<String, dynamic>>? attachments,
+          bool isLoading = false}) async =>
       await _repository.sendBroadcastMessage(
         userIds: userIds,
         showInConversation: showInConversation,
@@ -198,5 +198,6 @@ class IsmChatConversationsViewModel {
         events: events,
         metaData: metaData,
         searchableTags: searchableTags,
+        isLoading: isLoading,
       );
 }

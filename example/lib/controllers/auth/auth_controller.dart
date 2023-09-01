@@ -109,12 +109,12 @@ class AuthController extends GetxController {
   void ismUploadImage(ImageSource imageSource) async {
     XFile? result;
     if (imageSource == ImageSource.gallery) {
-      result = await ImagePicker()
-          .pickImage(imageQuality: 25, source: ImageSource.camera);
+      result =
+          await ImagePicker().pickImage(imageQuality: 25, source: imageSource);
     } else {
       result = await ImagePicker().pickImage(
         imageQuality: 25,
-        source: ImageSource.camera,
+        source: imageSource,
       );
     }
     Uint8List? bytes;
