@@ -70,7 +70,7 @@ class _ChatListState extends State<ChatList> {
               if (!kIsWeb) IsmChatAttachmentType.contact,
             ],
           ),
-          startConversationWidget: Center(
+          noChatSelectedPlaceholder: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -100,9 +100,7 @@ class _ChatListState extends State<ChatList> {
             onCreateTap: () {},
             onChatTap: (_, conversation) {},
             useCallbackOnForward: true,
-            isHeaderAppBar: true,
-
-            // appBar: AppBar(title: const Text('data')),
+            isHeaderAppBar: Responsive.isWebAndTablet(context) ? false : false,
             header: IsmChatListHeader(
               onSignOut: () {
                 controller.onSignOut();
