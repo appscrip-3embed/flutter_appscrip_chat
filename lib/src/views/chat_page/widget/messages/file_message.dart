@@ -3,7 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-// import 'package:pdfx/pdfx.dart';
+import 'package:internet_file/internet_file.dart';
+import 'package:pdfx/pdfx.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class IsmChatFileMessage extends StatefulWidget {
@@ -31,14 +32,13 @@ class _IsmChatFileMessageState extends State<IsmChatFileMessage> {
                 alignment: Alignment.bottomCenter,
                 children: [
                   Container(
-                      alignment: Alignment.topCenter,
-                      width: double.maxFinite,
-                      height: IsmChatDimens.twoHundredTwenty,
-                      child: const Text('')
-                      // IsmChatPdfView(
-                      //   filePath: widget.message.attachments?.first.mediaUrl,
-                      // ),
-                      ),
+                    alignment: Alignment.topCenter,
+                    width: double.maxFinite,
+                    height: IsmChatDimens.twoHundredTwenty,
+                    child: IsmChatPdfView(
+                      filePath: widget.message.attachments?.first.mediaUrl,
+                    ),
+                  ),
                   Container(
                     height: IsmChatDimens.fifty,
                     width: double.maxFinite,
@@ -187,68 +187,68 @@ class _IsmChatFileMessageState extends State<IsmChatFileMessage> {
       );
 }
 
-// class IsmChatPdfView extends StatefulWidget {
-//   const IsmChatPdfView({Key? key, this.filePath}) : super(key: key);
+class IsmChatPdfView extends StatefulWidget {
+  const IsmChatPdfView({Key? key, this.filePath}) : super(key: key);
 
-//   final String? filePath;
+  final String? filePath;
 
-//   @override
-//   State<IsmChatPdfView> createState() => _IsmChatPdfViewState();
-// }
+  @override
+  State<IsmChatPdfView> createState() => _IsmChatPdfViewState();
+}
 
-// class _IsmChatPdfViewState extends State<IsmChatPdfView> {
-//   late PdfController _pdfController;
+class _IsmChatPdfViewState extends State<IsmChatPdfView> {
+  late PdfController _pdfController;
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     if (kIsWeb) {
-//       final isNetowrk = widget.filePath!.contains('http');
-//       if (isNetowrk) {
-//         _pdfController = PdfController(
-//           document: PdfDocument.openData(
-//             InternetFile.get(
-//               widget.filePath ?? '',
-//             ),
-//           ),
-//           initialPage: 1,
-//         );
-//       } else {
-//         _pdfController = PdfController(
-//           document: PdfDocument.openData(
-//             widget.filePath!.strigToUnit8List,
-//           ),
-//           initialPage: 1,
-//         );
-//       }
-//     } else {
-//       _pdfController = PdfController(
-//         document: PdfDocument.openAsset(widget.filePath ?? ''),
-//         initialPage: 1,
-//       );
-//     }
-//   }
+  @override
+  void initState() {
+    super.initState();
+    if (kIsWeb) {
+      final isNetowrk = widget.filePath!.contains('http');
+      if (isNetowrk) {
+        _pdfController = PdfController(
+          document: PdfDocument.openData(
+            InternetFile.get(
+              widget.filePath ?? '',
+            ),
+          ),
+          initialPage: 1,
+        );
+      } else {
+        _pdfController = PdfController(
+          document: PdfDocument.openData(
+            widget.filePath!.strigToUnit8List,
+          ),
+          initialPage: 1,
+        );
+      }
+    } else {
+      _pdfController = PdfController(
+        document: PdfDocument.openAsset(widget.filePath ?? ''),
+        initialPage: 1,
+      );
+    }
+  }
 
-//   @override
-//   void dispose() {
-//     _pdfController.dispose();
-//     super.dispose();
-//   }
+  @override
+  void dispose() {
+    _pdfController.dispose();
+    super.dispose();
+  }
 
-//   @override
-//   Widget build(BuildContext context) => Scaffold(
-//         backgroundColor: Colors.transparent,
-//         body: PdfView(
-//           scrollDirection: Axis.vertical,
-//           physics: const NeverScrollableScrollPhysics(),
-//           builders: PdfViewBuilders<DefaultBuilderOptions>(
-//             options: const DefaultBuilderOptions(),
-//             documentLoaderBuilder: (_) =>
-//                 const Center(child: CircularProgressIndicator()),
-//             pageLoaderBuilder: (_) =>
-//                 const Center(child: CircularProgressIndicator()),
-//           ),
-//           controller: _pdfController,
-//         ),
-//       );
-// }
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        backgroundColor: Colors.transparent,
+        body: PdfView(
+          scrollDirection: Axis.vertical,
+          physics: const NeverScrollableScrollPhysics(),
+          builders: PdfViewBuilders<DefaultBuilderOptions>(
+            options: const DefaultBuilderOptions(),
+            documentLoaderBuilder: (_) =>
+                const Center(child: CircularProgressIndicator()),
+            pageLoaderBuilder: (_) =>
+                const Center(child: CircularProgressIndicator()),
+          ),
+          controller: _pdfController,
+        ),
+      );
+}

@@ -16,7 +16,7 @@ dependencies:
   camera: ^0.10.3+2
   carousel_slider: ^4.2.1
   connectivity_plus: ^3.0.6
-  device_info_plus: ^8.0.0
+  device_info_plus: ^9.0.0
   dio: ^5.2.1+1
   elegant_notification: ^1.11.0
   emoji_picker_flutter: ^1.5.4
@@ -40,7 +40,7 @@ dependencies:
   google_maps_flutter: ^2.3.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  http: ^0.13.5
+  http: ^0.13.6
   image_cropper: ^3.0.1
   image_gallery_saver: ^2.0.3
   image_painter: ^0.5.0
@@ -52,7 +52,7 @@ dependencies:
   mqtt_client: ^9.8.0
   open_filex: ^4.3.2
   path_provider: ^2.0.13
-  # pdfx: ^2.4.0
+  pdfx: ^2.4.0
   permission_handler: ^10.2.0
   photo_view: ^0.14.0
   plugin_platform_interface: ^2.0.2
