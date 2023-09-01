@@ -163,7 +163,22 @@ class IsmChatBroadCastView extends StatelessWidget {
                       ),
                     ),
                     FloatingActionButton(
-                      onPressed: () async {},
+                      onPressed: () async {
+                        await controller.sendBroadcastMessage(
+                          userIds: [
+                            controller.forwardedList.selectedUsers
+                                .map((e) => e.userDetails.userId)
+                                .join(',')
+                          ],
+                          showInConversation: true,
+                          messageType: 0,
+                          encrypted: true,
+                          deviceId: controller._deviceConfig.,
+                          body: body,
+                          notificationBody: notificationBody,
+                          notificationTitle: notificationTitle,
+                        );
+                      },
                       elevation: 0,
                       shape: const CircleBorder(),
                       backgroundColor: IsmChatConfig.chatTheme.primaryColor,

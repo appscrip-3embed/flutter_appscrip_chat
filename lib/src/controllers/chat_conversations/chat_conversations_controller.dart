@@ -21,6 +21,8 @@ class IsmChatConversationsController extends GetxController {
 
   var userSearchNameController = TextEditingController();
 
+  final _deviceConfig = Get.find<IsmChatDeviceConfig>();
+
   TextEditingController broadcastMessageController = TextEditingController();
 
   final _conversations = <IsmChatConversationModel>[].obs;
