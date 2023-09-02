@@ -150,16 +150,16 @@ class IsmChatApp extends StatelessWidget {
   /// * `profileImageUrl` - The image url of the user (`Optional`)
   /// * `duration` - The duration for which the loading dialog will be displayed, this is to make sure all the controllers and variables are initialized before executing any statement and/or calling the APIs for data. (default `Duration(milliseconds: 500)`)
   /// * `onNavigateToChat` - This function will be executed to navigate to the specific chat screen of the selected user. If not provided, the `onChatTap` callback will be used which is passed to `IsmChatApp`.
-  static Future<void> chatFromOutside(
-      {String profileImageUrl = '',
-      required String name,
-      String? email,
-      required String userId,
-      IsmChatMetaData? metaData,
-      void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
-      Duration duration = const Duration(milliseconds: 500),
-      String? messageFromOutSide,
-      searchBarColor}) async {
+  static Future<void> chatFromOutside({
+    String profileImageUrl = '',
+    required String name,
+    String? email,
+    required String userId,
+    IsmChatMetaData? metaData,
+    void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
+    Duration duration = const Duration(milliseconds: 500),
+    String? messageFromOutSide,
+  }) async {
     assert(
       [name, userId].every((e) => e.isNotEmpty),
       '''Input Error: Please make sure that all required fields are filled out.

@@ -430,7 +430,7 @@ class IsmChatPageController extends GetxController
       conversation = _conversationController.currentConversation!;
       _conversationController.isConversationId =
           conversation?.conversationId ?? '';
-      // final newMeessageFromOutside = conversation?.messageFromOutSide;
+      final newMeessageFromOutside = conversation?.messageFromOutSide;
       await Future.delayed(Duration.zero);
       if (conversation?.conversationId?.isNotEmpty ?? false) {
         _getBackGroundAsset();
@@ -466,16 +466,16 @@ class IsmChatPageController extends GetxController
         isMessagesLoading = false;
       }
       // Todo add feature send message form outside
-      // if (newMeessageFromOutside != null ||
-      //     newMeessageFromOutside?.isNotEmpty == true) {
-      //   await Future.delayed(const Duration(milliseconds: 100));
-      //   chatInputController.text = newMeessageFromOutside ?? '';
-      //   sendTextMessage(
-      //     conversationId: conversation?.conversationId ?? '',
-      //     userId: conversation?.opponentDetails?.userId ?? '',
-      //     opponentName: conversation?.opponentDetails?.userName ?? '',
-      //   );
-      // }
+      if (newMeessageFromOutside != null &&
+          newMeessageFromOutside.isNotEmpty == true) {
+        await Future.delayed(const Duration(milliseconds: 100));
+        chatInputController.text = newMeessageFromOutside;
+        sendTextMessage(
+          conversationId: conversation?.conversationId ?? '',
+          userId: conversation?.opponentDetails?.userId ?? '',
+          opponentName: conversation?.opponentDetails?.userName ?? '',
+        );
+      }
     }
     chatInputController.addListener(() {
       showSendButton = chatInputController.text.isNotEmpty;

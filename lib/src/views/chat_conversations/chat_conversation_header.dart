@@ -125,7 +125,13 @@ class _MoreIcon extends StatelessWidget {
         ),
         onSelected: (index) async {
           if (index == 1) {
-            IsmChatRouteManagement.goToBroadcastView();
+            if (Responsive.isWebAndTablet(context)) {
+              controller.isRenderScreen =
+                  IsRenderConversationScreen.broadcastView;
+              Scaffold.of(context).openDrawer();
+            } else {
+              IsmChatRouteManagement.goToBroadcastView();
+            }
           } else if (index == 2) {
             if (Responsive.isWebAndTablet(context)) {
               controller.isRenderScreen = IsRenderConversationScreen.blockView;

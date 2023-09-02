@@ -23,7 +23,11 @@ class IsmChatConversationsController extends GetxController {
 
   final _deviceConfig = Get.find<IsmChatDeviceConfig>();
 
-  TextEditingController broadcastMessageController = TextEditingController();
+  final RxString _broadcastMessage = ''.obs;
+  String get broadcastMessage => _broadcastMessage.value;
+  set broadcastMessage(String value) {
+    _broadcastMessage.value = value;
+  }
 
   final _conversations = <IsmChatConversationModel>[].obs;
   List<IsmChatConversationModel> get conversations => _conversations;
@@ -212,6 +216,8 @@ class IsmChatConversationsController extends GetxController {
         return IsmChatCreateConversationView();
       case IsRenderConversationScreen.userView:
         return const IsmChatUserView();
+      case IsRenderConversationScreen.broadcastView:
+        return const IsmChatBroadCastView();
     }
   }
 
@@ -241,6 +247,8 @@ class IsmChatConversationsController extends GetxController {
           user: contactDetails,
           conversationId: userConversationId,
         );
+      case IsRenderChatPageScreen.messageSearchView:
+        return const IsmChatSearchMessgae();
     }
     return const SizedBox.shrink();
   }
@@ -640,20 +648,24 @@ class IsmChatConversationsController extends GetxController {
         isLoading: isLoading);
   }
 
-  Future<void> sendBroadcastMessage({
-    required List<String> userIds,
-    required String body,
-  }) async {
+  Future<void> sendBroadcastMessage(
+      {required List<String> userIds,
+      required String body,
+      bool isLoading = false}) async {
     var response = await _viewModel.sendBroadcastMessage(
       userIds: userIds,
       showInConversation: true,
       messageType: 0,
       encrypted: true,
       deviceId: _deviceConfig.deviceId ?? '',
-      body: body,
+      body: IsmChatUtility.decodePayload(body),
       notificationBody: body,
       notificationTitle: userDetails?.userName ?? '',
+      isLoading: isLoading,
     );
-    if (response?.hasError == false) {}
+    if (response?.hasError == false) {
+      Get.back();
+      await getChatConversations();
+    }
   }
 }
