@@ -812,7 +812,7 @@ class IsmChatPageController extends GetxController
         var dataSize = IsmChatUtility.formatBytes(bytes?.length ?? 0);
         var platformFile = IsmchPlatformFile(
           name: x?.name ?? '',
-          size: double.tryParse((bytes?.length ?? 0).toString()),
+          size: bytes?.length,
           bytes: bytes,
           path: x?.path,
           extension: extension,
@@ -1444,7 +1444,7 @@ class IsmChatPageController extends GetxController
             name: '${DateTime.now().millisecondsSinceEpoch}.png',
             bytes: bytes,
             path: file.path,
-            size: double.tryParse((bytes.length).toString()),
+            size: bytes.length,
             extension: 'png',
           ),
           thumbnailBytes: Uint8List(0),

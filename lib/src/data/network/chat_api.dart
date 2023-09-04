@@ -37,6 +37,8 @@ class IsmChatAPI {
 
   static const String sendMessage = '$baseUrl/chat/message';
   static const String sendBroadcastMessage = '$baseUrl/chat/message/broadcast';
+  static const String sendForwardMessage = '$baseUrl/chat/message/forward';
+
   static const String chatStatus = '$sendMessage/status';
   static const String readStatus = '$chatStatus/read';
   static const String deliverStatus = '$chatStatus/delivery';

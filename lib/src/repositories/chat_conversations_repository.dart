@@ -353,4 +353,53 @@ class IsmChatConversationsRepository {
       return null;
     }
   }
+
+  Future<IsmChatResponseModel?> sendForwardMessage(
+      {required List<String> userIds,
+      required bool showInConversation,
+      required int messageType,
+      required bool encrypted,
+      required String deviceId,
+      required String body,
+      required String notificationBody,
+      required String notificationTitle,
+      List<String>? searchableTags,
+      IsmChatMetaData? metaData,
+      Map<String, dynamic>? events,
+      String? customType,
+      List<Map<String, dynamic>>? attachments,
+      bool isLoading = false}) async {
+    try {
+      final payload = {
+        'userIds': userIds,
+        'showInConversation': showInConversation,
+        'messageType': messageType,
+        'encrypted': encrypted,
+        'deviceId': deviceId,
+        'body': body,
+        'metaData': metaData?.toMap(),
+        'events': events,
+        'customType': customType,
+        'attachments': attachments,
+        'notificationBody': notificationBody,
+        'notificationTitle': notificationTitle,
+        'searchableTags': searchableTags,
+      };
+
+      var response = await _apiWrapper.post(
+        IsmChatAPI.sendForwardMessage,
+        payload: payload,
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading,
+      );
+      if (response.hasError) {
+        return null;
+      }
+
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Send Forward Message $e', st);
+      return null;
+    }
+  }
 }

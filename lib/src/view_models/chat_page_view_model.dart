@@ -81,7 +81,6 @@ class IsmChatPageViewModel {
       required int createdAt,
       required String notificationBody,
       required String notificationTitle,
-      SendMessageType sendMessageType = SendMessageType.pendingMessage,
       String? parentMessageId,
       IsmChatMetaData? metaData,
       List<Map<String, dynamic>>? mentionedUsers,
@@ -110,81 +109,42 @@ class IsmChatPageViewModel {
         return false;
       }
       var dbBox = IsmChatConfig.dbWrapper;
-      if (sendMessageType == SendMessageType.pendingMessage) {
-        final chatPendingMessages = await dbBox!.getConversation(
-            conversationId: conversationId, dbBox: IsmChatDbBox.pending);
-        if (chatPendingMessages == null) {
-          return false;
-        }
-        // Todo update messgae with url for audio
-        for (var x = 0; x < chatPendingMessages.messages!.length; x++) {
-          var pendingMessage = chatPendingMessages.messages![x];
-          if (pendingMessage.messageId!.isNotEmpty ||
-              pendingMessage.sentAt != createdAt) {
-            continue;
-          }
-          pendingMessage.messageId = messageId;
-          pendingMessage.deliveredToAll = false;
-          pendingMessage.isUploading = false;
-          chatPendingMessages.messages?.removeAt(x);
-          await dbBox.saveConversation(
-              conversation: chatPendingMessages, dbBox: IsmChatDbBox.pending);
-          if (chatPendingMessages.messages!.isEmpty) {
-            await dbBox.pendingMessageBox
-                .delete(chatPendingMessages.conversationId!);
-          }
-          var conversationModel =
-              await dbBox.getConversation(conversationId: conversationId);
-          if (conversationModel != null) {
-            conversationModel.messages?.add(pendingMessage);
-            conversationModel = conversationModel.copyWith(
-              lastMessageDetails: conversationModel.lastMessageDetails
-                  ?.copyWith(reactionType: ''),
-            );
-          }
-          await dbBox.saveConversation(conversation: conversationModel!);
-          return true;
-        }
-      } else {
-        final chatForwardMessages = await dbBox!.getConversation(
-            conversationId: conversationId, dbBox: IsmChatDbBox.forward);
-        if (chatForwardMessages == null) {
-          return false;
-        }
 
-        for (var x = 0; x < chatForwardMessages.messages!.length; x++) {
-          var forwardMessage = chatForwardMessages.messages![x];
-          if (forwardMessage.messageId!.isNotEmpty ||
-              forwardMessage.sentAt != createdAt) {
-            continue;
-          }
-          forwardMessage.messageId = messageId;
-          forwardMessage.deliveredToAll = false;
-          forwardMessage.isUploading = false;
-          chatForwardMessages.messages?.removeAt(x);
-          await dbBox.saveConversation(
-              conversation: chatForwardMessages, dbBox: IsmChatDbBox.forward);
-
-          if (chatForwardMessages.messages!.isEmpty) {
-            await dbBox.forwardMessageBox
-                .delete(chatForwardMessages.conversationId!);
-          }
-
-          final conversationModel = await dbBox.getConversation(
-            conversationId: conversationId,
-          );
-
-          if (conversationModel != null) {
-            conversationModel.messages?.add(forwardMessage);
-          }
-
-          await dbBox.saveConversation(
-            conversation: conversationModel!,
-          );
-
-          return true;
-        }
+      final chatPendingMessages = await dbBox!.getConversation(
+          conversationId: conversationId, dbBox: IsmChatDbBox.pending);
+      if (chatPendingMessages == null) {
+        return false;
       }
+      // Todo update messgae with url for audio
+      for (var x = 0; x < chatPendingMessages.messages!.length; x++) {
+        var pendingMessage = chatPendingMessages.messages![x];
+        if (pendingMessage.messageId!.isNotEmpty ||
+            pendingMessage.sentAt != createdAt) {
+          continue;
+        }
+        pendingMessage.messageId = messageId;
+        pendingMessage.deliveredToAll = false;
+        pendingMessage.isUploading = false;
+        chatPendingMessages.messages?.removeAt(x);
+        await dbBox.saveConversation(
+            conversation: chatPendingMessages, dbBox: IsmChatDbBox.pending);
+        if (chatPendingMessages.messages!.isEmpty) {
+          await dbBox.pendingMessageBox
+              .delete(chatPendingMessages.conversationId!);
+        }
+        var conversationModel =
+            await dbBox.getConversation(conversationId: conversationId);
+        if (conversationModel != null) {
+          conversationModel.messages?.add(pendingMessage);
+          conversationModel = conversationModel.copyWith(
+            lastMessageDetails: conversationModel.lastMessageDetails
+                ?.copyWith(reactionType: ''),
+          );
+        }
+        await dbBox.saveConversation(conversation: conversationModel!);
+        return true;
+      }
+
       return false;
     } catch (e, st) {
       IsmChatLog.error(e, st);

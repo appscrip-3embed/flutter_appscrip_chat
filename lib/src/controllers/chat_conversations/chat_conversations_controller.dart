@@ -668,4 +668,37 @@ class IsmChatConversationsController extends GetxController {
       await getChatConversations();
     }
   }
+
+  Future<void> sendForwardMessage({
+    required List<String> userIds,
+    required String body,
+    List<Map<String, dynamic>>? attachments,
+    String? customType,
+    bool isLoading = false,
+    IsmChatMetaData? metaData,
+  }) async {
+    var response = await _viewModel.sendForwardMessage(
+      userIds: userIds,
+      showInConversation: true,
+      messageType: IsmChatMessageType.forward.value,
+      encrypted: true,
+      deviceId: _deviceConfig.deviceId ?? '',
+      body: IsmChatUtility.encodePayload(body),
+      notificationBody: body,
+      notificationTitle:
+          IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+              ? IsmChatConfig.communicationConfig.userConfig.userName
+              : userDetails?.userName ?? '',
+      isLoading: isLoading,
+      searchableTags: [body],
+      customType: customType,
+      attachments: attachments,
+      events: {'updateUnreadCount': true, 'sendPushNotification': true},
+      metaData: metaData,
+    );
+    if (response?.hasError == false) {
+      Get.back();
+      await getChatConversations();
+    }
+  }
 }

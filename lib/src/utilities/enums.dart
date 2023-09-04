@@ -576,7 +576,6 @@ enum IsmChatFeature {
 enum IsmChatDbBox {
   main,
   pending,
-  forward;
 }
 
 enum IsRenderConversationScreen {
