@@ -21,13 +21,10 @@ class IsmChatConversationsController extends GetxController {
 
   var userSearchNameController = TextEditingController();
 
-  final _deviceConfig = Get.find<IsmChatDeviceConfig>();
+  IsmChatCommonController get commonController =>
+      Get.find<IsmChatCommonController>();
 
-  final RxString _broadcastMessage = ''.obs;
-  String get broadcastMessage => _broadcastMessage.value;
-  set broadcastMessage(String value) {
-    _broadcastMessage.value = value;
-  }
+  final _deviceConfig = Get.find<IsmChatDeviceConfig>();
 
   final _conversations = <IsmChatConversationModel>[].obs;
   List<IsmChatConversationModel> get conversations => _conversations;
@@ -374,14 +371,16 @@ class IsmChatConversationsController extends GetxController {
     Uint8List bytes,
   ) async {
     var response = await _viewModel.getPresignedUrl(
-        isLoading: true,
-        userIdentifier: userDetails?.userIdentifier ?? '',
-        mediaExtension: mediaExtension);
+      isLoading: true,
+      userIdentifier: userDetails?.userIdentifier ?? '',
+      mediaExtension: mediaExtension,
+    );
 
     if (response == null) {
       return;
     }
-    var responseCode = await updatePresignedUrl(response.presignedUrl, bytes);
+    var responseCode = await commonController.updatePresignedUrl(
+        presignedUrl: response.presignedUrl, bytes: bytes);
     if (responseCode == 200) {
       profileImage = response.mediaUrl!;
     }
@@ -646,27 +645,6 @@ class IsmChatConversationsController extends GetxController {
         conversationId: conversationId,
         metaData: metaData,
         isLoading: isLoading);
-  }
-
-  Future<void> sendBroadcastMessage(
-      {required List<String> userIds,
-      required String body,
-      bool isLoading = false}) async {
-    var response = await _viewModel.sendBroadcastMessage(
-      userIds: userIds,
-      showInConversation: true,
-      messageType: 0,
-      encrypted: true,
-      deviceId: _deviceConfig.deviceId ?? '',
-      body: IsmChatUtility.decodePayload(body),
-      notificationBody: body,
-      notificationTitle: userDetails?.userName ?? '',
-      isLoading: isLoading,
-    );
-    if (response?.hasError == false) {
-      Get.back();
-      await getChatConversations();
-    }
   }
 
   Future<void> sendForwardMessage({

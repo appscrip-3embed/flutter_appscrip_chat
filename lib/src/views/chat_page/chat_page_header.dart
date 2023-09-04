@@ -65,6 +65,8 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                   )
                 : const SizedBox.shrink(),
             titleSpacing: IsmChatDimens.two,
+            backgroundColor:
+                IsmChatConfig.chatTheme.chatPageHeaderTheme?.backgroundColor,
             centerTitle: false,
             shape: IsmChatProperties.chatPageProperties.header?.shape,
             elevation: IsmChatConfig.chatTheme.chatPageHeaderTheme?.elevation,
@@ -92,6 +94,9 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                     controller.conversation?.chatName ?? '') ??
                             controller.conversation?.chatName,
                         dimensions: IsmChatDimens.forty,
+                        isNetworkImage:
+                            (controller.conversation?.profileUrl ?? '')
+                                .isValidUrl,
                       ),
                   IsmChatDimens.boxWidth8,
                   Column(
@@ -298,36 +303,38 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     ),
                   ],
-
-                  // Todo
-                  // if (header?.onProfileWidget?.call(
-                  //         context,
-                  //         controller.conversation!,
-                  //         controller.conversation!.profileUrl) !=
-                  //     null)
-                  //   ...(header?.popupItems ?? []).map(
-                  //     (e) => PopupMenuItem(
-                  //       value: header!.popupItems!.indexOf(e) + 5,
-                  //       child: Row(
-                  //         children: [
-                  //           Icon(
-                  //             e.icon,
-                  //             color: e.color ?? IsmChatColors.blackColor,
-                  //           ),
-                  //           IsmChatDimens.boxWidth8,
-                  //           Text(
-                  //             e.label,
-                  //           )
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   )
+                  if (IsmChatProperties.chatPageProperties.header != null &&
+                      IsmChatProperties.chatPageProperties.header!.popupItems !=
+                          null &&
+                      IsmChatProperties.chatPageProperties.header!.popupItems!
+                          .isNotEmpty) ...[
+                    ...(IsmChatProperties
+                            .chatPageProperties.header!.popupItems!)
+                        .map(
+                      (e) => PopupMenuItem(
+                        value: IsmChatProperties
+                                .chatPageProperties.header!.popupItems!
+                                .indexOf(e) +
+                            6,
+                        child: Row(
+                          children: [
+                            Icon(
+                              e.icon,
+                              color: e.color,
+                            ),
+                            IsmChatDimens.boxWidth8,
+                            Text(e.label)
+                          ],
+                        ),
+                      ),
+                    )
+                  ]
                 ],
                 elevation: 2,
                 onSelected: (value) {
                   if (value == 4 || value == 5) {
                     controller.showDialogForClearChatAndDeleteGroup(
-                        isGroupDelete: value == 2 ? true : false);
+                        isGroupDelete: value == 5);
                   } else if (value == 3) {
                     controller.handleBlockUnblock();
                   } else if (value == 2) {

@@ -624,7 +624,6 @@ class IsmChatMqttController extends GetxController {
           allMessages[messageIndex].customType =
               IsmChatCustomMessageType.deletedForEveryone;
         }
-        //  allMessages.removeWhere((e) => e.messageId! == x);
       }
     }
 
@@ -712,8 +711,7 @@ class IsmChatMqttController extends GetxController {
         ),
       ),
     );
-    // Todo
-    // await IsmChatConfig.dbWrapper!.saveMessage(actionModel, allMessages ?? []);
+
     messageId = actionModel.sentAt.toString();
     if (Get.isRegistered<IsmChatPageController>()) {
       var chatPageController = Get.find<IsmChatPageController>();

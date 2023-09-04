@@ -7,9 +7,10 @@ mixin IsmChatPageGetMessageMixin {
     if (_controller.messageHoldOverlayEntry != null) {
       _controller.closeOveray();
     }
-    _controller.messages.clear();
+
     var messages = await IsmChatConfig.dbWrapper!.getMessage(conversationId);
     if (messages?.isEmpty ?? false || messages == null) {
+      _controller.messages.clear();
       return;
     }
 

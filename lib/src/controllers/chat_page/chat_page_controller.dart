@@ -45,8 +45,6 @@ class IsmChatPageController extends GetxController
 
   final _conversationController = Get.find<IsmChatConversationsController>();
 
-  final _deviceConfig = Get.find<IsmChatDeviceConfig>();
-
   final Rx<IsmChatConversationModel?> _conversation =
       Rx<IsmChatConversationModel?>(null);
   IsmChatConversationModel? get conversation => _conversation.value;
@@ -312,6 +310,10 @@ class IsmChatPageController extends GetxController
   bool get isActionAllowed => _isActionAllowed.value;
   set isActionAllowed(bool value) => _isActionAllowed.value = value;
 
+  final RxBool _isBroadcastMessage = false.obs;
+  bool get isBroadcastMessage => _isBroadcastMessage.value;
+  set isBroadcastMessage(bool value) => _isBroadcastMessage.value = value;
+
   final RxBool _isCoverationApiDetails = true.obs;
   bool get isCoverationApiDetails => _isCoverationApiDetails.value;
   set isCoverationApiDetails(bool value) =>
@@ -428,65 +430,72 @@ class IsmChatPageController extends GetxController
     _generateReactionList();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
-      _conversationController.isConversationId =
-          conversation?.conversationId ?? '';
-      final newMeessageFromOutside = conversation?.messageFromOutSide;
-      await Future.delayed(Duration.zero);
-      if (conversation?.conversationId?.isNotEmpty ?? false) {
-        _getBackGroundAsset();
-        await getMessagesFromDB(conversation?.conversationId ?? '');
-        await Future.wait([
-          getMessagesFromAPI(),
-          getConverstaionDetails(
-              conversationId: conversation?.conversationId ?? '',
-              includeMembers: conversation?.isGroup == true ? true : false),
-        ]);
-        await readAllMessages(
-          conversationId: conversation?.conversationId ?? '',
-          timestamp: messages.isNotEmpty
-              ? DateTime.now().millisecondsSinceEpoch
-              : conversation?.lastMessageSentAt ?? 0,
-        );
-        checkUserStatus();
-      } else {
-        if (Responsive.isWebAndTablet(Get.context!)) {
-          messages.clear();
-        }
-        if (conversation!.isGroup ?? false) {
-          await createConversation(
-            userId: [],
-            isGroup: true,
-            searchableTags: [
-              conversation?.opponentDetails?.userName ?? '',
-              conversation?.chatName ?? ''
-            ],
+
+      if (conversation?.customType?.isEmpty == true &&
+          conversation?.customType != 'null') {
+        _conversationController.isConversationId =
+            conversation?.conversationId ?? '';
+        isBroadcastMessage = false;
+        final newMeessageFromOutside = conversation?.messageFromOutSide;
+        await Future.delayed(Duration.zero);
+        if (conversation?.conversationId?.isNotEmpty ?? false) {
+          _getBackGroundAsset();
+          await getMessagesFromDB(conversation?.conversationId ?? '');
+          await Future.wait([
+            getMessagesFromAPI(),
+            getConverstaionDetails(
+                conversationId: conversation?.conversationId ?? '',
+                includeMembers: conversation?.isGroup == true ? true : false),
+          ]);
+          await readAllMessages(
+            conversationId: conversation?.conversationId ?? '',
+            timestamp: messages.isNotEmpty
+                ? DateTime.now().millisecondsSinceEpoch
+                : conversation?.lastMessageSentAt ?? 0,
           );
-          await getMessagesFromAPI();
+          checkUserStatus();
+        } else {
+          if (Responsive.isWebAndTablet(Get.context!)) {
+            messages.clear();
+          }
+          if (conversation!.isGroup ?? false) {
+            await createConversation(
+              userId: [],
+              isGroup: true,
+              searchableTags: [
+                conversation?.opponentDetails?.userName ?? '',
+                conversation?.chatName ?? ''
+              ],
+            );
+            await getMessagesFromAPI();
+          }
+          isMessagesLoading = false;
         }
-        isMessagesLoading = false;
-      }
-      // Todo add feature send message form outside
-      if (newMeessageFromOutside != null &&
-          newMeessageFromOutside.isNotEmpty == true) {
-        await Future.delayed(const Duration(milliseconds: 100));
-        chatInputController.text = newMeessageFromOutside;
-        sendTextMessage(
-          conversationId: conversation?.conversationId ?? '',
-          userId: conversation?.opponentDetails?.userId ?? '',
-          opponentName: conversation?.opponentDetails?.userName ?? '',
-        );
+
+        if (newMeessageFromOutside != null &&
+            newMeessageFromOutside.isNotEmpty == true) {
+          await Future.delayed(const Duration(milliseconds: 100));
+          chatInputController.text = newMeessageFromOutside;
+          sendTextMessage(
+            conversationId: conversation?.conversationId ?? '',
+            userId: conversation?.opponentDetails?.userId ?? '',
+            opponentName: conversation?.opponentDetails?.userName ?? '',
+          );
+        }
+        chatInputController.addListener(() {
+          showSendButton = chatInputController.text.isNotEmpty;
+        });
+        messageFieldFocusNode.addListener(() {
+          if (messageFieldFocusNode.hasFocus) {
+            showEmojiBoard = false;
+          }
+        });
+        scrollListener();
+        unawaited(updateUnreadMessgaeCount());
+      } else {
+        isBroadcastMessage = true;
       }
     }
-    chatInputController.addListener(() {
-      showSendButton = chatInputController.text.isNotEmpty;
-    });
-    messageFieldFocusNode.addListener(() {
-      if (messageFieldFocusNode.hasFocus) {
-        showEmojiBoard = false;
-      }
-    });
-    scrollListener();
-    unawaited(updateUnreadMessgaeCount());
   }
 
   @override
@@ -1263,29 +1272,6 @@ class IsmChatPageController extends GetxController
       ));
     } else if (message.customType == IsmChatCustomMessageType.contact) {
       IsmChatRouteManagement.goToContactInfoView(contacts: message.contacts);
-// Import contact from vCard
-
-      // try {
-      //   print('rasfddsf');
-
-      // var contact =
-      //     // await ContactsService.openContactForm(iOSLocalizedLabels: true);
-      //     IsmChatLog.error(contact.displayName);
-      // IsmChatLog.error(contact.avatar);
-      // var contactName = <Contact>[];
-      // if (message.metaData!.customType != null) {
-      //   var contact = message.metaData!.customType!['contact'] as List;
-      //   contactName = contact
-      //       .map((e) => Contact.fromMap(Map<String, dynamic>.from(e)))
-      //       .toList();
-      // }
-      //  await launchUrl(Uri.parse('tel:+97798345348734'));
-
-      // var x = await ContactsService.addContact(contactName.first);
-
-      // var list = await ContactsService.openContactForm();
-      // IsmChatLog.error(list.displayName ?? '');
-      // IsmChatLog.error(x);
     }
   }
 

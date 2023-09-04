@@ -62,8 +62,7 @@ class IsmChatStrings {
   static const String youareBlocked = 'You are blocked.';
   static const String cannotBlock =
       'Action not allowed, the user has already blocked you';
-  static const String broadcastAlert =
-      'Select atleast on person and write broadcast message';
+  static const String broadcastAlert = 'Select atleast two on person';
   static const String micePermission =
       'Please provide microphone access in order to send audio.';
   static const String micePermissionBlock =
@@ -126,6 +125,7 @@ class IsmChatStrings {
   static const String wasDeletedMessage = 'This message was deleted';
   static const String noDataFound = 'No data found';
   static const String noUserFound = 'No user found';
+  static const String forwarded = 'Forwarded';
 
   static const String logoutMessage = 'Are you sure you want to logout';
 

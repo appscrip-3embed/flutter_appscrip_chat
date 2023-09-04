@@ -1,6 +1,7 @@
 export 'attachment_card.dart';
 export 'attachments/attachments.dart';
 export 'audio_player.dart';
+export 'broadcast_mesage.dart';
 export 'chat_message.dart';
 export 'contact.dart';
 export 'contact_info.dart';

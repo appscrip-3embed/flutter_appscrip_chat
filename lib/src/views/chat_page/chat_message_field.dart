@@ -133,10 +133,7 @@ class IsmChatMessageField extends StatelessWidget {
                                 color: IsmChatConfig.chatTheme.primaryColor!),
                             borderRadius:
                                 BorderRadius.circular(IsmChatDimens.twenty),
-                            color:
-                                // Todo
-                                //  header?.backgroundColor ??
-                                IsmChatConfig.chatTheme.backgroundColor,
+                            color: IsmChatConfig.chatTheme.backgroundColor,
                           ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -162,11 +159,8 @@ class IsmChatMessageField extends StatelessWidget {
                                       decoration: InputDecoration(
                                         isDense: true,
                                         filled: true,
-                                        fillColor:
-                                            // Todo
-                                            //  header?.backgroundColor ??
-                                            IsmChatConfig
-                                                .chatTheme.backgroundColor,
+                                        fillColor: IsmChatConfig
+                                            .chatTheme.backgroundColor,
                                         contentPadding:
                                             Responsive.isWebAndTablet(context)
                                                 ? IsmChatDimens.edgeInsets12

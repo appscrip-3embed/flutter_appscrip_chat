@@ -26,9 +26,8 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
   }
 
   startInit() {
-    if (Get.isRegistered<IsmChatConversationsController>()) {
-      Get.find<IsmChatConversationsController>();
-    } else {
+    if (!Get.isRegistered<IsmChatConversationsController>()) {
+      IsmChatCommonBinding().dependencies();
       IsmChatConversationsBinding().dependencies();
     }
   }

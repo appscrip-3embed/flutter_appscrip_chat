@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class IsmChatPageViewModel {
@@ -59,16 +58,6 @@ class IsmChatPageViewModel {
     }
 
     return messages;
-  }
-
-  Future<int?> updatePresignedUrl(
-      {String? presignedUrl, Uint8List? bytes}) async {
-    var respone = await _repository.updatePresignedUrl(
-        presignedUrl: presignedUrl, bytes: bytes);
-    if (!respone!.hasError) {
-      return respone.errorCode;
-    }
-    return null;
   }
 
   Future<bool> sendMessage(
@@ -302,19 +291,6 @@ class IsmChatPageViewModel {
     bool isLoading = false,
   }) async =>
       await _repository.removeAdmin(conversationId, memberId, isLoading);
-
-  Future<List<PresignedUrlModel>?> postMediaUrl({
-    required String conversationId,
-    required String nameWithExtension,
-    required int mediaType,
-    required String mediaId,
-  }) async =>
-      await _repository.postMediaUrl(
-        conversationId: conversationId,
-        nameWithExtension: nameWithExtension,
-        mediaType: mediaType,
-        mediaId: mediaId,
-      );
 
   Future<void> readSingleMessage({
     required String conversationId,
@@ -616,4 +592,49 @@ class IsmChatPageViewModel {
 
   Future<List<UserDetails>?> getReacton({required Reaction reaction}) async =>
       await _repository.getReacton(reaction: reaction);
+
+  Future<List<PresignedUrlModel>?> postMediaUrl({
+    required String conversationId,
+    required String nameWithExtension,
+    required int mediaType,
+    required String mediaId,
+  }) async =>
+      await _repository.postMediaUrl(
+        conversationId: conversationId,
+        nameWithExtension: nameWithExtension,
+        mediaType: mediaType,
+        mediaId: mediaId,
+      );
+
+  Future<IsmChatResponseModel?> sendBroadcastMessage(
+          {required List<String> userIds,
+          required bool showInConversation,
+          required int messageType,
+          required bool encrypted,
+          required String deviceId,
+          required String body,
+          required String notificationBody,
+          required String notificationTitle,
+          List<String>? searchableTags,
+          IsmChatMetaData? metaData,
+          Map<String, dynamic>? events,
+          String? customType,
+          List<Map<String, dynamic>>? attachments,
+          bool isLoading = false}) async =>
+      await _repository.sendBroadcastMessage(
+        userIds: userIds,
+        showInConversation: showInConversation,
+        messageType: messageType,
+        encrypted: encrypted,
+        deviceId: deviceId,
+        body: body,
+        notificationBody: notificationBody,
+        notificationTitle: notificationTitle,
+        attachments: attachments,
+        customType: customType,
+        events: events,
+        metaData: metaData,
+        searchableTags: searchableTags,
+        isLoading: isLoading,
+      );
 }

@@ -39,22 +39,6 @@ class IsmChatPageRepository {
     }
   }
 
-  Future<IsmChatResponseModel?> updatePresignedUrl(
-      {String? presignedUrl, Uint8List? bytes}) async {
-    try {
-      var response = await _apiWrapper.put(presignedUrl!,
-          payload: bytes, headers: {}, forAwsUpload: true);
-      if (response.hasError) {
-        return null;
-      }
-
-      return response;
-    } catch (e, st) {
-      IsmChatLog.error('Send Message $e', st);
-      return null;
-    }
-  }
-
   Future<String?> sendMessage({
     required bool showInConversation,
     required int messageType,
@@ -381,43 +365,6 @@ class IsmChatPageRepository {
     }
   }
 
-  Future<List<PresignedUrlModel>?> postMediaUrl({
-    required String conversationId,
-    required String nameWithExtension,
-    required int mediaType,
-    required String mediaId,
-  }) async {
-    try {
-      final payload = {
-        'conversationId': conversationId,
-        'attachments': [
-          {
-            'nameWithExtension': nameWithExtension,
-            'mediaType': mediaType,
-            'mediaId': mediaId
-          }
-        ]
-      };
-      var response = await _apiWrapper.post(
-        IsmChatAPI.presignedUrls,
-        payload: payload,
-        headers: IsmChatUtility.tokenCommonHeader(),
-      );
-      if (response.hasError) {
-        return null;
-      }
-
-      var data = jsonDecode(response.data);
-
-      return (data['presignedUrls'] as List)
-          .map((e) => PresignedUrlModel.fromMap(e as Map<String, dynamic>))
-          .toList();
-    } catch (e, st) {
-      IsmChatLog.error('Media url $e', st);
-      return null;
-    }
-  }
-
   Future<void> readSingleMessage({
     required String conversationId,
     required String messageId,
@@ -713,6 +660,92 @@ class IsmChatPageRepository {
       return response;
     } catch (e, st) {
       IsmChatLog.error('Create converstaion $e', st);
+      return null;
+    }
+  }
+
+  Future<List<PresignedUrlModel>?> postMediaUrl({
+    required String conversationId,
+    required String nameWithExtension,
+    required int mediaType,
+    required String mediaId,
+  }) async {
+    try {
+      final payload = {
+        'conversationId': conversationId,
+        'attachments': [
+          {
+            'nameWithExtension': nameWithExtension,
+            'mediaType': mediaType,
+            'mediaId': mediaId
+          }
+        ]
+      };
+      var response = await _apiWrapper.post(
+        IsmChatAPI.presignedUrls,
+        payload: payload,
+        headers: IsmChatUtility.tokenCommonHeader(),
+      );
+      if (response.hasError) {
+        return null;
+      }
+
+      var data = jsonDecode(response.data);
+
+      return (data['presignedUrls'] as List)
+          .map((e) => PresignedUrlModel.fromMap(e as Map<String, dynamic>))
+          .toList();
+    } catch (e, st) {
+      IsmChatLog.error('Media url $e', st);
+      return null;
+    }
+  }
+
+  Future<IsmChatResponseModel?> sendBroadcastMessage(
+      {required List<String> userIds,
+      required bool showInConversation,
+      required int messageType,
+      required bool encrypted,
+      required String deviceId,
+      required String body,
+      required String notificationBody,
+      required String notificationTitle,
+      List<String>? searchableTags,
+      IsmChatMetaData? metaData,
+      Map<String, dynamic>? events,
+      String? customType,
+      List<Map<String, dynamic>>? attachments,
+      bool isLoading = false}) async {
+    try {
+      final payload = {
+        'userIds': userIds,
+        'showInConversation': showInConversation,
+        'messageType': messageType,
+        'encrypted': encrypted,
+        'deviceId': deviceId,
+        'body': body,
+        'metaData': metaData?.toMap(),
+        'events': events,
+        'customType': customType,
+        'attachments': attachments,
+        'notificationBody': notificationBody,
+        'notificationTitle': notificationTitle,
+        'searchableTags': searchableTags,
+      };
+
+      var response = await _apiWrapper.post(
+        IsmChatAPI.sendBroadcastMessage,
+        payload: payload,
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading,
+      );
+      if (response.hasError) {
+        return null;
+      }
+
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Send broadcast Message $e', st);
       return null;
     }
   }
