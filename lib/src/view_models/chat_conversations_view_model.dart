@@ -134,30 +134,6 @@ class IsmChatConversationsViewModel {
   }) async =>
       await _repository.getBlockUser(skip: skip, limit: limit);
 
-  // get Api for Presigned Url.....
-  Future<PresignedUrlModel?> getPresignedUrl({
-    required bool isLoading,
-    required String userIdentifier,
-    required String mediaExtension,
-  }) async =>
-      await _repository.getPresignedUrl(
-        isLoading: isLoading,
-        userIdentifier: userIdentifier,
-        mediaExtension: mediaExtension,
-      );
-
-  // update Api for Presigned Url.....
-  Future<IsmChatResponseModel?> updatePresignedUrl({
-    required bool isLoading,
-    required String presignedUrl,
-    required Uint8List file,
-  }) async =>
-      await _repository.updatePresignedUrl(
-        isLoading: isLoading,
-        presignedUrl: presignedUrl,
-        file: file,
-      );
-
   Future<IsmChatResponseModel?> updateConversation({
     required String conversationId,
     required IsmChatMetaData metaData,

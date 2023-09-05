@@ -12,7 +12,7 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
   static const String route = IsmPageRoutes.boradCastMessagePage;
 
   @override
-  Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
+  Widget build(BuildContext context) => GetX<IsmChatPageController>(
       builder: (controller) => Scaffold(
             appBar: AppBar(
               leading: IsmChatTapHandler(

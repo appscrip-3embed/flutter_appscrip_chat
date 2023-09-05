@@ -62,7 +62,7 @@ class IsmChatStrings {
   static const String youareBlocked = 'You are blocked.';
   static const String cannotBlock =
       'Action not allowed, the user has already blocked you';
-  static const String broadcastAlert = 'Select atleast two on person';
+  static const String broadcastAlert = 'Select atleast two people';
   static const String micePermission =
       'Please provide microphone access in order to send audio.';
   static const String micePermissionBlock =

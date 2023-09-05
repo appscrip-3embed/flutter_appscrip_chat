@@ -234,52 +234,6 @@ class IsmChatConversationsRepository {
     }
   }
 
-  // get Api for Presigned Url.....
-  Future<PresignedUrlModel?> getPresignedUrl({
-    required bool isLoading,
-    required String userIdentifier,
-    required String mediaExtension,
-  }) async {
-    try {
-      var response = await _apiWrapper.get(
-        '${IsmChatAPI.createPresignedurl}?userIdentifier=$userIdentifier&mediaExtension=$mediaExtension',
-        headers: IsmChatUtility.commonHeader(),
-        showLoader: isLoading,
-      );
-      if (response.hasError) {
-        return null;
-      }
-      var data = jsonDecode(response.data);
-      return PresignedUrlModel.fromMap(data as Map<String, dynamic>);
-    } catch (e) {
-      return null;
-    }
-  }
-
-// update for Presigned Url.....
-  Future<IsmChatResponseModel?> updatePresignedUrl({
-    required bool isLoading,
-    required String presignedUrl,
-    required Uint8List file,
-  }) async {
-    try {
-      var response = await _apiWrapper.put(
-        presignedUrl,
-        payload: file,
-        headers: {},
-        forAwsUpload: true,
-        showLoader: isLoading,
-      );
-
-      if (response.hasError) {
-        return response;
-      }
-      return response;
-    } catch (e) {
-      return null;
-    }
-  }
-
   Future<IsmChatResponseModel?> updateConversation({
     required String conversationId,
     required IsmChatMetaData metaData,

@@ -328,8 +328,8 @@ class IsmChatBroadCastView extends StatelessWidget {
           ),
           floatingActionButton: IsmChatStartChatFAB(
             onTap: () async {
-              if (controller.forwardedList.selectedUsers.isNotEmpty &&
-                  controller.forwardedList.selectedUsers.length >= 2) {
+              if (controller.selectedUserList.isNotEmpty &&
+                  controller.selectedUserList.length >= 2) {
                 var conversation = IsmChatConversationModel(
                   conversationTitle:
                       '${controller.selectedUserList.length.toString()} recipients',

@@ -352,8 +352,6 @@ class IsmChatConversationsController extends GetxController {
     await getPresignedUrl(extension!, bytes!);
   }
 
-  void updateUserExistingDetails() {}
-
   /// function to pick image for group profile
   Future<void> ismChangeImage(ImageSource imageSource) async {
     var file = await IsmChatUtility.pickMedia(imageSource);
@@ -370,7 +368,7 @@ class IsmChatConversationsController extends GetxController {
     String mediaExtension,
     Uint8List bytes,
   ) async {
-    var response = await _viewModel.getPresignedUrl(
+    var response = await commonController.getPresignedUrl(
       isLoading: true,
       userIdentifier: userDetails?.userIdentifier ?? '',
       mediaExtension: mediaExtension,
@@ -384,16 +382,6 @@ class IsmChatConversationsController extends GetxController {
     if (responseCode == 200) {
       profileImage = response.mediaUrl!;
     }
-  }
-
-  /// put Api for updatePresignedUrl...
-  Future<int?> updatePresignedUrl(String? presignedUrl, Uint8List bytes) async {
-    if (presignedUrl == null || presignedUrl.isEmpty) {
-      return 404;
-    }
-    var response = await _viewModel.updatePresignedUrl(
-        isLoading: true, presignedUrl: presignedUrl, file: bytes);
-    return response?.errorCode ?? 404;
   }
 
   /// This will be used to fetch all the users associated with the current user

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class IsmChatPageRepository {
@@ -664,7 +663,7 @@ class IsmChatPageRepository {
     }
   }
 
-  Future<List<PresignedUrlModel>?> postMediaUrl({
+  Future<PresignedUrlModel?> postMediaUrl({
     required String conversationId,
     required String nameWithExtension,
     required int mediaType,
@@ -694,7 +693,8 @@ class IsmChatPageRepository {
 
       return (data['presignedUrls'] as List)
           .map((e) => PresignedUrlModel.fromMap(e as Map<String, dynamic>))
-          .toList();
+          .toList()
+          .first;
     } catch (e, st) {
       IsmChatLog.error('Media url $e', st);
       return null;

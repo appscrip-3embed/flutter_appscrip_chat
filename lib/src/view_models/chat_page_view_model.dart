@@ -593,7 +593,7 @@ class IsmChatPageViewModel {
   Future<List<UserDetails>?> getReacton({required Reaction reaction}) async =>
       await _repository.getReacton(reaction: reaction);
 
-  Future<List<PresignedUrlModel>?> postMediaUrl({
+  Future<PresignedUrlModel?> postMediaUrl({
     required String conversationId,
     required String nameWithExtension,
     required int mediaType,

@@ -482,19 +482,19 @@ class IsmChatPageController extends GetxController
             opponentName: conversation?.opponentDetails?.userName ?? '',
           );
         }
-        chatInputController.addListener(() {
-          showSendButton = chatInputController.text.isNotEmpty;
-        });
-        messageFieldFocusNode.addListener(() {
-          if (messageFieldFocusNode.hasFocus) {
-            showEmojiBoard = false;
-          }
-        });
         scrollListener();
         unawaited(updateUnreadMessgaeCount());
       } else {
         isBroadcastMessage = true;
       }
+      chatInputController.addListener(() {
+        showSendButton = chatInputController.text.isNotEmpty;
+      });
+      messageFieldFocusNode.addListener(() {
+        if (messageFieldFocusNode.hasFocus) {
+          showEmojiBoard = false;
+        }
+      });
     }
   }
 
