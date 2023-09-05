@@ -31,6 +31,11 @@ class IsmChatConversationsController extends GetxController {
   set conversations(List<IsmChatConversationModel> value) =>
       _conversations.value = value;
 
+  final _publicConversation = <IsmChatConversationModel>[].obs;
+  List<IsmChatConversationModel> get publicConversation => _publicConversation;
+  set publicConversation(List<IsmChatConversationModel> value) =>
+      _publicConversation.value = value;
+
   final _suggestions = <IsmChatConversationModel>[].obs;
   List<IsmChatConversationModel> get suggestions => _suggestions;
   set suggestions(List<IsmChatConversationModel> value) =>
@@ -103,9 +108,9 @@ class IsmChatConversationsController extends GetxController {
     _profileImage.value = value;
   }
 
-  final RxBool _isLoadingUsers = false.obs;
-  bool get isLoadingUsers => _isLoadingUsers.value;
-  set isLoadingUsers(bool value) => _isLoadingUsers.value = value;
+  final RxBool _isLoadResponse = false.obs;
+  bool get isLoadResponse => _isLoadResponse.value;
+  set isLoadResponse(bool value) => _isLoadResponse.value = value;
 
   final RxBool _showSearchField = false.obs;
   bool get showSearchField => _showSearchField.value;
@@ -144,9 +149,9 @@ class IsmChatConversationsController extends GetxController {
   set mediaListDocs(List<IsmChatMessageModel> value) =>
       _mediaListDocs.value = value;
 
-  final RxBool _callApiNonBlock = true.obs;
-  bool get callApiNonBlock => _callApiNonBlock.value;
-  set callApiNonBlock(bool value) => _callApiNonBlock.value = value;
+  final RxBool _callApiOrNot = true.obs;
+  bool get callApiOrNot => _callApiOrNot.value;
+  set callApiOrNot(bool value) => _callApiOrNot.value = value;
 
   IsmChatMessageModel? message;
 
@@ -395,8 +400,8 @@ class IsmChatConversationsController extends GetxController {
     String? opponentId,
     bool isLoading = false,
   }) async {
-    if (!callApiNonBlock) return;
-    callApiNonBlock = false;
+    if (!callApiOrNot) return;
+    callApiOrNot = false;
     var response = await _viewModel.getNonBlockUserList(
       sort: sort,
       skip: searchTag.isNotEmpty
@@ -411,7 +416,7 @@ class IsmChatConversationsController extends GetxController {
 
     var users = response?.users ?? [];
     if (users.isEmpty) {
-      isLoadingUsers = true;
+      isLoadResponse = true;
     }
     users.sort((a, b) => a.userName.compareTo(b.userName));
 
@@ -446,7 +451,7 @@ class IsmChatConversationsController extends GetxController {
     }
 
     handleList(forwardedList);
-    callApiNonBlock = true;
+    callApiOrNot = true;
   }
 
   void handleList(List<SelectedForwardUser> list) {
@@ -668,17 +673,28 @@ class IsmChatConversationsController extends GetxController {
     }
   }
 
-  Future<void> getPublicConversation(
-          {String? searchTag,
-          int sort = 1,
-          int skip = 0,
-          int limit = 20}) async =>
-      await _viewModel.getPublicConversation(
-        searchTag: searchTag,
-        sort: sort,
-        skip: skip,
-        limit: limit,
-      );
+  Future<void> getPublicConversation({
+    required int conversationType,
+    String? searchTag,
+    int sort = 1,
+    int skip = 0,
+    int limit = 20,
+  }) async {
+    var response = await _viewModel.getPublicConversation(
+      searchTag: searchTag,
+      sort: sort,
+      skip: skip,
+      limit: limit,
+      conversationType: conversationType,
+    );
+    if (response != null) {
+      if (response.isEmpty) {
+        isLoadResponse = true;
+        return;
+      }
+      publicConversation = response;
+    }
+  }
 
   Future<void> joinConversation({
     required String conversationId,
@@ -687,6 +703,7 @@ class IsmChatConversationsController extends GetxController {
     var response = await _viewModel.joinConversation(
         conversationId: conversationId, isLoading: isloading);
     if (response != null) {
+      Get.back();
       await getChatConversations();
     }
   }

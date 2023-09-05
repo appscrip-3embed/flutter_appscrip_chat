@@ -51,12 +51,12 @@ class IsmChatForwardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
         initState: (_) {
-          converstaionController.callApiNonBlock = true;
+          converstaionController.callApiOrNot = true;
           converstaionController.forwardedList.clear();
           converstaionController.selectedUserList.clear();
           converstaionController.userSearchNameController.clear();
           converstaionController.showSearchField = false;
-          converstaionController.isLoadingUsers = false;
+          converstaionController.isLoadResponse = false;
           converstaionController.getNonBlockUserList(
             opponentId: _conversation?.opponentDetails?.userId,
           );
@@ -73,7 +73,7 @@ class IsmChatForwardView extends StatelessWidget {
                     hintStyle: IsmChatStyles.w400White16,
                     onChanged: (value) {
                       controller.debounce.run(() {
-                        controller.isLoadingUsers = false;
+                        controller.isLoadResponse = false;
                         controller.getNonBlockUserList(
                           searchTag: value,
                           opponentId: IsmChatConfig
@@ -119,8 +119,8 @@ class IsmChatForwardView extends StatelessWidget {
                         .toList();
                     controller.handleList(controller.forwardedList);
                   }
-                  if (controller.isLoadingUsers) {
-                    controller.isLoadingUsers = false;
+                  if (controller.isLoadResponse) {
+                    controller.isLoadResponse = false;
                   }
                 },
                 icon: Icon(
@@ -133,7 +133,7 @@ class IsmChatForwardView extends StatelessWidget {
             ],
           ),
           body: controller.forwardedList.isEmpty
-              ? controller.isLoadingUsers
+              ? controller.isLoadResponse
                   ? Center(
                       child: Text(
                         IsmChatStrings.noUserFound,
@@ -157,7 +157,7 @@ class IsmChatForwardView extends StatelessWidget {
                           }
                           return true;
                         },
-                        child: controller.isLoadingUsers
+                        child: controller.isLoadResponse
                             ? Center(
                                 child: Text(
                                   IsmChatStrings.noUserFound,

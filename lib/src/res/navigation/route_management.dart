@@ -35,7 +35,11 @@ class IsmChatRouteManagement {
   }
 
   static void goToPublicView() {
-    Get.toNamed(IsmChatPublicView.route);
+    Get.toNamed(IsmChatPublicConversationView.route);
+  }
+
+  static void goToOpenView() {
+    Get.toNamed(IsmChatOpenConversationView.route);
   }
 
   static void goToConversationInfo() {

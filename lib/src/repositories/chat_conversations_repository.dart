@@ -307,8 +307,12 @@ class IsmChatConversationsRepository {
     }
   }
 
-  Future<void> getPublicConversation(
-      {String? searchTag, int sort = 1, int skip = 0, int limit = 20}) async {
+  Future<List<IsmChatConversationModel>?> getPublicConversation(
+      {required int conversationType,
+      String? searchTag,
+      int sort = 1,
+      int skip = 0,
+      int limit = 20}) async {
     try {
       String? url;
       // if (searchTag?.isNotEmpty ?? false) {
@@ -318,14 +322,25 @@ class IsmChatConversationsRepository {
       //   url =
       //       '${IsmChatAPI.baseUrl}/chat/conversations/public?includeMembers=true';
       // }
-      url = '${IsmChatAPI.baseUrl}/chat/conversations/public';
+      url =
+          '${IsmChatAPI.baseUrl}/chat/conversations/publicoropen?conversationType=$conversationType';
       var response = await _apiWrapper.get(
         url,
         headers: IsmChatUtility.tokenCommonHeader(),
       );
-      IsmChatLog.error(response.data);
+      if (response.hasError) {
+        return null;
+      }
+      var data = jsonDecode(response.data);
+
+      var listData = (data['conversations'] as List)
+          .map((e) =>
+              IsmChatConversationModel.fromMap(e as Map<String, dynamic>))
+          .toList();
+      return listData;
     } catch (e, st) {
       IsmChatLog.error('GetUserList error $e', st);
+      return null;
     }
   }
 

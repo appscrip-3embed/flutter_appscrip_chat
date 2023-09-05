@@ -159,6 +159,8 @@ class _MoreIcon extends StatelessWidget {
             ));
           } else if (index == 5) {
             IsmChatRouteManagement.goToPublicView();
+          } else if (index == 6) {
+            IsmChatRouteManagement.goToOpenView();
           }
         },
         itemBuilder: (_) => [
@@ -227,7 +229,20 @@ class _MoreIcon extends StatelessWidget {
                   color: IsmChatConfig.chatTheme.primaryColor,
                 ),
                 IsmChatDimens.boxWidth8,
-                const Text(IsmChatStrings.public),
+                const Text(IsmChatStrings.publicConversation),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: 6,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.admin_panel_settings_outlined,
+                  color: IsmChatConfig.chatTheme.primaryColor,
+                ),
+                IsmChatDimens.boxWidth8,
+                const Text(IsmChatStrings.openConversation),
               ],
             ),
           ),

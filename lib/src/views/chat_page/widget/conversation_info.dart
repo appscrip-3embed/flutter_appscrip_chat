@@ -130,6 +130,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                             : null,
                         child: Text(
                           controller.conversation!.chatName,
+                          textAlign: TextAlign.center,
                           style: IsmChatStyles.w600Black27,
                         )),
                     if (!(controller.conversation?.isGroup ?? false)) ...[
