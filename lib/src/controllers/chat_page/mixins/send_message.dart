@@ -119,24 +119,34 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           await _controller.getMessagesFromDB(conversationId);
         }
       } else {
-        await sendBroadcastMessage(
-          userIds: (_controller.conversation?.members ?? [])
-              .map((e) => e.userId)
-              .toList(),
-          showInConversation: showInConversation,
-          messageType: messageType,
-          encrypted: encrypted,
-          deviceId: deviceId,
-          body: IsmChatUtility.encodePayload(body),
-          notificationBody: notificationBody,
-          notificationTitle: notificationTitle,
-          attachments: attachments,
-          customType: customType,
-          events: {'updateUnreadCount': true, 'sendPushNotification': true},
-          isLoading: true,
-          metaData: metaData,
-          searchableTags: [notificationBody],
-        );
+        if (_controller.conversation?.members?.isNotEmpty == true &&
+            (_controller.conversation?.members?.length ?? 0) >= 2) {
+          await sendBroadcastMessage(
+            userIds: (_controller.conversation?.members ?? [])
+                .map((e) => e.userId)
+                .toList(),
+            showInConversation: showInConversation,
+            messageType: messageType,
+            encrypted: encrypted,
+            deviceId: deviceId,
+            body: IsmChatUtility.encodePayload(body),
+            notificationBody: notificationBody,
+            notificationTitle: notificationTitle,
+            attachments: attachments,
+            customType: customType,
+            events: {'updateUnreadCount': true, 'sendPushNotification': true},
+            isLoading: true,
+            metaData: metaData,
+            searchableTags: [notificationBody],
+          );
+        } else {
+          await Get.dialog(
+            const IsmChatAlertDialogBox(
+              title: IsmChatStrings.broadcastAlert,
+              cancelLabel: 'Okay',
+            ),
+          );
+        }
       }
     }
   }

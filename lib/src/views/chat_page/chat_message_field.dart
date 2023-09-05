@@ -630,7 +630,7 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
 
   @override
   void dispose() {
-    controller.fabAnimationController!.dispose();
+    controller.fabAnimationController?.dispose();
     controller.attchmentOverlayEntry?.dispose();
     controller.attchmentOverlayEntry = null;
     super.dispose();

@@ -331,8 +331,6 @@ class IsmChatBroadCastView extends StatelessWidget {
               if (controller.selectedUserList.isNotEmpty &&
                   controller.selectedUserList.length >= 2) {
                 var conversation = IsmChatConversationModel(
-                  conversationTitle:
-                      '${controller.selectedUserList.length.toString()} recipients',
                   members: controller.selectedUserList,
                   conversationImageUrl: IsmChatAssets.noImage,
                   customType: 'BroadcastMessage',

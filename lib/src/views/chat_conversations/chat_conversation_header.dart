@@ -118,7 +118,8 @@ class _MoreIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) => PopupMenuButton(
         color: IsmChatColors.whiteColor,
-        offset: Offset((Responsive.isWebAndTablet(context)) ? -130 : 0, 0),
+        offset: Offset((Responsive.isWebAndTablet(context)) ? -180 : 0, 0),
+        padding: EdgeInsets.zero,
         icon: Icon(
           Icons.more_vert_rounded,
           color: IsmChatConfig.chatTheme.primaryColor,

@@ -600,5 +600,6 @@ enum IsRenderChatPageScreen {
   groupEligibleView,
   coversationMediaView,
   userInfoView,
-  messageSearchView
+  messageSearchView,
+  boradcastMessagePage,
 }

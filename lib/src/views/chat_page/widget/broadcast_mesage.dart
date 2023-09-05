@@ -16,7 +16,16 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
       builder: (controller) => Scaffold(
             appBar: AppBar(
               leading: IsmChatTapHandler(
-                onTap: Get.back,
+                onTap: () {
+                  if (Responsive.isWebAndTablet(context)) {
+                    controller.isBroadcastMessage = false;
+                    Get.find<IsmChatConversationsController>()
+                        .currentConversation = null;
+                    Get.delete<IsmChatPageController>(force: true);
+                  } else {
+                    Get.back();
+                  }
+                },
                 child: Icon(
                   Responsive.isWebAndTablet(context)
                       ? Icons.close_rounded
@@ -43,7 +52,7 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          controller.conversation?.chatName ?? '',
+                          '${controller.conversation?.members?.length} recipients',
                           style: IsmChatConfig
                                   .chatTheme.chatPageHeaderTheme?.titleStyle ??
                               IsmChatStyles.w600White16,

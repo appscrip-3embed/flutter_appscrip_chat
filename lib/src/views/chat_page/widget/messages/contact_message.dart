@@ -75,12 +75,13 @@ class IsmChatContactMessage extends StatelessWidget {
             const Divider(
               thickness: 1,
             ),
-            Center(
-              child: Text(
-                'View ${message.contacts.length != 1 ? 'All' : ''}',
-                style: IsmChatStyles.w600Black12,
-              ),
-            )
+            if (!Responsive.isWebAndTablet(context))
+              Center(
+                child: Text(
+                  'View ${message.contacts.length != 1 ? 'All' : ''}',
+                  style: IsmChatStyles.w600Black12,
+                ),
+              )
           ],
         ),
       );
