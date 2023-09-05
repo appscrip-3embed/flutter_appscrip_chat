@@ -550,6 +550,9 @@ class IsmChatPageController extends GetxController
     if (asset.isNotEmpty) {
       backgroundColor = asset.first.values.first.color!;
       backgroundImage = asset.first.values.first.imageUrl!;
+    } else {
+      backgroundColor = '';
+      backgroundImage = '';
     }
   }
 
