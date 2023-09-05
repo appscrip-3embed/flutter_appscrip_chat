@@ -667,4 +667,27 @@ class IsmChatConversationsController extends GetxController {
       await getChatConversations();
     }
   }
+
+  Future<void> getPublicConversation(
+          {String? searchTag,
+          int sort = 1,
+          int skip = 0,
+          int limit = 20}) async =>
+      await _viewModel.getPublicConversation(
+        searchTag: searchTag,
+        sort: sort,
+        skip: skip,
+        limit: limit,
+      );
+
+  Future<void> joinConversation({
+    required String conversationId,
+    bool isloading = false,
+  }) async {
+    var response = await _viewModel.joinConversation(
+        conversationId: conversationId, isLoading: isloading);
+    if (response != null) {
+      await getChatConversations();
+    }
+  }
 }

@@ -27,7 +27,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       pushNotifications: true,
       members: userId,
       isGroup: isGroup,
-      conversationType: 0,
+      conversationType: IsmChatConversationType.private.value,
       searchableTags: searchableTags,
       metaData: metaData != null ? metaData.toMap() : {},
       conversationImageUrl:

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:flutter/services.dart';
 
 class IsmChatConversationsRepository {
   final _apiWrapper = IsmChatApiWrapper();
@@ -304,6 +303,46 @@ class IsmChatConversationsRepository {
       return response;
     } catch (e, st) {
       IsmChatLog.error('Send Forward Message $e', st);
+      return null;
+    }
+  }
+
+  Future<void> getPublicConversation(
+      {String? searchTag, int sort = 1, int skip = 0, int limit = 20}) async {
+    try {
+      String? url;
+      // if (searchTag?.isNotEmpty ?? false) {
+      //   url =
+      //       '${IsmChatAPI.getPublicConversation}?sort=$sort&skip=$skip&limit=$limit';
+      // } else {
+      //   url =
+      //       '${IsmChatAPI.baseUrl}/chat/conversations/public?includeMembers=true';
+      // }
+      url = '${IsmChatAPI.baseUrl}/chat/conversations/public';
+      var response = await _apiWrapper.get(
+        url,
+        headers: IsmChatUtility.tokenCommonHeader(),
+      );
+      IsmChatLog.error(response.data);
+    } catch (e, st) {
+      IsmChatLog.error('GetUserList error $e', st);
+    }
+  }
+
+  Future<IsmChatResponseModel?> joinConversation(
+      {required String conversationId, bool isLoading = false}) async {
+    try {
+      var payload = {'conversationId': conversationId};
+      var response = await _apiWrapper.put(IsmChatAPI.joinConversation,
+          payload: payload,
+          headers: IsmChatUtility.tokenCommonHeader(),
+          showLoader: isLoading);
+      if (response.hasError) {
+        return response;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Join conversation error $e', st);
       return null;
     }
   }

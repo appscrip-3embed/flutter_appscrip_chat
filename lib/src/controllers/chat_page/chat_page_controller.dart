@@ -430,8 +430,8 @@ class IsmChatPageController extends GetxController
     _generateReactionList();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
-      if (conversation?.customType?.isEmpty == true &&
-          conversation?.customType != 'null') {
+      if (conversation?.customType?.isEmpty == true ||
+          conversation?.customType == null) {
         _conversationController.isConversationId =
             conversation?.conversationId ?? '';
         isBroadcastMessage = false;

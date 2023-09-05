@@ -3,6 +3,8 @@ class IsmPageRoutes {
   static const String chatlist = '/chatlist';
   static const String chatPage = '/chatPage';
   static const String createChat = '/createChat';
+  static const String publicView = '/publicView';
+
   static const String forwardView = '/forwardView';
   static const String broadcastView = '/broadcastView';
   static const String boradCastMessagePage = '/boradCastMessagePage';

@@ -45,6 +45,8 @@ class IsmChatStrings {
   static const String wallpaper = 'Wallpaper';
   static const String search = 'Search';
   static const String newGroup = 'New Group';
+  static const String public = 'Public';
+
   static const String logout = 'Logout';
   static const String startConversation = 'Start Conversation';
 

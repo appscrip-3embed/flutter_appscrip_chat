@@ -250,7 +250,6 @@ class _Message extends StatelessWidget {
                         Icon(Icons.shortcut_outlined),
                         Text(
                           IsmChatStrings.forwarded,
-                          style: TextStyle(fontStyle: FontStyle.italic),
                         ),
                       ],
                     )

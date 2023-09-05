@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class IsmChatConversationsViewModel {
@@ -177,4 +176,22 @@ class IsmChatConversationsViewModel {
         searchableTags: searchableTags,
         isLoading: isLoading,
       );
+
+  Future<void> getPublicConversation({
+    String? searchTag,
+    int sort = 1,
+    int skip = 0,
+    int limit = 20,
+  }) async =>
+      _repository.getPublicConversation(
+        limit: limit,
+        searchTag: searchTag,
+        skip: skip,
+        sort: sort,
+      );
+
+  Future<IsmChatResponseModel?> joinConversation(
+          {required String conversationId, bool isLoading = false}) async =>
+      _repository.joinConversation(
+          conversationId: conversationId, isLoading: isLoading);
 }
