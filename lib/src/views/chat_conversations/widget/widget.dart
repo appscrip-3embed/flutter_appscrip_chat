@@ -4,5 +4,6 @@ export 'broadcast.dart';
 export 'create_conversation_view.dart';
 export 'forward_view.dart';
 export 'group_input_field.dart';
-export 'public.dart';
+export 'open_conversation.dart';
+export 'public_conversation.dart';
 export 'user_info.dart';

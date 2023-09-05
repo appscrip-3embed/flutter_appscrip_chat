@@ -177,18 +177,19 @@ class IsmChatConversationsViewModel {
         isLoading: isLoading,
       );
 
-  Future<void> getPublicConversation({
+  Future<List<IsmChatConversationModel>?> getPublicConversation({
+    required int conversationType,
     String? searchTag,
     int sort = 1,
     int skip = 0,
     int limit = 20,
   }) async =>
       _repository.getPublicConversation(
-        limit: limit,
-        searchTag: searchTag,
-        skip: skip,
-        sort: sort,
-      );
+          limit: limit,
+          searchTag: searchTag,
+          skip: skip,
+          sort: sort,
+          conversationType: conversationType);
 
   Future<IsmChatResponseModel?> joinConversation(
           {required String conversationId, bool isLoading = false}) async =>

@@ -15,12 +15,12 @@ class IsmChatBroadCastView extends StatelessWidget {
         initState: (_) {
           final converstaionController =
               Get.find<IsmChatConversationsController>();
-          converstaionController.callApiNonBlock = true;
+          converstaionController.callApiOrNot = true;
           converstaionController.forwardedList.clear();
           converstaionController.selectedUserList.clear();
           converstaionController.userSearchNameController.clear();
           converstaionController.showSearchField = false;
-          converstaionController.isLoadingUsers = false;
+          converstaionController.isLoadResponse = false;
           converstaionController.getNonBlockUserList(
             opponentId: converstaionController.userDetails?.userId,
           );
@@ -37,7 +37,7 @@ class IsmChatBroadCastView extends StatelessWidget {
                     hintStyle: IsmChatStyles.w400White16,
                     onChanged: (value) {
                       controller.debounce.run(() {
-                        controller.isLoadingUsers = false;
+                        controller.isLoadResponse = false;
                         controller.getNonBlockUserList(
                           searchTag: value,
                           opponentId: IsmChatConfig
@@ -83,8 +83,8 @@ class IsmChatBroadCastView extends StatelessWidget {
                         .toList();
                     controller.handleList(controller.forwardedList);
                   }
-                  if (controller.isLoadingUsers) {
-                    controller.isLoadingUsers = false;
+                  if (controller.isLoadResponse) {
+                    controller.isLoadResponse = false;
                   }
                 },
                 icon: Icon(
@@ -181,7 +181,7 @@ class IsmChatBroadCastView extends StatelessWidget {
               controller.forwardedList.isEmpty
                   ? Expanded(
                       child: Center(
-                        child: controller.isLoadingUsers
+                        child: controller.isLoadResponse
                             ? Text(
                                 IsmChatStrings.noUserFound,
                                 style: IsmChatStyles.w600Black16,
@@ -203,7 +203,7 @@ class IsmChatBroadCastView extends StatelessWidget {
                           }
                           return true;
                         },
-                        child: controller.isLoadingUsers
+                        child: controller.isLoadResponse
                             ? Center(
                                 child: Text(
                                   IsmChatStrings.noUserFound,

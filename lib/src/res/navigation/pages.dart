@@ -20,8 +20,13 @@ class IsmChatPages {
       binding: IsmChatConversationsBinding(),
     ),
     GetPage(
-      name: IsmChatPublicView.route,
-      page: IsmChatPublicView.new,
+      name: IsmChatPublicConversationView.route,
+      page: IsmChatPublicConversationView.new,
+      binding: IsmChatConversationsBinding(),
+    ),
+    GetPage(
+      name: IsmChatOpenConversationView.route,
+      page: IsmChatOpenConversationView.new,
       binding: IsmChatConversationsBinding(),
     ),
     GetPage(

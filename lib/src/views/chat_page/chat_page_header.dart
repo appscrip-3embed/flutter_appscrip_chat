@@ -99,90 +99,77 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                 .isValidUrl,
                       ),
                   IsmChatDimens.boxWidth8,
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      FittedBox(
-                        child: Text(
-                          IsmChatProperties.chatPageProperties.header?.title
-                                  ?.call(
-                                      context,
-                                      controller.conversation!,
-                                      controller.conversation?.chatName ??
-                                          '') ??
-                              controller.conversation!.chatName,
-                          style: IsmChatConfig
-                                  .chatTheme.chatPageHeaderTheme?.titleStyle ??
-                              IsmChatStyles.w600White16,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            IsmChatProperties.chatPageProperties.header?.title
+                                    ?.call(
+                                        context,
+                                        controller.conversation!,
+                                        controller.conversation?.chatName ??
+                                            '') ??
+                                controller.conversation!.chatName,
+                            style: IsmChatConfig.chatTheme.chatPageHeaderTheme
+                                    ?.titleStyle ??
+                                IsmChatStyles.w600White16,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                      ),
-                      (!controller.conversation!.isChattingAllowed)
-                          ? const SizedBox.shrink()
-                          : Obx(
-                              () => controller.conversation!.isSomeoneTyping
-                                  ? Text(
-                                      controller.conversation!.typingUsers,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: IsmChatConfig
-                                              .chatTheme
-                                              .chatPageHeaderTheme
-                                              ?.titleStyle ??
-                                          IsmChatStyles.w400White12,
-                                    )
-                                  : controller.conversation!.isGroup == true
-                                      ? SizedBox(
-                                          width: Responsive.isWebAndTablet(
-                                                  context)
-                                              ? null
-                                              : IsmChatDimens.percentWidth(.55),
-                                          child: Text(
-                                            controller.conversation?.members
-                                                            ?.isEmpty ==
-                                                        true ||
-                                                    controller.conversation
-                                                            ?.members ==
-                                                        null
-                                                ? IsmChatStrings.tapInfo
-                                                : controller
-                                                        .conversation?.members!
-                                                        .map((e) => e.userName)
-                                                        .join(', ') ??
-                                                    '',
-                                            style: IsmChatConfig
-                                                    .chatTheme
-                                                    .chatPageHeaderTheme
-                                                    ?.subtileStyle ??
-                                                IsmChatStyles.w400White12,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                          ),
-                                        )
-                                      : controller.conversation?.opponentDetails
-                                                  ?.online ??
-                                              false
-                                          ? Text(
-                                              IsmChatStrings.online,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
+                        (!controller.conversation!.isChattingAllowed)
+                            ? const SizedBox.shrink()
+                            : Obx(
+                                () => controller.conversation!.isSomeoneTyping
+                                    ? Text(
+                                        controller.conversation!.typingUsers,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: IsmChatConfig
+                                                .chatTheme
+                                                .chatPageHeaderTheme
+                                                ?.titleStyle ??
+                                            IsmChatStyles.w400White12,
+                                      )
+                                    : controller.conversation!.isGroup == true
+                                        ? SizedBox(
+                                            width: Responsive.isWebAndTablet(
+                                                    context)
+                                                ? null
+                                                : IsmChatDimens.percentWidth(
+                                                    .55),
+                                            child: Text(
+                                              controller.conversation?.members
+                                                              ?.isEmpty ==
+                                                          true ||
+                                                      controller.conversation
+                                                              ?.members ==
+                                                          null
+                                                  ? IsmChatStrings.tapInfo
+                                                  : controller.conversation
+                                                          ?.members!
+                                                          .map(
+                                                              (e) => e.userName)
+                                                          .join(', ') ??
+                                                      '',
                                               style: IsmChatConfig
                                                       .chatTheme
                                                       .chatPageHeaderTheme
                                                       ?.subtileStyle ??
                                                   IsmChatStyles.w400White12,
-                                            )
-                                          : Flexible(
-                                              child: Text(
-                                                controller
-                                                        .conversation
-                                                        ?.opponentDetails
-                                                        ?.lastSeen
-                                                        .toCurrentTimeStirng() ??
-                                                    '',
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                            ),
+                                          )
+                                        : controller.conversation
+                                                    ?.opponentDetails?.online ??
+                                                false
+                                            ? Text(
+                                                IsmChatStrings.online,
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: IsmChatConfig
@@ -190,10 +177,28 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                                         .chatPageHeaderTheme
                                                         ?.subtileStyle ??
                                                     IsmChatStyles.w400White12,
+                                              )
+                                            : Flexible(
+                                                child: Text(
+                                                  controller
+                                                          .conversation
+                                                          ?.opponentDetails
+                                                          ?.lastSeen
+                                                          .toCurrentTimeStirng() ??
+                                                      '',
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: IsmChatConfig
+                                                          .chatTheme
+                                                          .chatPageHeaderTheme
+                                                          ?.subtileStyle ??
+                                                      IsmChatStyles.w400White12,
+                                                ),
                                               ),
-                                            ),
-                            ),
-                    ],
+                              ),
+                      ],
+                    ),
                   ),
                 ],
               ),
