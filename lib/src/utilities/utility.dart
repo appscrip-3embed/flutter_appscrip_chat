@@ -83,6 +83,7 @@ class IsmChatUtility {
       'appSecret': IsmChatConfig.communicationConfig.projectConfig.appSecret,
       'userSecret': IsmChatConfig.communicationConfig.projectConfig.userSecret,
     };
+    IsmChatLog.error(header);
     return header;
   }
 
@@ -94,7 +95,7 @@ class IsmChatUtility {
       'appSecret': IsmChatConfig.communicationConfig.projectConfig.appSecret,
       'userToken': IsmChatConfig.communicationConfig.userConfig.userToken,
     };
-
+    IsmChatLog.error('With Token $header');
     return header;
   }
 

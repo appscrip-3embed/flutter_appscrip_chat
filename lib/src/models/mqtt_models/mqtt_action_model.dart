@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:flutter/foundation.dart';
 
 class IsmChatMqttActionModel {
   factory IsmChatMqttActionModel.fromJson(String source) =>
@@ -55,6 +56,25 @@ class IsmChatMqttActionModel {
         action: IsmChatActionEvents.fromName(map['action'] as String? ?? ''),
         reactionType: map['reactionType'] as String? ?? '',
         reactionsCount: map['reactionsCount'] as int? ?? 0,
+        senderId: map['senderId'] as String? ?? '',
+        body: map['body'] != null && (map['body'] as String).isNotEmpty
+            ? IsmChatUtility.decodePayload(map['body'] as String)
+            : '',
+        messageType:
+            IsmChatMessageType.fromValue(map['messageType'] as int? ?? 0),
+        customType: map['customType'] != null
+            ? IsmChatCustomMessageType.fromMap(map['customType'])
+            : map['action'] != null
+                ? IsmChatCustomMessageType.fromAction(map['action'] as String)
+                : null,
+        attachments: map['attachments'] != null
+            ? (map['attachments'] as List<dynamic>)
+                .map((e) => AttachmentModel.fromMap(e as Map<String, dynamic>))
+                .toList()
+            : null,
+        metaData: map['metaData'] != null
+            ? IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>)
+            : null,
         members: map['members'] != null
             ? List<UserDetails>.from(
                 (map['members'] as List).map(
@@ -64,25 +84,6 @@ class IsmChatMqttActionModel {
             : [],
       );
 
-  const IsmChatMqttActionModel({
-    this.conversationId,
-    this.userDetails,
-    this.opponentDetails,
-    this.initiatorDetails,
-    this.conversationDetails,
-    this.messageId,
-    this.messageIds,
-    this.lastMessageSentAt,
-    required this.sentAt,
-    required this.action,
-    this.reactionType,
-    this.reactionsCount,
-    this.initiatorId,
-    this.initiatorName,
-    this.memberId,
-    this.memberName,
-    this.members,
-  });
   final String? conversationId;
   final IsmChatMqttUserModel? userDetails;
   final IsmChatMqttUserModel? opponentDetails;
@@ -100,52 +101,125 @@ class IsmChatMqttActionModel {
   final String? reactionType;
   final int? reactionsCount;
   final List<UserDetails>? members;
+  final String? senderId;
+  final String? senderName;
+  final IsmChatMessageType? messageType;
+  final IsmChatCustomMessageType? customType;
+  final String? body;
+  final List<AttachmentModel>? attachments;
+  final IsmChatMetaData? metaData;
+  IsmChatMqttActionModel({
+    this.conversationId,
+    this.userDetails,
+    this.opponentDetails,
+    this.initiatorDetails,
+    this.conversationDetails,
+    required this.sentAt,
+    this.lastMessageSentAt,
+    this.messageId,
+    this.messageIds,
+    required this.action,
+    this.memberId,
+    this.memberName,
+    this.initiatorName,
+    this.initiatorId,
+    this.reactionType,
+    this.reactionsCount,
+    this.members,
+    this.senderId,
+    this.senderName,
+    this.messageType,
+    this.customType,
+    this.body,
+    this.attachments,
+    this.metaData,
+  });
 
   IsmChatMqttActionModel copyWith({
     String? conversationId,
     IsmChatMqttUserModel? userDetails,
     IsmChatMqttUserModel? opponentDetails,
     IsmChatMqttUserModel? initiatorDetails,
+    IsmChatConversationModel? conversationDetails,
     int? sentAt,
+    int? lastMessageSentAt,
+    String? messageId,
+    List<String>? messageIds,
     IsmChatActionEvents? action,
     String? memberId,
     String? memberName,
     String? initiatorName,
     String? initiatorId,
+    String? reactionType,
+    int? reactionsCount,
     List<UserDetails>? members,
+    String? senderId,
+    String? senderName,
+    IsmChatMessageType? messageType,
+    IsmChatCustomMessageType? customType,
+    String? body,
+    List<AttachmentModel>? attachments,
+    IsmChatMetaData? metaData,
   }) =>
       IsmChatMqttActionModel(
-          conversationId: conversationId ?? this.conversationId,
-          userDetails: userDetails ?? this.userDetails,
-          opponentDetails: opponentDetails ?? this.opponentDetails,
-          initiatorDetails: initiatorDetails ?? this.initiatorDetails,
-          sentAt: sentAt ?? this.sentAt,
-          action: action ?? this.action,
-          memberId: memberId ?? this.memberId,
-          memberName: memberName ?? this.memberName,
-          initiatorName: initiatorName ?? this.initiatorName,
-          initiatorId: initiatorId ?? this.initiatorId,
-          members: members ?? this.members);
+        conversationId: conversationId ?? this.conversationId,
+        userDetails: userDetails ?? this.userDetails,
+        opponentDetails: opponentDetails ?? this.opponentDetails,
+        initiatorDetails: initiatorDetails ?? this.initiatorDetails,
+        conversationDetails: conversationDetails ?? this.conversationDetails,
+        sentAt: sentAt ?? this.sentAt,
+        lastMessageSentAt: lastMessageSentAt ?? this.lastMessageSentAt,
+        messageId: messageId ?? this.messageId,
+        messageIds: messageIds ?? this.messageIds,
+        action: action ?? this.action,
+        memberId: memberId ?? this.memberId,
+        memberName: memberName ?? this.memberName,
+        initiatorName: initiatorName ?? this.initiatorName,
+        initiatorId: initiatorId ?? this.initiatorId,
+        reactionType: reactionType ?? this.reactionType,
+        reactionsCount: reactionsCount ?? this.reactionsCount,
+        members: members ?? this.members,
+        senderId: senderId ?? this.senderId,
+        senderName: senderName ?? this.senderName,
+        messageType: messageType ?? this.messageType,
+        customType: customType ?? this.customType,
+        body: body ?? this.body,
+        attachments: attachments ?? this.attachments,
+        metaData: metaData ?? this.metaData,
+      );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
         'conversationId': conversationId,
         'userDetails': userDetails?.toMap(),
         'opponentDetails': opponentDetails?.toMap(),
         'initiatorDetails': initiatorDetails?.toMap(),
+        'conversationDetails': conversationDetails?.toMap(),
         'sentAt': sentAt,
-        'action': action.name,
+        'lastMessageSentAt': lastMessageSentAt,
+        'messageId': messageId,
+        'messageIds': messageIds,
+        'action': action,
         'memberId': memberId,
         'memberName': memberName,
         'initiatorName': initiatorName,
         'initiatorId': initiatorId,
-        'members': members
+        'reactionType': reactionType,
+        'reactionsCount': reactionsCount,
+        'members': members?.map((x) => x.toMap()).toList(),
+        'senderId': senderId,
+        'senderName': senderName,
+        'messageType': messageType,
+        'customType': customType,
+        'body': body,
+        'attachments': attachments?.map((x) => x.toMap()).toList(),
+        'metaData': metaData?.toMap(),
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'MqttActionModel(conversationId: $conversationId, messageId: $messageId, messageIds: $messageIds, userDetails: $userDetails, opponentDetails: $opponentDetails, initiatorDetails: $initiatorDetails, sentAt: $sentAt, action: $action, memberId : $memberId, memberName : $memberName, initiatorName : $initiatorName , initiatorId : $initiatorId)';
+      'IsmChatMqttActionModel(conversationId: $conversationId, userDetails: $userDetails, opponentDetails: $opponentDetails, initiatorDetails: $initiatorDetails, conversationDetails: $conversationDetails, sentAt: $sentAt, lastMessageSentAt: $lastMessageSentAt, messageId: $messageId, messageIds: $messageIds, action: $action, memberId: $memberId, memberName: $memberName, initiatorName: $initiatorName, initiatorId: $initiatorId, reactionType: $reactionType, reactionsCount: $reactionsCount, members: $members, senderId: $senderId, senderName: $senderName, messageType: $messageType, customType: $customType, body: $body, attachments: $attachments, metaData: $metaData)';
 
   @override
   bool operator ==(covariant IsmChatMqttActionModel other) {
@@ -155,12 +229,26 @@ class IsmChatMqttActionModel {
         other.userDetails == userDetails &&
         other.opponentDetails == opponentDetails &&
         other.initiatorDetails == initiatorDetails &&
+        other.conversationDetails == conversationDetails &&
         other.sentAt == sentAt &&
+        other.lastMessageSentAt == lastMessageSentAt &&
+        other.messageId == messageId &&
+        listEquals(other.messageIds, messageIds) &&
+        other.action == action &&
         other.memberId == memberId &&
         other.memberName == memberName &&
-        other.initiatorId == initiatorId &&
         other.initiatorName == initiatorName &&
-        other.action == action;
+        other.initiatorId == initiatorId &&
+        other.reactionType == reactionType &&
+        other.reactionsCount == reactionsCount &&
+        listEquals(other.members, members) &&
+        other.senderId == senderId &&
+        other.senderName == senderName &&
+        other.messageType == messageType &&
+        other.customType == customType &&
+        other.body == body &&
+        listEquals(other.attachments, attachments) &&
+        other.metaData == metaData;
   }
 
   @override
@@ -169,25 +257,54 @@ class IsmChatMqttActionModel {
       userDetails.hashCode ^
       opponentDetails.hashCode ^
       initiatorDetails.hashCode ^
+      conversationDetails.hashCode ^
       sentAt.hashCode ^
+      lastMessageSentAt.hashCode ^
+      messageId.hashCode ^
+      messageIds.hashCode ^
+      action.hashCode ^
       memberId.hashCode ^
       memberName.hashCode ^
-      initiatorId.hashCode ^
       initiatorName.hashCode ^
-      action.hashCode;
+      initiatorId.hashCode ^
+      reactionType.hashCode ^
+      reactionsCount.hashCode ^
+      members.hashCode ^
+      senderId.hashCode ^
+      senderName.hashCode ^
+      messageType.hashCode ^
+      customType.hashCode ^
+      body.hashCode ^
+      attachments.hashCode ^
+      metaData.hashCode;
 }
 
 class Members {
-  final String? memberProfileImageUrl;
-  final String? memberName;
-  final String? memberIdentifier;
-  final String? memberId;
   Members({
     this.memberProfileImageUrl,
     this.memberName,
     this.memberIdentifier,
     this.memberId,
   });
+
+  factory Members.fromMap(Map<String, dynamic> map) => Members(
+        memberProfileImageUrl: map['memberProfileImageUrl'] != null
+            ? map['memberProfileImageUrl'] as String
+            : null,
+        memberName:
+            map['memberName'] != null ? map['memberName'] as String : null,
+        memberIdentifier: map['memberIdentifier'] != null
+            ? map['memberIdentifier'] as String
+            : null,
+        memberId: map['memberId'] != null ? map['memberId'] as String : null,
+      );
+
+  factory Members.fromJson(String source) =>
+      Members.fromMap(json.decode(source) as Map<String, dynamic>);
+  final String? memberProfileImageUrl;
+  final String? memberName;
+  final String? memberIdentifier;
+  final String? memberId;
 
   Members copyWith({
     String? memberProfileImageUrl,
@@ -210,22 +327,7 @@ class Members {
         'memberId': memberId,
       };
 
-  factory Members.fromMap(Map<String, dynamic> map) => Members(
-        memberProfileImageUrl: map['memberProfileImageUrl'] != null
-            ? map['memberProfileImageUrl'] as String
-            : null,
-        memberName:
-            map['memberName'] != null ? map['memberName'] as String : null,
-        memberIdentifier: map['memberIdentifier'] != null
-            ? map['memberIdentifier'] as String
-            : null,
-        memberId: map['memberId'] != null ? map['memberId'] as String : null,
-      );
-
   String toJson() => json.encode(toMap());
-
-  factory Members.fromJson(String source) =>
-      Members.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() =>

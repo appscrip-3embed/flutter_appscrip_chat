@@ -15,7 +15,7 @@ class IsmchPlatformFile {
 
   final Uint8List? bytes;
 
-  final double? size;
+  final int? size;
 
   final String? extension;
 
@@ -23,7 +23,7 @@ class IsmchPlatformFile {
     String? path,
     String? name,
     Uint8List? bytes,
-    double? size,
+    int? size,
     String? extension,
   }) =>
       IsmchPlatformFile(

@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class IsmChatPageViewModel {
@@ -61,16 +60,6 @@ class IsmChatPageViewModel {
     return messages;
   }
 
-  Future<int?> updatePresignedUrl(
-      {String? presignedUrl, Uint8List? bytes}) async {
-    var respone = await _repository.updatePresignedUrl(
-        presignedUrl: presignedUrl, bytes: bytes);
-    if (!respone!.hasError) {
-      return respone.errorCode;
-    }
-    return null;
-  }
-
   Future<bool> sendMessage(
       {required bool showInConversation,
       required int messageType,
@@ -81,7 +70,6 @@ class IsmChatPageViewModel {
       required int createdAt,
       required String notificationBody,
       required String notificationTitle,
-      SendMessageType sendMessageType = SendMessageType.pendingMessage,
       String? parentMessageId,
       IsmChatMetaData? metaData,
       List<Map<String, dynamic>>? mentionedUsers,
@@ -110,81 +98,42 @@ class IsmChatPageViewModel {
         return false;
       }
       var dbBox = IsmChatConfig.dbWrapper;
-      if (sendMessageType == SendMessageType.pendingMessage) {
-        final chatPendingMessages = await dbBox!.getConversation(
-            conversationId: conversationId, dbBox: IsmChatDbBox.pending);
-        if (chatPendingMessages == null) {
-          return false;
-        }
-        // Todo update messgae with url for audio
-        for (var x = 0; x < chatPendingMessages.messages!.length; x++) {
-          var pendingMessage = chatPendingMessages.messages![x];
-          if (pendingMessage.messageId!.isNotEmpty ||
-              pendingMessage.sentAt != createdAt) {
-            continue;
-          }
-          pendingMessage.messageId = messageId;
-          pendingMessage.deliveredToAll = false;
-          pendingMessage.isUploading = false;
-          chatPendingMessages.messages?.removeAt(x);
-          await dbBox.saveConversation(
-              conversation: chatPendingMessages, dbBox: IsmChatDbBox.pending);
-          if (chatPendingMessages.messages!.isEmpty) {
-            await dbBox.pendingMessageBox
-                .delete(chatPendingMessages.conversationId!);
-          }
-          var conversationModel =
-              await dbBox.getConversation(conversationId: conversationId);
-          if (conversationModel != null) {
-            conversationModel.messages?.add(pendingMessage);
-            conversationModel = conversationModel.copyWith(
-              lastMessageDetails: conversationModel.lastMessageDetails
-                  ?.copyWith(reactionType: ''),
-            );
-          }
-          await dbBox.saveConversation(conversation: conversationModel!);
-          return true;
-        }
-      } else {
-        final chatForwardMessages = await dbBox!.getConversation(
-            conversationId: conversationId, dbBox: IsmChatDbBox.forward);
-        if (chatForwardMessages == null) {
-          return false;
-        }
 
-        for (var x = 0; x < chatForwardMessages.messages!.length; x++) {
-          var forwardMessage = chatForwardMessages.messages![x];
-          if (forwardMessage.messageId!.isNotEmpty ||
-              forwardMessage.sentAt != createdAt) {
-            continue;
-          }
-          forwardMessage.messageId = messageId;
-          forwardMessage.deliveredToAll = false;
-          forwardMessage.isUploading = false;
-          chatForwardMessages.messages?.removeAt(x);
-          await dbBox.saveConversation(
-              conversation: chatForwardMessages, dbBox: IsmChatDbBox.forward);
-
-          if (chatForwardMessages.messages!.isEmpty) {
-            await dbBox.forwardMessageBox
-                .delete(chatForwardMessages.conversationId!);
-          }
-
-          final conversationModel = await dbBox.getConversation(
-            conversationId: conversationId,
-          );
-
-          if (conversationModel != null) {
-            conversationModel.messages?.add(forwardMessage);
-          }
-
-          await dbBox.saveConversation(
-            conversation: conversationModel!,
-          );
-
-          return true;
-        }
+      final chatPendingMessages = await dbBox!.getConversation(
+          conversationId: conversationId, dbBox: IsmChatDbBox.pending);
+      if (chatPendingMessages == null) {
+        return false;
       }
+      // Todo update messgae with url for audio
+      for (var x = 0; x < chatPendingMessages.messages!.length; x++) {
+        var pendingMessage = chatPendingMessages.messages![x];
+        if (pendingMessage.messageId!.isNotEmpty ||
+            pendingMessage.sentAt != createdAt) {
+          continue;
+        }
+        pendingMessage.messageId = messageId;
+        pendingMessage.deliveredToAll = false;
+        pendingMessage.isUploading = false;
+        chatPendingMessages.messages?.removeAt(x);
+        await dbBox.saveConversation(
+            conversation: chatPendingMessages, dbBox: IsmChatDbBox.pending);
+        if (chatPendingMessages.messages!.isEmpty) {
+          await dbBox.pendingMessageBox
+              .delete(chatPendingMessages.conversationId!);
+        }
+        var conversationModel =
+            await dbBox.getConversation(conversationId: conversationId);
+        if (conversationModel != null) {
+          conversationModel.messages?.add(pendingMessage);
+          conversationModel = conversationModel.copyWith(
+            lastMessageDetails: conversationModel.lastMessageDetails
+                ?.copyWith(reactionType: ''),
+          );
+        }
+        await dbBox.saveConversation(conversation: conversationModel!);
+        return true;
+      }
+
       return false;
     } catch (e, st) {
       IsmChatLog.error(e, st);
@@ -342,19 +291,6 @@ class IsmChatPageViewModel {
     bool isLoading = false,
   }) async =>
       await _repository.removeAdmin(conversationId, memberId, isLoading);
-
-  Future<List<PresignedUrlModel>?> postMediaUrl({
-    required String conversationId,
-    required String nameWithExtension,
-    required int mediaType,
-    required String mediaId,
-  }) async =>
-      await _repository.postMediaUrl(
-        conversationId: conversationId,
-        nameWithExtension: nameWithExtension,
-        mediaType: mediaType,
-        mediaId: mediaId,
-      );
 
   Future<void> readSingleMessage({
     required String conversationId,
@@ -656,4 +592,49 @@ class IsmChatPageViewModel {
 
   Future<List<UserDetails>?> getReacton({required Reaction reaction}) async =>
       await _repository.getReacton(reaction: reaction);
+
+  Future<PresignedUrlModel?> postMediaUrl({
+    required String conversationId,
+    required String nameWithExtension,
+    required int mediaType,
+    required String mediaId,
+  }) async =>
+      await _repository.postMediaUrl(
+        conversationId: conversationId,
+        nameWithExtension: nameWithExtension,
+        mediaType: mediaType,
+        mediaId: mediaId,
+      );
+
+  Future<IsmChatResponseModel?> sendBroadcastMessage(
+          {required List<String> userIds,
+          required bool showInConversation,
+          required int messageType,
+          required bool encrypted,
+          required String deviceId,
+          required String body,
+          required String notificationBody,
+          required String notificationTitle,
+          List<String>? searchableTags,
+          IsmChatMetaData? metaData,
+          Map<String, dynamic>? events,
+          String? customType,
+          List<Map<String, dynamic>>? attachments,
+          bool isLoading = false}) async =>
+      await _repository.sendBroadcastMessage(
+        userIds: userIds,
+        showInConversation: showInConversation,
+        messageType: messageType,
+        encrypted: encrypted,
+        deviceId: deviceId,
+        body: body,
+        notificationBody: notificationBody,
+        notificationTitle: notificationTitle,
+        attachments: attachments,
+        customType: customType,
+        events: events,
+        metaData: metaData,
+        searchableTags: searchableTags,
+        isLoading: isLoading,
+      );
 }

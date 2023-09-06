@@ -241,6 +241,19 @@ class _Message extends StatelessWidget {
                     ),
                     IsmChatDimens.boxHeight2,
                   ],
+                  if (message.messageType == IsmChatMessageType.forward) ...[
+                    const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.shortcut_outlined),
+                        Text(
+                          IsmChatStrings.forwarded,
+                        ),
+                      ],
+                    )
+                  ],
                   MessageCard(
                     showMessageInCenter: showMessageInCenter,
                     message: message,

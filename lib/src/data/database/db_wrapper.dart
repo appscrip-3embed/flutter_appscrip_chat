@@ -5,11 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-// import 'package:path_provider/path_provider.dart';
-// import 'objectbox.g.dart'; // created by `flutter pub run build_runner build`
 
-/// Provides access to the ObjectBox Store throughout the presenter.
-///
 /// Create this in the apps main function.
 
 typedef IsmChatMessageBoxType = List<String>;
@@ -23,7 +19,7 @@ class IsmChatDBWrapper {
 
   static const String _userBox = 'user';
   static const String _conversationBox = 'conversation';
-  static const String _forwardBox = 'forward';
+
   static const String _pendingBox = 'pending';
 
   /// A Box of user Details.
@@ -46,7 +42,6 @@ class IsmChatDBWrapper {
       ]),
       Future.wait([
         collection.openBox<IsmChatMessageBoxType>(_pendingBox),
-        collection.openBox<IsmChatMessageBoxType>(_forwardBox),
       ]),
     ]);
     var boxes = data[0] as List<CollectionBox<IsmChatConversationTypeMap>>;
@@ -54,7 +49,6 @@ class IsmChatDBWrapper {
     userDetailsBox = boxes[0];
     chatConversationBox = boxes[1];
     pendingMessageBox = boxes2[0];
-    forwardMessageBox = boxes2[1];
   }
 
   /// Create an instance of HiveBox to use throughout the presenter.
@@ -70,7 +64,6 @@ class IsmChatDBWrapper {
           _userBox,
           _conversationBox,
           _pendingBox,
-          _forwardBox,
         },
         path: '${directory.path}/$dbName',
       );
@@ -81,7 +74,6 @@ class IsmChatDBWrapper {
           _userBox,
           _conversationBox,
           _pendingBox,
-          _forwardBox,
         },
       );
     }
@@ -104,7 +96,6 @@ class IsmChatDBWrapper {
       userDetailsBox.clear(),
       chatConversationBox.clear(),
       pendingMessageBox.clear(),
-      forwardMessageBox.clear(),
       Get.find<IsmChatMqttController>().unSubscribe(),
       Get.find<IsmChatMqttController>().disconnect(),
     ]);
@@ -155,9 +146,6 @@ class IsmChatDBWrapper {
       case IsmChatDbBox.pending:
         listMap = await pendingMessageBox.get(conversationId);
         break;
-      case IsmChatDbBox.forward:
-        listMap = await forwardMessageBox.get(conversationId);
-        break;
     }
     if (dbBox == IsmChatDbBox.main) {
       if (map == null) {
@@ -197,13 +185,6 @@ class IsmChatDBWrapper {
                 ? []
                 : conversation.messages!.map((e) => e.toJson()).toList());
         break;
-      case IsmChatDbBox.forward:
-        await forwardMessageBox.put(
-            conversation.conversationId ?? '',
-            conversation.messages?.isEmpty == true
-                ? []
-                : conversation.messages!.map((e) => e.toJson()).toList());
-        break;
     }
     return true;
   }
@@ -227,13 +208,6 @@ class IsmChatDBWrapper {
             await getConversation(conversationId: conversationId, dbBox: dbBox);
         if (pendingConversation != null) {
           messgges = pendingConversation.messages;
-        }
-        break;
-      case IsmChatDbBox.forward:
-        var forwardConversation =
-            await getConversation(conversationId: conversationId, dbBox: dbBox);
-        if (forwardConversation != null) {
-          messgges = forwardConversation.messages;
         }
         break;
     }
@@ -265,19 +239,6 @@ class IsmChatDBWrapper {
               conversationId: message.conversationId, messages: [message]);
           await saveConversation(
               conversation: pendingConversation, dbBox: dbBox);
-          return;
-        }
-        conversation.messages?.add(message);
-        await saveConversation(conversation: conversation, dbBox: dbBox);
-        break;
-      case IsmChatDbBox.forward:
-        var conversation = await getConversation(
-            conversationId: message.conversationId, dbBox: dbBox);
-        if (conversation == null) {
-          var forwardConversation = IsmChatConversationModel(
-              conversationId: message.conversationId, messages: [message]);
-          await saveConversation(
-              conversation: forwardConversation, dbBox: dbBox);
           return;
         }
         conversation.messages?.add(message);
@@ -500,13 +461,6 @@ class IsmChatDBWrapper {
         var pendingConversation =
             await getConversation(conversationId: conversationId, dbBox: dbBox);
         if (pendingConversation != null) {
-          await chatConversationBox.delete(conversationId);
-        }
-        break;
-      case IsmChatDbBox.forward:
-        var forwardConversation =
-            await getConversation(conversationId: conversationId, dbBox: dbBox);
-        if (forwardConversation != null) {
           await chatConversationBox.delete(conversationId);
         }
         break;

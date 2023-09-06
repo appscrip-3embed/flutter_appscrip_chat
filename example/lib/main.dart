@@ -20,7 +20,6 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   await initialize();
-
   runApp(const MyApp());
 }
 

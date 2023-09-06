@@ -17,11 +17,11 @@ class IsmChatPageView extends StatefulWidget {
 }
 
 class _IsmChatPageViewState extends State<IsmChatPageView> {
-  @override
-  void initState() {
-    IsmChatPageBinding().dependencies();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   IsmChatPageBinding().dependencies();
+  //   super.initState();
+  // }
 
   IsmChatPageController get controller => Get.find<IsmChatPageController>();
 
@@ -42,24 +42,27 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
   }
 
   @override
-  Widget build(BuildContext context) => WillPopScope(
-        onWillPop: () async {
-          if (!GetPlatform.isAndroid) {
-            return false;
-          }
-          return await navigateBack();
-        },
-        child: GetPlatform.isIOS
-            ? GestureDetector(
-                onHorizontalDragEnd: (details) {
-                  if (details.velocity.pixelsPerSecond.dx > 50) {
-                    navigateBack();
-                  }
-                },
-                child: const _IsmChatPageView(),
-              )
-            : const _IsmChatPageView(),
-      );
+  Widget build(BuildContext context) => GetX<IsmChatPageController>(
+      builder: (context) => controller.isBroadcastMessage
+          ? const IsmChatBoradcastMessagePage()
+          : WillPopScope(
+              onWillPop: () async {
+                if (!GetPlatform.isAndroid) {
+                  return false;
+                }
+                return await navigateBack();
+              },
+              child: GetPlatform.isIOS
+                  ? GestureDetector(
+                      onHorizontalDragEnd: (details) {
+                        if (details.velocity.pixelsPerSecond.dx > 50) {
+                          navigateBack();
+                        }
+                      },
+                      child: const _IsmChatPageView(),
+                    )
+                  : const _IsmChatPageView(),
+            ));
 }
 
 class _IsmChatPageView extends StatelessWidget {

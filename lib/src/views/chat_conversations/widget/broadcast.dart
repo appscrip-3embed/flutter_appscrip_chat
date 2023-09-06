@@ -10,31 +10,6 @@ class IsmChatBroadCastView extends StatelessWidget {
 
   static const String route = IsmPageRoutes.broadcastView;
 
-  Widget _buildSusWidget(String susTag) => Container(
-        padding: IsmChatDimens.edgeInsets10_0,
-        height: IsmChatDimens.forty,
-        width: double.infinity,
-        alignment: Alignment.centerLeft,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              susTag,
-              textScaleFactor: 1.5,
-              style: IsmChatStyles.w600Black14,
-            ),
-            SizedBox(
-                width: IsmChatDimens.percentWidth(
-                  Responsive.isWebAndTablet(Get.context!) ? .23 : .7,
-                ),
-                child: Divider(
-                  height: .0,
-                  indent: IsmChatDimens.ten,
-                ))
-          ],
-        ),
-      );
-
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
         initState: (_) {
@@ -44,7 +19,6 @@ class IsmChatBroadCastView extends StatelessWidget {
           converstaionController.forwardedList.clear();
           converstaionController.selectedUserList.clear();
           converstaionController.userSearchNameController.clear();
-          converstaionController.broadcastMessage = '';
           converstaionController.showSearchField = false;
           converstaionController.isLoadingUsers = false;
           converstaionController.getNonBlockUserList(
@@ -125,72 +99,85 @@ class IsmChatBroadCastView extends StatelessWidget {
           body: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              Padding(
-                padding: IsmChatDimens.edgeInsets5,
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                      child: IsmChatInputField(
-                        maxLines: 4,
-                        minLines: 1,
-                        padding: IsmChatDimens.edgeInsets4,
-                        textCapitalization: TextCapitalization.sentences,
-                        fillColor: IsmChatConfig.chatTheme.primaryColor,
-                        style: IsmChatStyles.w400White16,
-                        hint: 'Broadcast message...',
-                        hintStyle: IsmChatStyles.w600White14,
-                        onChanged: (value) {
-                          controller.broadcastMessage = value;
-                        },
-                        suffixIcon: Icon(
-                          Icons.attach_file_rounded,
-                          color: IsmChatColors.whiteColor,
-                          size: IsmChatDimens.twentyFive,
-                        ),
+              if (controller.selectedUserList.isNotEmpty)
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border(
+                      top: BorderSide(
+                        color: Colors.grey.withOpacity(0.5),
                       ),
                     ),
-                    SizedBox(
-                      height: IsmChatDimens.forty + IsmChatDimens.three,
-                      width: IsmChatDimens.forty + IsmChatDimens.three,
-                      child: FloatingActionButton(
-                        onPressed: () async {
-                          if (controller.broadcastMessage.isNotEmpty &&
-                              controller
-                                  .forwardedList.selectedUsers.isNotEmpty) {
-                            await controller.sendBroadcastMessage(
-                              userIds: controller.forwardedList.selectedUsers
-                                  .map((e) => e.userDetails.userId)
-                                  .toList(),
-                              body: controller.broadcastMessage,
-                              isLoading: true,
-                            );
-                          } else {
-                            await Get.dialog(
-                              const IsmChatAlertDialogBox(
-                                title: IsmChatStrings.broadcastAlert,
-                                cancelLabel: 'Okay',
+                  ),
+                  height: IsmChatDimens.hundred,
+                  child: ListView.separated(
+                    padding: IsmChatDimens.edgeInsets10,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.selectedUserList.length,
+                    separatorBuilder: (_, __) => IsmChatDimens.boxWidth8,
+                    itemBuilder: (context, index) {
+                      var user = controller.selectedUserList[index];
+                      return InkWell(
+                        onTap: () {
+                          controller.isSelectedUser(user);
+                          controller.onForwardUserTap(
+                            controller.forwardedList.indexOf(
+                              controller.forwardedList.selectedUsers[index],
+                            ),
+                          );
+                        },
+                        child: SizedBox(
+                          width: IsmChatDimens.fifty,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  SizedBox(
+                                    width: IsmChatDimens.forty,
+                                    height: IsmChatDimens.forty,
+                                    child: IsmChatImage.profile(
+                                      user.userProfileImageUrl,
+                                      name: user.userName,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: IsmChatDimens.twentySeven,
+                                    left: IsmChatDimens.twentySeven,
+                                    child: CircleAvatar(
+                                      backgroundColor: IsmChatConfig
+                                          .chatTheme.backgroundColor,
+                                      radius: IsmChatDimens.eight,
+                                      child: Icon(
+                                        Icons.close_rounded,
+                                        color: IsmChatConfig
+                                            .chatTheme.primaryColor,
+                                        size: IsmChatDimens.twelve,
+                                      ),
+                                    ),
+                                  )
+                                ],
                               ),
-                            );
-                          }
-                        },
-                        elevation: 0,
-                        shape: const CircleBorder(),
-                        backgroundColor:
-                            controller.broadcastMessage.isNotEmpty &&
-                                    controller
-                                        .forwardedList.selectedUsers.isNotEmpty
-                                ? IsmChatConfig.chatTheme.primaryColor
-                                : IsmChatColors.greyColorLight,
-                        child: const Icon(
-                          Icons.send_rounded,
-                          color: IsmChatColors.whiteColor,
+                              SizedBox(
+                                height: IsmChatDimens.twentyEight,
+                                child: Text(
+                                  user.userName,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  textAlign: TextAlign.center,
+                                  style: IsmChatStyles.w600Black10,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
+                      );
+                    },
+                  ),
                 ),
-              ),
               controller.forwardedList.isEmpty
                   ? Expanded(
                       child: Center(
@@ -299,9 +286,10 @@ class IsmChatBroadCastView extends StatelessWidget {
                                   return Column(
                                     children: [
                                       Offstage(
-                                        offstage: user.isShowSuspension != true,
-                                        child: _buildSusWidget(susTag),
-                                      ),
+                                          offstage:
+                                              user.isShowSuspension != true,
+                                          child: _GetSuspensionTag(
+                                              susTag: susTag)),
                                       ListTile(
                                         onTap: () {
                                           controller.onForwardUserTap(index);
@@ -336,87 +324,81 @@ class IsmChatBroadCastView extends StatelessWidget {
                               ),
                       ),
                     ),
-              if (controller.selectedUserList.isNotEmpty)
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border(
-                      top: BorderSide(
-                        color: Colors.grey.withOpacity(0.5),
-                      ),
-                    ),
-                  ),
-                  height: IsmChatDimens.hundred,
-                  child: ListView.separated(
-                    padding: IsmChatDimens.edgeInsets10,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: controller.selectedUserList.length,
-                    separatorBuilder: (_, __) => IsmChatDimens.boxWidth8,
-                    itemBuilder: (context, index) {
-                      var user = controller.selectedUserList[index];
-                      return InkWell(
-                        onTap: () {
-                          controller.isSelectedUser(user);
-                          controller.onForwardUserTap(
-                            controller.forwardedList.indexOf(
-                              controller.forwardedList.selectedUsers[index],
-                            ),
-                          );
-                        },
-                        child: SizedBox(
-                          width: IsmChatDimens.fifty,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                  SizedBox(
-                                    width: IsmChatDimens.forty,
-                                    height: IsmChatDimens.forty,
-                                    child: IsmChatImage.profile(
-                                      user.userProfileImageUrl,
-                                      name: user.userName,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: IsmChatDimens.twentySeven,
-                                    left: IsmChatDimens.twentySeven,
-                                    child: CircleAvatar(
-                                      backgroundColor: IsmChatConfig
-                                          .chatTheme.backgroundColor,
-                                      radius: IsmChatDimens.eight,
-                                      child: Icon(
-                                        Icons.close_rounded,
-                                        color: IsmChatConfig
-                                            .chatTheme.primaryColor,
-                                        size: IsmChatDimens.twelve,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: IsmChatDimens.twentyEight,
-                                child: Text(
-                                  user.userName,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                  textAlign: TextAlign.center,
-                                  style: IsmChatStyles.w600Black10,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
             ],
           ),
+          floatingActionButton: IsmChatStartChatFAB(
+            onTap: () async {
+              if (controller.selectedUserList.isNotEmpty &&
+                  controller.selectedUserList.length >= 2) {
+                var conversation = IsmChatConversationModel(
+                  members: controller.selectedUserList,
+                  conversationImageUrl: IsmChatAssets.noImage,
+                  customType: 'BroadcastMessage',
+                );
+                controller.navigateToMessages(conversation);
+                if (Responsive.isWebAndTablet(context)) {
+                  if (!Get.isRegistered<IsmChatPageController>()) {
+                    IsmChatPageBinding().dependencies();
+                    return;
+                  }
+
+                  final chatPagecontroller = Get.find<IsmChatPageController>();
+                  chatPagecontroller.startInit();
+                  if (chatPagecontroller.messageHoldOverlayEntry != null) {
+                    chatPagecontroller.closeOveray();
+                  }
+                } else {
+                  IsmChatRouteManagement.goToBroadcastMessagePage();
+                }
+              } else {
+                await Get.dialog(
+                  const IsmChatAlertDialogBox(
+                    title: IsmChatStrings.broadcastAlert,
+                    cancelLabel: 'Okay',
+                  ),
+                );
+              }
+            },
+            icon: Icon(
+              Icons.done_rounded,
+              size: IsmChatDimens.thirty,
+              color: IsmChatColors.whiteColor,
+            ),
+          ),
+        ),
+      );
+}
+
+class _GetSuspensionTag extends StatelessWidget {
+  const _GetSuspensionTag({
+    required this.susTag,
+  });
+
+  final String susTag;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: IsmChatDimens.edgeInsets10_0,
+        height: IsmChatDimens.forty,
+        width: double.infinity,
+        alignment: Alignment.centerLeft,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              susTag,
+              textScaleFactor: 1.5,
+              style: IsmChatStyles.w600Black14,
+            ),
+            SizedBox(
+                width: IsmChatDimens.percentWidth(
+                  Responsive.isWebAndTablet(Get.context!) ? .23 : .7,
+                ),
+                child: Divider(
+                  height: .0,
+                  indent: IsmChatDimens.ten,
+                ))
+          ],
         ),
       );
 }

@@ -2,13 +2,14 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
 class IsmChatHeaderThemeData {
-  IsmChatHeaderThemeData(
-      {this.backgroundColor,
-      this.iconColor,
-      this.elevation,
-      this.shadowColor,
-      this.subtileStyle,
-      this.titleStyle});
+  IsmChatHeaderThemeData({
+    this.backgroundColor,
+    this.iconColor,
+    this.elevation,
+    this.shadowColor,
+    this.subtileStyle,
+    this.titleStyle,
+  });
 
   IsmChatHeaderThemeData.light()
       : backgroundColor = IsmChatColors.backgroundColorLight,

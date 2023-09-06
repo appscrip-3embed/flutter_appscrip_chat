@@ -8,7 +8,7 @@ class AttachmentModel {
 
   factory AttachmentModel.fromMap(Map<String, dynamic> map) => AttachmentModel(
         thumbnailUrl: map['thumbnailUrl'] as String? ?? '',
-        size: (map['size'] as num).toDouble(),
+        size: map['size'] as int? ?? 0,
         name: map['name'] as String? ?? '',
         mimeType: map['mimeType'] as String? ?? '',
         mediaUrl: map['mediaUrl'] as String? ?? '',
@@ -33,7 +33,7 @@ class AttachmentModel {
 
   int id;
   String? thumbnailUrl;
-  double? size;
+  int? size;
   String? name;
   String? mimeType;
   String? mediaUrl;
@@ -43,7 +43,7 @@ class AttachmentModel {
 
   AttachmentModel copyWith({
     String? thumbnailUrl,
-    double? size,
+    int? size,
     String? name,
     String? mimeType,
     String? mediaUrl,

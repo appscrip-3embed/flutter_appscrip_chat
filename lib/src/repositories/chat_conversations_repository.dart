@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:flutter/services.dart';
 
 class IsmChatConversationsRepository {
   final _apiWrapper = IsmChatApiWrapper();
@@ -234,52 +233,6 @@ class IsmChatConversationsRepository {
     }
   }
 
-  // get Api for Presigned Url.....
-  Future<PresignedUrlModel?> getPresignedUrl({
-    required bool isLoading,
-    required String userIdentifier,
-    required String mediaExtension,
-  }) async {
-    try {
-      var response = await _apiWrapper.get(
-        '${IsmChatAPI.createPresignedurl}?userIdentifier=$userIdentifier&mediaExtension=$mediaExtension',
-        headers: IsmChatUtility.commonHeader(),
-        showLoader: isLoading,
-      );
-      if (response.hasError) {
-        return null;
-      }
-      var data = jsonDecode(response.data);
-      return PresignedUrlModel.fromMap(data as Map<String, dynamic>);
-    } catch (e) {
-      return null;
-    }
-  }
-
-// update for Presigned Url.....
-  Future<IsmChatResponseModel?> updatePresignedUrl({
-    required bool isLoading,
-    required String presignedUrl,
-    required Uint8List file,
-  }) async {
-    try {
-      var response = await _apiWrapper.put(
-        presignedUrl,
-        payload: file,
-        headers: {},
-        forAwsUpload: true,
-        showLoader: isLoading,
-      );
-
-      if (response.hasError) {
-        return response;
-      }
-      return response;
-    } catch (e) {
-      return null;
-    }
-  }
-
   Future<IsmChatResponseModel?> updateConversation({
     required String conversationId,
     required IsmChatMetaData metaData,
@@ -305,7 +258,7 @@ class IsmChatConversationsRepository {
     }
   }
 
-  Future<IsmChatResponseModel?> sendBroadcastMessage(
+  Future<IsmChatResponseModel?> sendForwardMessage(
       {required List<String> userIds,
       required bool showInConversation,
       required int messageType,
@@ -338,7 +291,7 @@ class IsmChatConversationsRepository {
       };
 
       var response = await _apiWrapper.post(
-        IsmChatAPI.sendBroadcastMessage,
+        IsmChatAPI.sendForwardMessage,
         payload: payload,
         headers: IsmChatUtility.tokenCommonHeader(),
         showLoader: isLoading,
@@ -349,7 +302,47 @@ class IsmChatConversationsRepository {
 
       return response;
     } catch (e, st) {
-      IsmChatLog.error('Send broadcast Message $e', st);
+      IsmChatLog.error('Send Forward Message $e', st);
+      return null;
+    }
+  }
+
+  Future<void> getPublicConversation(
+      {String? searchTag, int sort = 1, int skip = 0, int limit = 20}) async {
+    try {
+      String? url;
+      // if (searchTag?.isNotEmpty ?? false) {
+      //   url =
+      //       '${IsmChatAPI.getPublicConversation}?sort=$sort&skip=$skip&limit=$limit';
+      // } else {
+      //   url =
+      //       '${IsmChatAPI.baseUrl}/chat/conversations/public?includeMembers=true';
+      // }
+      url = '${IsmChatAPI.baseUrl}/chat/conversations/public';
+      var response = await _apiWrapper.get(
+        url,
+        headers: IsmChatUtility.tokenCommonHeader(),
+      );
+      IsmChatLog.error(response.data);
+    } catch (e, st) {
+      IsmChatLog.error('GetUserList error $e', st);
+    }
+  }
+
+  Future<IsmChatResponseModel?> joinConversation(
+      {required String conversationId, bool isLoading = false}) async {
+    try {
+      var payload = {'conversationId': conversationId};
+      var response = await _apiWrapper.put(IsmChatAPI.joinConversation,
+          payload: payload,
+          headers: IsmChatUtility.tokenCommonHeader(),
+          showLoader: isLoading);
+      if (response.hasError) {
+        return response;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Join conversation error $e', st);
       return null;
     }
   }

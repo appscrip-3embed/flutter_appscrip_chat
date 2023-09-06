@@ -249,6 +249,7 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                     latLng!.longitude,
                                   );
                                   if (addresses.isNotEmpty) {
+                                    
                                     controller.sendLocation(
                                       conversationId: controller
                                               .conversation?.conversationId ??
@@ -322,9 +323,7 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                             itemCount: controller.predictionList.length,
                             itemBuilder: (context, index) {
                               var prediction = controller.predictionList[index];
-                              // if (index == 0) {
-                              //   return const SizedBox.shrink();
-                              // }
+
                               return IsmChatTapHandler(
                                 onTap: () {
                                   controller.sendLocation(

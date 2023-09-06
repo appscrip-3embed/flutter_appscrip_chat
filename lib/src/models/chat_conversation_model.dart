@@ -71,6 +71,7 @@ class IsmChatConversationModel {
               .toList()
           : [],
       messageFromOutSide: map['messageFromOutSide'] as String? ?? '',
+      customType: map['customType'] as String? ?? '',
     );
     if (model.lastMessageDetails?.action ==
         IsmChatActionEvents.conversationCreated.name) {
@@ -105,6 +106,7 @@ class IsmChatConversationModel {
     this.createdByUserName,
     this.messages,
     this.messageFromOutSide,
+    this.customType,
   });
 
   final int? updatedAt;
@@ -131,6 +133,7 @@ class IsmChatConversationModel {
   final String? createdByUserName;
   final List<IsmChatMessageModel>? messages;
   final String? messageFromOutSide;
+  final String? customType;
 
   String get replyName =>
       IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
@@ -155,7 +158,7 @@ class IsmChatConversationModel {
     LastMessageDetails? lastMessageDetails,
     int? lastMessageSentAt,
     bool? isGroup,
-    dynamic customType,
+    String? customType,
     String? createdByUserName,
     String? createdByUserImageUrl,
     String? createdBy,
@@ -195,7 +198,8 @@ class IsmChatConversationModel {
           members: members ?? this.members,
           usersOwnDetails: usersOwnDetails ?? this.usersOwnDetails,
           messages: messages ?? this.messages,
-          messageFromOutSide: messageFromOutSide ?? this.messageFromOutSide);
+          messageFromOutSide: messageFromOutSide ?? this.messageFromOutSide,
+          customType: customType ?? this.customType);
 
   Map<String, dynamic> toMap() => {
         'isGroup': isGroup,
@@ -222,13 +226,14 @@ class IsmChatConversationModel {
         'lastMessageSentAt': lastMessageSentAt,
         'lastMessageDetails': lastMessageDetails?.toMap(),
         'messageFromOutSide': messageFromOutSide,
+        'customType': customType
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'IsmChatConversationModel(updatedAt: $updatedAt, unreadMessagesCount: $unreadMessagesCount, userIds: $userIds, privateOneToOne: $privateOneToOne, opponentDetails: $opponentDetails, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, lastMessageSentAt: $lastMessageSentAt, lastMessageDetails: $lastMessageDetails, isGroup: $isGroup, conversationType: $conversationType, createdAt: $createdAt, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, config: $config, members: $members, usersOwnDetails: $usersOwnDetails, createdBy: $createdBy, createdByUserName: $createdByUserName, messages: $messages, messageFromOutSide : $messageFromOutSide)';
+      'IsmChatConversationModel(updatedAt: $updatedAt, unreadMessagesCount: $unreadMessagesCount, userIds: $userIds, privateOneToOne: $privateOneToOne, opponentDetails: $opponentDetails, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, lastMessageSentAt: $lastMessageSentAt, lastMessageDetails: $lastMessageDetails, isGroup: $isGroup, conversationType: $conversationType, createdAt: $createdAt, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, config: $config, members: $members, usersOwnDetails: $usersOwnDetails, createdBy: $createdBy, createdByUserName: $createdByUserName, messages: $messages, messageFromOutSide : $messageFromOutSide, customType: $customType)';
 
   @override
   bool operator ==(covariant IsmChatConversationModel other) {
@@ -257,6 +262,7 @@ class IsmChatConversationModel {
         other.createdBy == createdBy &&
         other.messageFromOutSide == messageFromOutSide &&
         other.createdByUserName == createdByUserName &&
+        other.customType == customType &&
         listEquals(other.messages, messages);
   }
 
@@ -285,5 +291,6 @@ class IsmChatConversationModel {
       createdBy.hashCode ^
       createdByUserName.hashCode ^
       messageFromOutSide.hashCode ^
+      customType.hashCode ^
       messages.hashCode;
 }

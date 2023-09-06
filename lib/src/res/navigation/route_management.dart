@@ -10,6 +10,10 @@ class IsmChatRouteManagement {
     Get.toNamed(IsmChatPageView.route);
   }
 
+  static void goToBroadcastMessagePage() {
+    Get.toNamed(IsmChatBoradcastMessagePage.route);
+  }
+
   static void goToCreateChat({required bool isGroupConversation}) {
     Get.toNamed(IsmChatCreateConversationView.route,
         arguments: {'isGroupConversation': isGroupConversation});
@@ -28,6 +32,10 @@ class IsmChatRouteManagement {
 
   static void goToBroadcastView() {
     Get.toNamed(IsmChatBroadCastView.route);
+  }
+
+  static void goToPublicView() {
+    Get.toNamed(IsmChatPublicView.route);
   }
 
   static void goToConversationInfo() {
