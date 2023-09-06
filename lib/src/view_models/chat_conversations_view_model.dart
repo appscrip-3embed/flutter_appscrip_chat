@@ -195,4 +195,13 @@ class IsmChatConversationsViewModel {
           {required String conversationId, bool isLoading = false}) async =>
       _repository.joinConversation(
           conversationId: conversationId, isLoading: isLoading);
+  Future<IsmChatResponseModel?> joinObserver(
+          {required String conversationId, bool isLoading = false}) async =>
+      _repository.joinObserver(
+          conversationId: conversationId, isLoading: isLoading);
+
+  Future<IsmChatResponseModel?> leaveObserver(
+          {required String conversationId, bool isLoading = false}) async =>
+      _repository.leaveObserver(
+          conversationId: conversationId, isLoading: isLoading);
 }

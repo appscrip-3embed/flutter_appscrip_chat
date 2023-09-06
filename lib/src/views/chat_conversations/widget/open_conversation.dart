@@ -1,31 +1,49 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class IsmChatOpenConversationView extends StatelessWidget {
-  IsmChatOpenConversationView({super.key});
+class IsmChatOpenConversationView extends StatefulWidget {
+  const IsmChatOpenConversationView({super.key});
 
   static const String route = IsmPageRoutes.openView;
 
-  final converstaionController = Get.find<IsmChatConversationsController>();
+  @override
+  State<IsmChatOpenConversationView> createState() =>
+      _IsmChatOpenConversationViewState();
+}
+
+class _IsmChatOpenConversationViewState
+    extends State<IsmChatOpenConversationView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final converstaionController = Get.find<IsmChatConversationsController>();
+      converstaionController.publicConversation.clear();
+      converstaionController.isLoadResponse = false;
+      converstaionController.getPublicConversation(
+        conversationType: IsmChatConversationType.open.value,
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
-      initState: (state) {
-        converstaionController.publicConversation.clear();
-        converstaionController.isLoadResponse = false;
-        converstaionController.getPublicConversation(
-          conversationType: IsmChatConversationType.open.value,
-        );
-      },
       builder: (controller) => Scaffold(
-            appBar: IsmChatAppBar(
-              title: Text(
-                IsmChatStrings.openConversation,
-                style: IsmChatStyles.w600White18,
-              ),
-            ),
-            body: converstaionController.publicConversation.isEmpty
+            appBar: [
+              IsmChatConversationPosition.tabBar,
+              IsmChatConversationPosition.navigationBar
+            ].contains(IsmChatProperties
+                    .conversationProperties.conversationPosition)
+                ? null
+                : IsmChatAppBar(
+                    title: Text(
+                      IsmChatStrings.openConversation,
+                      style: IsmChatStyles.w600White18,
+                    ),
+                  ),
+            body: controller.publicConversation.isEmpty
                 ? controller.isLoadResponse
                     ? Center(
                         child: Text(
@@ -37,14 +55,45 @@ class IsmChatOpenConversationView extends StatelessWidget {
                 : SizedBox(
                     height: Get.height,
                     child: ListView.builder(
-                      itemCount:
-                          converstaionController.publicConversation.length,
+                      itemCount: controller.publicConversation.length,
                       itemBuilder: (_, index) {
-                        var data =
-                            converstaionController.publicConversation[index];
+                        var data = controller.publicConversation[index];
                         return Column(
                           children: [
                             ListTile(
+                              onTap: () async {
+                                var response = await controller.joinObserver(
+                                    conversationId: data.conversationId ?? '',
+                                    isLoading: true);
+                                if (response != null) {
+                                  IsmChatProperties.conversationProperties
+                                      .onChatTap!(Get.context!, data);
+                                  controller.navigateToMessages(data);
+
+                                  if (Responsive.isWebAndTablet(Get.context!)) {
+                                    if (!Get.isRegistered<
+                                        IsmChatPageController>()) {
+                                      IsmChatPageBinding().dependencies();
+                                      return;
+                                    }
+
+                                    final chatPagecontroller =
+                                        Get.find<IsmChatPageController>();
+                                    chatPagecontroller.startInit(
+                                      fromOpenView: true,
+                                    );
+                                    if (chatPagecontroller
+                                            .messageHoldOverlayEntry !=
+                                        null) {
+                                      chatPagecontroller.closeOveray();
+                                    }
+                                  } else {
+                                    IsmChatRouteManagement.goToChatPage(
+                                      isfromOpenView: true,
+                                    );
+                                  }
+                                }
+                              },
                               leading: IsmChatImage.profile(
                                 data.profileUrl,
                                 name: data.chatName,
@@ -69,27 +118,19 @@ class IsmChatOpenConversationView extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  IsmChatTapHandler(
-                                    onTap: () {
-                                      controller.joinConversation(
-                                        conversationId:
-                                            data.conversationId ?? '',
-                                        isloading: true,
-                                      );
-                                    },
-                                    child: Container(
-                                      width: IsmChatDimens.sixty,
-                                      height: IsmChatDimens.thirty,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        color: IsmChatColors.greenColor,
-                                        borderRadius: BorderRadius.circular(
-                                            IsmChatDimens.ten),
-                                      ),
-                                      child: Text(
-                                        'Join',
-                                        style: IsmChatStyles.w500White14,
-                                      ),
+                                  Container(
+                                    width: IsmChatDimens.sixty,
+                                    height: IsmChatDimens.thirty,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color:
+                                          IsmChatConfig.chatTheme.primaryColor,
+                                      borderRadius: BorderRadius.circular(
+                                          IsmChatDimens.ten),
+                                    ),
+                                    child: Text(
+                                      'Open',
+                                      style: IsmChatStyles.w500White14,
                                     ),
                                   ),
                                   IsmChatDimens.boxWidth4,

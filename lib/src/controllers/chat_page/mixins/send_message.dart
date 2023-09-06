@@ -79,6 +79,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     List<Map<String, dynamic>>? mentionedUsers,
     String? customType,
     List<Map<String, dynamic>>? attachments,
+    bool isObserverChat = false,
   }) async {
     var isSendMessage = false;
     if (IsmChatProperties
@@ -832,7 +833,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
 
-    if (chatConversationResponse == null && !_controller.isBroadcastMessage) {
+    if (chatConversationResponse == null &&
+        !_controller.isBroadcastMessage &&
+        !_controller.isObserverChat) {
       conversationId = await createConversation(
         userId: [userId],
         metaData: _controller.conversation?.metaData,
@@ -888,11 +891,13 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       _controller.isreplying = false;
       _controller.chatInputController.clear();
 
-      await IsmChatConfig.dbWrapper!
-          .saveMessage(textMessage, IsmChatDbBox.pending);
+      if (!_controller.isObserverChat) {
+        await IsmChatConfig.dbWrapper!
+            .saveMessage(textMessage, IsmChatDbBox.pending);
 
-      if (kIsWeb && Responsive.isWebAndTablet(Get.context!)) {
-        _controller.updateLastMessagOnCurrentTime(textMessage);
+        if (kIsWeb && Responsive.isWebAndTablet(Get.context!)) {
+          _controller.updateLastMessagOnCurrentTime(textMessage);
+        }
       }
     }
 
@@ -901,6 +906,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             ? IsmChatConfig.communicationConfig.userConfig.userName
             : conversationController.userDetails?.userName ?? '';
     sendMessage(
+      isObserverChat: _controller.isObserverChat,
       metaData: textMessage.metaData,
       deviceId: _controller._deviceConfig.deviceId!,
       body: textMessage.body,

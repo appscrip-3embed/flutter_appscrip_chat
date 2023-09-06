@@ -413,11 +413,19 @@ class IsmChatPageController extends GetxController
   set searchMessages(List<IsmChatMessageModel> value) =>
       _searchMessages.value = value;
 
+  final RxBool _isfromOpenView = false.obs;
+  bool get isObserverChat => _isfromOpenView.value;
+  set isObserverChat(bool value) {
+    _isfromOpenView.value = value;
+  }
+
   final Dio dio = Dio();
 
   final ismChatDebounce = IsmChatDebounce();
 
   late AnimationController holdController;
+
+  var arguments = Get.arguments as Map<String, dynamic>? ?? {};
 
   @override
   void onInit() {
@@ -425,34 +433,40 @@ class IsmChatPageController extends GetxController
     super.onInit();
   }
 
-  void startInit() async {
+  void startInit({
+    bool fromOpenView = false,
+  }) async {
     isActionAllowed = false;
     _generateReactionList();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
-      if (conversation?.customType?.isEmpty == true ||
-          conversation?.customType == null) {
+      if (conversation?.customType != 'BroadcastMessage') {
         _conversationController.isConversationId =
             conversation?.conversationId ?? '';
         isBroadcastMessage = false;
         final newMeessageFromOutside = conversation?.messageFromOutSide;
         await Future.delayed(Duration.zero);
         if (conversation?.conversationId?.isNotEmpty ?? false) {
+          isObserverChat = arguments['isfromOpenView'] as bool? ?? fromOpenView;
           _getBackGroundAsset();
-          await getMessagesFromDB(conversation?.conversationId ?? '');
-          await Future.wait([
-            getMessagesFromAPI(),
-            getConverstaionDetails(
-                conversationId: conversation?.conversationId ?? '',
-                includeMembers: conversation?.isGroup == true ? true : false),
-          ]);
-          await readAllMessages(
-            conversationId: conversation?.conversationId ?? '',
-            timestamp: messages.isNotEmpty
-                ? DateTime.now().millisecondsSinceEpoch
-                : conversation?.lastMessageSentAt ?? 0,
-          );
-          checkUserStatus();
+          if (!isObserverChat) {
+            await getMessagesFromDB(conversation?.conversationId ?? '');
+            await Future.wait([
+              getMessagesFromAPI(),
+              getConverstaionDetails(
+                  conversationId: conversation?.conversationId ?? '',
+                  includeMembers: conversation?.isGroup == true ? true : false),
+            ]);
+            await readAllMessages(
+              conversationId: conversation?.conversationId ?? '',
+              timestamp: messages.isNotEmpty
+                  ? DateTime.now().millisecondsSinceEpoch
+                  : conversation?.lastMessageSentAt ?? 0,
+            );
+            checkUserStatus();
+          } else {
+            isMessagesLoading = false;
+          }
         } else {
           if (Responsive.isWebAndTablet(Get.context!)) {
             messages.clear();
@@ -1333,9 +1347,13 @@ class IsmChatPageController extends GetxController
                   : messages.last.sentAt,
               senderName: [
                 IsmChatCustomMessageType.removeAdmin,
-                IsmChatCustomMessageType.addAdmin
+                IsmChatCustomMessageType.addAdmin,
+                IsmChatCustomMessageType.memberJoin,
+                IsmChatCustomMessageType.memberLeave,
               ].contains(messages.last.customType)
-                  ? messages.last.initiatorName ?? ''
+                  ? messages.last.userName?.isNotEmpty == true
+                      ? messages.last.userName
+                      : messages.last.initiatorName ?? ''
                   : messages.last.chatName,
               messageType: messages.last.messageType?.value ?? 0,
               messageId: messages.last.messageId ?? '',
@@ -1373,9 +1391,18 @@ class IsmChatPageController extends GetxController
     } else {
       await chatConversationController.getChatConversations();
     }
+
     await Get.delete<IsmChatPageController>(force: true);
     unawaited(
-        Get.find<IsmChatMqttController>().getChatConversationsUnreadCount());
+      Future.wait(
+        [
+          if (isObserverChat)
+            chatConversationController.leaveObserver(
+                conversationId: conversation?.conversationId ?? ''),
+          Get.find<IsmChatMqttController>().getChatConversationsUnreadCount()
+        ],
+      ),
+    );
   }
 
   Future<void> updateUnreadMessgaeCount() async {

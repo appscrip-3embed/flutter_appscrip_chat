@@ -26,6 +26,7 @@ class IsmChatPageViewModel {
     if (messages == null) {
       return [];
     }
+
     messages.removeWhere((e) => [
           IsmChatActionEvents.clearConversation.name,
           IsmChatActionEvents.deleteConversationLocally.name,
@@ -60,23 +61,24 @@ class IsmChatPageViewModel {
     return messages;
   }
 
-  Future<bool> sendMessage(
-      {required bool showInConversation,
-      required int messageType,
-      required bool encrypted,
-      required String deviceId,
-      required String conversationId,
-      required String body,
-      required int createdAt,
-      required String notificationBody,
-      required String notificationTitle,
-      String? parentMessageId,
-      IsmChatMetaData? metaData,
-      List<Map<String, dynamic>>? mentionedUsers,
-      Map<String, dynamic>? events,
-      String? customType,
-      List<Map<String, dynamic>>? attachments,
-      List<String>? searchableTags}) async {
+  Future<bool> sendMessage({
+    required bool showInConversation,
+    required int messageType,
+    required bool encrypted,
+    required String deviceId,
+    required String conversationId,
+    required String body,
+    required int createdAt,
+    required String notificationBody,
+    required String notificationTitle,
+    String? parentMessageId,
+    IsmChatMetaData? metaData,
+    List<Map<String, dynamic>>? mentionedUsers,
+    Map<String, dynamic>? events,
+    String? customType,
+    List<Map<String, dynamic>>? attachments,
+    List<String>? searchableTags,
+  }) async {
     try {
       var messageId = await _repository.sendMessage(
         showInConversation: showInConversation,
@@ -104,7 +106,7 @@ class IsmChatPageViewModel {
       if (chatPendingMessages == null) {
         return false;
       }
-      // Todo update messgae with url for audio
+
       for (var x = 0; x < chatPendingMessages.messages!.length; x++) {
         var pendingMessage = chatPendingMessages.messages![x];
         if (pendingMessage.messageId!.isNotEmpty ||

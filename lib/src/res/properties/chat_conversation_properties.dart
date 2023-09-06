@@ -22,6 +22,8 @@ class IsmChatConversationProperties {
     this.header,
     this.isHeaderAppBar = false,
     this.headerHeight,
+    this.allowedConversations = const [IsmChatConversationType.private],
+    this.conversationPosition = IsmChatConversationPosition.tabBar,
   }) {
     assert(useCallbackOnForward && onForwardTap != null);
     assert(
@@ -30,6 +32,10 @@ class IsmChatConversationProperties {
     );
     assert(!isHeaderAppBar || (isHeaderAppBar && header != null),
         'If isHeaderAppBar is set to true then a widget must be passed to header parameter');
+    assert(
+        allowedConversations.isNotEmpty &&
+            allowedConversations.contains(IsmChatConversationType.private),
+        'allowedConversations must not be empty and must contain IsmChatConversationType.private');
   }
 
   /// Required parameter
@@ -102,4 +108,14 @@ class IsmChatConversationProperties {
 
   /// This height will be use for when you use header on AppBar of coversation list
   final double? headerHeight;
+
+  /// Provide this allowedConversations parameter, to allow different types of conversations.
+  ///
+  /// It cannot be empty and  `IsmChatConversationType.private` must be passed in the list
+  ///
+  /// Furthermore, the position of types to show in the UI can be set by using [conversationPosition]
+  final List<IsmChatConversationType> allowedConversations;
+
+  /// Provide this conversationPosition parameter to set postion of allowedConversations list in your app
+  final IsmChatConversationPosition conversationPosition;
 }
