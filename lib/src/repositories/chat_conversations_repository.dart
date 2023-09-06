@@ -361,4 +361,46 @@ class IsmChatConversationsRepository {
       return null;
     }
   }
+
+  Future<IsmChatResponseModel?> joinObserver({
+    required String conversationId,
+    bool isLoading = false,
+  }) async {
+    try {
+      var payload = {'conversationId': conversationId};
+      var response = await _apiWrapper.put(
+        IsmChatAPI.joinObserver,
+        payload: payload,
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading,
+      );
+      if (response.hasError) {
+        return response;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Join Observer error $e', st);
+      return null;
+    }
+  }
+
+  Future<IsmChatResponseModel?> leaveObserver(
+      {required String conversationId, bool isLoading = false}) async {
+    try {
+      var payload = {'conversationId': conversationId};
+      var response = await _apiWrapper.delete(
+        '${IsmChatAPI.leaveObserver}?conversationId=$conversationId',
+        payload: payload,
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading,
+      );
+      if (response.hasError) {
+        return response;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Leave Observer error $e', st);
+      return null;
+    }
+  }
 }

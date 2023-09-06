@@ -119,6 +119,8 @@ class IsmChatDimens {
   static final EdgeInsets edgeInsets10_5_10_10 =
       EdgeInsets.only(left: ten, top: five, bottom: ten, right: ten);
   static final EdgeInsets edgeInsetsTop20 = EdgeInsets.only(top: twenty);
+  static final EdgeInsets edgeInsetsTop5 = EdgeInsets.only(top: five);
+
   static final EdgeInsets edgeInsetsTop20Left5 =
       EdgeInsets.only(top: twenty, left: five);
   static final EdgeInsets edgeInsets16_0_19_8 =

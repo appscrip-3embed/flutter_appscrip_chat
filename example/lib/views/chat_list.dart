@@ -93,6 +93,12 @@ class _ChatListState extends State<ChatList> {
             ),
           ),
           conversationProperties: IsmChatConversationProperties(
+            conversationPosition: IsmChatConversationPosition.menu,
+            allowedConversations: [
+              IsmChatConversationType.private,
+              IsmChatConversationType.public,
+              IsmChatConversationType.open,
+            ],
             showCreateChatIcon: true,
             enableGroupChat: true,
             allowDelete: true,

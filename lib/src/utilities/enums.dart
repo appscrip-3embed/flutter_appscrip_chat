@@ -55,6 +55,7 @@ enum IsmChatCustomMessageType {
   conversationTitleUpdated(20),
   conversationImageUpdated(21),
   contact(22),
+  memberJoin(23),
   date(100);
 
   const IsmChatCustomMessageType(this.value);
@@ -105,6 +106,8 @@ enum IsmChatCustomMessageType {
         return IsmChatCustomMessageType.conversationImageUpdated;
       case 22:
         return IsmChatCustomMessageType.contact;
+      case 23:
+        return IsmChatCustomMessageType.memberJoin;
       case 100:
         return IsmChatCustomMessageType.date;
       default:
@@ -137,7 +140,8 @@ enum IsmChatCustomMessageType {
           IsmChatCustomMessageType.conversationTitleUpdated,
       'conversationImageUpdated':
           IsmChatCustomMessageType.conversationImageUpdated,
-      'contact': IsmChatCustomMessageType.contact
+      'contact': IsmChatCustomMessageType.contact,
+      'memberJoin': IsmChatCustomMessageType.memberJoin,
     };
 
     var type = value.split('.').last;
@@ -231,6 +235,10 @@ enum IsmChatCustomMessageType {
         return IsmChatCustomMessageType.conversationTitleUpdated;
       case IsmChatActionEvents.conversationImageUpdated:
         return IsmChatCustomMessageType.conversationImageUpdated;
+
+      case IsmChatActionEvents.memberJoin:
+        return IsmChatCustomMessageType.memberJoin;
+
       default:
         return null;
     }
@@ -282,7 +290,7 @@ enum IsmChatConversationType {
       case 2:
         return IsmChatConversationType.open;
       default:
-        return IsmChatConversationType.public;
+        return IsmChatConversationType.private;
     }
   }
 
@@ -343,7 +351,8 @@ enum IsmChatActionEvents {
   conversationDetailsUpdated,
   conversationTitleUpdated,
   conversationImageUpdated,
-  broadcast;
+  broadcast,
+  memberJoin;
 
   factory IsmChatActionEvents.fromName(String name) {
     switch (name) {
@@ -393,6 +402,8 @@ enum IsmChatActionEvents {
         return IsmChatActionEvents.conversationImageUpdated;
       case 'broadcast':
         return IsmChatActionEvents.broadcast;
+      case 'memberJoin':
+        return IsmChatActionEvents.memberJoin;
       default:
         return IsmChatActionEvents.typingEvent;
     }
@@ -447,6 +458,8 @@ enum IsmChatActionEvents {
         return 'conversationImageUpdated';
       case IsmChatActionEvents.broadcast:
         return 'broadcast';
+      case IsmChatActionEvents.memberJoin:
+        return 'memberJoin';
     }
   }
 }
@@ -602,4 +615,10 @@ enum IsRenderChatPageScreen {
   userInfoView,
   messageSearchView,
   boradcastMessagePage,
+}
+
+enum IsmChatConversationPosition {
+  tabBar,
+  menu,
+  navigationBar,
 }

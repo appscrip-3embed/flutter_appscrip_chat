@@ -29,6 +29,7 @@ class IsmChatPageRepository {
         return null;
       }
       var data = jsonDecode(response.data);
+
       return (data['messages'] as List)
           .map((e) => IsmChatMessageModel.fromMap(e as Map<String, dynamic>))
           .toList();

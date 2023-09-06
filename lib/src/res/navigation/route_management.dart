@@ -6,8 +6,10 @@ import 'package:image_picker/image_picker.dart';
 class IsmChatRouteManagement {
   const IsmChatRouteManagement._();
 
-  static void goToChatPage() {
-    Get.toNamed(IsmChatPageView.route);
+  static void goToChatPage({bool isfromOpenView = false}) {
+    Get.toNamed(IsmChatPageView.route, arguments: {
+      'isfromOpenView': isfromOpenView,
+    });
   }
 
   static void goToBroadcastMessagePage() {

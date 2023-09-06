@@ -15,14 +15,15 @@ class IsmChatConversations extends StatefulWidget {
   State<IsmChatConversations> createState() => _IsmChatConversationsState();
 }
 
-class _IsmChatConversationsState extends State<IsmChatConversations> {
+class _IsmChatConversationsState extends State<IsmChatConversations>
+    with TickerProviderStateMixin {
   @override
   void initState() {
+    super.initState();
     if (!Get.isRegistered<IsmChatMqttController>()) {
       IsmChatMqttBinding().dependencies();
     }
     startInit();
-    super.initState();
   }
 
   startInit() {
@@ -30,6 +31,12 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
       IsmChatCommonBinding().dependencies();
       IsmChatConversationsBinding().dependencies();
     }
+    var controller = Get.find<IsmChatConversationsController>();
+    controller.tabController = TabController(
+      length: 3,
+      // IsmChatProperties.conversationProperties.allowedConversations.length,
+      vsync: this,
+    );
   }
 
   @override
@@ -76,7 +83,17 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
                                 null) ...[
                           IsmChatProperties.conversationProperties.header!,
                         ],
-                        const Expanded(child: IsmChatConversationList()),
+                        if (IsmChatProperties.conversationProperties
+                                    .allowedConversations.length !=
+                                1 &&
+                            IsmChatProperties.conversationProperties
+                                    .conversationPosition ==
+                                IsmChatConversationPosition.tabBar) ...[
+                          _IsmchatTabBar(),
+                          _IsmChatTabView()
+                        ] else ...[
+                          const Expanded(child: IsmChatConversationList()),
+                        ]
                       ],
                     ),
                   ),
@@ -161,6 +178,84 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
                 : null,
           );
         },
+      );
+}
+
+class _IsmchatTabBar extends StatelessWidget {
+  _IsmchatTabBar();
+
+  final controller = Get.find<IsmChatConversationsController>();
+
+  @override
+  Widget build(BuildContext context) => Container(
+        height: IsmChatDimens.forty,
+        margin: IsmChatDimens.edgeInsets10,
+        padding: IsmChatDimens.edgeInsets4,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: IsmChatColors.whiteColor,
+          borderRadius: BorderRadius.circular(
+            IsmChatDimens.twenty,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: IsmChatColors.greyColor,
+              blurRadius: IsmChatDimens.one,
+            ),
+          ],
+        ),
+        child: TabBar(
+          splashBorderRadius: BorderRadius.circular(
+            IsmChatDimens.twenty,
+          ),
+          controller: controller.tabController,
+          indicator: BoxDecoration(
+            borderRadius: BorderRadius.circular(
+              IsmChatDimens.twenty,
+            ),
+            color: IsmChatConfig.chatTheme.primaryColor,
+          ),
+          labelColor: IsmChatColors.whiteColor,
+          dividerColor: Colors.transparent,
+          indicatorSize: TabBarIndicatorSize.tab,
+          labelStyle: IsmChatStyles.w400White14,
+          unselectedLabelColor: IsmChatColors.greyColor,
+          physics: const ClampingScrollPhysics(),
+          unselectedLabelStyle: IsmChatStyles.w400Black14,
+          tabs: List.generate(
+            IsmChatProperties
+                .conversationProperties.allowedConversations.length,
+            (index) {
+              var data = IsmChatProperties
+                  .conversationProperties.allowedConversations[index];
+              return Tab(
+                text: data.conversationName,
+              );
+            },
+          ),
+        ),
+      );
+}
+
+class _IsmChatTabView extends StatelessWidget {
+  _IsmChatTabView();
+
+  final controller = Get.find<IsmChatConversationsController>();
+
+  @override
+  Widget build(BuildContext context) => Expanded(
+        child: TabBarView(
+          controller: controller.tabController,
+          children: List.generate(
+            IsmChatProperties
+                .conversationProperties.allowedConversations.length,
+            (index) {
+              var data = IsmChatProperties
+                  .conversationProperties.allowedConversations[index];
+              return data.conversationWidget;
+            },
+          ),
+        ),
       );
 }
 

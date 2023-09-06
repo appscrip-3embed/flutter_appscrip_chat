@@ -7,7 +7,6 @@ mixin IsmChatPageGetMessageMixin {
     if (_controller.messageHoldOverlayEntry != null) {
       _controller.closeOveray();
     }
-
     var messages = await IsmChatConfig.dbWrapper!.getMessage(conversationId);
     if (messages?.isEmpty ?? false || messages == null) {
       _controller.messages.clear();
@@ -15,7 +14,6 @@ mixin IsmChatPageGetMessageMixin {
     }
 
     _controller.messages = _controller._viewModel.sortMessages(messages!);
-
     if (_controller.messages.isEmpty) {
       return;
     }

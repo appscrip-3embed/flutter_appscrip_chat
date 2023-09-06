@@ -312,12 +312,17 @@ extension ChildWidget on IsmChatCustomMessageType {
         return IsmChatAddRevokeAdmin(message, isAdded: false);
 
       case IsmChatCustomMessageType.memberLeave:
-        return IsmChatAddRemoveMember(message, didLeft: true);
+        return IsmChatMemberLeaveAndJoin(message, didLeft: true);
+
       case IsmChatCustomMessageType.conversationTitleUpdated:
       case IsmChatCustomMessageType.conversationImageUpdated:
         return IsmChatConversationUpdate(message);
+
       case IsmChatCustomMessageType.contact:
         return IsmChatContactMessage(message);
+
+      case IsmChatCustomMessageType.memberJoin:
+        return IsmChatMemberLeaveAndJoin(message, didLeft: false);
     }
   }
 
@@ -545,12 +550,14 @@ extension ModelConversion on IsmChatConversationModel {
     try {
       if (!lastMessageDetails!.sentByMe ||
           lastMessageDetails!.messageBody.isEmpty ||
-          lastMessageDetails!.customType == IsmChatCustomMessageType.unblock ||
-          lastMessageDetails!.customType == IsmChatCustomMessageType.block ||
-          lastMessageDetails!.customType ==
-              IsmChatCustomMessageType.deletedForEveryone ||
-          [IsmChatCustomMessageType.addMember]
-              .contains(lastMessageDetails!.customType)) {
+          [
+            IsmChatCustomMessageType.addMember,
+            IsmChatCustomMessageType.unblock,
+            IsmChatCustomMessageType.block,
+            IsmChatCustomMessageType.deletedForEveryone,
+            IsmChatCustomMessageType.memberJoin,
+            IsmChatCustomMessageType.memberLeave,
+          ].contains(lastMessageDetails!.customType)) {
         return const SizedBox.shrink();
       }
       var deliveredToAll = false;
@@ -622,6 +629,8 @@ extension LastMessageBody on LastMessageDetails {
         return 'Remove you as an Admin';
       case IsmChatCustomMessageType.memberLeave:
         return '$senderName left';
+      case IsmChatCustomMessageType.memberJoin:
+        return '$senderName join';
       case IsmChatCustomMessageType.deletedForMe:
       case IsmChatCustomMessageType.deletedForEveryone:
         return sentByMe
@@ -675,6 +684,9 @@ extension LastMessageBody on LastMessageDetails {
         break;
       case IsmChatCustomMessageType.memberLeave:
         iconData = Icons.directions_walk_rounded;
+        break;
+      case IsmChatCustomMessageType.memberJoin:
+        iconData = Icons.join_inner_outlined;
         break;
       case IsmChatCustomMessageType.link:
         iconData = Icons.link_rounded;
@@ -875,6 +887,65 @@ extension AttachmentIcon on IsmChatAttachmentType {
 
       case IsmChatAttachmentType.contact:
         return Icons.person_rounded;
+    }
+  }
+}
+
+extension Conversation on IsmChatConversationType {
+  String get conversationName {
+    switch (this) {
+      case IsmChatConversationType.private:
+        return 'Conversation';
+      case IsmChatConversationType.public:
+        return 'Public';
+      case IsmChatConversationType.open:
+        return 'Open';
+    }
+  }
+
+  Widget get conversationWidget {
+    switch (this) {
+      case IsmChatConversationType.private:
+        return const IsmChatConversationList();
+      case IsmChatConversationType.public:
+        return const IsmChatPublicConversationView();
+      case IsmChatConversationType.open:
+        return const IsmChatOpenConversationView();
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case IsmChatConversationType.private:
+        return Icons.admin_panel_settings_outlined;
+      case IsmChatConversationType.public:
+        return Icons.group_add_rounded;
+      case IsmChatConversationType.open:
+        return Icons.lock_open_outlined;
+    }
+  }
+
+  String get conversationType {
+    switch (this) {
+      case IsmChatConversationType.private:
+        return IsmChatStrings.conversation;
+      case IsmChatConversationType.public:
+        return IsmChatStrings.publicConversation;
+      case IsmChatConversationType.open:
+        return IsmChatStrings.openConversation;
+    }
+  }
+
+  void goToRoute() {
+    switch (this) {
+      case IsmChatConversationType.private:
+        break;
+      case IsmChatConversationType.public:
+        IsmChatRouteManagement.goToPublicView();
+        break;
+      case IsmChatConversationType.open:
+        IsmChatRouteManagement.goToOpenView();
+        break;
     }
   }
 }

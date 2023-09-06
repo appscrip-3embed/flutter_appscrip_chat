@@ -135,7 +135,8 @@ class _IsmChatPageView extends StatelessWidget {
                 : IsmChatPageHeader(
                     onTap: controller.isActionAllowed == false
                         ? () {
-                            if (controller.isActionAllowed == false) {
+                            if (controller.isActionAllowed == false &&
+                                controller.isObserverChat == false) {
                               if (!(controller.conversation?.lastMessageDetails
                                           ?.customType ==
                                       IsmChatCustomMessageType.removeMember &&

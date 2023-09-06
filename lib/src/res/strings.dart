@@ -47,6 +47,7 @@ class IsmChatStrings {
   static const String newGroup = 'New Group';
   static const String publicConversation = 'Public Conversation';
   static const String openConversation = 'Open Conversation';
+  static const String conversation = 'Conversation';
 
   static const String logout = 'Logout';
   static const String startConversation = 'Start Conversation';

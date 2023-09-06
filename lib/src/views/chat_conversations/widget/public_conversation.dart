@@ -1,31 +1,49 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class IsmChatPublicConversationView extends StatelessWidget {
-  IsmChatPublicConversationView({super.key});
+class IsmChatPublicConversationView extends StatefulWidget {
+  const IsmChatPublicConversationView({super.key});
 
   static const String route = IsmPageRoutes.publicView;
 
-  final converstaionController = Get.find<IsmChatConversationsController>();
+  @override
+  State<IsmChatPublicConversationView> createState() =>
+      _IsmChatPublicConversationViewState();
+}
+
+class _IsmChatPublicConversationViewState
+    extends State<IsmChatPublicConversationView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final converstaionController = Get.find<IsmChatConversationsController>();
+      converstaionController.publicConversation.clear();
+      converstaionController.isLoadResponse = false;
+      converstaionController.getPublicConversation(
+        conversationType: IsmChatConversationType.public.value,
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
-      initState: (state) {
-        converstaionController.publicConversation.clear();
-        converstaionController.isLoadResponse = false;
-        converstaionController.getPublicConversation(
-          conversationType: IsmChatConversationType.public.value,
-        );
-      },
       builder: (controller) => Scaffold(
-            appBar: IsmChatAppBar(
-              title: Text(
-                IsmChatStrings.publicConversation,
-                style: IsmChatStyles.w600White18,
-              ),
-            ),
-            body: converstaionController.publicConversation.isEmpty
+            appBar: [
+              IsmChatConversationPosition.tabBar,
+              IsmChatConversationPosition.navigationBar
+            ].contains(IsmChatProperties
+                    .conversationProperties.conversationPosition)
+                ? null
+                : IsmChatAppBar(
+                    title: Text(
+                      IsmChatStrings.publicConversation,
+                      style: IsmChatStyles.w600White18,
+                    ),
+                  ),
+            body: controller.publicConversation.isEmpty
                 ? controller.isLoadResponse
                     ? Center(
                         child: Text(
@@ -37,11 +55,9 @@ class IsmChatPublicConversationView extends StatelessWidget {
                 : SizedBox(
                     height: Get.height,
                     child: ListView.builder(
-                      itemCount:
-                          converstaionController.publicConversation.length,
+                      itemCount: controller.publicConversation.length,
                       itemBuilder: (_, index) {
-                        var data =
-                            converstaionController.publicConversation[index];
+                        var data = controller.publicConversation[index];
                         return Column(
                           children: [
                             ListTile(

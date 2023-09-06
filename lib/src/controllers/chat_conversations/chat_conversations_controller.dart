@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
-    if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart';
@@ -165,10 +163,12 @@ class IsmChatConversationsController extends GetxController {
 
   BuildContext? context;
 
+  TabController? tabController;
+
   @override
   onInit() async {
     super.onInit();
-    IsmChatBlob.listenTabAndRefesh();
+
     await _generateReactionList();
     var users = await IsmChatConfig.dbWrapper?.userDetailsBox
         .get(IsmChatStrings.userData);
@@ -706,5 +706,17 @@ class IsmChatConversationsController extends GetxController {
       Get.back();
       await getChatConversations();
     }
+  }
+
+  Future<IsmChatResponseModel?> joinObserver(
+          {required String conversationId, bool isLoading = false}) async =>
+      await _viewModel.joinObserver(
+          conversationId: conversationId, isLoading: isLoading);
+
+  Future<void> leaveObserver(
+      {required String conversationId, bool isLoading = false}) async {
+    var response = await _viewModel.leaveObserver(
+        conversationId: conversationId, isLoading: isLoading);
+    if (response != null) {}
   }
 }

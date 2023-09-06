@@ -32,45 +32,11 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
                       : Icons.arrow_back_rounded,
                 ),
               ),
-              titleSpacing: IsmChatDimens.four,
-              title: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox.square(
-                    dimension: IsmChatDimens.forty,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(IsmChatDimens.fifty),
-                      child: Image.asset(
-                        IsmChatAssets.noImage,
-                      ),
-                    ),
-                  ),
-                  IsmChatDimens.boxWidth12,
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          '${controller.conversation?.members?.length} recipients',
-                          style: IsmChatConfig
-                                  .chatTheme.chatPageHeaderTheme?.titleStyle ??
-                              IsmChatStyles.w600White16,
-                        ),
-                        Text(
-                          (controller.conversation?.members ?? [])
-                              .map((e) => e.userName)
-                              .join(','),
-                          style: IsmChatConfig.chatTheme.chatPageHeaderTheme
-                                  ?.subtileStyle ??
-                              IsmChatStyles.w400White12,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              title: Text(
+                '${controller.conversation?.members?.length} Recipients Selected',
+                style:
+                    IsmChatConfig.chatTheme.chatPageHeaderTheme?.titleStyle ??
+                        IsmChatStyles.w600White16,
               ),
               backgroundColor: IsmChatConfig.chatTheme.primaryColor,
               iconTheme: const IconThemeData(color: IsmChatColors.whiteColor),
@@ -83,6 +49,12 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
                   itemBuilder: (_, index) {
                     var data = controller.conversation?.members?[index];
                     return ListTile(
+                      trailing: CircleAvatar(
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.close_rounded),
+                        ),
+                      ),
                       leading:
                           IsmChatImage.profile(data?.userProfileImageUrl ?? ''),
                       title: Text(
