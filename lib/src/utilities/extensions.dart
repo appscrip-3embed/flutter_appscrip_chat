@@ -803,8 +803,12 @@ extension MentionMessage on IsmChatMessageModel {
       menu.remove(IsmChatFocusMenuType.forward);
     }
     if (Get.find<IsmChatPageController>().isTemporaryChat) {
-      menu.remove(IsmChatFocusMenuType.info);
-      menu.remove(IsmChatFocusMenuType.delete);
+      menu.removeWhere((e) => [
+            IsmChatFocusMenuType.info,
+            IsmChatFocusMenuType.delete,
+            IsmChatFocusMenuType.reply,
+            IsmChatFocusMenuType.selectMessage
+          ].contains(e));
     }
     return menu;
   }

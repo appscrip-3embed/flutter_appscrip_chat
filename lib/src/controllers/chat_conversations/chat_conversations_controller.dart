@@ -735,11 +735,15 @@ class IsmChatConversationsController extends GetxController {
   }
 
   Future<void> goToChatPage() async {
+    await Future.delayed(const Duration(milliseconds: 100));
     if (Get.isRegistered<IsmChatPageController>()) {
       final chatPagecontroller = Get.find<IsmChatPageController>();
-      chatPagecontroller.startInit(
-        isTemporaryChats: true,
-      );
+      if (Responsive.isWebAndTablet(Get.context!)) {
+        chatPagecontroller.startInit(
+          isTemporaryChats: true,
+        );
+      }
+
       if (chatPagecontroller.messageHoldOverlayEntry != null) {
         chatPagecontroller.closeOveray();
       }

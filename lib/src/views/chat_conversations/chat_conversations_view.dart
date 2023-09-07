@@ -163,7 +163,8 @@ class _IsmChatConversationsState extends State<IsmChatConversations>
                         IsmChatProperties.conversationProperties.onCreateTap
                             ?.call();
                         IsmChatRouteManagement.goToCreateChat(
-                            isGroupConversation: false);
+                          isGroupConversation: false,
+                        );
                       }
                     },
                   )
@@ -262,9 +263,15 @@ class _IsmChatTabView extends StatelessWidget {
 class _CreateChatBottomSheet extends StatelessWidget {
   const _CreateChatBottomSheet();
 
-  void _startConversation([bool isGroup = false]) {
+  void _startConversation(
+      [bool isGroup = false,
+      IsmChatConversationType conversationType =
+          IsmChatConversationType.private]) {
     Get.back();
-    IsmChatRouteManagement.goToCreateChat(isGroupConversation: isGroup);
+    IsmChatRouteManagement.goToCreateChat(
+      isGroupConversation: isGroup,
+      conversationType: conversationType,
+    );
   }
 
   @override
@@ -273,6 +280,7 @@ class _CreateChatBottomSheet extends StatelessWidget {
           CupertinoActionSheetAction(
             onPressed: _startConversation,
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
@@ -292,6 +300,7 @@ class _CreateChatBottomSheet extends StatelessWidget {
           CupertinoActionSheetAction(
             onPressed: () => _startConversation(true),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
@@ -301,6 +310,52 @@ class _CreateChatBottomSheet extends StatelessWidget {
                 IsmChatDimens.boxWidth8,
                 Text(
                   'Group Conversation',
+                  style: IsmChatStyles.w400White18.copyWith(
+                    color: IsmChatConfig.chatTheme.primaryColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () => _startConversation(
+              true,
+              IsmChatConversationType.public,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.group_add_outlined,
+                  color: IsmChatConfig.chatTheme.primaryColor,
+                ),
+                IsmChatDimens.boxWidth8,
+                Text(
+                  'Public Conversation',
+                  style: IsmChatStyles.w400White18.copyWith(
+                    color: IsmChatConfig.chatTheme.primaryColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () => _startConversation(
+              true,
+              IsmChatConversationType.open,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.reduce_capacity_outlined,
+                  color: IsmChatConfig.chatTheme.primaryColor,
+                ),
+                IsmChatDimens.boxWidth8,
+                Text(
+                  'Open Conversation',
                   style: IsmChatStyles.w400White18.copyWith(
                     color: IsmChatConfig.chatTheme.primaryColor,
                   ),

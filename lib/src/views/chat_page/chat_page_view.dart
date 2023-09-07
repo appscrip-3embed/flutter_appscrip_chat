@@ -5,24 +5,14 @@ import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart'
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class IsmChatPageView extends StatefulWidget {
+class IsmChatPageView extends StatelessWidget {
   const IsmChatPageView({
     super.key,
   });
 
   static const String route = IsmPageRoutes.chatPage;
 
-  @override
-  State<IsmChatPageView> createState() => _IsmChatPageViewState();
-}
-
-class _IsmChatPageViewState extends State<IsmChatPageView> {
   // @override
-  // void initState() {
-  //   IsmChatPageBinding().dependencies();
-  //   super.initState();
-  // }
-
   IsmChatPageController get controller => Get.find<IsmChatPageController>();
 
   Future<bool> navigateBack() async {
@@ -43,27 +33,24 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
   }
 
   @override
-  Widget build(BuildContext context) => GetX<IsmChatPageController>(
-      builder: (context) => controller.isTemporaryChat
-          ? const IsmChatBoradcastMessagePage()
-          : WillPopScope(
-              onWillPop: () async {
-                if (!GetPlatform.isAndroid) {
-                  return false;
-                }
-                return await navigateBack();
-              },
-              child: GetPlatform.isIOS
-                  ? GestureDetector(
-                      onHorizontalDragEnd: (details) {
-                        if (details.velocity.pixelsPerSecond.dx > 50) {
-                          navigateBack();
-                        }
-                      },
-                      child: const _IsmChatPageView(),
-                    )
-                  : const _IsmChatPageView(),
-            ));
+  Widget build(BuildContext context) => WillPopScope(
+        onWillPop: () async {
+          if (!GetPlatform.isAndroid) {
+            return false;
+          }
+          return await navigateBack();
+        },
+        child: GetPlatform.isIOS
+            ? GestureDetector(
+                onHorizontalDragEnd: (details) {
+                  if (details.velocity.pixelsPerSecond.dx > 50) {
+                    navigateBack();
+                  }
+                },
+                child: const _IsmChatPageView(),
+              )
+            : const _IsmChatPageView(),
+      );
 }
 
 class _IsmChatPageView extends StatelessWidget {

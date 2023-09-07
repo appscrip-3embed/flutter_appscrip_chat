@@ -122,8 +122,6 @@ class _IsmChatOpenConversationViewState
                                     IsmChatRouteManagement.goToChatPage(
                                       isTemporaryChat: true,
                                     );
-                                    await Future.delayed(
-                                        const Duration(milliseconds: 100));
                                     await controller.goToChatPage();
                                   }
                                 }

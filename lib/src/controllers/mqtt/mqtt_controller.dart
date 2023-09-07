@@ -258,7 +258,6 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleObserverJoinAndLeave(IsmChatMqttActionModel actionModel) async {
-    IsmChatLog.error(actionModel);
     if (actionModel.senderId == _communicationConfig.userConfig.userId) {
       return;
     }

@@ -79,20 +79,23 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: controller.messages.isNotEmpty
-                        ? ListView.builder(
-                            controller:
-                                controller.searchMessageScrollController,
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            reverse: true,
-                            padding: IsmChatDimens.edgeInsets4_8,
-                            itemCount: controller.messages.length,
-                            itemBuilder: (_, index) => IsmChatMessage(
-                              index,
-                              IsmChatProperties
-                                  .chatPageProperties.messageBuilder,
-                              controller.messages[index],
-                              true,
+                        ? Align(
+                            alignment: Alignment.topCenter,
+                            child: ListView.builder(
+                              controller:
+                                  controller.searchMessageScrollController,
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              reverse: true,
+                              padding: IsmChatDimens.edgeInsets4_8,
+                              itemCount: controller.messages.length,
+                              itemBuilder: (_, index) => IsmChatMessage(
+                                index,
+                                IsmChatProperties
+                                    .chatPageProperties.messageBuilder,
+                                controller.messages[index],
+                                true,
+                              ),
                             ),
                           )
                         : ListView.builder(

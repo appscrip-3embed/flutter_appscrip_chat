@@ -442,7 +442,7 @@ class IsmChatPageController extends GetxController
       await Future.delayed(Duration.zero);
       isTemporaryChat =
           arguments['isTemporaryChat'] as bool? ?? isTemporaryChats;
-      IsmChatLog.error(isTemporaryChat);
+
       if (conversation?.conversationId?.isNotEmpty ?? false) {
         _getBackGroundAsset();
         if (!isTemporaryChat) {
@@ -450,8 +450,9 @@ class IsmChatPageController extends GetxController
           await Future.wait([
             getMessagesFromAPI(),
             getConverstaionDetails(
-                conversationId: conversation?.conversationId ?? '',
-                includeMembers: conversation?.isGroup == true ? true : false),
+              conversationId: conversation?.conversationId ?? '',
+              includeMembers: conversation?.isGroup == true ? true : false,
+            ),
           ]);
           await readAllMessages(
             conversationId: conversation?.conversationId ?? '',
@@ -470,6 +471,8 @@ class IsmChatPageController extends GetxController
         }
         if (conversation!.isGroup ?? false) {
           await createConversation(
+            conversationType: conversation?.conversationType ??
+                IsmChatConversationType.private,
             userId: [],
             isGroup: true,
             searchableTags: [

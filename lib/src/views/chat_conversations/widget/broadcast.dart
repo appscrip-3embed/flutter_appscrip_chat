@@ -343,7 +343,6 @@ class IsmChatBroadCastView extends StatelessWidget {
                 var conversation = IsmChatConversationModel(
                   members: controller.selectedUserList,
                   conversationImageUrl: IsmChatAssets.noImage,
-                  customType: 'BroadcastMessage',
                 );
                 controller.navigateToMessages(conversation);
                 if (Responsive.isWebAndTablet(context)) {
@@ -359,7 +358,8 @@ class IsmChatBroadCastView extends StatelessWidget {
                   }
                 } else {
                   IsmChatRouteManagement.goToBroadcastMessagePage(
-                      isTemporaryChat: true);
+                    isTemporaryChat: true,
+                  );
                 }
               } else {
                 await Get.dialog(
