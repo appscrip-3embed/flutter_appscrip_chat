@@ -18,9 +18,14 @@ class IsmChatRouteManagement {
     });
   }
 
-  static void goToCreateChat({required bool isGroupConversation}) {
-    Get.toNamed(IsmChatCreateConversationView.route,
-        arguments: {'isGroupConversation': isGroupConversation});
+  static void goToCreateChat({
+    required bool isGroupConversation,
+    IsmChatConversationType conversationType = IsmChatConversationType.private,
+  }) {
+    Get.toNamed(IsmChatCreateConversationView.route, arguments: {
+      'isGroupConversation': isGroupConversation,
+      'conversationType': conversationType
+    });
   }
 
   static void goToBlockView() {

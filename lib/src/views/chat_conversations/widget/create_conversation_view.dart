@@ -7,14 +7,19 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class IsmChatCreateConversationView extends StatelessWidget {
-  IsmChatCreateConversationView({
-    super.key,
-    bool? isGroupConversation,
-  }) : _isGroupConversation = isGroupConversation ??
+  IsmChatCreateConversationView(
+      {super.key,
+      bool? isGroupConversation,
+      IsmChatConversationType? conversationType})
+      : _isGroupConversation = isGroupConversation ??
             (Get.arguments as Map<String, dynamic>?)?['isGroupConversation'] ??
-            false;
+            false,
+        _conversationType = conversationType ??
+            (Get.arguments as Map<String, dynamic>?)?['conversationType'] ??
+            IsmChatConversationType.private;
 
   final bool? _isGroupConversation;
+  final IsmChatConversationType? _conversationType;
   final converstaionController = Get.find<IsmChatConversationsController>();
 
   static const String route = IsmPageRoutes.createChat;
@@ -97,7 +102,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                   )
                 : Text(
                     _isGroupConversation ?? false
-                        ? 'New Group Conversation'
+                        ? 'New  ${_conversationType == IsmChatConversationType.public ? 'Public' : _conversationType == IsmChatConversationType.open ? 'Open' : 'Group'} Conversation'
                         : 'New Conversation',
                     style: IsmChatStyles.w600White18,
                   ),
@@ -487,8 +492,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                     body: '',
                                   ),
                                   lastMessageSentAt: 0,
-                                  conversationType:
-                                      IsmChatConversationType.private,
+                                  conversationType: _conversationType,
                                   membersCount: controller
                                       .forwardedList.selectedUsers.length,
                                 );

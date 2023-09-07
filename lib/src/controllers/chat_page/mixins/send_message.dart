@@ -16,6 +16,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     bool isGroup = false,
     bool isLoading = true,
     List<String> searchableTags = const [' '],
+    IsmChatConversationType conversationType = IsmChatConversationType.private,
   }) async {
     if (isGroup) {
       userId = _controller.conversation!.userIds ?? [];
@@ -27,7 +28,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       pushNotifications: true,
       members: userId,
       isGroup: isGroup,
-      conversationType: IsmChatConversationType.private.value,
+      conversationType: conversationType.value,
       searchableTags: searchableTags,
       metaData: metaData != null ? metaData.toMap() : {},
       conversationImageUrl:
@@ -952,7 +953,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     PresignedUrlModel? presignedUrlModel;
     if (_controller.isTemporaryChat) {
       presignedUrlModel = await _controller.commonController.getPresignedUrl(
-        isLoading: true,
+        isLoading: false,
         mediaExtension:
             ismChatChatMessageModel.attachments?.first.extension ?? '',
         userIdentifier:
@@ -975,7 +976,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             ? presignedUrlModel.presignedUrl
             : presignedUrlModel.mediaPresignedUrl,
         bytes: bytes,
-        isLoading: _controller.isTemporaryChat,
+        isLoading: false,
       );
       if (mediaUrl == 200) {
         mediaUrlPath = presignedUrlModel.mediaUrl ?? '';
@@ -988,7 +989,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       PresignedUrlModel? presignedUrlModel;
       if (_controller.isTemporaryChat) {
         presignedUrlModel = await _controller.commonController.getPresignedUrl(
-          isLoading: true,
+          isLoading: false,
           mediaExtension: thumbnailNameWithExtension?.split('.').last ?? '',
           userIdentifier:
               IsmChatConfig.communicationConfig.userConfig.userEmail ?? '',
@@ -1008,7 +1009,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
               ? presignedUrlModel.presignedUrl
               : presignedUrlModel.thumbnailPresignedUrl,
           bytes: thumbnailBytes,
-          isLoading: _controller.isTemporaryChat,
+          isLoading: false,
         );
         if (mediaUrl == 200) {
           thumbnailUrlPath = _controller.isTemporaryChat
@@ -1090,6 +1091,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       isLoading: isLoading,
     );
     if (response?.hasError == false) {
+      if (_controller.messages.length == 1) {
+        _controller.messages =
+            _controller.viewModel.sortMessages(_controller.messages);
+      }
       for (var x = 0; x < _controller.messages.length; x++) {
         var messages = _controller.messages[x];
         if (messages.messageId?.isNotEmpty == true ||
