@@ -15,16 +15,22 @@ class IsmChatOpenConversationView extends StatefulWidget {
 
 class _IsmChatOpenConversationViewState
     extends State<IsmChatOpenConversationView> {
+  var scrollController = ScrollController();
+  final converstaionController = Get.find<IsmChatConversationsController>();
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final converstaionController = Get.find<IsmChatConversationsController>();
-      converstaionController.publicConversation.clear();
-      converstaionController.isLoadResponse = false;
-      converstaionController.getPublicConversation(
-        conversationType: IsmChatConversationType.open.value,
-      );
+      converstaionController
+          .intiPublicAndOpenConversation(IsmChatConversationType.open);
+      scrollController.addListener(() {
+        if (scrollController.offset.toInt() ==
+            scrollController.position.maxScrollExtent.toInt()) {
+          converstaionController.getPublicAndOpenConversation(
+            conversationType: IsmChatConversationType.open.value,
+          );
+        }
+      });
     });
   }
 
@@ -38,12 +44,46 @@ class _IsmChatOpenConversationViewState
                     .conversationProperties.conversationPosition)
                 ? null
                 : IsmChatAppBar(
-                    title: Text(
-                      IsmChatStrings.openConversation,
-                      style: IsmChatStyles.w600White18,
-                    ),
+                    title: controller.showSearchField
+                        ? IsmChatInputField(
+                            fillColor: IsmChatConfig.chatTheme.primaryColor,
+                            style: IsmChatStyles.w400White16,
+                            hint: 'Search user...',
+                            hintStyle: IsmChatStyles.w400White16,
+                            onChanged: (value) {
+                              controller.debounce.run(
+                                () {
+                                  controller.isLoadResponse = false;
+                                  controller.getPublicAndOpenConversation(
+                                    searchTag:
+                                        value.trim().isNotEmpty ? value : '',
+                                    conversationType:
+                                        IsmChatConversationType.public.value,
+                                  );
+                                },
+                              );
+                            },
+                          )
+                        : Text(
+                            IsmChatStrings.openConversation,
+                            style: IsmChatStyles.w600White18,
+                          ),
+                    action: [
+                      IconButton(
+                        onPressed: () {
+                          controller.showSearchField =
+                              !controller.showSearchField;
+                        },
+                        icon: Icon(
+                          controller.showSearchField
+                              ? Icons.close_rounded
+                              : Icons.search_rounded,
+                          color: IsmChatColors.whiteColor,
+                        ),
+                      ),
+                    ],
                   ),
-            body: controller.publicConversation.isEmpty
+            body: controller.publicAndOpenConversation.isEmpty
                 ? controller.isLoadResponse
                     ? Center(
                         child: Text(
@@ -55,9 +95,10 @@ class _IsmChatOpenConversationViewState
                 : SizedBox(
                     height: Get.height,
                     child: ListView.builder(
-                      itemCount: controller.publicConversation.length,
+                      controller: scrollController,
+                      itemCount: controller.publicAndOpenConversation.length,
                       itemBuilder: (_, index) {
-                        var data = controller.publicConversation[index];
+                        var data = controller.publicAndOpenConversation[index];
                         return Column(
                           children: [
                             ListTile(
@@ -76,21 +117,14 @@ class _IsmChatOpenConversationViewState
                                       IsmChatPageBinding().dependencies();
                                       return;
                                     }
-
-                                    final chatPagecontroller =
-                                        Get.find<IsmChatPageController>();
-                                    chatPagecontroller.startInit(
-                                      fromOpenView: true,
-                                    );
-                                    if (chatPagecontroller
-                                            .messageHoldOverlayEntry !=
-                                        null) {
-                                      chatPagecontroller.closeOveray();
-                                    }
+                                    await controller.goToChatPage();
                                   } else {
                                     IsmChatRouteManagement.goToChatPage(
-                                      isfromOpenView: true,
+                                      isTemporaryChat: true,
                                     );
+                                    await Future.delayed(
+                                        const Duration(milliseconds: 100));
+                                    await controller.goToChatPage();
                                   }
                                 }
                               },

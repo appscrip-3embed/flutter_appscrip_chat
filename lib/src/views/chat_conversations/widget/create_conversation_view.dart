@@ -70,14 +70,6 @@ class IsmChatCreateConversationView extends StatelessWidget {
                     hint: 'Search user...',
                     hintStyle: IsmChatStyles.w400White16,
                     onChanged: (value) {
-                      controller.debounce.run(() {
-                        controller.isLoadResponse = false;
-                        controller.getNonBlockUserList(
-                          searchTag: value,
-                          opponentId: IsmChatConfig
-                              .communicationConfig.userConfig.userId,
-                        );
-                      });
                       if (value.trim().isEmpty) {
                         controller.forwardedList =
                             controller.forwardedListDuplicat
@@ -91,7 +83,16 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                     ))
                                 .toList();
                         controller.handleList(controller.forwardedList);
+                        return;
                       }
+                      controller.debounce.run(() {
+                        controller.isLoadResponse = false;
+                        controller.getNonBlockUserList(
+                          searchTag: value,
+                          opponentId: IsmChatConfig
+                              .communicationConfig.userConfig.userId,
+                        );
+                      });
                     },
                   )
                 : Text(

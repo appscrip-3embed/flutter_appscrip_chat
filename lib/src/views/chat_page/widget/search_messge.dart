@@ -47,14 +47,14 @@ class IsmChatSearchMessgae extends StatelessWidget {
                   controller.textEditingController.text.isNotEmpty
               ? Center(
                   child: Text(
-                    'No Messages found',
+                    IsmChatStrings.noMessageFound,
                     style: IsmChatStyles.w600Black20,
                   ),
                 )
               : controller.textEditingController.text.isEmpty
                   ? Center(
                       child: Text(
-                        'You haven\'t searched anything yet',
+                        IsmChatStrings.noSearch,
                         style: IsmChatStyles.w600Black20,
                       ),
                     )

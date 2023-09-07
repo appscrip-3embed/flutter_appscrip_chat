@@ -14,6 +14,8 @@ class IsmPageRoutes {
   static const String contactInfoView = '/contactInfoView';
 
   static const String blockView = '/blockView';
+  static const String observerView = '/observerView';
+
   static const String userView = '/userView';
   static const String converstaionInfoView = '/converstaionInfoView';
 

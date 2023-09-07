@@ -323,6 +323,12 @@ extension ChildWidget on IsmChatCustomMessageType {
 
       case IsmChatCustomMessageType.memberJoin:
         return IsmChatMemberLeaveAndJoin(message, didLeft: false);
+
+      case IsmChatCustomMessageType.observerJoin:
+        return IsmChatObserverLeaveAndJoin(message);
+
+      case IsmChatCustomMessageType.observerLeave:
+        return IsmChatObserverLeaveAndJoin(message, didLeft: true);
     }
   }
 
@@ -795,6 +801,10 @@ extension MentionMessage on IsmChatMessageModel {
     if (!IsmChatProperties.chatPageProperties.features
         .contains(IsmChatFeature.forward)) {
       menu.remove(IsmChatFocusMenuType.forward);
+    }
+    if (Get.find<IsmChatPageController>().isTemporaryChat) {
+      menu.remove(IsmChatFocusMenuType.info);
+      menu.remove(IsmChatFocusMenuType.delete);
     }
     return menu;
   }

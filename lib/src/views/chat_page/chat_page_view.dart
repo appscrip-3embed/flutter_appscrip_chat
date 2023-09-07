@@ -36,6 +36,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
       if (IsmChatProperties.chatPageProperties.header?.onBackTap != null) {
         IsmChatProperties.chatPageProperties.header?.onBackTap!.call();
       }
+      controller.closeOveray();
       await controller.updateLastMessage();
       return true;
     }
@@ -43,7 +44,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
-      builder: (context) => controller.isBroadcastMessage
+      builder: (context) => controller.isTemporaryChat
           ? const IsmChatBoradcastMessagePage()
           : WillPopScope(
               onWillPop: () async {
@@ -136,7 +137,7 @@ class _IsmChatPageView extends StatelessWidget {
                     onTap: controller.isActionAllowed == false
                         ? () {
                             if (controller.isActionAllowed == false &&
-                                controller.isObserverChat == false) {
+                                controller.isTemporaryChat == false) {
                               if (!(controller.conversation?.lastMessageDetails
                                           ?.customType ==
                                       IsmChatCustomMessageType.removeMember &&
@@ -197,9 +198,7 @@ class _IsmChatPageView extends StatelessWidget {
                                           children: [
                                             Visibility(
                                               visible: controller
-                                                      .messages.isNotEmpty &&
-                                                  controller.messages.length !=
-                                                      1,
+                                                  .messages.isNotEmpty,
                                               replacement: IsmChatProperties
                                                       .chatPageProperties
                                                       .placeholder ??

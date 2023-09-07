@@ -6,14 +6,16 @@ import 'package:image_picker/image_picker.dart';
 class IsmChatRouteManagement {
   const IsmChatRouteManagement._();
 
-  static void goToChatPage({bool isfromOpenView = false}) {
+  static void goToChatPage({bool isTemporaryChat = false}) {
     Get.toNamed(IsmChatPageView.route, arguments: {
-      'isfromOpenView': isfromOpenView,
+      'isTemporaryChat': isTemporaryChat,
     });
   }
 
-  static void goToBroadcastMessagePage() {
-    Get.toNamed(IsmChatBoradcastMessagePage.route);
+  static void goToBroadcastMessagePage({bool isTemporaryChat = false}) {
+    Get.toNamed(IsmChatBoradcastMessagePage.route, arguments: {
+      'isTemporaryChat': isTemporaryChat,
+    });
   }
 
   static void goToCreateChat({required bool isGroupConversation}) {
@@ -23,6 +25,11 @@ class IsmChatRouteManagement {
 
   static void goToBlockView() {
     Get.toNamed(IsmChatBlockedUsersView.route);
+  }
+
+  static void goToObserverView(String conversationId) {
+    Get.toNamed(IsmChatObserverUsersView.route,
+        arguments: {'conversationId': conversationId});
   }
 
   static void goToForwardView(

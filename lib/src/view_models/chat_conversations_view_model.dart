@@ -177,14 +177,14 @@ class IsmChatConversationsViewModel {
         isLoading: isLoading,
       );
 
-  Future<List<IsmChatConversationModel>?> getPublicConversation({
+  Future<List<IsmChatConversationModel>?> getPublicAndOpenConversation({
     required int conversationType,
     String? searchTag,
     int sort = 1,
     int skip = 0,
     int limit = 20,
   }) async =>
-      _repository.getPublicConversation(
+      _repository.getPublicAndOpenConversation(
           limit: limit,
           searchTag: searchTag,
           skip: skip,
@@ -204,4 +204,18 @@ class IsmChatConversationsViewModel {
           {required String conversationId, bool isLoading = false}) async =>
       _repository.leaveObserver(
           conversationId: conversationId, isLoading: isLoading);
+
+  Future<List<UserDetails>?> getObservationUser(
+          {required String conversationId,
+          int skip = 0,
+          int limit = 20,
+          bool isLoading = false,
+          String? searchText}) async =>
+      _repository.getObservationUser(
+        conversationId: conversationId,
+        isLoading: isLoading,
+        skip: skip,
+        limit: limit,
+        searchText: searchText,
+      );
 }

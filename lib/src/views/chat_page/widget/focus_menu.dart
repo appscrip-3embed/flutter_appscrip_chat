@@ -21,13 +21,12 @@ class IsmChatFocusMenu extends StatelessWidget {
   final Animation<double> animation;
   final bool canReact;
 
+  final controller = Get.find<IsmChatPageController>();
+
   @override
   Widget build(BuildContext context) => Responsive.isWebAndTablet(context)
       ? IsmChatTapHandler(
-          onTap: () {
-            final controller = Get.find<IsmChatPageController>();
-            controller.closeOveray();
-          },
+          onTap: controller.closeOveray,
           child: Padding(
             padding: IsmChatDimens.edgeInsets8,
             child: Column(
@@ -37,7 +36,7 @@ class IsmChatFocusMenu extends StatelessWidget {
                   ? CrossAxisAlignment.end
                   : CrossAxisAlignment.start,
               children: [
-                if (canReact)
+                if (canReact && !controller.isTemporaryChat)
                   _FocusAnimationBuilder(
                     animation: animation,
                     child: ReactionGrid(message),
@@ -144,7 +143,7 @@ class IsmChatFocusMenu extends StatelessWidget {
                         ? CrossAxisAlignment.end
                         : CrossAxisAlignment.start,
                     children: [
-                      if (canReact)
+                      if (canReact && !controller.isTemporaryChat)
                         _FocusAnimationBuilder(
                           animation: animation,
                           child: ReactionGrid(message),
