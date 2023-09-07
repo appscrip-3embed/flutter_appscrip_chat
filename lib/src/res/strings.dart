@@ -39,6 +39,8 @@ class IsmChatStrings {
   static const String blockUser = 'Block User';
   static const String unBlockUser = 'Unblock User';
   static const String blockedUsers = 'Blocked Users';
+  static const String observer = 'Observers';
+
   static const String boradcastMessge = 'Broadcast Messgaes';
 
   static const String clearChat = 'Clear chat';
@@ -94,6 +96,10 @@ class IsmChatStrings {
   static const String createGroupAlert =
       'Select at least one user, add group name and choose one photo';
   static const String admin = 'Admin';
+  static const String add = 'Add';
+  static const String contactAppear =
+      'The selected contacts will appear hare..';
+
   static const String participants = 'participants';
   static const String exitGroup = 'Exit group';
   static const String createdOn = 'Created on';
@@ -129,6 +135,9 @@ class IsmChatStrings {
   static const String wasDeletedMessage = 'This message was deleted';
   static const String noDataFound = 'No data found';
   static const String noUserFound = 'No user found';
+  static const String noMessageFound = 'No Messages found';
+  static const String noSearch = 'You haven\'t searched anything yet';
+
   static const String noConversationFound = 'No conversation found';
 
   static const String forwarded = 'Forwarded';

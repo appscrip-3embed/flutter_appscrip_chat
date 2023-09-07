@@ -14,6 +14,7 @@ class IsmChatPageViewModel {
     int skip = 0,
     String? searchText,
     bool isLoading = false,
+    bool isTemporaryChat = false,
   }) async {
     var messages = await _repository.getChatMessages(
         conversationId: conversationId,
@@ -46,18 +47,21 @@ class IsmChatPageViewModel {
             Get.find<IsmChatPageController>().messages.last.messageId);
       }
 
-      var conversation = await IsmChatConfig.dbWrapper!
-          .getConversation(conversationId: conversationId);
+      if (!isTemporaryChat) {
+        var conversation = await IsmChatConfig.dbWrapper!
+            .getConversation(conversationId: conversationId);
 
-      if (conversation != null) {
-        conversation.messages?.addAll(messages);
-        await IsmChatConfig.dbWrapper!
-            .saveConversation(conversation: conversation);
+        if (conversation != null) {
+          conversation.messages?.addAll(messages);
+          await IsmChatConfig.dbWrapper!
+              .saveConversation(conversation: conversation);
+        }
+      } else {
+        messages = sortMessages(messages);
       }
     } else {
       messages = sortMessages(messages);
     }
-
     return messages;
   }
 
@@ -78,6 +82,7 @@ class IsmChatPageViewModel {
     String? customType,
     List<Map<String, dynamic>>? attachments,
     List<String>? searchableTags,
+    bool isTemporaryChat = false,
   }) async {
     try {
       var messageId = await _repository.sendMessage(
@@ -99,40 +104,59 @@ class IsmChatPageViewModel {
       if (messageId == null || messageId.isEmpty) {
         return false;
       }
-      var dbBox = IsmChatConfig.dbWrapper;
 
-      final chatPendingMessages = await dbBox!.getConversation(
-          conversationId: conversationId, dbBox: IsmChatDbBox.pending);
-      if (chatPendingMessages == null) {
-        return false;
-      }
+      if (isTemporaryChat) {
+        final chatPageController = Get.find<IsmChatPageController>();
+        for (var x = 0; x < chatPageController.messages.length; x++) {
+          var messages = chatPageController.messages[x];
+          if (messages.messageId?.isNotEmpty == true ||
+              messages.sentAt != createdAt) {
+            continue;
+          }
+          messages.messageId = messageId;
+          messages.deliveredToAll = false;
+          messages.readByAll = false;
+          messages.isUploading = false;
+          chatPageController.messages[x] = messages;
+        }
+      } else {
+        var dbBox = IsmChatConfig.dbWrapper;
+        final chatPendingMessages = await dbBox!.getConversation(
+            conversationId: conversationId, dbBox: IsmChatDbBox.pending);
+        if (chatPendingMessages == null) {
+          return false;
+        }
 
-      for (var x = 0; x < chatPendingMessages.messages!.length; x++) {
-        var pendingMessage = chatPendingMessages.messages![x];
-        if (pendingMessage.messageId!.isNotEmpty ||
-            pendingMessage.sentAt != createdAt) {
-          continue;
+        for (var x = 0; x < chatPendingMessages.messages!.length; x++) {
+          var pendingMessage = chatPendingMessages.messages![x];
+          if (pendingMessage.messageId!.isNotEmpty ||
+              pendingMessage.sentAt != createdAt) {
+            continue;
+          }
+
+          pendingMessage.messageId = messageId;
+          pendingMessage.deliveredToAll = false;
+          pendingMessage.readByAll = false;
+          pendingMessage.isUploading = false;
+          chatPendingMessages.messages?.removeAt(x);
+          await dbBox.saveConversation(
+              conversation: chatPendingMessages, dbBox: IsmChatDbBox.pending);
+          if (chatPendingMessages.messages!.isEmpty) {
+            await dbBox.pendingMessageBox
+                .delete(chatPendingMessages.conversationId!);
+          }
+          var conversationModel =
+              await dbBox.getConversation(conversationId: conversationId);
+          if (conversationModel != null) {
+            conversationModel.messages?.add(pendingMessage);
+            conversationModel = conversationModel.copyWith(
+              lastMessageDetails: conversationModel.lastMessageDetails
+                  ?.copyWith(reactionType: ''),
+            );
+          }
+          await dbBox.saveConversation(conversation: conversationModel!);
         }
-        pendingMessage.messageId = messageId;
-        pendingMessage.deliveredToAll = false;
-        pendingMessage.isUploading = false;
-        chatPendingMessages.messages?.removeAt(x);
-        await dbBox.saveConversation(
-            conversation: chatPendingMessages, dbBox: IsmChatDbBox.pending);
-        if (chatPendingMessages.messages!.isEmpty) {
-          await dbBox.pendingMessageBox
-              .delete(chatPendingMessages.conversationId!);
-        }
-        var conversationModel =
-            await dbBox.getConversation(conversationId: conversationId);
-        if (conversationModel != null) {
-          conversationModel.messages?.add(pendingMessage);
-          conversationModel = conversationModel.copyWith(
-            lastMessageDetails: conversationModel.lastMessageDetails
-                ?.copyWith(reactionType: ''),
-          );
-        }
-        await dbBox.saveConversation(conversation: conversationModel!);
+
         return true;
       }
 

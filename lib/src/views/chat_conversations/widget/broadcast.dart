@@ -18,7 +18,7 @@ class IsmChatBroadCastView extends StatelessWidget {
           converstaionController.callApiOrNot = true;
           converstaionController.forwardedList.clear();
           converstaionController.selectedUserList.clear();
-          converstaionController.userSearchNameController.clear();
+
           converstaionController.showSearchField = false;
           converstaionController.isLoadResponse = false;
           converstaionController.getNonBlockUserList(
@@ -31,7 +31,6 @@ class IsmChatBroadCastView extends StatelessWidget {
             title: controller.showSearchField
                 ? IsmChatInputField(
                     fillColor: IsmChatConfig.chatTheme.primaryColor,
-                    controller: controller.userSearchNameController,
                     style: IsmChatStyles.w400White16,
                     hint: 'Search user...',
                     hintStyle: IsmChatStyles.w400White16,
@@ -68,7 +67,7 @@ class IsmChatBroadCastView extends StatelessWidget {
               IconButton(
                 onPressed: () {
                   controller.showSearchField = !controller.showSearchField;
-                  controller.userSearchNameController.clear();
+
                   if (!controller.showSearchField &&
                       controller.forwardedListDuplicat.isNotEmpty) {
                     controller.forwardedList = controller.forwardedListDuplicat
@@ -99,7 +98,17 @@ class IsmChatBroadCastView extends StatelessWidget {
           body: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              if (controller.selectedUserList.isNotEmpty)
+              if (controller.selectedUserList.isEmpty) ...[
+                Container(
+                  alignment: Alignment.center,
+                  height: IsmChatDimens.ninty,
+                  child: Text(
+                    IsmChatStrings.contactAppear,
+                    style: IsmChatStyles.w400Black14,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                )
+              ] else ...[
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -109,7 +118,7 @@ class IsmChatBroadCastView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  height: IsmChatDimens.hundred,
+                  height: IsmChatDimens.ninty,
                   child: ListView.separated(
                     padding: IsmChatDimens.edgeInsets10,
                     scrollDirection: Axis.horizontal,
@@ -178,6 +187,7 @@ class IsmChatBroadCastView extends StatelessWidget {
                     },
                   ),
                 ),
+              ],
               controller.forwardedList.isEmpty
                   ? Expanded(
                       child: Center(
@@ -348,7 +358,8 @@ class IsmChatBroadCastView extends StatelessWidget {
                     chatPagecontroller.closeOveray();
                   }
                 } else {
-                  IsmChatRouteManagement.goToBroadcastMessagePage();
+                  IsmChatRouteManagement.goToBroadcastMessagePage(
+                      isTemporaryChat: true);
                 }
               } else {
                 await Get.dialog(

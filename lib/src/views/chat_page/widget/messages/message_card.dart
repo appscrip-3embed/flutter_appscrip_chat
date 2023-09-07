@@ -25,71 +25,72 @@ class MessageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
-      builder: (controller) => SwipeTo(
-            offsetDx: showMessageInCenter ? 0 : 0.8,
-            animationDuration: IsmChatConstants.swipeDuration,
-            iconColor: IsmChatConfig.chatTheme.primaryColor,
-            iconSize: 24,
-            onLeftSwipe: showMessageInCenter || !message.sentByMe
-                ? null
-                : !canReply
-                    ? null
-                    : () {
-                        controller.onReplyTap(
-                            controller.messages.reversed.toList()[index]);
-                      },
-            onRightSwipe: showMessageInCenter || message.sentByMe
-                ? null
-                : !canReply
-                    ? null
-                    : () {
-                        controller.onReplyTap(
-                            controller.messages.reversed.toList()[index]);
-                      },
-            child: InkWell(
-              onHover: (value) {
-                if (value) {
-                  controller.onMessageHoverIndex = index;
-                } else {
-                  controller.onMessageHoverIndex = -1;
-                }
-              },
-              hoverColor: Colors.transparent,
-              onTap: () async {
-                controller.closeOveray();
-                if (message.messageType == IsmChatMessageType.reply) {
-                  controller.scrollToMessage(message.parentMessageId ?? '');
-                } else if ([
-                  IsmChatCustomMessageType.image,
-                  IsmChatCustomMessageType.video,
-                  IsmChatCustomMessageType.file,
-                  if (!Responsive.isWebAndTablet(context))
-                    IsmChatCustomMessageType.contact,
-                ].contains(message.customType)) {
-                  controller.tapForMediaPreview(message);
-                }
-              },
-              child: AutoScrollTag(
-                controller: controller.messagesScrollController,
-                index: index,
-                key: Key('scroll-${message.messageId}'),
-                child: kIsWeb
-                    ? MessageBubble(
-                        message: message,
-                        showMessageInCenter: showMessageInCenter,
-                        index: index,
-                      )
-                    : Hero(
-                        tag: message,
-                        child: messageWidgetBuilder?.call(context, message,
-                                message.customType!, showMessageInCenter) ??
-                            MessageBubble(
-                              message: message,
-                              showMessageInCenter: showMessageInCenter,
-                              index: index,
-                            ),
-                      ),
-              ),
+        builder: (controller) => SwipeTo(
+          offsetDx: showMessageInCenter ? 0 : 0.8,
+          animationDuration: IsmChatConstants.swipeDuration,
+          iconColor: IsmChatConfig.chatTheme.primaryColor,
+          iconSize: 24,
+          onLeftSwipe: showMessageInCenter || !message.sentByMe
+              ? null
+              : !canReply
+                  ? null
+                  : () {
+                      controller.onReplyTap(
+                          controller.messages.reversed.toList()[index]);
+                    },
+          onRightSwipe: showMessageInCenter || message.sentByMe
+              ? null
+              : !canReply
+                  ? null
+                  : () {
+                      controller.onReplyTap(
+                          controller.messages.reversed.toList()[index]);
+                    },
+          child: InkWell(
+            onHover: (value) {
+              if (value) {
+                controller.onMessageHoverIndex = index;
+              } else {
+                controller.onMessageHoverIndex = -1;
+              }
+            },
+            hoverColor: Colors.transparent,
+            onTap: () async {
+              controller.closeOveray();
+              if (message.messageType == IsmChatMessageType.reply) {
+                controller.scrollToMessage(message.parentMessageId ?? '');
+              } else if ([
+                IsmChatCustomMessageType.image,
+                IsmChatCustomMessageType.video,
+                IsmChatCustomMessageType.file,
+                if (!Responsive.isWebAndTablet(context))
+                  IsmChatCustomMessageType.contact,
+              ].contains(message.customType)) {
+                controller.tapForMediaPreview(message);
+              }
+            },
+            child: AutoScrollTag(
+              controller: controller.messagesScrollController,
+              index: index,
+              key: Key('scroll-${message.messageId}'),
+              child: kIsWeb
+                  ? MessageBubble(
+                      message: message,
+                      showMessageInCenter: showMessageInCenter,
+                      index: index,
+                    )
+                  : Hero(
+                      tag: message,
+                      child: messageWidgetBuilder?.call(context, message,
+                              message.customType!, showMessageInCenter) ??
+                          MessageBubble(
+                            message: message,
+                            showMessageInCenter: showMessageInCenter,
+                            index: index,
+                          ),
+                    ),
             ),
-          ));
+          ),
+        ),
+      );
 }

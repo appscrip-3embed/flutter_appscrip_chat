@@ -7,10 +7,19 @@ class IsmChatMessage extends StatefulWidget {
       IsmChatMessageModel? message, bool isMessageSearch,
       {super.key})
       : _message = isMessageSearch
-            ? Get.find<IsmChatPageController>()
-                .searchMessages
-                .reversed
-                .toList()[index]
+            ? Get.isRegistered<IsmChatPageController>()
+                ? Get.find<IsmChatPageController>().isTemporaryChat
+                    ? Get.isRegistered<IsmChatPageController>()
+                        ? Get.find<IsmChatPageController>()
+                            .messages
+                            .reversed
+                            .toList()[index]
+                        : message
+                    : Get.find<IsmChatPageController>()
+                        .searchMessages
+                        .reversed
+                        .toList()[index]
+                : message
             : Get.isRegistered<IsmChatPageController>()
                 ? Get.find<IsmChatPageController>()
                     .messages
@@ -52,7 +61,9 @@ class _IsmChatMessageState extends State<IsmChatMessage>
       IsmChatCustomMessageType.memberLeave,
       IsmChatCustomMessageType.conversationImageUpdated,
       IsmChatCustomMessageType.conversationTitleUpdated,
-      IsmChatCustomMessageType.memberJoin
+      IsmChatCustomMessageType.memberJoin,
+      IsmChatCustomMessageType.observerJoin,
+      IsmChatCustomMessageType.observerLeave,
     ].contains(widget._message?.customType!);
     isGroup = controller.conversation!.isGroup ?? false;
   }

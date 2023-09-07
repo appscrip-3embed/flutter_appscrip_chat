@@ -15,16 +15,22 @@ class IsmChatPublicConversationView extends StatefulWidget {
 
 class _IsmChatPublicConversationViewState
     extends State<IsmChatPublicConversationView> {
+  final converstaionController = Get.find<IsmChatConversationsController>();
+  var scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final converstaionController = Get.find<IsmChatConversationsController>();
-      converstaionController.publicConversation.clear();
-      converstaionController.isLoadResponse = false;
-      converstaionController.getPublicConversation(
-        conversationType: IsmChatConversationType.public.value,
-      );
+      converstaionController
+          .intiPublicAndOpenConversation(IsmChatConversationType.public);
+      scrollController.addListener(() {
+        if (scrollController.offset.toInt() ==
+            scrollController.position.maxScrollExtent.toInt()) {
+          converstaionController.getPublicAndOpenConversation(
+            conversationType: IsmChatConversationType.public.value,
+          );
+        }
+      });
     });
   }
 
@@ -38,12 +44,46 @@ class _IsmChatPublicConversationViewState
                     .conversationProperties.conversationPosition)
                 ? null
                 : IsmChatAppBar(
-                    title: Text(
-                      IsmChatStrings.publicConversation,
-                      style: IsmChatStyles.w600White18,
-                    ),
+                    title: controller.showSearchField
+                        ? IsmChatInputField(
+                            fillColor: IsmChatConfig.chatTheme.primaryColor,
+                            style: IsmChatStyles.w400White16,
+                            hint: 'Search user...',
+                            hintStyle: IsmChatStyles.w400White16,
+                            onChanged: (value) {
+                              controller.debounce.run(
+                                () {
+                                  controller.isLoadResponse = false;
+                                  controller.getPublicAndOpenConversation(
+                                    searchTag:
+                                        value.trim().isNotEmpty ? value : '',
+                                    conversationType:
+                                        IsmChatConversationType.public.value,
+                                  );
+                                },
+                              );
+                            },
+                          )
+                        : Text(
+                            IsmChatStrings.publicConversation,
+                            style: IsmChatStyles.w600White18,
+                          ),
+                    action: [
+                      IconButton(
+                        onPressed: () {
+                          controller.showSearchField =
+                              !controller.showSearchField;
+                        },
+                        icon: Icon(
+                          controller.showSearchField
+                              ? Icons.close_rounded
+                              : Icons.search_rounded,
+                          color: IsmChatColors.whiteColor,
+                        ),
+                      ),
+                    ],
                   ),
-            body: controller.publicConversation.isEmpty
+            body: controller.publicAndOpenConversation.isEmpty
                 ? controller.isLoadResponse
                     ? Center(
                         child: Text(
@@ -55,9 +95,9 @@ class _IsmChatPublicConversationViewState
                 : SizedBox(
                     height: Get.height,
                     child: ListView.builder(
-                      itemCount: controller.publicConversation.length,
+                      itemCount: controller.publicAndOpenConversation.length,
                       itemBuilder: (_, index) {
-                        var data = controller.publicConversation[index];
+                        var data = controller.publicAndOpenConversation[index];
                         return Column(
                           children: [
                             ListTile(

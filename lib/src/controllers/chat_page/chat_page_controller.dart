@@ -40,8 +40,8 @@ class IsmChatPageController extends GetxController
         IsmChatPageSendMessageMixin,
         IsmChatPageGetMessageMixin,
         IsmChatGroupAdminMixin {
-  IsmChatPageController(this._viewModel);
-  final IsmChatPageViewModel _viewModel;
+  IsmChatPageController(this.viewModel);
+  final IsmChatPageViewModel viewModel;
 
   final _conversationController = Get.find<IsmChatConversationsController>();
 
@@ -310,10 +310,6 @@ class IsmChatPageController extends GetxController
   bool get isActionAllowed => _isActionAllowed.value;
   set isActionAllowed(bool value) => _isActionAllowed.value = value;
 
-  final RxBool _isBroadcastMessage = false.obs;
-  bool get isBroadcastMessage => _isBroadcastMessage.value;
-  set isBroadcastMessage(bool value) => _isBroadcastMessage.value = value;
-
   final RxBool _isCoverationApiDetails = true.obs;
   bool get isCoverationApiDetails => _isCoverationApiDetails.value;
   set isCoverationApiDetails(bool value) =>
@@ -413,10 +409,10 @@ class IsmChatPageController extends GetxController
   set searchMessages(List<IsmChatMessageModel> value) =>
       _searchMessages.value = value;
 
-  final RxBool _isfromOpenView = false.obs;
-  bool get isObserverChat => _isfromOpenView.value;
-  set isObserverChat(bool value) {
-    _isfromOpenView.value = value;
+  final RxBool _isTemporaryChat = false.obs;
+  bool get isTemporaryChat => _isTemporaryChat.value;
+  set isTemporaryChat(bool value) {
+    _isTemporaryChat.value = value;
   }
 
   final Dio dio = Dio();
@@ -434,72 +430,71 @@ class IsmChatPageController extends GetxController
   }
 
   void startInit({
-    bool fromOpenView = false,
+    bool isTemporaryChats = false,
   }) async {
     isActionAllowed = false;
     _generateReactionList();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
-      if (conversation?.customType != 'BroadcastMessage') {
-        _conversationController.isConversationId =
-            conversation?.conversationId ?? '';
-        isBroadcastMessage = false;
-        final newMeessageFromOutside = conversation?.messageFromOutSide;
-        await Future.delayed(Duration.zero);
-        if (conversation?.conversationId?.isNotEmpty ?? false) {
-          isObserverChat = arguments['isfromOpenView'] as bool? ?? fromOpenView;
-          _getBackGroundAsset();
-          if (!isObserverChat) {
-            await getMessagesFromDB(conversation?.conversationId ?? '');
-            await Future.wait([
-              getMessagesFromAPI(),
-              getConverstaionDetails(
-                  conversationId: conversation?.conversationId ?? '',
-                  includeMembers: conversation?.isGroup == true ? true : false),
-            ]);
-            await readAllMessages(
-              conversationId: conversation?.conversationId ?? '',
-              timestamp: messages.isNotEmpty
-                  ? DateTime.now().millisecondsSinceEpoch
-                  : conversation?.lastMessageSentAt ?? 0,
-            );
-            checkUserStatus();
-          } else {
-            isMessagesLoading = false;
-          }
+      _conversationController.isConversationId =
+          conversation?.conversationId ?? '';
+      final newMeessageFromOutside = conversation?.messageFromOutSide;
+      await Future.delayed(Duration.zero);
+      isTemporaryChat =
+          arguments['isTemporaryChat'] as bool? ?? isTemporaryChats;
+      IsmChatLog.error(isTemporaryChat);
+      if (conversation?.conversationId?.isNotEmpty ?? false) {
+        _getBackGroundAsset();
+        if (!isTemporaryChat) {
+          await getMessagesFromDB(conversation?.conversationId ?? '');
+          await Future.wait([
+            getMessagesFromAPI(),
+            getConverstaionDetails(
+                conversationId: conversation?.conversationId ?? '',
+                includeMembers: conversation?.isGroup == true ? true : false),
+          ]);
+          await readAllMessages(
+            conversationId: conversation?.conversationId ?? '',
+            timestamp: messages.isNotEmpty
+                ? DateTime.now().millisecondsSinceEpoch
+                : conversation?.lastMessageSentAt ?? 0,
+          );
+          checkUserStatus();
         } else {
-          if (Responsive.isWebAndTablet(Get.context!)) {
-            messages.clear();
-          }
-          if (conversation!.isGroup ?? false) {
-            await createConversation(
-              userId: [],
-              isGroup: true,
-              searchableTags: [
-                conversation?.opponentDetails?.userName ?? '',
-                conversation?.chatName ?? ''
-              ],
-            );
-            await getMessagesFromAPI();
-          }
+          await getMessagesFromAPI(isTemporaryChat: isTemporaryChat);
           isMessagesLoading = false;
         }
-
-        if (newMeessageFromOutside != null &&
-            newMeessageFromOutside.isNotEmpty == true) {
-          await Future.delayed(const Duration(milliseconds: 100));
-          chatInputController.text = newMeessageFromOutside;
-          sendTextMessage(
-            conversationId: conversation?.conversationId ?? '',
-            userId: conversation?.opponentDetails?.userId ?? '',
-            opponentName: conversation?.opponentDetails?.userName ?? '',
-          );
-        }
-        scrollListener();
-        unawaited(updateUnreadMessgaeCount());
       } else {
-        isBroadcastMessage = true;
+        if (Responsive.isWebAndTablet(Get.context!)) {
+          messages.clear();
+        }
+        if (conversation!.isGroup ?? false) {
+          await createConversation(
+            userId: [],
+            isGroup: true,
+            searchableTags: [
+              conversation?.opponentDetails?.userName ?? '',
+              conversation?.chatName ?? ''
+            ],
+          );
+          await getMessagesFromAPI();
+        }
+        isMessagesLoading = false;
       }
+
+      if (newMeessageFromOutside != null &&
+          newMeessageFromOutside.isNotEmpty == true) {
+        await Future.delayed(const Duration(milliseconds: 100));
+        chatInputController.text = newMeessageFromOutside;
+        sendTextMessage(
+          conversationId: conversation?.conversationId ?? '',
+          userId: conversation?.opponentDetails?.userId ?? '',
+          opponentName: conversation?.opponentDetails?.userName ?? '',
+        );
+      }
+      scrollListener();
+      unawaited(updateUnreadMessgaeCount());
+
       chatInputController.addListener(() {
         showSendButton = chatInputController.text.isNotEmpty;
       });
@@ -1207,7 +1202,7 @@ class IsmChatPageController extends GetxController
 
   /// Updates the [''] mapping with the latest messages.
   void _generateIndexedMessageList() =>
-      indexedMessageList = _viewModel.generateIndexedMessageList(messages);
+      indexedMessageList = viewModel.generateIndexedMessageList(messages);
 
   /// Scroll to the message with the specified id.
   void scrollToMessage(String messageId, {Duration? duration}) async {
@@ -1396,7 +1391,7 @@ class IsmChatPageController extends GetxController
     unawaited(
       Future.wait(
         [
-          if (isObserverChat)
+          if (isTemporaryChat)
             chatConversationController.leaveObserver(
                 conversationId: conversation?.conversationId ?? ''),
           Get.find<IsmChatMqttController>().getChatConversationsUnreadCount()
@@ -1755,7 +1750,7 @@ class IsmChatPageController extends GetxController
     required String conversationId,
     required String messageId,
   }) async {
-    await _viewModel.readMessage(
+    await viewModel.readMessage(
       conversationId: conversationId,
       messageId: messageId,
     );
@@ -1767,7 +1762,7 @@ class IsmChatPageController extends GetxController
       var tickTick = 0;
       Timer.periodic(const Duration(seconds: 3), (timer) async {
         if (tickTick == 0) {
-          await _viewModel.notifyTyping(
+          await viewModel.notifyTyping(
             conversationId: conversation?.conversationId ?? '',
           );
         }
@@ -1835,7 +1830,7 @@ class IsmChatPageController extends GetxController
       bool includeMembers = false,
       bool isLoading = false,
       bool fromUser = false}) async {
-    var data = await _viewModel.blockUser(
+    var data = await viewModel.blockUser(
         opponentId: opponentId,
         lastMessageTimeStamp: lastMessageTimeStamp,
         conversationId: conversation?.conversationId ?? '',
@@ -1884,7 +1879,7 @@ class IsmChatPageController extends GetxController
     required String conversationId,
     required String messageId,
   }) async {
-    await _viewModel.readSingleMessage(
+    await viewModel.readSingleMessage(
       conversationId: conversationId,
       messageId: messageId,
     );
@@ -1894,7 +1889,7 @@ class IsmChatPageController extends GetxController
     required String conversationId,
     required int timestamp,
   }) async {
-    await _viewModel.readAllMessages(
+    await viewModel.readAllMessages(
         conversationId: conversationId, timestamp: timestamp);
   }
 
@@ -1902,7 +1897,7 @@ class IsmChatPageController extends GetxController
     List<IsmChatMessageModel> messages,
   ) async {
     var pendingMessges = List<IsmChatMessageModel>.from(messages);
-    await _viewModel.deleteMessageForEveryone(messages);
+    await viewModel.deleteMessageForEveryone(messages);
     selectedMessage.clear();
     pendingMessges.where((e) => e.messageId == '').toList();
     if (pendingMessges.isNotEmpty) {
@@ -1919,7 +1914,7 @@ class IsmChatPageController extends GetxController
     List<IsmChatMessageModel> messages,
   ) async {
     var pendingMessges = List<IsmChatMessageModel>.from(messages);
-    await _viewModel.deleteMessageForMe(messages);
+    await viewModel.deleteMessageForMe(messages);
     selectedMessage.clear();
     pendingMessges.where((e) => e.messageId == '').toList();
     if (pendingMessges.isNotEmpty) {
@@ -1944,7 +1939,7 @@ class IsmChatPageController extends GetxController
 
   Future<void> clearAllMessages(String conversationId,
       {bool fromServer = true}) async {
-    await _viewModel.clearAllMessages(
+    await viewModel.clearAllMessages(
         conversationId: conversationId, fromServer: fromServer);
   }
 
@@ -1954,7 +1949,7 @@ class IsmChatPageController extends GetxController
       String searchKeyword = ''}) async {
     predictionList.clear();
     isLocaionSearch = true;
-    var response = await _viewModel.getLocation(
+    var response = await viewModel.getLocation(
       latitude: latitude,
       longitude: longitude,
       searchKeyword: searchKeyword,
@@ -1967,7 +1962,7 @@ class IsmChatPageController extends GetxController
   }
 
   Future<void> deleteReacton({required Reaction reaction}) async {
-    await _viewModel.deleteReacton(reaction: reaction);
+    await viewModel.deleteReacton(reaction: reaction);
     if (Responsive.isWebAndTablet(Get.context!)) {
       await _controller._conversationController.getChatConversations();
     }

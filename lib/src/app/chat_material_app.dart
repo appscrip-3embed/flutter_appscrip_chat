@@ -1,6 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -37,7 +36,7 @@ class IsmChatApp extends StatelessWidget {
       IsmChatConfig.communicationConfig = communicationConfig!;
       IsmChatConfig.configInitilized = true;
     }
-    IsmChatConfig.useDatabase = !kIsWeb && useDataBase;
+    IsmChatConfig.useDatabase = useDataBase;
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();

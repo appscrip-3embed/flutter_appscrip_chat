@@ -15,6 +15,7 @@ export 'location_message.dart';
 export 'member_leave_and_join.dart';
 export 'message_bubble.dart';
 export 'message_card.dart';
+export 'observer_join_leave.dart';
 export 'reply_message.dart';
 export 'text_message.dart';
 export 'video_message.dart';

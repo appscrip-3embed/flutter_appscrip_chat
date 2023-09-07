@@ -29,10 +29,11 @@ class IsmChatConversationsController extends GetxController {
   set conversations(List<IsmChatConversationModel> value) =>
       _conversations.value = value;
 
-  final _publicConversation = <IsmChatConversationModel>[].obs;
-  List<IsmChatConversationModel> get publicConversation => _publicConversation;
-  set publicConversation(List<IsmChatConversationModel> value) =>
-      _publicConversation.value = value;
+  final _publicAndOpenConversation = <IsmChatConversationModel>[].obs;
+  List<IsmChatConversationModel> get publicAndOpenConversation =>
+      _publicAndOpenConversation;
+  set publicAndOpenConversation(List<IsmChatConversationModel> value) =>
+      _publicAndOpenConversation.value = value;
 
   final _suggestions = <IsmChatConversationModel>[].obs;
   List<IsmChatConversationModel> get suggestions => _suggestions;
@@ -673,27 +674,40 @@ class IsmChatConversationsController extends GetxController {
     }
   }
 
-  Future<void> getPublicConversation({
+  void intiPublicAndOpenConversation(
+      IsmChatConversationType conversationType) async {
+    publicAndOpenConversation.clear();
+    isLoadResponse = false;
+    showSearchField = false;
+    callApiOrNot = true;
+    await getPublicAndOpenConversation(
+      conversationType: conversationType.value,
+    );
+  }
+
+  Future<void> getPublicAndOpenConversation({
     required int conversationType,
     String? searchTag,
     int sort = 1,
     int skip = 0,
     int limit = 20,
   }) async {
-    var response = await _viewModel.getPublicConversation(
+    if (!callApiOrNot) return;
+    callApiOrNot = false;
+    var response = await _viewModel.getPublicAndOpenConversation(
       searchTag: searchTag,
       sort: sort,
       skip: skip,
       limit: limit,
       conversationType: conversationType,
     );
-    if (response != null) {
-      if (response.isEmpty) {
-        isLoadResponse = true;
-        return;
-      }
-      publicConversation = response;
+    if (response == null) {
+      isLoadResponse = true;
+      publicAndOpenConversation = [];
+      return;
     }
+    publicAndOpenConversation = response;
+    callApiOrNot = true;
   }
 
   Future<void> joinConversation({
@@ -718,5 +732,50 @@ class IsmChatConversationsController extends GetxController {
     var response = await _viewModel.leaveObserver(
         conversationId: conversationId, isLoading: isLoading);
     if (response != null) {}
+  }
+
+  Future<void> goToChatPage() async {
+    if (Get.isRegistered<IsmChatPageController>()) {
+      final chatPagecontroller = Get.find<IsmChatPageController>();
+      chatPagecontroller.startInit(
+        isTemporaryChats: true,
+      );
+      if (chatPagecontroller.messageHoldOverlayEntry != null) {
+        chatPagecontroller.closeOveray();
+      }
+      chatPagecontroller.messages.add(
+        IsmChatMessageModel(
+          body: '',
+          userName:
+              IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+                  ? IsmChatConfig.communicationConfig.userConfig.userName
+                  : userDetails?.userName ?? '',
+          customType: IsmChatCustomMessageType.observerJoin,
+          sentAt: DateTime.now().millisecondsSinceEpoch,
+          sentByMe: true,
+        ),
+      );
+      chatPagecontroller.messages = chatPagecontroller.viewModel
+          .sortMessages(chatPagecontroller.messages);
+    }
+  }
+
+  Future<List<UserDetails>> getObservationUser(
+      {required String conversationId,
+      int skip = 0,
+      int limit = 20,
+      bool isLoading = false,
+      String? searchText}) async {
+    var res = await _viewModel.getObservationUser(
+      conversationId: conversationId,
+      isLoading: isLoading,
+      limit: limit,
+      searchText: searchText,
+      skip: skip,
+    );
+    if (res != null) {
+      return res;
+    }
+    return [];
   }
 }
