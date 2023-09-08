@@ -476,7 +476,9 @@ class IsmChatPageController extends GetxController
             userId: [],
             isGroup: true,
             searchableTags: [
-              conversation?.opponentDetails?.userName ?? '',
+              IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+                  ? IsmChatConfig.communicationConfig.userConfig.userName
+                  : conversationController.userDetails?.userName ?? '',
               conversation?.chatName ?? ''
             ],
           );
@@ -492,7 +494,6 @@ class IsmChatPageController extends GetxController
         sendTextMessage(
           conversationId: conversation?.conversationId ?? '',
           userId: conversation?.opponentDetails?.userId ?? '',
-          opponentName: conversation?.opponentDetails?.userName ?? '',
         );
       }
       scrollListener();
@@ -758,9 +759,9 @@ class IsmChatPageController extends GetxController
         break;
       case IsmChatAttachmentType.document:
         sendDocument(
-            conversationId: conversation?.conversationId ?? '',
-            userId: conversation?.opponentDetails?.userId ?? '',
-            opponentName: conversation?.opponentDetails?.userName ?? '');
+          conversationId: conversation?.conversationId ?? '',
+          userId: conversation?.opponentDetails?.userId ?? '',
+        );
         break;
       case IsmChatAttachmentType.location:
         IsmChatRouteManagement.goToLocation();
@@ -1392,15 +1393,7 @@ class IsmChatPageController extends GetxController
 
     await Get.delete<IsmChatPageController>(force: true);
     unawaited(
-      Future.wait(
-        [
-          if (isTemporaryChat)
-            chatConversationController.leaveObserver(
-                conversationId: conversation?.conversationId ?? ''),
-          Get.find<IsmChatMqttController>().getChatConversationsUnreadCount()
-        ],
-      ),
-    );
+        Get.find<IsmChatMqttController>().getChatConversationsUnreadCount());
   }
 
   Future<void> updateUnreadMessgaeCount() async {

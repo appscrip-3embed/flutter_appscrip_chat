@@ -97,7 +97,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       }
     }
     if (isSendMessage) {
-      if (!isTemporaryChat) {
+      if (_controller.conversation?.customType != 'Broadcasting') {
         var isMessageSent = await _controller.viewModel.sendMessage(
           showInConversation: showInConversation,
           attachments: attachments,
@@ -216,8 +216,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           await sendImage(
             conversationId: _controller.conversation?.conversationId ?? '',
             userId: _controller.conversation?.opponentDetails?.userId ?? '',
-            opponentName:
-                _controller.conversation?.opponentDetails?.userName ?? '',
             webMediaModel: media,
           );
         } else {
@@ -226,8 +224,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             isThumbnail: true,
             conversationId: _controller.conversation?.conversationId ?? '',
             userId: _controller.conversation?.opponentDetails?.userId ?? '',
-            opponentName:
-                _controller.conversation?.opponentDetails?.userName ?? '',
           );
         }
       }
@@ -244,8 +240,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           await sendImage(
               conversationId: _controller.conversation?.conversationId ?? '',
               userId: _controller.conversation?.opponentDetails?.userId ?? '',
-              opponentName:
-                  _controller.conversation?.opponentDetails?.userName ?? '',
               imagePath: File(
                 media.mediaUrl!,
               ));
@@ -256,8 +250,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             thumbnailFiles: File(media.thumbnailUrl!),
             conversationId: _controller.conversation?.conversationId ?? '',
             userId: _controller.conversation?.opponentDetails?.userId ?? '',
-            opponentName:
-                _controller.conversation?.opponentDetails?.userName ?? '',
           );
         }
       }
@@ -269,7 +261,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     String? path,
     required String conversationId,
     required String userId,
-    required String opponentName,
     WebMediaModel? webMediaModel,
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
@@ -279,7 +270,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           userId: [userId],
           metaData: _controller.conversation?.metaData,
           searchableTags: [
-            opponentName,
+            IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+                ? IsmChatConfig.communicationConfig.userConfig.userName
+                : conversationController.userDetails?.userName ?? '',
             _controller.conversation?.chatName ?? ''
           ]);
     }
@@ -372,7 +365,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
   void sendDocument({
     required String conversationId,
     required String userId,
-    required String opponentName,
   }) async {
     IsmChatMessageModel? documentMessage;
     String? nameWithExtension;
@@ -394,7 +386,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             userId: [userId],
             metaData: _controller.conversation?.metaData,
             searchableTags: [
-              opponentName,
+              IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+                  ? IsmChatConfig.communicationConfig.userConfig.userName
+                  : conversationController.userDetails?.userName ?? '',
               _controller.conversation?.chatName ?? ''
             ]);
       }
@@ -482,7 +476,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     File? thumbnailFiles,
     required String conversationId,
     required String userId,
-    required String opponentName,
     WebMediaModel? webMediaModel,
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
@@ -492,7 +485,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           userId: [userId],
           metaData: _controller.conversation?.metaData,
           searchableTags: [
-            opponentName,
+            IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+                ? IsmChatConfig.communicationConfig.userConfig.userName
+                : conversationController.userDetails?.userName ?? '',
             _controller.conversation?.chatName ?? ''
           ]);
     }
@@ -607,7 +602,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
   Future<void> sendImage(
       {required String conversationId,
       required String userId,
-      required String opponentName,
       File? imagePath,
       WebMediaModel? webMediaModel}) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
@@ -617,7 +611,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         userId: [userId],
         metaData: _controller.conversation?.metaData,
         searchableTags: [
-          opponentName,
+          IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+              ? IsmChatConfig.communicationConfig.userConfig.userName
+              : conversationController.userDetails?.userName ?? '',
           _controller.conversation?.chatName ?? ''
         ],
       );
@@ -716,7 +712,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     required String locationSubName,
     required String conversationId,
     required String userId,
-    required String opponentName,
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
@@ -725,7 +720,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           userId: [userId],
           metaData: _controller.conversation?.metaData,
           searchableTags: [
-            opponentName,
+            IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+                ? IsmChatConfig.communicationConfig.userConfig.userName
+                : conversationController.userDetails?.userName ?? '',
             _controller.conversation?.chatName ?? ''
           ]);
     }
@@ -783,7 +780,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
   void sendContact({
     required String conversationId,
     required String userId,
-    required String opponentName,
     required List<Contact> contacts,
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
@@ -794,7 +790,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         userId: [userId],
         metaData: _controller.conversation?.metaData,
         searchableTags: [
-          opponentName,
+          IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+              ? IsmChatConfig.communicationConfig.userConfig.userName
+              : conversationController.userDetails?.userName ?? '',
           _controller.conversation?.chatName ?? ''
         ],
       );
@@ -842,7 +840,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
   void sendTextMessage({
     required String conversationId,
     required String userId,
-    required String opponentName,
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
@@ -852,7 +849,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         userId: [userId],
         metaData: _controller.conversation?.metaData,
         searchableTags: [
-          opponentName,
+          IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+              ? IsmChatConfig.communicationConfig.userConfig.userName
+              : conversationController.userDetails?.userName ?? '',
           _controller.conversation?.chatName ?? ''
         ],
       );

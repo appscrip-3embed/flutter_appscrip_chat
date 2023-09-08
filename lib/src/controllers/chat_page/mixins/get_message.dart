@@ -75,8 +75,11 @@ mixin IsmChatPageGetMessageMixin {
       searchText: query,
       isLoading: true,
     );
+
     if (messages.isNotEmpty) {
       _controller.searchMessages.addAll(messages);
+    } else {
+      _controller.searchMessages.clear();
     }
     _controller.canCallCurrentApi = false;
   }

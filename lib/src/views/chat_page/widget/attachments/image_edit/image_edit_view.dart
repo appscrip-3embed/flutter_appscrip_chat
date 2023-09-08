@@ -74,9 +74,6 @@ class IsmChatImageEditView extends StatelessWidget {
                         controller.conversation?.conversationId ?? '',
                     userId:
                         controller.conversation?.opponentDetails?.userId ?? '',
-                    opponentName:
-                        controller.conversation?.opponentDetails?.userName ??
-                            '',
                     imagePath: controller.imagePath!);
                 Get.back<void>();
                 Get.back<void>();

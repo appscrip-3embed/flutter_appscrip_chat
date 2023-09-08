@@ -124,5 +124,10 @@ class IsmChatPages {
       page: IsmChatBoradcastMessagePage.new,
       binding: IsmChatPageBinding(),
     ),
+    GetPage(
+      name: IsmChatOpenChatMessagePage.route,
+      page: IsmChatOpenChatMessagePage.new,
+      binding: IsmChatPageBinding(),
+    ),
   ];
 }

@@ -366,9 +366,6 @@ class IsmChatContactView extends StatelessWidget {
                                   userId: controller.conversation
                                           ?.opponentDetails?.userId ??
                                       '',
-                                  opponentName: controller.conversation
-                                          ?.opponentDetails?.userName ??
-                                      '',
                                   contacts: controller
                                       .contactList.selectedContact
                                       .map((e) => e.contact)

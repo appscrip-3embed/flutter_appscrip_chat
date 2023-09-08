@@ -119,7 +119,8 @@ class _IsmChatOpenConversationViewState
                                     }
                                     await controller.goToChatPage();
                                   } else {
-                                    IsmChatRouteManagement.goToChatPage(
+                                    IsmChatRouteManagement
+                                        .goToOpenChatMessagePage(
                                       isTemporaryChat: true,
                                     );
                                     await controller.goToChatPage();

@@ -341,9 +341,9 @@ class IsmChatBroadCastView extends StatelessWidget {
               if (controller.selectedUserList.isNotEmpty &&
                   controller.selectedUserList.length >= 2) {
                 var conversation = IsmChatConversationModel(
-                  members: controller.selectedUserList,
-                  conversationImageUrl: IsmChatAssets.noImage,
-                );
+                    members: controller.selectedUserList,
+                    conversationImageUrl: IsmChatAssets.noImage,
+                    customType: 'Broadcasting');
                 controller.navigateToMessages(conversation);
                 if (Responsive.isWebAndTablet(context)) {
                   if (!Get.isRegistered<IsmChatPageController>()) {
