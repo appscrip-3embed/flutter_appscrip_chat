@@ -221,6 +221,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                           ?.call(context, controller.conversation!),
                     ),
                   ),
+            //
             actions: [
               controller.isTemporaryChat
                   ? IconButton(
