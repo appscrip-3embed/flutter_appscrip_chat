@@ -25,6 +25,9 @@ class IsmChatPageHeaderProperties {
   final ConversationCallback? bottom;
   final List<IsmChatPopupMenuItem>? popupItems;
   final VoidCallback? onBackTap;
-  final double? height;
+  final double? Function(
+    BuildContext,
+    IsmChatConversationModel,
+  )? height;
   final ShapeBorder? shape;
 }
