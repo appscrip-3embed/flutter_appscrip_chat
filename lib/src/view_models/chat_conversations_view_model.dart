@@ -177,21 +177,45 @@ class IsmChatConversationsViewModel {
         isLoading: isLoading,
       );
 
-  Future<void> getPublicConversation({
+  Future<List<IsmChatConversationModel>?> getPublicAndOpenConversation({
+    required int conversationType,
     String? searchTag,
     int sort = 1,
     int skip = 0,
     int limit = 20,
   }) async =>
-      _repository.getPublicConversation(
-        limit: limit,
-        searchTag: searchTag,
-        skip: skip,
-        sort: sort,
-      );
+      _repository.getPublicAndOpenConversation(
+          limit: limit,
+          searchTag: searchTag,
+          skip: skip,
+          sort: sort,
+          conversationType: conversationType);
 
   Future<IsmChatResponseModel?> joinConversation(
           {required String conversationId, bool isLoading = false}) async =>
       _repository.joinConversation(
           conversationId: conversationId, isLoading: isLoading);
+  Future<IsmChatResponseModel?> joinObserver(
+          {required String conversationId, bool isLoading = false}) async =>
+      _repository.joinObserver(
+          conversationId: conversationId, isLoading: isLoading);
+
+  Future<IsmChatResponseModel?> leaveObserver(
+          {required String conversationId, bool isLoading = false}) async =>
+      _repository.leaveObserver(
+          conversationId: conversationId, isLoading: isLoading);
+
+  Future<List<UserDetails>?> getObservationUser(
+          {required String conversationId,
+          int skip = 0,
+          int limit = 20,
+          bool isLoading = false,
+          String? searchText}) async =>
+      _repository.getObservationUser(
+        conversationId: conversationId,
+        isLoading: isLoading,
+        skip: skip,
+        limit: limit,
+        searchText: searchText,
+      );
 }

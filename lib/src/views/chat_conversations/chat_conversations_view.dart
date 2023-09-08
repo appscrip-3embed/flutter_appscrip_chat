@@ -15,14 +15,15 @@ class IsmChatConversations extends StatefulWidget {
   State<IsmChatConversations> createState() => _IsmChatConversationsState();
 }
 
-class _IsmChatConversationsState extends State<IsmChatConversations> {
+class _IsmChatConversationsState extends State<IsmChatConversations>
+    with TickerProviderStateMixin {
   @override
   void initState() {
+    super.initState();
     if (!Get.isRegistered<IsmChatMqttController>()) {
       IsmChatMqttBinding().dependencies();
     }
     startInit();
-    super.initState();
   }
 
   startInit() {
@@ -30,6 +31,12 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
       IsmChatCommonBinding().dependencies();
       IsmChatConversationsBinding().dependencies();
     }
+    var controller = Get.find<IsmChatConversationsController>();
+    controller.tabController = TabController(
+      length: 3,
+      // IsmChatProperties.conversationProperties.allowedConversations.length,
+      vsync: this,
+    );
   }
 
   @override
@@ -76,7 +83,17 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
                                 null) ...[
                           IsmChatProperties.conversationProperties.header!,
                         ],
-                        const Expanded(child: IsmChatConversationList()),
+                        if (IsmChatProperties.conversationProperties
+                                    .allowedConversations.length !=
+                                1 &&
+                            IsmChatProperties.conversationProperties
+                                    .conversationPosition ==
+                                IsmChatConversationPosition.tabBar) ...[
+                          _IsmchatTabBar(),
+                          _IsmChatTabView()
+                        ] else ...[
+                          const Expanded(child: IsmChatConversationList()),
+                        ]
                       ],
                     ),
                   ),
@@ -146,7 +163,8 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
                         IsmChatProperties.conversationProperties.onCreateTap
                             ?.call();
                         IsmChatRouteManagement.goToCreateChat(
-                            isGroupConversation: false);
+                          isGroupConversation: false,
+                        );
                       }
                     },
                   )
@@ -164,12 +182,96 @@ class _IsmChatConversationsState extends State<IsmChatConversations> {
       );
 }
 
+class _IsmchatTabBar extends StatelessWidget {
+  _IsmchatTabBar();
+
+  final controller = Get.find<IsmChatConversationsController>();
+
+  @override
+  Widget build(BuildContext context) => Container(
+        height: IsmChatDimens.forty,
+        margin: IsmChatDimens.edgeInsets10,
+        padding: IsmChatDimens.edgeInsets4,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: IsmChatColors.whiteColor,
+          borderRadius: BorderRadius.circular(
+            IsmChatDimens.twenty,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: IsmChatColors.greyColor,
+              blurRadius: IsmChatDimens.one,
+            ),
+          ],
+        ),
+        child: TabBar(
+          splashBorderRadius: BorderRadius.circular(
+            IsmChatDimens.twenty,
+          ),
+          controller: controller.tabController,
+          indicator: BoxDecoration(
+            borderRadius: BorderRadius.circular(
+              IsmChatDimens.twenty,
+            ),
+            color: IsmChatConfig.chatTheme.primaryColor,
+          ),
+          labelColor: IsmChatColors.whiteColor,
+          dividerColor: Colors.transparent,
+          indicatorSize: TabBarIndicatorSize.tab,
+          labelStyle: IsmChatStyles.w400White14,
+          unselectedLabelColor: IsmChatColors.greyColor,
+          physics: const ClampingScrollPhysics(),
+          unselectedLabelStyle: IsmChatStyles.w400Black14,
+          tabs: List.generate(
+            IsmChatProperties
+                .conversationProperties.allowedConversations.length,
+            (index) {
+              var data = IsmChatProperties
+                  .conversationProperties.allowedConversations[index];
+              return Tab(
+                text: data.conversationName,
+              );
+            },
+          ),
+        ),
+      );
+}
+
+class _IsmChatTabView extends StatelessWidget {
+  _IsmChatTabView();
+
+  final controller = Get.find<IsmChatConversationsController>();
+
+  @override
+  Widget build(BuildContext context) => Expanded(
+        child: TabBarView(
+          controller: controller.tabController,
+          children: List.generate(
+            IsmChatProperties
+                .conversationProperties.allowedConversations.length,
+            (index) {
+              var data = IsmChatProperties
+                  .conversationProperties.allowedConversations[index];
+              return data.conversationWidget;
+            },
+          ),
+        ),
+      );
+}
+
 class _CreateChatBottomSheet extends StatelessWidget {
   const _CreateChatBottomSheet();
 
-  void _startConversation([bool isGroup = false]) {
+  void _startConversation(
+      [bool isGroup = false,
+      IsmChatConversationType conversationType =
+          IsmChatConversationType.private]) {
     Get.back();
-    IsmChatRouteManagement.goToCreateChat(isGroupConversation: isGroup);
+    IsmChatRouteManagement.goToCreateChat(
+      isGroupConversation: isGroup,
+      conversationType: conversationType,
+    );
   }
 
   @override
@@ -178,6 +280,7 @@ class _CreateChatBottomSheet extends StatelessWidget {
           CupertinoActionSheetAction(
             onPressed: _startConversation,
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
@@ -197,6 +300,7 @@ class _CreateChatBottomSheet extends StatelessWidget {
           CupertinoActionSheetAction(
             onPressed: () => _startConversation(true),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
@@ -206,6 +310,52 @@ class _CreateChatBottomSheet extends StatelessWidget {
                 IsmChatDimens.boxWidth8,
                 Text(
                   'Group Conversation',
+                  style: IsmChatStyles.w400White18.copyWith(
+                    color: IsmChatConfig.chatTheme.primaryColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () => _startConversation(
+              true,
+              IsmChatConversationType.public,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.group_add_outlined,
+                  color: IsmChatConfig.chatTheme.primaryColor,
+                ),
+                IsmChatDimens.boxWidth8,
+                Text(
+                  'Public Conversation',
+                  style: IsmChatStyles.w400White18.copyWith(
+                    color: IsmChatConfig.chatTheme.primaryColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () => _startConversation(
+              true,
+              IsmChatConversationType.open,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.reduce_capacity_outlined,
+                  color: IsmChatConfig.chatTheme.primaryColor,
+                ),
+                IsmChatDimens.boxWidth8,
+                Text(
+                  'Open Conversation',
                   style: IsmChatStyles.w400White18.copyWith(
                     color: IsmChatConfig.chatTheme.primaryColor,
                   ),

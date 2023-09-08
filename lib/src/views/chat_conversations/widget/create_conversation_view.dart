@@ -7,14 +7,19 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class IsmChatCreateConversationView extends StatelessWidget {
-  IsmChatCreateConversationView({
-    super.key,
-    bool? isGroupConversation,
-  }) : _isGroupConversation = isGroupConversation ??
+  IsmChatCreateConversationView(
+      {super.key,
+      bool? isGroupConversation,
+      IsmChatConversationType? conversationType})
+      : _isGroupConversation = isGroupConversation ??
             (Get.arguments as Map<String, dynamic>?)?['isGroupConversation'] ??
-            false;
+            false,
+        _conversationType = conversationType ??
+            (Get.arguments as Map<String, dynamic>?)?['conversationType'] ??
+            IsmChatConversationType.private;
 
   final bool? _isGroupConversation;
+  final IsmChatConversationType? _conversationType;
   final converstaionController = Get.find<IsmChatConversationsController>();
 
   static const String route = IsmPageRoutes.createChat;
@@ -46,7 +51,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
         initState: (_) {
-          converstaionController.callApiNonBlock = true;
+          converstaionController.callApiOrNot = true;
           converstaionController.profileImage = '';
           converstaionController.forwardedList.clear();
           converstaionController.selectedUserList.clear();
@@ -54,7 +59,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
           converstaionController.forwardedList.selectedUsers.clear();
           converstaionController.userSearchNameController.clear();
           converstaionController.showSearchField = false;
-          converstaionController.isLoadingUsers = false;
+          converstaionController.isLoadResponse = false;
           converstaionController.getNonBlockUserList(
             opponentId: IsmChatConfig.communicationConfig.userConfig.userId,
           );
@@ -70,14 +75,6 @@ class IsmChatCreateConversationView extends StatelessWidget {
                     hint: 'Search user...',
                     hintStyle: IsmChatStyles.w400White16,
                     onChanged: (value) {
-                      controller.debounce.run(() {
-                        controller.isLoadingUsers = false;
-                        controller.getNonBlockUserList(
-                          searchTag: value,
-                          opponentId: IsmChatConfig
-                              .communicationConfig.userConfig.userId,
-                        );
-                      });
                       if (value.trim().isEmpty) {
                         controller.forwardedList =
                             controller.forwardedListDuplicat
@@ -91,12 +88,21 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                     ))
                                 .toList();
                         controller.handleList(controller.forwardedList);
+                        return;
                       }
+                      controller.debounce.run(() {
+                        controller.isLoadResponse = false;
+                        controller.getNonBlockUserList(
+                          searchTag: value,
+                          opponentId: IsmChatConfig
+                              .communicationConfig.userConfig.userId,
+                        );
+                      });
                     },
                   )
                 : Text(
                     _isGroupConversation ?? false
-                        ? 'New Group Conversation'
+                        ? 'New  ${_conversationType == IsmChatConversationType.public ? 'Public' : _conversationType == IsmChatConversationType.open ? 'Open' : 'Group'} Conversation'
                         : 'New Conversation',
                     style: IsmChatStyles.w600White18,
                   ),
@@ -117,8 +123,8 @@ class IsmChatCreateConversationView extends StatelessWidget {
                         .toList();
                     controller.handleList(controller.forwardedList);
                   }
-                  if (controller.isLoadingUsers) {
-                    controller.isLoadingUsers = false;
+                  if (controller.isLoadResponse) {
+                    controller.isLoadResponse = false;
                   }
                 },
                 icon: Icon(
@@ -131,7 +137,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
             ],
           ),
           body: controller.forwardedList.isEmpty
-              ? controller.isLoadingUsers
+              ? controller.isLoadResponse
                   ? Center(
                       child: Text(
                         IsmChatStrings.noUserFound,
@@ -486,8 +492,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                     body: '',
                                   ),
                                   lastMessageSentAt: 0,
-                                  conversationType:
-                                      IsmChatConversationType.private,
+                                  conversationType: _conversationType,
                                   membersCount: controller
                                       .forwardedList.selectedUsers.length,
                                 );

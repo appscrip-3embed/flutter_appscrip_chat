@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -116,123 +117,140 @@ class _MoreIcon extends StatelessWidget {
   final VoidCallback? onSignOut;
   final controller = Get.find<IsmChatConversationsController>();
   @override
-  Widget build(BuildContext context) => PopupMenuButton(
-        color: IsmChatColors.whiteColor,
-        offset: Offset((Responsive.isWebAndTablet(context)) ? -180 : 0, 0),
-        padding: EdgeInsets.zero,
-        icon: Icon(
-          Icons.more_vert_rounded,
-          color: IsmChatConfig.chatTheme.primaryColor,
-        ),
-        onSelected: (index) async {
-          if (index == 1) {
-            if (Responsive.isWebAndTablet(context)) {
-              controller.isRenderScreen =
-                  IsRenderConversationScreen.broadcastView;
-              Scaffold.of(context).openDrawer();
-            } else {
-              IsmChatRouteManagement.goToBroadcastView();
-            }
-          } else if (index == 2) {
-            if (Responsive.isWebAndTablet(context)) {
-              controller.isRenderScreen = IsRenderConversationScreen.blockView;
-              Scaffold.of(context).openDrawer();
-            } else {
-              IsmChatRouteManagement.goToBlockView();
-            }
-          } else if (index == 3) {
+  Widget build(BuildContext context) {
+    var conversationTypeList =
+        IsmChatProperties.conversationProperties.allowedConversations;
+    if (conversationTypeList.length != 1 &&
+        IsmChatProperties.conversationProperties.conversationPosition ==
+            IsmChatConversationPosition.menu) {
+      conversationTypeList.remove(IsmChatConversationType.private);
+    }
+    return PopupMenuButton(
+      color: IsmChatColors.whiteColor,
+      offset: Offset((Responsive.isWebAndTablet(context)) ? -180 : 0, 0),
+      padding: EdgeInsets.zero,
+      icon: Icon(
+        Icons.more_vert_rounded,
+        color: IsmChatConfig.chatTheme.primaryColor,
+      ),
+      onSelected: (index) async {
+        if (index == 1) {
+          if (Responsive.isWebAndTablet(context)) {
             controller.isRenderScreen =
-                IsRenderConversationScreen.groupUserView;
+                IsRenderConversationScreen.broadcastView;
             Scaffold.of(context).openDrawer();
-          } else if (index == 4) {
-            await Get.dialog(IsmChatAlertDialogBox(
-              title: '${IsmChatStrings.logout}?',
-              content: const Text(IsmChatStrings.logoutMessage),
-              actionLabels: const [
-                IsmChatStrings.logout,
-              ],
-              callbackActions: [
-                () {
-                  onSignOut?.call();
-                },
-              ],
-            ));
-          } else if (index == 5) {
-            IsmChatRouteManagement.goToPublicView();
+          } else {
+            IsmChatRouteManagement.goToBroadcastView();
           }
-        },
-        itemBuilder: (_) => [
-          PopupMenuItem(
-            value: 1,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.groups_rounded,
-                  color: IsmChatConfig.chatTheme.primaryColor,
-                ),
-                IsmChatDimens.boxWidth8,
-                const Text(IsmChatStrings.boradcastMessge),
-              ],
-            ),
-          ),
-          PopupMenuItem(
-            value: 2,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.no_accounts_rounded,
-                  color: IsmChatConfig.chatTheme.primaryColor,
-                ),
-                IsmChatDimens.boxWidth8,
-                const Text(IsmChatStrings.blockedUsers),
-              ],
-            ),
-          ),
-          if (Responsive.isWebAndTablet(context)) ...[
-            PopupMenuItem(
-              value: 3,
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.diversity_3_outlined,
-                    color: IsmChatConfig.chatTheme.primaryColor,
-                  ),
-                  IsmChatDimens.boxWidth8,
-                  const Text(IsmChatStrings.newGroup),
-                ],
+        } else if (index == 2) {
+          if (Responsive.isWebAndTablet(context)) {
+            controller.isRenderScreen = IsRenderConversationScreen.blockView;
+            Scaffold.of(context).openDrawer();
+          } else {
+            IsmChatRouteManagement.goToBlockView();
+          }
+        } else if (index == 3) {
+          controller.isRenderScreen = IsRenderConversationScreen.groupUserView;
+          Scaffold.of(context).openDrawer();
+        } else if (index == 4) {
+          await Get.dialog(IsmChatAlertDialogBox(
+            title: '${IsmChatStrings.logout}?',
+            content: const Text(IsmChatStrings.logoutMessage),
+            actionLabels: const [
+              IsmChatStrings.logout,
+            ],
+            callbackActions: [
+              () {
+                onSignOut?.call();
+              },
+            ],
+          ));
+        } else if (IsmChatProperties
+                    .conversationProperties.conversationPosition ==
+                IsmChatConversationPosition.menu &&
+            conversationTypeList.length != 1) {
+          conversationTypeList[index - 5].goToRoute();
+        }
+      },
+      itemBuilder: (_) => [
+        PopupMenuItem(
+          value: 1,
+          child: Row(
+            children: [
+              Icon(
+                Icons.groups_rounded,
+                color: IsmChatConfig.chatTheme.primaryColor,
               ),
-            ),
-          ],
-          if (Responsive.isWebAndTablet(context)) ...[
-            PopupMenuItem(
-              value: 4,
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.logout_outlined,
-                    color: IsmChatConfig.chatTheme.primaryColor,
-                  ),
-                  IsmChatDimens.boxWidth8,
-                  const Text(IsmChatStrings.logout),
-                ],
+              IsmChatDimens.boxWidth8,
+              const Text(IsmChatStrings.boradcastMessge),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: 2,
+          child: Row(
+            children: [
+              Icon(
+                Icons.no_accounts_rounded,
+                color: IsmChatConfig.chatTheme.primaryColor,
               ),
-            ),
-          ],
+              IsmChatDimens.boxWidth8,
+              const Text(IsmChatStrings.blockedUsers),
+            ],
+          ),
+        ),
+        if (Responsive.isWebAndTablet(context)) ...[
           PopupMenuItem(
-            value: 5,
+            value: 3,
             child: Row(
               children: [
                 Icon(
-                  Icons.group_add_rounded,
+                  Icons.diversity_3_outlined,
                   color: IsmChatConfig.chatTheme.primaryColor,
                 ),
                 IsmChatDimens.boxWidth8,
-                const Text(IsmChatStrings.public),
+                const Text(IsmChatStrings.newGroup),
               ],
             ),
           ),
         ],
-      );
+        if (Responsive.isWebAndTablet(context)) ...[
+          PopupMenuItem(
+            value: 4,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.logout_outlined,
+                  color: IsmChatConfig.chatTheme.primaryColor,
+                ),
+                IsmChatDimens.boxWidth8,
+                const Text(IsmChatStrings.logout),
+              ],
+            ),
+          ),
+        ],
+        if (IsmChatProperties.conversationProperties.conversationPosition ==
+                IsmChatConversationPosition.menu &&
+            conversationTypeList.length != 1) ...[
+          ...conversationTypeList.map(
+            (e) => PopupMenuItem(
+              value: conversationTypeList.indexOf(e) + 5,
+              child: Row(
+                children: [
+                  Icon(
+                    e.icon,
+                    color: IsmChatConfig.chatTheme.primaryColor,
+                  ),
+                  IsmChatDimens.boxWidth8,
+                  Text(e.conversationType),
+                ],
+              ),
+            ),
+          )
+        ]
+      ],
+    );
+  }
 }
 
 class _SearchAction extends StatelessWidget {

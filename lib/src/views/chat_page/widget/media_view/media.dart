@@ -53,7 +53,60 @@ class _IsmMediaState extends State<IsmMedia> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  Widget getTabBar() => TabBar(
+  @override
+  Widget build(BuildContext context) => DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            surfaceTintColor: IsmChatColors.whiteColor,
+            elevation: IsmChatDimens.three,
+            shadowColor: Colors.grey,
+            title: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(IsmChatDimens.eight),
+                color: IsmChatColors.darkBlueGreyColor,
+              ),
+              child: _TabBarView(tabController: _tabController),
+            ),
+            centerTitle: GetPlatform.isAndroid ? true : false,
+            leading: IconButton(
+              onPressed: Responsive.isWebAndTablet(context)
+                  ? () {
+                      Get.find<IsmChatConversationsController>()
+                              .isRenderChatPageaScreen =
+                          IsRenderChatPageScreen.none;
+                    }
+                  : Get.back,
+              icon: Icon(
+                Responsive.isWebAndTablet(context)
+                    ? Icons.close_rounded
+                    : Icons.arrow_back_rounded,
+              ),
+            ),
+          ),
+          body: SafeArea(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                IsmMediaView(mediaList: widget._mediaList ?? []),
+                IsmLinksView(mediaListLinks: widget._mediaListLinks ?? []),
+                IsmDocsView(mediaListDocs: widget._mediaListDocs ?? []),
+              ],
+            ),
+          ),
+        ),
+      );
+}
+
+class _TabBarView extends StatelessWidget {
+  const _TabBarView({
+    required TabController? tabController,
+  }) : _tabController = tabController;
+
+  final TabController? _tabController;
+
+  @override
+  Widget build(BuildContext context) => TabBar(
         overlayColor: MaterialStateProperty.resolveWith<Color?>(
             (Set<MaterialState> states) =>
                 states.contains(MaterialState.focused)
@@ -127,51 +180,5 @@ class _IsmMediaState extends State<IsmMedia> with TickerProviderStateMixin {
             ],
           ),
         ],
-      );
-
-  Widget getTabBarView() => TabBarView(
-        controller: _tabController,
-        children: [
-          IsmMediaView(mediaList: widget._mediaList ?? []),
-          IsmLinksView(mediaListLinks: widget._mediaListLinks ?? []),
-          IsmDocsView(mediaListDocs: widget._mediaListDocs ?? []),
-        ],
-      );
-
-  @override
-  Widget build(BuildContext context) => DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            surfaceTintColor: IsmChatColors.whiteColor,
-            elevation: IsmChatDimens.three,
-            shadowColor: Colors.grey,
-            title: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(IsmChatDimens.eight),
-                color: IsmChatColors.darkBlueGreyColor,
-              ),
-              child: getTabBar(),
-            ),
-            centerTitle: GetPlatform.isAndroid ? true : false,
-            leading: IconButton(
-              onPressed: Responsive.isWebAndTablet(context)
-                  ? () {
-                      Get.find<IsmChatConversationsController>()
-                              .isRenderChatPageaScreen =
-                          IsRenderChatPageScreen.none;
-                    }
-                  : Get.back,
-              icon: Icon(
-                Responsive.isWebAndTablet(context)
-                    ? Icons.close_rounded
-                    : Icons.arrow_back_rounded,
-              ),
-            ),
-          ),
-          body: SafeArea(
-            child: getTabBarView(),
-          ),
-        ),
       );
 }

@@ -15,12 +15,12 @@ class IsmChatBroadCastView extends StatelessWidget {
         initState: (_) {
           final converstaionController =
               Get.find<IsmChatConversationsController>();
-          converstaionController.callApiNonBlock = true;
+          converstaionController.callApiOrNot = true;
           converstaionController.forwardedList.clear();
           converstaionController.selectedUserList.clear();
-          converstaionController.userSearchNameController.clear();
+
           converstaionController.showSearchField = false;
-          converstaionController.isLoadingUsers = false;
+          converstaionController.isLoadResponse = false;
           converstaionController.getNonBlockUserList(
             opponentId: converstaionController.userDetails?.userId,
           );
@@ -31,13 +31,12 @@ class IsmChatBroadCastView extends StatelessWidget {
             title: controller.showSearchField
                 ? IsmChatInputField(
                     fillColor: IsmChatConfig.chatTheme.primaryColor,
-                    controller: controller.userSearchNameController,
                     style: IsmChatStyles.w400White16,
                     hint: 'Search user...',
                     hintStyle: IsmChatStyles.w400White16,
                     onChanged: (value) {
                       controller.debounce.run(() {
-                        controller.isLoadingUsers = false;
+                        controller.isLoadResponse = false;
                         controller.getNonBlockUserList(
                           searchTag: value,
                           opponentId: IsmChatConfig
@@ -68,7 +67,7 @@ class IsmChatBroadCastView extends StatelessWidget {
               IconButton(
                 onPressed: () {
                   controller.showSearchField = !controller.showSearchField;
-                  controller.userSearchNameController.clear();
+
                   if (!controller.showSearchField &&
                       controller.forwardedListDuplicat.isNotEmpty) {
                     controller.forwardedList = controller.forwardedListDuplicat
@@ -83,8 +82,8 @@ class IsmChatBroadCastView extends StatelessWidget {
                         .toList();
                     controller.handleList(controller.forwardedList);
                   }
-                  if (controller.isLoadingUsers) {
-                    controller.isLoadingUsers = false;
+                  if (controller.isLoadResponse) {
+                    controller.isLoadResponse = false;
                   }
                 },
                 icon: Icon(
@@ -99,7 +98,17 @@ class IsmChatBroadCastView extends StatelessWidget {
           body: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              if (controller.selectedUserList.isNotEmpty)
+              if (controller.selectedUserList.isEmpty) ...[
+                Container(
+                  alignment: Alignment.center,
+                  height: IsmChatDimens.ninty,
+                  child: Text(
+                    IsmChatStrings.contactAppear,
+                    style: IsmChatStyles.w400Black14,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                )
+              ] else ...[
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -109,7 +118,7 @@ class IsmChatBroadCastView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  height: IsmChatDimens.hundred,
+                  height: IsmChatDimens.ninty,
                   child: ListView.separated(
                     padding: IsmChatDimens.edgeInsets10,
                     scrollDirection: Axis.horizontal,
@@ -178,10 +187,11 @@ class IsmChatBroadCastView extends StatelessWidget {
                     },
                   ),
                 ),
+              ],
               controller.forwardedList.isEmpty
                   ? Expanded(
                       child: Center(
-                        child: controller.isLoadingUsers
+                        child: controller.isLoadResponse
                             ? Text(
                                 IsmChatStrings.noUserFound,
                                 style: IsmChatStyles.w600Black16,
@@ -203,7 +213,7 @@ class IsmChatBroadCastView extends StatelessWidget {
                           }
                           return true;
                         },
-                        child: controller.isLoadingUsers
+                        child: controller.isLoadResponse
                             ? Center(
                                 child: Text(
                                   IsmChatStrings.noUserFound,
@@ -333,7 +343,6 @@ class IsmChatBroadCastView extends StatelessWidget {
                 var conversation = IsmChatConversationModel(
                   members: controller.selectedUserList,
                   conversationImageUrl: IsmChatAssets.noImage,
-                  customType: 'BroadcastMessage',
                 );
                 controller.navigateToMessages(conversation);
                 if (Responsive.isWebAndTablet(context)) {
@@ -348,7 +357,9 @@ class IsmChatBroadCastView extends StatelessWidget {
                     chatPagecontroller.closeOveray();
                   }
                 } else {
-                  IsmChatRouteManagement.goToBroadcastMessagePage();
+                  IsmChatRouteManagement.goToBroadcastMessagePage(
+                    isTemporaryChat: true,
+                  );
                 }
               } else {
                 await Get.dialog(

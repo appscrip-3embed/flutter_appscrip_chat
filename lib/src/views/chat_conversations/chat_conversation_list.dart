@@ -31,10 +31,6 @@ class IsmChatConversationList extends StatefulWidget {
 
 class _IsmChatConversationListState extends State<IsmChatConversationList>
     with TickerProviderStateMixin {
-  late IsmChatConversationsController controller;
-
-  var mqttController = Get.find<IsmChatMqttController>();
-
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
         builder: (controller) {

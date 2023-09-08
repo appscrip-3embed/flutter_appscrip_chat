@@ -10,18 +10,18 @@ class IsmChatPages {
       binding: IsmChatConversationsBinding(),
     ),
     GetPage(
-      name: IsmChatPageView.route,
-      page: IsmChatPageView.new,
-      binding: IsmChatPageBinding(),
-    ),
-    GetPage(
       name: IsmChatCreateConversationView.route,
       page: IsmChatCreateConversationView.new,
       binding: IsmChatConversationsBinding(),
     ),
     GetPage(
-      name: IsmChatPublicView.route,
-      page: IsmChatPublicView.new,
+      name: IsmChatPublicConversationView.route,
+      page: IsmChatPublicConversationView.new,
+      binding: IsmChatConversationsBinding(),
+    ),
+    GetPage(
+      name: IsmChatOpenConversationView.route,
+      page: IsmChatOpenConversationView.new,
       binding: IsmChatConversationsBinding(),
     ),
     GetPage(
@@ -35,9 +35,19 @@ class IsmChatPages {
       binding: IsmChatConversationsBinding(),
     ),
     GetPage(
+      name: IsmChatObserverUsersView.route,
+      page: IsmChatObserverUsersView.new,
+      binding: IsmChatConversationsBinding(),
+    ),
+    GetPage(
       name: IsmChatBroadCastView.route,
       page: IsmChatBroadCastView.new,
       binding: IsmChatConversationsBinding(),
+    ),
+    GetPage(
+      name: IsmChatPageView.route,
+      page: IsmChatPageView.new,
+      binding: IsmChatPageBinding(),
     ),
     GetPage(
       name: IsmChatConverstaionInfoView.route,

@@ -6,21 +6,35 @@ import 'package:image_picker/image_picker.dart';
 class IsmChatRouteManagement {
   const IsmChatRouteManagement._();
 
-  static void goToChatPage() {
-    Get.toNamed(IsmChatPageView.route);
+  static void goToChatPage({bool isTemporaryChat = false}) {
+    Get.toNamed(IsmChatPageView.route, arguments: {
+      'isTemporaryChat': isTemporaryChat,
+    });
   }
 
-  static void goToBroadcastMessagePage() {
-    Get.toNamed(IsmChatBoradcastMessagePage.route);
+  static void goToBroadcastMessagePage({bool isTemporaryChat = false}) {
+    Get.toNamed(IsmChatBoradcastMessagePage.route, arguments: {
+      'isTemporaryChat': isTemporaryChat,
+    });
   }
 
-  static void goToCreateChat({required bool isGroupConversation}) {
-    Get.toNamed(IsmChatCreateConversationView.route,
-        arguments: {'isGroupConversation': isGroupConversation});
+  static void goToCreateChat({
+    required bool isGroupConversation,
+    IsmChatConversationType conversationType = IsmChatConversationType.private,
+  }) {
+    Get.toNamed(IsmChatCreateConversationView.route, arguments: {
+      'isGroupConversation': isGroupConversation,
+      'conversationType': conversationType
+    });
   }
 
   static void goToBlockView() {
     Get.toNamed(IsmChatBlockedUsersView.route);
+  }
+
+  static void goToObserverView(String conversationId) {
+    Get.toNamed(IsmChatObserverUsersView.route,
+        arguments: {'conversationId': conversationId});
   }
 
   static void goToForwardView(
@@ -35,7 +49,11 @@ class IsmChatRouteManagement {
   }
 
   static void goToPublicView() {
-    Get.toNamed(IsmChatPublicView.route);
+    Get.toNamed(IsmChatPublicConversationView.route);
+  }
+
+  static void goToOpenView() {
+    Get.toNamed(IsmChatOpenConversationView.route);
   }
 
   static void goToConversationInfo() {

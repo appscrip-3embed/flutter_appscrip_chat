@@ -55,6 +55,9 @@ enum IsmChatCustomMessageType {
   conversationTitleUpdated(20),
   conversationImageUpdated(21),
   contact(22),
+  memberJoin(23),
+  observerJoin(24),
+  observerLeave(25),
   date(100);
 
   const IsmChatCustomMessageType(this.value);
@@ -105,6 +108,12 @@ enum IsmChatCustomMessageType {
         return IsmChatCustomMessageType.conversationImageUpdated;
       case 22:
         return IsmChatCustomMessageType.contact;
+      case 23:
+        return IsmChatCustomMessageType.memberJoin;
+      case 24:
+        return IsmChatCustomMessageType.observerJoin;
+      case 25:
+        return IsmChatCustomMessageType.observerLeave;
       case 100:
         return IsmChatCustomMessageType.date;
       default:
@@ -137,7 +146,10 @@ enum IsmChatCustomMessageType {
           IsmChatCustomMessageType.conversationTitleUpdated,
       'conversationImageUpdated':
           IsmChatCustomMessageType.conversationImageUpdated,
-      'contact': IsmChatCustomMessageType.contact
+      'contact': IsmChatCustomMessageType.contact,
+      'memberJoin': IsmChatCustomMessageType.memberJoin,
+      'observerJoin': IsmChatCustomMessageType.observerJoin,
+      'observerLeave': IsmChatCustomMessageType.observerLeave,
     };
 
     var type = value.split('.').last;
@@ -231,6 +243,14 @@ enum IsmChatCustomMessageType {
         return IsmChatCustomMessageType.conversationTitleUpdated;
       case IsmChatActionEvents.conversationImageUpdated:
         return IsmChatCustomMessageType.conversationImageUpdated;
+
+      case IsmChatActionEvents.memberJoin:
+        return IsmChatCustomMessageType.memberJoin;
+      case IsmChatActionEvents.observerJoin:
+        return IsmChatCustomMessageType.observerJoin;
+      case IsmChatActionEvents.observerLeave:
+        return IsmChatCustomMessageType.observerLeave;
+
       default:
         return null;
     }
@@ -282,7 +302,7 @@ enum IsmChatConversationType {
       case 2:
         return IsmChatConversationType.open;
       default:
-        return IsmChatConversationType.public;
+        return IsmChatConversationType.private;
     }
   }
 
@@ -343,7 +363,10 @@ enum IsmChatActionEvents {
   conversationDetailsUpdated,
   conversationTitleUpdated,
   conversationImageUpdated,
-  broadcast;
+  broadcast,
+  memberJoin,
+  observerJoin,
+  observerLeave;
 
   factory IsmChatActionEvents.fromName(String name) {
     switch (name) {
@@ -393,6 +416,13 @@ enum IsmChatActionEvents {
         return IsmChatActionEvents.conversationImageUpdated;
       case 'broadcast':
         return IsmChatActionEvents.broadcast;
+      case 'memberJoin':
+        return IsmChatActionEvents.memberJoin;
+      case 'observerJoin':
+        return IsmChatActionEvents.observerJoin;
+      case 'observerLeave':
+        return IsmChatActionEvents.observerLeave;
+
       default:
         return IsmChatActionEvents.typingEvent;
     }
@@ -447,6 +477,13 @@ enum IsmChatActionEvents {
         return 'conversationImageUpdated';
       case IsmChatActionEvents.broadcast:
         return 'broadcast';
+      case IsmChatActionEvents.memberJoin:
+        return 'memberJoin';
+
+      case IsmChatActionEvents.observerJoin:
+        return 'observerJoin';
+      case IsmChatActionEvents.observerLeave:
+        return 'observerLeave';
     }
   }
 }
@@ -602,4 +639,10 @@ enum IsRenderChatPageScreen {
   userInfoView,
   messageSearchView,
   boradcastMessagePage,
+}
+
+enum IsmChatConversationPosition {
+  tabBar,
+  menu,
+  navigationBar,
 }

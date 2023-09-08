@@ -7,15 +7,13 @@ mixin IsmChatPageGetMessageMixin {
     if (_controller.messageHoldOverlayEntry != null) {
       _controller.closeOveray();
     }
-
     var messages = await IsmChatConfig.dbWrapper!.getMessage(conversationId);
     if (messages?.isEmpty ?? false || messages == null) {
       _controller.messages.clear();
       return;
     }
 
-    _controller.messages = _controller._viewModel.sortMessages(messages!);
-
+    _controller.messages = _controller.viewModel.sortMessages(messages!);
     if (_controller.messages.isEmpty) {
       return;
     }
@@ -27,6 +25,7 @@ mixin IsmChatPageGetMessageMixin {
     String conversationId = '',
     bool forPagination = false,
     int? lastMessageTimestamp,
+    bool isTemporaryChat = false,
   }) async {
     if (_controller.messages.isEmpty) {
       _controller.isMessagesLoading = true;
@@ -43,16 +42,19 @@ mixin IsmChatPageGetMessageMixin {
     var conversationID = conversationId.isNotEmpty
         ? conversationId
         : _controller.conversation?.conversationId ?? '';
-    var data = await _controller._viewModel.getChatMessages(
+    var data = await _controller.viewModel.getChatMessages(
       pagination: forPagination ? messagesList.length.pagination() : 0,
       conversationId: conversationID,
       lastMessageTimestamp: timeStamp,
+      isTemporaryChat: isTemporaryChat,
     );
     if (_controller.messages.isEmpty) {
       _controller.isMessagesLoading = false;
     }
-    if (data.isNotEmpty) {
+    if (data.isNotEmpty && !_controller.isTemporaryChat) {
       await getMessagesFromDB(conversationID);
+    } else {
+      _controller.messages.addAll(data);
     }
   }
 
@@ -64,7 +66,7 @@ mixin IsmChatPageGetMessageMixin {
     if (_controller.canCallCurrentApi) return;
     _controller.canCallCurrentApi = true;
 
-    var messages = await _controller._viewModel.getChatMessages(
+    var messages = await _controller.viewModel.getChatMessages(
       pagination: _controller.searchMessages.isEmpty
           ? 0
           : _controller.searchMessages.length.pagination(),
@@ -90,7 +92,7 @@ mixin IsmChatPageGetMessageMixin {
 
   Future<void> getMessageDeliverTime(IsmChatMessageModel message) async {
     _controller.deliverdMessageMembers.clear();
-    var response = await _controller._viewModel.getMessageDeliverTime(
+    var response = await _controller.viewModel.getMessageDeliverTime(
       conversationId: message.conversationId ?? '',
       messageId: message.messageId ?? '',
     );
@@ -103,7 +105,7 @@ mixin IsmChatPageGetMessageMixin {
 
   Future<void> getMessageReadTime(IsmChatMessageModel message) async {
     _controller.readMessageMembers.clear();
-    var response = await _controller._viewModel.getMessageReadTime(
+    var response = await _controller.viewModel.getMessageReadTime(
       conversationId: message.conversationId ?? '',
       messageId: message.messageId ?? '',
     );
@@ -125,7 +127,7 @@ mixin IsmChatPageGetMessageMixin {
       return;
     }
     _controller.isCoverationApiDetails = false;
-    var data = await _controller._viewModel.getConverstaionDetails(
+    var data = await _controller.viewModel.getConverstaionDetails(
         conversationId: conversationId,
         includeMembers: includeMembers,
         isLoading: isLoading);
@@ -177,7 +179,7 @@ mixin IsmChatPageGetMessageMixin {
   }
 
   Future<void> getReacton({required Reaction reaction}) async {
-    var response = await _controller._viewModel.getReacton(reaction: reaction);
+    var response = await _controller.viewModel.getReacton(reaction: reaction);
     _controller.userReactionList = response ?? [];
   }
 

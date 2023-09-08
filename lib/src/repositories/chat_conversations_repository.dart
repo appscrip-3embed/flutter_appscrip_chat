@@ -307,25 +307,40 @@ class IsmChatConversationsRepository {
     }
   }
 
-  Future<void> getPublicConversation(
-      {String? searchTag, int sort = 1, int skip = 0, int limit = 20}) async {
+  Future<List<IsmChatConversationModel>?> getPublicAndOpenConversation({
+    required int conversationType,
+    String? searchTag,
+    int sort = 1,
+    int skip = 0,
+    int limit = 20,
+  }) async {
     try {
       String? url;
-      // if (searchTag?.isNotEmpty ?? false) {
-      //   url =
-      //       '${IsmChatAPI.getPublicConversation}?sort=$sort&skip=$skip&limit=$limit';
-      // } else {
-      //   url =
-      //       '${IsmChatAPI.baseUrl}/chat/conversations/public?includeMembers=true';
-      // }
-      url = '${IsmChatAPI.baseUrl}/chat/conversations/public';
+      if (searchTag?.isNotEmpty ?? false) {
+        url =
+            '${IsmChatAPI.getPublicAndOpenConversation}?conversationType=$conversationType&includeMembers=true&searchTag=$searchTag&sort=$sort&skip=$skip&limit=$limit';
+      } else {
+        url =
+            '${IsmChatAPI.getPublicAndOpenConversation}?conversationType=$conversationType&includeMembers=true&sort=$sort&skip=$skip&limit=$limit';
+      }
+
       var response = await _apiWrapper.get(
         url,
         headers: IsmChatUtility.tokenCommonHeader(),
       );
-      IsmChatLog.error(response.data);
+      if (response.hasError) {
+        return null;
+      }
+      var data = jsonDecode(response.data);
+
+      var listData = (data['conversations'] as List)
+          .map((e) =>
+              IsmChatConversationModel.fromMap(e as Map<String, dynamic>))
+          .toList();
+      return listData;
     } catch (e, st) {
       IsmChatLog.error('GetUserList error $e', st);
+      return null;
     }
   }
 
@@ -343,6 +358,81 @@ class IsmChatConversationsRepository {
       return response;
     } catch (e, st) {
       IsmChatLog.error('Join conversation error $e', st);
+      return null;
+    }
+  }
+
+  Future<IsmChatResponseModel?> joinObserver({
+    required String conversationId,
+    bool isLoading = false,
+  }) async {
+    try {
+      var payload = {'conversationId': conversationId};
+      var response = await _apiWrapper.put(
+        IsmChatAPI.joinObserver,
+        payload: payload,
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading,
+      );
+      if (response.hasError) {
+        return response;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Join Observer error $e', st);
+      return null;
+    }
+  }
+
+  Future<IsmChatResponseModel?> leaveObserver(
+      {required String conversationId, bool isLoading = false}) async {
+    try {
+      var payload = {'conversationId': conversationId};
+      var response = await _apiWrapper.delete(
+        '${IsmChatAPI.leaveObserver}?conversationId=$conversationId',
+        payload: payload,
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading,
+      );
+      if (response.hasError) {
+        return response;
+      }
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('Leave Observer error $e', st);
+      return null;
+    }
+  }
+
+  Future<List<UserDetails>?> getObservationUser(
+      {required String conversationId,
+      int skip = 0,
+      int limit = 20,
+      bool isLoading = false,
+      String? searchText}) async {
+    try {
+      String? url;
+      if (searchText != null || searchText?.isNotEmpty == true) {
+        url =
+            '${IsmChatAPI.getObserver}?conversationId=$conversationId&searchTag=$searchText&sort=-1&limit=$limit&skip=$skip';
+      } else {
+        url =
+            '${IsmChatAPI.getObserver}?conversationId=$conversationId&limit=$limit&skip=$skip';
+      }
+      var response = await _apiWrapper.get(url,
+          headers: IsmChatUtility.tokenCommonHeader(), showLoader: isLoading);
+
+      if (response.hasError) {
+        return null;
+      }
+
+      var data = jsonDecode(response.data) as Map<String, dynamic>;
+
+      return (data['conversationObservers'] as List)
+          .map((e) => UserDetails.fromMap(e as Map<String, dynamic>))
+          .toList();
+    } catch (e, st) {
+      IsmChatLog.error('Get observer user $e, $st');
       return null;
     }
   }
