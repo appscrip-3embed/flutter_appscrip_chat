@@ -285,8 +285,14 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                           return;
                                         }
 
-                                        Get.find<IsmChatPageController>()
-                                            .startInit();
+                                        final chatPagecontroller =
+                                            Get.find<IsmChatPageController>();
+                                        chatPagecontroller.startInit();
+                                        if (chatPagecontroller
+                                                .messageHoldOverlayEntry !=
+                                            null) {
+                                          chatPagecontroller.closeOveray();
+                                        }
                                       } else {
                                         IsmChatRouteManagement.goToChatPage();
                                       }

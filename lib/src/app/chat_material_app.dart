@@ -104,6 +104,7 @@ class IsmChatApp extends StatelessWidget {
     await IsmChatConfig.dbWrapper?.deleteChatLocalDb();
     await Future.wait([
       Get.delete<IsmChatConversationsController>(force: true),
+      Get.delete<IsmChatCommonController>(force: true),
       Get.delete<IsmChatMqttController>(force: true),
     ]);
   }
@@ -175,6 +176,7 @@ class IsmChatApp extends StatelessWidget {
     IsmChatUtility.closeLoader();
 
     if (!Get.isRegistered<IsmChatConversationsController>()) {
+      IsmChatCommonBinding().dependencies();
       IsmChatConversationsBinding().dependencies();
     }
     var controller = Get.find<IsmChatConversationsController>();
@@ -242,6 +244,7 @@ class IsmChatApp extends StatelessWidget {
     IsmChatUtility.closeLoader();
 
     if (!Get.isRegistered<IsmChatConversationsController>()) {
+      IsmChatCommonBinding().dependencies();
       IsmChatConversationsBinding().dependencies();
     }
     if (!Get.isRegistered<IsmChatPageController>()) {

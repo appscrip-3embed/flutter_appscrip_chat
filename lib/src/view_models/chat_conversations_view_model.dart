@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class IsmChatConversationsViewModel {
@@ -134,30 +133,6 @@ class IsmChatConversationsViewModel {
   }) async =>
       await _repository.getBlockUser(skip: skip, limit: limit);
 
-  // get Api for Presigned Url.....
-  Future<PresignedUrlModel?> getPresignedUrl({
-    required bool isLoading,
-    required String userIdentifier,
-    required String mediaExtension,
-  }) async =>
-      await _repository.getPresignedUrl(
-        isLoading: isLoading,
-        userIdentifier: userIdentifier,
-        mediaExtension: mediaExtension,
-      );
-
-  // update Api for Presigned Url.....
-  Future<IsmChatResponseModel?> updatePresignedUrl({
-    required bool isLoading,
-    required String presignedUrl,
-    required Uint8List file,
-  }) async =>
-      await _repository.updatePresignedUrl(
-        isLoading: isLoading,
-        presignedUrl: presignedUrl,
-        file: file,
-      );
-
   Future<IsmChatResponseModel?> updateConversation({
     required String conversationId,
     required IsmChatMetaData metaData,
@@ -169,22 +144,23 @@ class IsmChatConversationsViewModel {
         isLoading: isLoading,
       );
 
-  Future<IsmChatResponseModel?> sendBroadcastMessage(
-          {required List<String> userIds,
-          required bool showInConversation,
-          required int messageType,
-          required bool encrypted,
-          required String deviceId,
-          required String body,
-          required String notificationBody,
-          required String notificationTitle,
-          List<String>? searchableTags,
-          IsmChatMetaData? metaData,
-          Map<String, dynamic>? events,
-          String? customType,
-          List<Map<String, dynamic>>? attachments,
-          bool isLoading = false}) async =>
-      await _repository.sendBroadcastMessage(
+  Future<IsmChatResponseModel?> sendForwardMessage({
+    required List<String> userIds,
+    required bool showInConversation,
+    required int messageType,
+    required bool encrypted,
+    required String deviceId,
+    required String body,
+    required String notificationBody,
+    required String notificationTitle,
+    List<String>? searchableTags,
+    IsmChatMetaData? metaData,
+    Map<String, dynamic>? events,
+    String? customType,
+    List<Map<String, dynamic>>? attachments,
+    bool isLoading = false,
+  }) async =>
+      await _repository.sendForwardMessage(
         userIds: userIds,
         showInConversation: showInConversation,
         messageType: messageType,
@@ -200,4 +176,22 @@ class IsmChatConversationsViewModel {
         searchableTags: searchableTags,
         isLoading: isLoading,
       );
+
+  Future<void> getPublicConversation({
+    String? searchTag,
+    int sort = 1,
+    int skip = 0,
+    int limit = 20,
+  }) async =>
+      _repository.getPublicConversation(
+        limit: limit,
+        searchTag: searchTag,
+        skip: skip,
+        sort: sort,
+      );
+
+  Future<IsmChatResponseModel?> joinConversation(
+          {required String conversationId, bool isLoading = false}) async =>
+      _repository.joinConversation(
+          conversationId: conversationId, isLoading: isLoading);
 }

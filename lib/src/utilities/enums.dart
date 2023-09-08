@@ -342,7 +342,8 @@ enum IsmChatActionEvents {
   reactionRemove,
   conversationDetailsUpdated,
   conversationTitleUpdated,
-  conversationImageUpdated;
+  conversationImageUpdated,
+  broadcast;
 
   factory IsmChatActionEvents.fromName(String name) {
     switch (name) {
@@ -390,6 +391,8 @@ enum IsmChatActionEvents {
         return IsmChatActionEvents.conversationTitleUpdated;
       case 'conversationImageUpdated':
         return IsmChatActionEvents.conversationImageUpdated;
+      case 'broadcast':
+        return IsmChatActionEvents.broadcast;
       default:
         return IsmChatActionEvents.typingEvent;
     }
@@ -442,6 +445,8 @@ enum IsmChatActionEvents {
         return 'conversationTitleUpdated';
       case IsmChatActionEvents.conversationImageUpdated:
         return 'conversationImageUpdated';
+      case IsmChatActionEvents.broadcast:
+        return 'broadcast';
     }
   }
 }
@@ -576,7 +581,6 @@ enum IsmChatFeature {
 enum IsmChatDbBox {
   main,
   pending,
-  forward;
 }
 
 enum IsRenderConversationScreen {
@@ -596,5 +600,6 @@ enum IsRenderChatPageScreen {
   groupEligibleView,
   coversationMediaView,
   userInfoView,
-  messageSearchView
+  messageSearchView,
+  boradcastMessagePage,
 }

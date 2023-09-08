@@ -118,7 +118,8 @@ class _MoreIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) => PopupMenuButton(
         color: IsmChatColors.whiteColor,
-        offset: Offset((Responsive.isWebAndTablet(context)) ? -130 : 0, 0),
+        offset: Offset((Responsive.isWebAndTablet(context)) ? -180 : 0, 0),
+        padding: EdgeInsets.zero,
         icon: Icon(
           Icons.more_vert_rounded,
           color: IsmChatConfig.chatTheme.primaryColor,
@@ -156,6 +157,8 @@ class _MoreIcon extends StatelessWidget {
                 },
               ],
             ));
+          } else if (index == 5) {
+            IsmChatRouteManagement.goToPublicView();
           }
         },
         itemBuilder: (_) => [
@@ -214,7 +217,20 @@ class _MoreIcon extends StatelessWidget {
                 ],
               ),
             ),
-          ]
+          ],
+          PopupMenuItem(
+            value: 5,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.group_add_rounded,
+                  color: IsmChatConfig.chatTheme.primaryColor,
+                ),
+                IsmChatDimens.boxWidth8,
+                const Text(IsmChatStrings.public),
+              ],
+            ),
+          ),
         ],
       );
 }

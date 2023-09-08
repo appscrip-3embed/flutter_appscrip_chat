@@ -230,7 +230,6 @@ class _ConversationList extends StatelessWidget {
                     if (Responsive.isWebAndTablet(context)) {
                       if (!Get.isRegistered<IsmChatPageController>()) {
                         IsmChatPageBinding().dependencies();
-
                         return;
                       }
 

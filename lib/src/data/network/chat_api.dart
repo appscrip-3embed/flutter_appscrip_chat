@@ -17,12 +17,15 @@ class IsmChatAPI {
   static const String chatConversationDelete = '$chatConversation/local';
   static const String getChatConversations = '$baseUrl/chat/conversations';
   static const String conversationDetails = '$chatConversation/details';
+  static const String getPublicConversation = '$chatConversation/public';
+
   static const String conversationUnreadCount =
       '${chatConversation}s/unread/count';
 
   static const String conversationMembers = '$chatConversation/members';
   static const String eligibleMembers = '$chatConversation/eligible/members';
   static const String leaveConversation = '$chatConversation/leave';
+  static const String joinConversation = '$chatConversation/join';
   static const String conversationAdmin = '$chatConversation/admin';
   static const String conversationTitle = '$chatConversation/title';
   static const String conversationImage = '$chatConversation/image';
@@ -37,6 +40,8 @@ class IsmChatAPI {
 
   static const String sendMessage = '$baseUrl/chat/message';
   static const String sendBroadcastMessage = '$baseUrl/chat/message/broadcast';
+  static const String sendForwardMessage = '$baseUrl/chat/message/forward';
+
   static const String chatStatus = '$sendMessage/status';
   static const String readStatus = '$chatStatus/read';
   static const String deliverStatus = '$chatStatus/delivery';

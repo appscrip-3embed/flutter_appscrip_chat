@@ -7,11 +7,8 @@ import 'package:appscrip_chat_component/src/controllers/mqtt/clients/mobile_clie
     if (dart.library.html) 'clients/web_client.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
-// import 'package:elegant_notification/elegant_notification.dart';
-// import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// import 'package:motion_toast/resources/arrays.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 
 class IsmChatMqttController extends GetxController {
@@ -251,7 +248,92 @@ class IsmChatMqttController extends GetxController {
       case IsmChatActionEvents.conversationImageUpdated:
         _handleConversationUpdate(actionModel);
         break;
+      case IsmChatActionEvents.broadcast:
+        _handleBroadcast(actionModel);
+        break;
     }
+  }
+
+  void _handleBroadcast(IsmChatMqttActionModel actionModel) async {
+    await Future.delayed(const Duration(milliseconds: 100));
+    var conversationController = Get.find<IsmChatConversationsController>();
+    if (actionModel.senderId == _communicationConfig.userConfig.userId) {
+      return;
+    }
+    var conversation = await IsmChatConfig.dbWrapper!
+        .getConversation(conversationId: actionModel.conversationId);
+
+    if (conversation == null ||
+        conversation.lastMessageDetails?.messageId == actionModel.messageId) {
+      return;
+    }
+
+    // To handle and show last message & unread count in conversation list
+    conversation = conversation.copyWith(
+      unreadMessagesCount: Responsive.isWebAndTablet(Get.context!) &&
+              (Get.isRegistered<IsmChatPageController>() &&
+                  Get.find<IsmChatPageController>()
+                          .conversation
+                          ?.conversationId ==
+                      actionModel.conversationId)
+          ? 0
+          : (conversation.unreadMessagesCount ?? 0) + 1,
+      lastMessageDetails: conversation.lastMessageDetails?.copyWith(
+        sentByMe: false,
+        showInConversation: true,
+        sentAt: actionModel.sentAt,
+        senderName: actionModel.senderName,
+        messageType: actionModel.messageType?.value ?? 0,
+        messageId: actionModel.messageId ?? '',
+        conversationId: actionModel.conversationId ?? '',
+        body: actionModel.body,
+        customType: actionModel.customType,
+        action: '',
+      ),
+    );
+    var message = IsmChatMessageModel(
+        body: actionModel.body ?? '',
+        sentAt: actionModel.sentAt,
+        customType: actionModel.customType,
+        sentByMe: false,
+        messageId: actionModel.messageId,
+        attachments: actionModel.attachments,
+        conversationId: actionModel.conversationId,
+        isGroup: false,
+        messageType: actionModel.messageType,
+        metaData: actionModel.metaData,
+        senderInfo: UserDetails(
+          userProfileImageUrl: '',
+          userName: actionModel.senderName ?? '',
+          userIdentifier: '',
+          userId: actionModel.senderId ?? '',
+          online: false,
+          lastSeen: 0,
+        ));
+    conversation.messages?.add(message);
+    await IsmChatConfig.dbWrapper!.saveConversation(conversation: conversation);
+    unawaited(conversationController.getConversationsFromDB());
+    await conversationController.pingMessageDelivered(
+      conversationId: actionModel.conversationId ?? '',
+      messageId: actionModel.messageId ?? '',
+    );
+    _handleUnreadMessages(message);
+
+    // To handle messages in chatList
+    if (!Get.isRegistered<IsmChatPageController>()) {
+      return;
+    }
+    var chatController = Get.find<IsmChatPageController>();
+    if (chatController.conversation?.conversationId != message.conversationId) {
+      return;
+    }
+
+    unawaited(chatController.getMessagesFromDB(message.conversationId!));
+    await Future.delayed(const Duration(milliseconds: 30));
+    await chatController.readSingleMessage(
+      conversationId: message.conversationId!,
+      messageId: message.messageId!,
+    );
   }
 
   void _handleMessage(IsmChatMessageModel message) async {
@@ -291,9 +373,7 @@ class IsmChatMqttController extends GetxController {
         action: '',
       ),
     );
-
     conversation.messages?.add(message);
-
     await IsmChatConfig.dbWrapper!.saveConversation(conversation: conversation);
     unawaited(conversationController.getConversationsFromDB());
     await conversationController.pingMessageDelivered(
@@ -624,7 +704,6 @@ class IsmChatMqttController extends GetxController {
           allMessages[messageIndex].customType =
               IsmChatCustomMessageType.deletedForEveryone;
         }
-        //  allMessages.removeWhere((e) => e.messageId! == x);
       }
     }
 
@@ -712,8 +791,7 @@ class IsmChatMqttController extends GetxController {
         ),
       ),
     );
-    // Todo
-    // await IsmChatConfig.dbWrapper!.saveMessage(actionModel, allMessages ?? []);
+
     messageId = actionModel.sentAt.toString();
     if (Get.isRegistered<IsmChatPageController>()) {
       var chatPageController = Get.find<IsmChatPageController>();

@@ -21,13 +21,10 @@ class IsmChatConversationsController extends GetxController {
 
   var userSearchNameController = TextEditingController();
 
-  final _deviceConfig = Get.find<IsmChatDeviceConfig>();
+  IsmChatCommonController get commonController =>
+      Get.find<IsmChatCommonController>();
 
-  final RxString _broadcastMessage = ''.obs;
-  String get broadcastMessage => _broadcastMessage.value;
-  set broadcastMessage(String value) {
-    _broadcastMessage.value = value;
-  }
+  final _deviceConfig = Get.find<IsmChatDeviceConfig>();
 
   final _conversations = <IsmChatConversationModel>[].obs;
   List<IsmChatConversationModel> get conversations => _conversations;
@@ -355,8 +352,6 @@ class IsmChatConversationsController extends GetxController {
     await getPresignedUrl(extension!, bytes!);
   }
 
-  void updateUserExistingDetails() {}
-
   /// function to pick image for group profile
   Future<void> ismChangeImage(ImageSource imageSource) async {
     var file = await IsmChatUtility.pickMedia(imageSource);
@@ -373,28 +368,20 @@ class IsmChatConversationsController extends GetxController {
     String mediaExtension,
     Uint8List bytes,
   ) async {
-    var response = await _viewModel.getPresignedUrl(
-        isLoading: true,
-        userIdentifier: userDetails?.userIdentifier ?? '',
-        mediaExtension: mediaExtension);
+    var response = await commonController.getPresignedUrl(
+      isLoading: true,
+      userIdentifier: userDetails?.userIdentifier ?? '',
+      mediaExtension: mediaExtension,
+    );
 
     if (response == null) {
       return;
     }
-    var responseCode = await updatePresignedUrl(response.presignedUrl, bytes);
+    var responseCode = await commonController.updatePresignedUrl(
+        presignedUrl: response.presignedUrl, bytes: bytes);
     if (responseCode == 200) {
       profileImage = response.mediaUrl!;
     }
-  }
-
-  /// put Api for updatePresignedUrl...
-  Future<int?> updatePresignedUrl(String? presignedUrl, Uint8List bytes) async {
-    if (presignedUrl == null || presignedUrl.isEmpty) {
-      return 404;
-    }
-    var response = await _viewModel.updatePresignedUrl(
-        isLoading: true, presignedUrl: presignedUrl, file: bytes);
-    return response?.errorCode ?? 404;
   }
 
   /// This will be used to fetch all the users associated with the current user
@@ -648,23 +635,58 @@ class IsmChatConversationsController extends GetxController {
         isLoading: isLoading);
   }
 
-  Future<void> sendBroadcastMessage(
-      {required List<String> userIds,
-      required String body,
-      bool isLoading = false}) async {
-    var response = await _viewModel.sendBroadcastMessage(
+  Future<void> sendForwardMessage({
+    required List<String> userIds,
+    required String body,
+    List<Map<String, dynamic>>? attachments,
+    String? customType,
+    bool isLoading = false,
+    IsmChatMetaData? metaData,
+  }) async {
+    var response = await _viewModel.sendForwardMessage(
       userIds: userIds,
       showInConversation: true,
-      messageType: 0,
+      messageType: IsmChatMessageType.forward.value,
       encrypted: true,
       deviceId: _deviceConfig.deviceId ?? '',
-      body: IsmChatUtility.decodePayload(body),
+      body: IsmChatUtility.encodePayload(body),
       notificationBody: body,
-      notificationTitle: userDetails?.userName ?? '',
+      notificationTitle:
+          IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+              ? IsmChatConfig.communicationConfig.userConfig.userName
+              : userDetails?.userName ?? '',
       isLoading: isLoading,
+      searchableTags: [body],
+      customType: customType,
+      attachments: attachments,
+      events: {'updateUnreadCount': true, 'sendPushNotification': true},
+      metaData: metaData,
     );
     if (response?.hasError == false) {
       Get.back();
+      await getChatConversations();
+    }
+  }
+
+  Future<void> getPublicConversation(
+          {String? searchTag,
+          int sort = 1,
+          int skip = 0,
+          int limit = 20}) async =>
+      await _viewModel.getPublicConversation(
+        searchTag: searchTag,
+        sort: sort,
+        skip: skip,
+        limit: limit,
+      );
+
+  Future<void> joinConversation({
+    required String conversationId,
+    bool isloading = false,
+  }) async {
+    var response = await _viewModel.joinConversation(
+        conversationId: conversationId, isLoading: isloading);
+    if (response != null) {
       await getChatConversations();
     }
   }

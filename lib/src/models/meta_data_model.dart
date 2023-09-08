@@ -98,43 +98,43 @@ class IsmChatMetaData {
       );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
-        if (country != null || country?.isNotEmpty == true) 'country': country,
-        if (parentMessageBody != null || parentMessageBody?.isNotEmpty == true)
+        if (country != null && country?.isNotEmpty == true) 'country': country,
+        if (parentMessageBody != null && parentMessageBody?.isNotEmpty == true)
           'parentMessageBody': parentMessageBody,
-        if (locationAddress != null || locationAddress?.isNotEmpty == true)
+        if (locationAddress != null && locationAddress?.isNotEmpty == true)
           'locationAddress': locationAddress,
-        if (locationSubAddress != null ||
+        if (locationSubAddress != null &&
             locationSubAddress?.isNotEmpty == true)
           'locationSubAddress': locationSubAddress,
         if (parentMessageInitiator != null)
           'parentMessageInitiator': parentMessageInitiator,
-        if (profilePic != null || profilePic?.isNotEmpty == true)
+        if (profilePic != null && profilePic?.isNotEmpty == true)
           'profilePic': profilePic,
         if (userId != null || userId?.isNotEmpty == true) 'userId': userId,
-        if (isMatchId != null || isMatchId?.isNotEmpty == true)
+        if (isMatchId != null && isMatchId?.isNotEmpty == true)
           'isMatchId': isMatchId,
-        if (firstName != null || firstName?.isNotEmpty == true)
+        if (firstName != null && firstName?.isNotEmpty == true)
           'firstName': firstName,
-        if (lastName != null || lastName?.isNotEmpty == true)
+        if (lastName != null && lastName?.isNotEmpty == true)
           'lastName': lastName,
         if (isGuestMatch != null) 'isGuestMatch': isGuestMatch,
-        if (genderOfUserWhoReceivedTheGuestChat != null ||
+        if (genderOfUserWhoReceivedTheGuestChat != null &&
             genderOfUserWhoReceivedTheGuestChat?.isNotEmpty == true)
           'genderOfUserWhoReceivedTheGuestChat':
               genderOfUserWhoReceivedTheGuestChat,
-        if (genderOfUserWhoStartedGuestChat != null ||
+        if (genderOfUserWhoStartedGuestChat != null &&
             genderOfUserWhoStartedGuestChat?.isNotEmpty == true)
           'genderOfUserWhoStartedGuestChat': genderOfUserWhoStartedGuestChat,
-        if (guestMatchInitiatedByUserId != null ||
+        if (guestMatchInitiatedByUserId != null &&
             guestMatchInitiatedByUserId?.isNotEmpty == true)
           'guestMatchInitiatedByUserId': guestMatchInitiatedByUserId,
-        if (guestMatchInitiatedWithUserId != null ||
+        if (guestMatchInitiatedWithUserId != null &&
             guestMatchInitiatedWithUserId?.isNotEmpty == true)
           'guestMatchInitiatedWithUserId': guestMatchInitiatedWithUserId,
         if (paidChat != null) 'paidChat': paidChat,
-        if (customType != null || customType?.isNotEmpty == true)
+        if (customType != null && customType?.isNotEmpty == true)
           'customType': customType,
-        if (assetList != null || assetList?.isNotEmpty == true)
+        if (assetList != null && assetList?.isNotEmpty == true)
           'assetList': assetList,
         if (duration != null) 'duration': duration?.inSeconds,
       };

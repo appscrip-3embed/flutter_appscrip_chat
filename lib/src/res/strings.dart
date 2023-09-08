@@ -45,6 +45,8 @@ class IsmChatStrings {
   static const String wallpaper = 'Wallpaper';
   static const String search = 'Search';
   static const String newGroup = 'New Group';
+  static const String public = 'Public';
+
   static const String logout = 'Logout';
   static const String startConversation = 'Start Conversation';
 
@@ -62,8 +64,7 @@ class IsmChatStrings {
   static const String youareBlocked = 'You are blocked.';
   static const String cannotBlock =
       'Action not allowed, the user has already blocked you';
-  static const String broadcastAlert =
-      'Select atleast on person and write broadcast message';
+  static const String broadcastAlert = 'Select atleast two people';
   static const String micePermission =
       'Please provide microphone access in order to send audio.';
   static const String micePermissionBlock =
@@ -126,6 +127,7 @@ class IsmChatStrings {
   static const String wasDeletedMessage = 'This message was deleted';
   static const String noDataFound = 'No data found';
   static const String noUserFound = 'No user found';
+  static const String forwarded = 'Forwarded';
 
   static const String logoutMessage = 'Are you sure you want to logout';
 

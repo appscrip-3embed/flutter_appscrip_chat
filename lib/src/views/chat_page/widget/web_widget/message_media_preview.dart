@@ -158,6 +158,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                               List.empty(),
                           downloadName:
                               '${widget._messageData?[chatPageController.assetsIndex].attachments!.first.name}.${widget._messageData?[chatPageController.assetsIndex].attachments!.first.extension}');
+                      IsmChatUtility.showToast('Save your media');
                     }
                   },
                   icon: const Icon(Icons.save_rounded),

@@ -63,7 +63,8 @@ class MessageCard extends StatelessWidget {
                   IsmChatCustomMessageType.image,
                   IsmChatCustomMessageType.video,
                   IsmChatCustomMessageType.file,
-                  IsmChatCustomMessageType.contact,
+                  if (!Responsive.isWebAndTablet(context))
+                    IsmChatCustomMessageType.contact,
                 ].contains(message.customType)) {
                   controller.tapForMediaPreview(message);
                 }
