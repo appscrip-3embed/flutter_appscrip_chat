@@ -215,7 +215,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ),
             actions: [
-              PopupMenuButton(
+              PopupMenuButton<int>(
                 icon: Icon(
                   Icons.more_vert,
                   color:
@@ -311,15 +311,13 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                   ],
                   if (IsmChatProperties.chatPageProperties.header != null &&
                       IsmChatProperties.chatPageProperties.header!.popupItems !=
-                          null &&
-                      IsmChatProperties.chatPageProperties.header!.popupItems!
-                          .isNotEmpty) ...[
-                    ...(IsmChatProperties
-                            .chatPageProperties.header!.popupItems!)
+                          null) ...[
+                    ...IsmChatProperties.chatPageProperties.header!
+                        .popupItems!(context, controller.conversation!)
                         .map(
                       (e) => PopupMenuItem(
-                        value: IsmChatProperties
-                                .chatPageProperties.header!.popupItems!
+                        value: IsmChatProperties.chatPageProperties.header!
+                                .popupItems!(context, controller.conversation!)
                                 .indexOf(e) +
                             6,
                         child: Row(
@@ -361,10 +359,11 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                 .chatPageProperties.header?.popupItems !=
                             null ||
                         IsmChatProperties.chatPageProperties.header?.popupItems
-                                ?.isNotEmpty ==
+                                ?.call(context, controller.conversation!)
+                                .isNotEmpty ==
                             true) {
-                      IsmChatProperties
-                          .chatPageProperties.header?.popupItems?[value - 6]
+                      IsmChatProperties.chatPageProperties.header!.popupItems!
+                          .call(context, controller.conversation!)[value - 6]
                           .onTap(controller.conversation!);
                     }
                   }

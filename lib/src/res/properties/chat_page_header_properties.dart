@@ -23,7 +23,7 @@ class IsmChatPageHeaderProperties {
   final ConversationWidgetCallback? subtitleBuilder;
   final ConversationStringCallback? subtitle;
   final ConversationCallback? bottom;
-  final List<IsmChatPopupMenuItem>? popupItems;
+  final PopupItemListCallback? popupItems;
   final VoidCallback? onBackTap;
   final double? Function(
     BuildContext,
