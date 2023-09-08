@@ -69,6 +69,20 @@ class _ChatListState extends State<ChatList> {
               if (!kIsWeb) IsmChatAttachmentType.location,
               if (!kIsWeb) IsmChatAttachmentType.contact,
             ],
+            // header: IsmChatPageHeaderProperties(
+            //   popupItems: (_, converstion) {
+            //     if (converstion.metaData?.isMatchId?.isEmpty == true) {
+            //       return [
+            //         IsmChatPopupMenuItem(
+            //           label: 'Unmatch',
+            //           icon: Icons.no_accounts,
+            //           onTap: (conversation) {},
+            //         )
+            //       ];
+            //     }
+            //     return [];
+            //   },
+            // )
           ),
           noChatSelectedPlaceholder: Center(
             child: Column(
