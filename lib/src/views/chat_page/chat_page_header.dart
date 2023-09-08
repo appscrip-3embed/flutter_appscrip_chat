@@ -221,7 +221,6 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                           ?.call(context, controller.conversation!),
                     ),
                   ),
-            //
             actions: [
               controller.isTemporaryChat
                   ? IconButton(
@@ -234,7 +233,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                         size: IsmChatDimens.thirty,
                       ),
                     )
-                  : PopupMenuButton(
+                  : PopupMenuButton<int>(
                       icon: Icon(
                         Icons.more_vert,
                         color: IsmChatConfig
@@ -333,15 +332,16 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                 null &&
                             IsmChatProperties
                                     .chatPageProperties.header!.popupItems !=
-                                null &&
-                            IsmChatProperties.chatPageProperties.header!
-                                .popupItems!.isNotEmpty) ...[
-                          ...(IsmChatProperties
-                                  .chatPageProperties.header!.popupItems!)
+                                null) ...[
+                          ...IsmChatProperties.chatPageProperties.header!
+                              .popupItems!(context, controller.conversation!)
                               .map(
                             (e) => PopupMenuItem(
                               value: IsmChatProperties
-                                      .chatPageProperties.header!.popupItems!
+                                      .chatPageProperties
+                                      .header!
+                                      .popupItems!
+                                          (context, controller.conversation!)
                                       .indexOf(e) +
                                   6,
                               child: Row(
@@ -360,6 +360,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                       ],
                       elevation: 2,
                       onSelected: (value) {
+                        IsmChatLog.error(value);
                         if (value == 4 || value == 5) {
                           controller.showDialogForClearChatAndDeleteGroup(
                               isGroupDelete: value == 5);
@@ -383,171 +384,20 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                           if (IsmChatProperties
                                       .chatPageProperties.header?.popupItems !=
                                   null ||
-                              IsmChatProperties.chatPageProperties.header
-                                      ?.popupItems?.isNotEmpty ==
+                              IsmChatProperties
+                                      .chatPageProperties.header?.popupItems
+                                      ?.call(context, controller.conversation!)
+                                      .isNotEmpty ==
                                   true) {
-                            IsmChatProperties.chatPageProperties.header
-                                ?.popupItems?[value - 6]
+                            IsmChatProperties
+                                .chatPageProperties.header!.popupItems!
+                                .call(context,
+                                    controller.conversation!)[value - 6]
                                 .onTap(controller.conversation!);
                           }
                         }
                       },
                     ),
-              PopupMenuButton<int>(
-                icon: Icon(
-                  Icons.more_vert,
-                  color:
-                      IsmChatConfig.chatTheme.chatPageHeaderTheme?.iconColor ??
-                          IsmChatColors.whiteColor,
-                ),
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    value: 1,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.search_rounded,
-                          color: IsmChatConfig.chatTheme.primaryColor,
-                        ),
-                        IsmChatDimens.boxWidth8,
-                        const Text(IsmChatStrings.search)
-                      ],
-                    ),
-                  ),
-                  if (IsmChatProperties.chatPageProperties.features
-                      .contains(IsmChatFeature.chageWallpaper))
-                    PopupMenuItem(
-                      value: 2,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.wallpaper_rounded,
-                            color: IsmChatConfig.chatTheme.primaryColor,
-                          ),
-                          IsmChatDimens.boxWidth8,
-                          const Text(IsmChatStrings.wallpaper)
-                        ],
-                      ),
-                    ),
-                  if (!controller.conversation!.isGroup!)
-                    PopupMenuItem(
-                      value: 3,
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.block,
-                            color: IsmChatColors.redColor,
-                          ),
-                          IsmChatDimens.boxWidth8,
-                          controller.conversation!.isBlockedByMe
-                              ? const Text(
-                                  IsmChatStrings.unBlockUser,
-                                )
-                              : const Text(
-                                  IsmChatStrings.blockUser,
-                                )
-                        ],
-                      ),
-                    ),
-                  PopupMenuItem(
-                    value: 4,
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.delete,
-                          color: IsmChatColors.blackColor,
-                        ),
-                        IsmChatDimens.boxWidth8,
-                        const Text(IsmChatStrings.clearChat)
-                      ],
-                    ),
-                  ),
-                  if ((controller.conversation?.lastMessageDetails
-                                  ?.customType ==
-                              IsmChatCustomMessageType.removeMember &&
-                          controller.conversation?.lastMessageDetails?.userId ==
-                              IsmChatConfig
-                                  .communicationConfig.userConfig.userId) ||
-                      controller.isActionAllowed == true) ...[
-                    PopupMenuItem(
-                      value: 5,
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.group_off_rounded,
-                            color: IsmChatColors.redColor,
-                          ),
-                          IsmChatDimens.boxWidth8,
-                          Text(
-                            IsmChatStrings.deleteGroup,
-                            style: IsmChatStyles.w500Black12
-                                .copyWith(color: IsmChatColors.redColor),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                  if (IsmChatProperties.chatPageProperties.header != null &&
-                      IsmChatProperties.chatPageProperties.header!.popupItems !=
-                          null) ...[
-                    ...IsmChatProperties.chatPageProperties.header!
-                        .popupItems!(context, controller.conversation!)
-                        .map(
-                      (e) => PopupMenuItem(
-                        value: IsmChatProperties.chatPageProperties.header!
-                                .popupItems!(context, controller.conversation!)
-                                .indexOf(e) +
-                            6,
-                        child: Row(
-                          children: [
-                            Icon(
-                              e.icon,
-                              color: e.color,
-                            ),
-                            IsmChatDimens.boxWidth8,
-                            Text(e.label)
-                          ],
-                        ),
-                      ),
-                    )
-                  ]
-                ],
-                elevation: 2,
-                onSelected: (value) {
-                  IsmChatLog.error(value);
-                  if (value == 4 || value == 5) {
-                    controller.showDialogForClearChatAndDeleteGroup(
-                        isGroupDelete: value == 5);
-                  } else if (value == 3) {
-                    controller.handleBlockUnblock();
-                  } else if (value == 2) {
-                    controller.addWallpaper();
-                  } else if (value == 1) {
-                    if (Responsive.isWebAndTablet(context)) {
-                      Get.find<IsmChatConversationsController>()
-                              .isRenderChatPageaScreen =
-                          IsRenderChatPageScreen.messageSearchView;
-                    } else {
-                      IsmChatRouteManagement.goToSearchMessageView();
-                    }
-                  } else {
-                    if (IsmChatProperties.chatPageProperties.header == null) {
-                      return;
-                    }
-                    if (IsmChatProperties
-                                .chatPageProperties.header?.popupItems !=
-                            null ||
-                        IsmChatProperties.chatPageProperties.header?.popupItems
-                                ?.call(context, controller.conversation!)
-                                .isNotEmpty ==
-                            true) {
-                      IsmChatProperties.chatPageProperties.header!.popupItems!
-                          .call(context, controller.conversation!)[value - 6]
-                          .onTap(controller.conversation!);
-                    }
-                  }
-                },
-              ),
             ],
           ),
         ),
