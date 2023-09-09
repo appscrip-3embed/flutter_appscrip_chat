@@ -215,7 +215,7 @@ class _ConversationList extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: IsmChatStyles.typing,
                           ),
-                  onTap: () {
+                  onTap: () async {
                     if (kIsWeb) {
                       controller.isConversationId =
                           conversation.conversationId ?? '';
@@ -223,21 +223,8 @@ class _ConversationList extends StatelessWidget {
                     IsmChatProperties.conversationProperties.onChatTap!(
                         _, conversation);
                     controller.navigateToMessages(conversation);
-                    if (Responsive.isWebAndTablet(context)) {
-                      if (!Get.isRegistered<IsmChatPageController>()) {
-                        IsmChatPageBinding().dependencies();
-                        return;
-                      }
 
-                      final chatPagecontroller =
-                          Get.find<IsmChatPageController>();
-                      chatPagecontroller.startInit();
-                      if (chatPagecontroller.messageHoldOverlayEntry != null) {
-                        chatPagecontroller.closeOveray();
-                      }
-                    } else {
-                      IsmChatRouteManagement.goToChatPage();
-                    }
+                    await controller.goToChatPage();
                   },
                 ),
               );

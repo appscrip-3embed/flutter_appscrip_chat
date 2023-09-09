@@ -734,7 +734,7 @@ class IsmChatConversationsController extends GetxController {
     if (response != null) {}
   }
 
-  Future<void> goToChatPage() async {
+  Future<void> goToChatPageWithMessage() async {
     await Future.delayed(const Duration(milliseconds: 100));
     if (Get.isRegistered<IsmChatPageController>()) {
       final chatPagecontroller = Get.find<IsmChatPageController>();
@@ -761,6 +761,22 @@ class IsmChatConversationsController extends GetxController {
       );
       chatPagecontroller.messages = chatPagecontroller.viewModel
           .sortMessages(chatPagecontroller.messages);
+    }
+  }
+
+  Future<void> goToChatPage() async {
+    if (Responsive.isWebAndTablet(Get.context!)) {
+      if (!Get.isRegistered<IsmChatPageController>()) {
+        IsmChatPageBinding().dependencies();
+        return;
+      }
+      final chatPagecontroller = Get.find<IsmChatPageController>();
+      chatPagecontroller.startInit();
+      if (chatPagecontroller.messageHoldOverlayEntry != null) {
+        chatPagecontroller.closeOveray();
+      }
+    } else {
+      IsmChatRouteManagement.goToChatPage();
     }
   }
 

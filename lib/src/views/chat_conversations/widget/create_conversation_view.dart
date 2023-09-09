@@ -284,24 +284,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                           .call(_, ismChatConversation);
                                       controller.navigateToMessages(
                                           ismChatConversation);
-                                      if (Responsive.isWebAndTablet(context)) {
-                                        if (!Get.isRegistered<
-                                            IsmChatPageController>()) {
-                                          IsmChatPageBinding().dependencies();
-                                          return;
-                                        }
-
-                                        final chatPagecontroller =
-                                            Get.find<IsmChatPageController>();
-                                        chatPagecontroller.startInit();
-                                        if (chatPagecontroller
-                                                .messageHoldOverlayEntry !=
-                                            null) {
-                                          chatPagecontroller.closeOveray();
-                                        }
-                                      } else {
-                                        IsmChatRouteManagement.goToChatPage();
-                                      }
+                                      await controller.goToChatPage();
                                     }
                                   },
                                   dense: true,
@@ -502,18 +485,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                     .call(context, ismChatConversation);
                                 controller
                                     .navigateToMessages(ismChatConversation);
-                                if (Responsive.isWebAndTablet(context)) {
-                                  controller
-                                      .navigateToMessages(ismChatConversation);
-                                  if (!Get.isRegistered<
-                                      IsmChatPageController>()) {
-                                    IsmChatPageBinding().dependencies();
-                                    return;
-                                  }
-                                  Get.find<IsmChatPageController>().startInit();
-                                } else {
-                                  IsmChatRouteManagement.goToChatPage();
-                                }
+                                await controller.goToChatPage();
                               },
                             ),
                             IsmChatDimens.boxWidth8,

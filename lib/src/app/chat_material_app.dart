@@ -179,7 +179,6 @@ class IsmChatApp extends StatelessWidget {
       IsmChatConversationsBinding().dependencies();
     }
     var controller = Get.find<IsmChatConversationsController>();
-    Get.put(IsmChatDeviceConfig()).init();
     var conversationId = controller.getConversationId(userId);
     late IsmChatConversationModel conversation;
     if (conversationId.isEmpty) {
@@ -214,10 +213,11 @@ class IsmChatApp extends StatelessWidget {
         messageFromOutSide: messageFromOutSide,
       );
     }
-    controller.navigateToMessages(conversation);
 
     (onNavigateToChat ?? IsmChatProperties.conversationProperties.onChatTap)!
         .call(Get.context!, conversation);
+    controller.navigateToMessages(conversation);
+    await controller.goToChatPage();
   }
 
   /// This function can be used to directly go to chatting page and start chatting from anywhere in the app
@@ -246,13 +246,13 @@ class IsmChatApp extends StatelessWidget {
       IsmChatCommonBinding().dependencies();
       IsmChatConversationsBinding().dependencies();
     }
-    if (!Get.isRegistered<IsmChatPageController>()) {
-      IsmChatPageBinding().dependencies();
-    }
+
     var controller = Get.find<IsmChatConversationsController>();
-    controller.navigateToMessages(ismChatConversation);
+
     (onNavigateToChat ?? IsmChatProperties.conversationProperties.onChatTap)!
         .call(Get.context!, ismChatConversation);
+    controller.navigateToMessages(ismChatConversation);
+    await controller.goToChatPage();
   }
 
   static final RxString _unReadConversationMessages = ''.obs;
