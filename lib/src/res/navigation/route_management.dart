@@ -6,14 +6,18 @@ import 'package:image_picker/image_picker.dart';
 class IsmChatRouteManagement {
   const IsmChatRouteManagement._();
 
-  static void goToChatPage({bool isTemporaryChat = false}) {
-    Get.toNamed(IsmChatPageView.route, arguments: {
-      'isTemporaryChat': isTemporaryChat,
-    });
+  static void goToChatPage() {
+    Get.toNamed(IsmChatPageView.route);
   }
 
   static void goToBroadcastMessagePage({bool isTemporaryChat = false}) {
     Get.toNamed(IsmChatBoradcastMessagePage.route, arguments: {
+      'isTemporaryChat': isTemporaryChat,
+    });
+  }
+
+  static void goToOpenChatMessagePage({bool isTemporaryChat = false}) {
+    Get.toNamed(IsmChatOpenChatMessagePage.route, arguments: {
       'isTemporaryChat': isTemporaryChat,
     });
   }

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:appscrip_chat_component/src/controllers/controllers.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:appscrip_chat_component/src/res/res.dart';
 import 'package:appscrip_chat_component/src/utilities/utilities.dart';
 import 'package:appscrip_chat_component/src/views/views.dart';
@@ -42,6 +41,9 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
               return true;
             },
             child: Scaffold(
+              backgroundColor:
+                  IsmChatConfig.chatTheme.chatPageTheme?.backgroundColor ??
+                      IsmChatColors.whiteColor,
               appBar: AppBar(
                 leading: IsmChatTapHandler(
                   onTap: () => _back(context),
@@ -82,8 +84,6 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
                         ? Align(
                             alignment: Alignment.topCenter,
                             child: ListView.builder(
-                              controller:
-                                  controller.searchMessageScrollController,
                               scrollDirection: Axis.vertical,
                               shrinkWrap: true,
                               reverse: true,
@@ -91,10 +91,8 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
                               itemCount: controller.messages.length,
                               itemBuilder: (_, index) => IsmChatMessage(
                                 index,
-                                IsmChatProperties
-                                    .chatPageProperties.messageBuilder,
                                 controller.messages[index],
-                                true,
+                                isIgnorTap: true,
                               ),
                             ),
                           )

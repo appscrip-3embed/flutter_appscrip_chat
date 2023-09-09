@@ -12,7 +12,6 @@ class MessageCard extends StatelessWidget {
     required this.showMessageInCenter,
     required this.message,
     required this.index,
-    this.messageWidgetBuilder,
   }) : canReply = IsmChatProperties.chatPageProperties.features
             .contains(IsmChatFeature.reply);
 
@@ -21,7 +20,6 @@ class MessageCard extends StatelessWidget {
 
   final int index;
   final bool canReply;
-  final MessageWidgetBuilder? messageWidgetBuilder;
 
   @override
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
@@ -81,8 +79,9 @@ class MessageCard extends StatelessWidget {
                     )
                   : Hero(
                       tag: message,
-                      child: messageWidgetBuilder?.call(context, message,
-                              message.customType!, showMessageInCenter) ??
+                      child: IsmChatProperties.chatPageProperties.messageBuilder
+                              ?.call(context, message, message.customType!,
+                                  showMessageInCenter) ??
                           MessageBubble(
                             message: message,
                             showMessageInCenter: showMessageInCenter,

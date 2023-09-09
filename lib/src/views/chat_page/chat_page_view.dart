@@ -215,11 +215,7 @@ class _IsmChatPageView extends StatelessWidget {
                                                   itemBuilder: (_, index) =>
                                                       IsmChatMessage(
                                                     index,
-                                                    IsmChatProperties
-                                                        .chatPageProperties
-                                                        .messageBuilder,
                                                     controller.messages[index],
-                                                    false,
                                                   ),
                                                 ),
                                               ),
@@ -357,12 +353,15 @@ class _MessgeNotAllowdWidget extends StatelessWidget {
         width: double.maxFinite,
         child: SafeArea(
           child: Center(
-            child: Text(
-              showMessage,
-              style: IsmChatStyles.w600Black12,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              maxLines: 2,
+            child: SizedBox(
+              width: IsmChatDimens.percentWidth(.9),
+              child: Text(
+                showMessage,
+                style: IsmChatStyles.w600Black12,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+              ),
             ),
           ),
         ),

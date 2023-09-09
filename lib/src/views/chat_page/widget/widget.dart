@@ -17,6 +17,7 @@ export 'media_view/media_views.dart';
 export 'mention_user_list.dart';
 export 'message_info.dart';
 export 'messages/messages.dart';
+export 'openchat_message.dart';
 export 'reaction.dart';
 export 'reaction_button.dart';
 export 'search_messge.dart';

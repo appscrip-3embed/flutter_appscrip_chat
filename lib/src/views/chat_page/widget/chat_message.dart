@@ -1,37 +1,31 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatMessage extends StatefulWidget {
-  IsmChatMessage(this.index, this.messageWidgetBuilder,
-      IsmChatMessageModel? message, bool isMessageSearch,
-      {super.key})
-      : _message = isMessageSearch
-            ? Get.isRegistered<IsmChatPageController>()
-                ? Get.find<IsmChatPageController>().isTemporaryChat
-                    ? Get.isRegistered<IsmChatPageController>()
-                        ? Get.find<IsmChatPageController>()
-                            .messages
-                            .reversed
-                            .toList()[index]
-                        : message
-                    : Get.find<IsmChatPageController>()
-                        .searchMessages
-                        .reversed
-                        .toList()[index]
-                : message
-            : Get.isRegistered<IsmChatPageController>()
+  IsmChatMessage(
+    this.index,
+    IsmChatMessageModel? message, {
+    bool isIgnorTap = false,
+    bool isFromSearchMessage = false,
+    super.key,
+  })  : _message = Get.isRegistered<IsmChatPageController>()
+            ? isFromSearchMessage
                 ? Get.find<IsmChatPageController>()
+                    .searchMessages
+                    .reversed
+                    .toList()[index]
+                : Get.find<IsmChatPageController>()
                     .messages
                     .reversed
                     .toList()[index]
-                : message,
-        _isMessageSearch = isMessageSearch;
+            : message,
+        _isIgnorTap = isIgnorTap;
 
   final IsmChatMessageModel? _message;
-  final bool? _isMessageSearch;
+  final bool? _isIgnorTap;
   final int index;
-  final MessageWidgetBuilder? messageWidgetBuilder;
 
   @override
   State<IsmChatMessage> createState() => _IsmChatMessageState();
@@ -85,7 +79,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
     super.build(context);
     var theme = IsmChatConfig.chatTheme.chatPageTheme;
     return IgnorePointer(
-      ignoring: widget._isMessageSearch!,
+      ignoring: widget._isIgnorTap!,
       child: IsmChatTapHandler(
         onLongPress: showMessageInCenter
             ? null
@@ -160,7 +154,9 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                                   .chatTheme.chatPageTheme?.profileImageSize ??
                               30,
                         ),
-                        if (widget.messageWidgetBuilder == null) ...[
+                        if (IsmChatProperties
+                                .chatPageProperties.messageBuilder ==
+                            null) ...[
                           IsmChatDimens.boxWidth2,
                         ],
                       ],
@@ -168,14 +164,15 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                       message: widget._message!,
                       showMessageInCenter: showMessageInCenter,
                       index: widget.index,
-                      messageWidgetBuilder: widget.messageWidgetBuilder,
                     ),
                     if (theme?.selfMessageTheme?.showProfile != null)
                       if (theme?.selfMessageTheme?.showProfile == true &&
                           !isGroup &&
                           !showMessageInCenter &&
                           widget._message!.sentByMe) ...[
-                        if (widget.messageWidgetBuilder == null) ...[
+                        if (IsmChatProperties
+                                .chatPageProperties.messageBuilder ==
+                            null) ...[
                           IsmChatDimens.boxWidth4,
                         ],
                         IsmChatImage.profile(
@@ -210,14 +207,12 @@ class _Message extends StatelessWidget {
     required this.message,
     required this.showMessageInCenter,
     required this.index,
-    this.messageWidgetBuilder,
   });
 
   final IsmChatMessageModel message;
   final bool showMessageInCenter;
 
   final int index;
-  final MessageWidgetBuilder? messageWidgetBuilder;
 
   @override
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
@@ -270,7 +265,6 @@ class _Message extends StatelessWidget {
                     showMessageInCenter: showMessageInCenter,
                     message: message,
                     index: index,
-                    messageWidgetBuilder: messageWidgetBuilder,
                   ),
                 ],
               ),

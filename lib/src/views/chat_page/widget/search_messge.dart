@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -18,6 +17,9 @@ class IsmChatSearchMessgae extends StatelessWidget {
         },
         builder: (controller) => Scaffold(
           resizeToAvoidBottomInset: false,
+          backgroundColor:
+              IsmChatConfig.chatTheme.chatPageTheme?.backgroundColor ??
+                  IsmChatColors.whiteColor,
           appBar: IsmChatAppBar(
             onBack: !Responsive.isWebAndTablet(context)
                 ? null
@@ -53,9 +55,13 @@ class IsmChatSearchMessgae extends StatelessWidget {
                 )
               : controller.textEditingController.text.isEmpty
                   ? Center(
-                      child: Text(
-                        IsmChatStrings.noSearch,
-                        style: IsmChatStyles.w600Black20,
+                      child: SizedBox(
+                        width: IsmChatDimens.percentWidth(.7),
+                        child: Text(
+                          IsmChatStrings.noSearch,
+                          style: IsmChatStyles.w600Black20,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     )
                   : SafeArea(
@@ -75,10 +81,9 @@ class IsmChatSearchMessgae extends StatelessWidget {
                             itemCount: controller.searchMessages.length,
                             itemBuilder: (_, index) => IsmChatMessage(
                               index,
-                              IsmChatProperties
-                                  .chatPageProperties.messageBuilder,
                               controller.searchMessages[index],
-                              true,
+                              isFromSearchMessage: true,
+                              isIgnorTap: true,
                             ),
                           ),
                         ),

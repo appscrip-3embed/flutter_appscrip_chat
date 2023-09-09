@@ -1,6 +1,6 @@
 export 'blocked_users.dart';
 export 'bottom_sheet.dart';
-export 'broadcast.dart';
+export 'broadcast_conversation.dart';
 export 'create_conversation_view.dart';
 export 'forward_view.dart';
 export 'group_input_field.dart';
