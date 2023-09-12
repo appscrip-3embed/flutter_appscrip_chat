@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 class IsmChatConversationProperties {
   IsmChatConversationProperties({
     this.onChatTap,
-    this.onForwardTap,
     this.onCreateTap,
-    this.useCallbackOnForward = false,
     this.cardBuilder,
     this.cardElementBuilders,
     this.showCreateChatIcon = false,
@@ -25,7 +23,6 @@ class IsmChatConversationProperties {
     this.allowedConversations = const [IsmChatConversationType.private],
     this.conversationPosition = IsmChatConversationPosition.tabBar,
   }) {
-    assert(useCallbackOnForward && onForwardTap != null);
     assert(
       (showCreateChatIcon && onCreateTap != null) || !showCreateChatIcon,
       'If showCreateChatIcon is set to true then a non null callback must be passed to onCreateChatTap parameter',
@@ -50,13 +47,11 @@ class IsmChatConversationProperties {
   ///
   /// `IsmChatConversationModel` gives data of current chat, it could be used for local storage or state variables
   final ConversationVoidCallback? onChatTap;
-  final ConversationVoidCallback? onForwardTap;
 
   /// A callback for `navigating` to the create chat screen
   ///
   /// A non-null callback should be passed, if showCreateChatIcon is set to `true`
   final VoidCallback? onCreateTap;
-  final bool useCallbackOnForward;
 
   /// `itemBuilder` will handle how child items are rendered on the screen.
   ///

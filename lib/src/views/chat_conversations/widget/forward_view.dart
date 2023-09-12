@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -287,7 +288,7 @@ class IsmChatForwardView extends StatelessWidget {
                           ),
                         ),
                         height: IsmChatDimens.sixty,
-                        padding: IsmChatDimens.edgeInsets0_10,
+                        padding: IsmChatDimens.edgeInsets10_0,
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -305,8 +306,20 @@ class IsmChatForwardView extends StatelessWidget {
                                 ),
                               ),
                             ),
+                            const VerticalDivider(
+                              thickness: 1,
+                              color: IsmChatColors.greyColorLight,
+                            ),
                             FloatingActionButton(
                               onPressed: () async {
+                                if (IsmChatProperties
+                                        .chatPageProperties.onForwardTap !=
+                                    null) {
+                                  IsmChatProperties
+                                      .chatPageProperties.onForwardTap!
+                                      .call(context,
+                                          controller.currentConversation!);
+                                }
                                 await controller.sendForwardMessage(
                                   customType: _message?.customType?.name ?? '',
                                   userIds: controller.selectedUserList

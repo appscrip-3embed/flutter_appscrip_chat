@@ -2,7 +2,7 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
 class IsmChatPageHeaderProperties {
-  const IsmChatPageHeaderProperties({
+  IsmChatPageHeaderProperties({
     this.profileImageBuilder,
     this.profileImageUrl,
     this.titleBuilder,
@@ -14,6 +14,7 @@ class IsmChatPageHeaderProperties {
     this.onBackTap,
     this.height,
     this.shape,
+    this.onProfileTap,
   });
 
   final ConversationWidgetCallback? profileImageBuilder;
@@ -25,6 +26,11 @@ class IsmChatPageHeaderProperties {
   final ConversationCallback? bottom;
   final PopupItemListCallback? popupItems;
   final VoidCallback? onBackTap;
+
+  /// This funcation provides for tap on profile pic of chat page header,
+  /// This is optional parameter
+  /// When you have user `profileImageBuilder` then you can add own tap handler
+  final void Function(IsmChatConversationModel)? onProfileTap;
   final double? Function(
     BuildContext,
     IsmChatConversationModel,
