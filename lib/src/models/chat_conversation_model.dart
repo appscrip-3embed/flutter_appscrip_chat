@@ -135,10 +135,7 @@ class IsmChatConversationModel {
   final String? messageFromOutSide;
   final String? customType;
 
-  String get replyName =>
-      IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-          ? IsmChatConfig.communicationConfig.userConfig.userName
-          : opponentDetails?.userName ?? '';
+  String get replyName => opponentDetails?.userName ?? '';
 
   String get chatName => conversationTitle ?? opponentDetails?.userName ?? '';
 

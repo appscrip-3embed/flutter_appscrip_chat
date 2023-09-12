@@ -8,30 +8,31 @@ class IsmChatReplyMessage extends StatelessWidget {
   final IsmChatMessageModel message;
 
   @override
-  Widget build(BuildContext context) => IntrinsicWidth(
-        // stepHeight: 200,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _ReplyMessage(message),
-            // ChatDimens.boxHeight4,
-            Container(
-              alignment: message.sentByMe
-                  ? Alignment.centerRight
-                  : Alignment.centerLeft,
-              constraints: BoxConstraints(
-                minHeight: IsmChatDimens.twentyFour,
+  Widget build(BuildContext context) => Material(
+        color: Colors.transparent,
+        child: IntrinsicWidth(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _ReplyMessage(message),
+              Container(
+                alignment: message.sentByMe
+                    ? Alignment.centerRight
+                    : Alignment.centerLeft,
+                constraints: BoxConstraints(
+                  minHeight: IsmChatDimens.twentyFour,
+                ),
+                padding: IsmChatDimens.edgeInsets4_0,
+                child: Text(
+                  message.body,
+                  style: message.style,
+                  softWrap: true,
+                  maxLines: null,
+                ),
               ),
-              padding: IsmChatDimens.edgeInsets4_0,
-              child: Text(
-                message.body,
-                style: message.style,
-                softWrap: true,
-                maxLines: null,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
 }
