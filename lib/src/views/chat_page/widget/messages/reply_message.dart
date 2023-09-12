@@ -80,7 +80,9 @@ class _ReplyMessage extends StatelessWidget {
                         Text(
                           replyingMyMessage
                               ? IsmChatStrings.you
-                              : controller.conversation!.replyName,
+                              : controller.conversation!.replyName
+                                      .capitalizeFirst ??
+                                  '',
                           style: IsmChatStyles.w500Black14.copyWith(
                             color: replyingMyMessage
                                 ? IsmChatColors.yellowColor
