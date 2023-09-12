@@ -252,6 +252,12 @@ class IsmChatConversationsController extends GetxController {
         );
       case IsRenderChatPageScreen.messageSearchView:
         return const IsmChatSearchMessgae();
+      case IsRenderChatPageScreen.boradcastChatMessagePage:
+        // TODO: Handle this case.
+        break;
+      case IsRenderChatPageScreen.openChatMessagePage:
+        // TODO: Handle this case.
+        break;
     }
     return const SizedBox.shrink();
   }

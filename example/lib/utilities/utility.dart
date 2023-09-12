@@ -1,3 +1,4 @@
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/res/res.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -47,6 +48,7 @@ class Utility {
       'appSecret': Constants.appSecret,
       'userSecret': Constants.userSecret,
     };
+
     return header;
   }
 

@@ -638,7 +638,8 @@ enum IsRenderChatPageScreen {
   coversationMediaView,
   userInfoView,
   messageSearchView,
-  boradcastMessagePage,
+  boradcastChatMessagePage,
+  openChatMessagePage,
 }
 
 enum IsmChatConversationPosition {

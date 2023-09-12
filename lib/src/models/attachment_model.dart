@@ -8,7 +8,11 @@ class AttachmentModel {
 
   factory AttachmentModel.fromMap(Map<String, dynamic> map) => AttachmentModel(
         thumbnailUrl: map['thumbnailUrl'] as String? ?? '',
-        size: map['size'] as int? ?? 0,
+        size: map['size'].runtimeType == double
+            ? int.tryParse(
+                (map['size'] as double? ?? 0).toString(),
+              )
+            : map['size'] as int? ?? 0,
         name: map['name'] as String? ?? '',
         mimeType: map['mimeType'] as String? ?? '',
         mediaUrl: map['mediaUrl'] as String? ?? '',
