@@ -10,6 +10,7 @@ class IsmChatPageProperties {
     this.features = IsmChatFeature.values,
     this.attachmentConfig,
     this.messageAllowedConfig,
+    this.onForwardTap,
   });
 
   final Widget? placeholder;
@@ -33,4 +34,15 @@ class IsmChatPageProperties {
   final MessageAllowedConfig? messageAllowedConfig;
 
   final AttachmentConfig? attachmentConfig;
+
+  /// Required parameter
+  ///
+  /// Primarily designed for nagivating to Message screen
+  ///
+  /// ```dart
+  /// void Function(BuildContext, IsmChatConversationModel) onForwardTap;
+  /// ```
+  ///
+  /// `IsmChatConversationModel` gives data of current chat, it could be used for local storage or state variables
+  final ConversationVoidCallback? onForwardTap;
 }
