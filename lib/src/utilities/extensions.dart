@@ -963,3 +963,7 @@ extension Conversation on IsmChatConversationType {
     }
   }
 }
+
+extension RenederBox on BuildContext {
+  RenderBox get renderBox => findRenderObject() as RenderBox;
+}

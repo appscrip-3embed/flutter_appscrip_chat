@@ -1,7 +1,7 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
-typedef ConversationCallback = Widget Function(
+typedef ConversationCallback = PreferredSizeWidget Function(
   BuildContext,
   IsmChatConversationModel,
 );

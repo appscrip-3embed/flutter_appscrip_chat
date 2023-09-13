@@ -972,8 +972,8 @@ class IsmChatPageController extends GetxController
     IsmChatMessageModel message,
     Animation<double> animation,
   ) async {
-    final renderBox = context.findRenderObject() as RenderBox?;
-    final size = renderBox!.size;
+    final renderBox = context.renderBox;
+    final size = renderBox.size;
     final offset = renderBox.localToGlobal(Offset.zero);
     // Get hight of Overlay widget which is rendor on message tap
     var overlayHeight = message.focusMenuList.length * IsmChatDimens.forty +

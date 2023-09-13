@@ -150,3 +150,22 @@ class _ChatListState extends State<ChatList> {
     );
   }
 }
+
+class NewClass extends StatelessWidget implements PreferredSizeWidget {
+  const NewClass({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return PreferredSize(
+      preferredSize: preferredSize,
+      child: const Column(
+        children: [
+          Text('Rahul'),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(50);
+}

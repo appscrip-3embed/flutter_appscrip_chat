@@ -23,6 +23,8 @@ class IsmChatPageHeaderProperties {
   final ConversationStringCallback? title;
   final ConversationWidgetCallback? subtitleBuilder;
   final ConversationStringCallback? subtitle;
+
+  /// Provides this methode with exclude hight of widget
   final ConversationCallback? bottom;
   final PopupItemListCallback? popupItems;
   final VoidCallback? onBackTap;
