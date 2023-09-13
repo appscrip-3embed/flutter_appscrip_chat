@@ -5,14 +5,26 @@ import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart'
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class IsmChatPageView extends StatelessWidget {
+class IsmChatPageView extends StatefulWidget {
   const IsmChatPageView({
     super.key,
   });
 
   static const String route = IsmPageRoutes.chatPage;
 
-  // @override
+  @override
+  State<IsmChatPageView> createState() => _IsmChatPageViewState();
+}
+
+class _IsmChatPageViewState extends State<IsmChatPageView> {
+  @override
+  void didUpdateWidget(covariant IsmChatPageView oldWidget) {
+    if (IsmChatProperties.chatPageProperties.header?.height != null) {
+      setState(() {});
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
   IsmChatPageController get controller => Get.find<IsmChatPageController>();
 
   Future<bool> navigateBack() async {
