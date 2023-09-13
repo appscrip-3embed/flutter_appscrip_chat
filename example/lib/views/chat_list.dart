@@ -55,6 +55,21 @@ class _ChatListState extends State<ChatList> {
               ),
             ),
             chatPageProperties: IsmChatPageProperties(
+              // header: IsmChatPageHeaderProperties(
+              //   bottom: controller.firstTapConversations == true
+              //       ? (p0, p1) {
+              //           Future.delayed(const Duration(seconds: 1));
+              //           return const SizedBox(
+              //             child: Center(
+              //               child: Text('Saryam'),
+              //             ),
+              //           );
+              //         }
+              //       : null,
+              //   height: controller.firstTapConversations == true
+              //       ? (p0, p1) => 100
+              //       : null,
+              // ),
               placeholder: IsmChatEmptyView(
                 icon: Icon(
                   Icons.chat_outlined,
@@ -118,7 +133,9 @@ class _ChatListState extends State<ChatList> {
               enableGroupChat: true,
               allowDelete: true,
               onCreateTap: () {},
-              onChatTap: (_, conversation) {},
+              onChatTap: (_, conversation) {
+                // controller.callFuncation();
+              },
               isHeaderAppBar: Responsive.isWebAndTablet(context) ? false : true,
               header: IsmChatListHeader(
                 onSignOut: () {
@@ -149,23 +166,4 @@ class _ChatListState extends State<ChatList> {
       },
     );
   }
-}
-
-class NewClass extends StatelessWidget implements PreferredSizeWidget {
-  const NewClass({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return PreferredSize(
-      preferredSize: preferredSize,
-      child: const Column(
-        children: [
-          Text('Rahul'),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(50);
 }

@@ -22,6 +22,10 @@ class ChatListController extends GetxController {
   bool get firstTapConversation => _firstTapConversation.value;
   set firstTapConversation(bool value) => _firstTapConversation.value = value;
 
+  // final RxBool _firstTapConversations = false.obs;
+  // bool get firstTapConversations => _firstTapConversations.value;
+  // set firstTapConversations(bool value) => _firstTapConversations.value = value;
+
   @override
   void onInit() {
     super.onInit();
@@ -41,4 +45,10 @@ class ChatListController extends GetxController {
     IsmChatApp.logout();
     Get.offAllNamed(AppRoutes.login);
   }
+
+  // void callFuncation() async {
+  //   await Future.delayed(const Duration(seconds: 5));
+  //   firstTapConversations = true;
+  //   Get.find<IsmChatPageController>().update();
+  // }
 }

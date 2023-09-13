@@ -208,14 +208,16 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ],
             ),
-            bottom: PreferredSize(
-              preferredSize: preferredSize,
-              child: Padding(
-                padding: IsmChatDimens.edgeInsets4,
-                child: IsmChatProperties.chatPageProperties.header?.bottom
-                    ?.call(context, controller.conversation!),
-              ),
-            ),
+            bottom: IsmChatProperties.chatPageProperties.header?.bottom == null
+                ? null
+                : PreferredSize(
+                    preferredSize: preferredSize,
+                    child: Padding(
+                      padding: IsmChatDimens.edgeInsets4,
+                      child: IsmChatProperties.chatPageProperties.header?.bottom
+                          ?.call(context, controller.conversation!),
+                    ),
+                  ),
             actions: [
               PopupMenuButton<int>(
                 icon: Icon(
@@ -375,31 +377,4 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       );
-}
-
-class NewPrered extends StatelessWidget {
-  const NewPrered({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    IsmChatLog.error('step1');
-    IsmChatLog.error(context.renderBox.size.height);
-    return Padding(
-      padding: IsmChatDimens.edgeInsets4,
-      child: IsmChatProperties.chatPageProperties.header?.bottom
-          ?.call(context, Get.find<IsmChatPageController>().conversation!),
-    );
-  }
-
-  // @override
-  // Size get preferredSize {
-  //   IsmChatLog.error('step2');
-  //   if (Get.isRegistered<IsmChatPageController>()) {
-  //     // return Size.fromHeight(IsmChatProperties.chatPageProperties.header?.height
-  //     //         ?.call(Get.context!,
-  //     //             Get.find<IsmChatPageController>().conversation!) ??
-  //     //     IsmChatDimens.appBarHeight);
-  //   }
-  //   return Size.fromHeight(IsmChatDimens.appBarHeight);
-  // }
 }
