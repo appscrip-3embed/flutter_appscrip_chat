@@ -98,6 +98,10 @@ class IsmChatPageController extends GetxController
   bool get isreplying => _isreplying.value;
   set isreplying(bool value) => _isreplying.value = value;
 
+  final RxBool _isUpdateController = true.obs;
+  bool get isUpdateController => _isUpdateController.value;
+  set isUpdateController(bool value) => _isUpdateController.value = value;
+
   final RxBool _isMemberSearch = false.obs;
   bool get isMemberSearch => _isMemberSearch.value;
   set isMemberSearch(bool value) => _isMemberSearch.value = value;

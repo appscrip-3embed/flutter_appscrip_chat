@@ -81,6 +81,16 @@ class IsmChatApp extends StatelessWidget {
   final Widget? noChatSelectedPlaceholder;
 
   /// Call this function for Get all Conversation List
+  static void updateChatPageController() {
+    if (Get.isRegistered<IsmChatPageController>()) {
+      final controller = Get.find<IsmChatPageController>();
+      var conversationModel = controller.conversation!;
+      controller.conversation = null;
+      controller.conversation = conversationModel;
+    }
+  }
+
+  /// Call this function for Get all Conversation List
   static Future<List<IsmChatConversationModel>?> getAllConversation() async =>
       IsmChatConfig.dbWrapper?.getAllConversations();
 

@@ -46,14 +46,16 @@ class IsmChatPageView extends StatelessWidget {
                     navigateBack();
                   }
                 },
-                child: const _IsmChatPageView(),
+                child: const _IsmChatPageView(false),
               )
-            : const _IsmChatPageView(),
+            : const _IsmChatPageView(false),
       );
 }
 
 class _IsmChatPageView extends StatelessWidget {
-  const _IsmChatPageView();
+  const _IsmChatPageView(this.value);
+
+  final bool value;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(

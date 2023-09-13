@@ -171,7 +171,6 @@ mixin IsmChatPageGetMessageMixin {
               a.userName.toLowerCase().compareTo(b.userName.toLowerCase()));
         }
 
-        _controller.update();
         IsmChatLog.success('Updated conversation');
       }
       if (data.statusCode == 400 && conversationId.isNotEmpty) {

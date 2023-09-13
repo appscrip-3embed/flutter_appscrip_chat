@@ -23,18 +23,19 @@ class _MessageBubbleState extends State<MessageBubble>
     with TickerProviderStateMixin {
   GlobalKey globalKey = GlobalKey();
   var controller = Get.find<IsmChatPageController>();
-  late Animation<double> holdAnimation = CurvedAnimation(
-    parent: controller.holdController,
-    curve: Curves.easeInOutCubic,
-  );
+  late Animation<double> holdAnimation;
 
   @override
   void initState() {
+    super.initState();
     controller.holdController = AnimationController(
       vsync: this,
       duration: IsmChatConstants.transitionDuration,
     );
-    super.initState();
+    holdAnimation = CurvedAnimation(
+      parent: controller.holdController,
+      curve: Curves.easeInOutCubic,
+    );
   }
 
   @override

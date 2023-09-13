@@ -7,16 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-class ChatList extends StatefulWidget {
+class ChatList extends StatelessWidget {
   const ChatList({super.key});
 
   static const String route = AppRoutes.chatList;
 
-  @override
-  State<ChatList> createState() => _ChatListState();
-}
-
-class _ChatListState extends State<ChatList> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatListController>(
@@ -56,18 +51,19 @@ class _ChatListState extends State<ChatList> {
             ),
             chatPageProperties: IsmChatPageProperties(
               // header: IsmChatPageHeaderProperties(
-              //   bottom: controller.firstTapConversations == true
+              //   onBackTap: () {
+              //     // controller.firstUpdateWidget = false;
+              //   },
+              //   bottom: controller.firstUpdateWidget == true
               //       ? (p0, p1) {
-              //           Future.delayed(const Duration(seconds: 1));
-              //           return const SizedBox(
-              //             child: Center(
-              //               child: Text('Saryam'),
-              //             ),
-              //           );
+              //           return const PreferredSize(
+              //               preferredSize: Size.fromHeight(100),
+              //               child: SizedBox(
+              //                 child: Center(
+              //                   child: Text('Rahul'),
+              //                 ),
+              //               ));
               //         }
-              //       : null,
-              //   height: controller.firstTapConversations == true
-              //       ? (p0, p1) => 100
               //       : null,
               // ),
               placeholder: IsmChatEmptyView(
@@ -85,20 +81,6 @@ class _ChatListState extends State<ChatList> {
                 if (!kIsWeb) IsmChatAttachmentType.location,
                 if (!kIsWeb) IsmChatAttachmentType.contact,
               ],
-              // header: IsmChatPageHeaderProperties(
-              //   popupItems: (_, converstion) {
-              //     if (converstion.metaData?.isMatchId?.isEmpty == true) {
-              //       return [
-              //         IsmChatPopupMenuItem(
-              //           label: 'Unmatch',
-              //           icon: Icons.no_accounts,
-              //           onTap: (conversation) {},
-              //         )
-              //       ];
-              //     }
-              //     return [];
-              //   },
-              // )
             ),
             noChatSelectedPlaceholder: Center(
               child: Column(
@@ -166,4 +148,22 @@ class _ChatListState extends State<ChatList> {
       },
     );
   }
+}
+
+class Prefred extends StatelessWidget implements PreferredSizeWidget {
+  const Prefred({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return PreferredSize(
+        preferredSize: preferredSize,
+        child: const SizedBox(
+          child: Center(
+            child: Text('Rahul'),
+          ),
+        ));
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(100);
 }

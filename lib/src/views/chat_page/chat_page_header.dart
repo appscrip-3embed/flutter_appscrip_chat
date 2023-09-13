@@ -16,11 +16,19 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize {
     if (Get.isRegistered<IsmChatPageController>()) {
-      return Size.fromHeight(IsmChatProperties.chatPageProperties.header?.height
-              ?.call(Get.context!,
-                  Get.find<IsmChatPageController>().conversation!) ??
-          IsmChatDimens.appBarHeight);
+      return Size.fromHeight(
+          (IsmChatProperties.chatPageProperties.header?.height?.call(
+                      Get.context!,
+                      Get.find<IsmChatPageController>().conversation!) ??
+                  IsmChatDimens.appBarHeight) +
+              (IsmChatProperties.chatPageProperties.header?.bottom
+                      ?.call(Get.context!,
+                          Get.find<IsmChatPageController>().conversation!)
+                      .preferredSize
+                      .height ??
+                  0));
     }
+
     return Size.fromHeight(IsmChatDimens.appBarHeight);
   }
 
@@ -208,16 +216,8 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ],
             ),
-            bottom: IsmChatProperties.chatPageProperties.header?.bottom == null
-                ? null
-                : PreferredSize(
-                    preferredSize: preferredSize,
-                    child: Padding(
-                      padding: IsmChatDimens.edgeInsets4,
-                      child: IsmChatProperties.chatPageProperties.header?.bottom
-                          ?.call(context, controller.conversation!),
-                    ),
-                  ),
+            bottom: IsmChatProperties.chatPageProperties.header?.bottom
+                ?.call(context, controller.conversation!),
             actions: [
               PopupMenuButton<int>(
                 icon: Icon(

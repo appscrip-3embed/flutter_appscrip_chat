@@ -22,9 +22,9 @@ class ChatListController extends GetxController {
   bool get firstTapConversation => _firstTapConversation.value;
   set firstTapConversation(bool value) => _firstTapConversation.value = value;
 
-  // final RxBool _firstTapConversations = false.obs;
-  // bool get firstTapConversations => _firstTapConversations.value;
-  // set firstTapConversations(bool value) => _firstTapConversations.value = value;
+  // final RxBool _firstUpdateWidget = false.obs;
+  // bool get firstUpdateWidget => _firstUpdateWidget.value;
+  // set firstUpdateWidget(bool value) => _firstUpdateWidget.value = value;
 
   @override
   void onInit() {
@@ -48,7 +48,7 @@ class ChatListController extends GetxController {
 
   // void callFuncation() async {
   //   await Future.delayed(const Duration(seconds: 5));
-  //   firstTapConversations = true;
-  //   Get.find<IsmChatPageController>().update();
+  //   firstUpdateWidget = true;
+  //   IsmChatApp.updateChatPageController();
   // }
 }
