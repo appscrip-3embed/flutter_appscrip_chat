@@ -588,7 +588,10 @@ extension ModelConversion on IsmChatConversationModel {
 
       return Icon(
         deliveredToAll ? Icons.done_all_rounded : Icons.done_rounded,
-        color: readByAll ? Colors.blue : Colors.grey,
+        color: readByAll
+            ? Colors.blue
+            : IsmChatConfig.chatTheme.chatListCardThemData?.subTitleColor ??
+                Colors.grey,
         size: 16,
       );
     } catch (e, st) {
@@ -720,7 +723,8 @@ extension LastMessageBody on LastMessageDetails {
       return Icon(
         iconData,
         size: IsmChatDimens.fifteen,
-        color: IsmChatColors.blackColor,
+        color: IsmChatConfig.chatTheme.chatListCardThemData?.subTitleColor ??
+            IsmChatColors.blackColor,
       );
     }
     return const SizedBox.shrink();

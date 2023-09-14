@@ -86,12 +86,26 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
                   Flexible(
                     child: Text(
                       widget.conversation.lastMessageDetails?.messageBody ?? '',
-                      style: IsmChatStyles.w400Black12.copyWith(
-                          fontStyle: widget.conversation.lastMessageDetails
-                                      ?.customType ==
-                                  IsmChatCustomMessageType.deletedForEveryone
-                              ? FontStyle.italic
-                              : FontStyle.normal),
+                      style: IsmChatConfig.chatTheme.chatListCardThemData
+                                  ?.subTitleColor !=
+                              null
+                          ? IsmChatStyles.w400Black12.copyWith(
+                              color: IsmChatConfig.chatTheme
+                                  .chatListCardThemData?.subTitleColor,
+                              fontStyle: widget.conversation.lastMessageDetails
+                                          ?.customType ==
+                                      IsmChatCustomMessageType
+                                          .deletedForEveryone
+                                  ? FontStyle.italic
+                                  : FontStyle.normal,
+                            )
+                          : IsmChatStyles.w400Black12.copyWith(
+                              fontStyle: widget.conversation.lastMessageDetails
+                                          ?.customType ==
+                                      IsmChatCustomMessageType
+                                          .deletedForEveryone
+                                  ? FontStyle.italic
+                                  : FontStyle.normal),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -106,19 +120,28 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
               Text(
                 widget.conversation.lastMessageDetails!.sentAt
                     .toLastMessageTimeString(),
-                style: IsmChatStyles.w400Black10,
+                style: IsmChatConfig
+                        .chatTheme.chatListCardThemData?.trailingTextStyle ??
+                    IsmChatStyles.w400Black10,
               ),
               if (widget.conversation.unreadMessagesCount != null &&
                   widget.conversation.unreadMessagesCount != 0)
                 FittedBox(
                   child: CircleAvatar(
                     radius: IsmChatDimens.ten,
-                    backgroundColor: IsmChatConfig.chatTheme.primaryColor!,
+                    backgroundColor: IsmChatConfig.chatTheme
+                            .chatListCardThemData?.trailingBackgroundColor ??
+                        IsmChatConfig.chatTheme.primaryColor!,
                     child: Text(
                       (widget.conversation.unreadMessagesCount ?? 0) < 99
                           ? widget.conversation.unreadMessagesCount.toString()
                           : '99+',
-                      style: IsmChatStyles.w700White10,
+                      style: IsmChatConfig
+                              .chatTheme.chatListCardThemData?.trailingTextStyle
+                              ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: IsmChatDimens.seventy) ??
+                          IsmChatStyles.w700White10,
                       textAlign: TextAlign.center,
                       maxLines: 1,
                     ),
