@@ -17,6 +17,7 @@ class IsmChatAudioMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     var url = message.attachments!.first.mediaUrl!;
     var duration = message.metaData?.duration;
+
     return Material(
       color: message.sentByMe
           ? IsmChatConfig.chatTheme.primaryColor
@@ -39,8 +40,8 @@ class IsmChatAudioMessage extends StatelessWidget {
             contactPlayIconColor: IsmChatConfig.chatTheme.chatPageTheme
                     ?.opponentMessageTheme?.backgroundColor ??
                 IsmChatConfig.chatTheme.backgroundColor!,
-            contactFgColor: IsmChatConfig.chatTheme.chatPageTheme
-                    ?.selfMessageTheme?.backgroundColor ??
+            contactFgColor: IsmChatConfig
+                    .chatTheme.chatPageTheme?.opponentMessageTheme?.textColor ??
                 IsmChatConfig.chatTheme.primaryColor!,
             duration: duration,
           ),
@@ -158,6 +159,7 @@ class _VoiceMessageState extends State<VoiceMessage>
           break;
         case PlayerState.completed:
           remainingTime = _audioDuration!.formatDuration();
+          isPlaying = false;
           break;
         default:
           break;
@@ -175,8 +177,8 @@ class _VoiceMessageState extends State<VoiceMessage>
   @override
   Widget build(BuildContext context) => Container(
         alignment: Alignment.center,
-        width: IsmChatDimens.twoHundredTwenty,
-        height: IsmChatDimens.seventyEight,
+        width: IsmChatDimens.twoHundred,
+        height: IsmChatDimens.seventy,
         color: widget.me ? widget.meBgColor : widget.contactBgColor,
         child: Row(
           mainAxisSize: MainAxisSize.min,

@@ -27,34 +27,36 @@ mixin IsmChatPageGetMessageMixin {
     int? lastMessageTimestamp,
     bool isTemporaryChat = false,
   }) async {
-    if (_controller.messages.isEmpty) {
-      _controller.isMessagesLoading = true;
-    }
+    if (Get.isRegistered<IsmChatPageController>()) {
+      if (_controller.messages.isEmpty) {
+        _controller.isMessagesLoading = true;
+      }
 
-    var timeStamp = lastMessageTimestamp ??
-        (_controller.messages.isEmpty
-            ? 0
-            : _controller.messages.last.sentAt + 2000);
+      var timeStamp = lastMessageTimestamp ??
+          (_controller.messages.isEmpty
+              ? 0
+              : _controller.messages.last.sentAt + 2000);
 
-    var messagesList = List.from(_controller.messages);
-    messagesList.removeWhere(
-        (element) => element.customType == IsmChatCustomMessageType.date);
-    var conversationID = conversationId.isNotEmpty
-        ? conversationId
-        : _controller.conversation?.conversationId ?? '';
-    var data = await _controller.viewModel.getChatMessages(
-      pagination: forPagination ? messagesList.length.pagination() : 0,
-      conversationId: conversationID,
-      lastMessageTimestamp: timeStamp,
-      isTemporaryChat: isTemporaryChat,
-    );
-    if (_controller.messages.isEmpty) {
-      _controller.isMessagesLoading = false;
-    }
-    if (data.isNotEmpty && !_controller.isTemporaryChat) {
-      await getMessagesFromDB(conversationID);
-    } else {
-      _controller.messages.addAll(data);
+      var messagesList = List.from(_controller.messages);
+      messagesList.removeWhere(
+          (element) => element.customType == IsmChatCustomMessageType.date);
+      var conversationID = conversationId.isNotEmpty
+          ? conversationId
+          : _controller.conversation?.conversationId ?? '';
+      var data = await _controller.viewModel.getChatMessages(
+        pagination: forPagination ? messagesList.length.pagination() : 0,
+        conversationId: conversationID,
+        lastMessageTimestamp: timeStamp,
+        isTemporaryChat: isTemporaryChat,
+      );
+      if (_controller.messages.isEmpty) {
+        _controller.isMessagesLoading = false;
+      }
+      if (data.isNotEmpty && !_controller.isTemporaryChat) {
+        await getMessagesFromDB(conversationID);
+      } else {
+        _controller.messages.addAll(data);
+      }
     }
   }
 
@@ -126,15 +128,16 @@ mixin IsmChatPageGetMessageMixin {
       int? membersSkip,
       int? membersLimit,
       bool? isLoading}) async {
-    if (!_controller.isCoverationApiDetails) {
-      return;
-    }
-    _controller.isCoverationApiDetails = false;
-    var data = await _controller.viewModel.getConverstaionDetails(
-        conversationId: conversationId,
-        includeMembers: includeMembers,
-        isLoading: isLoading);
     if (Get.isRegistered<IsmChatPageController>()) {
+      if (!_controller.isCoverationApiDetails) {
+        return;
+      }
+      _controller.isCoverationApiDetails = false;
+      var data = await _controller.viewModel.getConverstaionDetails(
+          conversationId: conversationId,
+          includeMembers: includeMembers,
+          isLoading: isLoading);
+
       if (data.data != null &&
           (_controller.conversation?.conversationId == conversationId)) {
         _controller.conversation =

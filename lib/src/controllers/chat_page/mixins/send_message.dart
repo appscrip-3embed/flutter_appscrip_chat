@@ -257,12 +257,12 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
   }
 
-  void sendAudio({
-    String? path,
-    required String conversationId,
-    required String userId,
-    WebMediaModel? webMediaModel,
-  }) async {
+  void sendAudio(
+      {String? path,
+      required String conversationId,
+      required String userId,
+      WebMediaModel? webMediaModel,
+      Duration? duration}) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null && !_controller.isTemporaryChat) {
@@ -289,14 +289,14 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
     if (webMediaModel == null) {
       bytes = kIsWeb
-          ? await IsmChatUtility.fetchBytesFromBlobUrl(path) as Uint8List
+          ? await IsmChatUtility.fetchBytesFromBlobUrl(path)
           : Uint8List.fromList(
               await File.fromUri(Uri.parse(path)).readAsBytes());
       nameWithExtension = path.split('/').last;
       extension = nameWithExtension.split('.').last;
       mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
     } else {
-      bytes = webMediaModel.platformFile.bytes;
+      bytes = webMediaModel.platformFile.bytes ?? Uint8List(0);
       nameWithExtension = webMediaModel.platformFile.name;
       extension = webMediaModel.platformFile.extension;
       mediaId = sentAt.toString();
@@ -310,7 +310,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         AttachmentModel(
           attachmentType: IsmChatMediaType.audio,
           thumbnailUrl: path,
-          size: bytes!.length,
+          size: bytes.length,
           name: nameWithExtension,
           mimeType: extension,
           mediaUrl: path,
@@ -329,7 +329,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       sentByMe: true,
       isUploading: true,
       metaData: IsmChatMetaData(
-        duration: webMediaModel?.duration,
+        duration: duration ?? webMediaModel?.duration,
       ),
     );
 
@@ -338,6 +338,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     if (!_controller.isTemporaryChat) {
       await IsmChatConfig.dbWrapper!
           .saveMessage(audioMessage, IsmChatDbBox.pending);
+
       if (kIsWeb && Responsive.isWebAndTablet(Get.context!)) {
         _controller.updateLastMessagOnCurrentTime(audioMessage);
       }

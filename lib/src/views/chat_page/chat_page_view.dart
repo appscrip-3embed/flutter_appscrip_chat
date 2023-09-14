@@ -21,7 +21,6 @@ class IsmChatPageView extends StatelessWidget {
       return false;
     } else {
       Get.back<void>();
-
       if (IsmChatProperties.chatPageProperties.header?.onBackTap != null) {
         IsmChatProperties.chatPageProperties.header?.onBackTap!.call();
       }

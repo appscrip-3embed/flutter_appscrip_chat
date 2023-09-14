@@ -22,160 +22,174 @@ class MessageBubble extends StatefulWidget {
 class _MessageBubbleState extends State<MessageBubble>
     with TickerProviderStateMixin {
   GlobalKey globalKey = GlobalKey();
-  var controller = Get.find<IsmChatPageController>();
-  late Animation<double> holdAnimation;
+
+  Animation<double>? holdAnimation;
 
   @override
   void initState() {
     super.initState();
-    controller.holdController = AnimationController(
-      vsync: this,
-      duration: IsmChatConstants.transitionDuration,
-    );
-    holdAnimation = CurvedAnimation(
-      parent: controller.holdController,
-      curve: Curves.easeInOutCubic,
-    );
+    if (mounted) {
+      if (Get.isRegistered<IsmChatPageController>()) {
+        var controller = Get.find<IsmChatPageController>();
+        controller.holdController = AnimationController(
+          vsync: this,
+          duration: IsmChatConstants.transitionDuration,
+        );
+        holdAnimation = CurvedAnimation(
+          parent: controller.holdController!,
+          curve: Curves.easeInOutCubic,
+        );
+      }
+    }
   }
 
   @override
-  Widget build(BuildContext context) => Container(
-        key: globalKey,
-        margin: widget.message.reactions?.isNotEmpty == true &&
-                !widget.showMessageInCenter
-            ? IsmChatDimens.edgeInsetsB25
-            : null,
-        padding: widget.showMessageInCenter ? IsmChatDimens.edgeInsets4 : null,
-        constraints: widget.showMessageInCenter
-            ? BoxConstraints(
-                maxWidth: context.width * .8,
-                minWidth: context.width * .1,
-              )
-            : IsmChatConfig.chatTheme.chatPageTheme?.constraints ??
-                BoxConstraints(
-                  maxWidth: (Responsive.isWebAndTablet(context))
-                      ? context.width * .25
-                      : kIsWeb
-                          ? context.width * .4
-                          : context.width * .8,
-                  minWidth: Responsive.isWebAndTablet(context)
-                      ? IsmChatDimens.ninty
-                      : kIsWeb
-                          ? context.width * .2
-                          : context.width * .25,
-                ),
-        decoration: widget.showMessageInCenter
-            ? null
-            : BoxDecoration(
-                color: widget.message.backgroundColor,
-                border: Border.all(color: widget.message.borderColor!),
-                borderRadius: widget.message.sentByMe
-                    ? IsmChatConfig.chatTheme.chatPageTheme?.selfMessageTheme
-                            ?.borderRadius ??
-                        BorderRadius.circular(IsmChatDimens.twelve).copyWith(
-                          bottomRight: Radius.circular(IsmChatDimens.four),
-                        )
-                    : IsmChatConfig.chatTheme.chatPageTheme
-                            ?.opponentMessageTheme?.borderRadius ??
-                        BorderRadius.circular(IsmChatDimens.twelve).copyWith(
-                          topLeft: Radius.circular(IsmChatDimens.four),
-                        ),
-              ),
-        child: Stack(
-          children: [
-            Padding(
-              padding: !widget.showMessageInCenter
-                  ? IsmChatDimens.edgeInsets5_5_5_20
-                  : IsmChatDimens.edgeInsets0,
-              child: widget.message.customType!.messageType(widget.message),
-            ),
-            if (!widget.showMessageInCenter) ...[
-              Positioned(
-                bottom: IsmChatDimens.four,
-                right: IsmChatDimens.ten,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: widget.message.sentByMe
-                      ? MainAxisAlignment.end
-                      : MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.message.sentAt.toTimeString(),
-                      style: (widget.message.sentByMe
-                              ? IsmChatStyles.w400White10
-                              : IsmChatStyles.w400Grey10)
-                          .copyWith(
-                        color: widget.message.style.color,
-                      ),
+  Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
+      builder: (controller) => Container(
+            key: globalKey,
+            margin: widget.message.reactions?.isNotEmpty == true &&
+                    !widget.showMessageInCenter
+                ? IsmChatDimens.edgeInsetsB25
+                : null,
+            padding:
+                widget.showMessageInCenter ? IsmChatDimens.edgeInsets4 : null,
+            constraints: widget.showMessageInCenter
+                ? BoxConstraints(
+                    maxWidth: context.width * .8,
+                    minWidth: context.width * .1,
+                  )
+                : IsmChatConfig.chatTheme.chatPageTheme?.constraints ??
+                    BoxConstraints(
+                      maxWidth: (Responsive.isWebAndTablet(context))
+                          ? context.width * .25
+                          : kIsWeb
+                              ? context.width * .4
+                              : context.width * .8,
+                      minWidth: Responsive.isWebAndTablet(context)
+                          ? IsmChatDimens.ninty
+                          : kIsWeb
+                              ? context.width * .2
+                              : context.width * .25,
                     ),
-                    if (widget.message.sentByMe &&
-                        widget.message.customType !=
-                            IsmChatCustomMessageType.deletedForEveryone) ...[
-                      IsmChatDimens.boxWidth2,
-                      Icon(
-                        widget.message.messageId!.isEmpty
-                            ? Icons.watch_later_outlined
-                            : widget.message.deliveredToAll ?? false
-                                ? Icons.done_all_rounded
-                                : Icons.done_rounded,
-                        color: widget.message.messageId!.isEmpty
-                            ? IsmChatConfig.chatTheme.chatPageTheme
-                                    ?.unreadCheckColor ??
-                                Colors.white
-                            : widget.message.readByAll ?? false
-                                ? IsmChatConfig.chatTheme.chatPageTheme
-                                        ?.readCheckColor ??
-                                    Colors.blue
-                                : IsmChatConfig.chatTheme.chatPageTheme
-                                        ?.unreadCheckColor ??
-                                    Colors.white,
-                        size: IsmChatDimens.forteen,
-                      ),
-                    ],
-                  ],
+            decoration: widget.showMessageInCenter
+                ? null
+                : BoxDecoration(
+                    color: widget.message.backgroundColor,
+                    border: Border.all(color: widget.message.borderColor!),
+                    borderRadius: widget.message.sentByMe
+                        ? IsmChatConfig.chatTheme.chatPageTheme
+                                ?.selfMessageTheme?.borderRadius ??
+                            BorderRadius.circular(IsmChatDimens.twelve)
+                                .copyWith(
+                              bottomRight: Radius.circular(IsmChatDimens.four),
+                            )
+                        : IsmChatConfig.chatTheme.chatPageTheme
+                                ?.opponentMessageTheme?.borderRadius ??
+                            BorderRadius.circular(IsmChatDimens.twelve)
+                                .copyWith(
+                              topLeft: Radius.circular(IsmChatDimens.four),
+                            ),
+                  ),
+            child: Stack(
+              children: [
+                Padding(
+                  padding: !widget.showMessageInCenter
+                      ? IsmChatDimens.edgeInsets5_5_5_20
+                      : IsmChatDimens.edgeInsets0,
+                  child: widget.message.customType!.messageType(widget.message),
                 ),
-              ),
-              Obx(
-                () => (controller.onMessageHoverIndex == widget.index &&
-                        Responsive.isWebAndTablet(context))
-                    ? Positioned(
-                        top: IsmChatDimens.four,
-                        right: IsmChatDimens.five,
-                        child: IsmChatTapHandler(
-                          onTap: () {
-                            if (controller.holdController.isCompleted &&
-                                controller.messageHoldOverlayEntry != null) {
-                              controller.closeOveray();
-                            } else {
-                              controller.holdController.forward();
-                              controller.showOverlayWeb(
-                                  globalKey.currentContext!,
-                                  widget.message,
-                                  holdAnimation);
-                            }
-                          },
-                          child: Container(
-                            width: IsmChatDimens.thirty,
-                            height: IsmChatDimens.thirty,
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.circular(IsmChatDimens.fifty),
-                              color: IsmChatColors.whiteColor.withOpacity(.5),
-                              border: Border.all(
-                                color: IsmChatColors.blackColor,
-                              ),
-                            ),
-                            child: Icon(
-                              Icons.expand_more_rounded,
-                              color: widget.message.textColor,
-                            ),
+                if (!widget.showMessageInCenter) ...[
+                  Positioned(
+                    bottom: IsmChatDimens.four,
+                    right: IsmChatDimens.ten,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: widget.message.sentByMe
+                          ? MainAxisAlignment.end
+                          : MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.message.sentAt.toTimeString(),
+                          style: (widget.message.sentByMe
+                                  ? IsmChatStyles.w400White10
+                                  : IsmChatStyles.w400Grey10)
+                              .copyWith(
+                            color: widget.message.style.color,
                           ),
                         ),
-                      )
-                    : const SizedBox.shrink(),
-              )
-            ],
-          ],
-        ),
-      );
+                        if (widget.message.sentByMe &&
+                            widget.message.customType !=
+                                IsmChatCustomMessageType
+                                    .deletedForEveryone) ...[
+                          IsmChatDimens.boxWidth2,
+                          Icon(
+                            widget.message.messageId!.isEmpty
+                                ? Icons.watch_later_outlined
+                                : widget.message.deliveredToAll ?? false
+                                    ? Icons.done_all_rounded
+                                    : Icons.done_rounded,
+                            color: widget.message.messageId!.isEmpty
+                                ? IsmChatConfig.chatTheme.chatPageTheme
+                                        ?.unreadCheckColor ??
+                                    Colors.white
+                                : widget.message.readByAll ?? false
+                                    ? IsmChatConfig.chatTheme.chatPageTheme
+                                            ?.readCheckColor ??
+                                        Colors.blue
+                                    : IsmChatConfig.chatTheme.chatPageTheme
+                                            ?.unreadCheckColor ??
+                                        Colors.white,
+                            size: IsmChatDimens.forteen,
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  Obx(
+                    () => (controller.onMessageHoverIndex == widget.index &&
+                            Responsive.isWebAndTablet(context))
+                        ? Positioned(
+                            top: IsmChatDimens.four,
+                            right: IsmChatDimens.five,
+                            child: IsmChatTapHandler(
+                              onTap: () {
+                                if (controller.holdController?.isCompleted ==
+                                        true &&
+                                    controller.messageHoldOverlayEntry !=
+                                        null) {
+                                  controller.closeOveray();
+                                } else {
+                                  controller.holdController?.forward();
+                                  controller.showOverlayWeb(
+                                    globalKey.currentContext!,
+                                    widget.message,
+                                    holdAnimation!,
+                                  );
+                                }
+                              },
+                              child: Container(
+                                width: IsmChatDimens.thirty,
+                                height: IsmChatDimens.thirty,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      IsmChatDimens.fifty),
+                                  color:
+                                      IsmChatColors.whiteColor.withOpacity(.5),
+                                  border: Border.all(
+                                    color: IsmChatColors.blackColor,
+                                  ),
+                                ),
+                                child: Icon(
+                                  Icons.expand_more_rounded,
+                                  color: widget.message.textColor,
+                                ),
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                  )
+                ],
+              ],
+            ),
+          ));
 }

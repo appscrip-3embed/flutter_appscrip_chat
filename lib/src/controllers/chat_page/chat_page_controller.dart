@@ -423,14 +423,15 @@ class IsmChatPageController extends GetxController
 
   final ismChatDebounce = IsmChatDebounce();
 
-  late AnimationController holdController;
+  AnimationController? holdController;
 
   var arguments = Get.arguments as Map<String, dynamic>? ?? {};
 
   @override
   void onInit() {
-    startInit();
     super.onInit();
+
+    startInit();
   }
 
   void startInit({
@@ -438,6 +439,7 @@ class IsmChatPageController extends GetxController
   }) async {
     isActionAllowed = false;
     _generateReactionList();
+    scrollListener();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
       _conversationController.isConversationId =
@@ -500,7 +502,7 @@ class IsmChatPageController extends GetxController
           userId: conversation?.opponentDetails?.userId ?? '',
         );
       }
-      scrollListener();
+
       unawaited(updateUnreadMessgaeCount());
 
       chatInputController.addListener(() {
@@ -976,7 +978,7 @@ class IsmChatPageController extends GetxController
     IsmChatMessageModel message,
     Animation<double> animation,
   ) async {
-    final renderBox = context.renderBox;
+    final renderBox = context.findRenderObject() as RenderBox;
     final size = renderBox.size;
     final offset = renderBox.localToGlobal(Offset.zero);
     // Get hight of Overlay widget which is rendor on message tap
@@ -1021,10 +1023,10 @@ class IsmChatPageController extends GetxController
   }
 
   void scrollListener() {
-    /// This method for messgae scrolling
     messagesScrollController.addListener(
       () {
-        if (holdController.isCompleted && messageHoldOverlayEntry != null) {
+        if (holdController?.isCompleted == true &&
+            messageHoldOverlayEntry != null) {
           closeOveray();
         }
 
@@ -1042,7 +1044,7 @@ class IsmChatPageController extends GetxController
         }
         toggleEmojiBoard(false, false);
 
-        if (Get.height * 0.3 < messagesScrollController.offset) {
+        if (Get.height * 0.3 < (messagesScrollController.offset)) {
           showDownSideButton = true;
         } else {
           showDownSideButton = false;
@@ -1050,7 +1052,6 @@ class IsmChatPageController extends GetxController
       },
     );
 
-    /// This method for search  messgae scrolling
     searchMessageScrollController.addListener(
       () {
         if (searchMessageScrollController.offset.toInt() ==
@@ -1062,9 +1063,11 @@ class IsmChatPageController extends GetxController
   }
 
   void closeOveray() {
-    holdController.reverse();
-    messageHoldOverlayEntry?.remove();
-    messageHoldOverlayEntry = null;
+    if (holdController != null && messageHoldOverlayEntry != null) {
+      holdController?.reverse();
+      messageHoldOverlayEntry?.remove();
+      messageHoldOverlayEntry = null;
+    }
   }
 
   Future<void> scrollDown() async {
@@ -1387,6 +1390,7 @@ class IsmChatPageController extends GetxController
             unreadMessagesCount: 0,
           );
         }
+
         await IsmChatConfig.dbWrapper!
             .saveConversation(conversation: chatConversation);
         await chatConversationController.getConversationsFromDB();
@@ -1395,7 +1399,9 @@ class IsmChatPageController extends GetxController
       await chatConversationController.getChatConversations();
     }
 
-    await Get.delete<IsmChatPageController>(force: true);
+    if (Get.isRegistered<IsmChatPageController>()) {
+      await Get.delete<IsmChatPageController>(force: true);
+    }
     unawaited(
         Get.find<IsmChatMqttController>().getChatConversationsUnreadCount());
   }

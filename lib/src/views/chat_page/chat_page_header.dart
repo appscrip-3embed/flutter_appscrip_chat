@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +71,8 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                         IsmChatProperties.chatPageProperties.header?.onBackTap!
                             .call();
                       }
-                      unawaited(controller.updateLastMessage());
+                      controller.closeOveray();
+                      await controller.updateLastMessage();
                     },
                     child: const Icon(Icons.arrow_back_rounded),
                   )

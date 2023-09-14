@@ -64,8 +64,8 @@ class _IsmChatMessageState extends State<IsmChatMessage>
 
   @override
   void initState() {
-    _updateWidget();
     super.initState();
+    _updateWidget();
   }
 
   @override
