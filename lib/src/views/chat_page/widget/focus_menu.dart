@@ -175,7 +175,6 @@ class IsmChatFocusMenu extends StatelessWidget {
                                         onTap: () {
                                           Get.back();
                                           controller.closeOveray();
-
                                           controller.onMenuItemSelected(
                                             item,
                                             message,

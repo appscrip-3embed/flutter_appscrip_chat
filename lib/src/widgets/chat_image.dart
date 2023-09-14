@@ -124,21 +124,22 @@ class _NetworkImage extends StatelessWidget {
         alignment: Alignment.center,
         cacheKey: imageUrl,
         imageBuilder: (_, image) {
-          try {
-            if (imageUrl.isEmpty) {
-              _ErrorImage(isProfileImage: _isProfileImage, name: _name);
-            }
-            return Container(
-              decoration: BoxDecoration(
-                shape: _isProfileImage ? BoxShape.circle : BoxShape.rectangle,
-                color: IsmChatConfig.chatTheme.backgroundColor!,
-                image: DecorationImage(image: image, fit: BoxFit.cover),
-              ),
-            );
-          } catch (e, st) {
-            IsmChatLog.error(e, st);
-            return _ErrorImage(isProfileImage: _isProfileImage, name: _name);
-          }
+          return Container(
+            decoration: BoxDecoration(
+              shape: _isProfileImage ? BoxShape.circle : BoxShape.rectangle,
+              color: IsmChatConfig.chatTheme.backgroundColor!,
+              image: DecorationImage(image: image, fit: BoxFit.cover),
+            ),
+          );
+          // try {
+          //   if (imageUrl.isEmpty) {
+          //     _ErrorImage(isProfileImage: _isProfileImage, name: _name);
+          //   }
+
+          // } catch (e, st) {
+          //   IsmChatLog.error(e, st);
+          //   return _ErrorImage(isProfileImage: _isProfileImage, name: _name);
+          // }
         },
         placeholder: (context, url) => Container(
           alignment: Alignment.center,
