@@ -145,23 +145,30 @@ class IsmChatMessageModel {
     );
 
     if (IsmChatConfig.configInitilized) {
-      model = model.copyWith(
-          customType: model.customType != null &&
-                  model.customType != IsmChatCustomMessageType.text
-              ? model.customType
-              : IsmChatCustomMessageType.withBody(model.body),
-          sentByMe: model.senderInfo != null
-              ? model.senderInfo!.userId ==
-                  IsmChatConfig.communicationConfig.userConfig.userId
-              : model.memberId != null
-                  ? IsmChatConfig.communicationConfig.userConfig.userId ==
-                          model.memberId
-                      ? false
-                      : true
-                  : true,
-          isGroup: model.conversationDetails?.isNotEmpty == true
-              ? model.conversationDetails!['isGroup']
-              : false);
+      try {
+        model = model.copyWith(
+            customType: model.customType != null &&
+                    model.customType != IsmChatCustomMessageType.text
+                ? model.customType
+                : IsmChatCustomMessageType.withBody(model.body),
+            sentByMe: model.senderInfo != null
+                ? model.senderInfo!.userId ==
+                    IsmChatConfig.communicationConfig.userConfig.userId
+                : model.memberId != null
+                    ? IsmChatConfig.communicationConfig.userConfig.userId ==
+                            model.memberId
+                        ? false
+                        : true
+                    : true,
+            isGroup: model.conversationDetails?.isNotEmpty == true
+                ? model.conversationDetails!['isGroup']
+                : false);
+      } catch (eroor, st) {
+        IsmChatLog.error(eroor, st);
+      }
+    } else {
+      IsmChatLog.error(
+          'from chat message model => IsmChatConfig.configInitilized');
     }
 
     return model;
