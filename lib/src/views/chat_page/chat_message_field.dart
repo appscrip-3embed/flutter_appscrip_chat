@@ -131,7 +131,9 @@ class IsmChatMessageField extends StatelessWidget {
                                 color: IsmChatConfig.chatTheme.primaryColor!),
                             borderRadius:
                                 BorderRadius.circular(IsmChatDimens.twenty),
-                            color: IsmChatConfig.chatTheme.backgroundColor,
+                            color: IsmChatConfig.chatTheme.chatPageTheme
+                                    ?.textfieldBackgroundColor ??
+                                IsmChatConfig.chatTheme.backgroundColor,
                           ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -144,13 +146,16 @@ class IsmChatMessageField extends StatelessWidget {
                                 children: [
                                   Expanded(
                                     child: TextFormField(
+                                      style: IsmChatConfig.chatTheme
+                                          .chatPageTheme?.inputTextStyle,
                                       maxLines: 4,
                                       minLines: 1,
                                       focusNode:
                                           controller.messageFieldFocusNode,
                                       controller:
                                           controller.chatInputController,
-                                      cursorColor:
+                                      cursorColor: IsmChatConfig.chatTheme
+                                              .chatPageTheme?.cursorColor ??
                                           IsmChatConfig.chatTheme.primaryColor,
                                       textCapitalization:
                                           TextCapitalization.sentences,
@@ -162,7 +167,7 @@ class IsmChatMessageField extends StatelessWidget {
                                                 .chatPageTheme
                                                 ?.textfieldBackgroundColor ??
                                             IsmChatConfig
-                                                .chatTheme.primaryColor,
+                                                .chatTheme.backgroundColor,
                                         contentPadding:
                                             Responsive.isWebAndTablet(context)
                                                 ? IsmChatDimens.edgeInsets12
@@ -183,7 +188,8 @@ class IsmChatMessageField extends StatelessWidget {
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(
-                                              IsmChatDimens.twenty),
+                                            IsmChatDimens.twenty,
+                                          ),
                                           borderSide: const BorderSide(
                                             color: Colors.transparent,
                                           ),
