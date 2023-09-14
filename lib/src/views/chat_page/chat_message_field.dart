@@ -158,7 +158,11 @@ class IsmChatMessageField extends StatelessWidget {
                                         isDense: true,
                                         filled: true,
                                         fillColor: IsmChatConfig
-                                            .chatTheme.backgroundColor,
+                                                .chatTheme
+                                                .chatPageTheme
+                                                ?.textfieldBackgroundColor ??
+                                            IsmChatConfig
+                                                .chatTheme.primaryColor,
                                         contentPadding:
                                             Responsive.isWebAndTablet(context)
                                                 ? IsmChatDimens.edgeInsets12
@@ -166,12 +170,16 @@ class IsmChatMessageField extends StatelessWidget {
                                         prefixIcon:
                                             Responsive.isWebAndTablet(context)
                                                 ? null
-                                                : const _EmojiButton(null),
+                                                : _EmojiButton(IsmChatConfig
+                                                    .chatTheme
+                                                    .chatPageTheme
+                                                    ?.emojiColor),
                                         enabledBorder: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(
                                               IsmChatDimens.twenty),
                                           borderSide: const BorderSide(
-                                              color: Colors.transparent),
+                                            color: Colors.transparent,
+                                          ),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(
@@ -576,7 +584,9 @@ class _MicOrSendButton extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: IsmChatConfig.chatTheme.primaryColor,
+                    color: IsmChatConfig.chatTheme.chatPageTheme
+                            ?.sendButtonBackGroundColor ??
+                        IsmChatConfig.chatTheme.primaryColor,
                   ),
                   child: AnimatedSwitcher(
                     duration: IsmChatConfig.animationDuration,
@@ -815,7 +825,8 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
             );
           }
         },
-        color: IsmChatConfig.chatTheme.primaryColor,
+        color: IsmChatConfig.chatTheme.chatPageTheme?.attchmentColor ??
+            IsmChatConfig.chatTheme.primaryColor,
         icon: const Icon(Icons.attach_file_rounded),
       );
 }

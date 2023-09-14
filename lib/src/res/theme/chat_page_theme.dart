@@ -11,9 +11,13 @@ class IsmChatPageThemeData {
     this.unreadCheckColor,
     this.readCheckColor,
     this.textfieldInsets,
-    this.textfieldDecoration,
+    this.textfieldBackgroundColor,
     this.pageDecoration,
     this.backgroundColor,
+    this.sendButtonBackGroundColor,
+    this.attchmentColor,
+    this.emojiColor,
+    this.textfieldDecoration,
   });
 
   final double? profileImageSize;
@@ -24,7 +28,13 @@ class IsmChatPageThemeData {
   final Color? unreadCheckColor;
   final Color? readCheckColor;
   final EdgeInsetsGeometry? textfieldInsets;
+
   final Decoration? textfieldDecoration;
+
+  final Color? textfieldBackgroundColor;
+  final Color? attchmentColor;
+  final Color? emojiColor;
   final Decoration? pageDecoration;
   final Color? backgroundColor;
+  final Color? sendButtonBackGroundColor;
 }
