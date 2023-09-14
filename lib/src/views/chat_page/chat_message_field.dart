@@ -459,33 +459,53 @@ class _MicOrSendButton extends StatelessWidget {
                       controller.showDialogCheckBlockUnBlock();
                     } else {
                       if (controller.isEnableRecordingAudio) {
-                        var audioPaht =
+                        var audioPath =
                             await controller.recordAudio.stop() ?? '';
                         controller.forVideoRecordTimer?.cancel();
                         controller.showSendButton = false;
-                        controller.seconds = 0;
+
                         controller.isEnableRecordingAudio = false;
                         String? sizeMedia;
+                        WebMediaModel? webMediaModel;
                         if (kIsWeb) {
                           var bytes =
                               await IsmChatUtility.fetchBytesFromBlobUrl(
-                                  audioPaht);
+                                  audioPath);
 
                           sizeMedia = await IsmChatUtility.bytesToSize(bytes);
+                          webMediaModel = WebMediaModel(
+                            platformFile: IsmchPlatformFile(
+                              name:
+                                  '${DateTime.now().millisecondsSinceEpoch}.mp3',
+                              size: bytes.length,
+                              bytes: bytes,
+                              path: audioPath,
+                              extension: 'mp3',
+                            ),
+                            isVideo: false,
+                            thumbnailBytes: Uint8List(0),
+                            dataSize: sizeMedia,
+                            duration: Duration(
+                              seconds: controller.seconds,
+                            ),
+                          );
                         } else {
                           sizeMedia =
-                              await IsmChatUtility.fileToSize(File(audioPaht));
+                              await IsmChatUtility.fileToSize(File(audioPath));
                         }
 
                         if (sizeMedia.size()) {
                           controller.sendAudio(
-                            path: audioPaht,
+                            webMediaModel: webMediaModel,
+                            path: audioPath,
                             conversationId:
                                 controller.conversation?.conversationId ?? '',
                             userId: controller
                                     .conversation?.opponentDetails?.userId ??
                                 '',
+                            duration: Duration(seconds: controller.seconds),
                           );
+                          controller.seconds = 0;
                         } else {
                           await Get.dialog(
                             const IsmChatAlertDialogBox(

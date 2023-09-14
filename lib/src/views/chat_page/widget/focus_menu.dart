@@ -118,8 +118,7 @@ class IsmChatFocusMenu extends StatelessWidget {
                   onTap: () {
                     if (Responsive.isWebAndTablet(context)) {
                       var controller = Get.find<IsmChatPageController>();
-                      controller.holdController.reverse();
-                      controller.messageHoldOverlayEntry?.remove();
+                      controller.closeOveray();
                     } else {
                       Navigator.pop(context);
                     }
@@ -175,9 +174,8 @@ class IsmChatFocusMenu extends StatelessWidget {
                                       return IsmChatTapHandler(
                                         onTap: () {
                                           Get.back();
-                                          controller.holdController.reverse();
-                                          controller.messageHoldOverlayEntry
-                                              ?.remove();
+                                          controller.closeOveray();
+
                                           controller.onMenuItemSelected(
                                             item,
                                             message,

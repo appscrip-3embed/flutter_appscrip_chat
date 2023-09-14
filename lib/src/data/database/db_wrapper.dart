@@ -234,6 +234,7 @@ class IsmChatDBWrapper {
       case IsmChatDbBox.pending:
         var conversation = await getConversation(
             conversationId: message.conversationId, dbBox: dbBox);
+
         if (conversation == null) {
           var pendingConversation = IsmChatConversationModel(
               conversationId: message.conversationId, messages: [message]);
