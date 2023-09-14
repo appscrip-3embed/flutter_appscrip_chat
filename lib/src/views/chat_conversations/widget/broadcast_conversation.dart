@@ -341,9 +341,10 @@ class IsmChatBroadCastView extends StatelessWidget {
               if (controller.selectedUserList.isNotEmpty &&
                   controller.selectedUserList.length >= 2) {
                 var conversation = IsmChatConversationModel(
-                    members: controller.selectedUserList,
-                    conversationImageUrl: IsmChatAssets.noImage,
-                    customType: 'Broadcasting');
+                  members: controller.selectedUserList,
+                  conversationImageUrl: IsmChatAssets.noImage,
+                  customType: 'Broadcasting',
+                );
                 controller.navigateToMessages(conversation);
                 if (Responsive.isWebAndTablet(context)) {
                   if (!Get.isRegistered<IsmChatPageController>()) {
@@ -352,6 +353,8 @@ class IsmChatBroadCastView extends StatelessWidget {
                   }
 
                   final chatPagecontroller = Get.find<IsmChatPageController>();
+                  controller.isRenderChatPageaScreen =
+                      IsRenderChatPageScreen.boradcastChatMessagePage;
                   chatPagecontroller.startInit();
                   if (chatPagecontroller.messageHoldOverlayEntry != null) {
                     chatPagecontroller.closeOveray();

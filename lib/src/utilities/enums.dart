@@ -626,7 +626,9 @@ enum IsRenderConversationScreen {
   groupUserView,
   createConverstaionView,
   userView,
-  broadcastView
+  broadcastView,
+  openConverationView,
+  publicConverationView,
 }
 
 enum IsRenderChatPageScreen {

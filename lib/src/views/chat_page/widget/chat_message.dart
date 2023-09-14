@@ -86,7 +86,9 @@ class _IsmChatMessageState extends State<IsmChatMessage>
             : () {
                 if (widget._message?.customType !=
                     IsmChatCustomMessageType.deletedForEveryone) {
-                  controller.showOverlay(context, widget._message!);
+                  if (!Responsive.isWebAndTablet(context)) {
+                    controller.showOverlay(context, widget._message!);
+                  }
                 } else {
                   controller.isMessageSeleted = true;
                   controller.selectedMessage.add(widget._message!);

@@ -21,6 +21,8 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
       var controller = Get.find<IsmChatPageController>();
       controller.isTemporaryChat = false;
       conversationController.currentConversation = null;
+      conversationController.isRenderChatPageaScreen =
+          IsRenderChatPageScreen.none;
       await Get.delete<IsmChatPageController>(force: true);
     } else {
       Get.back();

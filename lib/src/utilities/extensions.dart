@@ -554,18 +554,24 @@ extension ModelConversion on IsmChatConversationModel {
 
   Widget get readCheck {
     try {
-      if (!lastMessageDetails!.sentByMe ||
-          lastMessageDetails!.messageBody.isEmpty ||
-          [
-            IsmChatCustomMessageType.addMember,
-            IsmChatCustomMessageType.unblock,
-            IsmChatCustomMessageType.block,
-            IsmChatCustomMessageType.deletedForEveryone,
-            IsmChatCustomMessageType.memberJoin,
-            IsmChatCustomMessageType.memberLeave,
-          ].contains(lastMessageDetails!.customType)) {
+      if (!(lastMessageDetails?.sentByMe ?? false)) {
         return const SizedBox.shrink();
       }
+      if (lastMessageDetails!.messageBody.isEmpty) {
+        return const SizedBox.shrink();
+      }
+
+      if ([
+        IsmChatCustomMessageType.addMember,
+        IsmChatCustomMessageType.unblock,
+        IsmChatCustomMessageType.block,
+        IsmChatCustomMessageType.deletedForEveryone,
+        IsmChatCustomMessageType.memberJoin,
+        IsmChatCustomMessageType.memberLeave,
+      ].contains(lastMessageDetails!.customType)) {
+        return const SizedBox.shrink();
+      }
+
       var deliveredToAll = false;
       var readByAll = false;
       if (!isGroup!) {
@@ -955,14 +961,29 @@ extension Conversation on IsmChatConversationType {
   }
 
   void goToRoute() {
+    final controller = Get.find<IsmChatConversationsController>();
     switch (this) {
       case IsmChatConversationType.private:
         break;
       case IsmChatConversationType.public:
-        IsmChatRouteManagement.goToPublicView();
+        if (Responsive.isWebAndTablet(Get.context!)) {
+          controller.isRenderScreen =
+              IsRenderConversationScreen.publicConverationView;
+          Scaffold.of(controller.isDrawerContext!).openDrawer();
+        } else {
+          IsmChatRouteManagement.goToPublicView();
+        }
+
         break;
       case IsmChatConversationType.open:
-        IsmChatRouteManagement.goToOpenView();
+        if (Responsive.isWebAndTablet(Get.context!)) {
+          controller.isRenderScreen =
+              IsRenderConversationScreen.openConverationView;
+          Scaffold.of(controller.isDrawerContext!).openDrawer();
+        } else {
+          IsmChatRouteManagement.goToOpenView();
+        }
+
         break;
     }
   }

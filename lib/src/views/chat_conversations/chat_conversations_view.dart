@@ -103,7 +103,14 @@ class _IsmChatConversationsState extends State<IsmChatConversations>
                         children: [
                           Obx(
                             () => controller.currentConversation != null
-                                ? const IsmChatPageView()
+                                ? ([
+                                    IsRenderChatPageScreen
+                                        .boradcastChatMessagePage,
+                                    IsRenderChatPageScreen.openChatMessagePage
+                                  ].contains(
+                                        controller.isRenderChatPageaScreen))
+                                    ? controller.isRenderChatScreenWidget()
+                                    : const IsmChatPageView()
                                 : IsmChatProperties.noChatSelectedPlaceholder ??
                                     Center(
                                       child: Text(
@@ -125,8 +132,11 @@ class _IsmChatConversationsState extends State<IsmChatConversations>
                     ),
                     if (Responsive.isWeb(context)) ...[
                       Obx(
-                        () => controller.isRenderChatPageaScreen !=
-                                IsRenderChatPageScreen.none
+                        () => ![
+                          IsRenderChatPageScreen.none,
+                          IsRenderChatPageScreen.boradcastChatMessagePage,
+                          IsRenderChatPageScreen.openChatMessagePage
+                        ].contains(controller.isRenderChatPageaScreen)
                             ? Container(
                                 decoration: BoxDecoration(
                                   border: Border(

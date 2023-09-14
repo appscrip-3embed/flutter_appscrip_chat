@@ -19,18 +19,11 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 /// ```
 ///
 /// Certain properties can be modified as per requirement. You can read about each of them by hovering over the property
-class IsmChatConversationList extends StatefulWidget {
+class IsmChatConversationList extends StatelessWidget {
   const IsmChatConversationList({
     super.key,
   });
 
-  @override
-  State<IsmChatConversationList> createState() =>
-      _IsmChatConversationListState();
-}
-
-class _IsmChatConversationListState extends State<IsmChatConversationList>
-    with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
         builder: (controller) {
@@ -194,38 +187,42 @@ class _ConversationList extends StatelessWidget {
                             ),
                         ],
                       ),
-                child: IsmChatConversationCard(
-                  name: IsmChatProperties
-                      .conversationProperties.cardElementBuilders?.name,
-                  nameBuilder: IsmChatProperties
-                      .conversationProperties.cardElementBuilders?.nameBuilder,
-                  profileImageUrl: IsmChatProperties.conversationProperties
-                      .cardElementBuilders?.profileImageUrl,
-                  subtitle: IsmChatProperties
-                      .conversationProperties.cardElementBuilders?.subtitle,
-                  conversation,
-                  profileImageBuilder: IsmChatProperties.conversationProperties
-                      .cardElementBuilders?.profileImageBuilder,
-                  subtitleBuilder: !conversation.isSomeoneTyping
-                      ? IsmChatProperties.conversationProperties
-                          .cardElementBuilders?.subtitleBuilder
-                      : (_, __, ___) => Text(
-                            conversation.typingUsers,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: IsmChatStyles.typing,
-                          ),
-                  onTap: () async {
-                    if (kIsWeb) {
-                      controller.isConversationId =
-                          conversation.conversationId ?? '';
-                    }
-                    IsmChatProperties.conversationProperties.onChatTap!(
-                        _, conversation);
-                    controller.navigateToMessages(conversation);
+                child: Obx(
+                  () => IsmChatConversationCard(
+                    name: IsmChatProperties
+                        .conversationProperties.cardElementBuilders?.name,
+                    nameBuilder: IsmChatProperties.conversationProperties
+                        .cardElementBuilders?.nameBuilder,
+                    profileImageUrl: IsmChatProperties.conversationProperties
+                        .cardElementBuilders?.profileImageUrl,
+                    subtitle: IsmChatProperties
+                        .conversationProperties.cardElementBuilders?.subtitle,
+                    conversation,
+                    profileImageBuilder: IsmChatProperties
+                        .conversationProperties
+                        .cardElementBuilders
+                        ?.profileImageBuilder,
+                    subtitleBuilder: !conversation.isSomeoneTyping
+                        ? IsmChatProperties.conversationProperties
+                            .cardElementBuilders?.subtitleBuilder
+                        : (_, __, ___) => Text(
+                              conversation.typingUsers,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: IsmChatStyles.typing,
+                            ),
+                    onTap: () async {
+                      if (kIsWeb) {
+                        controller.isConversationId =
+                            conversation.conversationId ?? '';
+                      }
+                      IsmChatProperties.conversationProperties.onChatTap!(
+                          _, conversation);
+                      controller.navigateToMessages(conversation);
 
-                    await controller.goToChatPage();
-                  },
+                      await controller.goToChatPage();
+                    },
+                  ),
                 ),
               );
         },

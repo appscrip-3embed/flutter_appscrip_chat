@@ -77,6 +77,7 @@ class LastMessageDetails {
               IsmChatConfig.communicationConfig.userConfig.userId
           : true,
     );
+
     return details;
   }
 
@@ -178,7 +179,7 @@ class LastMessageDetails {
         'reactionType': reactionType,
         'action': action,
         'readBy': readBy,
-        'deliveredTo': deliveredTo
+        'deliveredTo': deliveredTo,
       };
 
   String toJson() => json.encode(toMap());

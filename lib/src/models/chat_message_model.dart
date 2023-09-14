@@ -168,7 +168,7 @@ class IsmChatMessageModel {
       }
     } else {
       IsmChatLog.error(
-          'from chat message model => IsmChatConfig.configInitilized');
+          'error from chat message model => IsmChatConfig.configInitilized');
     }
 
     return model;

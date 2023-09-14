@@ -39,7 +39,8 @@ class IsmChatPageController extends GetxController
     with
         IsmChatPageSendMessageMixin,
         IsmChatPageGetMessageMixin,
-        IsmChatGroupAdminMixin {
+        IsmChatGroupAdminMixin,
+        GetTickerProviderStateMixin {
   IsmChatPageController(this.viewModel);
   final IsmChatPageViewModel viewModel;
 
@@ -425,12 +426,13 @@ class IsmChatPageController extends GetxController
 
   AnimationController? holdController;
 
+  Animation<double>? holdAnimation;
+
   var arguments = Get.arguments as Map<String, dynamic>? ?? {};
 
   @override
   void onInit() {
     super.onInit();
-
     startInit();
   }
 
@@ -439,7 +441,9 @@ class IsmChatPageController extends GetxController
   }) async {
     isActionAllowed = false;
     _generateReactionList();
-    scrollListener();
+    _startAnimated();
+    _scrollListener();
+    _intputAndFocustNode();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
       _conversationController.isConversationId =
@@ -448,7 +452,6 @@ class IsmChatPageController extends GetxController
       await Future.delayed(Duration.zero);
       isTemporaryChat =
           arguments['isTemporaryChat'] as bool? ?? isTemporaryChats;
-
       if (conversation?.conversationId?.isNotEmpty ?? false) {
         _getBackGroundAsset();
         if (!isTemporaryChat) {
@@ -504,15 +507,6 @@ class IsmChatPageController extends GetxController
       }
 
       unawaited(updateUnreadMessgaeCount());
-
-      chatInputController.addListener(() {
-        showSendButton = chatInputController.text.isNotEmpty;
-      });
-      messageFieldFocusNode.addListener(() {
-        if (messageFieldFocusNode.hasFocus) {
-          showEmojiBoard = false;
-        }
-      });
     }
   }
 
@@ -1022,7 +1016,7 @@ class IsmChatPageController extends GetxController
     overlayState.insert(messageHoldOverlayEntry!);
   }
 
-  void scrollListener() {
+  void _scrollListener() {
     messagesScrollController.addListener(
       () {
         if (holdController?.isCompleted == true &&
@@ -1059,6 +1053,30 @@ class IsmChatPageController extends GetxController
           searchedMessages(textEditingController.text);
         }
       },
+    );
+  }
+
+  void _intputAndFocustNode() {
+    chatInputController.addListener(() {
+      showSendButton = chatInputController.text.isNotEmpty;
+    });
+    messageFieldFocusNode.addListener(
+      () {
+        if (messageFieldFocusNode.hasFocus) {
+          showEmojiBoard = false;
+        }
+      },
+    );
+  }
+
+  void _startAnimated() {
+    holdController = AnimationController(
+      vsync: this,
+      duration: IsmChatConstants.transitionDuration,
+    );
+    holdAnimation = CurvedAnimation(
+      parent: holdController!,
+      curve: Curves.easeInOutCubic,
     );
   }
 
@@ -1346,6 +1364,7 @@ class IsmChatPageController extends GetxController
             lastMessageDetails: chatConversation.lastMessageDetails?.copyWith(
               sentByMe: messages.last.sentByMe,
               showInConversation: true,
+              senderId: messages.last.senderInfo?.userId ?? '',
               sentAt: chatConversation
                           .lastMessageDetails?.reactionType?.isNotEmpty ==
                       true
@@ -1377,7 +1396,7 @@ class IsmChatPageController extends GetxController
               readBy: messages.last.readBy,
               deliverCount: chatConversation.isGroup!
                   ? messages.last.deliveredToAll ?? false
-                      ? chatConversation.membersCount!
+                      ? chatConversation.membersCount
                       : 0
                   : messages.last.deliveredToAll ?? false
                       ? 1

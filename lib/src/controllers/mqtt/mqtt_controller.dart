@@ -403,6 +403,7 @@ class IsmChatMqttController extends GetxController {
           : (conversation.unreadMessagesCount ?? 0) + 1,
       lastMessageDetails: conversation.lastMessageDetails?.copyWith(
         sentByMe: message.sentByMe,
+        senderId: message.senderInfo?.userId ?? '',
         showInConversation: true,
         sentAt: message.sentAt,
         senderName: message.senderInfo!.userName,
@@ -412,8 +413,13 @@ class IsmChatMqttController extends GetxController {
         body: message.body,
         customType: message.customType,
         action: '',
+        deliverCount: 0,
+        deliveredTo: [],
+        readCount: 0,
+        readBy: [],
       ),
     );
+    IsmChatLog.error('fromMatt ${conversation.lastMessageDetails?.toMap()}');
     conversation.messages?.add(message);
     await IsmChatConfig.dbWrapper!.saveConversation(conversation: conversation);
     unawaited(conversationController.getConversationsFromDB());

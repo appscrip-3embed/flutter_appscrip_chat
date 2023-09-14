@@ -164,6 +164,8 @@ class IsmChatConversationsController extends GetxController {
 
   BuildContext? context;
 
+  BuildContext? isDrawerContext;
+
   TabController? tabController;
 
   @override
@@ -221,6 +223,10 @@ class IsmChatConversationsController extends GetxController {
         return const IsmChatUserView();
       case IsRenderConversationScreen.broadcastView:
         return const IsmChatBroadCastView();
+      case IsRenderConversationScreen.openConverationView:
+        return const IsmChatOpenConversationView();
+      case IsRenderConversationScreen.publicConverationView:
+        return const IsmChatPublicConversationView();
     }
   }
 
@@ -253,11 +259,10 @@ class IsmChatConversationsController extends GetxController {
       case IsRenderChatPageScreen.messageSearchView:
         return const IsmChatSearchMessgae();
       case IsRenderChatPageScreen.boradcastChatMessagePage:
-        // TODO: Handle this case.
-        break;
+        return const IsmChatBoradcastMessagePage();
+
       case IsRenderChatPageScreen.openChatMessagePage:
-        // TODO: Handle this case.
-        break;
+        return const IsmChatOpenChatMessagePage();
     }
     return const SizedBox.shrink();
   }
@@ -518,8 +523,8 @@ class IsmChatConversationsController extends GetxController {
     if (conversations.length <= 1) {
       return;
     }
-    conversations.sort((a, b) =>
-        b.lastMessageDetails!.sentAt.compareTo(a.lastMessageDetails!.sentAt));
+    conversations.sort((a, b) => (b.lastMessageDetails?.sentAt ?? 0)
+        .compareTo(a.lastMessageDetails?.sentAt ?? 0));
   }
 
   String getConversationId(String userId) {
@@ -776,7 +781,9 @@ class IsmChatConversationsController extends GetxController {
         IsmChatPageBinding().dependencies();
         return;
       }
+      isRenderChatPageaScreen = IsRenderChatPageScreen.none;
       final chatPagecontroller = Get.find<IsmChatPageController>();
+
       chatPagecontroller.startInit();
       if (chatPagecontroller.messageHoldOverlayEntry != null) {
         chatPagecontroller.closeOveray();

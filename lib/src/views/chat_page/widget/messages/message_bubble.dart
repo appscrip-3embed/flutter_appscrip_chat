@@ -3,8 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class MessageBubble extends StatefulWidget {
-  const MessageBubble({
+class MessageBubble extends StatelessWidget {
+  MessageBubble({
     super.key,
     required this.message,
     required this.showMessageInCenter,
@@ -15,45 +15,18 @@ class MessageBubble extends StatefulWidget {
   final bool showMessageInCenter;
   final int? index;
 
-  @override
-  State<MessageBubble> createState() => _MessageBubbleState();
-}
-
-class _MessageBubbleState extends State<MessageBubble>
-    with TickerProviderStateMixin {
-  GlobalKey globalKey = GlobalKey();
-
-  Animation<double>? holdAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    if (mounted) {
-      if (Get.isRegistered<IsmChatPageController>()) {
-        var controller = Get.find<IsmChatPageController>();
-        controller.holdController = AnimationController(
-          vsync: this,
-          duration: IsmChatConstants.transitionDuration,
-        );
-        holdAnimation = CurvedAnimation(
-          parent: controller.holdController!,
-          curve: Curves.easeInOutCubic,
-        );
-      }
-    }
-  }
+  final GlobalKey globalKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
       builder: (controller) => Container(
             key: globalKey,
-            margin: widget.message.reactions?.isNotEmpty == true &&
-                    !widget.showMessageInCenter
-                ? IsmChatDimens.edgeInsetsB25
-                : null,
-            padding:
-                widget.showMessageInCenter ? IsmChatDimens.edgeInsets4 : null,
-            constraints: widget.showMessageInCenter
+            margin:
+                message.reactions?.isNotEmpty == true && !showMessageInCenter
+                    ? IsmChatDimens.edgeInsetsB25
+                    : null,
+            padding: showMessageInCenter ? IsmChatDimens.edgeInsets4 : null,
+            constraints: showMessageInCenter
                 ? BoxConstraints(
                     maxWidth: context.width * .8,
                     minWidth: context.width * .1,
@@ -71,12 +44,12 @@ class _MessageBubbleState extends State<MessageBubble>
                               ? context.width * .2
                               : context.width * .25,
                     ),
-            decoration: widget.showMessageInCenter
+            decoration: showMessageInCenter
                 ? null
                 : BoxDecoration(
-                    color: widget.message.backgroundColor,
-                    border: Border.all(color: widget.message.borderColor!),
-                    borderRadius: widget.message.sentByMe
+                    color: message.backgroundColor,
+                    border: Border.all(color: message.borderColor!),
+                    borderRadius: message.sentByMe
                         ? IsmChatConfig.chatTheme.chatPageTheme
                                 ?.selfMessageTheme?.borderRadius ??
                             BorderRadius.circular(IsmChatDimens.twelve)
@@ -93,46 +66,46 @@ class _MessageBubbleState extends State<MessageBubble>
             child: Stack(
               children: [
                 Padding(
-                  padding: !widget.showMessageInCenter
+                  padding: !showMessageInCenter
                       ? IsmChatDimens.edgeInsets5_5_5_20
                       : IsmChatDimens.edgeInsets0,
-                  child: widget.message.customType!.messageType(widget.message),
+                  child: message.customType!.messageType(message),
                 ),
-                if (!widget.showMessageInCenter) ...[
+                if (!showMessageInCenter) ...[
                   Positioned(
                     bottom: IsmChatDimens.four,
                     right: IsmChatDimens.ten,
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: widget.message.sentByMe
+                      mainAxisAlignment: message.sentByMe
                           ? MainAxisAlignment.end
                           : MainAxisAlignment.start,
                       children: [
                         Text(
-                          widget.message.sentAt.toTimeString(),
-                          style: (widget.message.sentByMe
+                          message.sentAt.toTimeString(),
+                          style: (message.sentByMe
                                   ? IsmChatStyles.w400White10
                                   : IsmChatStyles.w400Grey10)
                               .copyWith(
-                            color: widget.message.style.color,
+                            color: message.style.color,
                           ),
                         ),
-                        if (widget.message.sentByMe &&
-                            widget.message.customType !=
+                        if (message.sentByMe &&
+                            message.customType !=
                                 IsmChatCustomMessageType
                                     .deletedForEveryone) ...[
                           IsmChatDimens.boxWidth2,
                           Icon(
-                            widget.message.messageId!.isEmpty
+                            message.messageId!.isEmpty
                                 ? Icons.watch_later_outlined
-                                : widget.message.deliveredToAll ?? false
+                                : message.deliveredToAll ?? false
                                     ? Icons.done_all_rounded
                                     : Icons.done_rounded,
-                            color: widget.message.messageId!.isEmpty
+                            color: message.messageId!.isEmpty
                                 ? IsmChatConfig.chatTheme.chatPageTheme
                                         ?.unreadCheckColor ??
                                     Colors.white
-                                : widget.message.readByAll ?? false
+                                : message.readByAll ?? false
                                     ? IsmChatConfig.chatTheme.chatPageTheme
                                             ?.readCheckColor ??
                                         Colors.blue
@@ -146,7 +119,7 @@ class _MessageBubbleState extends State<MessageBubble>
                     ),
                   ),
                   Obx(
-                    () => (controller.onMessageHoverIndex == widget.index &&
+                    () => (controller.onMessageHoverIndex == index &&
                             Responsive.isWebAndTablet(context))
                         ? Positioned(
                             top: IsmChatDimens.four,
@@ -162,8 +135,8 @@ class _MessageBubbleState extends State<MessageBubble>
                                   controller.holdController?.forward();
                                   controller.showOverlayWeb(
                                     globalKey.currentContext!,
-                                    widget.message,
-                                    holdAnimation!,
+                                    message,
+                                    controller.holdAnimation!,
                                   );
                                 }
                               },
@@ -181,7 +154,7 @@ class _MessageBubbleState extends State<MessageBubble>
                                 ),
                                 child: Icon(
                                   Icons.expand_more_rounded,
-                                  color: widget.message.textColor,
+                                  color: message.textColor,
                                 ),
                               ),
                             ),

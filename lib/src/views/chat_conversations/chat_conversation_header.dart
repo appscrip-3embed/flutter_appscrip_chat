@@ -125,6 +125,7 @@ class _MoreIcon extends StatelessWidget {
             IsmChatConversationPosition.menu) {
       conversationTypeList.remove(IsmChatConversationType.private);
     }
+    controller.isDrawerContext = context;
     return PopupMenuButton(
       color: IsmChatColors.whiteColor,
       offset: Offset((Responsive.isWebAndTablet(context)) ? -180 : 0, 0),
