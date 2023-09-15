@@ -298,11 +298,13 @@ class _IsmChatPageView extends StatelessWidget {
                                                 padding: IsmChatConfig
                                                     .chatTheme
                                                     .chatPageTheme
+                                                    ?.textFiledThemData
                                                     ?.textfieldInsets,
                                                 decoration: IsmChatConfig
                                                     .chatTheme
                                                     .chatPageTheme
-                                                    ?.textfieldDecoration,
+                                                    ?.textFiledThemData
+                                                    ?.decoration,
                                                 child: const SafeArea(
                                                   child: IsmChatMessageField(),
                                                 ),

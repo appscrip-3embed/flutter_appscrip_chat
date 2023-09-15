@@ -132,7 +132,7 @@ class IsmChatMessageField extends StatelessWidget {
                             borderRadius:
                                 BorderRadius.circular(IsmChatDimens.twenty),
                             color: IsmChatConfig.chatTheme.chatPageTheme
-                                    ?.textfieldBackgroundColor ??
+                                    ?.textFiledThemData?.backgroundColor ??
                                 IsmChatConfig.chatTheme.backgroundColor,
                           ),
                           child: Column(
@@ -146,16 +146,22 @@ class IsmChatMessageField extends StatelessWidget {
                                 children: [
                                   Expanded(
                                     child: TextFormField(
-                                      style: IsmChatConfig.chatTheme
-                                          .chatPageTheme?.inputTextStyle,
+                                      style: IsmChatConfig
+                                          .chatTheme
+                                          .chatPageTheme
+                                          ?.textFiledThemData
+                                          ?.inputTextStyle,
                                       maxLines: 4,
                                       minLines: 1,
                                       focusNode:
                                           controller.messageFieldFocusNode,
                                       controller:
                                           controller.chatInputController,
-                                      cursorColor: IsmChatConfig.chatTheme
-                                              .chatPageTheme?.cursorColor ??
+                                      cursorColor: IsmChatConfig
+                                              .chatTheme
+                                              .chatPageTheme
+                                              ?.textFiledThemData
+                                              ?.cursorColor ??
                                           IsmChatConfig.chatTheme.primaryColor,
                                       textCapitalization:
                                           TextCapitalization.sentences,
@@ -165,7 +171,8 @@ class IsmChatMessageField extends StatelessWidget {
                                         fillColor: IsmChatConfig
                                                 .chatTheme
                                                 .chatPageTheme
-                                                ?.textfieldBackgroundColor ??
+                                                ?.textFiledThemData
+                                                ?.backgroundColor ??
                                             IsmChatConfig
                                                 .chatTheme.backgroundColor,
                                         contentPadding:
@@ -178,6 +185,7 @@ class IsmChatMessageField extends StatelessWidget {
                                                 : _EmojiButton(IsmChatConfig
                                                     .chatTheme
                                                     .chatPageTheme
+                                                    ?.textFiledThemData
                                                     ?.emojiColor),
                                         enabledBorder: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(
@@ -591,7 +599,7 @@ class _MicOrSendButton extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: IsmChatConfig.chatTheme.chatPageTheme
-                            ?.sendButtonBackGroundColor ??
+                            ?.sendButtonThemData?.backgroundColor ??
                         IsmChatConfig.chatTheme.primaryColor,
                   ),
                   child: AnimatedSwitcher(
@@ -657,13 +665,13 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
     super.initState();
   }
 
-  @override
-  void dispose() {
-    controller.fabAnimationController?.dispose();
-    controller.attchmentOverlayEntry?.dispose();
-    controller.attchmentOverlayEntry = null;
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   controller.fabAnimationController?.dispose();
+  //   controller.attchmentOverlayEntry?.dispose();
+  //   controller.attchmentOverlayEntry = null;
+  //   super.dispose();
+  // }
 
   void _toggle(BuildContext context) async {
     if (controller.showAttachment) {
@@ -831,7 +839,8 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
             );
           }
         },
-        color: IsmChatConfig.chatTheme.chatPageTheme?.attchmentColor ??
+        color: IsmChatConfig
+                .chatTheme.chatPageTheme?.textFiledThemData?.attchmentColor ??
             IsmChatConfig.chatTheme.primaryColor,
         icon: const Icon(Icons.attach_file_rounded),
       );

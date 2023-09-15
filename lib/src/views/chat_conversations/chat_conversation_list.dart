@@ -7,18 +7,6 @@ import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 /// `ChatConversationList` can be used to show the list of all the conversations user has done.
-///
-/// It takes 4 parameters
-/// ```dart
-/// const ChatConversationList({
-///    this.childBuilder,
-///    this.itemBuilder,
-///    this.profileImageBuilder,
-///    this.height,
-/// });
-/// ```
-///
-/// Certain properties can be modified as per requirement. You can read about each of them by hovering over the property
 class IsmChatConversationList extends StatelessWidget {
   const IsmChatConversationList({
     super.key,
@@ -189,6 +177,10 @@ class _ConversationList extends StatelessWidget {
                       ),
                 child: Obx(
                   () => IsmChatConversationCard(
+                    isShowBackgroundColor: Responsive.isWebAndTablet(context)
+                        ? controller.isConversationId ==
+                            conversation.conversationId
+                        : false,
                     name: IsmChatProperties
                         .conversationProperties.cardElementBuilders?.name,
                     nameBuilder: IsmChatProperties.conversationProperties
@@ -212,7 +204,7 @@ class _ConversationList extends StatelessWidget {
                               style: IsmChatStyles.typing,
                             ),
                     onTap: () async {
-                      if (kIsWeb) {
+                      if (Responsive.isWebAndTablet(context)) {
                         controller.isConversationId =
                             conversation.conversationId ?? '';
                       }

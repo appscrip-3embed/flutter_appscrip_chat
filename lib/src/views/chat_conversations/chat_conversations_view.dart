@@ -33,8 +33,8 @@ class _IsmChatConversationsState extends State<IsmChatConversations>
     }
     var controller = Get.find<IsmChatConversationsController>();
     controller.tabController = TabController(
-      length: 3,
-      // IsmChatProperties.conversationProperties.allowedConversations.length,
+      length:
+          IsmChatProperties.conversationProperties.allowedConversations.length,
       vsync: this,
     );
   }
@@ -67,12 +67,13 @@ class _IsmChatConversationsState extends State<IsmChatConversations>
                       border: Responsive.isWebAndTablet(context)
                           ? Border(
                               right: BorderSide(
-                                  color: IsmChatConfig.chatTheme.primaryColor!),
+                                  color: IsmChatConfig.chatTheme.dividerColor!),
                             )
                           : null,
                     ),
                     width: Responsive.isWebAndTablet(context)
-                        ? IsmChatDimens.percentWidth(.3)
+                        ? IsmChatProperties.sideWidgetWidth ??
+                            IsmChatDimens.percentWidth(.3)
                         : IsmChatDimens.percentWidth(1),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
@@ -142,10 +143,11 @@ class _IsmChatConversationsState extends State<IsmChatConversations>
                                   border: Border(
                                     left: BorderSide(
                                         color: IsmChatConfig
-                                            .chatTheme.primaryColor!),
+                                            .chatTheme.dividerColor!),
                                   ),
                                 ),
-                                width: IsmChatDimens.percentWidth(.3),
+                                width: IsmChatProperties.sideWidgetWidth ??
+                                    IsmChatDimens.percentWidth(.3),
                                 child: controller.isRenderChatScreenWidget(),
                               )
                             : const SizedBox.shrink(),

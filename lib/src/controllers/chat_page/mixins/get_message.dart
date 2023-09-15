@@ -217,6 +217,7 @@ mixin IsmChatPageGetMessageMixin {
             messageId: message.messageId ?? '',
             conversationId: message.conversationId ?? '',
             body: message.body,
+            senderId: message.senderInfo?.userId,
             customType: message.customType,
             readBy: [],
             deliveredTo: [],

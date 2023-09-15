@@ -8,10 +8,39 @@ import 'package:appscrip_chat_component/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class IsmChatBoradcastMessagePage extends StatelessWidget {
+class IsmChatBoradcastMessagePage extends StatefulWidget {
   const IsmChatBoradcastMessagePage({super.key});
 
   static const String route = IsmPageRoutes.boradCastMessagePage;
+
+  @override
+  State<IsmChatBoradcastMessagePage> createState() =>
+      _IsmChatBoradcastMessagePageState();
+}
+
+class _IsmChatBoradcastMessagePageState
+    extends State<IsmChatBoradcastMessagePage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (Responsive.isWebAndTablet(context)) {
+        _start();
+      }
+    });
+  }
+
+  void _start() async {
+    await Future.delayed(const Duration(milliseconds: 100));
+    if (!Get.isRegistered<IsmChatPageController>()) {
+      IsmChatPageBinding().dependencies();
+      final controller = Get.find<IsmChatPageController>();
+      controller.startInit(isTemporaryChats: true);
+      if (controller.messageHoldOverlayEntry != null) {
+        controller.closeOveray();
+      }
+    }
+  }
 
   void _back(BuildContext context) async {
     var controller = Get.find<IsmChatPageController>();
@@ -21,6 +50,7 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
       var controller = Get.find<IsmChatPageController>();
       controller.isTemporaryChat = false;
       conversationController.currentConversation = null;
+      conversationController.isConversationId = '';
       conversationController.isRenderChatPageaScreen =
           IsRenderChatPageScreen.none;
       await Get.delete<IsmChatPageController>(force: true);
@@ -140,7 +170,8 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
                             },
                           ),
                   ),
-                  if (controller.messages.isEmpty)
+                  if (controller.messages.isEmpty &&
+                      !Responsive.isWebAndTablet(context))
                     Container(
                       height: IsmChatDimens.forty,
                       width: IsmChatDimens.hundred,
@@ -165,10 +196,10 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
                     ),
                   IsmChatDimens.boxHeight20,
                   Container(
-                    padding:
-                        IsmChatConfig.chatTheme.chatPageTheme?.textfieldInsets,
+                    padding: IsmChatConfig.chatTheme.chatPageTheme
+                        ?.textFiledThemData?.textfieldInsets,
                     decoration: IsmChatConfig
-                        .chatTheme.chatPageTheme?.textfieldDecoration,
+                        .chatTheme.chatPageTheme?.textFiledThemData?.decoration,
                     child: const SafeArea(
                       child: IsmChatMessageField(),
                     ),

@@ -263,6 +263,10 @@ class IsmChatConversationsController extends GetxController {
 
       case IsRenderChatPageScreen.openChatMessagePage:
         return const IsmChatOpenChatMessagePage();
+      case IsRenderChatPageScreen.observerUsersView:
+        return IsmChatObserverUsersView(
+          conversationId: currentConversation?.conversationId ?? '',
+        );
     }
     return const SizedBox.shrink();
   }
@@ -745,36 +749,6 @@ class IsmChatConversationsController extends GetxController {
     if (response != null) {}
   }
 
-  Future<void> goToChatPageWithMessage() async {
-    await Future.delayed(const Duration(milliseconds: 100));
-    if (Get.isRegistered<IsmChatPageController>()) {
-      final chatPagecontroller = Get.find<IsmChatPageController>();
-      if (Responsive.isWebAndTablet(Get.context!)) {
-        chatPagecontroller.startInit(
-          isTemporaryChats: true,
-        );
-      }
-
-      if (chatPagecontroller.messageHoldOverlayEntry != null) {
-        chatPagecontroller.closeOveray();
-      }
-      chatPagecontroller.messages.add(
-        IsmChatMessageModel(
-          body: '',
-          userName:
-              IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-                  ? IsmChatConfig.communicationConfig.userConfig.userName
-                  : userDetails?.userName ?? '',
-          customType: IsmChatCustomMessageType.observerJoin,
-          sentAt: DateTime.now().millisecondsSinceEpoch,
-          sentByMe: true,
-        ),
-      );
-      chatPagecontroller.messages = chatPagecontroller.viewModel
-          .sortMessages(chatPagecontroller.messages);
-    }
-  }
-
   Future<void> goToChatPage() async {
     if (Responsive.isWebAndTablet(Get.context!)) {
       if (!Get.isRegistered<IsmChatPageController>()) {
@@ -783,7 +757,6 @@ class IsmChatConversationsController extends GetxController {
       }
       isRenderChatPageaScreen = IsRenderChatPageScreen.none;
       final chatPagecontroller = Get.find<IsmChatPageController>();
-
       chatPagecontroller.startInit();
       if (chatPagecontroller.messageHoldOverlayEntry != null) {
         chatPagecontroller.closeOveray();

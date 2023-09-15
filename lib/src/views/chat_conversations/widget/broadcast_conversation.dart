@@ -347,15 +347,14 @@ class IsmChatBroadCastView extends StatelessWidget {
                 );
                 controller.navigateToMessages(conversation);
                 if (Responsive.isWebAndTablet(context)) {
+                  Get.back();
                   if (!Get.isRegistered<IsmChatPageController>()) {
                     IsmChatPageBinding().dependencies();
-                    return;
                   }
-
-                  final chatPagecontroller = Get.find<IsmChatPageController>();
                   controller.isRenderChatPageaScreen =
                       IsRenderChatPageScreen.boradcastChatMessagePage;
-                  chatPagecontroller.startInit();
+                  final chatPagecontroller = Get.find<IsmChatPageController>();
+                  chatPagecontroller.startInit(isTemporaryChats: true);
                   if (chatPagecontroller.messageHoldOverlayEntry != null) {
                     chatPagecontroller.closeOveray();
                   }

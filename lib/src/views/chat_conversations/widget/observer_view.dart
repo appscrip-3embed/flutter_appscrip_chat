@@ -20,6 +20,7 @@ class _IsmChatObserverUsersViewState extends State<IsmChatObserverUsersView> {
 
   Future<List<UserDetails>>? future;
   bool isSearch = false;
+
   @override
   void initState() {
     super.initState();
