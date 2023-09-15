@@ -112,21 +112,51 @@ class _IsmChatOpenConversationViewState
                                 controller.navigateToMessages(data);
 
                                 if (Responsive.isWebAndTablet(Get.context!)) {
+                                  Get.back();
+
                                   if (!Get.isRegistered<
                                       IsmChatPageController>()) {
                                     IsmChatPageBinding().dependencies();
-                                    return;
                                   }
                                   controller.isRenderChatPageaScreen =
                                       IsRenderChatPageScreen
                                           .openChatMessagePage;
-                                  await controller.goToChatPage();
+                                  final chatPagecontroller =
+                                      Get.find<IsmChatPageController>();
+                                  chatPagecontroller.messages.clear();
+                                  chatPagecontroller.startInit(
+                                    isTemporaryChats: true,
+                                  );
+
+                                  chatPagecontroller.closeOveray();
+                                  chatPagecontroller.messages.add(
+                                    IsmChatMessageModel(
+                                      body: '',
+                                      userName: IsmChatConfig
+                                              .communicationConfig
+                                              .userConfig
+                                              .userName
+                                              .isNotEmpty
+                                          ? IsmChatConfig.communicationConfig
+                                              .userConfig.userName
+                                          : controller.userDetails?.userName ??
+                                              '',
+                                      customType:
+                                          IsmChatCustomMessageType.observerJoin,
+                                      sentAt:
+                                          DateTime.now().millisecondsSinceEpoch,
+                                      sentByMe: true,
+                                    ),
+                                  );
+                                  chatPagecontroller.messages =
+                                      chatPagecontroller.viewModel.sortMessages(
+                                    chatPagecontroller.messages,
+                                  );
                                 } else {
                                   IsmChatRouteManagement
                                       .goToOpenChatMessagePage(
                                     isTemporaryChat: true,
                                   );
-                                  await controller.goToChatPage();
                                 }
                               }
                             },

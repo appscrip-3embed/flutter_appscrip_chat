@@ -445,7 +445,7 @@ class IsmChatPageController extends GetxController
     _scrollListener();
     _intputAndFocustNode();
     if (_conversationController.currentConversation != null) {
-      conversation = _conversationController.currentConversation!;
+      conversation = _conversationController.currentConversation;
       _conversationController.isConversationId =
           conversation?.conversationId ?? '';
       final newMeessageFromOutside = conversation?.messageFromOutSide;
@@ -512,37 +512,31 @@ class IsmChatPageController extends GetxController
 
   @override
   void onClose() {
-    if (areCamerasInitialized) {
-      _frontCameraController.dispose();
-      _backCameraController.dispose();
-    }
-    conversationDetailsApTimer?.cancel();
-    messagesScrollController.dispose();
-    searchMessageScrollController.dispose();
-    attchmentOverlayEntry?.dispose();
-    messageHoldOverlayEntry?.dispose();
-    fabAnimationController?.dispose();
-
-    ifTimerMounted();
+    _dispose();
     super.onClose();
   }
 
   @override
   void dispose() {
+    _dispose();
+    super.dispose();
+  }
+
+  void _dispose() {
     if (areCamerasInitialized) {
       _frontCameraController.dispose();
       _backCameraController.dispose();
     }
+
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
     searchMessageScrollController.dispose();
     attchmentOverlayEntry?.dispose();
     messageHoldOverlayEntry?.dispose();
-    fabAnimationController!.dispose();
-    attchmentOverlayEntry = null;
-    messageHoldOverlayEntry = null;
+    attchmentOverlayEntry?.dispose();
+    fabAnimationController?.dispose();
+    holdController?.dispose();
     ifTimerMounted();
-    super.dispose();
   }
 
   _generateReactionList() async {

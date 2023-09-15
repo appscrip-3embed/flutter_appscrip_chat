@@ -190,7 +190,7 @@ class IsmChatApp extends StatelessWidget {
     }
     var controller = Get.find<IsmChatConversationsController>();
     var conversationId = controller.getConversationId(userId);
-    late IsmChatConversationModel conversation;
+    IsmChatConversationModel? conversation;
     if (conversationId.isEmpty) {
       var userDetails = UserDetails(
           userProfileImageUrl: profileImageUrl,

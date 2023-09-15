@@ -6,6 +6,7 @@ class IsmChatThemeData with Diagnosticable {
   IsmChatThemeData({
     IsmChatListThemeData? chatListTheme,
     Color? primaryColor,
+    Color? dividerColor,
     Color? backgroundColor,
     Color? mentionColor,
     FloatingActionButtonThemeData? floatingActionButtonTheme,
@@ -20,7 +21,8 @@ class IsmChatThemeData with Diagnosticable {
         floatingActionButtonTheme = floatingActionButtonTheme ??
             IsmChatThemeData.light().floatingActionButtonTheme,
         iconTheme = iconTheme ?? IsmChatThemeData.light().iconTheme,
-        chatListTheme = chatListTheme ?? IsmChatThemeData.light().chatListTheme;
+        chatListTheme = chatListTheme ?? IsmChatThemeData.light().chatListTheme,
+        dividerColor = dividerColor ?? primaryColor;
 
   factory IsmChatThemeData.fallback() => IsmChatThemeData.light();
 
@@ -57,6 +59,8 @@ class IsmChatThemeData with Diagnosticable {
       );
 
   final Color? primaryColor;
+
+  final Color? dividerColor;
 
   final Color? backgroundColor;
 
