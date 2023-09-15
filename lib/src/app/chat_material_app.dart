@@ -4,19 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatApp extends StatelessWidget {
-  IsmChatApp({
-    super.key,
-    this.communicationConfig,
-    this.chatPageProperties,
-    this.conversationProperties,
-    this.chatTheme,
-    this.chatDarkTheme,
-    this.loadingDialog,
-    this.databaseName,
-    this.enableGroupChat = false,
-    this.useDataBase = true,
-    this.noChatSelectedPlaceholder,
-  }) {
+  IsmChatApp(
+      {super.key,
+      this.communicationConfig,
+      this.chatPageProperties,
+      this.conversationProperties,
+      this.chatTheme,
+      this.chatDarkTheme,
+      this.loadingDialog,
+      this.databaseName,
+      this.enableGroupChat = false,
+      this.useDataBase = true,
+      this.noChatSelectedPlaceholder,
+      this.sideWidgetWidth}) {
     assert(IsmChatConfig.isInitialized,
         'ChatHiveBox is not initialized\nYou are getting this error because the Database class is not initialized, to initialize ChatHiveBox class call AppscripChatComponent.initialize() before your runApp()');
     assert(IsmChatConfig.configInitilized || communicationConfig != null,
@@ -31,6 +31,7 @@ class IsmChatApp extends StatelessWidget {
     // );
     IsmChatConfig.dbName = databaseName ?? IsmChatStrings.dbname;
     IsmChatProperties.loadingDialog = loadingDialog;
+    IsmChatProperties.sideWidgetWidth = sideWidgetWidth;
     IsmChatProperties.noChatSelectedPlaceholder = noChatSelectedPlaceholder;
     if (communicationConfig != null) {
       IsmChatConfig.communicationConfig = communicationConfig!;
@@ -79,6 +80,8 @@ class IsmChatApp extends StatelessWidget {
 
   ///  It is showing you have no tap any converstaion
   final Widget? noChatSelectedPlaceholder;
+
+  final double? sideWidgetWidth;
 
   /// Call this function for Get all Conversation List
   static void updateChatPageController() {

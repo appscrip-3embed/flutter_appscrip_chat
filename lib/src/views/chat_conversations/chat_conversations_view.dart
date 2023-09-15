@@ -72,7 +72,8 @@ class _IsmChatConversationsState extends State<IsmChatConversations>
                           : null,
                     ),
                     width: Responsive.isWebAndTablet(context)
-                        ? IsmChatDimens.percentWidth(.3)
+                        ? IsmChatProperties.sideWidgetWidth ??
+                            IsmChatDimens.percentWidth(.3)
                         : IsmChatDimens.percentWidth(1),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
@@ -145,7 +146,8 @@ class _IsmChatConversationsState extends State<IsmChatConversations>
                                             .chatTheme.dividerColor!),
                                   ),
                                 ),
-                                width: IsmChatDimens.percentWidth(.3),
+                                width: IsmChatProperties.sideWidgetWidth ??
+                                    IsmChatDimens.percentWidth(.3),
                                 child: controller.isRenderChatScreenWidget(),
                               )
                             : const SizedBox.shrink(),
