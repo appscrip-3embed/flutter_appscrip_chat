@@ -21,15 +21,19 @@ class IsmChatBlockedMessage extends StatelessWidget {
           return Center(
             child: Container(
               decoration: BoxDecoration(
-                color: IsmChatConfig.chatTheme.backgroundColor,
+                color: IsmChatConfig.chatTheme.chatPageTheme
+                        ?.centerMessageThemData?.backgroundColor ??
+                    IsmChatConfig.chatTheme.backgroundColor,
                 borderRadius: BorderRadius.circular(IsmChatDimens.eight),
               ),
               padding: IsmChatDimens.edgeInsets8_4,
               child: Text(
                 text,
-                style: IsmChatStyles.w500Black12.copyWith(
-                  color: IsmChatConfig.chatTheme.primaryColor,
-                ),
+                style: IsmChatConfig.chatTheme.chatPageTheme
+                        ?.centerMessageThemData?.textStyle ??
+                    IsmChatStyles.w500Black12.copyWith(
+                      color: IsmChatConfig.chatTheme.primaryColor,
+                    ),
                 textAlign: TextAlign.center,
               ),
             ),

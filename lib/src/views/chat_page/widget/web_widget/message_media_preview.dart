@@ -258,7 +258,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                                         const Duration(milliseconds: 100));
                               },
                               child: Container(
-                                padding: IsmChatDimens.edgeInsets10,
+                                padding: IsmChatDimens.edgeInsets5,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(
                                       IsmChatDimens.fifty),
@@ -296,13 +296,13 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                                     '';
                                 updateState();
                                 await carouselController.animateToPage(
-                                    chatPageController.assetsIndex,
-                                    curve: Curves.linear,
-                                    duration:
-                                        const Duration(milliseconds: 100));
+                                  chatPageController.assetsIndex,
+                                  curve: Curves.linear,
+                                  duration: const Duration(milliseconds: 100),
+                                );
                               },
                               child: Container(
-                                padding: IsmChatDimens.edgeInsets10,
+                                padding: IsmChatDimens.edgeInsets5,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(
                                       IsmChatDimens.fifty),

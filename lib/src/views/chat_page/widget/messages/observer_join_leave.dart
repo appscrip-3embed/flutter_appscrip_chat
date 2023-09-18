@@ -15,7 +15,9 @@ class IsmChatObserverLeaveAndJoin extends StatelessWidget {
   Widget build(BuildContext context) => Center(
         child: Container(
           decoration: BoxDecoration(
-            color: IsmChatConfig.chatTheme.backgroundColor,
+            color: IsmChatConfig.chatTheme.chatPageTheme?.centerMessageThemData
+                    ?.backgroundColor ??
+                IsmChatConfig.chatTheme.backgroundColor,
             borderRadius: BorderRadius.circular(IsmChatDimens.eight),
           ),
           padding: IsmChatDimens.edgeInsets8_4,
@@ -24,9 +26,11 @@ class IsmChatObserverLeaveAndJoin extends StatelessWidget {
                 ? '${message.userName} has left as observer'
                 : '${message.userName} joined as observer',
             textAlign: TextAlign.center,
-            style: IsmChatStyles.w500Black12.copyWith(
-              color: IsmChatConfig.chatTheme.primaryColor,
-            ),
+            style: IsmChatConfig.chatTheme.chatPageTheme?.centerMessageThemData
+                    ?.textStyle ??
+                IsmChatStyles.w500Black12.copyWith(
+                  color: IsmChatConfig.chatTheme.primaryColor,
+                ),
           ),
         ),
       );
