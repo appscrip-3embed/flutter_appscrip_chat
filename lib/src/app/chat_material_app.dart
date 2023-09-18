@@ -4,19 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatApp extends StatelessWidget {
-  IsmChatApp(
-      {super.key,
-      this.communicationConfig,
-      this.chatPageProperties,
-      this.conversationProperties,
-      this.chatTheme,
-      this.chatDarkTheme,
-      this.loadingDialog,
-      this.databaseName,
-      this.enableGroupChat = false,
-      this.useDataBase = true,
-      this.noChatSelectedPlaceholder,
-      this.sideWidgetWidth}) {
+  IsmChatApp({
+    super.key,
+    this.communicationConfig,
+    this.chatPageProperties,
+    this.conversationProperties,
+    this.chatTheme,
+    this.chatDarkTheme,
+    this.loadingDialog,
+    this.databaseName,
+    this.enableGroupChat = false,
+    this.useDataBase = true,
+    this.noChatSelectedPlaceholder,
+    this.sideWidgetWidth,
+  }) {
     assert(IsmChatConfig.isInitialized,
         'ChatHiveBox is not initialized\nYou are getting this error because the Database class is not initialized, to initialize ChatHiveBox class call AppscripChatComponent.initialize() before your runApp()');
     assert(IsmChatConfig.configInitilized || communicationConfig != null,
