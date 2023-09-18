@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class IsmChatTextFiledThemData {
-  IsmChatTextFiledThemData(
+  IsmChatTextFiledThemData({
     this.inputTextStyle,
     this.decoration,
     this.backgroundColor,
@@ -9,7 +9,7 @@ class IsmChatTextFiledThemData {
     this.textfieldInsets,
     this.attchmentColor,
     this.emojiColor,
-  );
+  });
 
   final TextStyle? inputTextStyle;
   final Decoration? decoration;
