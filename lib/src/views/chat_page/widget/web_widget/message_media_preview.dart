@@ -266,8 +266,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                                   duration: const Duration(milliseconds: 1000));
                             },
                             icon: Container(
-                              height: IsmChatDimens.fifty,
-                              width: IsmChatDimens.fifty,
+                              padding: IsmChatDimens.edgeInsets10,
                               decoration: BoxDecoration(
                                 borderRadius:
                                     BorderRadius.circular(IsmChatDimens.fifty),
@@ -276,8 +275,10 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                                   color: IsmChatColors.blackColor,
                                 ),
                               ),
-                              child: const Icon(Icons.chevron_left_rounded,
-                                  color: IsmChatColors.blackColor),
+                              child: const Icon(
+                                Icons.chevron_left_rounded,
+                                color: IsmChatColors.blackColor,
+                              ),
                             ),
                           ),
                           IconButton(
@@ -305,8 +306,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                                   duration: const Duration(milliseconds: 1000));
                             },
                             icon: Container(
-                              height: IsmChatDimens.fifty,
-                              width: IsmChatDimens.fifty,
+                              padding: IsmChatDimens.edgeInsets10,
                               decoration: BoxDecoration(
                                 borderRadius:
                                     BorderRadius.circular(IsmChatDimens.fifty),

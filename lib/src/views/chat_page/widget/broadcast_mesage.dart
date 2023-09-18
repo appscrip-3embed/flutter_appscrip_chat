@@ -8,39 +8,10 @@ import 'package:appscrip_chat_component/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class IsmChatBoradcastMessagePage extends StatefulWidget {
+class IsmChatBoradcastMessagePage extends StatelessWidget {
   const IsmChatBoradcastMessagePage({super.key});
 
   static const String route = IsmPageRoutes.boradCastMessagePage;
-
-  @override
-  State<IsmChatBoradcastMessagePage> createState() =>
-      _IsmChatBoradcastMessagePageState();
-}
-
-class _IsmChatBoradcastMessagePageState
-    extends State<IsmChatBoradcastMessagePage> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (Responsive.isWebAndTablet(context)) {
-        _start();
-      }
-    });
-  }
-
-  void _start() async {
-    await Future.delayed(const Duration(milliseconds: 100));
-    if (!Get.isRegistered<IsmChatPageController>()) {
-      IsmChatPageBinding().dependencies();
-      final controller = Get.find<IsmChatPageController>();
-      controller.startInit(isTemporaryChats: true);
-      if (controller.messageHoldOverlayEntry != null) {
-        controller.closeOveray();
-      }
-    }
-  }
 
   void _back(BuildContext context) async {
     var controller = Get.find<IsmChatPageController>();
