@@ -263,7 +263,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                               await carouselController.animateToPage(
                                   chatPageController.assetsIndex,
                                   curve: Curves.linear,
-                                  duration: const Duration(milliseconds: 1000));
+                                  duration: const Duration(milliseconds: 100));
                             },
                             icon: Container(
                               padding: IsmChatDimens.edgeInsets10,
@@ -275,9 +275,10 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                                   color: IsmChatColors.blackColor,
                                 ),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.chevron_left_rounded,
                                 color: IsmChatColors.blackColor,
+                                size: IsmChatDimens.fifty,
                               ),
                             ),
                           ),
@@ -303,7 +304,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                               await carouselController.animateToPage(
                                   chatPageController.assetsIndex,
                                   curve: Curves.linear,
-                                  duration: const Duration(milliseconds: 1000));
+                                  duration: const Duration(milliseconds: 100));
                             },
                             icon: Container(
                               padding: IsmChatDimens.edgeInsets10,
@@ -315,9 +316,10 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                                   color: IsmChatColors.blackColor,
                                 ),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.chevron_right_rounded,
                                 color: IsmChatColors.blackColor,
+                                size: IsmChatDimens.fifty,
                               ),
                             ),
                           ),
