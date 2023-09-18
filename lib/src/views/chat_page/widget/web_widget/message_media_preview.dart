@@ -266,6 +266,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                                   duration: const Duration(milliseconds: 100));
                             },
                             icon: Container(
+                              alignment: Alignment.center,
                               padding: IsmChatDimens.edgeInsets10,
                               decoration: BoxDecoration(
                                 borderRadius:
@@ -307,6 +308,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                                   duration: const Duration(milliseconds: 100));
                             },
                             icon: Container(
+                              alignment: Alignment.center,
                               padding: IsmChatDimens.edgeInsets10,
                               decoration: BoxDecoration(
                                 borderRadius:
