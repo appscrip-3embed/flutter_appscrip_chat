@@ -15,6 +15,7 @@ class WebMediaPreview extends StatelessWidget {
             appBar: PreferredSize(
               preferredSize: const Size.fromHeight(50),
               child: AppBar(
+                elevation: IsmChatDimens.zero,
                 title: Text(
                   controller.webMedia[controller.assetsIndex].dataSize,
                   style: IsmChatStyles.w600Black14,

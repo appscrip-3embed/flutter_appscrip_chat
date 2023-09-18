@@ -93,46 +93,27 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
         child: Scaffold(
           appBar: AppBar(
             shadowColor: Colors.grey,
-            elevation: 1,
-            leadingWidth: IsmChatDimens.twoHundredFifty + IsmChatDimens.fifty,
-            title: Text(mediaSize),
-            centerTitle: true,
-            leading: Padding(
-              padding: IsmChatDimens.edgeInsetsLeft10
-                  .copyWith(left: IsmChatDimens.ten),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  IconButton(
-                    alignment: Alignment.center,
-                    icon: Icon(
-                      Icons.adaptive.arrow_back,
-                      color: IsmChatColors.blackColor,
-                    ),
-                    onPressed: () {
-                      Get.back<void>();
-                    },
-                  ),
-                  IsmChatDimens.boxWidth8,
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        initiated
-                            ? IsmChatStrings.you
-                            : widget._mediaUserName.toString(),
-                        style: IsmChatStyles.w400Black16,
-                      ),
-                      Text(
-                        mediaTime,
-                        style: IsmChatStyles.w400Black14,
-                      )
-                    ],
-                  ),
-                ],
-              ),
+            elevation: IsmChatDimens.one,
+            leading: const SizedBox.shrink(),
+            leadingWidth: IsmChatDimens.zero,
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  initiated
+                      ? IsmChatStrings.you
+                      : widget._mediaUserName.toString(),
+                  style: IsmChatStyles.w400Black16,
+                ),
+                Text(
+                  mediaTime,
+                  style: IsmChatStyles.w400Black14,
+                )
+              ],
             ),
+            centerTitle: true,
             actions: [
               Tooltip(
                 message: 'Save media',
@@ -176,6 +157,16 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                   },
                   icon: const Icon(Icons.delete_rounded),
                 ),
+              ),
+              IconButton(
+                alignment: Alignment.center,
+                icon: const Icon(
+                  Icons.close_rounded,
+                  color: IsmChatColors.blackColor,
+                ),
+                onPressed: () {
+                  Get.back<void>();
+                },
               ),
               IsmChatDimens.boxWidth32
             ],
