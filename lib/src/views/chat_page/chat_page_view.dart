@@ -17,6 +17,14 @@ class IsmChatPageView extends StatefulWidget {
 }
 
 class _IsmChatPageViewState extends State<IsmChatPageView> {
+  @override
+  void initState() {
+    super.initState();
+    if (!Get.isRegistered<IsmChatPageController>()) {
+      IsmChatPageBinding().dependencies();
+    }
+  }
+
   IsmChatPageController get controller => Get.find<IsmChatPageController>();
 
   Future<bool> navigateBack() async {
