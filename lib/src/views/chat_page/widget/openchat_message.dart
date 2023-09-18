@@ -19,7 +19,7 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
     if (Responsive.isWebAndTablet(context)) {
       controller.isTemporaryChat = false;
       conversationController.currentConversation = null;
-      conversationController.isConversationId = '';
+      conversationController.currentConversationId = '';
       conversationController.isRenderChatPageaScreen =
           IsRenderChatPageScreen.none;
       await Get.delete<IsmChatPageController>(force: true);

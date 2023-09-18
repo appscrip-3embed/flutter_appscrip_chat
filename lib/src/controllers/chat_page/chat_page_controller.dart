@@ -446,8 +446,7 @@ class IsmChatPageController extends GetxController
     _intputAndFocustNode();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation;
-      _conversationController.isConversationId =
-          conversation?.conversationId ?? '';
+
       final newMeessageFromOutside = conversation?.messageFromOutSide;
       await Future.delayed(Duration.zero);
       isTemporaryChat =
@@ -505,7 +504,6 @@ class IsmChatPageController extends GetxController
           userId: conversation?.opponentDetails?.userId ?? '',
         );
       }
-
       unawaited(updateUnreadMessgaeCount());
     }
   }

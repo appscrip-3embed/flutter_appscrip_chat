@@ -115,9 +115,10 @@ class IsmChatConversationsController extends GetxController {
   bool get showSearchField => _showSearchField.value;
   set showSearchField(bool value) => _showSearchField.value = value;
 
-  final RxString _isConversationId = ''.obs;
-  String get isConversationId => _isConversationId.value;
-  set isConversationId(String value) => _isConversationId.value = value;
+  final RxString _currentConversationId = ''.obs;
+  String get currentConversationId => _currentConversationId.value;
+  set currentConversationId(String value) =>
+      _currentConversationId.value = value;
 
   final Rx<IsRenderConversationScreen> _isRenderScreen =
       IsRenderConversationScreen.none.obs;
@@ -495,8 +496,10 @@ class IsmChatConversationsController extends GetxController {
     return _viewModel.clearAllMessages(conversationId, fromServer: fromServer);
   }
 
-  void navigateToMessages(IsmChatConversationModel conversation) =>
-      currentConversation = conversation;
+  void navigateToMessages(IsmChatConversationModel conversation) {
+    currentConversation = conversation;
+    currentConversationId = conversation.conversationId ?? '';
+  }
 
   Future<void> deleteChat(
     String? conversationId, {

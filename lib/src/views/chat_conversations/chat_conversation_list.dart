@@ -178,7 +178,7 @@ class _ConversationList extends StatelessWidget {
                 child: Obx(
                   () => IsmChatConversationCard(
                     isShowBackgroundColor: Responsive.isWebAndTablet(context)
-                        ? controller.isConversationId ==
+                        ? controller.currentConversationId ==
                             conversation.conversationId
                         : false,
                     name: IsmChatProperties
@@ -204,14 +204,9 @@ class _ConversationList extends StatelessWidget {
                               style: IsmChatStyles.typing,
                             ),
                     onTap: () async {
-                      if (Responsive.isWebAndTablet(context)) {
-                        controller.isConversationId =
-                            conversation.conversationId ?? '';
-                      }
                       IsmChatProperties.conversationProperties.onChatTap!(
                           _, conversation);
                       controller.navigateToMessages(conversation);
-
                       await controller.goToChatPage();
                     },
                   ),

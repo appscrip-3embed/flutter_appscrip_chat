@@ -50,7 +50,7 @@ class _IsmChatBoradcastMessagePageState
       var controller = Get.find<IsmChatPageController>();
       controller.isTemporaryChat = false;
       conversationController.currentConversation = null;
-      conversationController.isConversationId = '';
+      conversationController.currentConversationId = '';
       conversationController.isRenderChatPageaScreen =
           IsRenderChatPageScreen.none;
       await Get.delete<IsmChatPageController>(force: true);
