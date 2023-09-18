@@ -266,8 +266,9 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                                   duration: const Duration(milliseconds: 100));
                             },
                             icon: Container(
+                              height: IsmChatDimens.sixty,
+                              width: IsmChatDimens.sixty,
                               alignment: Alignment.center,
-                              padding: IsmChatDimens.edgeInsets10,
                               decoration: BoxDecoration(
                                 borderRadius:
                                     BorderRadius.circular(IsmChatDimens.fifty),
@@ -308,8 +309,9 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                                   duration: const Duration(milliseconds: 100));
                             },
                             icon: Container(
+                              height: IsmChatDimens.sixty,
+                              width: IsmChatDimens.sixty,
                               alignment: Alignment.center,
-                              padding: IsmChatDimens.edgeInsets10,
                               decoration: BoxDecoration(
                                 borderRadius:
                                     BorderRadius.circular(IsmChatDimens.fifty),
