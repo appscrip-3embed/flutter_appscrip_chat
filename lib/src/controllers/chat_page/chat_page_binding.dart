@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 class IsmChatPageBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<IsmChatPageController>(
-      () => IsmChatPageController(
+    Get.put<IsmChatPageController>(
+      IsmChatPageController(
         IsmChatPageViewModel(
           IsmChatPageRepository(),
         ),

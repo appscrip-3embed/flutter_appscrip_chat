@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -34,15 +33,11 @@ class MessageBubble extends StatelessWidget {
                 : IsmChatConfig.chatTheme.chatPageTheme?.constraints ??
                     BoxConstraints(
                       maxWidth: (Responsive.isWebAndTablet(context))
-                          ? context.width * .25
-                          : kIsWeb
-                              ? context.width * .4
-                              : context.width * .8,
+                          ? context.width * .2
+                          : context.width * .7,
                       minWidth: Responsive.isWebAndTablet(context)
                           ? IsmChatDimens.ninty
-                          : kIsWeb
-                              ? context.width * .2
-                              : context.width * .25,
+                          : context.width * .25,
                     ),
             decoration: showMessageInCenter
                 ? null
