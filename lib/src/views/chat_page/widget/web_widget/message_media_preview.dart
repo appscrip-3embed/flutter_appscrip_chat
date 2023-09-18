@@ -229,92 +229,93 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                       itemCount: widget._messageData?.length ?? 0,
                     ),
                     Padding(
-                      padding: IsmChatDimens.edgeInsets0_20,
+                      padding: IsmChatDimens.edgeInsets20_0,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          IconButton(
-                            onPressed: () async {
-                              if (chatPageController.assetsIndex == 0) {
-                                return;
-                              }
-                              chatPageController.assetsIndex--;
-                              initiated = widget
-                                      ._messageData?[
-                                          chatPageController.assetsIndex]
-                                      .sentByMe ??
-                                  false;
-                              mediaTime = widget
-                                      ._messageData?[
-                                          chatPageController.assetsIndex]
-                                      .sentAt
-                                      .deliverTime ??
-                                  '';
-                              updateState();
-                              await carouselController.animateToPage(
-                                  chatPageController.assetsIndex,
-                                  curve: Curves.linear,
-                                  duration: const Duration(milliseconds: 100));
-                            },
-                            icon: Container(
-                              height: IsmChatDimens.sixty,
-                              width: IsmChatDimens.sixty,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.circular(IsmChatDimens.fifty),
-                                color: IsmChatColors.whiteColor,
-                                border: Border.all(
-                                  color: IsmChatColors.blackColor,
+                          Opacity(
+                            opacity:
+                                chatPageController.assetsIndex != 0 ? 1 : 0,
+                            child: IsmChatTapHandler(
+                              onTap: () async {
+                                chatPageController.assetsIndex--;
+                                initiated = widget
+                                        ._messageData?[
+                                            chatPageController.assetsIndex]
+                                        .sentByMe ??
+                                    false;
+                                mediaTime = widget
+                                        ._messageData?[
+                                            chatPageController.assetsIndex]
+                                        .sentAt
+                                        .deliverTime ??
+                                    '';
+                                updateState();
+                                await carouselController.animateToPage(
+                                    chatPageController.assetsIndex,
+                                    curve: Curves.linear,
+                                    duration:
+                                        const Duration(milliseconds: 100));
+                              },
+                              child: Container(
+                                padding: IsmChatDimens.edgeInsets10,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      IsmChatDimens.fifty),
+                                  color: IsmChatColors.whiteColor,
+                                  border: Border.all(
+                                    color: IsmChatColors.blackColor,
+                                  ),
                                 ),
-                              ),
-                              child: Icon(
-                                Icons.chevron_left_rounded,
-                                color: IsmChatColors.blackColor,
-                                size: IsmChatDimens.fifty,
+                                child: Icon(
+                                  Icons.chevron_left_rounded,
+                                  color: IsmChatColors.blackColor,
+                                  size: IsmChatDimens.fifty,
+                                ),
                               ),
                             ),
                           ),
-                          IconButton(
-                            onPressed: () async {
-                              if (chatPageController.assetsIndex ==
-                                  (widget._messageData?.length ?? 0) - 1) {
-                                return;
-                              }
-                              chatPageController.assetsIndex++;
-                              initiated = widget
-                                      ._messageData?[
-                                          chatPageController.assetsIndex]
-                                      .sentByMe ??
-                                  false;
-                              mediaTime = widget
-                                      ._messageData?[
-                                          chatPageController.assetsIndex]
-                                      .sentAt
-                                      .deliverTime ??
-                                  '';
-                              updateState();
-                              await carouselController.animateToPage(
-                                  chatPageController.assetsIndex,
-                                  curve: Curves.linear,
-                                  duration: const Duration(milliseconds: 100));
-                            },
-                            icon: Container(
-                              height: IsmChatDimens.sixty,
-                              width: IsmChatDimens.sixty,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.circular(IsmChatDimens.fifty),
-                                color: IsmChatColors.whiteColor,
-                                border: Border.all(
-                                  color: IsmChatColors.blackColor,
+                          Opacity(
+                            opacity: (chatPageController.assetsIndex ==
+                                    (widget._messageData?.length ?? 0) - 1)
+                                ? 0
+                                : 1,
+                            child: IsmChatTapHandler(
+                              onTap: () async {
+                                chatPageController.assetsIndex++;
+                                initiated = widget
+                                        ._messageData?[
+                                            chatPageController.assetsIndex]
+                                        .sentByMe ??
+                                    false;
+                                mediaTime = widget
+                                        ._messageData?[
+                                            chatPageController.assetsIndex]
+                                        .sentAt
+                                        .deliverTime ??
+                                    '';
+                                updateState();
+                                await carouselController.animateToPage(
+                                    chatPageController.assetsIndex,
+                                    curve: Curves.linear,
+                                    duration:
+                                        const Duration(milliseconds: 100));
+                              },
+                              child: Container(
+                                padding: IsmChatDimens.edgeInsets10,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      IsmChatDimens.fifty),
+                                  color: IsmChatColors.whiteColor,
+                                  border: Border.all(
+                                    color: IsmChatColors.blackColor,
+                                  ),
                                 ),
-                              ),
-                              child: Icon(
-                                Icons.chevron_right_rounded,
-                                color: IsmChatColors.blackColor,
-                                size: IsmChatDimens.fifty,
+                                child: Icon(
+                                  Icons.chevron_right_rounded,
+                                  color: IsmChatColors.blackColor,
+                                  size: IsmChatDimens.fifty,
+                                ),
                               ),
                             ),
                           ),
@@ -352,7 +353,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                         chatPageController.isVideoVisible = false;
                         await carouselController.animateToPage(index,
                             curve: Curves.linear,
-                            duration: const Duration(milliseconds: 1000));
+                            duration: const Duration(milliseconds: 100));
                         updateState();
                       },
                       child: Stack(
