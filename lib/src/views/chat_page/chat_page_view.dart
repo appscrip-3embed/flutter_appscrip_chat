@@ -53,7 +53,6 @@ class IsmChatPageView extends StatelessWidget {
 
 class _IsmChatPageView extends StatelessWidget {
   const _IsmChatPageView(this.value);
-
   final bool value;
 
   @override

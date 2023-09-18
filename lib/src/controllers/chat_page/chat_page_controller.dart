@@ -513,12 +513,14 @@ class IsmChatPageController extends GetxController
   @override
   void onClose() {
     _dispose();
+
     super.onClose();
   }
 
   @override
   void dispose() {
     _dispose();
+
     super.dispose();
   }
 

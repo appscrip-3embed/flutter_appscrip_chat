@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
@@ -144,12 +146,13 @@ class IsmChatApp extends StatelessWidget {
     }
   }
 
-  static void addListener(Function(Map<String, dynamic>) listener) {
+  static StreamSubscription<Map<String, dynamic>> addListener(
+      Function(Map<String, dynamic>) listener) {
     assert(IsmChatConfig.configInitilized,
         '''MQTT Controller must be initialized before adding listener.
     Either call IsmChatApp.initializeMqtt() or add listener after IsmChatApp is called''');
     var mqttController = Get.find<IsmChatMqttController>();
-    mqttController.actionStreamController.stream.listen(listener);
+    return mqttController.actionStreamController.stream.listen(listener);
   }
 
   /// This function can be used to directly go to chatting page and start chatting from anywhere in the app

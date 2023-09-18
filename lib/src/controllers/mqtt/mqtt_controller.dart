@@ -419,7 +419,7 @@ class IsmChatMqttController extends GetxController {
         readBy: [],
       ),
     );
-    IsmChatLog.error('fromMatt ${conversation.lastMessageDetails?.toMap()}');
+
     conversation.messages?.add(message);
     await IsmChatConfig.dbWrapper!.saveConversation(conversation: conversation);
     unawaited(conversationController.getConversationsFromDB());
