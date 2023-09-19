@@ -156,7 +156,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                               ?.titleStyle ??
                                           IsmChatStyles.w400White12,
                                     )
-                                  : controller.conversation!.isGroup == true
+                                  : controller.conversation?.isGroup == true
                                       ? SizedBox(
                                           width: Responsive.isWebAndTablet(
                                                   context)
@@ -176,7 +176,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                                         .conversation?.members!
                                                         .map((e) => e.userName)
                                                         .join(', ') ??
-                                                    '',
+                                                    IsmChatStrings.tapInfo,
                                             style: IsmChatConfig
                                                     .chatTheme
                                                     .chatPageHeaderTheme
@@ -206,7 +206,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                                         ?.opponentDetails
                                                         ?.lastSeen
                                                         .toCurrentTimeStirng() ??
-                                                    '',
+                                                    IsmChatStrings.tapInfo,
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: IsmChatConfig
