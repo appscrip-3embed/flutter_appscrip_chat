@@ -516,7 +516,9 @@ class IsmChatConversationsController extends GetxController {
     }
     await IsmChatConfig.dbWrapper?.removeConversation(conversationId);
     await getConversationsFromDB();
-    await getChatConversations();
+    if (deleteFromServer) {
+      await getChatConversations();
+    }
   }
 
   Future<void> getConversationsFromDB() async {

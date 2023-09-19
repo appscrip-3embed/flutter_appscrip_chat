@@ -25,18 +25,20 @@ class IsmChatActionWidget extends StatelessWidget {
           child: Container(
             alignment: Alignment.center,
             decoration: decoration,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                icon,
-                if (label != null && labelStyle != null)
-                  Text(
-                    label!,
-                    style: labelStyle,
-                  )
-              ],
+            child: FittedBox(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  icon,
+                  if (label != null && labelStyle != null)
+                    Text(
+                      label!,
+                      style: labelStyle,
+                    )
+                ],
+              ),
             ),
           ),
         ),

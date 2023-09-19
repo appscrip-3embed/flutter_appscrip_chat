@@ -97,74 +97,85 @@ class _ConversationList extends StatelessWidget {
                 enabled: IsmChatProperties
                         .conversationProperties.isSlidableEnable
                         ?.call(context, conversation) ??
-                    true,
-                startActionPane: IsmChatProperties
-                                .conversationProperties.actions ==
-                            null ||
-                        IsmChatProperties
-                                .conversationProperties.actions?.isEmpty ==
-                            true
+                    false,
+                startActionPane: !(IsmChatProperties
+                            .conversationProperties.startActionSlidableEnable
+                            ?.call(context, conversation) ??
+                        false)
                     ? null
-                    : ActionPane(
-                        extentRatio: 0.3,
-                        motion: const ScrollMotion(),
-                        children: [
-                          ...IsmChatProperties.conversationProperties.actions
-                                  ?.map(
-                                (e) => IsmChatActionWidget(
-                                  onTap: () => e.onTap(conversation),
-                                  decoration: e.decoration,
-                                  icon: e.icon,
-                                  label: e.label,
-                                  labelStyle: e.labelStyle,
-                                ),
-                              ) ??
-                              [],
-                        ],
-                      ),
+                    : (IsmChatProperties.conversationProperties.actions ==
+                                null ||
+                            IsmChatProperties
+                                    .conversationProperties.actions?.isEmpty ==
+                                true)
+                        ? null
+                        : ActionPane(
+                            extentRatio: 0.3,
+                            motion: const ScrollMotion(),
+                            children: [
+                              ...IsmChatProperties
+                                      .conversationProperties.actions
+                                      ?.map(
+                                    (e) => IsmChatActionWidget(
+                                      onTap: () => e.onTap(conversation),
+                                      decoration: e.decoration,
+                                      icon: e.icon,
+                                      label: e.label,
+                                      labelStyle: e.labelStyle,
+                                    ),
+                                  ) ??
+                                  [],
+                            ],
+                          ),
                 endActionPane: !IsmChatProperties
                             .conversationProperties.allowDelete &&
-                        (IsmChatProperties.conversationProperties.endActions ==
+                        !(IsmChatProperties
+                                .conversationProperties.endActionSlidableEnable
+                                ?.call(context, conversation) ??
+                            true)
+                    ? null
+                    : (IsmChatProperties.conversationProperties.endActions ==
                                 null ||
                             IsmChatProperties.conversationProperties.endActions
                                     ?.isEmpty ==
                                 true)
-                    ? null
-                    : ActionPane(
-                        extentRatio: 0.3,
-                        motion: const StretchMotion(),
-                        children: [
-                          ...IsmChatProperties.conversationProperties.endActions
-                                  ?.map(
-                                (e) => IsmChatActionWidget(
-                                  onTap: () => e.onTap(conversation),
-                                  decoration: e.decoration,
-                                  icon: e.icon,
-                                  label: e.label,
-                                  labelStyle: e.labelStyle,
+                        ? null
+                        : ActionPane(
+                            extentRatio: 0.3,
+                            motion: const StretchMotion(),
+                            children: [
+                              ...IsmChatProperties
+                                      .conversationProperties.endActions
+                                      ?.map(
+                                    (e) => IsmChatActionWidget(
+                                      onTap: () => e.onTap(conversation),
+                                      decoration: e.decoration,
+                                      icon: e.icon,
+                                      label: e.label,
+                                      labelStyle: e.labelStyle,
+                                    ),
+                                  ) ??
+                                  [],
+                              if (IsmChatProperties
+                                  .conversationProperties.allowDelete)
+                                SlidableAction(
+                                  onPressed: (_) async {
+                                    await Get.bottomSheet(
+                                      IsmChatClearConversationBottomSheet(
+                                        controller.conversations[index],
+                                      ),
+                                      isDismissible: false,
+                                      elevation: 0,
+                                    );
+                                  },
+                                  flex: 1,
+                                  backgroundColor: IsmChatColors.redColor,
+                                  foregroundColor: IsmChatColors.whiteColor,
+                                  icon: Icons.delete_rounded,
+                                  label: IsmChatStrings.delete,
                                 ),
-                              ) ??
-                              [],
-                          if (IsmChatProperties
-                              .conversationProperties.allowDelete)
-                            SlidableAction(
-                              onPressed: (_) async {
-                                await Get.bottomSheet(
-                                  IsmChatClearConversationBottomSheet(
-                                    controller.conversations[index],
-                                  ),
-                                  isDismissible: false,
-                                  elevation: 0,
-                                );
-                              },
-                              flex: 1,
-                              backgroundColor: IsmChatColors.redColor,
-                              foregroundColor: IsmChatColors.whiteColor,
-                              icon: Icons.delete_rounded,
-                              label: IsmChatStrings.delete,
-                            ),
-                        ],
-                      ),
+                            ],
+                          ),
                 child: Obx(
                   () => IsmChatConversationCard(
                     isShowBackgroundColor: Responsive.isWebAndTablet(context)

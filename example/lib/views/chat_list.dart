@@ -97,7 +97,7 @@ class ChatList extends StatelessWidget {
               ],
               showCreateChatIcon: true,
               enableGroupChat: true,
-              allowDelete: true,
+              allowDelete: false,
               onCreateTap: () {},
               onChatTap: (_, conversation) {},
               isHeaderAppBar: Responsive.isWebAndTablet(context) ? false : true,
@@ -122,6 +122,22 @@ class ChatList extends StatelessWidget {
               isSlidableEnable: (_, conversation) {
                 return true;
               },
+              actions: [
+                IsmChatConversationAction(
+                    label: 'snpachat',
+                    labelStyle: IsmChatStyles.w400Black10,
+                    onTap: (p0) {},
+                    icon: const Icon(Icons.snapchat))
+              ],
+              endActions: [
+                IsmChatConversationAction(
+                    label: 'snpachat',
+                    labelStyle: IsmChatStyles.w400Black10,
+                    onTap: (p0) {},
+                    icon: const Icon(Icons.snapchat))
+              ],
+              endActionSlidableEnable: (p0, p1) => true,
+              startActionSlidableEnable: (p0, p1) => true,
             ),
           ),
         );

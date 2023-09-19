@@ -14,6 +14,8 @@ class IsmChatConversationProperties {
     this.actions,
     this.endActions,
     this.isSlidableEnable,
+    this.startActionSlidableEnable,
+    this.endActionSlidableEnable,
     this.placeholder,
     this.height,
     this.appBar,
@@ -88,6 +90,10 @@ class IsmChatConversationProperties {
   final Widget? placeholder;
   final bool? Function(BuildContext, IsmChatConversationModel)?
       isSlidableEnable;
+  final bool? Function(BuildContext, IsmChatConversationModel)?
+      startActionSlidableEnable;
+  final bool? Function(BuildContext, IsmChatConversationModel)?
+      endActionSlidableEnable;
 
   /// Provide this height parameter to set the maximum height for conversation list
   ///
