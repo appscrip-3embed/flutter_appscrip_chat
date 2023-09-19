@@ -98,37 +98,45 @@ class _ConversationList extends StatelessWidget {
                         .conversationProperties.isSlidableEnable
                         ?.call(context, conversation) ??
                     true,
-                startActionPane: IsmChatProperties
-                                .conversationProperties.actions ==
-                            null ||
-                        IsmChatProperties
-                                .conversationProperties.actions?.isEmpty ==
-                            true
-                    ? null
-                    : ActionPane(
-                        extentRatio: 0.3,
-                        motion: const ScrollMotion(),
-                        children: [
-                          ...IsmChatProperties.conversationProperties.actions
-                                  ?.map(
-                                (e) => IsmChatActionWidget(
-                                  onTap: () => e.onTap(conversation),
-                                  decoration: e.decoration,
-                                  icon: e.icon,
-                                  label: e.label,
-                                  labelStyle: e.labelStyle,
-                                ),
-                              ) ??
-                              [],
-                        ],
-                      ),
+                startActionPane:
+                    (IsmChatProperties.conversationProperties.actions == null ||
+                                IsmChatProperties.conversationProperties.actions
+                                        ?.isEmpty ==
+                                    true) &&
+                            !(IsmChatProperties.conversationProperties
+                                    .startActionSlidableEnable
+                                    ?.call(context, conversation) ??
+                                false)
+                        ? null
+                        : ActionPane(
+                            extentRatio: 0.3,
+                            motion: const ScrollMotion(),
+                            children: [
+                              ...IsmChatProperties
+                                      .conversationProperties.actions
+                                      ?.map(
+                                    (e) => IsmChatActionWidget(
+                                      onTap: () => e.onTap(conversation),
+                                      decoration: e.decoration,
+                                      icon: e.icon,
+                                      label: e.label,
+                                      labelStyle: e.labelStyle,
+                                    ),
+                                  ) ??
+                                  [],
+                            ],
+                          ),
                 endActionPane: !IsmChatProperties
                             .conversationProperties.allowDelete &&
                         (IsmChatProperties.conversationProperties.endActions ==
                                 null ||
                             IsmChatProperties.conversationProperties.endActions
                                     ?.isEmpty ==
-                                true)
+                                true) &&
+                        !(IsmChatProperties
+                                .conversationProperties.endActionSlidableEnable
+                                ?.call(context, conversation) ??
+                            false)
                     ? null
                     : ActionPane(
                         extentRatio: 0.3,
