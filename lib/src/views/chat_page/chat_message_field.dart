@@ -128,7 +128,10 @@ class IsmChatMessageField extends StatelessWidget {
                               .copyWith(bottom: IsmChatDimens.eight),
                           decoration: BoxDecoration(
                             border: Border.all(
-                                color: IsmChatConfig.chatTheme.primaryColor!),
+                              color: IsmChatConfig.chatTheme.chatPageTheme
+                                      ?.textFiledThemData?.borderColor ??
+                                  IsmChatConfig.chatTheme.primaryColor!,
+                            ),
                             borderRadius:
                                 BorderRadius.circular(IsmChatDimens.twenty),
                             color: IsmChatConfig.chatTheme.chatPageTheme
@@ -166,6 +169,13 @@ class IsmChatMessageField extends StatelessWidget {
                                       textCapitalization:
                                           TextCapitalization.sentences,
                                       decoration: InputDecoration(
+                                        hintText: 'Type your message',
+                                        hintStyle: IsmChatConfig
+                                                .chatTheme
+                                                .chatPageTheme
+                                                ?.textFiledThemData
+                                                ?.hintTextStyle ??
+                                            IsmChatStyles.w400Black12,
                                         isDense: true,
                                         filled: true,
                                         fillColor: IsmChatConfig
