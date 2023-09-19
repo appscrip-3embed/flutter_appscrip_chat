@@ -215,21 +215,6 @@ class _MoreIcon extends StatelessWidget {
             ),
           ),
         ],
-        if (Responsive.isWebAndTablet(context)) ...[
-          PopupMenuItem(
-            value: 4,
-            child: Row(
-              children: [
-                Icon(
-                  Icons.logout_outlined,
-                  color: IsmChatConfig.chatTheme.primaryColor,
-                ),
-                IsmChatDimens.boxWidth8,
-                const Text(IsmChatStrings.logout),
-              ],
-            ),
-          ),
-        ],
         if (IsmChatProperties.conversationProperties.conversationPosition ==
                 IsmChatConversationPosition.menu &&
             conversationTypeList.length != 1) ...[
@@ -248,7 +233,22 @@ class _MoreIcon extends StatelessWidget {
               ),
             ),
           )
-        ]
+        ],
+        if (Responsive.isWebAndTablet(context)) ...[
+          PopupMenuItem(
+            value: 4,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.logout_outlined,
+                  color: IsmChatConfig.chatTheme.primaryColor,
+                ),
+                IsmChatDimens.boxWidth8,
+                const Text(IsmChatStrings.logout),
+              ],
+            ),
+          ),
+        ],
       ],
     );
   }

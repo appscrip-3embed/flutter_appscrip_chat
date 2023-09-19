@@ -19,6 +19,7 @@ class IsmChatApp extends StatelessWidget {
     this.useDataBase = true,
     this.noChatSelectedPlaceholder,
     this.sideWidgetWidth,
+    this.fontFamily,
   }) {
     assert(IsmChatConfig.isInitialized,
         'ChatHiveBox is not initialized\nYou are getting this error because the Database class is not initialized, to initialize ChatHiveBox class call AppscripChatComponent.initialize() before your runApp()');
@@ -33,7 +34,9 @@ class IsmChatApp extends StatelessWidget {
     //   'If showAppBar is set to true then a non-null callback must be passed to onSignOut parameter',
     // );
     IsmChatConfig.dbName = databaseName ?? IsmChatStrings.dbname;
+    IsmChatConfig.fontFamily = fontFamily;
     IsmChatProperties.loadingDialog = loadingDialog;
+
     IsmChatProperties.sideWidgetWidth = sideWidgetWidth;
     IsmChatProperties.noChatSelectedPlaceholder = noChatSelectedPlaceholder;
     if (communicationConfig != null) {
@@ -85,6 +88,8 @@ class IsmChatApp extends StatelessWidget {
   final Widget? noChatSelectedPlaceholder;
 
   final double? sideWidgetWidth;
+
+  final String? fontFamily;
 
   /// Call this function for Get all Conversation List
   static void updateChatPageController() {

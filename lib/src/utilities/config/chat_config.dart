@@ -22,4 +22,5 @@ class IsmChatConfig {
   static set chatLightTheme(IsmChatThemeData data) => _chatLightTheme = data;
 
   static set chatDarkTheme(IsmChatThemeData data) => _chatDarkTheme = data;
+  static String? fontFamily;
 }
