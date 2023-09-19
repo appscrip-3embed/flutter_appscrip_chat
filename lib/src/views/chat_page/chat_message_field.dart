@@ -320,10 +320,11 @@ class _EmojiButton extends StatelessWidget {
                     Icons.keyboard_rounded,
                     key: UniqueKey(),
                   )
-                : Icon(
-                    Icons.emoji_emotions_rounded,
-                    key: UniqueKey(),
-                  ),
+                : IsmChatProperties.chatPageProperties.emojiIcon ??
+                    Icon(
+                      Icons.emoji_emotions_rounded,
+                      key: UniqueKey(),
+                    ),
           ),
           onPressed: () {
             if (!controller.conversation!.isChattingAllowed) {

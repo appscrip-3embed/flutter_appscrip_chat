@@ -11,9 +11,14 @@ class IsmChatPageProperties {
     this.attachmentConfig,
     this.messageAllowedConfig,
     this.onForwardTap,
+    this.emojiIcon,
   });
 
   final Widget? placeholder;
+
+  /// Provide this widget show emoji icon in message type input filed
+  final Widget? emojiIcon;
+
   final MessageWidgetBuilder? messageBuilder;
 
   /// It is an optional parameter which take List of `IsmChatAttachmentType` which is an enum.

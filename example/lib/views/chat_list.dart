@@ -50,22 +50,6 @@ class ChatList extends StatelessWidget {
               ),
             ),
             chatPageProperties: IsmChatPageProperties(
-              // header: IsmChatPageHeaderProperties(
-              //   onBackTap: () {
-              //     // controller.firstUpdateWidget = false;
-              //   },
-              //   bottom: controller.firstUpdateWidget == true
-              //       ? (p0, p1) {
-              //           return const PreferredSize(
-              //               preferredSize: Size.fromHeight(100),
-              //               child: SizedBox(
-              //                 child: Center(
-              //                   child: Text('Rahul'),
-              //                 ),
-              //               ));
-              //         }
-              //       : null,
-              // ),
               placeholder: IsmChatEmptyView(
                 icon: Icon(
                   Icons.chat_outlined,
@@ -115,9 +99,7 @@ class ChatList extends StatelessWidget {
               enableGroupChat: true,
               allowDelete: true,
               onCreateTap: () {},
-              onChatTap: (_, conversation) {
-                // controller.callFuncation();
-              },
+              onChatTap: (_, conversation) {},
               isHeaderAppBar: Responsive.isWebAndTablet(context) ? false : true,
               header: IsmChatListHeader(
                 onSignOut: () {
