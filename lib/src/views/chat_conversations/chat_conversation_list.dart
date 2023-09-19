@@ -111,17 +111,12 @@ class _ConversationList extends StatelessWidget {
                         children: [
                           ...IsmChatProperties.conversationProperties.actions
                                   ?.map(
-                                (e) => SlidableAction(
-                                  onPressed: (_) => e.onTap(conversation),
-                                  flex: 1,
-                                  backgroundColor: e.backgroundColor ??
-                                      IsmChatConfig.chatTheme.primaryColor!,
+                                (e) => IsmChatActionWidget(
+                                  onTap: () => e.onTap(conversation),
+                                  decoration: e.decoration,
                                   icon: e.icon,
-                                  foregroundColor: e.style?.color,
                                   label: e.label,
-                                  borderRadius: e.borderRadius ??
-                                      BorderRadius.circular(
-                                          IsmChatDimens.eight),
+                                  labelStyle: e.labelStyle,
                                 ),
                               ) ??
                               [],
@@ -129,29 +124,24 @@ class _ConversationList extends StatelessWidget {
                       ),
                 endActionPane: !IsmChatProperties
                             .conversationProperties.allowDelete &&
-                        (IsmChatProperties.conversationProperties.actions ==
+                        (IsmChatProperties.conversationProperties.endActions ==
                                 null ||
-                            IsmChatProperties
-                                    .conversationProperties.actions?.isEmpty ==
+                            IsmChatProperties.conversationProperties.endActions
+                                    ?.isEmpty ==
                                 true)
                     ? null
                     : ActionPane(
                         extentRatio: 0.3,
                         motion: const StretchMotion(),
                         children: [
-                          ...IsmChatProperties.conversationProperties.actions
+                          ...IsmChatProperties.conversationProperties.endActions
                                   ?.map(
-                                (e) => SlidableAction(
-                                  onPressed: (_) => e.onTap(conversation),
-                                  flex: 1,
-                                  backgroundColor: e.backgroundColor ??
-                                      IsmChatConfig.chatTheme.primaryColor!,
+                                (e) => IsmChatActionWidget(
+                                  onTap: () => e.onTap(conversation),
+                                  decoration: e.decoration,
                                   icon: e.icon,
-                                  foregroundColor: e.style?.color,
                                   label: e.label,
-                                  borderRadius: e.borderRadius ??
-                                      BorderRadius.circular(
-                                          IsmChatDimens.eight),
+                                  labelStyle: e.labelStyle,
                                 ),
                               ) ??
                               [],

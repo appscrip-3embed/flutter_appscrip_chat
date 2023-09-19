@@ -138,9 +138,7 @@ class ChatList extends StatelessWidget {
                 ),
               ),
               isSlidableEnable: (_, conversation) {
-                return conversation.metaData!.isMatchId!.isNotEmpty
-                    ? false
-                    : true;
+                return true;
               },
             ),
           ),
