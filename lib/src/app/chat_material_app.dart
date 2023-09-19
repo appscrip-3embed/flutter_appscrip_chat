@@ -188,8 +188,6 @@ class IsmChatApp extends StatelessWidget {
       Name, and userId cannot be empty.''',
     );
 
-    await Future.delayed(const Duration(milliseconds: 100));
-
     IsmChatUtility.showLoader();
 
     await Future.delayed(duration);
@@ -205,16 +203,18 @@ class IsmChatApp extends StatelessWidget {
     IsmChatConversationModel? conversation;
     if (conversationId.isEmpty) {
       var userDetails = UserDetails(
-          userProfileImageUrl: profileImageUrl,
-          userName: name,
-          userIdentifier: email ?? '',
-          userId: userId,
-          online: false,
-          lastSeen: 0,
-          metaData: IsmChatMetaData(
-              profilePic: profileImageUrl,
-              firstName: name.split(' ').first,
-              lastName: name.split(' ').last));
+        userProfileImageUrl: profileImageUrl,
+        userName: name,
+        userIdentifier: email ?? '',
+        userId: userId,
+        online: false,
+        lastSeen: 0,
+        metaData: IsmChatMetaData(
+          profilePic: profileImageUrl,
+          firstName: name.split(' ').first,
+          lastName: name.split(' ').last,
+        ),
+      );
       conversation = IsmChatConversationModel(
         messagingDisabled: false,
         conversationImageUrl: profileImageUrl,
