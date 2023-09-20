@@ -89,7 +89,6 @@ class ChatList extends StatelessWidget {
               ),
             ),
             conversationProperties: IsmChatConversationProperties(
-              thirdColumnWidget: (_, p1) => const Text('Rahul'),
               conversationPosition: IsmChatConversationPosition.menu,
               allowedConversations: [
                 IsmChatConversationType.private,
