@@ -121,7 +121,7 @@ extension DateConvertor on int {
 
   String toCurrentTimeStirng() {
     if (this == 0 || this == -1) {
-      return '';
+      return IsmChatStrings.tapInfo;
     }
     final timeStamp = toDate().removeTime();
     final now = DateTime.now().removeTime();

@@ -3,26 +3,30 @@ import 'package:flutter/material.dart';
 
 class IsmChatListCardThemData {
   const IsmChatListCardThemData({
-    this.trailingTextColor,
     this.trailingBackgroundColor,
     this.trailingTextStyle,
+    this.subTitleTextStyle,
     this.subTitleColor,
+    this.titleTextStyle,
   });
 
   IsmChatListCardThemData.light()
-      : trailingTextColor = IsmChatColors.backgroundColorLight,
-        subTitleColor = IsmChatColors.backgroundColorLight,
-        trailingBackgroundColor = IsmChatColors.backgroundColorDark,
-        trailingTextStyle = IsmChatStyles.w400Black10;
+      : trailingBackgroundColor = IsmChatColors.backgroundColorDark,
+        subTitleColor = IsmChatColors.backgroundColorDark,
+        trailingTextStyle = IsmChatStyles.w400Black10,
+        subTitleTextStyle = IsmChatStyles.w400Black10,
+        titleTextStyle = IsmChatStyles.w600Black12;
 
   IsmChatListCardThemData.dark()
-      : trailingTextColor = IsmChatColors.backgroundColorDark,
-        subTitleColor = IsmChatColors.backgroundColorDark,
-        trailingBackgroundColor = IsmChatColors.backgroundColorLight,
-        trailingTextStyle = IsmChatStyles.w400Black10;
+      : trailingBackgroundColor = IsmChatColors.backgroundColorLight,
+        subTitleColor = IsmChatColors.backgroundColorLight,
+        trailingTextStyle = IsmChatStyles.w400White10,
+        subTitleTextStyle = IsmChatStyles.w400Black10,
+        titleTextStyle = IsmChatStyles.w600Black12;
 
-  final Color? trailingTextColor;
-  final Color? subTitleColor;
   final Color? trailingBackgroundColor;
   final TextStyle? trailingTextStyle;
+  final TextStyle? subTitleTextStyle;
+  final TextStyle? titleTextStyle;
+  final Color? subTitleColor;
 }

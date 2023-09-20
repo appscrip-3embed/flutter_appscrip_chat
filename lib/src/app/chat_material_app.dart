@@ -91,6 +91,14 @@ class IsmChatApp extends StatelessWidget {
 
   final String? fontFamily;
 
+  /// Call this function for assign null on current conversation
+  static void changeCurrentConversation() {
+    if (Get.isRegistered<IsmChatConversationsController>()) {
+      final controller = Get.find<IsmChatConversationsController>();
+      controller.currentConversation = null;
+    }
+  }
+
   /// Call this function for Get all Conversation List
   static void updateChatPageController() {
     if (Get.isRegistered<IsmChatPageController>()) {
