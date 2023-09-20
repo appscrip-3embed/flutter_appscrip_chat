@@ -153,7 +153,7 @@ class IsmChatApp extends StatelessWidget {
 
   /// Call this funcation for the initialize mqtt
   static void initializeMqtt(IsmChatCommunicationConfig communicationConfig,
-      [IsmChatThemeData? chatTheme, IsmChatThemeData? chatDarkTheme]) {
+      {IsmChatThemeData? chatTheme, IsmChatThemeData? chatDarkTheme}) {
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
