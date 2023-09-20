@@ -6,21 +6,25 @@ class IsmChatListThemeData {
     this.tileColor,
     this.dividerColor,
     this.dividerThickness,
+    this.backGroundColor,
   });
 
   const IsmChatListThemeData.light()
       : tileColor = IsmChatColors.backgroundColorLight,
         dividerColor = IsmChatColors.backgroundColorDark,
+        backGroundColor = IsmChatColors.backgroundColorLight,
         dividerThickness = _kDividerThickness;
 
   const IsmChatListThemeData.dark()
       : tileColor = IsmChatColors.backgroundColorDark,
         dividerColor = IsmChatColors.backgroundColorLight,
+        backGroundColor = IsmChatColors.backgroundColorLight,
         dividerThickness = _kDividerThickness;
 
   final Color? tileColor;
   final Color? dividerColor;
-  final double? dividerThickness;
+  final Color? backGroundColor;
 
+  final double? dividerThickness;
   static const double _kDividerThickness = 2;
 }

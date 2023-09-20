@@ -58,7 +58,9 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
             widget.name?.call(context, widget.conversation,
                     widget.conversation.chatName) ??
                 widget.conversation.chatName,
-            style: IsmChatStyles.w600Black14,
+            style:
+                IsmChatConfig.chatTheme.chatListCardThemData?.titleTextStyle ??
+                    IsmChatStyles.w600Black14,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -82,23 +84,14 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
                 child: Text(
                   widget.conversation.lastMessageDetails?.messageBody ?? '',
                   style: IsmChatConfig
-                              .chatTheme.chatListCardThemData?.subTitleColor !=
-                          null
-                      ? IsmChatStyles.w400Black12.copyWith(
-                          color: IsmChatConfig
-                              .chatTheme.chatListCardThemData?.subTitleColor,
-                          fontStyle: widget.conversation.lastMessageDetails
-                                      ?.customType ==
-                                  IsmChatCustomMessageType.deletedForEveryone
-                              ? FontStyle.italic
-                              : FontStyle.normal,
-                        )
-                      : IsmChatStyles.w400Black12.copyWith(
-                          fontStyle: widget.conversation.lastMessageDetails
-                                      ?.customType ==
-                                  IsmChatCustomMessageType.deletedForEveryone
-                              ? FontStyle.italic
-                              : FontStyle.normal),
+                          .chatTheme.chatListCardThemData?.subTitleTextStyle ??
+                      IsmChatStyles.w400Black12.copyWith(
+                        fontStyle: widget.conversation.lastMessageDetails
+                                    ?.customType ==
+                                IsmChatCustomMessageType.deletedForEveryone
+                            ? FontStyle.italic
+                            : FontStyle.normal,
+                      ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

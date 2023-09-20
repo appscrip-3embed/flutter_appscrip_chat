@@ -45,6 +45,8 @@ class _IsmChatConversationsState extends State<IsmChatConversations>
         builder: (controller) {
           controller.context = context;
           return Scaffold(
+            backgroundColor:
+                IsmChatConfig.chatTheme.chatListTheme?.backGroundColor,
             drawerScrimColor: Colors.transparent,
             appBar: IsmChatProperties.conversationProperties.appBar ??
                 (IsmChatProperties.conversationProperties.isHeaderAppBar
