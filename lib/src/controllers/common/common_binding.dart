@@ -10,6 +10,7 @@ class IsmChatCommonBinding extends Bindings {
           IsmChatCommonRepository(),
         ),
       ),
+      permanent: true,
     );
   }
 }

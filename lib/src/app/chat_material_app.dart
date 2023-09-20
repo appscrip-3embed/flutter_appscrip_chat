@@ -250,8 +250,8 @@ class IsmChatApp extends StatelessWidget {
       );
     }
 
-    (onNavigateToChat ?? IsmChatProperties.conversationProperties.onChatTap)!
-        .call(Get.context!, conversation);
+    (onNavigateToChat ?? IsmChatProperties.conversationProperties.onChatTap)
+        ?.call(Get.context!, conversation);
     controller.navigateToMessages(conversation);
     await controller.goToChatPage();
   }
@@ -268,7 +268,7 @@ class IsmChatApp extends StatelessWidget {
   static Future<void> chatFromOutsideWithConversation({
     required IsmChatConversationModel ismChatConversation,
     void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
-    Duration duration = const Duration(milliseconds: 500),
+    Duration duration = const Duration(milliseconds: 100),
   }) async {
     IsmChatUtility.showLoader();
 
@@ -283,8 +283,8 @@ class IsmChatApp extends StatelessWidget {
 
     var controller = Get.find<IsmChatConversationsController>();
 
-    (onNavigateToChat ?? IsmChatProperties.conversationProperties.onChatTap)!
-        .call(Get.context!, ismChatConversation);
+    (onNavigateToChat ?? IsmChatProperties.conversationProperties.onChatTap)
+        ?.call(Get.context!, ismChatConversation);
     controller.navigateToMessages(ismChatConversation);
     await controller.goToChatPage();
   }
