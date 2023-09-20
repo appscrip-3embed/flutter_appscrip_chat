@@ -206,6 +206,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                       },
                       options: CarouselOptions(
                         height: IsmChatDimens.percentHeight(1),
+                        scrollPhysics: const NeverScrollableScrollPhysics(),
                         aspectRatio: 16 / 9,
                         viewportFraction: 1,
                         enlargeCenterPage: true,

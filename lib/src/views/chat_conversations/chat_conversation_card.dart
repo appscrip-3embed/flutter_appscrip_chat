@@ -111,8 +111,9 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            widget.conversation.lastMessageDetails!.sentAt
-                .toLastMessageTimeString(),
+            widget.conversation.lastMessageDetails?.sentAt
+                    .toLastMessageTimeString() ??
+                '',
             style: IsmChatConfig
                     .chatTheme.chatListCardThemData?.trailingTextStyle ??
                 IsmChatStyles.w400Black10,
