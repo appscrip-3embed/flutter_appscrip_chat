@@ -142,7 +142,9 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                           ),
                         ),
                         (!controller.conversation!.isChattingAllowed)
-                            ? const SizedBox.shrink()
+                            ? const Text(IsmChatStrings.tapInfo)
+
+                            /// const   SizedBox.shrink()
                             : Obx(
                                 () => controller.conversation!.isSomeoneTyping
                                     ? Text(
