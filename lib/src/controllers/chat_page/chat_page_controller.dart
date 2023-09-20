@@ -883,9 +883,7 @@ class IsmChatPageController extends GetxController
         onReplyTap(message);
         break;
       case IsmChatFocusMenuType.forward:
-        var chatConversationController =
-            Get.find<IsmChatConversationsController>();
-        chatConversationController.forwardedList.clear();
+        _conversationController.forwardedList.clear();
 
         if (Responsive.isWeb(Get.context!)) {
           await Get.dialog(
@@ -1345,7 +1343,6 @@ class IsmChatPageController extends GetxController
   }
 
   Future<void> updateLastMessage() async {
-    var chatConversationController = Get.find<IsmChatConversationsController>();
     if (!didReactedLast) {
       var chatConversation = await IsmChatConfig.dbWrapper!
           .getConversation(conversationId: conversation?.conversationId ?? '');
@@ -1404,10 +1401,10 @@ class IsmChatPageController extends GetxController
 
         await IsmChatConfig.dbWrapper!
             .saveConversation(conversation: chatConversation);
-        await chatConversationController.getConversationsFromDB();
+        await _conversationController.getConversationsFromDB();
       }
     } else {
-      await chatConversationController.getChatConversations();
+      await _conversationController.getChatConversations();
     }
 
     if (Get.isRegistered<IsmChatPageController>()) {
@@ -1418,7 +1415,6 @@ class IsmChatPageController extends GetxController
   }
 
   Future<void> updateUnreadMessgaeCount() async {
-    var chatConversationController = Get.find<IsmChatConversationsController>();
     var chatConversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversation?.conversationId ?? '');
     if (chatConversation != null) {
@@ -1427,7 +1423,7 @@ class IsmChatPageController extends GetxController
       );
       await IsmChatConfig.dbWrapper!
           .saveConversation(conversation: chatConversation);
-      await chatConversationController.getConversationsFromDB();
+      await _conversationController.getConversationsFromDB();
     }
   }
 
@@ -1513,7 +1509,7 @@ class IsmChatPageController extends GetxController
           title: IsmChatStrings.deleteThiGroup,
           actionLabels: const [IsmChatStrings.deleteGroup],
           callbackActions: [
-            () => Get.find<IsmChatConversationsController>().deleteChat(
+            () => _conversationController.deleteChat(
                   conversation?.conversationId ?? '',
                   deleteFromServer: false,
                 ),
@@ -1855,7 +1851,7 @@ class IsmChatPageController extends GetxController
     if (data != null) {
       IsmChatUtility.showToast(IsmChatStrings.blockedSuccessfully);
       await Future.wait([
-        Get.find<IsmChatConversationsController>().getBlockUser(),
+        _conversationController.getBlockUser(),
         if (fromUser == false) ...[
           getConverstaionDetails(
             conversationId: conversation?.conversationId ?? '',
@@ -1986,7 +1982,6 @@ class IsmChatPageController extends GetxController
   }
 
   Future<void> showUserDetails(UserDetails userDetails) async {
-    var conversationController = Get.find<IsmChatConversationsController>();
     var conversationId = conversationController.getConversationId(
       userDetails.userId,
     );

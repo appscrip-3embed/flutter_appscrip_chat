@@ -138,33 +138,40 @@ class _IsmChatPageView extends StatelessWidget {
                         ? () => IsmChatProperties
                             .chatPageProperties.header?.onProfileTap
                             ?.call(controller.conversation!)
-                        : controller.isActionAllowed == false
-                            ? () {
-                                if (controller.isActionAllowed == false &&
-                                    controller.isTemporaryChat == false) {
-                                  if (!(controller
-                                              .conversation
-                                              ?.lastMessageDetails
-                                              ?.customType ==
-                                          IsmChatCustomMessageType
-                                              .removeMember &&
-                                      controller.conversation
-                                              ?.lastMessageDetails?.userId ==
-                                          IsmChatConfig.communicationConfig
-                                              .userConfig.userId)) {
-                                    if (Responsive.isWebAndTablet(context)) {
-                                      Get.find<IsmChatConversationsController>()
-                                              .isRenderChatPageaScreen =
-                                          IsRenderChatPageScreen
-                                              .coversationInfoView;
-                                    } else {
-                                      IsmChatRouteManagement
-                                          .goToConversationInfo();
+                        : IsmChatProperties.chatPageProperties.header
+                                    ?.profileImageBuilder !=
+                                null
+                            ? null
+                            : controller.isActionAllowed == false
+                                ? () {
+                                    if (controller.isActionAllowed == false &&
+                                        controller.isTemporaryChat == false) {
+                                      if (!(controller
+                                                  .conversation
+                                                  ?.lastMessageDetails
+                                                  ?.customType ==
+                                              IsmChatCustomMessageType
+                                                  .removeMember &&
+                                          controller
+                                                  .conversation
+                                                  ?.lastMessageDetails
+                                                  ?.userId ==
+                                              IsmChatConfig.communicationConfig
+                                                  .userConfig.userId)) {
+                                        if (Responsive.isWebAndTablet(
+                                            context)) {
+                                          Get.find<IsmChatConversationsController>()
+                                                  .isRenderChatPageaScreen =
+                                              IsRenderChatPageScreen
+                                                  .coversationInfoView;
+                                        } else {
+                                          IsmChatRouteManagement
+                                              .goToConversationInfo();
+                                        }
+                                      }
                                     }
                                   }
-                                }
-                              }
-                            : null,
+                                : null,
                   ),
             body: Responsive.isWebAndTablet(context) &&
                     controller.webMedia.isNotEmpty

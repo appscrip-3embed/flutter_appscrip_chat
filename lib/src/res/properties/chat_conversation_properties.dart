@@ -22,6 +22,7 @@ class IsmChatConversationProperties {
     this.header,
     this.isHeaderAppBar = false,
     this.headerHeight,
+    this.thirdColumnWidget,
     this.allowedConversations = const [IsmChatConversationType.private],
     this.conversationPosition = IsmChatConversationPosition.tabBar,
   }) {
@@ -119,4 +120,6 @@ class IsmChatConversationProperties {
 
   /// Provide this conversationPosition parameter to set postion of allowedConversations list in your app
   final IsmChatConversationPosition conversationPosition;
+
+  final WidgetCallback? thirdColumnWidget;
 }
