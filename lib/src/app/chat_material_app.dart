@@ -151,6 +151,7 @@ class IsmChatApp extends StatelessWidget {
         deleteFromServer: deleteFromServer,
       );
 
+  /// Call this funcation for the initialize mqtt
   static void initializeMqtt(IsmChatCommunicationConfig communicationConfig) {
     IsmChatConfig.communicationConfig = communicationConfig;
     IsmChatConfig.configInitilized = true;
@@ -159,6 +160,11 @@ class IsmChatApp extends StatelessWidget {
     }
   }
 
+  /// Call this funcation on to listener for mqtt events
+  ///
+  /// [IsmChatConfig.configInitilized] this variable must be true
+  ///
+  /// You can call this funcation after initialize mqtt [initializeMqtt] funcation
   static StreamSubscription<Map<String, dynamic>> addListener(
       Function(Map<String, dynamic>) listener) {
     assert(IsmChatConfig.configInitilized,
@@ -264,8 +270,6 @@ class IsmChatApp extends StatelessWidget {
     void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
     Duration duration = const Duration(milliseconds: 500),
   }) async {
-    await Future.delayed(const Duration(milliseconds: 100));
-
     IsmChatUtility.showLoader();
 
     await Future.delayed(duration);
