@@ -91,6 +91,34 @@ class IsmChatApp extends StatelessWidget {
 
   final String? fontFamily;
 
+  /// Call this function for show outside widget
+  ///
+  ///  `You must use in web flow`
+  ///
+  ///  `You must call  outSideView callback widget in IsmChatConversationProperties`
+  ///
+  /// Don't use in mobile flow because this function work on web flow
+  static void showThirdColumn() {
+    if (Get.isRegistered<IsmChatConversationsController>()) {
+      final controller = Get.find<IsmChatConversationsController>();
+      controller.isRenderChatPageaScreen = IsRenderChatPageScreen.outSideView;
+    }
+  }
+
+  /// Call this function for close outside widget
+  ///
+  ///  `You must use in web flow `
+  ///
+  ///  `You must call  outSideView callback widget in IsmChatConversationProperties`
+  ///
+  /// Don't use in mobile flow because this function work on web flow
+  static void clostThirdColumn() {
+    if (Get.isRegistered<IsmChatConversationsController>()) {
+      final controller = Get.find<IsmChatConversationsController>();
+      controller.isRenderChatPageaScreen = IsRenderChatPageScreen.none;
+    }
+  }
+
   /// Call this function for assign null on current conversation
   static void changeCurrentConversation() {
     if (Get.isRegistered<IsmChatConversationsController>()) {

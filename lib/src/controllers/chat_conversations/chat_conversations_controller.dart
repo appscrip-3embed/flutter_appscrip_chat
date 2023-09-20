@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart';
@@ -282,6 +283,10 @@ class IsmChatConversationsController extends GetxController {
         return IsmChatObserverUsersView(
           conversationId: currentConversation?.conversationId ?? '',
         );
+      case IsRenderChatPageScreen.outSideView:
+        return IsmChatProperties.conversationProperties.thirdColumnWidget
+                ?.call(Get.context!, currentConversation!) ??
+            const SizedBox.shrink();
     }
     return const SizedBox.shrink();
   }

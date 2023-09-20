@@ -18,6 +18,11 @@ typedef ConversationWidgetCallback = Widget? Function(
   String,
 );
 
+typedef WidgetCallback = Widget? Function(
+  BuildContext,
+  IsmChatConversationModel,
+);
+
 typedef PopupItemListCallback = List<IsmChatPopupMenuItem> Function(
   BuildContext,
   IsmChatConversationModel,
