@@ -421,7 +421,7 @@ class IsmChatMqttController extends GetxController {
     );
     if (Get.isRegistered<IsmChatPageController>()) {
       var chatController = Get.find<IsmChatPageController>();
-      if (chatController.conversation?.conversationId !=
+      if (chatController.conversation?.conversationId ==
           message.conversationId) {
         conversation.messages?.add(message);
       }

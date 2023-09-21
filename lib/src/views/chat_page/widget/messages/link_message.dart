@@ -18,41 +18,44 @@ class IsmChatLinkMessage extends StatelessWidget {
           maxWidth: context.width * 0.8,
           maxHeight: context.height * 0.22,
         ),
-        child: _LinkPreview(
-          sentByMe: message.sentByMe,
-          link: message.body,
-          child: LinkPreviewGenerator(
-            bodyMaxLines: 3,
-            link: message.body.convertToValidUrl,
-            linkPreviewStyle: LinkPreviewStyle.small,
-            showGraphic: true,
-            backgroundColor: Colors.transparent,
-            removeElevation: true,
-            bodyStyle: (message.sentByMe
-                    ? IsmChatStyles.w400White12
-                    : IsmChatStyles.w400Black12)
-                .copyWith(
-              color: message.style.color,
-            ),
-            titleStyle: message.style,
-            bodyTextOverflow: TextOverflow.ellipsis,
-            cacheDuration: const Duration(minutes: 5),
-            errorWidget: Text(
-              IsmChatStrings.errorLoadingPreview,
-              style: (message.sentByMe
+        child: Material(
+          color: Colors.transparent,
+          child: _LinkPreview(
+            sentByMe: message.sentByMe,
+            link: message.body,
+            child: LinkPreviewGenerator(
+              bodyMaxLines: 3,
+              link: message.body.convertToValidUrl,
+              linkPreviewStyle: LinkPreviewStyle.small,
+              showGraphic: true,
+              backgroundColor: Colors.transparent,
+              removeElevation: true,
+              bodyStyle: (message.sentByMe
                       ? IsmChatStyles.w400White12
                       : IsmChatStyles.w400Black12)
                   .copyWith(
                 color: message.style.color,
               ),
-            ),
-            placeholderWidget: Text(
-              'Loading preview...',
-              style: (message.sentByMe
-                      ? IsmChatStyles.w400White12
-                      : IsmChatStyles.w400Black12)
-                  .copyWith(
-                color: message.style.color,
+              titleStyle: message.style,
+              bodyTextOverflow: TextOverflow.ellipsis,
+              cacheDuration: const Duration(minutes: 5),
+              errorWidget: Text(
+                IsmChatStrings.errorLoadingPreview,
+                style: (message.sentByMe
+                        ? IsmChatStyles.w400White12
+                        : IsmChatStyles.w400Black12)
+                    .copyWith(
+                  color: message.style.color,
+                ),
+              ),
+              placeholderWidget: Text(
+                'Loading preview...',
+                style: (message.sentByMe
+                        ? IsmChatStyles.w400White12
+                        : IsmChatStyles.w400Black12)
+                    .copyWith(
+                  color: message.style.color,
+                ),
               ),
             ),
           ),

@@ -17,9 +17,6 @@ class IsmChatReplyMessage extends StatelessWidget {
             children: [
               _ReplyMessage(message),
               Container(
-                // alignment: message.sentByMe
-                //     ? Alignment.centerRight
-                //     : Alignment.centerLeft,
                 constraints: BoxConstraints(
                   minHeight: IsmChatDimens.twentyFour,
                 ),

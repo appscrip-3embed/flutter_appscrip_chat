@@ -323,8 +323,11 @@ class _IsmChatPageView extends StatelessWidget {
                                                     .chatPageTheme
                                                     ?.textFiledThemData
                                                     ?.decoration,
-                                                child: const SafeArea(
-                                                  child: IsmChatMessageField(),
+                                                child: SafeArea(
+                                                  bottom: !controller
+                                                      .showEmojiBoard,
+                                                  child:
+                                                      const IsmChatMessageField(),
                                                 ),
                                               ),
                                 Offstage(

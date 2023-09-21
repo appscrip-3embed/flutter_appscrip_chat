@@ -2070,9 +2070,8 @@ class IsmChatPageController extends GetxController
         );
 
         if (GetPlatform.isIOS) {
-          var staus = await ImageGallerySaver.saveFile(saveFile.path,
+          await ImageGallerySaver.saveFile(saveFile.path,
               name: message.attachments?.first.name, isReturnPathOfIOS: true);
-          IsmChatLog.error(staus);
         }
       }
       IsmChatUtility.showToast('Save your media');

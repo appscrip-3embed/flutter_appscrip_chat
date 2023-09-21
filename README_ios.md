@@ -49,7 +49,7 @@ Path: `ios` > `Podfile`
 ```podfile
 installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
-    <!-- ADD THE NEXT SECTION -->
+   # <!-- ADD THE NEXT SECTION -->
     target.build_configurations.each do |config|
       config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
         '$(inherited)',
