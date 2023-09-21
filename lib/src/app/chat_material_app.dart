@@ -91,6 +91,34 @@ class IsmChatApp extends StatelessWidget {
 
   final String? fontFamily;
 
+  /// Call this function for show outside widget
+  ///
+  ///  `You must use in web flow`
+  ///
+  ///  `You must call  outSideView callback widget in IsmChatConversationProperties`
+  ///
+  /// Don't use in mobile flow because this function work on web flow
+  static void showThirdColumn() {
+    if (Get.isRegistered<IsmChatConversationsController>()) {
+      final controller = Get.find<IsmChatConversationsController>();
+      controller.isRenderChatPageaScreen = IsRenderChatPageScreen.outSideView;
+    }
+  }
+
+  /// Call this function for close outside widget
+  ///
+  ///  `You must use in web flow `
+  ///
+  ///  `You must call  outSideView callback widget in IsmChatConversationProperties`
+  ///
+  /// Don't use in mobile flow because this function work on web flow
+  static void clostThirdColumn() {
+    if (Get.isRegistered<IsmChatConversationsController>()) {
+      final controller = Get.find<IsmChatConversationsController>();
+      controller.isRenderChatPageaScreen = IsRenderChatPageScreen.none;
+    }
+  }
+
   /// Call this function for assign null on current conversation
   static void changeCurrentConversation() {
     if (Get.isRegistered<IsmChatConversationsController>()) {
@@ -151,7 +179,12 @@ class IsmChatApp extends StatelessWidget {
         deleteFromServer: deleteFromServer,
       );
 
-  static void initializeMqtt(IsmChatCommunicationConfig communicationConfig) {
+  /// Call this funcation for the initialize mqtt
+  static void initializeMqtt(IsmChatCommunicationConfig communicationConfig,
+      {IsmChatThemeData? chatTheme, IsmChatThemeData? chatDarkTheme}) {
+    IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
+    IsmChatConfig.chatDarkTheme =
+        chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
     IsmChatConfig.communicationConfig = communicationConfig;
     IsmChatConfig.configInitilized = true;
     if (!Get.isRegistered<IsmChatMqttController>()) {
@@ -159,6 +192,11 @@ class IsmChatApp extends StatelessWidget {
     }
   }
 
+  /// Call this funcation on to listener for mqtt events
+  ///
+  /// [IsmChatConfig.configInitilized] this variable must be true
+  ///
+  /// You can call this funcation after initialize mqtt [initializeMqtt] funcation
   static StreamSubscription<Map<String, dynamic>> addListener(
       Function(Map<String, dynamic>) listener) {
     assert(IsmChatConfig.configInitilized,
@@ -244,8 +282,8 @@ class IsmChatApp extends StatelessWidget {
       );
     }
 
-    (onNavigateToChat ?? IsmChatProperties.conversationProperties.onChatTap)!
-        .call(Get.context!, conversation);
+    (onNavigateToChat ?? IsmChatProperties.conversationProperties.onChatTap)
+        ?.call(Get.context!, conversation);
     controller.navigateToMessages(conversation);
     await controller.goToChatPage();
   }
@@ -262,10 +300,8 @@ class IsmChatApp extends StatelessWidget {
   static Future<void> chatFromOutsideWithConversation({
     required IsmChatConversationModel ismChatConversation,
     void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
-    Duration duration = const Duration(milliseconds: 500),
+    Duration duration = const Duration(milliseconds: 100),
   }) async {
-    await Future.delayed(const Duration(milliseconds: 100));
-
     IsmChatUtility.showLoader();
 
     await Future.delayed(duration);
@@ -279,8 +315,8 @@ class IsmChatApp extends StatelessWidget {
 
     var controller = Get.find<IsmChatConversationsController>();
 
-    (onNavigateToChat ?? IsmChatProperties.conversationProperties.onChatTap)!
-        .call(Get.context!, ismChatConversation);
+    (onNavigateToChat ?? IsmChatProperties.conversationProperties.onChatTap)
+        ?.call(Get.context!, ismChatConversation);
     controller.navigateToMessages(ismChatConversation);
     await controller.goToChatPage();
   }

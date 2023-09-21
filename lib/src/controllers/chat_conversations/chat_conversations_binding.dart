@@ -10,6 +10,7 @@ class IsmChatConversationsBinding extends Bindings {
           IsmChatConversationsRepository(),
         ),
       ),
+      permanent: true,
     );
   }
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart';
@@ -15,48 +16,62 @@ class IsmChatConversationsController extends GetxController {
   IsmChatConversationsController(this._viewModel);
   final IsmChatConversationsViewModel _viewModel;
 
-  var addGrouNameController = TextEditingController();
+  /// This variable use for type group name of group chat
+  TextEditingController addGrouNameController = TextEditingController();
 
-  var userSearchNameController = TextEditingController();
+  /// This variable use for type user name for searcing feature
+  TextEditingController userSearchNameController = TextEditingController();
 
+  /// This variable use for get all method and varibles from IsmChatCommonController
   IsmChatCommonController get commonController =>
       Get.find<IsmChatCommonController>();
 
+  /// This variable use for get all method and varibles from IsmChatDeviceConfig
   final _deviceConfig = Get.find<IsmChatDeviceConfig>();
 
+  /// This variable use for store conversation details
   final _conversations = <IsmChatConversationModel>[].obs;
   List<IsmChatConversationModel> get conversations => _conversations;
   set conversations(List<IsmChatConversationModel> value) =>
       _conversations.value = value;
 
+  /// This variable use for store public and open conversation details
   final _publicAndOpenConversation = <IsmChatConversationModel>[].obs;
   List<IsmChatConversationModel> get publicAndOpenConversation =>
       _publicAndOpenConversation;
   set publicAndOpenConversation(List<IsmChatConversationModel> value) =>
       _publicAndOpenConversation.value = value;
 
+  /// This variable use for store suggestions list on chat page view
   final _suggestions = <IsmChatConversationModel>[].obs;
   List<IsmChatConversationModel> get suggestions => _suggestions;
   set suggestions(List<IsmChatConversationModel> value) =>
       _suggestions.value = value;
 
+  /// This variable use for store true or false
+  ///
+  /// Show loader on chat list view
   final RxBool _isConversationsLoading = true.obs;
   bool get isConversationsLoading => _isConversationsLoading.value;
   set isConversationsLoading(bool value) =>
       _isConversationsLoading.value = value;
 
+  /// This variabel use for store user details which is login or signup
   final Rx<UserDetails?> _userDetails = Rx<UserDetails?>(null);
   UserDetails? get userDetails => _userDetails.value;
   set userDetails(UserDetails? value) => _userDetails.value = value;
 
+  /// This variabel use for store sended contact details
   final Rx<UserDetails?> _contactDetails = Rx<UserDetails?>(null);
   UserDetails? get contactDetails => _contactDetails.value;
   set contactDetails(UserDetails? value) => _contactDetails.value = value;
 
+  /// This variabel use for store userConversationId
   final Rx<String?> _userConversationId = ''.obs;
   String? get userConversationId => _userConversationId.value;
   set userConversationId(String? value) => _userConversationId.value = value;
 
+  /// This variabel use for store currentConversation
   final Rx<IsmChatConversationModel?> _currentConversation =
       Rx<IsmChatConversationModel?>(null);
   IsmChatConversationModel? get currentConversation =>
@@ -65,13 +80,13 @@ class IsmChatConversationsController extends GetxController {
     _currentConversation.value = value;
   }
 
-  /// Refresh Controller
+  /// This variabel use for store refreshcontroller on chat list
   final refreshController = RefreshController(
     initialRefresh: false,
     initialLoadStatus: LoadStatus.idle,
   );
 
-  /// Refresh Controller on Empty List
+  /// This variabel use for store refreshcontroller on chat empty list
   final refreshControllerOnEmptyList = RefreshController(
     initialRefresh: false,
     initialLoadStatus: LoadStatus.idle,
@@ -268,6 +283,10 @@ class IsmChatConversationsController extends GetxController {
         return IsmChatObserverUsersView(
           conversationId: currentConversation?.conversationId ?? '',
         );
+      case IsRenderChatPageScreen.outSideView:
+        return IsmChatProperties.conversationProperties.thirdColumnWidget
+                ?.call(Get.context!, currentConversation!) ??
+            const SizedBox.shrink();
     }
     return const SizedBox.shrink();
   }
