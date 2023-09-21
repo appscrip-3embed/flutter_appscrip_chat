@@ -23,6 +23,7 @@ class IsmChatConversationProperties {
     this.isHeaderAppBar = false,
     this.headerHeight,
     this.thirdColumnWidget,
+    this.conversationPredicate,
     this.allowedConversations = const [IsmChatConversationType.private],
     this.conversationPosition = IsmChatConversationPosition.tabBar,
   }) {
@@ -122,4 +123,6 @@ class IsmChatConversationProperties {
   final IsmChatConversationPosition conversationPosition;
 
   final WidgetCallback? thirdColumnWidget;
+
+  final ConversationPredicate? conversationPredicate;
 }

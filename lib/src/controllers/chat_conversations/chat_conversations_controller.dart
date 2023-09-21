@@ -184,6 +184,11 @@ class IsmChatConversationsController extends GetxController {
 
   TabController? tabController;
 
+  List<IsmChatConversationModel> get userConversations => conversations
+      .where(IsmChatProperties.conversationProperties.conversationPredicate ??
+          (_) => true)
+      .toList();
+
   @override
   onInit() async {
     super.onInit();

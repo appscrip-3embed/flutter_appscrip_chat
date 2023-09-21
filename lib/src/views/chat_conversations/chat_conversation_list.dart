@@ -18,7 +18,7 @@ class IsmChatConversationList extends StatelessWidget {
           if (controller.isConversationsLoading) {
             return const IsmChatLoadingDialog();
           }
-          if (controller.conversations.isEmpty) {
+          if (controller.userConversations.isEmpty) {
             return SmartRefresher(
               physics: const ClampingScrollPhysics(),
               controller: controller.refreshControllerOnEmptyList,
@@ -83,12 +83,12 @@ class _ConversationList extends StatelessWidget {
   Widget build(BuildContext context) => ListView.separated(
         padding: IsmChatDimens.edgeInsets0_10,
         shrinkWrap: true,
-        itemCount: controller.conversations.length,
+        itemCount: controller.userConversations.length,
         controller: controller.conversationScrollController,
         separatorBuilder: (_, __) => IsmChatDimens.boxHeight8,
         addAutomaticKeepAlives: true,
         itemBuilder: (_, index) {
-          var conversation = controller.conversations[index];
+          var conversation = controller.userConversations[index];
           return IsmChatProperties.conversationProperties.cardBuilder
                   ?.call(_, conversation, index) ??
               Slidable(
@@ -134,11 +134,13 @@ class _ConversationList extends StatelessWidget {
                                 ?.call(context, conversation) ??
                             true)
                     ? null
-                    : (IsmChatProperties.conversationProperties.endActions ==
-                                null ||
-                            IsmChatProperties.conversationProperties.endActions
-                                    ?.isEmpty ==
-                                true)
+                    : !IsmChatProperties.conversationProperties.allowDelete &&
+                            (IsmChatProperties
+                                        .conversationProperties.endActions ==
+                                    null ||
+                                IsmChatProperties.conversationProperties
+                                        .endActions?.isEmpty ==
+                                    true)
                         ? null
                         : ActionPane(
                             extentRatio: 0.3,
@@ -162,7 +164,7 @@ class _ConversationList extends StatelessWidget {
                                   onPressed: (_) async {
                                     await Get.bottomSheet(
                                       IsmChatClearConversationBottomSheet(
-                                        controller.conversations[index],
+                                        conversation,
                                       ),
                                       isDismissible: false,
                                       elevation: 0,

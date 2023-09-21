@@ -45,3 +45,5 @@ typedef MessageWidgetBuilder = Widget? Function(
   IsmChatCustomMessageType,
   bool,
 );
+
+typedef ConversationPredicate = bool Function(IsmChatConversationModel);
