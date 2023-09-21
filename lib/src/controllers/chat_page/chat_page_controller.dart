@@ -534,6 +534,7 @@ class IsmChatPageController extends GetxController
     attchmentOverlayEntry?.dispose();
     fabAnimationController?.dispose();
     holdController?.dispose();
+
     ifTimerMounted();
   }
 
@@ -2079,4 +2080,37 @@ class IsmChatPageController extends GetxController
       IsmChatLog.error('Error downloading :- $e\n$st');
     }
   }
+
+//   ///Run animation for child widget
+//   /// value defines animation Offset direction
+//   void replayAnimation({required bool onRight, required int index}) {
+//     //set child animation
+//     replayMessageAnimation = Tween(
+//       begin: const Offset(0.0, 0.0),
+//       end: Offset(onRight ? 0.8 : -0.8, 0.0),
+//     ).animate(
+//       CurvedAnimation(curve: Curves.decelerate, parent: replayController!),
+//     );
+
+//     //set back left/right icon animation
+
+//     replayIconAnimation = Tween(begin: 0.0, end: 1.0).animate(
+//       CurvedAnimation(curve: Curves.decelerate, parent: replayController!),
+//     );
+
+//     //Forward animation
+//     replayController?.forward().whenComplete(() {
+//       replayController?.reverse().whenComplete(() {
+//         // if (onRight) {
+//         replayIconAnimation =
+//             replayController?.drive(Tween(begin: 0.0, end: 0.0));
+//         // } else {
+//         //   replayIconAnimationRight =
+//         //       replayController?.drive(Tween(begin: 0.0, end: 0.0));
+//         // }
+
+//         onReplyTap(messages.reversed.toList()[index]);
+//       });
+//     });
+//   }
 }
