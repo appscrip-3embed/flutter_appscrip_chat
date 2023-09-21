@@ -419,8 +419,13 @@ class IsmChatMqttController extends GetxController {
         readBy: [],
       ),
     );
-
-    conversation.messages?.add(message);
+    if (Get.isRegistered<IsmChatPageController>()) {
+      var chatController = Get.find<IsmChatPageController>();
+      if (chatController.conversation?.conversationId !=
+          message.conversationId) {
+        conversation.messages?.add(message);
+      }
+    }
     await IsmChatConfig.dbWrapper!.saveConversation(conversation: conversation);
     unawaited(conversationController.getConversationsFromDB());
     await conversationController.pingMessageDelivered(

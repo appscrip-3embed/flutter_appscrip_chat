@@ -12,13 +12,13 @@ class IsmChatListThemeData {
   const IsmChatListThemeData.light()
       : tileColor = IsmChatColors.backgroundColorLight,
         dividerColor = IsmChatColors.backgroundColorDark,
-        backGroundColor = IsmChatColors.backgroundColorLight,
+        backGroundColor = IsmChatColors.whiteColor,
         dividerThickness = _kDividerThickness;
 
   const IsmChatListThemeData.dark()
       : tileColor = IsmChatColors.backgroundColorDark,
         dividerColor = IsmChatColors.backgroundColorLight,
-        backGroundColor = IsmChatColors.backgroundColorLight,
+        backGroundColor = IsmChatColors.whiteColor,
         dividerThickness = _kDividerThickness;
 
   final Color? tileColor;
