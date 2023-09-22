@@ -37,7 +37,6 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
   @override
   void initState() {
     super.initState();
-
     chatPageController.isVideoVisible = true;
     _controller = kIsWeb
         ? VideoPlayerController.network(
