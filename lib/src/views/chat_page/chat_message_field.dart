@@ -22,10 +22,10 @@ class IsmChatMessageField extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
         builder: (controller) {
-          var messageBody = controller.chatMessageModel?.customType ==
+          var messageBody = controller.replayMessage?.customType ==
                   IsmChatCustomMessageType.location
               ? 'Location'
-              : controller.chatMessageModel?.body ?? '';
+              : controller.replayMessage?.body ?? '';
 
           return Row(
             mainAxisSize: MainAxisSize.max,
@@ -277,7 +277,7 @@ class _ReplyMessage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  controller.chatMessageModel?.sentByMe ?? false
+                  controller.replayMessage?.sentByMe ?? false
                       ? IsmChatStrings.you
                       : IsmChatProperties.chatPageProperties.header?.title
                               ?.call(context, controller.conversation!,
@@ -433,6 +433,10 @@ class _MicOrSendButton extends StatelessWidget {
                       }
                     }
                   } else {
+                    if (controller.showEmojiBoard) {
+                      controller.toggleEmojiBoard();
+                    }
+
                     var allowPermission = false;
                     if (kIsWeb) {
                       final state =

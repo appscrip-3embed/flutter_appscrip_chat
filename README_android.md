@@ -89,19 +89,35 @@ Path: `android` > `app` > `main` > `AndroidMenifest.xml`
                 android:name="androidx.core.content.FileProvider"
                 android:authorities="${applicationId}.fileProvider"
                 android:exported="false"
-                android:grantUriPermissions="true"
-                tools:replace="android:authorities">
+                android:grantUriPermissions="true">
             <meta-data
                     android:name="android.support.FILE_PROVIDER_PATHS"
-                    android:resource="@xml/filepaths"
-                    tools:replace="android:resource" />
+                    android:resource="@xml/filepaths"/>
         </provider>  
     </application>
     ```
 
 ---
 
-### Make these changes to your `build.gradle`
+### Make these changes to your project level `filepaths.xml`
+
+### First you need make a one folder with xml and make one file with `filepaths.xml` file name
+
+Path: `android` > `app` > `src` > `main` > `res` > `xml` > `filepaths.xml`
+
+1. Add versions inside android
+
+    ```xml
+    <?xml version="1.0" encoding="utf-8"?>
+
+    <resources>
+        <external-path name="external_storage_directory" path="." />
+    </resources>
+    ```
+
+---
+
+### Make these changes to your app level `build.gradle`
 
 Path: `android` > `app` > `build.gradle`
 

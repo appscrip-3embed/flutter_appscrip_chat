@@ -11,11 +11,11 @@ class IsmChatBlockedMessage extends StatelessWidget {
   Widget build(BuildContext context) =>
       GetBuilder<IsmChatConversationsController>(
         builder: (controller) {
-          var ismMqttController = Get.find<IsmChatMqttController>();
           var status = message.customType == IsmChatCustomMessageType.block
               ? 'blocked'
               : 'unblocked';
-          var text = ismMqttController.userId == message.initiatorId
+          var text = IsmChatConfig.communicationConfig.userConfig.userId ==
+                  message.initiatorId
               ? 'You $status this user'
               : 'You are $status';
           return Center(

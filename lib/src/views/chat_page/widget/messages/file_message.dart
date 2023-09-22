@@ -89,51 +89,40 @@ class _IsmChatFileMessageState extends State<IsmChatFileMessage> {
                         child: widget.message.attachments?.first.mediaUrl!
                                     .isValidUrl ==
                                 true
-                            ? SfPdfViewer.network(
-                                key: _pdfViewerKey,
-                                widget.message.attachments?.first.mediaUrl ??
-                                    '',
-                                enableDoubleTapZooming: false,
-                                canShowHyperlinkDialog: false,
-                                canShowPaginationDialog: false,
-                                canShowScrollHead: false,
-                                enableTextSelection: false,
-                                canShowPasswordDialog: false,
-                                canShowScrollStatus: false,
-                                enableDocumentLinkAnnotation: false,
-                                enableHyperlinkNavigation: false,
+                            ? SizedBox(
+                                height: 200,
+                                child: SfPdfViewer.network(
+                                  key: _pdfViewerKey,
+                                  widget.message.attachments?.first.mediaUrl ??
+                                      '',
+                                  enableDoubleTapZooming: false,
+                                  canShowHyperlinkDialog: false,
+                                  canShowPaginationDialog: false,
+                                  canShowScrollHead: false,
+                                  enableTextSelection: false,
+                                  canShowPasswordDialog: false,
+                                  canShowScrollStatus: false,
+                                  enableDocumentLinkAnnotation: false,
+                                  enableHyperlinkNavigation: false,
+                                ),
                               )
-                            : kIsWeb
-                                ? SfPdfViewer.memory(
-                                    widget.message.attachments?.first.mediaUrl!
-                                            .strigToUnit8List ??
-                                        Uint8List(0),
-                                    key: _pdfViewerKey,
-                                    enableDoubleTapZooming: false,
-                                    canShowHyperlinkDialog: false,
-                                    canShowPaginationDialog: false,
-                                    canShowScrollHead: false,
-                                    enableTextSelection: false,
-                                    canShowPasswordDialog: false,
-                                    canShowScrollStatus: false,
-                                    enableDocumentLinkAnnotation: false,
-                                    enableHyperlinkNavigation: false,
-                                  )
-                                : SfPdfViewer.asset(
-                                    key: _pdfViewerKey,
-                                    widget.message.attachments?.first
-                                            .mediaUrl ??
-                                        '',
-                                    enableDoubleTapZooming: false,
-                                    canShowHyperlinkDialog: false,
-                                    canShowPaginationDialog: false,
-                                    canShowScrollHead: false,
-                                    enableTextSelection: false,
-                                    canShowPasswordDialog: false,
-                                    canShowScrollStatus: false,
-                                    enableDocumentLinkAnnotation: false,
-                                    enableHyperlinkNavigation: false,
-                                  ),
+                            : SizedBox(
+                                height: 200,
+                                child: SfPdfViewer.asset(
+                                  key: _pdfViewerKey,
+                                  widget.message.attachments?.first.mediaUrl ??
+                                      '',
+                                  enableDoubleTapZooming: false,
+                                  canShowHyperlinkDialog: false,
+                                  canShowPaginationDialog: false,
+                                  canShowScrollHead: false,
+                                  enableTextSelection: false,
+                                  canShowPasswordDialog: false,
+                                  canShowScrollStatus: false,
+                                  enableDocumentLinkAnnotation: false,
+                                  enableHyperlinkNavigation: false,
+                                ),
+                              ),
                       ),
                     Container(
                       height: context.width * 0.15,

@@ -54,7 +54,6 @@ class _MessageCardState extends State<MessageCard>
   }
 
   ///Run animation for child widget
-
   void _runAnimation({required bool onRight}) {
     //set child animation
     animation = Tween(

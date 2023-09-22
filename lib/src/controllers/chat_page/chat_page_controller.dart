@@ -107,11 +107,10 @@ class IsmChatPageController extends GetxController
   bool get isMemberSearch => _isMemberSearch.value;
   set isMemberSearch(bool value) => _isMemberSearch.value = value;
 
-  final Rx<IsmChatMessageModel?> _chatMessageModel =
+  final Rx<IsmChatMessageModel?> _replayMessage =
       Rx<IsmChatMessageModel?>(null);
-  IsmChatMessageModel? get chatMessageModel => _chatMessageModel.value;
-  set chatMessageModel(IsmChatMessageModel? value) =>
-      _chatMessageModel.value = value;
+  IsmChatMessageModel? get replayMessage => _replayMessage.value;
+  set replayMessage(IsmChatMessageModel? value) => _replayMessage.value = value;
 
   final RxBool _isSearchSelect = false.obs;
   bool get isSearchSelect => _isSearchSelect.value;
@@ -867,7 +866,7 @@ class IsmChatPageController extends GetxController
 
   void onReplyTap(IsmChatMessageModel message) {
     isreplying = true;
-    chatMessageModel = message;
+    replayMessage = message;
     messageFieldFocusNode.requestFocus();
   }
 
@@ -1395,6 +1394,7 @@ class IsmChatPageController extends GetxController
                       ?.map((e) => e.memberName ?? '')
                       .toList() ??
                   [],
+              initiatorId: messages.last.initiatorId,
             ),
             unreadMessagesCount: 0,
           );

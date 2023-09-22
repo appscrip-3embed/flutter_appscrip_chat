@@ -506,6 +506,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     var sentAt = DateTime.now().millisecondsSinceEpoch;
 
     if (webMediaModel == null) {
+      IsmChatUtility.showLoader();
       videoCopress = await VideoCompress.compressVideo(file!.path,
           quality: VideoQuality.MediumQuality, includeAudio: true);
       thumbnailFile = isThumbnail
@@ -515,6 +516,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
               position: -1 // default(-1)
               );
       if (videoCopress != null) {
+        IsmChatUtility.closeLoader();
         bytes = videoCopress.file!.readAsBytesSync();
         thumbnailBytes = thumbnailFile.readAsBytesSync();
         thumbnailNameWithExtension = thumbnailFile.path.split('/').last;
@@ -871,16 +873,19 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           : IsmChatMessageType.normal,
       messagingDisabled: false,
       parentMessageId:
-          _controller.isreplying ? _controller.chatMessageModel?.messageId : '',
+          _controller.isreplying ? _controller.replayMessage?.messageId : '',
       readByAll: false,
       sentAt: sentAt,
       sentByMe: true,
       metaData: IsmChatMetaData(
-        parentMessageBody:
-            _controller.isreplying ? _controller.chatMessageModel?.body : '',
-        parentMessageInitiator: _controller.isreplying
-            ? _controller.chatMessageModel?.sentByMe
-            : null,
+        parentMessageBody: _controller.isreplying
+            ? _controller.replayMessage?.customType ==
+                    IsmChatCustomMessageType.location
+                ? 'Location'
+                : _controller.replayMessage?.body
+            : '',
+        parentMessageInitiator:
+            _controller.isreplying ? _controller.replayMessage?.sentByMe : null,
       ),
       mentionedUsers: _controller.userMentionedList.map(
         (e) {
