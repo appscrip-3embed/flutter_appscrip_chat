@@ -200,6 +200,8 @@ class IsmChatMqttController extends GetxController {
         break;
       case IsmChatActionEvents.conversationCreated:
         _handleCreateConversation(actionModel);
+        _handleUnreadMessages(actionModel.userDetails?.userId ?? '');
+
         break;
       case IsmChatActionEvents.messageDelivered:
         _handleMessageDelivered(actionModel);
@@ -209,6 +211,7 @@ class IsmChatMqttController extends GetxController {
         break;
       case IsmChatActionEvents.messagesDeleteForAll:
         _handleMessageDelelteForEveryOne(actionModel);
+        _handleUnreadMessages(actionModel.userDetails?.userId ?? '');
         break;
       case IsmChatActionEvents.multipleMessagesRead:
         _handleMultipleMessageRead(actionModel);
@@ -218,6 +221,7 @@ class IsmChatMqttController extends GetxController {
       case IsmChatActionEvents.userBlockConversation:
       case IsmChatActionEvents.userUnblockConversation:
         _handleBlockUserOrUnBlock(actionModel);
+        _handleUnreadMessages(actionModel.initiatorDetails!.userId);
         break;
       case IsmChatActionEvents.clearConversation:
       case IsmChatActionEvents.deleteConversationLocally:
@@ -226,25 +230,29 @@ class IsmChatMqttController extends GetxController {
       case IsmChatActionEvents.memberLeave:
       case IsmChatActionEvents.memberJoin:
         _handleMemberJoinAndLeave(actionModel);
+        _handleUnreadMessages(actionModel.userDetails?.userId ?? '');
         break;
       case IsmChatActionEvents.addMember:
       case IsmChatActionEvents.removeMember:
         _handleGroupRemoveAndAddUser(actionModel);
+        _handleUnreadMessages(actionModel.userDetails?.userId ?? '');
         break;
       case IsmChatActionEvents.removeAdmin:
       case IsmChatActionEvents.addAdmin:
         _handleAdminRemoveAndAdd(actionModel);
+        _handleUnreadMessages(actionModel.userDetails?.userId ?? '');
         break;
 
       case IsmChatActionEvents.reactionAdd:
       case IsmChatActionEvents.reactionRemove:
         _handleAddAndRemoveReaction(actionModel);
-
+        _handleUnreadMessages(actionModel.userDetails?.userId ?? '');
         break;
       case IsmChatActionEvents.conversationDetailsUpdated:
       case IsmChatActionEvents.conversationTitleUpdated:
       case IsmChatActionEvents.conversationImageUpdated:
         _handleConversationUpdate(actionModel);
+        _handleUnreadMessages(actionModel.userDetails?.userId ?? '');
         break;
       case IsmChatActionEvents.broadcast:
         _handleBroadcast(actionModel);
@@ -357,7 +365,7 @@ class IsmChatMqttController extends GetxController {
       conversationId: actionModel.conversationId ?? '',
       messageId: actionModel.messageId ?? '',
     );
-    _handleUnreadMessages(message);
+    _handleUnreadMessages(message.senderInfo?.userId ?? '');
 
     // To handle messages in chatList
     if (!Get.isRegistered<IsmChatPageController>()) {
@@ -432,7 +440,7 @@ class IsmChatMqttController extends GetxController {
       conversationId: message.conversationId!,
       messageId: message.messageId!,
     );
-    _handleUnreadMessages(message);
+    _handleUnreadMessages(message.senderInfo?.userId ?? '');
 
     // To handle messages in chatList
     if (!Get.isRegistered<IsmChatPageController>()) {
@@ -798,6 +806,7 @@ class IsmChatMqttController extends GetxController {
         messageId = actionModel.sentAt.toString();
       }
     }
+
     var conversationController = Get.find<IsmChatConversationsController>();
     await conversationController.getBlockUser();
     await conversationController.getChatConversations();
@@ -1039,8 +1048,8 @@ class IsmChatMqttController extends GetxController {
     await Get.find<IsmChatConversationsController>().getChatConversations();
   }
 
-  void _handleUnreadMessages(IsmChatMessageModel message) async {
-    if (message.senderInfo!.userId == _communicationConfig.userConfig.userId) {
+  void _handleUnreadMessages(String userId) async {
+    if (userId == _communicationConfig.userConfig.userId) {
       return;
     }
     await getChatConversationsUnreadCount();

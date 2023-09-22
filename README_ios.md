@@ -27,6 +27,8 @@ Path: `ios` > `Runner` > `info.plist`
 <string>Used to capture audio for image picker plugin</string>
 <key>NSPhotoLibraryUsageDescription</key>
 <string>Used to demonstrate image picker plugin</string>
+<key>NSContactsUsageDescription</key>
+<string>This app requires contacts access to function properly.</string>
 <key>LSSupportsOpeningDocumentsInPlace</key>
 <true/>
  <key>UIFileSharingEnabled</key>
