@@ -79,7 +79,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
     super.build(context);
     var theme = IsmChatConfig.chatTheme.chatPageTheme;
     return IgnorePointer(
-      ignoring: widget._isIgnorTap!,
+      ignoring: showMessageInCenter || widget._isIgnorTap!,
       child: IsmChatTapHandler(
         onLongPress: showMessageInCenter
             ? null

@@ -55,9 +55,6 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
         _controller.play();
       });
-    // ValueListenable<VideoPlayerValue>? x;
-    // x = _controller;
-    // IsmChatLog.error('duratiaon ${x.value.position}');
   }
 
   void updateState() {
@@ -90,8 +87,6 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
     }
     super.didUpdateWidget(oldWidget);
   }
-
-  void startInit() {}
 
   @override
   void dispose() {

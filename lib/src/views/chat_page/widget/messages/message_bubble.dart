@@ -70,47 +70,50 @@ class MessageBubble extends StatelessWidget {
                   Positioned(
                     bottom: IsmChatDimens.four,
                     right: IsmChatDimens.ten,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: message.sentByMe
-                          ? MainAxisAlignment.end
-                          : MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          message.sentAt.toTimeString(),
-                          style: (message.sentByMe
-                                  ? IsmChatStyles.w400White10
-                                  : IsmChatStyles.w400Grey10)
-                              .copyWith(
-                            color: message.style.color,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: message.sentByMe
+                            ? MainAxisAlignment.end
+                            : MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            message.sentAt.toTimeString(),
+                            style: (message.sentByMe
+                                    ? IsmChatStyles.w400White10
+                                    : IsmChatStyles.w400Grey10)
+                                .copyWith(
+                              color: message.style.color,
+                            ),
                           ),
-                        ),
-                        if (message.sentByMe &&
-                            message.customType !=
-                                IsmChatCustomMessageType
-                                    .deletedForEveryone) ...[
-                          IsmChatDimens.boxWidth2,
-                          Icon(
-                            message.messageId!.isEmpty
-                                ? Icons.watch_later_outlined
-                                : message.deliveredToAll ?? false
-                                    ? Icons.done_all_rounded
-                                    : Icons.done_rounded,
-                            color: message.messageId!.isEmpty
-                                ? IsmChatConfig.chatTheme.chatPageTheme
-                                        ?.unreadCheckColor ??
-                                    Colors.white
-                                : message.readByAll ?? false
-                                    ? IsmChatConfig.chatTheme.chatPageTheme
-                                            ?.readCheckColor ??
-                                        Colors.blue
-                                    : IsmChatConfig.chatTheme.chatPageTheme
-                                            ?.unreadCheckColor ??
-                                        Colors.white,
-                            size: IsmChatDimens.forteen,
-                          ),
+                          if (message.sentByMe &&
+                              message.customType !=
+                                  IsmChatCustomMessageType
+                                      .deletedForEveryone) ...[
+                            IsmChatDimens.boxWidth2,
+                            Icon(
+                              message.messageId!.isEmpty
+                                  ? Icons.watch_later_outlined
+                                  : message.deliveredToAll ?? false
+                                      ? Icons.done_all_rounded
+                                      : Icons.done_rounded,
+                              color: message.messageId!.isEmpty
+                                  ? IsmChatConfig.chatTheme.chatPageTheme
+                                          ?.unreadCheckColor ??
+                                      Colors.white
+                                  : message.readByAll ?? false
+                                      ? IsmChatConfig.chatTheme.chatPageTheme
+                                              ?.readCheckColor ??
+                                          Colors.blue
+                                      : IsmChatConfig.chatTheme.chatPageTheme
+                                              ?.unreadCheckColor ??
+                                          Colors.white,
+                              size: IsmChatDimens.forteen,
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
                   ),
                   Obx(

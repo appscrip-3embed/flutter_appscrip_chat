@@ -623,11 +623,22 @@ extension LastMessageBody on LastMessageDetails {
       case IsmChatCustomMessageType.location:
         return 'Location';
       case IsmChatCustomMessageType.block:
-        return 'Blocked';
+        var status = 'blocked';
+        var text =
+            IsmChatConfig.communicationConfig.userConfig.userId == initiatorId
+                ? 'You $status this user'
+                : 'You are $status';
+        return text;
       case IsmChatCustomMessageType.contact:
         return 'Contact';
       case IsmChatCustomMessageType.unblock:
-        return 'Unblocked';
+        var status = 'unblocked';
+        var text =
+            IsmChatConfig.communicationConfig.userConfig.userId == initiatorId
+                ? 'You $status this user'
+                : 'You are $status';
+        return text;
+
       case IsmChatCustomMessageType.conversationCreated:
         return 'Conversation created';
       case IsmChatCustomMessageType.conversationImageUpdated:

@@ -107,11 +107,10 @@ class IsmChatPageController extends GetxController
   bool get isMemberSearch => _isMemberSearch.value;
   set isMemberSearch(bool value) => _isMemberSearch.value = value;
 
-  final Rx<IsmChatMessageModel?> _chatMessageModel =
+  final Rx<IsmChatMessageModel?> _replayMessage =
       Rx<IsmChatMessageModel?>(null);
-  IsmChatMessageModel? get chatMessageModel => _chatMessageModel.value;
-  set chatMessageModel(IsmChatMessageModel? value) =>
-      _chatMessageModel.value = value;
+  IsmChatMessageModel? get replayMessage => _replayMessage.value;
+  set replayMessage(IsmChatMessageModel? value) => _replayMessage.value = value;
 
   final RxBool _isSearchSelect = false.obs;
   bool get isSearchSelect => _isSearchSelect.value;
@@ -534,6 +533,7 @@ class IsmChatPageController extends GetxController
     attchmentOverlayEntry?.dispose();
     fabAnimationController?.dispose();
     holdController?.dispose();
+
     ifTimerMounted();
   }
 
@@ -866,7 +866,7 @@ class IsmChatPageController extends GetxController
 
   void onReplyTap(IsmChatMessageModel message) {
     isreplying = true;
-    chatMessageModel = message;
+    replayMessage = message;
     messageFieldFocusNode.requestFocus();
   }
 
@@ -1394,6 +1394,7 @@ class IsmChatPageController extends GetxController
                       ?.map((e) => e.memberName ?? '')
                       .toList() ??
                   [],
+              initiatorId: messages.last.initiatorId,
             ),
             unreadMessagesCount: 0,
           );
@@ -2079,4 +2080,37 @@ class IsmChatPageController extends GetxController
       IsmChatLog.error('Error downloading :- $e\n$st');
     }
   }
+
+//   ///Run animation for child widget
+//   /// value defines animation Offset direction
+//   void replayAnimation({required bool onRight, required int index}) {
+//     //set child animation
+//     replayMessageAnimation = Tween(
+//       begin: const Offset(0.0, 0.0),
+//       end: Offset(onRight ? 0.8 : -0.8, 0.0),
+//     ).animate(
+//       CurvedAnimation(curve: Curves.decelerate, parent: replayController!),
+//     );
+
+//     //set back left/right icon animation
+
+//     replayIconAnimation = Tween(begin: 0.0, end: 1.0).animate(
+//       CurvedAnimation(curve: Curves.decelerate, parent: replayController!),
+//     );
+
+//     //Forward animation
+//     replayController?.forward().whenComplete(() {
+//       replayController?.reverse().whenComplete(() {
+//         // if (onRight) {
+//         replayIconAnimation =
+//             replayController?.drive(Tween(begin: 0.0, end: 0.0));
+//         // } else {
+//         //   replayIconAnimationRight =
+//         //       replayController?.drive(Tween(begin: 0.0, end: 0.0));
+//         // }
+
+//         onReplyTap(messages.reversed.toList()[index]);
+//       });
+//     });
+//   }
 }
