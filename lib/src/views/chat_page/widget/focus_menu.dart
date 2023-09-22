@@ -150,12 +150,9 @@ class IsmChatFocusMenu extends StatelessWidget {
                       IsmChatDimens.boxHeight8,
                       Hero(
                         tag: message,
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxHeight: 260),
-                          child: MessageBubble(
-                            message: message,
-                            showMessageInCenter: false,
-                          ),
+                        child: MessageBubble(
+                          message: message,
+                          showMessageInCenter: false,
                         ),
                       ),
                       IsmChatDimens.boxHeight8,
