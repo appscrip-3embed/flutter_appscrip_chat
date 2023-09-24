@@ -254,6 +254,7 @@ class IsmChatUtility {
       return true;
     } else {
       var result = await permission.request();
+
       if (result == PermissionStatus.granted) {
         return true;
       }

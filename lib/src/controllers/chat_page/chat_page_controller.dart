@@ -2051,14 +2051,22 @@ class IsmChatPageController extends GetxController
           }
           newPath = '$newPath/ChatApp';
           directory = Directory(newPath);
+        } else {
+          await openAppSettings();
+
+          return;
         }
       } else {
         if (await IsmChatUtility.requestPermission(Permission.photos)) {
           directory = await path_provider.getTemporaryDirectory();
+        } else {
+          await openAppSettings();
+
+          return;
         }
       }
 
-      if (!await directory!.exists()) {
+      if (!await directory.exists()) {
         await directory.create(recursive: true);
       }
       if (await directory.exists()) {

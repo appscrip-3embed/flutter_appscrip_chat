@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -181,7 +183,7 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
                   ? PhotoView(
                       imageProvider: url.isValidUrl
                           ? NetworkImage(url) as ImageProvider
-                          : AssetImage(url),
+                          : FileImage(File(url)),
                       loadingBuilder: (context, event) =>
                           const IsmChatLoadingDialog(),
                       wantKeepAlive: true,
