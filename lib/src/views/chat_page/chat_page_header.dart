@@ -154,7 +154,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                         style: IsmChatConfig
                                                 .chatTheme
                                                 .chatPageHeaderTheme
-                                                ?.titleStyle ??
+                                                ?.subtileStyle ??
                                             IsmChatStyles.w400White12,
                                       )
                                     : controller.conversation?.isGroup == true
