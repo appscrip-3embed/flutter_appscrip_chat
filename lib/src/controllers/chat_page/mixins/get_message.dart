@@ -3,16 +3,23 @@ part of '../chat_page_controller.dart';
 mixin IsmChatPageGetMessageMixin {
   IsmChatPageController get _controller => Get.find<IsmChatPageController>();
 
-  Future<void> getMessagesFromDB(String conversationId) async {
+  Future<void> getMessagesFromDB(String conversationId,
+      [IsmChatDbBox dbBox = IsmChatDbBox.main]) async {
     if (_controller.messageHoldOverlayEntry != null) {
       _controller.closeOveray();
     }
-    var messages = await IsmChatConfig.dbWrapper!.getMessage(conversationId);
+
+    var messages =
+        await IsmChatConfig.dbWrapper!.getMessage(conversationId, dbBox);
     if (messages?.isEmpty ?? false || messages == null) {
       _controller.messages.clear();
       return;
     }
-
+    var pendingmessages = await IsmChatConfig.dbWrapper!
+        .getMessage(conversationId, IsmChatDbBox.pending);
+    if (pendingmessages?.isNotEmpty ?? false || pendingmessages != null) {
+      messages?.addAll(pendingmessages ?? []);
+    }
     _controller.messages = _controller.viewModel.sortMessages(messages!);
     if (_controller.messages.isEmpty) {
       return;

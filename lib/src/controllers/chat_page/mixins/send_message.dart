@@ -1127,4 +1127,31 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         mediaType: mediaType,
         mediaId: mediaId,
       );
+
+  void sendPendingMessgae(String conversationId) async {
+    var messages = await IsmChatConfig.dbWrapper!
+        .getMessage(conversationId, IsmChatDbBox.pending);
+    if (messages?.isEmpty ?? false || messages == null) {
+      return;
+    }
+    for (var x in messages!) {
+      sendMessage(
+        messageType: x.messageType?.value ?? 0,
+        deviceId: x.deviceId ?? '',
+        conversationId: conversationId,
+        body: x.body,
+        createdAt: x.sentAt,
+        notificationBody: x.notificationBody ?? '',
+        notificationTitle: x.notificationTitle ?? '',
+        attachments: [{}],
+        customType: x.customType!.name,
+        metaData: x.metaData,
+        showInConversation: x.showInConversation ?? false,
+        mentionedUsers: [{}],
+        parentMessageId: x.parentMessageId,
+        encrypted: true,
+        isTemporaryChat: _controller.isTemporaryChat,
+      );
+    }
+  }
 }

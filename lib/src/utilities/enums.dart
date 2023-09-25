@@ -615,10 +615,7 @@ enum IsmChatFeature {
   chageWallpaper;
 }
 
-enum IsmChatDbBox {
-  main,
-  pending,
-}
+enum IsmChatDbBox { main, pending }
 
 enum IsRenderConversationScreen {
   none,
