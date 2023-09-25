@@ -23,6 +23,7 @@ class IsmChatConstants {
   static const Duration transitionDuration = Duration(milliseconds: 300);
   static const Duration swipeDuration = Duration(milliseconds: 300);
   static const Duration bottomSheetDuration = Duration(milliseconds: 200);
+  static const int keepAlivePeriod = 60;
 
   static const int attachmentHight = 130;
 

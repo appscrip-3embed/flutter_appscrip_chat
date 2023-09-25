@@ -41,6 +41,7 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   http: ^0.13.6
+  image: ^4.1.2
   image_cropper: ^3.0.1
   image_gallery_saver: ^2.0.3
   image_painter: ^0.5.0

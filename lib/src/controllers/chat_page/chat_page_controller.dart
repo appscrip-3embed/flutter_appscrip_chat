@@ -20,6 +20,7 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image/image.dart' as img;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
@@ -523,6 +524,9 @@ class IsmChatPageController extends GetxController
     if (areCamerasInitialized) {
       _frontCameraController.dispose();
       _backCameraController.dispose();
+
+      //   Get.find<IsmChatPageController>().cameraController.dispose();
+      // },
     }
 
     conversationDetailsApTimer?.cancel();
@@ -1478,7 +1482,22 @@ class IsmChatPageController extends GetxController
         IsmChatRouteManagement.goToWebMediaPreview();
       }
     } else {
-      imagePath = File(file.path);
+      if (cameraController.description.lensDirection ==
+          CameraLensDirection.front) {
+        var imageBytes = await file.readAsBytes();
+        var file2 = File(file.path);
+        // When using the front camera; flip the image
+        var originalImage = img.decodeImage(imageBytes);
+        var fixedImage = img.flipHorizontal(originalImage!);
+        var fixedFile = await file2.writeAsBytes(
+          img.encodeJpg(fixedImage),
+          flush: true,
+        );
+        imagePath = File(fixedFile.path);
+      } else {
+        imagePath = File(file.path);
+      }
+
       fileSize = await IsmChatUtility.fileToSize(imagePath!);
       await Get.to(const IsmChatImageEditView());
     }

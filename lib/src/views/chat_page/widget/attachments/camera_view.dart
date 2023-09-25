@@ -21,7 +21,9 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
         dispose: (state) {
-          Get.find<IsmChatPageController>().cameraController.dispose();
+          if (Responsive.isWebAndTablet(context)) {
+            Get.find<IsmChatPageController>().cameraController.dispose();
+          }
         },
         builder: (controller) => MediaQuery.removePadding(
           removeTop: true,
@@ -120,9 +122,6 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                                 });
 
                                 if (kIsWeb) {
-                                  IsmChatLog.error(file.path);
-                                  IsmChatLog.error(file.name);
-                                  IsmChatLog.error(file.mimeType);
                                   var bytes = await file.readAsBytes();
                                   var fileSize = IsmChatUtility.formatBytes(
                                     int.parse(bytes.length.toString()),
