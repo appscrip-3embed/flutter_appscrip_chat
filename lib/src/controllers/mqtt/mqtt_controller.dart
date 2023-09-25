@@ -58,7 +58,7 @@ class IsmChatMqttController extends GetxController {
   Future<void> initializeMqttClient() async {
     await IsmChatMqttClient.initializeMqttClient(_deviceConfig.deviceId!);
     client = IsmChatMqttClient.client;
-    client?.keepAlivePeriod = 60;
+    client?.keepAlivePeriod = IsmChatConstants.keepAlivePeriod;
     client?.onDisconnected = _onDisconnected;
     client?.onUnsubscribed = _onUnSubscribed;
     client?.onSubscribeFail = _onSubscribeFailed;
