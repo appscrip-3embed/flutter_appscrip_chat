@@ -593,11 +593,17 @@ extension ModelConversion on IsmChatConversationModel {
       }
 
       return Icon(
-        deliveredToAll ? Icons.done_all_rounded : Icons.done_rounded,
-        color: readByAll
-            ? Colors.blue
-            : IsmChatConfig.chatTheme.chatListCardThemData?.subTitleColor ??
-                Colors.grey,
+        lastMessageDetails?.messageId.isEmpty == true
+            ? Icons.watch_later_outlined
+            : deliveredToAll
+                ? Icons.done_all_rounded
+                : Icons.done_rounded,
+        color: lastMessageDetails?.messageId.isEmpty == true
+            ? Colors.grey
+            : readByAll
+                ? Colors.blue
+                : IsmChatConfig.chatTheme.chatListCardThemData?.subTitleColor ??
+                    Colors.grey,
         size: 16,
       );
     } catch (e, st) {

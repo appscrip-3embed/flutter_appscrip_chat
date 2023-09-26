@@ -1374,22 +1374,30 @@ class IsmChatPageController extends GetxController
               conversationId: messages.last.conversationId ?? '',
               body: messages.last.body,
               customType: messages.last.customType,
-              readCount: chatConversation.isGroup ?? false
-                  ? messages.last.readByAll ?? false
-                      ? chatConversation.membersCount
-                      : messages.last.lastReadAt?.length
-                  : messages.last.readByAll ?? false
-                      ? 1
-                      : 0,
-              deliveredTo: messages.last.deliveredTo,
-              readBy: messages.last.readBy,
-              deliverCount: chatConversation.isGroup ?? false
-                  ? messages.last.deliveredToAll ?? false
-                      ? chatConversation.membersCount
-                      : 0
-                  : messages.last.deliveredToAll ?? false
-                      ? 1
-                      : 0,
+              readCount: messages.last.messageId?.isNotEmpty == true
+                  ? chatConversation.isGroup ?? false
+                      ? messages.last.readByAll ?? false
+                          ? chatConversation.membersCount
+                          : messages.last.lastReadAt?.length
+                      : messages.last.readByAll ?? false
+                          ? 1
+                          : 0
+                  : 0,
+              deliveredTo: messages.last.messageId?.isNotEmpty == true
+                  ? messages.last.deliveredTo
+                  : [],
+              readBy: messages.last.messageId?.isNotEmpty == true
+                  ? messages.last.readBy
+                  : [],
+              deliverCount: messages.last.messageId?.isNotEmpty == true
+                  ? chatConversation.isGroup ?? false
+                      ? messages.last.deliveredToAll ?? false
+                          ? chatConversation.membersCount
+                          : 0
+                      : messages.last.deliveredToAll ?? false
+                          ? 1
+                          : 0
+                  : 0,
               members: messages.last.members
                       ?.map((e) => e.memberName ?? '')
                       .toList() ??
