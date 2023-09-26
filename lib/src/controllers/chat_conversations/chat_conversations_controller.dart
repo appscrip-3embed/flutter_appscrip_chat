@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:azlistview/azlistview.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -189,6 +190,9 @@ class IsmChatConversationsController extends GetxController {
           (_) => true)
       .toList();
 
+  final Connectivity connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult>? connectivitySubscription;
+
   @override
   onInit() async {
     super.onInit();
@@ -214,18 +218,39 @@ class IsmChatConversationsController extends GetxController {
         );
       }
     });
+    _isInterNetConnect();
   }
 
   @override
   void onClose() {
-    conversationScrollController.dispose();
+    onDispose();
     super.onClose();
   }
 
   @override
   void dispose() {
-    conversationScrollController.dispose();
+    onDispose();
     super.dispose();
+  }
+
+  void onDispose() {
+    conversationScrollController.dispose();
+    connectivitySubscription?.cancel();
+  }
+
+  _isInterNetConnect() {
+    connectivitySubscription =
+        connectivity.onConnectivityChanged.listen((event) async {
+      if (await IsmChatUtility.isNetworkAvailable) {
+        if (currentConversation?.conversationId?.isNotEmpty == true &&
+            Get.isRegistered<IsmChatPageController>()) {
+          {
+            Get.find<IsmChatPageController>()
+                .sendPendingMessgae(currentConversation?.conversationId ?? '');
+          }
+        }
+      }
+    });
   }
 
   Widget isRenderScreenWidget() {

@@ -10,7 +10,6 @@ import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
     if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:camera/camera.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
@@ -431,9 +430,6 @@ class IsmChatPageController extends GetxController
 
   var arguments = Get.arguments as Map<String, dynamic>? ?? {};
 
-  final Connectivity connectivity = Connectivity();
-  StreamSubscription<ConnectivityResult>? connectivitySubscription;
-
   @override
   void onInit() {
     super.onInit();
@@ -473,7 +469,6 @@ class IsmChatPageController extends GetxController
                 : conversation?.lastMessageSentAt ?? 0,
           );
           checkUserStatus();
-          _isInterNetConnect();
         } else {
           await getMessagesFromAPI(isTemporaryChat: isTemporaryChat);
           isMessagesLoading = false;
@@ -538,21 +533,8 @@ class IsmChatPageController extends GetxController
     attchmentOverlayEntry?.dispose();
     fabAnimationController?.dispose();
     holdController?.dispose();
-    connectivitySubscription?.cancel();
-    ifTimerMounted();
-  }
 
-  _isInterNetConnect() {
-    connectivitySubscription =
-        connectivity.onConnectivityChanged.listen((event) async {
-      if (await IsmChatUtility.isNetworkAvailable) {
-        if (conversation?.conversationId?.isNotEmpty == true) {
-          {
-            sendPendingMessgae(conversation?.conversationId ?? '');
-          }
-        }
-      }
-    });
+    ifTimerMounted();
   }
 
   _generateReactionList() async {

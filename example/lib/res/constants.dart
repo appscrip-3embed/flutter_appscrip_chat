@@ -14,6 +14,22 @@ class Constants {
   static const int port = 2052;
 }
 
+// class Constants {
+//   const Constants._();
+
+//   static const String licenseKey = 'lic-IMKT8jm9Ac7sIu1GBYGeo7mzdt5Yr0sRs9s';
+//   static const String appSecret =
+//       'SFMyNTY.g3QAAAACZAAEZGF0YXQAAAADbQAAAAlhY2NvdW50SWRtAAAAGDY1MTEyZmMxMmNhM2JmMzZkMmQ1ZTY3OW0AAAAIa2V5c2V0SWRtAAAAJDhlZjdiODRiLTNkYjQtNGE1MC05ZGVmLTAxODE2ZTdjZDc3NW0AAAAJcHJvamVjdElkbQAAACQ4YWU4NTNjMi02NzAwLTQ0ZjktOWMyNi01NTNmZmVjYzg2YTdkAAZzaWduZWRuBgB7mDLLigE.OktQUZNww9Yw2a3Hn29duFxFPWylmWd2QkXj3hL_40c';
+//   static const String userSecret =
+//       'SFMyNTY.g3QAAAACZAAEZGF0YXQAAAADbQAAAAlhY2NvdW50SWRtAAAAGDY1MTEyZmMxMmNhM2JmMzZkMmQ1ZTY3OW0AAAAIa2V5c2V0SWRtAAAAJDhlZjdiODRiLTNkYjQtNGE1MC05ZGVmLTAxODE2ZTdjZDc3NW0AAAAJcHJvamVjdElkbQAAACQ4YWU4NTNjMi02NzAwLTQ0ZjktOWMyNi01NTNmZmVjYzg2YTdkAAZzaWduZWRuBgB7mDLLigE.hZnsDAw5_MExjV2KEZu_uOJjfCshX4XdnQdEn3EPgPg';
+//   static const String accountId = '65112fc12ca3bf36d2d5e679';
+//   static const String keysetId = '8ef7b84b-3db4-4a50-9def-01816e7cd775';
+//   static const String projectId = '8ae853c2-6700-44f9-9c26-553ffecc86a7';
+
+//   static const String hostname = 'connections.isometrik.io';
+//   static const int port = 2052;
+// }
+
 class AssetConstants {
   const AssetConstants._();
 

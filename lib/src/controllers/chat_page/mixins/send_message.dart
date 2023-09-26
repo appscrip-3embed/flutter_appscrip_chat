@@ -73,8 +73,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     required int createdAt,
     required String notificationBody,
     required String notificationTitle,
-    bool encrypted = true,
-    bool showInConversation = true,
     String? parentMessageId,
     IsmChatMetaData? metaData,
     List<Map<String, dynamic>>? mentionedUsers,
@@ -99,15 +97,15 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     if (isSendMessage) {
       if (_controller.conversation?.customType != 'Broadcasting') {
         var isMessageSent = await _controller.viewModel.sendMessage(
-          showInConversation: showInConversation,
-          attachments: attachments,
+          showInConversation: true,
+          encrypted: true,
           events: {'updateUnreadCount': true, 'sendPushNotification': true},
+          attachments: attachments,
           mentionedUsers: mentionedUsers,
           metaData: metaData,
           messageType: messageType,
           customType: customType,
           parentMessageId: parentMessageId,
-          encrypted: encrypted,
           deviceId: deviceId,
           conversationId: conversationId,
           notificationBody: notificationBody,
@@ -128,16 +126,16 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             userIds: (_controller.conversation?.members ?? [])
                 .map((e) => e.userId)
                 .toList(),
-            showInConversation: showInConversation,
+            showInConversation: true,
+            encrypted: true,
+            events: {'updateUnreadCount': true, 'sendPushNotification': true},
             messageType: messageType,
-            encrypted: encrypted,
             deviceId: deviceId,
             body: IsmChatUtility.encodePayload(body),
             notificationBody: notificationBody,
             notificationTitle: notificationTitle,
             attachments: attachments,
             customType: customType,
-            events: {'updateUnreadCount': true, 'sendPushNotification': true},
             isLoading: false,
             metaData: metaData,
             searchableTags: [notificationBody],
@@ -320,7 +318,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       ],
       deliveredToAll: false,
       messageId: '',
-      deviceId: _controller._deviceConfig.deviceId!,
+      deviceId: _controller._deviceConfig.deviceId ?? '',
       messageType: IsmChatMessageType.normal,
       messagingDisabled: false,
       parentMessageId: '',
@@ -420,7 +418,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             ],
             deliveredToAll: false,
             messageId: '',
-            deviceId: _controller._deviceConfig.deviceId!,
+            deviceId: _controller._deviceConfig.deviceId ?? '',
             messageType: IsmChatMessageType.normal,
             messagingDisabled: false,
             parentMessageId: '',
@@ -558,7 +556,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       ],
       deliveredToAll: false,
       messageId: '',
-      deviceId: _controller._deviceConfig.deviceId!,
+      deviceId: _controller._deviceConfig.deviceId ?? '',
       messageType: IsmChatMessageType.normal,
       messagingDisabled: false,
       parentMessageId: '',
@@ -666,7 +664,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       ],
       deliveredToAll: false,
       messageId: '',
-      deviceId: _controller._deviceConfig.deviceId!,
+      deviceId: _controller._deviceConfig.deviceId ?? '',
       messageType: IsmChatMessageType.normal,
       messagingDisabled: false,
       parentMessageId: '',
@@ -730,7 +728,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           ]);
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
-    var textMessage = IsmChatMessageModel(
+    var locationMessage = IsmChatMessageModel(
       body:
           'https://www.google.com/maps/search/?api=1&map_action=map&query=$latitude%2C$longitude&query_place_id=$placeId',
       conversationId: conversationId,
@@ -738,6 +736,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       deliveredToAll: false,
       messageId: '',
       messageType: IsmChatMessageType.normal,
+      deviceId: _controller._deviceConfig.deviceId ?? '',
       messagingDisabled: false,
       parentMessageId: '',
       readByAll: false,
@@ -750,15 +749,15 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       ),
     );
 
-    _controller.messages.add(textMessage);
+    _controller.messages.add(locationMessage);
     _controller.chatInputController.clear();
 
     if (!_controller.isTemporaryChat) {
       await IsmChatConfig.dbWrapper!
-          .saveMessage(textMessage, IsmChatDbBox.pending);
+          .saveMessage(locationMessage, IsmChatDbBox.pending);
 
       if (kIsWeb && Responsive.isWebAndTablet(Get.context!)) {
-        _controller.updateLastMessagOnCurrentTime(textMessage);
+        _controller.updateLastMessagOnCurrentTime(locationMessage);
       }
     }
 
@@ -767,13 +766,13 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             ? IsmChatConfig.communicationConfig.userConfig.userName
             : conversationController.userDetails?.userName ?? '';
     sendMessage(
-      metaData: textMessage.metaData,
-      deviceId: _controller._deviceConfig.deviceId!,
-      body: textMessage.body,
-      customType: textMessage.customType!.name,
-      createdAt: sentAt,
-      conversationId: textMessage.conversationId ?? '',
-      messageType: textMessage.messageType?.value ?? 0,
+      metaData: locationMessage.metaData,
+      deviceId: locationMessage.deviceId ?? '',
+      body: locationMessage.body,
+      customType: locationMessage.customType!.name,
+      createdAt: locationMessage.sentAt,
+      conversationId: locationMessage.conversationId ?? '',
+      messageType: locationMessage.messageType?.value ?? 0,
       notificationBody: 'Sent you a location',
       notificationTitle: notificationTitle,
       isTemporaryChat: _controller.isTemporaryChat,
@@ -801,25 +800,25 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       );
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
-    var textMessage = IsmChatMessageModel(
-      body: jsonEncode(contacts.map((e) => e.toJson()).toList()),
-      conversationId: conversationId,
-      customType: IsmChatCustomMessageType.contact,
-      deliveredToAll: false,
-      messageId: '',
-      messageType: IsmChatMessageType.normal,
-      messagingDisabled: false,
-      parentMessageId: '',
-      readByAll: false,
-      sentAt: sentAt,
-      sentByMe: true,
-    );
+    var contactMessage = IsmChatMessageModel(
+        body: jsonEncode(contacts.map((e) => e.toJson()).toList()),
+        conversationId: conversationId,
+        customType: IsmChatCustomMessageType.contact,
+        deliveredToAll: false,
+        messageId: '',
+        messageType: IsmChatMessageType.normal,
+        messagingDisabled: false,
+        parentMessageId: '',
+        readByAll: false,
+        sentAt: sentAt,
+        sentByMe: true,
+        deviceId: _controller._deviceConfig.deviceId ?? '');
 
-    _controller.messages.add(textMessage);
+    _controller.messages.add(contactMessage);
 
     if (!_controller.isTemporaryChat) {
       await IsmChatConfig.dbWrapper!
-          .saveMessage(textMessage, IsmChatDbBox.pending);
+          .saveMessage(contactMessage, IsmChatDbBox.pending);
     }
 
     var notificationTitle =
@@ -827,13 +826,13 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             ? IsmChatConfig.communicationConfig.userConfig.userName
             : conversationController.userDetails?.userName ?? '';
     sendMessage(
-      metaData: textMessage.metaData,
-      deviceId: _controller._deviceConfig.deviceId!,
-      body: textMessage.body,
-      customType: textMessage.customType!.name,
-      createdAt: sentAt,
-      conversationId: textMessage.conversationId ?? '',
-      messageType: textMessage.messageType?.value ?? 0,
+      metaData: contactMessage.metaData,
+      deviceId: contactMessage.deviceId ?? '',
+      body: contactMessage.body,
+      customType: contactMessage.customType?.name,
+      createdAt: contactMessage.sentAt,
+      conversationId: contactMessage.conversationId ?? '',
+      messageType: contactMessage.messageType?.value ?? 0,
       notificationBody: 'Sent you a contact',
       notificationTitle: notificationTitle,
       isTemporaryChat: _controller.isTemporaryChat,
@@ -867,6 +866,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           ? IsmChatCustomMessageType.reply
           : IsmChatCustomMessageType.text,
       deliveredToAll: false,
+      deviceId: _controller._deviceConfig.deviceId ?? '',
       messageId: '',
       messageType: _controller.isreplying
           ? IsmChatMessageType.reply
@@ -924,7 +924,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     sendMessage(
       isTemporaryChat: _controller.isTemporaryChat,
       metaData: textMessage.metaData,
-      deviceId: _controller._deviceConfig.deviceId!,
+      deviceId: textMessage.deviceId ?? '',
       body: textMessage.body,
       customType: textMessage.customType!.name,
       createdAt: sentAt,
@@ -1134,24 +1134,34 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     if (messages?.isEmpty ?? false || messages == null) {
       return;
     }
+    var notificationTitle =
+        IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+            ? IsmChatConfig.communicationConfig.userConfig.userName
+            : conversationController.userDetails?.userName ?? '';
     for (var x in messages!) {
-      sendMessage(
+      var isMessageSent = await _controller.viewModel.sendMessage(
+        showInConversation: true,
+        encrypted: true,
+        events: {'updateUnreadCount': true, 'sendPushNotification': true},
+        attachments: x.attachments?.map((e) => e.toMap()).toList(),
+        mentionedUsers: x.mentionedUsers?.map((e) => e.toMap()).toList(),
+        metaData: x.metaData,
         messageType: x.messageType?.value ?? 0,
+        customType: x.customType?.name,
+        parentMessageId: x.parentMessageId,
         deviceId: x.deviceId ?? '',
         conversationId: conversationId,
-        body: x.body,
+        notificationBody: x.body,
+        notificationTitle: notificationTitle,
+        body: IsmChatUtility.encodePayload(x.body),
         createdAt: x.sentAt,
-        notificationBody: x.notificationBody ?? '',
-        notificationTitle: x.notificationTitle ?? '',
-        attachments: [{}],
-        customType: x.customType!.name,
-        metaData: x.metaData,
-        showInConversation: x.showInConversation ?? false,
-        mentionedUsers: [{}],
-        parentMessageId: x.parentMessageId,
-        encrypted: true,
         isTemporaryChat: _controller.isTemporaryChat,
       );
+
+      if (isMessageSent && !_controller.isTemporaryChat) {
+        _controller.didReactedLast = false;
+        await _controller.getMessagesFromDB(conversationId);
+      }
     }
   }
 }

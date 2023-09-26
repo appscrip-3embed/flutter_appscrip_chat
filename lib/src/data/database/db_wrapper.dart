@@ -243,6 +243,7 @@ class IsmChatDBWrapper {
           return;
         }
         conversation.messages?.add(message);
+
         await saveConversation(conversation: conversation, dbBox: dbBox);
         break;
     }
