@@ -2,6 +2,7 @@ part of '../chat_page_controller.dart';
 
 mixin IsmChatPageSendMessageMixin on GetxController {
   IsmChatPageController get _controller => Get.find<IsmChatPageController>();
+
   IsmChatConversationsController get conversationController =>
       Get.find<IsmChatConversationsController>();
 
@@ -96,7 +97,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
     if (isSendMessage) {
       if (_controller.conversation?.customType != 'Broadcasting') {
-        var isMessageSent = await _controller.viewModel.sendMessage(
+        var isMessageSent = await _controller.commonController.sendMessage(
           showInConversation: true,
           encrypted: true,
           events: {'updateUnreadCount': true, 'sendPushNotification': true},
@@ -965,7 +966,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             IsmChatConfig.communicationConfig.userConfig.userEmail ?? '',
       );
     } else {
-      presignedUrlModel = await postMediaUrl(
+      presignedUrlModel = await commonController.postMediaUrl(
         conversationId: ismChatChatMessageModel.conversationId ?? '',
         nameWithExtension: nameWithExtension,
         mediaType: mediaType,
@@ -1000,7 +1001,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
               IsmChatConfig.communicationConfig.userConfig.userEmail ?? '',
         );
       } else {
-        presignedUrlModel = await postMediaUrl(
+        presignedUrlModel = await commonController.postMediaUrl(
           conversationId: ismChatChatMessageModel.conversationId ?? '',
           nameWithExtension: thumbnailNameWithExtension ?? '',
           mediaType: thumbanilMediaType ?? 0,
@@ -1059,7 +1060,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
     await _controller.viewModel.addReacton(reaction: reaction);
     if (Responsive.isWebAndTablet(Get.context!)) {
-      await _controller._conversationController.getChatConversations();
+      await _controller.conversationController.getChatConversations();
     }
   }
 
@@ -1098,7 +1099,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     if (response?.hasError == false) {
       if (_controller.messages.length == 1) {
         _controller.messages =
-            _controller.viewModel.sortMessages(_controller.messages);
+            _controller.commonController.sortMessages(_controller.messages);
       }
       for (var x = 0; x < _controller.messages.length; x++) {
         var messages = _controller.messages[x];
@@ -1111,123 +1112,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         messages.readByAll = false;
         messages.isUploading = false;
         _controller.messages[x] = messages;
-      }
-    }
-  }
-
-  Future<PresignedUrlModel?> postMediaUrl({
-    required String conversationId,
-    required String nameWithExtension,
-    required int mediaType,
-    required String mediaId,
-  }) async =>
-      await _controller.viewModel.postMediaUrl(
-        conversationId: conversationId,
-        nameWithExtension: nameWithExtension,
-        mediaType: mediaType,
-        mediaId: mediaId,
-      );
-
-  void sendPendingMessgae(String conversationId) async {
-    var messages = await IsmChatConfig.dbWrapper!
-        .getMessage(conversationId, IsmChatDbBox.pending);
-    if (messages?.isEmpty ?? false || messages == null) {
-      return;
-    }
-    var notificationTitle =
-        IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-            ? IsmChatConfig.communicationConfig.userConfig.userName
-            : conversationController.userDetails?.userName ?? '';
-    for (var x in messages!) {
-      List<Map<String, dynamic>>? attachments;
-      if ([
-        IsmChatCustomMessageType.image,
-        IsmChatCustomMessageType.audio,
-        IsmChatCustomMessageType.video,
-        IsmChatCustomMessageType.file
-      ].contains(x.customType)) {
-        var attachment = x.attachments?.first;
-        PresignedUrlModel? presignedUrlModel;
-        presignedUrlModel = await postMediaUrl(
-          conversationId: conversationId,
-          nameWithExtension: attachment?.name ?? '',
-          mediaType: attachment?.attachmentType?.value ?? 0,
-          mediaId: attachment?.mediaId ?? '',
-        );
-
-        var mediaUrlPath = '';
-        if (presignedUrlModel != null) {
-          var bytes = File(attachment?.mediaUrl ?? '').readAsBytesSync();
-          var response = await commonController.updatePresignedUrl(
-            presignedUrl: presignedUrlModel.mediaPresignedUrl,
-            bytes: bytes,
-            isLoading: false,
-          );
-          if (response == 200) {
-            mediaUrlPath = presignedUrlModel.mediaUrl ?? '';
-          }
-        }
-        var thumbnailUrlPath = '';
-        if (IsmChatCustomMessageType.video == x.customType) {
-          PresignedUrlModel? presignedUrlModel;
-          var nameWithExtension = attachment?.thumbnailUrl?.split('/').last;
-          presignedUrlModel = await postMediaUrl(
-            conversationId: conversationId,
-            nameWithExtension: nameWithExtension ?? '',
-            mediaType: 0,
-            mediaId: DateTime.now().millisecondsSinceEpoch.toString(),
-          );
-          if (presignedUrlModel != null) {
-            var bytes = File(attachment?.thumbnailUrl ?? '').readAsBytesSync();
-            var response = await commonController.updatePresignedUrl(
-              presignedUrl: presignedUrlModel.thumbnailPresignedUrl,
-              bytes: bytes,
-              isLoading: false,
-            );
-            if (response == 200) {
-              thumbnailUrlPath = presignedUrlModel.thumbnailUrl ?? '';
-            }
-          }
-        }
-        if (mediaUrlPath.isNotEmpty) {
-          attachments = [
-            {
-              'thumbnailUrl': IsmChatCustomMessageType.video == x.customType
-                  ? thumbnailUrlPath
-                  : mediaUrlPath,
-              'size': attachment?.size,
-              'name': attachment?.name,
-              'mimeType': attachment?.mimeType,
-              'mediaUrl': mediaUrlPath,
-              'mediaId': attachment?.mediaId,
-              'extension': attachment?.extension,
-              'attachmentType': attachment?.attachmentType?.value,
-            }
-          ];
-        }
-      }
-      var isMessageSent = await _controller.viewModel.sendMessage(
-        showInConversation: true,
-        encrypted: true,
-        events: {'updateUnreadCount': true, 'sendPushNotification': true},
-        attachments: attachments,
-        mentionedUsers: x.mentionedUsers?.map((e) => e.toMap()).toList(),
-        metaData: x.metaData,
-        messageType: x.messageType?.value ?? 0,
-        customType: x.customType?.name,
-        parentMessageId: x.parentMessageId,
-        deviceId: x.deviceId ?? '',
-        conversationId: conversationId,
-        notificationBody: x.body,
-        notificationTitle: notificationTitle,
-        body: IsmChatUtility.encodePayload(x.body),
-        createdAt: x.sentAt,
-        isTemporaryChat: _controller.isTemporaryChat,
-      );
-
-      if (isMessageSent && !_controller.isTemporaryChat) {
-        _controller.didReactedLast = false;
-        await _controller.getMessagesFromDB(conversationId);
       }
     }
   }

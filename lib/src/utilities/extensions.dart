@@ -1000,6 +1000,23 @@ extension Conversation on IsmChatConversationType {
   }
 }
 
-// extension RenederBox on BuildContext {
-//   RenderBox get renderBox => findRenderObject() as RenderBox;
-// }
+extension ListMerging<T> on List<List<T>?> {
+  List<T> merge() => fold([], (a, b) {
+        a.addAll(b ?? []);
+        return a;
+      });
+
+  List<T> mergeWithSeprator([T? seperator]) {
+    var result = <T>[];
+    for (var i = 0; i < length; i++) {
+      result.addAll(this[i] ?? []);
+      if (seperator != null) {
+        result.add(seperator);
+      }
+    }
+    if (seperator != null) {
+      result.removeLast();
+    }
+    return result;
+  }
+}

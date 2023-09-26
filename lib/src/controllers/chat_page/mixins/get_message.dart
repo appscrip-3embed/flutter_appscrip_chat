@@ -1,6 +1,6 @@
 part of '../chat_page_controller.dart';
 
-mixin IsmChatPageGetMessageMixin {
+mixin IsmChatPageGetMessageMixin on GetxController {
   IsmChatPageController get _controller => Get.find<IsmChatPageController>();
 
   Future<void> getMessagesFromDB(String conversationId,
@@ -20,7 +20,7 @@ mixin IsmChatPageGetMessageMixin {
     if (pendingmessages?.isNotEmpty ?? false || pendingmessages != null) {
       messages?.addAll(pendingmessages ?? []);
     }
-    _controller.messages = _controller.viewModel.sortMessages(messages!);
+    _controller.messages = _controller.commonController.sortMessages(messages!);
     if (_controller.messages.isEmpty) {
       return;
     }

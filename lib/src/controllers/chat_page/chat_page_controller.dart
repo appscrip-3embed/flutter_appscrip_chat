@@ -45,7 +45,7 @@ class IsmChatPageController extends GetxController
   IsmChatPageController(this.viewModel);
   final IsmChatPageViewModel viewModel;
 
-  final _conversationController = Get.find<IsmChatConversationsController>();
+  // final _conversationController = Get.find<IsmChatConversationsController>();
 
   final Rx<IsmChatConversationModel?> _conversation =
       Rx<IsmChatConversationModel?>(null);
@@ -444,8 +444,8 @@ class IsmChatPageController extends GetxController
     _startAnimated();
     _scrollListener();
     _intputAndFocustNode();
-    if (_conversationController.currentConversation != null) {
-      conversation = _conversationController.currentConversation;
+    if (conversationController.currentConversation != null) {
+      conversation = conversationController.currentConversation;
       final newMeessageFromOutside = conversation?.messageFromOutSide;
       await Future.delayed(Duration.zero);
       isTemporaryChat =
@@ -548,7 +548,7 @@ class IsmChatPageController extends GetxController
   }
 
   _getBackGroundAsset() {
-    var assets = _conversationController.userDetails?.metaData?.assetList ?? [];
+    var assets = conversationController.userDetails?.metaData?.assetList ?? [];
     var asset = assets
         .where((e) => e.keys.contains(conversation?.conversationId))
         .toList();
@@ -883,7 +883,7 @@ class IsmChatPageController extends GetxController
         onReplyTap(message);
         break;
       case IsmChatFocusMenuType.forward:
-        _conversationController.forwardedList.clear();
+        conversationController.forwardedList.clear();
 
         if (Responsive.isWeb(Get.context!)) {
           await Get.dialog(
@@ -1214,7 +1214,7 @@ class IsmChatPageController extends GetxController
       await Future.wait([
         IsmChatConfig.dbWrapper!
             .removeConversation(conversation!.conversationId!),
-        _conversationController.getChatConversations(),
+        conversationController.getChatConversations(),
       ]);
     }
   }
@@ -1374,16 +1374,16 @@ class IsmChatPageController extends GetxController
               conversationId: messages.last.conversationId ?? '',
               body: messages.last.body,
               customType: messages.last.customType,
-              readCount: chatConversation.isGroup!
-                  ? messages.last.readByAll!
-                      ? chatConversation.membersCount!
-                      : messages.last.lastReadAt!.length
-                  : messages.last.readByAll!
+              readCount: chatConversation.isGroup ?? false
+                  ? messages.last.readByAll ?? false
+                      ? chatConversation.membersCount
+                      : messages.last.lastReadAt?.length
+                  : messages.last.readByAll ?? false
                       ? 1
                       : 0,
               deliveredTo: messages.last.deliveredTo,
               readBy: messages.last.readBy,
-              deliverCount: chatConversation.isGroup!
+              deliverCount: chatConversation.isGroup ?? false
                   ? messages.last.deliveredToAll ?? false
                       ? chatConversation.membersCount
                       : 0
@@ -1402,10 +1402,10 @@ class IsmChatPageController extends GetxController
 
         await IsmChatConfig.dbWrapper!
             .saveConversation(conversation: chatConversation);
-        await _conversationController.getConversationsFromDB();
+        await conversationController.getConversationsFromDB();
       }
     } else {
-      await _conversationController.getChatConversations();
+      await conversationController.getChatConversations();
     }
 
     if (Get.isRegistered<IsmChatPageController>()) {
@@ -1424,7 +1424,7 @@ class IsmChatPageController extends GetxController
       );
       await IsmChatConfig.dbWrapper!
           .saveConversation(conversation: chatConversation);
-      await _conversationController.getConversationsFromDB();
+      await conversationController.getConversationsFromDB();
     }
   }
 
@@ -1525,7 +1525,7 @@ class IsmChatPageController extends GetxController
           title: IsmChatStrings.deleteThiGroup,
           actionLabels: const [IsmChatStrings.deleteGroup],
           callbackActions: [
-            () => _conversationController.deleteChat(
+            () => conversationController.deleteChat(
                   conversation?.conversationId ?? '',
                   deleteFromServer: false,
                 ),
@@ -1556,9 +1556,9 @@ class IsmChatPageController extends GetxController
   /// function to show dialog for changing the group profile
   Future<void> showDialogForChangeGroupProfile() async {
     if (kIsWeb) {
-      await _conversationController.ismChangeImage(ImageSource.gallery);
+      await conversationController.ismChangeImage(ImageSource.gallery);
       await changeGroupProfile(
-          conversationImageUrl: _conversationController.profileImage,
+          conversationImageUrl: conversationController.profileImage,
           conversationId: conversation?.conversationId ?? '',
           isLoading: true);
     } else {
@@ -1575,11 +1575,11 @@ class IsmChatPageController extends GetxController
                   children: [
                     GestureDetector(
                       onTap: () async {
-                        await _conversationController
+                        await conversationController
                             .ismChangeImage(ImageSource.camera);
                         await changeGroupProfile(
                             conversationImageUrl:
-                                _conversationController.profileImage,
+                                conversationController.profileImage,
                             conversationId: conversation?.conversationId ?? '',
                             isLoading: true);
                       },
@@ -1607,11 +1607,11 @@ class IsmChatPageController extends GetxController
                   children: [
                     GestureDetector(
                       onTap: () async {
-                        await _conversationController
+                        await conversationController
                             .ismChangeImage(ImageSource.gallery);
                         await changeGroupProfile(
                             conversationImageUrl:
-                                _conversationController.profileImage,
+                                conversationController.profileImage,
                             conversationId: conversation?.conversationId ?? '',
                             isLoading: true);
                       },
@@ -1867,7 +1867,7 @@ class IsmChatPageController extends GetxController
     if (data != null) {
       IsmChatUtility.showToast(IsmChatStrings.blockedSuccessfully);
       await Future.wait([
-        _conversationController.getBlockUser(),
+        conversationController.getBlockUser(),
         if (fromUser == false) ...[
           getConverstaionDetails(
             conversationId: conversation?.conversationId ?? '',
@@ -1886,7 +1886,7 @@ class IsmChatPageController extends GetxController
     bool isLoading = false,
     bool fromUser = false,
   }) async {
-    var isBlocked = await _conversationController.unblockUser(
+    var isBlocked = await conversationController.unblockUser(
       opponentId: opponentId,
       isLoading: isLoading,
       fromUser: fromUser,
@@ -1993,7 +1993,7 @@ class IsmChatPageController extends GetxController
   Future<void> deleteReacton({required Reaction reaction}) async {
     await viewModel.deleteReacton(reaction: reaction);
     if (Responsive.isWebAndTablet(Get.context!)) {
-      await _controller._conversationController.getChatConversations();
+      await _controller.conversationController.getChatConversations();
     }
   }
 
@@ -2103,37 +2103,4 @@ class IsmChatPageController extends GetxController
       IsmChatLog.error('Error downloading :- $e\n$st');
     }
   }
-
-//   ///Run animation for child widget
-//   /// value defines animation Offset direction
-//   void replayAnimation({required bool onRight, required int index}) {
-//     //set child animation
-//     replayMessageAnimation = Tween(
-//       begin: const Offset(0.0, 0.0),
-//       end: Offset(onRight ? 0.8 : -0.8, 0.0),
-//     ).animate(
-//       CurvedAnimation(curve: Curves.decelerate, parent: replayController!),
-//     );
-
-//     //set back left/right icon animation
-
-//     replayIconAnimation = Tween(begin: 0.0, end: 1.0).animate(
-//       CurvedAnimation(curve: Curves.decelerate, parent: replayController!),
-//     );
-
-//     //Forward animation
-//     replayController?.forward().whenComplete(() {
-//       replayController?.reverse().whenComplete(() {
-//         // if (onRight) {
-//         replayIconAnimation =
-//             replayController?.drive(Tween(begin: 0.0, end: 0.0));
-//         // } else {
-//         //   replayIconAnimationRight =
-//         //       replayController?.drive(Tween(begin: 0.0, end: 0.0));
-//         // }
-
-//         onReplyTap(messages.reversed.toList()[index]);
-//       });
-//     });
-//   }
 }
