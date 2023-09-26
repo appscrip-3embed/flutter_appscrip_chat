@@ -328,9 +328,12 @@ class IsmChatPageRepository {
       } else {
         url = '${IsmChatAPI.conversationDetails}/$conversationId';
       }
-      var response = await _apiWrapper.get(url,
-          headers: IsmChatUtility.tokenCommonHeader(),
-          showLoader: isLoading ?? false);
+      var response = await _apiWrapper.get(
+        url,
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading ?? false,
+        showDailog: false,
+      );
 
       if (response.hasError) {
         return ModelWrapper(data: null, statusCode: response.errorCode);
@@ -750,6 +753,4 @@ class IsmChatPageRepository {
       return null;
     }
   }
-
-  
 }

@@ -2,12 +2,16 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class IsmChatApiWrapper {
-  Future<IsmChatResponseModel> _handleNoInternet() async {
+  Future<IsmChatResponseModel> _handleNoInternet(bool showDailog) async {
     IsmChatLog.error('----- Internet not working -----');
-    await IsmChatUtility.showErrorDialog(IsmChatStrings.noInternet);
+    if (showDailog && Get.isDialogOpen == false) {
+      await IsmChatUtility.showErrorDialog(IsmChatStrings.noInternet);
+    }
+
     return const IsmChatResponseModel(
       data: IsmChatStrings.noInternet,
       errorCode: 1000,
@@ -18,11 +22,12 @@ class IsmChatApiWrapper {
   Future<IsmChatResponseModel> get(
     String api, {
     bool showLoader = false,
+    bool showDailog = true,
     required Map<String, String> headers,
   }) async {
     IsmChatLog('Request - GET $api');
     if (!(await IsmChatUtility.isNetworkAvailable)) {
-      return await _handleNoInternet();
+      return await _handleNoInternet(showDailog);
     }
     var uri = Uri.parse(api);
     if (showLoader) {
@@ -55,10 +60,11 @@ class IsmChatApiWrapper {
     required dynamic payload,
     required Map<String, String> headers,
     bool showLoader = false,
+    bool showDailog = true,
   }) async {
     IsmChatLog('Request - POST $api $payload');
     if (!(await IsmChatUtility.isNetworkAvailable)) {
-      return await _handleNoInternet();
+      return await _handleNoInternet(showDailog);
     }
     var uri = Uri.parse(api);
     if (showLoader) {
@@ -96,10 +102,11 @@ class IsmChatApiWrapper {
     required Map<String, String> headers,
     bool showLoader = false,
     bool forAwsUpload = false,
+    bool showDailog = true,
   }) async {
     IsmChatLog('Request - PUT $api $payload');
     if (!(await IsmChatUtility.isNetworkAvailable)) {
-      return await _handleNoInternet();
+      return await _handleNoInternet(showDailog);
     }
     var uri = Uri.parse(api);
     if (showLoader) {
@@ -136,10 +143,11 @@ class IsmChatApiWrapper {
     required dynamic payload,
     required Map<String, String> headers,
     bool showLoader = false,
+    bool showDailog = true,
   }) async {
     IsmChatLog('Request - PATCH $api $payload');
     if (!(await IsmChatUtility.isNetworkAvailable)) {
-      return await _handleNoInternet();
+      return await _handleNoInternet(showDailog);
     }
     var uri = Uri.parse(api);
     if (showLoader) {
@@ -176,10 +184,11 @@ class IsmChatApiWrapper {
     required dynamic payload,
     required Map<String, String> headers,
     bool showLoader = false,
+    bool showDailog = true,
   }) async {
     IsmChatLog('Request - DELETE $api $payload');
     if (!(await IsmChatUtility.isNetworkAvailable)) {
-      return await _handleNoInternet();
+      return await _handleNoInternet(showDailog);
     }
     var uri = Uri.parse(api);
     if (showLoader) {

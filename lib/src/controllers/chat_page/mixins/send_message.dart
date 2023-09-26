@@ -769,7 +769,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       metaData: locationMessage.metaData,
       deviceId: locationMessage.deviceId ?? '',
       body: locationMessage.body,
-      customType: locationMessage.customType!.name,
+      customType: locationMessage.customType?.name,
       createdAt: locationMessage.sentAt,
       conversationId: locationMessage.conversationId ?? '',
       messageType: locationMessage.messageType?.value ?? 0,
@@ -926,7 +926,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       metaData: textMessage.metaData,
       deviceId: textMessage.deviceId ?? '',
       body: textMessage.body,
-      customType: textMessage.customType!.name,
+      customType: textMessage.customType?.name,
       createdAt: sentAt,
       parentMessageId: textMessage.parentMessageId,
       conversationId: textMessage.conversationId ?? '',
@@ -1046,7 +1046,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         notificationBody: notificationBody,
         notificationTitle: notificationTitle,
         attachments: attachment,
-        customType: ismChatChatMessageModel.customType!.name,
+        customType: ismChatChatMessageModel.customType?.name,
         metaData: ismChatChatMessageModel.metaData,
         isTemporaryChat: isTemporaryChat,
       );
@@ -1139,11 +1139,78 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             ? IsmChatConfig.communicationConfig.userConfig.userName
             : conversationController.userDetails?.userName ?? '';
     for (var x in messages!) {
+      List<Map<String, dynamic>>? attachments;
+      if ([
+        IsmChatCustomMessageType.image,
+        IsmChatCustomMessageType.audio,
+        IsmChatCustomMessageType.video,
+        IsmChatCustomMessageType.file
+      ].contains(x.customType)) {
+        var attachment = x.attachments?.first;
+        PresignedUrlModel? presignedUrlModel;
+        presignedUrlModel = await postMediaUrl(
+          conversationId: conversationId,
+          nameWithExtension: attachment?.name ?? '',
+          mediaType: attachment?.attachmentType?.value ?? 0,
+          mediaId: attachment?.mediaId ?? '',
+        );
+
+        var mediaUrlPath = '';
+        if (presignedUrlModel != null) {
+          var bytes = File(attachment?.mediaUrl ?? '').readAsBytesSync();
+          var response = await commonController.updatePresignedUrl(
+            presignedUrl: presignedUrlModel.mediaPresignedUrl,
+            bytes: bytes,
+            isLoading: false,
+          );
+          if (response == 200) {
+            mediaUrlPath = presignedUrlModel.mediaUrl ?? '';
+          }
+        }
+        var thumbnailUrlPath = '';
+        if (IsmChatCustomMessageType.video == x.customType) {
+          PresignedUrlModel? presignedUrlModel;
+          var nameWithExtension = attachment?.thumbnailUrl?.split('/').last;
+          presignedUrlModel = await postMediaUrl(
+            conversationId: conversationId,
+            nameWithExtension: nameWithExtension ?? '',
+            mediaType: 0,
+            mediaId: DateTime.now().millisecondsSinceEpoch.toString(),
+          );
+          if (presignedUrlModel != null) {
+            var bytes = File(attachment?.thumbnailUrl ?? '').readAsBytesSync();
+            var response = await commonController.updatePresignedUrl(
+              presignedUrl: presignedUrlModel.thumbnailPresignedUrl,
+              bytes: bytes,
+              isLoading: false,
+            );
+            if (response == 200) {
+              thumbnailUrlPath = presignedUrlModel.thumbnailUrl ?? '';
+            }
+          }
+        }
+        if (mediaUrlPath.isNotEmpty) {
+          attachments = [
+            {
+              'thumbnailUrl': IsmChatCustomMessageType.video == x.customType
+                  ? thumbnailUrlPath
+                  : mediaUrlPath,
+              'size': attachment?.size,
+              'name': attachment?.name,
+              'mimeType': attachment?.mimeType,
+              'mediaUrl': mediaUrlPath,
+              'mediaId': attachment?.mediaId,
+              'extension': attachment?.extension,
+              'attachmentType': attachment?.attachmentType?.value,
+            }
+          ];
+        }
+      }
       var isMessageSent = await _controller.viewModel.sendMessage(
         showInConversation: true,
         encrypted: true,
         events: {'updateUnreadCount': true, 'sendPushNotification': true},
-        attachments: x.attachments?.map((e) => e.toMap()).toList(),
+        attachments: attachments,
         mentionedUsers: x.mentionedUsers?.map((e) => e.toMap()).toList(),
         metaData: x.metaData,
         messageType: x.messageType?.value ?? 0,
