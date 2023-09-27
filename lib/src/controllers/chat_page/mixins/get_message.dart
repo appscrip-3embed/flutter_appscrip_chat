@@ -35,6 +35,9 @@ mixin IsmChatPageGetMessageMixin on GetxController {
     bool isTemporaryChat = false,
   }) async {
     if (Get.isRegistered<IsmChatPageController>()) {
+      if (_controller.canCallCurrentApi) return;
+      _controller.canCallCurrentApi = true;
+
       if (_controller.messages.isEmpty) {
         _controller.isMessagesLoading = true;
       }
@@ -50,12 +53,14 @@ mixin IsmChatPageGetMessageMixin on GetxController {
       var conversationID = conversationId.isNotEmpty
           ? conversationId
           : _controller.conversation?.conversationId ?? '';
+
       var data = await _controller.viewModel.getChatMessages(
         pagination: forPagination ? messagesList.length.pagination() : 0,
         conversationId: conversationID,
         lastMessageTimestamp: timeStamp,
         isTemporaryChat: isTemporaryChat,
       );
+
       if (_controller.messages.isEmpty) {
         _controller.isMessagesLoading = false;
       }
@@ -64,10 +69,11 @@ mixin IsmChatPageGetMessageMixin on GetxController {
       } else {
         _controller.messages.addAll(data);
       }
+      _controller.canCallCurrentApi = false;
     }
   }
 
-  void searchedMessages(String query) async {
+  void searchedMessages(String query, {bool fromScrolling = false}) async {
     if (query.trim().isEmpty) {
       _controller.searchMessages.clear();
       return;
@@ -76,9 +82,8 @@ mixin IsmChatPageGetMessageMixin on GetxController {
     _controller.canCallCurrentApi = true;
 
     var messages = await _controller.viewModel.getChatMessages(
-      pagination: _controller.searchMessages.isEmpty
-          ? 0
-          : _controller.searchMessages.length.pagination(),
+      pagination:
+          !fromScrolling ? 0 : _controller.searchMessages.length.pagination(),
       conversationId: _controller.conversation?.conversationId ?? '',
       lastMessageTimestamp: 0,
       searchText: query,
@@ -86,8 +91,12 @@ mixin IsmChatPageGetMessageMixin on GetxController {
     );
 
     if (messages.isNotEmpty) {
-      _controller.searchMessages.addAll(messages);
-    } else {
+      if (fromScrolling) {
+        _controller.searchMessages.addAll(messages);
+      } else {
+        _controller.searchMessages = messages;
+      }
+    } else if (!fromScrolling) {
       _controller.searchMessages.clear();
     }
     _controller.canCallCurrentApi = false;

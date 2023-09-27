@@ -94,53 +94,79 @@ class IsmChatConversationsController extends GetxController {
     initialLoadStatus: LoadStatus.idle,
   );
 
+  /// This variabel user for store user list data
+  ///
+  /// This list use for show new user and forward user
   final _forwardedList = <SelectedForwardUser>[].obs;
   List<SelectedForwardUser> get forwardedList => _forwardedList;
   set forwardedList(List<SelectedForwardUser> value) {
     _forwardedList.value = value;
   }
 
+  /// This variable use for store selected user list
+  ///
+  /// When user selcte on new user  and forward user
   final _selectedUserList = <UserDetails>[].obs;
   List<UserDetails> get selectedUserList => _selectedUserList;
   set selectedUserList(List<UserDetails> value) {
     _selectedUserList.value = value;
   }
 
+  /// This variabel use for store user list data with duplicate
+  ///
+  /// This list use for only searching time any user
   final _forwardedListDuplicat = <SelectedForwardUser>[].obs;
   List<SelectedForwardUser> get forwardedListDuplicat => _forwardedListDuplicat;
   set forwardedListDuplicat(List<SelectedForwardUser> value) {
     _forwardedListDuplicat.value = value;
   }
 
+  /// This variable use for store block user list
   final _blockUsers = <UserDetails>[].obs;
   List<UserDetails> get blockUsers => _blockUsers;
   set blockUsers(List<UserDetails> value) => _blockUsers.value = value;
 
+  /// This variable use for  store profile image url
+  ///
+  /// When user add profile pic or update profile pic
   final RxString _profileImage = ''.obs;
   String get profileImage => _profileImage.value;
   set profileImage(String value) {
     _profileImage.value = value;
   }
 
+  /// This variabel use for store bool value with api calling and response
+  ///
+  /// If calling api `true` after response `false`
   final RxBool _isLoadResponse = false.obs;
   bool get isLoadResponse => _isLoadResponse.value;
   set isLoadResponse(bool value) => _isLoadResponse.value = value;
 
+  /// This variable use for store bool value
+  ///
+  /// When click search icon set `true` then show search textfiled
   final RxBool _showSearchField = false.obs;
   bool get showSearchField => _showSearchField.value;
   set showSearchField(bool value) => _showSearchField.value = value;
 
+  /// This variable use for  store current conversationId
+  ///
+  /// When you tap any convesation on chat list that time store conversationId that chat converstaion
   final RxString _currentConversationId = ''.obs;
   String get currentConversationId => _currentConversationId.value;
   set currentConversationId(String value) =>
       _currentConversationId.value = value;
 
+  /// This variable use for store render screen two column widget in web and tab view
   final Rx<IsRenderConversationScreen> _isRenderScreen =
       IsRenderConversationScreen.none.obs;
   IsRenderConversationScreen get isRenderScreen => _isRenderScreen.value;
   set isRenderScreen(IsRenderConversationScreen value) =>
       _isRenderScreen.value = value;
 
+  /// This variable use for store render screen second column widget
+  ///
+  /// When you have tap on chat list then render that chat page view
   final Rx<IsRenderChatPageScreen> _isRenderChatPageaScreen =
       IsRenderChatPageScreen.none.obs;
   IsRenderChatPageScreen get isRenderChatPageaScreen =>
@@ -148,55 +174,112 @@ class IsmChatConversationsController extends GetxController {
   set isRenderChatPageaScreen(IsRenderChatPageScreen value) =>
       _isRenderChatPageaScreen.value = value;
 
+  /// This variabel use for store media list
+  ///
+  /// In this list you can get image, audio and video messgae of current convesation chat page
   final RxList<IsmChatMessageModel> _mediaList = <IsmChatMessageModel>[].obs;
   List<IsmChatMessageModel> get mediaList => _mediaList;
   set mediaList(List<IsmChatMessageModel> value) => _mediaList.value = value;
 
+  /// This variabel use for store links list
+  ///
+  /// In this list you can get any type of links messgae of current convesation chat page
   final RxList<IsmChatMessageModel> _mediaListLinks =
       <IsmChatMessageModel>[].obs;
   List<IsmChatMessageModel> get mediaListLinks => _mediaListLinks;
   set mediaListLinks(List<IsmChatMessageModel> value) =>
       _mediaListLinks.value = value;
 
+  /// This variabel use for store documents list
+  ///
+  /// In this list you can documents messgae of current convesation chat page
   final RxList<IsmChatMessageModel> _mediaListDocs =
       <IsmChatMessageModel>[].obs;
   List<IsmChatMessageModel> get mediaListDocs => _mediaListDocs;
   set mediaListDocs(List<IsmChatMessageModel> value) =>
       _mediaListDocs.value = value;
 
+  /// This variabel use for store bool value
+  ///
+  /// Our value does not change until the API response comes the set `true`.
   final RxBool _callApiOrNot = true.obs;
   bool get callApiOrNot => _callApiOrNot.value;
   set callApiOrNot(bool value) => _callApiOrNot.value = value;
 
+  /// This variabel use for store show message info
+  ///
+  /// When we use `web` and `tablet` then acesses this variable show message deliverd or read
   IsmChatMessageModel? message;
 
+  /// This variabel use for store 15 types of emoji
+  ///
+  /// Emojis comes from package
+  ///
+  /// When we intnilized this controller
   List<Emoji> reactions = [];
 
+  /// This variabel use for debounceing calling api
   final debounce = IsmChatDebounce();
 
+  /// This variabel use for store bacground image
+  ///
+  /// When you will be change background image with perticular chat then this list you have use list
+  ///
+  /// All image comming from project level assets
   List<BackGroundAsset> backgroundImage = [];
 
+  /// This variabel use for store bacground color
+  ///
+  /// When you will be change background color with perticular chat then this list you have use list
+  ///
+  /// All image comming from project level assets
   List<BackGroundAsset> backgroundColor = [];
 
+  /// This variabel use for store context of chat page view
+  ///
+  /// This context use when come mqtt event from other side then show notificaiton
   BuildContext? context;
 
+  /// This variabel use for store context of chat list view
+  ///
+  /// This context use when tap poup menu of chat list then open drawer of chat list app bar
   BuildContext? isDrawerContext;
 
+  /// This variabel use for store tab controller
+  ///
+  /// This variable use if `IsmChatProperties.conversationProperties.conversationPosition == IsmChatConversationPosition.tabBar`, then you can handle it
   TabController? tabController;
 
+  /// This variabel use for conversation scrolling controller
+  ///
+  /// When you have scroll or you want get pagination then you have use it.
   var conversationScrollController = ScrollController();
 
+  /// This variable use for store filete conversation list
+  ///
+  /// When user add conversaiton `IsmChatProperties.conversationProperties.conversationPredicate` in `IsmChatApp`
+  /// get conversaton filter list on conditions `true` or `false`
   List<IsmChatConversationModel> get userConversations => conversations
       .where(IsmChatProperties.conversationProperties.conversationPredicate ??
           (_) => true)
       .toList();
 
-  final Connectivity connectivity = Connectivity();
+  /// This variable use for store check connnection
+  ///
+  /// When this controller initilized then set value
+  ///
+  /// Then we have use check internet connection `wifi` , `ethernet` and `mobile`
+  Connectivity? connectivity;
+
+  /// This variable use for store streamSubscription
+  ///
+  /// This StreamSubscription listen internet `on` or `off` when app in running
   StreamSubscription<ConnectivityResult>? connectivitySubscription;
 
   @override
   onInit() async {
     super.onInit();
+    _isInterNetConnect();
     await _generateReactionList();
     var users = await IsmChatConfig.dbWrapper?.userDetailsBox
         .get(IsmChatStrings.userData);
@@ -208,7 +291,6 @@ class IsmChatConversationsController extends GetxController {
     await getConversationsFromDB();
     await getChatConversations();
     await Get.find<IsmChatMqttController>().getChatConversationsUnreadCount();
-
     await getBackGroundAssets();
     conversationScrollController.addListener(() async {
       if (conversationScrollController.offset.toInt() ==
@@ -218,7 +300,7 @@ class IsmChatConversationsController extends GetxController {
         );
       }
     });
-    _isInterNetConnect();
+
     if (await IsmChatUtility.isNetworkAvailable) {
       sendPendingMessgae();
     }
@@ -242,8 +324,9 @@ class IsmChatConversationsController extends GetxController {
   }
 
   void _isInterNetConnect() {
+    connectivity = Connectivity();
     connectivitySubscription =
-        connectivity.onConnectivityChanged.listen((event) async {
+        connectivity?.onConnectivityChanged.listen((event) async {
       _sendPendingMessage();
     });
   }

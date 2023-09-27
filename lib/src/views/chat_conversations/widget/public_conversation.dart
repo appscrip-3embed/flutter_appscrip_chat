@@ -135,7 +135,7 @@ class _IsmChatPublicConversationViewState
                                     },
                                     child: Container(
                                       width: IsmChatDimens.sixty,
-                                      height: IsmChatDimens.thirty,
+                                      height: IsmChatDimens.twentyFive,
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
                                         color: IsmChatColors.greenColor,

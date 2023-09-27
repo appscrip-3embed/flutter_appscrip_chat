@@ -1024,6 +1024,8 @@ class IsmChatPageController extends GetxController
 
         if (messagesScrollController.offset.toInt() ==
             messagesScrollController.position.maxScrollExtent.toInt()) {
+          IsmChatLog.error('Rahul');
+          _controller.canCallCurrentApi = false;
           getMessagesFromAPI(forPagination: true, lastMessageTimestamp: 0);
         }
         toggleEmojiBoard(false, false);
@@ -1040,7 +1042,7 @@ class IsmChatPageController extends GetxController
       () {
         if (searchMessageScrollController.offset.toInt() ==
             searchMessageScrollController.position.maxScrollExtent.toInt()) {
-          searchedMessages(textEditingController.text);
+          searchedMessages(textEditingController.text, fromScrolling: true);
         }
       },
     );
