@@ -15,16 +15,16 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize {
     if (Get.isRegistered<IsmChatPageController>()) {
       return Size.fromHeight(
-          (IsmChatProperties.chatPageProperties.header?.height?.call(
-                      Get.context!,
-                      Get.find<IsmChatPageController>().conversation!) ??
-                  IsmChatDimens.appBarHeight) +
-              (IsmChatProperties.chatPageProperties.header?.bottom
-                      ?.call(Get.context!,
-                          Get.find<IsmChatPageController>().conversation!)
-                      .preferredSize
-                      .height ??
-                  0));
+        (IsmChatProperties.chatPageProperties.header?.height?.call(Get.context!,
+                    Get.find<IsmChatPageController>().conversation!) ??
+                IsmChatDimens.appBarHeight) +
+            (IsmChatProperties.chatPageProperties.header?.bottom
+                    ?.call(Get.context!,
+                        Get.find<IsmChatPageController>().conversation!)
+                    .preferredSize
+                    .height ??
+                0),
+      );
     }
 
     return Size.fromHeight(IsmChatDimens.appBarHeight);
@@ -53,6 +53,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                 )),
           ),
           child: AppBar(
+            primary: false,
             leadingWidth: Responsive.isWebAndTablet(context)
                 ? IsmChatDimens.twenty
                 : null,
@@ -85,131 +86,123 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
             elevation: IsmChatConfig.chatTheme.chatPageHeaderTheme?.elevation,
             title: IsmChatTapHandler(
               onTap: onTap,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IsmChatProperties
-                          .chatPageProperties.header?.profileImageBuilder
-                          ?.call(context, controller.conversation!,
-                              controller.conversation?.profileUrl ?? '') ??
-                      IsmChatImage.profile(
-                        IsmChatProperties
-                                .chatPageProperties.header?.profileImageUrl
-                                ?.call(
-                                    context,
-                                    controller.conversation!,
-                                    controller.conversation?.profileUrl ??
-                                        '') ??
-                            controller.conversation?.profileUrl ??
-                            '',
-                        name: IsmChatProperties.chatPageProperties.header?.title
-                                ?.call(context, controller.conversation!,
-                                    controller.conversation?.chatName ?? '') ??
-                            controller.conversation?.chatName,
-                        dimensions: IsmChatDimens.forty,
-                        isNetworkImage: (IsmChatProperties
-                                    .chatPageProperties.header?.profileImageUrl
-                                    ?.call(
-                                        context,
-                                        controller.conversation!,
-                                        controller.conversation?.profileUrl ??
-                                            '') ??
-                                controller.conversation?.profileUrl ??
-                                '')
-                            .isValidUrl,
-                      ),
-                  IsmChatDimens.boxWidth8,
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            IsmChatProperties.chatPageProperties.header?.title
-                                    ?.call(
-                                        context,
-                                        controller.conversation!,
-                                        controller.conversation?.chatName ??
-                                            '') ??
-                                controller.conversation!.chatName,
-                            style: IsmChatConfig.chatTheme.chatPageHeaderTheme
-                                    ?.titleStyle ??
-                                IsmChatStyles.w600White16,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+              child: Padding(
+                padding: IsmChatDimens.edgeInsetsTop10,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IsmChatProperties
+                            .chatPageProperties.header?.profileImageBuilder
+                            ?.call(context, controller.conversation!,
+                                controller.conversation?.profileUrl ?? '') ??
+                        IsmChatImage.profile(
+                          IsmChatProperties
+                                  .chatPageProperties.header?.profileImageUrl
+                                  ?.call(
+                                      context,
+                                      controller.conversation!,
+                                      controller.conversation?.profileUrl ??
+                                          '') ??
+                              controller.conversation?.profileUrl ??
+                              '',
+                          name: IsmChatProperties
+                                  .chatPageProperties.header?.title
+                                  ?.call(
+                                      context,
+                                      controller.conversation!,
+                                      controller.conversation?.chatName ??
+                                          '') ??
+                              controller.conversation?.chatName,
+                          dimensions: IsmChatDimens.forty,
+                          isNetworkImage: (IsmChatProperties.chatPageProperties
+                                      .header?.profileImageUrl
+                                      ?.call(
+                                          context,
+                                          controller.conversation!,
+                                          controller.conversation?.profileUrl ??
+                                              '') ??
+                                  controller.conversation?.profileUrl ??
+                                  '')
+                              .isValidUrl,
                         ),
-                        (!controller.conversation!.isChattingAllowed)
-                            ? const SizedBox.shrink()
-                            : Obx(
-                                () => controller
-                                            .conversation?.isSomeoneTyping ==
-                                        true
-                                    ? Text(
-                                        controller.conversation!.typingUsers,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: IsmChatConfig
-                                                .chatTheme
-                                                .chatPageHeaderTheme
-                                                ?.subtileStyle ??
-                                            IsmChatStyles.w400White12,
-                                      )
-                                    : controller.conversation?.isGroup == true
-                                        ? SizedBox(
-                                            width: Responsive.isWebAndTablet(
-                                                    context)
-                                                ? null
-                                                : IsmChatDimens.percentWidth(
-                                                    .55),
-                                            child: Text(
-                                              controller.conversation?.members
-                                                              ?.isEmpty ==
-                                                          true ||
-                                                      controller.conversation
-                                                              ?.members ==
-                                                          null
-                                                  ? controller.isTemporaryChat
-                                                      ? '${controller.conversation?.membersCount} ${IsmChatStrings.participants.toUpperCase()}'
-                                                      : IsmChatStrings.tapInfo
-                                                  : controller.conversation
-                                                          ?.members!
-                                                          .map(
-                                                              (e) => e.userName)
-                                                          .join(', ') ??
-                                                      IsmChatStrings.tapInfo,
-                                              style: IsmChatConfig
-                                                      .chatTheme
-                                                      .chatPageHeaderTheme
-                                                      ?.subtileStyle ??
-                                                  IsmChatStyles.w400White12,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                            ),
-                                          )
-                                        : controller.conversation
-                                                    ?.opponentDetails?.online ??
-                                                false
-                                            ? Text(
-                                                IsmChatStrings.online,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
+                    IsmChatDimens.boxWidth8,
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              IsmChatProperties.chatPageProperties.header?.title
+                                      ?.call(
+                                          context,
+                                          controller.conversation!,
+                                          controller.conversation?.chatName ??
+                                              '') ??
+                                  controller.conversation!.chatName,
+                              style: IsmChatConfig.chatTheme.chatPageHeaderTheme
+                                      ?.titleStyle ??
+                                  IsmChatStyles.w600White16,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          (!controller.conversation!.isChattingAllowed)
+                              ? const SizedBox.shrink()
+                              : Obx(
+                                  () => controller
+                                              .conversation?.isSomeoneTyping ==
+                                          true
+                                      ? Text(
+                                          controller.conversation!.typingUsers,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: IsmChatConfig
+                                                  .chatTheme
+                                                  .chatPageHeaderTheme
+                                                  ?.subtileStyle ??
+                                              IsmChatStyles.w400White12,
+                                        )
+                                      : controller.conversation?.isGroup == true
+                                          ? SizedBox(
+                                              width: Responsive.isWebAndTablet(
+                                                      context)
+                                                  ? null
+                                                  : IsmChatDimens.percentWidth(
+                                                      .55),
+                                              child: Text(
+                                                controller.conversation?.members
+                                                                ?.isEmpty ==
+                                                            true ||
+                                                        controller.conversation
+                                                                ?.members ==
+                                                            null
+                                                    ? controller.isTemporaryChat
+                                                        ? '${controller.conversation?.membersCount} ${IsmChatStrings.participants.toUpperCase()}'
+                                                        : IsmChatStrings.tapInfo
+                                                    : controller.conversation
+                                                            ?.members!
+                                                            .map((e) =>
+                                                                e.userName)
+                                                            .join(', ') ??
+                                                        IsmChatStrings.tapInfo,
                                                 style: IsmChatConfig
                                                         .chatTheme
                                                         .chatPageHeaderTheme
                                                         ?.subtileStyle ??
                                                     IsmChatStyles.w400White12,
-                                              )
-                                            : Flexible(
-                                                child: Text(
-                                                  controller
-                                                          .conversation
-                                                          ?.opponentDetails
-                                                          ?.lastSeen
-                                                          .toCurrentTimeStirng() ??
-                                                      IsmChatStrings.tapInfo,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                              ),
+                                            )
+                                          : controller
+                                                      .conversation
+                                                      ?.opponentDetails
+                                                      ?.online ??
+                                                  false
+                                              ? Text(
+                                                  IsmChatStrings.online,
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
@@ -218,13 +211,32 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                                           .chatPageHeaderTheme
                                                           ?.subtileStyle ??
                                                       IsmChatStyles.w400White12,
+                                                )
+                                              : Flexible(
+                                                  child: Text(
+                                                    controller
+                                                            .conversation
+                                                            ?.opponentDetails
+                                                            ?.lastSeen
+                                                            .toCurrentTimeStirng() ??
+                                                        IsmChatStrings.tapInfo,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: IsmChatConfig
+                                                            .chatTheme
+                                                            .chatPageHeaderTheme
+                                                            ?.subtileStyle ??
+                                                        IsmChatStyles
+                                                            .w400White12,
+                                                  ),
                                                 ),
-                                              ),
-                              ),
-                      ],
+                                ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             bottom: IsmChatProperties.chatPageProperties.header?.bottom

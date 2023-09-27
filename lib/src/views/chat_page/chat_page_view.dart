@@ -90,6 +90,7 @@ class _IsmChatPageView extends StatelessWidget {
                 : null,
           ),
           child: Scaffold(
+            
             drawerEnableOpenDragGesture: false,
             backgroundColor:
                 IsmChatConfig.chatTheme.chatPageTheme?.backgroundColor ??
