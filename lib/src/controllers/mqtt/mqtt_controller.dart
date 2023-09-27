@@ -530,6 +530,13 @@ class IsmChatMqttController extends GetxController {
       }
     } else {
       if (Get.isRegistered<IsmChatConversationsController>()) {
+        if (Get.isRegistered<IsmChatPageController>()) {
+          var chatController = Get.find<IsmChatPageController>();
+          if (chatController.conversation?.conversationId ==
+              message.conversationId) {
+            return;
+          }
+        }
         ElegantNotification(
           icon: Icon(
             Icons.message_rounded,

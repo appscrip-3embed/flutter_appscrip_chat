@@ -93,7 +93,7 @@ class MessageBubble extends StatelessWidget {
                                       .deletedForEveryone) ...[
                             IsmChatDimens.boxWidth2,
                             Icon(
-                              message.messageId!.isEmpty
+                              message.messageId?.isEmpty == true
                                   ? Icons.watch_later_outlined
                                   : message.deliveredToAll ?? false
                                       ? Icons.done_all_rounded

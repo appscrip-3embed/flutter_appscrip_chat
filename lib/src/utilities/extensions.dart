@@ -593,11 +593,17 @@ extension ModelConversion on IsmChatConversationModel {
       }
 
       return Icon(
-        deliveredToAll ? Icons.done_all_rounded : Icons.done_rounded,
-        color: readByAll
-            ? Colors.blue
-            : IsmChatConfig.chatTheme.chatListCardThemData?.subTitleColor ??
-                Colors.grey,
+        lastMessageDetails?.messageId.isEmpty == true
+            ? Icons.watch_later_outlined
+            : deliveredToAll
+                ? Icons.done_all_rounded
+                : Icons.done_rounded,
+        color: lastMessageDetails?.messageId.isEmpty == true
+            ? Colors.grey
+            : readByAll
+                ? Colors.blue
+                : IsmChatConfig.chatTheme.chatListCardThemData?.subTitleColor ??
+                    Colors.grey,
         size: 16,
       );
     } catch (e, st) {
@@ -1000,6 +1006,23 @@ extension Conversation on IsmChatConversationType {
   }
 }
 
-// extension RenederBox on BuildContext {
-//   RenderBox get renderBox => findRenderObject() as RenderBox;
-// }
+extension ListMerging<T> on List<List<T>?> {
+  List<T> merge() => fold([], (a, b) {
+        a.addAll(b ?? []);
+        return a;
+      });
+
+  List<T> mergeWithSeprator([T? seperator]) {
+    var result = <T>[];
+    for (var i = 0; i < length; i++) {
+      result.addAll(this[i] ?? []);
+      if (seperator != null) {
+        result.add(seperator);
+      }
+    }
+    if (seperator != null) {
+      result.removeLast();
+    }
+    return result;
+  }
+}

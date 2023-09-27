@@ -19,7 +19,6 @@ class IsmChatDBWrapper {
 
   static const String _userBox = 'user';
   static const String _conversationBox = 'conversation';
-
   static const String _pendingBox = 'pending';
 
   /// A Box of user Details.
@@ -30,9 +29,6 @@ class IsmChatDBWrapper {
 
   /// A Box of Pending message.
   late final CollectionBox<IsmChatMessageBoxType> pendingMessageBox;
-
-  /// A Box of Forward Message box.
-  late final CollectionBox<IsmChatMessageBoxType> forwardMessageBox;
 
   Future<void> _createBox() async {
     var data = await Future.wait<dynamic>([
@@ -125,6 +121,18 @@ class IsmChatDBWrapper {
     return conversations
         .map((e) => IsmChatConversationModel.fromJson(e!))
         .toList();
+  }
+
+  Future<List<IsmChatMessageModel>> getAllPendingMessages() async {
+    var keys = await pendingMessageBox.getAllKeys();
+    var pendingMessages = await pendingMessageBox.getAll(keys);
+
+    if (pendingMessages.isEmpty) {
+      return [];
+    }
+
+    var allPendingMessage = pendingMessages.merge();
+    return allPendingMessage.map(IsmChatMessageModel.fromJson).toList();
   }
 
   Future<IsmChatConversationModel?> getConversation({
@@ -243,6 +251,7 @@ class IsmChatDBWrapper {
           return;
         }
         conversation.messages?.add(message);
+
         await saveConversation(conversation: conversation, dbBox: dbBox);
         break;
     }

@@ -1,10 +1,7 @@
 part of '../chat_page_controller.dart';
 
-mixin IsmChatGroupAdminMixin {
+mixin IsmChatGroupAdminMixin on GetxController {
   IsmChatPageController get _controller => Get.find<IsmChatPageController>();
-
-  IsmChatConversationsController get _ismChatConversationsController =>
-      Get.find<IsmChatConversationsController>();
 
   /// Add members to a conversation
   Future<void> addMembers(
@@ -43,7 +40,7 @@ mixin IsmChatGroupAdminMixin {
       _controller.update();
       await _controller.getMessagesFromAPI(
           lastMessageTimestamp: _controller.messages.last.sentAt);
-      unawaited(_ismChatConversationsController.getChatConversations());
+      unawaited(_controller.conversationController.getChatConversations());
       IsmChatUtility.showToast('Group title changed successfully!');
     }
   }
@@ -66,7 +63,7 @@ mixin IsmChatGroupAdminMixin {
       _controller.update();
       await _controller.getMessagesFromAPI(
           lastMessageTimestamp: _controller.messages.last.sentAt);
-      unawaited(_ismChatConversationsController.getChatConversations());
+      unawaited(_controller.conversationController.getChatConversations());
       IsmChatUtility.showToast('Group profile changed successfully!');
     }
   }

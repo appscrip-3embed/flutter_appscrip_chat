@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:azlistview/azlistview.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +25,7 @@ class IsmChatConversationsController extends GetxController {
   TextEditingController userSearchNameController = TextEditingController();
 
   /// This variable use for get all method and varibles from IsmChatCommonController
-  IsmChatCommonController get commonController =>
+  IsmChatCommonController get _commonController =>
       Get.find<IsmChatCommonController>();
 
   /// This variable use for get all method and varibles from IsmChatDeviceConfig
@@ -91,8 +93,6 @@ class IsmChatConversationsController extends GetxController {
     initialRefresh: false,
     initialLoadStatus: LoadStatus.idle,
   );
-
-  var conversationScrollController = ScrollController();
 
   final _forwardedList = <SelectedForwardUser>[].obs;
   List<SelectedForwardUser> get forwardedList => _forwardedList;
@@ -184,15 +184,19 @@ class IsmChatConversationsController extends GetxController {
 
   TabController? tabController;
 
+  var conversationScrollController = ScrollController();
+
   List<IsmChatConversationModel> get userConversations => conversations
       .where(IsmChatProperties.conversationProperties.conversationPredicate ??
           (_) => true)
       .toList();
 
+  final Connectivity connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult>? connectivitySubscription;
+
   @override
   onInit() async {
     super.onInit();
-
     await _generateReactionList();
     var users = await IsmChatConfig.dbWrapper?.userDetailsBox
         .get(IsmChatStrings.userData);
@@ -214,18 +218,45 @@ class IsmChatConversationsController extends GetxController {
         );
       }
     });
+    _isInterNetConnect();
+    if (await IsmChatUtility.isNetworkAvailable) {
+      sendPendingMessgae();
+    }
   }
 
   @override
   void onClose() {
-    conversationScrollController.dispose();
+    onDispose();
     super.onClose();
   }
 
   @override
   void dispose() {
-    conversationScrollController.dispose();
+    onDispose();
     super.dispose();
+  }
+
+  void onDispose() {
+    conversationScrollController.dispose();
+    connectivitySubscription?.cancel();
+  }
+
+  void _isInterNetConnect() {
+    connectivitySubscription =
+        connectivity.onConnectivityChanged.listen((event) async {
+      _sendPendingMessage();
+    });
+  }
+
+  void _sendPendingMessage() async {
+    if (await IsmChatUtility.isNetworkAvailable) {
+      if (currentConversation?.conversationId?.isNotEmpty == true) {
+        {
+          sendPendingMessgae(
+              conversationId: currentConversation?.conversationId ?? '');
+        }
+      }
+    }
   }
 
   Widget isRenderScreenWidget() {
@@ -414,7 +445,7 @@ class IsmChatConversationsController extends GetxController {
     String mediaExtension,
     Uint8List bytes,
   ) async {
-    var response = await commonController.getPresignedUrl(
+    var response = await _commonController.getPresignedUrl(
       isLoading: true,
       userIdentifier: userDetails?.userIdentifier ?? '',
       mediaExtension: mediaExtension,
@@ -423,7 +454,7 @@ class IsmChatConversationsController extends GetxController {
     if (response == null) {
       return;
     }
-    var responseCode = await commonController.updatePresignedUrl(
+    var responseCode = await _commonController.updatePresignedUrl(
         presignedUrl: response.presignedUrl, bytes: bytes);
     if (responseCode == 200) {
       profileImage = response.mediaUrl!;
@@ -812,5 +843,123 @@ class IsmChatConversationsController extends GetxController {
       return res;
     }
     return [];
+  }
+
+  void sendPendingMessgae({String conversationId = ''}) async {
+    List<IsmChatMessageModel>? messages = [];
+    if (conversationId.isEmpty) {
+      var pendingMessages =
+          await IsmChatConfig.dbWrapper!.getAllPendingMessages();
+
+      messages.addAll(pendingMessages);
+    } else {
+      messages = await IsmChatConfig.dbWrapper!
+          .getMessage(conversationId, IsmChatDbBox.pending);
+    }
+    if (messages?.isEmpty ?? false || messages == null) {
+      return;
+    }
+    var notificationTitle =
+        IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+            ? IsmChatConfig.communicationConfig.userConfig.userName
+            : userDetails?.userName ?? '';
+    for (var x in messages!) {
+      List<Map<String, dynamic>>? attachments;
+      if ([
+        IsmChatCustomMessageType.image,
+        IsmChatCustomMessageType.audio,
+        IsmChatCustomMessageType.video,
+        IsmChatCustomMessageType.file
+      ].contains(x.customType)) {
+        var attachment = x.attachments?.first;
+        PresignedUrlModel? presignedUrlModel;
+        presignedUrlModel = await _commonController.postMediaUrl(
+          conversationId: x.conversationId ?? '',
+          nameWithExtension: attachment?.name ?? '',
+          mediaType: attachment?.attachmentType?.value ?? 0,
+          mediaId: attachment?.mediaId ?? '',
+        );
+
+        var mediaUrlPath = '';
+        if (presignedUrlModel != null) {
+          var bytes = File(attachment?.mediaUrl ?? '').readAsBytesSync();
+          var response = await _commonController.updatePresignedUrl(
+            presignedUrl: presignedUrlModel.mediaPresignedUrl,
+            bytes: bytes,
+            isLoading: false,
+          );
+          if (response == 200) {
+            mediaUrlPath = presignedUrlModel.mediaUrl ?? '';
+          }
+        }
+        var thumbnailUrlPath = '';
+        if (IsmChatCustomMessageType.video == x.customType) {
+          PresignedUrlModel? presignedUrlModel;
+          var nameWithExtension = attachment?.thumbnailUrl?.split('/').last;
+          presignedUrlModel = await _commonController.postMediaUrl(
+            conversationId: x.conversationId ?? '',
+            nameWithExtension: nameWithExtension ?? '',
+            mediaType: 0,
+            mediaId: DateTime.now().millisecondsSinceEpoch.toString(),
+          );
+          if (presignedUrlModel != null) {
+            var bytes = File(attachment?.thumbnailUrl ?? '').readAsBytesSync();
+            var response = await _commonController.updatePresignedUrl(
+              presignedUrl: presignedUrlModel.thumbnailPresignedUrl,
+              bytes: bytes,
+              isLoading: false,
+            );
+            if (response == 200) {
+              thumbnailUrlPath = presignedUrlModel.thumbnailUrl ?? '';
+            }
+          }
+        }
+        if (mediaUrlPath.isNotEmpty) {
+          attachments = [
+            {
+              'thumbnailUrl': IsmChatCustomMessageType.video == x.customType
+                  ? thumbnailUrlPath
+                  : mediaUrlPath,
+              'size': attachment?.size,
+              'name': attachment?.name,
+              'mimeType': attachment?.mimeType,
+              'mediaUrl': mediaUrlPath,
+              'mediaId': attachment?.mediaId,
+              'extension': attachment?.extension,
+              'attachmentType': attachment?.attachmentType?.value,
+            }
+          ];
+        }
+      }
+      var isMessageSent = await _commonController.sendMessage(
+        showInConversation: true,
+        encrypted: true,
+        events: {'updateUnreadCount': true, 'sendPushNotification': true},
+        attachments: attachments,
+        mentionedUsers: x.mentionedUsers?.map((e) => e.toMap()).toList(),
+        metaData: x.metaData,
+        messageType: x.messageType?.value ?? 0,
+        customType: x.customType?.name,
+        parentMessageId: x.parentMessageId,
+        deviceId: x.deviceId ?? '',
+        conversationId: x.conversationId ?? '',
+        notificationBody: x.body,
+        notificationTitle: notificationTitle,
+        body: IsmChatUtility.encodePayload(x.body),
+        createdAt: x.sentAt,
+        isTemporaryChat: Get.isRegistered<IsmChatPageController>()
+            ? Get.find<IsmChatPageController>().isTemporaryChat
+            : false,
+      );
+      if (isMessageSent && Get.isRegistered<IsmChatPageController>()) {
+        final controller = Get.find<IsmChatPageController>();
+        if (!controller.isTemporaryChat) {
+          controller.didReactedLast = false;
+          await controller.getMessagesFromDB(conversationId);
+        }
+      } else if (isMessageSent) {
+        await getChatConversations();
+      }
+    }
   }
 }

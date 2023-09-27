@@ -149,7 +149,8 @@ class _IsmChatOpenConversationViewState
                                     ),
                                   );
                                   chatPagecontroller.messages =
-                                      chatPagecontroller.viewModel.sortMessages(
+                                      chatPagecontroller.commonController
+                                          .sortMessages(
                                     chatPagecontroller.messages,
                                   );
                                 } else {

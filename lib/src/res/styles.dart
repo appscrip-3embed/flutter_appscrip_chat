@@ -1,5 +1,4 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/res/res.dart';
 import 'package:flutter/material.dart';
 
 class IsmChatStyles {
