@@ -150,7 +150,9 @@ class IsmChatApp extends StatelessWidget {
 
   /// Call this function for Get Conversation List When on click
   static Future<void> getChatConversation() async {
-    await Get.find<IsmChatConversationsController>().getChatConversations();
+    if (Get.isRegistered<IsmChatConversationsController>()) {
+      await Get.find<IsmChatConversationsController>().getChatConversations();
+    }
   }
 
   /// Call this function on SignOut to delete the data stored locally in the Local Database
