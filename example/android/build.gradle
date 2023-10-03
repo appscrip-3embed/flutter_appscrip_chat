@@ -16,6 +16,9 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        project.ext {
+            config_file = "config.properties"
+        }
     }
 }
 

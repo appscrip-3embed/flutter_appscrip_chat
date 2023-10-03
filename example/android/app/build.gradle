@@ -26,6 +26,12 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply plugin: 'com.google.gms.google-services'
 
+def configPropertiesFile = rootProject.file(project.ext.config_file)
+def configProperties = new Properties()
+if (configPropertiesFile.exists()) {
+    configProperties.load(new FileInputStream(configPropertiesFile))
+}
+
 android {
     compileSdkVersion 33
     ndkVersion flutter.ndkVersion
@@ -44,17 +50,16 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.flutterChat.android"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         multiDexEnabled true
         minSdkVersion 24
-        // minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        versionCode configProperties['VERSION_CODE_D'].toInteger()
+        versionName configProperties['VERSION_NAME_D'].toString()
     }
+
+    def appName = configProperties['BUILD_NAME']
+    archivesBaseName = "${appName}_v${defaultConfig.versionName}_c${defaultConfig.versionCode}"
 
     buildTypes {
         release {
