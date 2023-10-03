@@ -290,24 +290,27 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                   if (header?.popupItems != null) ...[
                     ...header!.popupItems!(context, controller.conversation!)
                         .map(
-                      (e) => PopupMenuItem(
-                        value: header!.popupItems!
-                                    (context, controller.conversation!)
-                                .indexOf(e) +
-                            5,
-                        child: Row(
-                          children: [
-                            Icon(
-                              e.icon,
-                              color: e.color ?? IsmChatColors.blackColor,
-                            ),
-                            IsmChatDimens.boxWidth8,
-                            Text(
-                              e.label,
-                            )
-                          ],
-                        ),
-                      ),
+                      (e) {
+                        IsmChatLog.error(e.label);
+                        return PopupMenuItem(
+                          value: header!.popupItems!
+                                      (context, controller.conversation!)
+                                  .indexOf(e) +
+                              5,
+                          child: Row(
+                            children: [
+                              Icon(
+                                e.icon,
+                                color: e.color ?? IsmChatColors.blackColor,
+                              ),
+                              IsmChatDimens.boxWidth8,
+                              Text(
+                                e.label,
+                              )
+                            ],
+                          ),
+                        );
+                      },
                     )
                   ]
 
@@ -332,6 +335,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                 ],
                 elevation: 2,
                 onSelected: (value) {
+                  IsmChatLog.error(value);
                   if (value == 1 || value == 2) {
                     controller.showDialogForClearChatAndDeleteGroup(
                         isGroupDelete: value == 2 ? true : false);

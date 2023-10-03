@@ -18,6 +18,17 @@ class ChatMessageView extends StatelessWidget {
         ),
         text: 'No Messages',
       ),
+      // header: IsmChatHeader(
+      //   popupItems: (p0, p1) => [
+      //     IsmChatPopItem(
+      //       label: 'Report User',
+      //       icon: Icons.report_rounded,
+      //       onTap: (conversation) {
+      //         IsmChatLog.error(conversation);
+      //       },
+      //     )
+      //   ],
+      // ),
       // messageAllowedConfig: MessageAllowedConfig(
       //   isShowTextfiledConfig: IsShowTextfiledConfig(
       //       isShowMessageAllowed: (_, conversation) => true,

@@ -66,6 +66,7 @@ class ChatList extends StatelessWidget {
             color: AppColors.primaryColorLight,
           ),
         ),
+
         // isSlidableEnable: (_, conversation) {
         //   return conversation.metaData!.isMatchId!.isNotEmpty ? false : true;
         // },
