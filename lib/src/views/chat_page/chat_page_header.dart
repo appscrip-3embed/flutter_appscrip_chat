@@ -286,14 +286,15 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                         ],
                       ),
                     ),
-                  if (header?.onProfileWidget?.call(
-                          context,
-                          controller.conversation!,
-                          controller.conversation!.profileUrl) !=
-                      null)
-                    ...(header?.popupItems ?? []).map(
+
+                  if (header?.popupItems != null) ...[
+                    ...header!.popupItems!(context, controller.conversation!)
+                        .map(
                       (e) => PopupMenuItem(
-                        value: header!.popupItems!.indexOf(e) + 5,
+                        value: header!.popupItems!
+                                    (context, controller.conversation!)
+                                .indexOf(e) +
+                            5,
                         child: Row(
                           children: [
                             Icon(
@@ -308,6 +309,26 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                         ),
                       ),
                     )
+                  ]
+
+                  // ...(header?.popupItems ?? [])
+                  // .map(
+                  //   (e) => PopupMenuItem(
+                  //     value: header!.popupItems!.indexOf(e) + 5,
+                  //     child: Row(
+                  //       children: [
+                  //         Icon(
+                  //           e.icon,
+                  //           color: e.color ?? IsmChatColors.blackColor,
+                  //         ),
+                  //         IsmChatDimens.boxWidth8,
+                  //         Text(
+                  //           e.label,
+                  //         )
+                  //       ],
+                  //     ),
+                  //   ),
+                  // )
                 ],
                 elevation: 2,
                 onSelected: (value) {
@@ -322,9 +343,9 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                     if (header == null) {
                       return;
                     }
-                    if (header!.popupItems != null ||
-                        header!.popupItems!.isNotEmpty) {
-                      header!.popupItems![value - 5]
+                    if (header!.popupItems != null) {
+                      header!.popupItems!
+                          .call(context, controller.conversation!)[value - 5]
                           .onTap(controller.conversation!);
                     }
                   }

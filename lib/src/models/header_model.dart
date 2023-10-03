@@ -29,7 +29,11 @@ class IsmChatHeader {
 
   final TextStyle? titleStyle;
   final TextStyle? subtitleStyle;
-  final List<IsmChatPopItem>? popupItems;
+
+  final List<IsmChatPopItem> Function(
+    BuildContext,
+    IsmChatConversationModel,
+  )? popupItems;
   final ShapeBorder? shape;
   final Widget? Function(BuildContext, IsmChatConversationModel)? bottom;
   final ConversationWidgetCallback? onProfileWidget;
