@@ -146,4 +146,7 @@ class IsmChatStrings {
 
   static const String removeGroupMessage =
       'You have been removed out of the group...!';
+
+  static const String gallery = 'Gallery';
+  static const String camera = 'Camera';
 }

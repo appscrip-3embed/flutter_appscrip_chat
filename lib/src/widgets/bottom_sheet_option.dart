@@ -93,7 +93,10 @@ class IsmChatProfilePhotoBottomSheet extends StatelessWidget {
         builder: (controller) => CupertinoActionSheet(
           actions: [
             CupertinoActionSheetAction(
-              onPressed: () => controller.ismUploadImage(ImageSource.camera),
+              onPressed: () {
+                Get.back();
+                controller.ismUploadImage(ImageSource.camera);
+              },
               child: Padding(
                 padding: IsmChatDimens.edgeInsets10_0,
                 child: Row(
@@ -112,7 +115,7 @@ class IsmChatProfilePhotoBottomSheet extends StatelessWidget {
                     ),
                     IsmChatDimens.boxWidth8,
                     Text(
-                      'Camera',
+                      IsmChatStrings.camera,
                       style: IsmChatStyles.w500Black16,
                     )
                   ],
@@ -120,7 +123,10 @@ class IsmChatProfilePhotoBottomSheet extends StatelessWidget {
               ),
             ),
             CupertinoActionSheetAction(
-              onPressed: () => controller.ismUploadImage(ImageSource.gallery),
+              onPressed: () {
+                Get.back();
+                controller.ismUploadImage(ImageSource.gallery);
+              },
               child: Padding(
                 padding: IsmChatDimens.edgeInsets10_0,
                 child: Row(
@@ -139,7 +145,7 @@ class IsmChatProfilePhotoBottomSheet extends StatelessWidget {
                     ),
                     IsmChatDimens.boxWidth8,
                     Text(
-                      'Gallery',
+                      IsmChatStrings.gallery,
                       style: IsmChatStyles.w500Black16,
                     )
                   ],

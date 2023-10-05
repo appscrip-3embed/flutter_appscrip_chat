@@ -28,6 +28,8 @@ class _IsmChatOpenConversationViewState
             scrollController.position.maxScrollExtent.toInt()) {
           converstaionController.getPublicAndOpenConversation(
             conversationType: IsmChatConversationType.open.value,
+            skip: converstaionController.publicAndOpenConversation.length
+                .pagination(),
           );
         }
       });

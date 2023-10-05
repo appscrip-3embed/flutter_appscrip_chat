@@ -21,7 +21,7 @@ extension ScaffoldExtenstion on Scaffold {
 }
 
 extension NullCheck<T> on Iterable<T>? {
-  bool get isNullOrEmpty => this == null || this!.isEmpty;
+  bool get isNullOrEmpty => this == null || this?.isEmpty == true;
 }
 
 extension MatchString on String {
@@ -543,8 +543,9 @@ extension ModelConversion on IsmChatConversationModel {
       return const SizedBox.shrink();
     }
 
-    var senderName =
-        lastMessageDetails!.sentByMe ? 'You' : lastMessageDetails!.senderName;
+    var senderName = lastMessageDetails?.sentByMe == true
+        ? 'You'
+        : lastMessageDetails!.senderName;
 
     return Text(
       '$senderName: ',
@@ -884,7 +885,7 @@ extension MentionMessage on IsmChatMessageModel {
 }
 
 extension SizeOfMedia on String {
-  bool size({double limit = 20.0}) {
+  bool size({double limit = 100.0}) {
     if (split(' ').last == 'KB') {
       return true;
     }

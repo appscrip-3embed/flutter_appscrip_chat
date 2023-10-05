@@ -52,11 +52,7 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
                       : Icons.arrow_back_rounded,
                 ),
               ),
-              centerTitle: Responsive.isWebAndTablet(context)
-                  ? false
-                  : controller.messages.isNotEmpty
-                      ? false
-                      : true,
+              centerTitle: false,
               title: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,

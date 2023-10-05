@@ -8,6 +8,7 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
     if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
+import 'package:appscrip_chat_component/src/views/chat_page/widget/profile_change.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:camera/camera.dart';
 import 'package:dio/dio.dart';
@@ -1572,83 +1573,10 @@ class IsmChatPageController extends GetxController
           conversationId: conversation?.conversationId ?? '',
           isLoading: true);
     } else {
-      await Get.dialog(
-        IsmChatAlertDialogBox(
-          title: IsmChatStrings.chooseNewGroupProfile,
-          content: SizedBox(
-            height: IsmChatDimens.eighty,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () async {
-                        await conversationController
-                            .ismChangeImage(ImageSource.camera);
-                        await changeGroupProfile(
-                            conversationImageUrl:
-                                conversationController.profileImage,
-                            conversationId: conversation?.conversationId ?? '',
-                            isLoading: true);
-                      },
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.blueAccent,
-                        ),
-                        width: IsmChatDimens.forty,
-                        height: IsmChatDimens.forty,
-                        child: const Icon(
-                          Icons.camera_alt_rounded,
-                          color: IsmChatColors.whiteColor,
-                        ),
-                      ),
-                    ),
-                    IsmChatDimens.boxHeight8,
-                    Text(
-                      'Camera',
-                      style: IsmChatStyles.w500Black16,
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () async {
-                        await conversationController
-                            .ismChangeImage(ImageSource.gallery);
-                        await changeGroupProfile(
-                            conversationImageUrl:
-                                conversationController.profileImage,
-                            conversationId: conversation?.conversationId ?? '',
-                            isLoading: true);
-                      },
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.purpleAccent,
-                        ),
-                        width: IsmChatDimens.forty,
-                        height: IsmChatDimens.forty,
-                        child: const Icon(
-                          Icons.photo_rounded,
-                          color: IsmChatColors.whiteColor,
-                        ),
-                      ),
-                    ),
-                    IsmChatDimens.boxHeight8,
-                    Text(
-                      'Gallery',
-                      style: IsmChatStyles.w500Black16,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
+      await Get.bottomSheet(
+        const ProfileChange(),
+        isDismissible: false,
+        elevation: 0,
       );
     }
   }

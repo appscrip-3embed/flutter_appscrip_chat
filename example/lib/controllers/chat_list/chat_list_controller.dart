@@ -40,10 +40,12 @@ class ChatListController extends GetxController {
         .subscribeToTopic('chat-${userDetails.userId}');
   }
 
-  void onSignOut() {
+  void onSignOut() async {
     dbWrapper?.deleteChatLocalDb();
     IsmChatApp.logout();
     Get.offAllNamed(AppRoutes.login);
+    await FirebaseMessaging.instance
+        .unsubscribeFromTopic('chat-${userDetails.userId}');
   }
 
   // void callFuncation() async {
