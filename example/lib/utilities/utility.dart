@@ -1,3 +1,4 @@
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/res/res.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,8 +35,10 @@ class Utility {
       );
 
   static void closeLoader() {
+    IsmChatLog.error('step1');
     if (isLoaderOpen) {
       Get.back(closeOverlays: true, canPop: false);
+      IsmChatLog.error('step2');
     }
   }
 

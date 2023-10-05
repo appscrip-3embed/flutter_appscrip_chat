@@ -161,9 +161,10 @@ class AuthController extends GetxController {
         extension = 'jpg';
       }
 
-      if (Responsive.isWebAndTablet(Get.context!)) Utility.showLoader();
+      Utility.showLoader();
       await ismGetPresignedUrl(extension, bytes);
-      if (Responsive.isWebAndTablet(Get.context!)) Get.back();
+
+      Get.back();
     }
   }
 

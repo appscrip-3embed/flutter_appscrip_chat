@@ -55,19 +55,19 @@ PODS:
   - file_picker (0.0.1):
     - DKImagePickerController/PhotoGallery
     - Flutter
-  - Firebase/CoreOnly (10.12.0):
-    - FirebaseCore (= 10.12.0)
-  - Firebase/Messaging (10.12.0):
+  - Firebase/CoreOnly (10.15.0):
+    - FirebaseCore (= 10.15.0)
+  - Firebase/Messaging (10.15.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (~> 10.12.0)
-  - firebase_core (2.15.1):
-    - Firebase/CoreOnly (= 10.12.0)
+    - FirebaseMessaging (~> 10.15.0)
+  - firebase_core (2.17.0):
+    - Firebase/CoreOnly (= 10.15.0)
     - Flutter
-  - firebase_messaging (14.6.7):
-    - Firebase/Messaging (= 10.12.0)
+  - firebase_messaging (14.6.9):
+    - Firebase/Messaging (= 10.15.0)
     - firebase_core
     - Flutter
-  - FirebaseCore (10.12.0):
+  - FirebaseCore (10.15.0):
     - FirebaseCoreInternal (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/Logger (~> 7.8)
@@ -78,7 +78,7 @@ PODS:
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
     - PromisesObjC (~> 2.1)
-  - FirebaseMessaging (10.12.0):
+  - FirebaseMessaging (10.15.0):
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
     - GoogleDataTransport (~> 9.2)
@@ -177,9 +177,9 @@ PODS:
   - ReachabilitySwift (5.0.0)
   - record (0.0.1):
     - Flutter
-  - SDWebImage (5.18.1):
-    - SDWebImage/Core (= 5.18.1)
-  - SDWebImage/Core (5.18.1)
+  - SDWebImage (5.18.2):
+    - SDWebImage/Core (= 5.18.2)
+  - SDWebImage/Core (5.18.2)
   - share_plus (0.0.1):
     - Flutter
   - shared_preferences_foundation (0.0.1):
@@ -199,6 +199,7 @@ PODS:
     - Flutter
   - video_player_avfoundation (0.0.1):
     - Flutter
+    - FlutterMacOS
   - video_thumbnail (0.0.1):
     - Flutter
     - libwebp
@@ -240,7 +241,7 @@ DEPENDENCIES:
   - syncfusion_flutter_pdfviewer (from `.symlinks/plugins/syncfusion_flutter_pdfviewer/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - video_compress (from `.symlinks/plugins/video_compress/ios`)
-  - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
+  - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/darwin`)
   - video_thumbnail (from `.symlinks/plugins/video_thumbnail/ios`)
 
 SPEC REPOS:
@@ -340,7 +341,7 @@ EXTERNAL SOURCES:
   video_compress:
     :path: ".symlinks/plugins/video_compress/ios"
   video_player_avfoundation:
-    :path: ".symlinks/plugins/video_player_avfoundation/ios"
+    :path: ".symlinks/plugins/video_player_avfoundation/darwin"
   video_thumbnail:
     :path: ".symlinks/plugins/video_thumbnail/ios"
 
@@ -357,13 +358,13 @@ SPEC CHECKSUMS:
   ffmpeg-kit-ios-https: 9e50ffa7eaa6272a0021829e054ef241f2ecffb2
   ffmpeg_kit_flutter: fb5bee3a6038231463ee99e30f97a5763e0ae40f
   file_picker: ce3938a0df3cc1ef404671531facef740d03f920
-  Firebase: 07150e75d142fb9399f6777fa56a187b17f833a0
-  firebase_core: 4a3246a02f828a01c74a2c26427037786d90f17f
-  firebase_messaging: 0b4f7997f491343b90d9300af54fe55c72135833
-  FirebaseCore: f86a1394906b97ac445ae49c92552a9425831bed
+  Firebase: 66043bd4579e5b73811f96829c694c7af8d67435
+  firebase_core: 28e84c2a4fcf6a50ef83f47b145ded8c1fa331e4
+  firebase_messaging: 91ec967913a5d144f951b3c3ac17a57796d38735
+  FirebaseCore: 2cec518b43635f96afe7ac3a9c513e47558abd2e
   FirebaseCoreInternal: 2f4bee5ed00301b5e56da0849268797a2dd31fb4
   FirebaseInstallations: cae95cab0f965ce05b805189de1d4c70b11c76fb
-  FirebaseMessaging: bb2c4f6422a753038fe137d90ae7c1af57251316
+  FirebaseMessaging: 0c0ae1eb722ef0c07f7801e5ded8dccd1357d6d4
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_contacts: edb1c5ce76aa433e20e6cb14c615f4c0b66e0983
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
@@ -391,7 +392,7 @@ SPEC CHECKSUMS:
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   record: cae05d8dd3cdb1dea3511b20e5a5811a1ae00d0d
-  SDWebImage: ebdbcebc7933a45226d9313bd0118bc052ad458b
+  SDWebImage: c0de394d7cf7f9838aed1fd6bb6037654a4572e4
   share_plus: 599aa54e4ea31d4b4c0e9c911bcc26c55e791028
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
@@ -401,7 +402,7 @@ SPEC CHECKSUMS:
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
   video_compress: fce97e4fb1dfd88175aa07d2ffc8a2f297f87fbe
-  video_player_avfoundation: 81e49bb3d9fb63dccf9fa0f6d877dc3ddbeac126
+  video_player_avfoundation: 8563f13d8fc8b2c29dc2d09e60b660e4e8128837
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
 
 PODFILE CHECKSUM: 440196394199caa8d442952d4b06d9928ff565cf
