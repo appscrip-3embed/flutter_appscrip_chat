@@ -149,4 +149,5 @@ class IsmChatStrings {
 
   static const String gallery = 'Gallery';
   static const String camera = 'Camera';
+  static const String message = 'Message';
 }

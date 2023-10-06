@@ -92,6 +92,7 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
             child: Padding(
               padding: IsmChatDimens.edgeInsets16_0_16_0,
               child: Column(
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   IsmChatDimens.boxHeight16,
                   IsmChatImage.profile(
@@ -108,101 +109,136 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
                     style: IsmChatStyles.w500GreyLight17,
                   ),
                   IsmChatDimens.boxHeight16,
-                  Container(
-                    padding: IsmChatDimens.edgeInsets16_8_16_8,
-                    decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.circular(IsmChatDimens.sixteen),
-                      color: IsmChatColors.whiteColor,
+                  ListTile(
+                    onTap: () {
+                      if (Responsive.isWebAndTablet(context)) {
+                        conversationController.mediaList = mediaList;
+                        conversationController.mediaListDocs = mediaListDocs;
+                        conversationController.mediaListLinks = mediaListLinks;
+                        conversationController.isRenderChatPageaScreen =
+                            IsRenderChatPageScreen.coversationMediaView;
+                      } else {
+                        IsmChatRouteManagement.goToMedia(
+                          mediaList: mediaList,
+                          mediaListLinks: mediaListLinks,
+                          mediaListDocs: mediaListDocs,
+                        );
+                      }
+                    },
+                    leading: SvgPicture.asset(
+                      IsmChatAssets.gallarySvg,
                     ),
-                    child: IsmChatTapHandler(
-                      onTap: () {
-                        if (Responsive.isWebAndTablet(context)) {
-                          conversationController.mediaList = mediaList;
-                          conversationController.mediaListDocs = mediaListDocs;
-                          conversationController.mediaListLinks =
-                              mediaListLinks;
-                          conversationController.isRenderChatPageaScreen =
-                              IsRenderChatPageScreen.coversationMediaView;
-                        } else {
-                          IsmChatRouteManagement.goToMedia(
-                            mediaList: mediaList,
-                            mediaListLinks: mediaListLinks,
-                            mediaListDocs: mediaListDocs,
-                          );
-                        }
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          SvgPicture.asset(
-                            IsmChatAssets.gallarySvg,
-                          ),
-                          IsmChatDimens.boxWidth12,
-                          Text(
-                            IsmChatStrings.mediaLinksAndDocs,
-                            style: IsmChatStyles.w500Black16,
-                          ),
-                          const Spacer(),
-                          Row(
-                            children: [
-                              Text(
-                                '${mediaList.length + mediaListLinks.length + mediaListDocs.length}',
-                                style: IsmChatStyles.w500GreyLight17,
-                              ),
-                              IsmChatDimens.boxWidth4,
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                color: IsmChatColors.greyColorLight,
-                                size: IsmChatDimens.fifteen,
-                              ),
-                            ],
-                          ),
-                        ],
+                    title: Text(
+                      IsmChatStrings.mediaLinksAndDocs,
+                      style: IsmChatStyles.w500Black16,
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '${mediaList.length + mediaListLinks.length + mediaListDocs.length}',
+                          style: IsmChatStyles.w500GreyLight17,
+                        ),
+                        IsmChatDimens.boxWidth4,
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: IsmChatColors.greyColorLight,
+                          size: IsmChatDimens.fifteen,
+                        ),
+                      ],
+                    ),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      // Todo send dicrect message
+                      Get.back();
+                      Get.back();
+                      // conversationController.navigateToMessages(conversation);
+                      chatPageController.startInit();
+                      chatPageController.closeOveray();
+                    },
+                    title: Text(
+                      IsmChatStrings.message,
+                      style: IsmChatStyles.w500Black16,
+                    ),
+                    leading: Container(
+                      height: IsmChatDimens.thirty,
+                      width: IsmChatDimens.thirty,
+                      decoration: BoxDecoration(
+                        color: IsmChatConfig.chatTheme.primaryColor,
+                        borderRadius: BorderRadius.circular(IsmChatDimens.five),
                       ),
+                      child: Icon(
+                        Icons.message_rounded,
+                        color: IsmChatColors.whiteColor,
+                        size: IsmChatDimens.twenty,
+                      ),
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: IsmChatColors.greyColorLight,
+                      size: IsmChatDimens.fifteen,
                     ),
                   ),
                   if (IsmChatConfig.communicationConfig.userConfig.userId !=
-                      widget._user?.userId)
-                    TextButton.icon(
-                      onPressed: () async {
-                        await Get.dialog(IsmChatAlertDialogBox(
-                          title: isUserBlock
-                              ? IsmChatStrings.doWantUnBlckUser
-                              : IsmChatStrings.doWantBlckUser,
-                          actionLabels: [
-                            isUserBlock
-                                ? IsmChatStrings.unblock
-                                : IsmChatStrings.block,
-                          ],
-                          callbackActions: [
-                            () {
-                              Get.back();
+                      widget._user?.userId) ...[
+                    ListTile(
+                      onTap: () async {
+                        await Get.dialog(
+                          IsmChatAlertDialogBox(
+                            title: isUserBlock
+                                ? IsmChatStrings.doWantUnBlckUser
+                                : IsmChatStrings.doWantBlckUser,
+                            actionLabels: [
                               isUserBlock
-                                  ? chatPageController.unblockUser(
-                                      opponentId: widget._user?.userId ?? '',
-                                      lastMessageTimeStamp: 0,
-                                      fromUser: true,
-                                    )
-                                  : chatPageController.blockUser(
-                                      opponentId: widget._user?.userId ?? '',
-                                      lastMessageTimeStamp: 0,
-                                    );
-                            },
-                          ],
-                        ));
+                                  ? IsmChatStrings.unblock
+                                  : IsmChatStrings.block,
+                            ],
+                            callbackActions: [
+                              () {
+                                Get.back();
+                                isUserBlock
+                                    ? chatPageController.unblockUser(
+                                        opponentId: widget._user?.userId ?? '',
+                                        lastMessageTimeStamp: 0,
+                                        fromUser: true,
+                                      )
+                                    : chatPageController.blockUser(
+                                        opponentId: widget._user?.userId ?? '',
+                                        lastMessageTimeStamp: 0,
+                                      );
+                              },
+                            ],
+                          ),
+                        );
                       },
-                      icon: const Icon(
-                        Icons.block_rounded,
-                        color: IsmChatColors.redColor,
-                      ),
-                      label: Text(
+                      title: Text(
                         isUserBlock
                             ? IsmChatStrings.unblock
                             : IsmChatStrings.block,
                         style: IsmChatStyles.w600red16,
                       ),
+                      leading: Container(
+                        height: IsmChatDimens.thirty,
+                        width: IsmChatDimens.thirty,
+                        decoration: BoxDecoration(
+                          color: IsmChatColors.redColor,
+                          borderRadius:
+                              BorderRadius.circular(IsmChatDimens.five),
+                        ),
+                        child: Icon(
+                          Icons.block_rounded,
+                          color: IsmChatColors.whiteColor,
+                          size: IsmChatDimens.twenty,
+                        ),
+                      ),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        color: IsmChatColors.greyColorLight,
+                        size: IsmChatDimens.fifteen,
+                      ),
                     ),
+                  ]
                 ],
               ),
             ),

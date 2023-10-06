@@ -387,12 +387,26 @@ class IsmChatMqttController extends GetxController {
   void _handleMessage(IsmChatMessageModel message) async {
     await Future.delayed(const Duration(milliseconds: 100));
 
-    if (message.senderInfo!.userId == _communicationConfig.userConfig.userId) {
+    if (message.senderInfo?.userId == _communicationConfig.userConfig.userId) {
       return;
     }
+
     var conversationController = Get.find<IsmChatConversationsController>();
     var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: message.conversationId);
+    if (conversation == null && Get.isRegistered<IsmChatPageController>()) {
+      final controller = Get.find<IsmChatPageController>();
+
+      if (message.conversationId == controller.conversation?.conversationId) {
+        if (controller.messages.isEmpty) {
+          controller.messages =
+              controller.commonController.sortMessages([message]);
+        } else {
+          controller.messages.add(message);
+        }
+        return;
+      }
+    }
 
     if (conversation == null ||
         conversation.lastMessageDetails?.messageId == message.messageId) {

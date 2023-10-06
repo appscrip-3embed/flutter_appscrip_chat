@@ -4,10 +4,10 @@ analyzer:
   exclude:
     - lib/**/*.g.dart
   # strong-mode:
-    # implicit-casts: false
-    # implicit-dynamic: true
-    # strict-casts: true
-    # strict-raw-types: true
+  # implicit-casts: false
+  # implicit-dynamic: true
+  # strict-casts: true
+  # strict-raw-types: true
   errors:
     close_sinks: ignore
     missing_required_param: warning
@@ -37,7 +37,7 @@ linter:
     - comment_references
     - constant_identifier_names
     - control_flow_in_finally
-    - directives_ordering
+    - directives_orderings
     - curly_braces_in_flow_control_structures
     - empty_catches
     - empty_constructor_bodies

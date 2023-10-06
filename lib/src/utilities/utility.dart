@@ -140,11 +140,11 @@ class IsmChatUtility {
     if (result.isEmpty) {
       return [];
     }
-    if (kIsWeb) {
+    if (isVideoAndImage) {
       return result;
     }
     var croppedFile = await ImageCropper().cropImage(
-      sourcePath: result.first!.path,
+      sourcePath: result.first?.path ?? '',
       cropStyle: CropStyle.circle,
       compressQuality: 100,
       uiSettings: [

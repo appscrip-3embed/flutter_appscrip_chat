@@ -28,7 +28,8 @@ class IsmChatContactsInfoView extends StatelessWidget {
           ),
           backgroundColor: IsmChatConfig.chatTheme.primaryColor,
           titleSpacing: 1,
-          title: Text('Contact Info', style: IsmChatStyles.w600White18),
+          title: Text(IsmChatStrings.contactInfo,
+              style: IsmChatStyles.w600White18),
           centerTitle: true,
         ),
         body: SizedBox(

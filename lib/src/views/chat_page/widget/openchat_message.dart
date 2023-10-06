@@ -55,7 +55,6 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
               centerTitle: false,
               title: Row(
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IsmChatImage.profile(
                     controller.conversation?.profileUrl ?? '',

@@ -198,6 +198,10 @@ class IsmChatPageController extends GetxController
   int get assetsIndex => _assetsIndex.value;
   set assetsIndex(int value) => _assetsIndex.value = value;
 
+  final RxString _dataSize = ''.obs;
+  String get dataSize => _dataSize.value;
+  set dataSize(String value) => _dataSize.value = value;
+
   LayerLink messageHoldLink = LayerLink();
 
   Timer? conversationDetailsApTimer;
@@ -746,9 +750,9 @@ class IsmChatPageController extends GetxController
         break;
       case IsmChatAttachmentType.gallery:
         listOfAssetsPath.clear();
-        kIsWeb
+        Responsive.isWebAndTablet(Get.context!)
             ? getMediaWithWeb()
-            : await Get.to<void>(const IsmChatMediaiAssetsPage());
+            : getMedia();
         break;
       case IsmChatAttachmentType.document:
         sendDocument(
@@ -818,7 +822,6 @@ class IsmChatPageController extends GetxController
     if (result.isEmpty) {
       return;
     }
-
     if (result.isNotEmpty) {
       IsmChatUtility.showLoader();
       for (var x in result) {
@@ -863,6 +866,52 @@ class IsmChatPageController extends GetxController
         IsmChatRouteManagement.goToWebMediaPreview();
       }
     }
+  }
+
+  void getMedia() async {
+    final result = await IsmChatUtility.pickMedia(
+      ImageSource.gallery,
+      isVideoAndImage: true,
+    );
+
+    if (result.isEmpty) {
+      return;
+    }
+    await Get.to<void>(GalleryAssetsView(
+      assetList: result,
+    ));
+  }
+
+  Future<void> selectAssets(List<XFile?> assetList) async {
+    assetsIndex = 0;
+    for (var file in assetList) {
+      if (IsmChatConstants.imageExtensions
+          .contains(file?.path.split('.').last)) {
+        listOfAssetsPath.add(
+          AttachmentModel(
+            mediaUrl: file?.path,
+            attachmentType: IsmChatMediaType.image,
+          ),
+        );
+      } else {
+        var thumbTempPath = await VideoCompress.getFileThumbnail(
+          file?.path ?? '',
+          quality: 50,
+          position: -1,
+        );
+
+        listOfAssetsPath.add(
+          AttachmentModel(
+            thumbnailUrl: thumbTempPath.path,
+            mediaUrl: file?.path ?? '',
+            attachmentType: IsmChatMediaType.video,
+          ),
+        );
+      }
+    }
+    dataSize = await IsmChatUtility.fileToSize(
+      File(listOfAssetsPath[assetsIndex].mediaUrl!),
+    );
   }
 
   void onReplyTap(IsmChatMessageModel message) {

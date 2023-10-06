@@ -1,82 +1,29 @@
-// Copyright 2019 The FlutterCandies author. All rights reserved.
-// Use of this source code is governed by an Apache license that can be found
-// in the LICENSE file.
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:video_compress/video_compress.dart';
-import 'package:wechat_assets_picker/wechat_assets_picker.dart'
-    show
-        AssetEntity,
-        DefaultAssetPickerBuilderDelegate,
-        DefaultAssetPickerProvider;
+import 'package:image_picker/image_picker.dart';
 
-@optionalTypeArgs
-mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
-  int get maxAssetsCount;
+class GalleryAssetsView extends StatefulWidget {
+  const GalleryAssetsView({super.key, this.assetList});
 
-  String dataSize = '';
+  final List<XFile?>? assetList;
 
-  List<AssetEntity> assets = <AssetEntity>[];
+  @override
+  State<GalleryAssetsView> createState() => _GalleryAssetsViewState();
+}
 
-  IsmChatPickMethod get pickMethods;
-
+class _GalleryAssetsViewState extends State<GalleryAssetsView> {
   final ismChatPageController = Get.find<IsmChatPageController>();
-
-  /// These fields are for the keep scroll position feature.
-  late DefaultAssetPickerProvider keepScrollProvider =
-      DefaultAssetPickerProvider();
-  DefaultAssetPickerBuilderDelegate? keepScrollDelegate;
-
-  Future<void> selectAssets(IsmChatPickMethod model) async {
-    final result = await model.method(context, assets);
-    if (result != null) {
-      for (var x in result) {
-        var file = await x.file;
-        if (IsmChatConstants.imageExtensions
-            .contains(file!.path.split('.').last)) {
-          ismChatPageController.listOfAssetsPath.add(
-            AttachmentModel(
-              mediaUrl: file.path.toString(),
-              attachmentType: IsmChatMediaType.image,
-            ),
-          );
-        } else {
-          var thumbTempPath = await VideoCompress.getFileThumbnail(
-            file.path.toString(),
-            quality: 50,
-            position: -1,
-          );
-
-          ismChatPageController.listOfAssetsPath.add(
-            AttachmentModel(
-              thumbnailUrl: thumbTempPath.path,
-              mediaUrl: file.path.toString(),
-              attachmentType: IsmChatMediaType.video,
-            ),
-          );
-        }
-      }
-      dataSize = await IsmChatUtility.fileToSize(
-        File(ismChatPageController
-            .listOfAssetsPath[ismChatPageController.assetsIndex].mediaUrl!),
-      );
-    } else {
-      Get.back<void>();
-    }
-  }
 
   @override
   void initState() {
-    ismChatPageController.assetsIndex = 0;
-    selectAssets(pickMethods);
     super.initState();
+    ismChatPageController.selectAssets(widget.assetList ?? []);
   }
 
   @override
-  @mustCallSuper
   Widget build(BuildContext context) =>
       GetX<IsmChatPageController>(builder: (controller) {
         if (controller.listOfAssetsPath.isNotEmpty) {
@@ -88,7 +35,7 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
             child: Scaffold(
               appBar: AppBar(
                 title: Text(
-                  dataSize,
+                  controller.dataSize,
                   style: IsmChatStyles.w600White14,
                 ),
                 centerTitle: true,
@@ -122,10 +69,10 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                                     .listOfAssetsPath[controller.assetsIndex]
                                     .copyWith(
                                         mediaUrl: controller.imagePath?.path);
-                                dataSize = await IsmChatUtility.fileToSize(
-                                  File(ismChatPageController
-                                      .listOfAssetsPath[
-                                          ismChatPageController.assetsIndex]
+                                controller.dataSize =
+                                    await IsmChatUtility.fileToSize(
+                                  File(controller
+                                      .listOfAssetsPath[controller.assetsIndex]
                                       .mediaUrl!),
                                 );
                               },
@@ -152,10 +99,10 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                                         .assetsIndex] = controller
                                     .listOfAssetsPath[controller.assetsIndex]
                                     .copyWith(mediaUrl: mediaFile!.path);
-                                dataSize = await IsmChatUtility.fileToSize(
-                                  File(ismChatPageController
-                                      .listOfAssetsPath[
-                                          ismChatPageController.assetsIndex]
+                                controller.dataSize =
+                                    await IsmChatUtility.fileToSize(
+                                  File(controller
+                                      .listOfAssetsPath[controller.assetsIndex]
                                       .mediaUrl!),
                                 );
                               },
@@ -185,28 +132,29 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                             IconButton(
                               onPressed: () async {
                                 controller.isVideoVisible = true;
-                                var mediaFile =
-                                    await Get.to<File>(IsmVideoTrimmerView(
-                                  index: controller.assetsIndex,
-                                  file: File(
-                                    controller
-                                        .listOfAssetsPath[
-                                            controller.assetsIndex]
-                                        .mediaUrl
-                                        .toString(),
+                                var mediaFile = await Get.to<File>(
+                                  IsmVideoTrimmerView(
+                                    index: controller.assetsIndex,
+                                    file: File(
+                                      controller
+                                          .listOfAssetsPath[
+                                              controller.assetsIndex]
+                                          .mediaUrl
+                                          .toString(),
+                                    ),
+                                    durationInSeconds: 30,
                                   ),
-                                  durationInSeconds: 30,
-                                ));
+                                );
 
                                 controller.listOfAssetsPath[
                                     controller
                                         .assetsIndex] = controller
                                     .listOfAssetsPath[controller.assetsIndex]
                                     .copyWith(mediaUrl: mediaFile?.path);
-                                dataSize = await IsmChatUtility.fileToSize(
-                                  File(ismChatPageController
-                                      .listOfAssetsPath[
-                                          ismChatPageController.assetsIndex]
+                                controller.dataSize =
+                                    await IsmChatUtility.fileToSize(
+                                  File(controller
+                                      .listOfAssetsPath[controller.assetsIndex]
                                       .mediaUrl!),
                                 );
                               },
@@ -282,10 +230,10 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                               onTap: () async {
                                 controller.assetsIndex = index;
                                 controller.isVideoVisible = false;
-                                dataSize = await IsmChatUtility.fileToSize(
-                                  File(ismChatPageController
-                                      .listOfAssetsPath[
-                                          ismChatPageController.assetsIndex]
+                                controller.dataSize =
+                                    await IsmChatUtility.fileToSize(
+                                  File(controller
+                                      .listOfAssetsPath[controller.assetsIndex]
                                       .mediaUrl!),
                                 );
                               },
