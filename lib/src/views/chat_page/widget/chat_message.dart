@@ -128,8 +128,9 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                         !widget._message!.sentByMe) ...[
                       IsmChatTapHandler(
                         onTap: () async {
-                          await controller
-                              .showUserDetails(widget._message!.senderInfo!);
+                          await controller.showUserDetails(
+                            widget._message!.senderInfo!,
+                          );
                         },
                         child: IsmChatImage.profile(
                           widget._message?.senderInfo?.profileUrl ?? '',

@@ -545,7 +545,7 @@ extension ModelConversion on IsmChatConversationModel {
 
     var senderName = lastMessageDetails?.sentByMe == true
         ? 'You'
-        : lastMessageDetails!.senderName;
+        : lastMessageDetails?.senderName;
 
     return Text(
       '$senderName: ',

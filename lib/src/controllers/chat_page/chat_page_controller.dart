@@ -435,6 +435,8 @@ class IsmChatPageController extends GetxController
 
   var arguments = Get.arguments as Map<String, dynamic>? ?? {};
 
+  UserDetails? currentUser;
+
   @override
   void onInit() {
     super.onInit();
@@ -450,12 +452,12 @@ class IsmChatPageController extends GetxController
     _scrollListener();
     _intputAndFocustNode();
     if (conversationController.currentConversation != null) {
+      _currentUser();
       conversation = conversationController.currentConversation;
       final newMeessageFromOutside = conversation?.messageFromOutSide;
       await Future.delayed(Duration.zero);
       isTemporaryChat =
           arguments['isTemporaryChat'] as bool? ?? isTemporaryChats;
-
       if (conversation?.conversationId?.isNotEmpty ?? false) {
         _getBackGroundAsset();
         if (!isTemporaryChat) {
@@ -540,6 +542,19 @@ class IsmChatPageController extends GetxController
     holdController?.dispose();
 
     ifTimerMounted();
+  }
+
+  _currentUser() {
+    currentUser = UserDetails(
+      userProfileImageUrl:
+          IsmChatConfig.communicationConfig.userConfig.userProfile ?? '',
+      userName: IsmChatConfig.communicationConfig.userConfig.userName,
+      userIdentifier:
+          IsmChatConfig.communicationConfig.userConfig.userEmail ?? '',
+      userId: IsmChatConfig.communicationConfig.userConfig.userId,
+      online: false,
+      lastSeen: 0,
+    );
   }
 
   _generateReactionList() async {
@@ -1984,7 +1999,8 @@ class IsmChatPageController extends GetxController
     }
   }
 
-  Future<void> showUserDetails(UserDetails userDetails) async {
+  Future<void> showUserDetails(UserDetails userDetails,
+      {bool fromMessagePage = true}) async {
     var conversationId = conversationController.getConversationId(
       userDetails.userId,
     );
@@ -2005,6 +2021,7 @@ class IsmChatPageController extends GetxController
       IsmChatRouteManagement.goToUserInfo(
         conversationId: conversationId,
         user: user!,
+        fromMessagePage: fromMessagePage,
       );
     }
   }

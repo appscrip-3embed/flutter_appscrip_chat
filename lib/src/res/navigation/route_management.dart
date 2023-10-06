@@ -99,10 +99,16 @@ class IsmChatRouteManagement {
   }
 
   static void goToUserInfo(
-      {required UserDetails user, required String conversationId}) {
+      {required UserDetails user,
+      required String conversationId,
+      bool fromMessagePage = true}) {
     Get.toNamed(
       IsmChatUserInfo.route,
-      arguments: {'user': user, 'conversationId': conversationId},
+      arguments: {
+        'user': user,
+        'conversationId': conversationId,
+        'fromMessagePage': fromMessagePage
+      },
     );
   }
 

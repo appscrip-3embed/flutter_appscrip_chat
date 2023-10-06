@@ -25,11 +25,12 @@ class IsmChatGroupAdminDialog extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  //Todo: 1 make item option for message
-                  //Todo: 2 make item option for user profile
                   PopupMenuItem(
                     onTap: () async {
-                      await controller.showUserDetails(user);
+                      await controller.showUserDetails(
+                        user,
+                        fromMessagePage: false,
+                      );
                     },
                     padding: IsmChatDimens.edgeInsets24_0,
                     child: const Text('View info'),
