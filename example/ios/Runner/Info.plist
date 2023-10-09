@@ -116,5 +116,9 @@
   		<string>sms</string>
   		<string>tel</string>
 	</array>
+	<key>FirebaseScreenReportingEnabled</key>
+	<true/>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
 </dict>
 </plist>

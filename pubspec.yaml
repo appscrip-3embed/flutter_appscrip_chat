@@ -21,6 +21,7 @@ dependencies:
   elegant_notification: ^1.11.0
   emoji_picker_flutter: ^1.5.4
   file_picker: ^5.2.10
+
   flutter:
     sdk: flutter
   flutter_audio_waveforms: ^1.2.1+8
