@@ -21,40 +21,41 @@ dependencies:
   elegant_notification: ^1.11.0
   emoji_picker_flutter: ^1.5.4
   file_picker: ^5.2.10
+
   flutter:
     sdk: flutter
   flutter_audio_waveforms: ^1.2.1+8
   flutter_contacts: ^1.1.7+1
-  flutter_local_notifications: ^14.1.0
+  flutter_local_notifications: ^15.1.2
   flutter_native_image: ^0.0.6+1
   flutter_screenutil: ^5.5.3+2
-  flutter_slidable: ^2.0.0
+  flutter_slidable: ^3.0.0
   flutter_svg: ^2.0.7
   flutter_web_plugins:
     sdk: flutter
   fluttertoast: ^8.2.1
   geocode: ^1.0.2
   geocoding: ^2.1.0
-  geolocator: ^9.0.2
+  geolocator: ^10.1.0
   get: ^4.6.5
   google_maps_flutter: ^2.3.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   http: ^0.13.6
   image: ^4.1.2
-  image_cropper: ^3.0.1
+  image_cropper: ^4.0.1
   image_gallery_saver: ^2.0.3
-  image_painter: ^0.5.0
-  image_picker: ^0.8.7
+  image_painter: ^0.6.1
+  image_picker: ^1.0.4
   internet_file: ^1.2.0
   intl: ^0.18.0
   just_audio: ^0.9.34
   link_preview_generator: ^1.2.0
-  mqtt_client: ^9.8.0
+  mqtt_client: ^10.0.0
   open_filex: ^4.3.2
   path_provider: ^2.0.13
   pdfx: ^2.4.0
-  permission_handler: ^10.2.0
+  permission_handler: ^11.0.1
   photo_view: ^0.14.0
   plugin_platform_interface: ^2.0.2
   pull_to_refresh: ^2.0.0
@@ -66,7 +67,7 @@ dependencies:
   uuid: ^3.0.7
   video_compress: ^3.1.2
   video_player: ^2.6.0
-  video_trimmer: ^2.0.1
+  video_trimmer: ^3.0.1
   visibility_detector: ^0.4.0+2
   wechat_assets_picker: ^8.5.0
 

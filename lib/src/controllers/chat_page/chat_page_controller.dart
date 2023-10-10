@@ -8,6 +8,7 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
     if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
+import 'package:appscrip_chat_component/src/views/chat_page/widget/profile_change.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:camera/camera.dart';
 import 'package:dio/dio.dart';
@@ -196,6 +197,10 @@ class IsmChatPageController extends GetxController
   final RxInt _assetsIndex = 0.obs;
   int get assetsIndex => _assetsIndex.value;
   set assetsIndex(int value) => _assetsIndex.value = value;
+
+  final RxString _dataSize = ''.obs;
+  String get dataSize => _dataSize.value;
+  set dataSize(String value) => _dataSize.value = value;
 
   LayerLink messageHoldLink = LayerLink();
 
@@ -430,6 +435,8 @@ class IsmChatPageController extends GetxController
 
   var arguments = Get.arguments as Map<String, dynamic>? ?? {};
 
+  UserDetails? currentUser;
+
   @override
   void onInit() {
     super.onInit();
@@ -445,12 +452,12 @@ class IsmChatPageController extends GetxController
     _scrollListener();
     _intputAndFocustNode();
     if (conversationController.currentConversation != null) {
+      _currentUser();
       conversation = conversationController.currentConversation;
       final newMeessageFromOutside = conversation?.messageFromOutSide;
       await Future.delayed(Duration.zero);
       isTemporaryChat =
           arguments['isTemporaryChat'] as bool? ?? isTemporaryChats;
-
       if (conversation?.conversationId?.isNotEmpty ?? false) {
         _getBackGroundAsset();
         if (!isTemporaryChat) {
@@ -535,6 +542,19 @@ class IsmChatPageController extends GetxController
     holdController?.dispose();
 
     ifTimerMounted();
+  }
+
+  _currentUser() {
+    currentUser = UserDetails(
+      userProfileImageUrl:
+          IsmChatConfig.communicationConfig.userConfig.userProfile ?? '',
+      userName: IsmChatConfig.communicationConfig.userConfig.userName,
+      userIdentifier:
+          IsmChatConfig.communicationConfig.userConfig.userEmail ?? '',
+      userId: IsmChatConfig.communicationConfig.userConfig.userId,
+      online: false,
+      lastSeen: 0,
+    );
   }
 
   _generateReactionList() async {
@@ -745,9 +765,9 @@ class IsmChatPageController extends GetxController
         break;
       case IsmChatAttachmentType.gallery:
         listOfAssetsPath.clear();
-        kIsWeb
+        Responsive.isWebAndTablet(Get.context!)
             ? getMediaWithWeb()
-            : await Get.to<void>(const IsmChatMediaiAssetsPage());
+            : getMedia();
         break;
       case IsmChatAttachmentType.document:
         sendDocument(
@@ -817,7 +837,6 @@ class IsmChatPageController extends GetxController
     if (result.isEmpty) {
       return;
     }
-
     if (result.isNotEmpty) {
       IsmChatUtility.showLoader();
       for (var x in result) {
@@ -862,6 +881,52 @@ class IsmChatPageController extends GetxController
         IsmChatRouteManagement.goToWebMediaPreview();
       }
     }
+  }
+
+  void getMedia() async {
+    final result = await IsmChatUtility.pickMedia(
+      ImageSource.gallery,
+      isVideoAndImage: true,
+    );
+
+    if (result.isEmpty) {
+      return;
+    }
+    await Get.to<void>(GalleryAssetsView(
+      assetList: result,
+    ));
+  }
+
+  Future<void> selectAssets(List<XFile?> assetList) async {
+    assetsIndex = 0;
+    for (var file in assetList) {
+      if (IsmChatConstants.imageExtensions
+          .contains(file?.path.split('.').last)) {
+        listOfAssetsPath.add(
+          AttachmentModel(
+            mediaUrl: file?.path,
+            attachmentType: IsmChatMediaType.image,
+          ),
+        );
+      } else {
+        var thumbTempPath = await VideoCompress.getFileThumbnail(
+          file?.path ?? '',
+          quality: 50,
+          position: -1,
+        );
+
+        listOfAssetsPath.add(
+          AttachmentModel(
+            thumbnailUrl: thumbTempPath.path,
+            mediaUrl: file?.path ?? '',
+            attachmentType: IsmChatMediaType.video,
+          ),
+        );
+      }
+    }
+    dataSize = await IsmChatUtility.fileToSize(
+      File(listOfAssetsPath[assetsIndex].mediaUrl!),
+    );
   }
 
   void onReplyTap(IsmChatMessageModel message) {
@@ -1572,83 +1637,10 @@ class IsmChatPageController extends GetxController
           conversationId: conversation?.conversationId ?? '',
           isLoading: true);
     } else {
-      await Get.dialog(
-        IsmChatAlertDialogBox(
-          title: IsmChatStrings.chooseNewGroupProfile,
-          content: SizedBox(
-            height: IsmChatDimens.eighty,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () async {
-                        await conversationController
-                            .ismChangeImage(ImageSource.camera);
-                        await changeGroupProfile(
-                            conversationImageUrl:
-                                conversationController.profileImage,
-                            conversationId: conversation?.conversationId ?? '',
-                            isLoading: true);
-                      },
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.blueAccent,
-                        ),
-                        width: IsmChatDimens.forty,
-                        height: IsmChatDimens.forty,
-                        child: const Icon(
-                          Icons.camera_alt_rounded,
-                          color: IsmChatColors.whiteColor,
-                        ),
-                      ),
-                    ),
-                    IsmChatDimens.boxHeight8,
-                    Text(
-                      'Camera',
-                      style: IsmChatStyles.w500Black16,
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () async {
-                        await conversationController
-                            .ismChangeImage(ImageSource.gallery);
-                        await changeGroupProfile(
-                            conversationImageUrl:
-                                conversationController.profileImage,
-                            conversationId: conversation?.conversationId ?? '',
-                            isLoading: true);
-                      },
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.purpleAccent,
-                        ),
-                        width: IsmChatDimens.forty,
-                        height: IsmChatDimens.forty,
-                        child: const Icon(
-                          Icons.photo_rounded,
-                          color: IsmChatColors.whiteColor,
-                        ),
-                      ),
-                    ),
-                    IsmChatDimens.boxHeight8,
-                    Text(
-                      'Gallery',
-                      style: IsmChatStyles.w500Black16,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
+      await Get.bottomSheet(
+        const ProfileChange(),
+        isDismissible: false,
+        elevation: 0,
       );
     }
   }
@@ -2007,7 +1999,8 @@ class IsmChatPageController extends GetxController
     }
   }
 
-  Future<void> showUserDetails(UserDetails userDetails) async {
+  Future<void> showUserDetails(UserDetails userDetails,
+      {bool fromMessagePage = true}) async {
     var conversationId = conversationController.getConversationId(
       userDetails.userId,
     );
@@ -2028,6 +2021,7 @@ class IsmChatPageController extends GetxController
       IsmChatRouteManagement.goToUserInfo(
         conversationId: conversationId,
         user: user!,
+        fromMessagePage: fromMessagePage,
       );
     }
   }

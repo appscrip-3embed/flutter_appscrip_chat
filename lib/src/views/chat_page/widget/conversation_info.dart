@@ -129,7 +129,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                               }
                             : null,
                         child: Text(
-                          controller.conversation!.chatName,
+                          controller.conversation?.chatName ?? '',
                           textAlign: TextAlign.center,
                           style: IsmChatStyles.w600Black27,
                         )),
@@ -306,8 +306,10 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                           );
                                         }
                                       : () async {
-                                          await controller
-                                              .showUserDetails(member);
+                                          await controller.showUserDetails(
+                                            member,
+                                            fromMessagePage: false,
+                                          );
                                         }
                                   : controller.conversation!.usersOwnDetails
                                               ?.isAdmin ??
@@ -323,8 +325,10 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                           );
                                         }
                                       : () async {
-                                          await controller
-                                              .showUserDetails(member);
+                                          await controller.showUserDetails(
+                                            member,
+                                            fromMessagePage: false,
+                                          );
                                         },
                               trailing: member.isAdmin
                                   ? Text(

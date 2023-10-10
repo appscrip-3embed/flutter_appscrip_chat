@@ -528,6 +528,7 @@ class _GroupChatImageAndName extends StatelessWidget {
                       if (kIsWeb) {
                         controller.ismUploadImage(ImageSource.gallery);
                       } else {
+                        Get.back();
                         Get.bottomSheet<void>(
                           const IsmChatProfilePhotoBottomSheet(),
                           elevation: 0,

@@ -387,12 +387,26 @@ class IsmChatMqttController extends GetxController {
   void _handleMessage(IsmChatMessageModel message) async {
     await Future.delayed(const Duration(milliseconds: 100));
 
-    if (message.senderInfo!.userId == _communicationConfig.userConfig.userId) {
+    if (message.senderInfo?.userId == _communicationConfig.userConfig.userId) {
       return;
     }
+
     var conversationController = Get.find<IsmChatConversationsController>();
     var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: message.conversationId);
+    if (conversation == null && Get.isRegistered<IsmChatPageController>()) {
+      final controller = Get.find<IsmChatPageController>();
+
+      if (message.conversationId == controller.conversation?.conversationId) {
+        if (controller.messages.isEmpty) {
+          controller.messages =
+              controller.commonController.sortMessages([message]);
+        } else {
+          controller.messages.add(message);
+        }
+        return;
+      }
+    }
 
     if (conversation == null ||
         conversation.lastMessageDetails?.messageId == message.messageId) {
@@ -425,6 +439,7 @@ class IsmChatMqttController extends GetxController {
         deliveredTo: [],
         readCount: 0,
         readBy: [],
+        reactionType: '',
       ),
     );
     if (Get.isRegistered<IsmChatPageController>()) {
@@ -986,69 +1001,64 @@ class IsmChatMqttController extends GetxController {
       return;
     }
 
-    if (Get.isRegistered<IsmChatPageController>()) {
-      var controller = Get.find<IsmChatPageController>();
-      if (controller.conversation!.conversationId ==
-          actionModel.conversationId) {
-        var allMessages = await IsmChatConfig.dbWrapper!
-            .getMessage(actionModel.conversationId!);
-        if (allMessages == null) {
-          return;
+    var allMessages =
+        await IsmChatConfig.dbWrapper!.getMessage(actionModel.conversationId!);
+    if (!allMessages.isNullOrEmpty) {
+      var message =
+          allMessages?.where((e) => e.messageId == actionModel.messageId).first;
+      var isEmoji = false;
+
+      if (actionModel.action == IsmChatActionEvents.reactionAdd) {
+        for (var x in message?.reactions ?? <MessageReactionModel>[]) {
+          if (x.emojiKey == actionModel.reactionType) {
+            x.userIds.add(actionModel.userDetails?.userId ?? '');
+            x.userIds.toSet().toList();
+            isEmoji = true;
+            break;
+          }
         }
-
-        var message = allMessages
-            .where((e) => e.messageId == actionModel.messageId)
-            .first;
-        var isEmoji = false;
-
-        if (actionModel.action == IsmChatActionEvents.reactionAdd) {
-          for (var x in message.reactions ?? <MessageReactionModel>[]) {
-            if (x.emojiKey == actionModel.reactionType) {
-              x.userIds.add(actionModel.userDetails?.userId ?? '');
-              x.userIds.toSet().toList();
-              isEmoji = true;
-              break;
-            }
-          }
-          if (isEmoji == false) {
-            message.reactions ??= [];
-            message.reactions?.add(
-              MessageReactionModel(
-                emojiKey: actionModel.reactionType ?? '',
-                userIds: [actionModel.userDetails?.userId ?? ''],
-              ),
-            );
-          }
-        } else {
-          for (var x in message.reactions ?? <MessageReactionModel>[]) {
-            if (x.emojiKey == actionModel.reactionType &&
-                x.userIds.length > 1) {
-              x.userIds.remove(actionModel.userDetails?.userId ?? '');
-              x.userIds.toSet().toList();
-              isEmoji = true;
-            }
-          }
-
-          if (isEmoji == false) {
-            message.reactions ??= [];
-            message.reactions
-                ?.removeWhere((e) => e.emojiKey == actionModel.reactionType);
+        if (isEmoji == false) {
+          message?.reactions ??= [];
+          message?.reactions?.add(
+            MessageReactionModel(
+              emojiKey: actionModel.reactionType ?? '',
+              userIds: [actionModel.userDetails?.userId ?? ''],
+            ),
+          );
+        }
+      } else {
+        for (var x in message?.reactions ?? <MessageReactionModel>[]) {
+          if (x.emojiKey == actionModel.reactionType && x.userIds.length > 1) {
+            x.userIds.remove(actionModel.userDetails?.userId ?? '');
+            x.userIds.toSet().toList();
+            isEmoji = true;
           }
         }
 
-        var messageIndex =
-            allMessages.indexWhere((e) => e.messageId == actionModel.messageId);
+        if (isEmoji == false) {
+          message?.reactions ??= [];
+          message?.reactions
+              ?.removeWhere((e) => e.emojiKey == actionModel.reactionType);
+        }
+      }
 
-        allMessages[messageIndex] = message;
-        var conversation = await IsmChatConfig.dbWrapper!
-            .getConversation(conversationId: actionModel.conversationId);
-        if (conversation != null) {
-          conversation = conversation.copyWith(messages: allMessages);
-          IsmChatLog.error(conversation);
-          await IsmChatConfig.dbWrapper!
-              .saveConversation(conversation: conversation);
-          await Get.find<IsmChatPageController>()
-              .getMessagesFromDB(actionModel.conversationId ?? '');
+      var messageIndex =
+          allMessages?.indexWhere((e) => e.messageId == actionModel.messageId);
+      allMessages![messageIndex ?? 0] = message!;
+      var conversation = await IsmChatConfig.dbWrapper!
+          .getConversation(conversationId: actionModel.conversationId);
+      if (conversation != null) {
+        conversation = conversation.copyWith(messages: allMessages);
+
+        await IsmChatConfig.dbWrapper!
+            .saveConversation(conversation: conversation);
+        if (Get.isRegistered<IsmChatPageController>()) {
+          var controller = Get.find<IsmChatPageController>();
+          if (controller.conversation?.conversationId ==
+              actionModel.conversationId) {
+            await Get.find<IsmChatPageController>()
+                .getMessagesFromDB(actionModel.conversationId ?? '');
+          }
         }
       }
     }

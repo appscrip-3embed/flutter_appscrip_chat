@@ -305,6 +305,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       body: 'Audio',
       conversationId: conversationId,
       customType: IsmChatCustomMessageType.audio,
+      senderInfo: _controller.currentUser,
       attachments: [
         AttachmentModel(
           attachmentType: IsmChatMediaType.audio,
@@ -404,6 +405,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           documentMessage = IsmChatMessageModel(
             body: 'Document',
             conversationId: conversationId,
+            senderInfo: _controller.currentUser,
             customType: IsmChatCustomMessageType.file,
             attachments: [
               AttachmentModel(
@@ -538,6 +540,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     videoMessage = IsmChatMessageModel(
       body: 'Video',
       conversationId: conversationId,
+      senderInfo: _controller.currentUser,
       customType: IsmChatCustomMessageType.video,
       attachments: [
         AttachmentModel(
@@ -648,6 +651,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     imageMessage = IsmChatMessageModel(
       body: 'Image',
       conversationId: conversationId,
+      senderInfo: _controller.currentUser,
       customType: IsmChatCustomMessageType.image,
       attachments: [
         AttachmentModel(
@@ -733,6 +737,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       body:
           'https://www.google.com/maps/search/?api=1&map_action=map&query=$latitude%2C$longitude&query_place_id=$placeId',
       conversationId: conversationId,
+      senderInfo: _controller.currentUser,
       customType: IsmChatCustomMessageType.location,
       deliveredToAll: false,
       messageId: '',
@@ -804,6 +809,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     var contactMessage = IsmChatMessageModel(
         body: jsonEncode(contacts.map((e) => e.toJson()).toList()),
         conversationId: conversationId,
+        senderInfo: _controller.currentUser,
         customType: IsmChatCustomMessageType.contact,
         deliveredToAll: false,
         messageId: '',
@@ -863,6 +869,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     var textMessage = IsmChatMessageModel(
       body: _controller.chatInputController.text.trim(),
       conversationId: conversationId,
+      senderInfo: _controller.currentUser,
       customType: _controller.isreplying
           ? IsmChatCustomMessageType.reply
           : IsmChatCustomMessageType.text,

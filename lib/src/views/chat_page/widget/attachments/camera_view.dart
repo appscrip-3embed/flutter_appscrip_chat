@@ -19,12 +19,15 @@ class IsmChatCameraView extends StatefulWidget {
 
 class _CameraScreenViewState extends State<IsmChatCameraView> {
   @override
+  void dispose() {
+    if (Responsive.isWebAndTablet(Get.context!)) {
+      Get.find<IsmChatPageController>().cameraController.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
-        dispose: (state) {
-          if (Responsive.isWebAndTablet(context)) {
-            Get.find<IsmChatPageController>().cameraController.dispose();
-          }
-        },
         builder: (controller) => MediaQuery.removePadding(
           removeTop: true,
           context: context,

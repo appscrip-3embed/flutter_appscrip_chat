@@ -24,9 +24,16 @@ class _IsmChatVideoViewState extends State<IsmChatVideoView> {
 
   @override
   void initState() {
-    videoFile = widget.file;
-    IsmChatUtility.fileToSize(videoFile!).then((value) => dataSize = value);
     super.initState();
+    videoFile = widget.file;
+    setSize();
+  }
+
+  void setSize() async {
+    dataSize = await IsmChatUtility.fileToSize(videoFile!);
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override

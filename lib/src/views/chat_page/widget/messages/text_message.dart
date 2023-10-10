@@ -61,6 +61,7 @@ class IsmChatTextMessage extends StatelessWidget {
                                           IsmChatRouteManagement.goToUserInfo(
                                             conversationId: conversationId,
                                             user: user.first,
+                                            fromMessagePage: true,
                                           );
                                         }
                                       }
