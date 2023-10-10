@@ -11,7 +11,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:url_strategy/url_strategy.dart';
-
 import 'data/data.dart';
 import 'views/views.dart';
 

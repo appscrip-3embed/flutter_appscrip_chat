@@ -71,7 +71,7 @@ class IsmChatConversationsRepository {
   }) async {
     try {
       var response = await _apiWrapper.get(
-        '${IsmChatAPI.getChatConversations}?skip=$skip&limit=$limit',
+        '${IsmChatAPI.getChatConversations}?includeConversationStatusMessagesInUnreadMessagesCount=false&skip=$skip&limit=$limit',
         headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {

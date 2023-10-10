@@ -16,6 +16,8 @@ class AppConfig {
     if (data == null) {
       return;
     }
+
     userDetail = UserDetailsModel.fromJson(data);
+    IsmChatLog.error(userDetail?.userToken);
   }
 }
