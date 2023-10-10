@@ -428,7 +428,7 @@ class IsmChatMqttController extends GetxController {
         senderId: message.senderInfo?.userId ?? '',
         showInConversation: true,
         sentAt: message.sentAt,
-        senderName: message.senderInfo!.userName,
+        senderName: message.senderInfo?.userName,
         messageType: message.messageType?.value ?? 0,
         messageId: message.messageId!,
         conversationId: message.conversationId!,
@@ -446,6 +446,7 @@ class IsmChatMqttController extends GetxController {
       var chatController = Get.find<IsmChatPageController>();
       if (chatController.conversation?.conversationId ==
           message.conversationId) {
+        IsmChatLog.error(message.toString());
         conversation.messages?.add(message);
       }
     }

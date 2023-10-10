@@ -53,6 +53,7 @@ class IsmChatAPI {
   static const String readStatus = '$chatStatus/read';
   static const String deliverStatus = '$chatStatus/delivery';
   static const String chatMessages = '$baseUrl/chat/messages';
+  static const String userchatMessages = '$chatMessages/user';
 
   static const String readAllMessages = '$chatMessages/read';
   static const String deleteMessagesForMe = '$chatMessages/self';

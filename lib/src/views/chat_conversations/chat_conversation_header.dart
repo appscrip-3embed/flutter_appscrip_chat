@@ -48,11 +48,24 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
                         IsRenderConversationScreen.userView;
                     Scaffold.of(context).openDrawer();
                   }
-                : () => Get.bottomSheet(
-                      IsmChatLogutBottomSheet(
-                        signOutTap: () => onSignOut?.call(),
+                : () => IsmChatUtility.openFullScreenBottomSheet(
+                      IsmChatUserView(
+                        signOutTap: () async {
+                          await Get.dialog(IsmChatAlertDialogBox(
+                            title: '${IsmChatStrings.logout}?',
+                            content: const Text(IsmChatStrings.logoutMessage),
+                            actionLabels: const [
+                              IsmChatStrings.logout,
+                            ],
+                            callbackActions: [
+                              () {
+                                Get.back();
+                                onSignOut?.call();
+                              },
+                            ],
+                          ));
+                        },
                       ),
-                      elevation: IsmChatDimens.twenty,
                       enableDrag: true,
                       backgroundColor: IsmChatColors.whiteColor,
                       shape: RoundedRectangleBorder(
@@ -174,19 +187,21 @@ class _MoreIcon extends StatelessWidget {
         }
       },
       itemBuilder: (_) => [
-        PopupMenuItem(
-          value: 1,
-          child: Row(
-            children: [
-              Icon(
-                Icons.groups_rounded,
-                color: IsmChatConfig.chatTheme.primaryColor,
-              ),
-              IsmChatDimens.boxWidth8,
-              const Text(IsmChatStrings.boradcastMessge),
-            ],
-          ),
-        ),
+        if (Responsive.isWebAndTablet(context)) ...[
+          PopupMenuItem(
+            value: 1,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.groups_rounded,
+                  color: IsmChatConfig.chatTheme.primaryColor,
+                ),
+                IsmChatDimens.boxWidth8,
+                const Text(IsmChatStrings.boradcastMessge),
+              ],
+            ),
+          )
+        ],
         PopupMenuItem(
           value: 2,
           child: Row(

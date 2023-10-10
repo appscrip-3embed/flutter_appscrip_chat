@@ -1436,7 +1436,9 @@ class IsmChatPageController extends GetxController
                   ? messages.last.userName?.isNotEmpty == true
                       ? messages.last.userName
                       : messages.last.initiatorName ?? ''
-                  : messages.last.chatName,
+                  : chatConversation.isGroup ?? false
+                      ? messages.last.senderInfo?.userName
+                      : messages.last.chatName,
               messageType: messages.last.messageType?.value ?? 0,
               messageId: messages.last.messageId ?? '',
               conversationId: messages.last.conversationId ?? '',

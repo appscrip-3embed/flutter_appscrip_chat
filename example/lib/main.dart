@@ -11,6 +11,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:url_strategy/url_strategy.dart';
+
 import 'data/data.dart';
 import 'views/views.dart';
 
@@ -42,9 +43,8 @@ Future<void> initialize() async {
 
     // when app is killed
     final initialMessage = await messaging.getInitialMessage();
-    IsmChatLog.error('recieved messgae on app killed step1');
+
     if (initialMessage != null) {
-      IsmChatLog.error('recieved messgae on app killed step2');
       LocalNoticeService().cancelAllNotification();
       LocalNoticeService().addNotification(
         '', // Add the  sender user name here
@@ -57,7 +57,6 @@ Future<void> initialize() async {
 
     // when app is in background
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? message) async {
-      IsmChatLog.error('recieved messgae on app background');
       LocalNoticeService().cancelAllNotification();
       LocalNoticeService().addNotification(
         '', // Add the  sender user name here

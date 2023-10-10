@@ -36,7 +36,7 @@ class IsmChatStrings {
   static const String on = 'on';
   static const String ok = 'Okay';
   static const String change = 'Change';
-  static const String blockUser = 'Block User';
+  static const String blockUser = 'Block Users';
   static const String unBlockUser = 'Unblock User';
   static const String blockedUsers = 'Blocked Users';
   static const String observer = 'Observers';
@@ -49,6 +49,8 @@ class IsmChatStrings {
   static const String newGroup = 'New Group';
   static const String publicConversation = 'Public Conversation';
   static const String openConversation = 'Open Conversation';
+  static const String groupConversation = 'Group Conversation';
+
   static const String conversation = 'Conversation';
 
   static const String logout = 'Logout';
@@ -150,4 +152,5 @@ class IsmChatStrings {
   static const String gallery = 'Gallery';
   static const String camera = 'Camera';
   static const String message = 'Message';
+  static const String signOut = ' Sign out';
 }

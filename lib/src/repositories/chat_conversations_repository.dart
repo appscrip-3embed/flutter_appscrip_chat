@@ -71,7 +71,7 @@ class IsmChatConversationsRepository {
   }) async {
     try {
       var response = await _apiWrapper.get(
-        '${IsmChatAPI.getChatConversations}?includeConversationStatusMessagesInUnreadMessagesCount=false&skip=$skip&limit=$limit',
+        '${IsmChatAPI.getChatConversations}?skip=$skip&limit=$limit',
         headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
@@ -462,6 +462,43 @@ class IsmChatConversationsRepository {
     } catch (e, st) {
       IsmChatLog.error('Get observer user $e, $st');
       return null;
+    }
+  }
+
+  Future<void> getUserMessges({
+    List<String>? ids,
+    List<String>? messageTypes,
+    List<String>? customTypes,
+    List<String>? attachmentTypes,
+    String? showInConversation,
+    List<String>? senderIds,
+    String? parentMessageId,
+    int? lastMessageTimestamp,
+    bool? conversationStatusMessage,
+    String? searchTag,
+    String? fetchConversationDetails,
+    bool deliveredToMe = false,
+    bool senderIdsExclusive = true,
+    int limit = 20,
+    int? skip = 0,
+    int? sort = -1,
+    bool isLoading = false,
+  }) async {
+    try {
+      var response = await _apiWrapper.get(
+          '${IsmChatAPI.userchatMessages}?senderIdsExclusive=$senderIdsExclusive&deliveredToMe=$deliveredToMe&senderIds=${senderIds?.join(',')}&limit=$limit&skip=$skip&sort=$sort',
+          headers: IsmChatUtility.tokenCommonHeader(),
+          showLoader: isLoading);
+
+      if (response.hasError) {
+        return;
+      }
+      IsmChatLog.error('respose user Data ${response.data}');
+
+      var data = jsonDecode(response.data) as Map<String, dynamic>;
+    } catch (e, st) {
+      IsmChatLog.error('Get observer user $e, $st');
+      return;
     }
   }
 }

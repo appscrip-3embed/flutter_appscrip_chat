@@ -300,10 +300,15 @@ class IsmChatConversationsController extends GetxController {
         );
       }
     });
-
-    if (await IsmChatUtility.isNetworkAvailable) {
-      sendPendingMessgae();
-    }
+    await getUserMessges(
+      senderIds: [
+        IsmChatConfig.communicationConfig.userConfig.userId.isNotEmpty
+            ? IsmChatConfig.communicationConfig.userConfig.userId
+            : userDetails?.userId ?? ''
+      ],
+      senderIdsExclusive: true,
+    );
+    sendPendingMessgae();
   }
 
   @override
@@ -1057,5 +1062,45 @@ class IsmChatConversationsController extends GetxController {
         await getChatConversations();
       }
     }
+  }
+
+  Future<void> getUserMessges({
+    List<String>? ids,
+    List<String>? messageTypes,
+    List<String>? customTypes,
+    List<String>? attachmentTypes,
+    String? showInConversation,
+    List<String>? senderIds,
+    String? parentMessageId,
+    int? lastMessageTimestamp,
+    bool? conversationStatusMessage,
+    String? searchTag,
+    String? fetchConversationDetails,
+    bool deliveredToMe = false,
+    bool senderIdsExclusive = true,
+    int limit = 20,
+    int? skip = 0,
+    int? sort = -1,
+    bool isLoading = false,
+  }) async {
+    var res = await _viewModel.getUserMessges(
+      attachmentTypes: attachmentTypes,
+      conversationStatusMessage: conversationStatusMessage,
+      customTypes: customTypes,
+      deliveredToMe: deliveredToMe,
+      fetchConversationDetails: fetchConversationDetails,
+      ids: ids,
+      lastMessageTimestamp: lastMessageTimestamp,
+      limit: limit,
+      messageTypes: messageTypes,
+      parentMessageId: parentMessageId,
+      searchTag: searchTag,
+      senderIds: senderIds,
+      senderIdsExclusive: senderIdsExclusive,
+      showInConversation: showInConversation,
+      skip: skip,
+      sort: sort,
+      isLoading: isLoading,
+    );
   }
 }
