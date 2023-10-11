@@ -598,17 +598,22 @@ class IsmChatMqttController extends GetxController {
         _communicationConfig.userConfig.userId) {
       return;
     }
+
     var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: actionModel.conversationId);
 
     if (conversation != null) {
-      var lastMessage = conversation.messages!.last;
-      if (lastMessage.messageId == actionModel.messageId) {
-        var isDelivered = lastMessage.deliveredTo
+      var message =
+          conversation.messages?.cast<IsmChatMessageModel?>().firstWhere(
+                (e) => e?.messageId == actionModel.messageId,
+                orElse: () => null,
+              );
+      if (message != null) {
+        var isDelivered = message.deliveredTo
             ?.any((e) => e.userId == actionModel.userDetails?.userId);
 
         if (isDelivered == false) {
-          lastMessage.deliveredTo?.add(
+          message.deliveredTo?.add(
             MessageStatus(
               userId: actionModel.userDetails?.userId ?? '',
               timestamp: actionModel.sentAt,
@@ -616,14 +621,14 @@ class IsmChatMqttController extends GetxController {
           );
         }
 
-        lastMessage.deliveredToAll = lastMessage.deliveredTo?.length ==
-            (conversation.membersCount ?? 0) - 1;
-        conversation.messages?.last = lastMessage;
+        message.deliveredToAll =
+            message.deliveredTo?.length == (conversation.membersCount ?? 0) - 1;
+        conversation.messages?.last = message;
 
         conversation = conversation.copyWith(
           lastMessageDetails: conversation.lastMessageDetails?.copyWith(
-            deliverCount: lastMessage.deliveredTo?.length,
-            deliveredTo: lastMessage.deliveredTo,
+            deliverCount: message.deliveredTo?.length,
+            deliveredTo: message.deliveredTo,
           ),
         );
 
@@ -648,26 +653,30 @@ class IsmChatMqttController extends GetxController {
         .getConversation(conversationId: actionModel.conversationId!);
 
     if (conversation != null) {
-      var lastMessage = conversation.messages!.last;
-      if (lastMessage.messageId == actionModel.messageId) {
-        var isDelivered = lastMessage.readBy
+      var message =
+          conversation.messages?.cast<IsmChatMessageModel?>().firstWhere(
+                (e) => e?.messageId == actionModel.messageId,
+                orElse: () => null,
+              );
+      if (message != null) {
+        var isDelivered = message.readBy
             ?.any((e) => e.userId == actionModel.userDetails?.userId);
         if (isDelivered == false) {
-          lastMessage.readBy?.add(
+          message.readBy?.add(
             MessageStatus(
               userId: actionModel.userDetails?.userId ?? '',
               timestamp: actionModel.sentAt,
             ),
           );
         }
-        lastMessage.readByAll =
-            lastMessage.readBy?.length == (conversation.membersCount ?? 0) - 1;
-        conversation.messages?.last = lastMessage;
+        message.readByAll =
+            message.readBy?.length == (conversation.membersCount ?? 0) - 1;
+        conversation.messages?.last = message;
 
         conversation = conversation.copyWith(
           lastMessageDetails: conversation.lastMessageDetails?.copyWith(
-            readCount: lastMessage.readBy?.length,
-            readBy: lastMessage.readBy,
+            readCount: message.readBy?.length,
+            readBy: message.readBy,
           ),
         );
         await IsmChatConfig.dbWrapper!

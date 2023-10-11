@@ -366,7 +366,8 @@ enum IsmChatActionEvents {
   broadcast,
   memberJoin,
   observerJoin,
-  observerLeave;
+  observerLeave,
+  userUpdate;
 
   factory IsmChatActionEvents.fromName(String name) {
     switch (name) {
@@ -422,6 +423,8 @@ enum IsmChatActionEvents {
         return IsmChatActionEvents.observerJoin;
       case 'observerLeave':
         return IsmChatActionEvents.observerLeave;
+      case 'userUpdate':
+        return IsmChatActionEvents.userUpdate;
 
       default:
         return IsmChatActionEvents.typingEvent;
@@ -484,6 +487,8 @@ enum IsmChatActionEvents {
         return 'observerJoin';
       case IsmChatActionEvents.observerLeave:
         return 'observerLeave';
+      case IsmChatActionEvents.userUpdate:
+        return 'userUpdate';
     }
   }
 }

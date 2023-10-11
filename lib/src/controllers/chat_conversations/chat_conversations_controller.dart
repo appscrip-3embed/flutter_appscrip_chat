@@ -276,6 +276,11 @@ class IsmChatConversationsController extends GetxController {
   /// This StreamSubscription listen internet `on` or `off` when app in running
   StreamSubscription<ConnectivityResult>? connectivitySubscription;
 
+  final _userMeessages = <IsmChatMessageModel>[].obs;
+  List<IsmChatMessageModel> get userMeessages => _userMeessages;
+  set userMeessages(List<IsmChatMessageModel> value) =>
+      _userMeessages.value = value;
+
   @override
   onInit() async {
     super.onInit();
@@ -306,7 +311,6 @@ class IsmChatConversationsController extends GetxController {
             ? IsmChatConfig.communicationConfig.userConfig.userId
             : userDetails?.userId ?? ''
       ],
-      senderIdsExclusive: true,
     );
     sendPendingMessgae();
   }
@@ -1083,7 +1087,7 @@ class IsmChatConversationsController extends GetxController {
     int? sort = -1,
     bool isLoading = false,
   }) async {
-    var res = await _viewModel.getUserMessges(
+    var response = await _viewModel.getUserMessges(
       attachmentTypes: attachmentTypes,
       conversationStatusMessage: conversationStatusMessage,
       customTypes: customTypes,
@@ -1102,5 +1106,19 @@ class IsmChatConversationsController extends GetxController {
       sort: sort,
       isLoading: isLoading,
     );
+    if (response != null) {
+      userMeessages = response;
+      for (var message in userMeessages) {
+        var isSender =
+            message.deliveredTo?.any((e) => e.userId == senderIds?.first);
+        if (isSender == false) {
+          await Future.delayed(const Duration(milliseconds: 10));
+          await pingMessageDelivered(
+            conversationId: message.conversationId ?? '',
+            messageId: message.messageId ?? '',
+          );
+        }
+      }
+    }
   }
 }

@@ -230,7 +230,7 @@ class IsmChatConversationsViewModel {
         searchText: searchText,
       );
 
-  Future<void> getUserMessges({
+  Future<List<IsmChatMessageModel>?> getUserMessges({
     List<String>? ids,
     List<String>? messageTypes,
     List<String>? customTypes,
@@ -248,23 +248,52 @@ class IsmChatConversationsViewModel {
     int? skip = 0,
     int? sort = -1,
     bool isLoading = false,
-  }) async =>
-      _repository.getUserMessges(
-          attachmentTypes: attachmentTypes,
-          conversationStatusMessage: conversationStatusMessage,
-          customTypes: customTypes,
-          deliveredToMe: deliveredToMe,
-          fetchConversationDetails: fetchConversationDetails,
-          ids: ids,
-          lastMessageTimestamp: lastMessageTimestamp,
-          limit: limit,
-          messageTypes: messageTypes,
-          parentMessageId: parentMessageId,
-          searchTag: searchTag,
-          senderIds: senderIds,
-          senderIdsExclusive: senderIdsExclusive,
-          showInConversation: showInConversation,
-          skip: skip,
-          sort: sort,
-          isLoading: isLoading);
+  }) async {
+    var messages = await _repository.getUserMessges(
+      attachmentTypes: attachmentTypes,
+      conversationStatusMessage: conversationStatusMessage,
+      customTypes: customTypes,
+      deliveredToMe: deliveredToMe,
+      fetchConversationDetails: fetchConversationDetails,
+      ids: ids,
+      lastMessageTimestamp: lastMessageTimestamp,
+      limit: limit,
+      messageTypes: messageTypes,
+      parentMessageId: parentMessageId,
+      searchTag: searchTag,
+      senderIds: senderIds,
+      senderIdsExclusive: senderIdsExclusive,
+      showInConversation: showInConversation,
+      skip: skip,
+      sort: sort,
+      isLoading: isLoading,
+    );
+    if (messages == null) {
+      return null;
+    }
+    messages.removeWhere(
+      (e) => [
+        IsmChatActionEvents.clearConversation.name,
+        IsmChatActionEvents.conversationCreated.name,
+        IsmChatActionEvents.deleteConversationLocally.name,
+        IsmChatActionEvents.reactionAdd.name,
+        IsmChatActionEvents.reactionRemove.name,
+        IsmChatActionEvents.conversationDetailsUpdated.name,
+        IsmChatActionEvents.userUpdate.name,
+        IsmChatActionEvents.memberLeave.name,
+        IsmChatActionEvents.memberJoin.name,
+        IsmChatActionEvents.userUnblock.name,
+        IsmChatActionEvents.userUnblockConversation.name,
+        IsmChatActionEvents.userBlock.name,
+        IsmChatActionEvents.userBlockConversation.name,
+        IsmChatActionEvents.userBlockConversation.name,
+        if (e.memberId !=
+            IsmChatConfig.communicationConfig.userConfig.userId) ...[
+          IsmChatActionEvents.removeAdmin.name,
+          IsmChatActionEvents.addAdmin.name,
+        ]
+      ].contains(e.action),
+    );
+    return messages;
+  }
 }

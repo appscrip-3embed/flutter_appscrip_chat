@@ -19,12 +19,13 @@ class IsmChatPageViewModel {
     bool isTemporaryChat = false,
   }) async {
     var messages = await _repository.getChatMessages(
-        conversationId: conversationId,
-        lastMessageTimestamp: lastMessageTimestamp,
-        limit: limit,
-        skip: pagination ?? 0,
-        searchText: searchText,
-        isLoading: isLoading);
+      conversationId: conversationId,
+      lastMessageTimestamp: lastMessageTimestamp,
+      limit: limit,
+      skip: pagination ?? 0,
+      searchText: searchText,
+      isLoading: isLoading,
+    );
 
     if (messages == null) {
       return [];
@@ -477,8 +478,6 @@ class IsmChatPageViewModel {
 
   Future<List<UserDetails>?> getReacton({required Reaction reaction}) async =>
       await _repository.getReacton(reaction: reaction);
-
- 
 
   Future<IsmChatResponseModel?> sendBroadcastMessage(
           {required List<String> userIds,

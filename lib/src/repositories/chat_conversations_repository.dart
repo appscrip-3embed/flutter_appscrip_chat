@@ -465,7 +465,7 @@ class IsmChatConversationsRepository {
     }
   }
 
-  Future<void> getUserMessges({
+  Future<List<IsmChatMessageModel>?> getUserMessges({
     List<String>? ids,
     List<String>? messageTypes,
     List<String>? customTypes,
@@ -491,14 +491,15 @@ class IsmChatConversationsRepository {
           showLoader: isLoading);
 
       if (response.hasError) {
-        return;
+        return null;
       }
-      IsmChatLog.error('respose user Data ${response.data}');
-
-      var data = jsonDecode(response.data) as Map<String, dynamic>;
+      var data = jsonDecode(response.data);
+      return (data['messages'] as List)
+          .map((e) => IsmChatMessageModel.fromMap(e as Map<String, dynamic>))
+          .toList();
     } catch (e, st) {
-      IsmChatLog.error('Get observer user $e, $st');
-      return;
+      IsmChatLog.error('Get user messages $e, $st');
+      return null;
     }
   }
 }
