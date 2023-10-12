@@ -1,6 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class IsmChatConversationCard extends StatefulWidget {
   const IsmChatConversationCard(
@@ -123,13 +122,13 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
                           ),
                     ),
                   ],
-                  if (widget.conversation.conversationType ==
-                      IsmChatConversationType.public) ...[
-                    Positioned(
-                        bottom: IsmChatDimens.zero,
-                        right: IsmChatDimens.zero,
-                        child: SvgPicture.asset(IsmChatAssets.publicGroupSvg))
-                  ]
+                  // if (widget.conversation.conversationType ==
+                  //     IsmChatConversationType.public) ...[
+                  //   Positioned(
+                  //       bottom: IsmChatDimens.zero,
+                  //       right: IsmChatDimens.zero,
+                  //       child: SvgPicture.asset(IsmChatAssets.publicGroupSvg))
+                  // ]
                 ],
               ),
             ),
