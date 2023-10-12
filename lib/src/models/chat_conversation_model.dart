@@ -44,7 +44,7 @@ class IsmChatConversationModel {
       createdBy: map['createdBy'] as String?,
       createdByUserName: map['createdByUserName'] as String? ?? '',
       conversationType: IsmChatConversationType.fromValue(
-          map['conversationType'] as int? ?? 1),
+          map['conversationType'] as int? ?? 0),
       conversationTitle: map['conversationTitle'] as String?,
       conversationImageUrl: map['conversationImageUrl'] as String?,
       conversationId: map['conversationId'] as String? ?? '',
