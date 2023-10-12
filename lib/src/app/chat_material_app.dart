@@ -229,6 +229,7 @@ class IsmChatApp extends StatelessWidget {
     void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
     Duration duration = const Duration(milliseconds: 500),
     String? messageFromOutSide,
+    bool? pushNotifications,
   }) async {
     assert(
       [name, userId].every((e) => e.isNotEmpty),
@@ -264,23 +265,24 @@ class IsmChatApp extends StatelessWidget {
         ),
       );
       conversation = IsmChatConversationModel(
-        messagingDisabled: false,
-        conversationImageUrl: profileImageUrl,
-        isGroup: false,
-        opponentDetails: userDetails,
-        unreadMessagesCount: 0,
-        lastMessageDetails: null,
-        lastMessageSentAt: 0,
-        membersCount: 1,
-        metaData: metaData,
-        messageFromOutSide: messageFromOutSide,
-      );
+          messagingDisabled: false,
+          conversationImageUrl: profileImageUrl,
+          isGroup: false,
+          opponentDetails: userDetails,
+          unreadMessagesCount: 0,
+          lastMessageDetails: null,
+          lastMessageSentAt: 0,
+          membersCount: 1,
+          metaData: metaData,
+          messageFromOutSide: messageFromOutSide,
+          pushNotifications: pushNotifications);
     } else {
       conversation = controller.conversations
           .firstWhere((e) => e.conversationId == conversationId);
       conversation = conversation.copyWith(
         metaData: metaData,
         messageFromOutSide: messageFromOutSide,
+        pushNotifications: pushNotifications,
       );
     }
 

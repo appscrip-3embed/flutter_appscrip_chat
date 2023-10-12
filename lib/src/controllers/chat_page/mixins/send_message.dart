@@ -18,6 +18,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     bool isLoading = true,
     List<String> searchableTags = const [' '],
     IsmChatConversationType conversationType = IsmChatConversationType.private,
+    bool pushNotifications = true,
   }) async {
     if (isGroup) {
       userId = _controller.conversation!.userIds ?? [];
@@ -26,7 +27,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       isLoading: isLoading,
       typingEvents: true,
       readEvents: true,
-      pushNotifications: true,
+      pushNotifications: pushNotifications,
       members: userId,
       isGroup: isGroup,
       conversationType: conversationType.value,
@@ -80,6 +81,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     String? customType,
     List<Map<String, dynamic>>? attachments,
     bool isTemporaryChat = false,
+    bool sendPushNotification = true,
   }) async {
     var isSendMessage = false;
     if (IsmChatProperties
@@ -100,7 +102,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         var isMessageSent = await _controller.commonController.sendMessage(
           showInConversation: true,
           encrypted: true,
-          events: {'updateUnreadCount': true, 'sendPushNotification': true},
+          events: {
+            'updateUnreadCount': true,
+            'sendPushNotification': sendPushNotification
+          },
           attachments: attachments,
           mentionedUsers: mentionedUsers,
           metaData: metaData,
@@ -849,12 +854,14 @@ mixin IsmChatPageSendMessageMixin on GetxController {
   void sendTextMessage({
     required String conversationId,
     required String userId,
+    bool pushNotifications = true,
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
 
     if (chatConversationResponse == null && !_controller.isTemporaryChat) {
       conversationId = await createConversation(
+        pushNotifications: pushNotifications,
         userId: [userId],
         metaData: _controller.conversation?.metaData,
         searchableTags: [
@@ -943,6 +950,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       notificationTitle: notificationTitle,
       mentionedUsers:
           _controller.userMentionedList.map((e) => e.toMap()).toList(),
+      sendPushNotification: pushNotifications,
     );
   }
 

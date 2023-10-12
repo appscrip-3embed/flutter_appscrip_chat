@@ -455,7 +455,7 @@ class IsmChatPageController extends GetxController
       _currentUser();
       conversation = conversationController.currentConversation;
       final newMeessageFromOutside = conversation?.messageFromOutSide;
-      await Future.delayed(Duration.zero);
+
       isTemporaryChat =
           arguments['isTemporaryChat'] as bool? ?? isTemporaryChats;
       if (conversation?.conversationId?.isNotEmpty ?? false) {
@@ -509,6 +509,7 @@ class IsmChatPageController extends GetxController
         sendTextMessage(
           conversationId: conversation?.conversationId ?? '',
           userId: conversation?.opponentDetails?.userId ?? '',
+          pushNotifications: conversation?.pushNotifications ?? true,
         );
       }
       unawaited(updateUnreadMessgaeCount());
