@@ -455,7 +455,7 @@ class IsmChatPageController extends GetxController
       _currentUser();
       conversation = conversationController.currentConversation;
       final newMeessageFromOutside = conversation?.messageFromOutSide;
-
+      await Future.delayed(Duration.zero);
       isTemporaryChat =
           arguments['isTemporaryChat'] as bool? ?? isTemporaryChats;
       if (conversation?.conversationId?.isNotEmpty ?? false) {
