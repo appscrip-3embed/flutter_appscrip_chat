@@ -17,6 +17,8 @@ class IsmChatAPI {
   static const String chatConversationDelete = '$chatConversation/local';
   static const String getChatConversations = '$baseUrl/chat/conversations';
   static const String conversationDetails = '$chatConversation/details';
+  static const String conversationSetting = '$chatConversation/settings';
+
   static const String getPublicAndOpenConversation =
       '${chatConversation}s/publicoropen';
   static const String observer = '$chatConversation/observer';

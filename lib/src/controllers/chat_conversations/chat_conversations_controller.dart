@@ -794,9 +794,22 @@ class IsmChatConversationsController extends GetxController {
     bool isLoading = false,
   }) async {
     await _viewModel.updateConversation(
-        conversationId: conversationId,
-        metaData: metaData,
-        isLoading: isLoading);
+      conversationId: conversationId,
+      metaData: metaData,
+      isLoading: isLoading,
+    );
+  }
+
+  Future<void> updateConversationSetting({
+    required String conversationId,
+    required IsmChatEvents events,
+    bool isLoading = false,
+  }) async {
+    await _viewModel.updateConversationSetting(
+      conversationId: conversationId,
+      events: events,
+      isLoading: isLoading,
+    );
   }
 
   Future<void> sendForwardMessage({

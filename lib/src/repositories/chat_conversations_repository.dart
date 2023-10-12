@@ -258,6 +258,34 @@ class IsmChatConversationsRepository {
     }
   }
 
+  Future<IsmChatResponseModel?> updateConversationSetting({
+    required String conversationId,
+    required IsmChatEvents events,
+    bool isLoading = false,
+  }) async {
+    try {
+      var payload = {
+        'conversationId': conversationId,
+      };
+      var event = events.toMap();
+      event
+          .addAll(payload.map((key, value) => MapEntry(key, value as dynamic)));
+      var response = await _apiWrapper.patch(
+        IsmChatAPI.conversationSetting,
+        payload: event,
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading,
+      );
+
+      if (response.hasError) {
+        return response;
+      }
+      return response;
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<IsmChatResponseModel?> sendForwardMessage(
       {required List<String> userIds,
       required bool showInConversation,

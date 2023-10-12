@@ -144,6 +144,17 @@ class IsmChatConversationsViewModel {
         isLoading: isLoading,
       );
 
+  Future<IsmChatResponseModel?> updateConversationSetting({
+    required String conversationId,
+    required IsmChatEvents events,
+    bool isLoading = false,
+  }) async =>
+      await _repository.updateConversationSetting(
+        conversationId: conversationId,
+        events: events,
+        isLoading: isLoading,
+      );
+
   Future<IsmChatResponseModel?> sendForwardMessage({
     required List<String> userIds,
     required bool showInConversation,

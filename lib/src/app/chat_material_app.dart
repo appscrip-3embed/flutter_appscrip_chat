@@ -148,6 +148,19 @@ class IsmChatApp extends StatelessWidget {
       await Get.find<IsmChatConversationsController>().updateConversation(
           conversationId: conversationId, metaData: metaData);
 
+  /// Call this function for update conversation setting in meta data
+  static Future<void> updateConversationSetting({
+    required String conversationId,
+    required IsmChatEvents events,
+    bool isLoading = false,
+  }) async =>
+      await Get.find<IsmChatConversationsController>()
+          .updateConversationSetting(
+        conversationId: conversationId,
+        events: events,
+        isLoading: isLoading,
+      );
+
   /// Call this function for Get Conversation List When on click
   static Future<void> getChatConversation() async {
     if (Get.isRegistered<IsmChatConversationsController>()) {
