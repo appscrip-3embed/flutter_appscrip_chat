@@ -42,7 +42,7 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
     return IsmChatTapHandler(
       onTap: widget.onTap,
       child: Container(
-        padding: IsmChatDimens.edgeInsets10_05,
+        padding: IsmChatDimens.edgeInsets5,
         width: IsmChatDimens.percentWidth(1),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -51,7 +51,7 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
               alignment: widget.conversation.conversationType ==
                       IsmChatConversationType.open
                   ? null
-                  : Alignment.centerRight,
+                  : Alignment.center,
               width: IsmChatDimens.sixty,
               child: Stack(
                 clipBehavior: Clip.none,
