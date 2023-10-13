@@ -13,7 +13,6 @@ class MessageBubble extends StatelessWidget {
   final IsmChatMessageModel message;
   final bool showMessageInCenter;
   final int? index;
-
   final GlobalKey globalKey = GlobalKey();
 
   @override

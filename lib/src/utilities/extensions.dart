@@ -657,9 +657,9 @@ extension LastMessageBody on LastMessageDetails {
       case IsmChatCustomMessageType.addMember:
         return 'Added ${(members ?? []).join(', ')}';
       case IsmChatCustomMessageType.addAdmin:
-        return 'Added you as an Admin';
+        return 'Added $adminOpponentName as an Admin';
       case IsmChatCustomMessageType.removeAdmin:
-        return 'Remove you as an Admin';
+        return 'Remove $adminOpponentName as an Admin';
       case IsmChatCustomMessageType.memberLeave:
         return '$senderName left';
       case IsmChatCustomMessageType.memberJoin:

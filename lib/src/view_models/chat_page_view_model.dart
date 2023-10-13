@@ -37,11 +37,11 @@ class IsmChatPageViewModel {
           IsmChatActionEvents.reactionAdd.name,
           IsmChatActionEvents.reactionRemove.name,
           IsmChatActionEvents.conversationDetailsUpdated.name,
-          if (e.memberId !=
-              IsmChatConfig.communicationConfig.userConfig.userId) ...[
-            IsmChatActionEvents.removeAdmin.name,
-            IsmChatActionEvents.addAdmin.name,
-          ]
+          // if (e.memberId !=
+          //     IsmChatConfig.communicationConfig.userConfig.userId) ...[
+          //   IsmChatActionEvents.removeAdmin.name,
+          //   IsmChatActionEvents.addAdmin.name,
+          // ]
         ].contains(e.action));
     if (searchText == null || searchText.isEmpty) {
       if (Get.find<IsmChatPageController>().messages.isNotEmpty) {
