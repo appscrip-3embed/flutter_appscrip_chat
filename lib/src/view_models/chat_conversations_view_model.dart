@@ -9,34 +9,40 @@ class IsmChatConversationsViewModel {
   Future<List<IsmChatConversationModel>> getChatConversations(
     int skip, {
     int chatLimit = 20,
+    String? searchTag,
   }) async {
     var conversations = await _repository.getChatConversations(
       skip: skip,
       limit: chatLimit,
+      searchTag: searchTag,
     );
 
     if (conversations == null || conversations.isEmpty) {
       return [];
     }
-    var dbConversations = await IsmChatConfig.dbWrapper!.getAllConversations();
+    if (searchTag == null) {
+      var dbConversations =
+          await IsmChatConfig.dbWrapper!.getAllConversations();
 
-    for (var conversation in conversations) {
-      IsmChatConversationModel? dbConversation;
-      if (dbConversations.isNotEmpty) {
-        dbConversation = dbConversations.firstWhere(
-          (e) => e.conversationId == conversation.conversationId,
-          orElse: () => IsmChatConversationModel(messages: []),
+      for (var conversation in conversations) {
+        IsmChatConversationModel? dbConversation;
+        if (dbConversations.isNotEmpty) {
+          dbConversation = dbConversations.firstWhere(
+            (e) => e.conversationId == conversation.conversationId,
+            orElse: () => IsmChatConversationModel(messages: []),
+          );
+        }
+        conversation = conversation.copyWith(
+          messages: dbConversation?.messages,
+          opponentDetails: conversation.opponentDetails,
+          lastMessageDetails: conversation.lastMessageDetails,
+          config: conversation.config,
+          metaData: conversation.metaData,
         );
-      }
-      conversation = conversation.copyWith(
-        messages: dbConversation?.messages,
-        opponentDetails: conversation.opponentDetails,
-        lastMessageDetails: conversation.lastMessageDetails,
-        config: conversation.config,
-        metaData: conversation.metaData,
-      );
 
-      await IsmChatConfig.dbWrapper!.createAndUpdateConversation(conversation);
+        await IsmChatConfig.dbWrapper!
+            .createAndUpdateConversation(conversation);
+      }
     }
     return conversations;
   }
@@ -103,7 +109,7 @@ class IsmChatConversationsViewModel {
     if (!response!.hasError) {
       await IsmChatConfig.dbWrapper!
           .clearAllMessage(conversationId: conversationId);
-      await Get.find<IsmChatConversationsController>().getConversationsFromDB();
+      await Get.find<IsmChatConversationsController>().getChatConversations();
     }
   }
 

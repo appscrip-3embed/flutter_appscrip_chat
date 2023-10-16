@@ -63,7 +63,11 @@ class LocalNoticeService {
     const initSettings =
         InitializationSettings(android: androidSetting, iOS: iosSetting);
 
-    await _localNotificationsPlugin.initialize(initSettings).then((_) {
+    await _localNotificationsPlugin
+        .initialize(
+      initSettings,
+    )
+        .then((_) {
       debugPrint('setupPlugin: setup success');
     }).catchError((Object error) {
       debugPrint('Error: $error');

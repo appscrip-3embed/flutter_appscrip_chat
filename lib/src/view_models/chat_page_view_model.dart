@@ -122,9 +122,10 @@ class IsmChatPageViewModel {
     required bool isLoading,
   }) async =>
       await _repository.changeGroupTitle(
-          conversationTitle: conversationTitle,
-          conversationId: conversationId,
-          isLoading: isLoading);
+        conversationTitle: conversationTitle,
+        conversationId: conversationId,
+        isLoading: isLoading,
+      );
 
   /// change group title
   Future<IsmChatResponseModel?> changeGroupProfile({
@@ -312,6 +313,7 @@ class IsmChatPageViewModel {
     if (!response!.hasError) {
       await IsmChatConfig.dbWrapper!
           .clearAllMessage(conversationId: conversationId);
+      await Get.find<IsmChatConversationsController>().getChatConversations();
     }
   }
 

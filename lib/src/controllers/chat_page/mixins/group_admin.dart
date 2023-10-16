@@ -29,9 +29,10 @@ mixin IsmChatGroupAdminMixin on GetxController {
     required bool isLoading,
   }) async {
     var response = await _controller.viewModel.changeGroupTitle(
-        conversationTitle: conversationTitle,
-        conversationId: conversationId,
-        isLoading: isLoading);
+      conversationTitle: conversationTitle,
+      conversationId: conversationId,
+      isLoading: isLoading,
+    );
     if (response?.hasError ?? true) {
       return;
     } else {

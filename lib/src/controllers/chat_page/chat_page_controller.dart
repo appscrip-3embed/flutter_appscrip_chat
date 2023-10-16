@@ -2059,7 +2059,8 @@ class IsmChatPageController extends GetxController
                 Permission.accessMediaLocation) &&
             // manage external storage needed for android 11/R
             await IsmChatUtility.requestPermission(
-                Permission.manageExternalStorage)) {
+              Permission.photos,
+            )) {
           directory = await path_provider.getExternalStorageDirectory();
           var newPath = '';
           var paths = directory!.path.split('/');

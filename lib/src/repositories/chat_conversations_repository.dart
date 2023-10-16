@@ -68,10 +68,18 @@ class IsmChatConversationsRepository {
   Future<List<IsmChatConversationModel>?> getChatConversations({
     required int skip,
     required int limit,
+    String? searchTag,
   }) async {
     try {
+      String? url;
+      if (searchTag != null && searchTag.isNotEmpty) {
+        url =
+            '${IsmChatAPI.getChatConversations}?searchTag=$searchTag&skip=$skip&limit=$limit';
+      } else {
+        url = '${IsmChatAPI.getChatConversations}?skip=$skip&limit=$limit';
+      }
       var response = await _apiWrapper.get(
-        '${IsmChatAPI.getChatConversations}?skip=$skip&limit=$limit',
+        url,
         headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {

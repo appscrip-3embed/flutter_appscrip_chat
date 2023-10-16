@@ -1,4 +1,6 @@
 PODS:
+  - app_settings (5.1.1):
+    - Flutter
   - appscrip_chat_component (0.0.1):
     - Flutter
   - audio_session (0.0.1):
@@ -205,6 +207,7 @@ PODS:
     - libwebp
 
 DEPENDENCIES:
+  - app_settings (from `.symlinks/plugins/app_settings/ios`)
   - appscrip_chat_component (from `.symlinks/plugins/appscrip_chat_component/ios`)
   - audio_session (from `.symlinks/plugins/audio_session/ios`)
   - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
@@ -268,6 +271,8 @@ SPEC REPOS:
     - TOCropViewController
 
 EXTERNAL SOURCES:
+  app_settings:
+    :path: ".symlinks/plugins/app_settings/ios"
   appscrip_chat_component:
     :path: ".symlinks/plugins/appscrip_chat_component/ios"
   audio_session:
@@ -346,6 +351,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/video_thumbnail/ios"
 
 SPEC CHECKSUMS:
+  app_settings: 017320c6a680cdc94c799949d95b84cb69389ebc
   appscrip_chat_component: acd7eac10950d82a75badfe2af68da3872cf75ca
   audio_session: 4f3e461722055d21515cf3261b64c973c062f345
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40

@@ -106,7 +106,7 @@ class ChatList extends StatelessWidget {
                   controller.onSignOut();
                 },
                 onSearchTap: (p0, p1, p2) {},
-                showSearch: false,
+                showSearch: true,
                 width: Responsive.isWebAndTablet(context)
                     ? IsmChatDimens.percentWidth(.3)
                     : null,

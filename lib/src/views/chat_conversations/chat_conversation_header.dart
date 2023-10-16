@@ -27,7 +27,7 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final VoidCallback? onSignOut;
 
-  /// Defines the height of the [IsmChatListHeader]
+  /// Defines the height of the IsmChatListHeader
   final double? height;
 
   final double? width;
@@ -270,19 +270,19 @@ class _MoreIcon extends StatelessWidget {
 }
 
 class _SearchAction extends StatelessWidget {
-  const _SearchAction({required this.onTap});
+  _SearchAction({required this.onTap});
 
   final void Function(BuildContext, IsmChatConversationModel, bool) onTap;
+
+  final controller = Get.find<IsmChatConversationsController>();
 
   @override
   Widget build(BuildContext context) => IconButton(
         color: IsmChatConfig.chatTheme.primaryColor,
         onPressed: () {
-          Scaffold.of(context).openDrawer();
-          showSearch<void>(
-            context: context,
-            delegate: IsmChatSearchDelegate(onChatTap: onTap),
-          );
+          controller.isConversationsLoading = true;
+          controller.searchConversationList.clear();
+          IsmChatRouteManagement.goToGlobalSearchView();
         },
         icon: const Icon(Icons.search_rounded),
       );

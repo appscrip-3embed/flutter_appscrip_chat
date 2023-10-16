@@ -179,4 +179,8 @@ class IsmChatRouteManagement {
   static void goToSearchMessageView() {
     Get.toNamed(IsmChatSearchMessgae.route);
   }
+
+  static void goToGlobalSearchView() {
+    Get.toNamed(IsmChatGlobalSearchView.route);
+  }
 }

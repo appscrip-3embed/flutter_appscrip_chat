@@ -44,7 +44,6 @@ class IsmChatMqttController extends GetxController {
   void onInit() async {
     _communicationConfig = IsmChatConfig.communicationConfig;
     userId = _communicationConfig.userConfig.userId;
-
     messageTopic =
         '/${_communicationConfig.projectConfig.accountId}/${_communicationConfig.projectConfig.projectId}/Message/${_communicationConfig.userConfig.userId}';
     statusTopic =
@@ -262,6 +261,8 @@ class IsmChatMqttController extends GetxController {
       case IsmChatActionEvents.observerLeave:
         _handleObserverJoinAndLeave(actionModel);
         break;
+      case IsmChatActionEvents.userUpdate:
+        break;
     }
   }
 
@@ -446,7 +447,6 @@ class IsmChatMqttController extends GetxController {
       var chatController = Get.find<IsmChatPageController>();
       if (chatController.conversation?.conversationId ==
           message.conversationId) {
-        IsmChatLog.error(message.toString());
         conversation.messages?.add(message);
       }
     }
