@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -38,13 +39,59 @@ class IsmChatConversationSearchView extends StatelessWidget {
                       origin: ApiCallOrigin.loadMore,
                     );
                   },
-                  child: ListView.builder(itemBuilder: (context, index) {
-                    final conversation =
-                        controller.searchConversationList[index];
-                    return ListTile(
-                      title: Text(conversation.chatName),
-                    );
-                  }),
+                  child: ListView.builder(
+                      itemCount: controller.searchConversationList.length,
+                      itemBuilder: (context, index) {
+                        final conversation =
+                            controller.searchConversationList[index];
+                        return Column(
+                          children: [
+                            IsmChatConversationCard(
+                              isShowBackgroundColor:
+                                  Responsive.isWebAndTablet(context)
+                                      ? controller.currentConversationId ==
+                                          conversation.conversationId
+                                      : false,
+                              name: IsmChatProperties.conversationProperties
+                                  .cardElementBuilders?.name,
+                              nameBuilder: IsmChatProperties
+                                  .conversationProperties
+                                  .cardElementBuilders
+                                  ?.nameBuilder,
+                              profileImageUrl: IsmChatProperties
+                                  .conversationProperties
+                                  .cardElementBuilders
+                                  ?.profileImageUrl,
+                              subtitle: IsmChatProperties.conversationProperties
+                                  .cardElementBuilders?.subtitle,
+                              conversation,
+                              profileImageBuilder: IsmChatProperties
+                                  .conversationProperties
+                                  .cardElementBuilders
+                                  ?.profileImageBuilder,
+                              subtitleBuilder: !conversation.isSomeoneTyping
+                                  ? IsmChatProperties.conversationProperties
+                                      .cardElementBuilders?.subtitleBuilder
+                                  : (_, __, ___) => Text(
+                                        conversation.typingUsers,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: IsmChatStyles.typing,
+                                      ),
+                              onTap: () async {
+                                IsmChatProperties.conversationProperties
+                                    .onChatTap!(context, conversation);
+                                controller.navigateToMessages(conversation);
+                                await controller.goToChatPage();
+                              },
+                            ),
+                            SizedBox(
+                              width: IsmChatDimens.percentWidth(.95),
+                              child: const Divider(),
+                            )
+                          ],
+                        );
+                      }),
                 ),
         ),
       );

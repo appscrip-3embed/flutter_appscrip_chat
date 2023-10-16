@@ -24,6 +24,8 @@ class IsmChatConversationsController extends GetxController {
   /// This variable use for type user name for searcing feature
   TextEditingController userSearchNameController = TextEditingController();
 
+  TextEditingController globalSearchController = TextEditingController();
+
   /// This variable use for get all method and varibles from IsmChatCommonController
   IsmChatCommonController get _commonController =>
       Get.find<IsmChatCommonController>();
@@ -340,6 +342,7 @@ class IsmChatConversationsController extends GetxController {
 
   void onDispose() {
     conversationScrollController.dispose();
+    searchConversationScrollController.dispose();
     connectivitySubscription?.cancel();
   }
 

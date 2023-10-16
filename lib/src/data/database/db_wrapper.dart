@@ -263,6 +263,7 @@ class IsmChatDBWrapper {
   ) async {
     try {
       var resposne = await getAllConversations();
+
       if (resposne.isEmpty) {
         await chatConversationBox.put(
           conversationModel.conversationId!,
@@ -288,38 +289,6 @@ class IsmChatDBWrapper {
           config: conversationModel.config,
           metaData: conversationModel.metaData,
         );
-        // Todo admin remove and add
-
-        if ([
-              IsmChatCustomMessageType.removeAdmin,
-              IsmChatCustomMessageType.addAdmin
-            ].contains(conversationModel.lastMessageDetails?.customType) &&
-            ![
-              conversation.lastMessageDetails?.initiatorId,
-              conversation.lastMessageDetails?.memberId
-            ].contains(IsmChatConfig.communicationConfig.userConfig.userId)) {
-          final currentconverstaion = await getConversation(
-              conversationId: conversation.conversationId);
-          if (currentconverstaion != null) {
-            if (!currentconverstaion.messages.isNullOrEmpty) {
-              final lastMessage = currentconverstaion.messages?.last;
-              conversation = conversation.copyWith(
-                lastMessageDetails: conversation.lastMessageDetails?.copyWith(
-                  sentByMe: lastMessage?.sentByMe,
-                  body: lastMessage?.body,
-                  senderName: lastMessage?.senderInfo?.userName,
-                ),
-                lastMessageSentAt: lastMessage?.sentAt,
-              );
-            } else {
-              conversation = conversation.copyWith(
-                lastMessageDetails: conversation.lastMessageDetails?.copyWith(
-                  body: null,
-                ),
-              );
-            }
-          }
-        }
 
         await saveConversation(conversation: conversation);
       }

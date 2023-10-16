@@ -50,7 +50,7 @@ class _IsmChatOpenConversationViewState
                       ? IsmChatInputField(
                           fillColor: IsmChatConfig.chatTheme.primaryColor,
                           style: IsmChatStyles.w400White16,
-                          hint: 'Search user...',
+                          hint: IsmChatStrings.searchUser,
                           hintStyle: IsmChatStyles.w400White16,
                           onChanged: (value) {
                             controller.debounce.run(

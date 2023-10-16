@@ -141,48 +141,48 @@ class IsmChatUserView extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: Get.height,
-                  child: controller.blockUsers.isEmpty
-                      ? const Center(
-                          child: IsmIconAndText(
-                            icon: Icons.supervised_user_circle_rounded,
-                            text: IsmChatStrings.noBlockedUsers,
+                if (controller.blockUsers.isEmpty) ...[
+                  IsmChatDimens.boxHeight32,
+                  const IsmIconAndText(
+                    icon: Icons.supervised_user_circle_rounded,
+                    text: IsmChatStrings.noBlockedUsers,
+                  ),
+                ] else ...[
+                  SizedBox(
+                    height: Get.height,
+                    child: ListView.builder(
+                      itemCount: controller.blockUsers.length,
+                      itemBuilder: (_, index) {
+                        var user = controller.blockUsers[index];
+                        return ListTile(
+                          leading: IsmChatImage.profile(user.profileUrl),
+                          title: Text(
+                            user.userName,
                           ),
-                        )
-                      : ListView.builder(
-                          itemCount: controller.blockUsers.length,
-                          itemBuilder: (_, index) {
-                            var user = controller.blockUsers[index];
-                            return ListTile(
-                              leading: IsmChatImage.profile(user.profileUrl),
-                              title: Text(
-                                user.userName,
-                              ),
-                              subtitle: Text(
-                                user.userIdentifier,
-                              ),
-                              trailing: ElevatedButton(
-                                onPressed: () {
-                                  if (!Responsive.isWebAndTablet(context)) {
-                                    controller.unblockUser(
-                                        opponentId: user.userId,
-                                        isLoading: true);
-                                  } else {
-                                    controller.unblockUserForWeb(user.userId);
+                          subtitle: Text(
+                            user.userIdentifier,
+                          ),
+                          trailing: ElevatedButton(
+                            onPressed: () {
+                              if (!Responsive.isWebAndTablet(context)) {
+                                controller.unblockUser(
+                                    opponentId: user.userId, isLoading: true);
+                              } else {
+                                controller.unblockUserForWeb(user.userId);
 
-                                    Get.back();
-                                  }
-                                  unawaited(controller.getChatConversations());
-                                },
-                                child: const Text(
-                                  IsmChatStrings.unblock,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                ),
+                                Get.back();
+                              }
+                              unawaited(controller.getChatConversations());
+                            },
+                            child: const Text(
+                              IsmChatStrings.unblock,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ]
               ],
             ),
           ),

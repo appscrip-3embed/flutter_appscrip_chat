@@ -23,35 +23,48 @@ class _IsmChatGlobalSearchViewState extends State<IsmChatGlobalSearchView>
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: IsmChatAppBar(
-          title: Text(
-            IsmChatStrings.search,
-            style: IsmChatStyles.w600White18,
-          ),
-        ),
-        body: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            SizedBox(
-              height: IsmChatDimens.fifty,
-              child: TabBar(
-                controller: _tabController,
-                tabs: const [
-                  Text('Converstion'),
-                  Text('Message'),
-                  Text('User')
-                ],
-              ),
-            ),
-            Expanded(
-              child: TabBarView(controller: _tabController, children: const [
-                IsmChatConversationSearchView(),
-                IsmChatMessageSearchView(),
-                IsmChatUserSearchView()
-              ]),
-            )
-          ],
-        ),
-      );
+  Widget build(BuildContext context) =>
+      GetBuilder<IsmChatConversationsController>(
+          builder: (controller) => Scaffold(
+                appBar: IsmChatAppBar(
+                  title: Text(
+                    IsmChatStrings.search,
+                    style: IsmChatStyles.w600White18,
+                  ),
+                ),
+                body: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    IsmChatInputField(
+                      fillColor: IsmChatConfig.chatTheme.primaryColor,
+                      controller: controller.globalSearchController,
+                      style: IsmChatStyles.w400White16,
+                      hint: IsmChatStrings.globalSearch,
+                      hintStyle: IsmChatStyles.w400White16,
+                      onChanged: (value) {},
+                    ),
+                    SizedBox(
+                      height: IsmChatDimens.fifty,
+                      child: TabBar(
+                        controller: _tabController,
+                        tabs: const [
+                          Text(IsmChatStrings.conversation),
+                          Text(IsmChatStrings.messages),
+                          Text(IsmChatStrings.people)
+                        ],
+                      ),
+                    ),
+                    IsmChatDimens.boxHeight20,
+                    Expanded(
+                      child: TabBarView(
+                          controller: _tabController,
+                          children: const [
+                            IsmChatConversationSearchView(),
+                            IsmChatMessageSearchView(),
+                            IsmChatUserSearchView()
+                          ]),
+                    )
+                  ],
+                ),
+              ));
 }

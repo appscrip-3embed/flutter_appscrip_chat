@@ -152,5 +152,11 @@ class IsmChatStrings {
   static const String gallery = 'Gallery';
   static const String camera = 'Camera';
   static const String message = 'Message';
-  static const String signOut = ' Sign out';
+  static const String signOut = 'Sign out';
+  static const String searchUser = 'Search user...';
+  static const String globalSearch = 'Search conversation, messages people..';
+
+  static const String messages = 'Messages';
+
+  static const String people = 'People';
 }
