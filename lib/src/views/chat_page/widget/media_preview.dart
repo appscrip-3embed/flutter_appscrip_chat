@@ -124,21 +124,21 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
                       ],
                     ),
                   ),
-                  if (widget._messageData![mediaIndex].attachments!.first
-                      .mediaUrl!.isValidUrl)
-                    PopupMenuItem(
-                      value: 2,
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.save_rounded,
-                            color: IsmChatColors.blackColor,
-                          ),
-                          IsmChatDimens.boxWidth8,
-                          const Text(IsmChatStrings.save)
-                        ],
-                      ),
-                    ),
+                  // if (widget._messageData![mediaIndex].attachments!.first
+                  //     .mediaUrl!.isValidUrl)
+                  //   PopupMenuItem(
+                  //     value: 2,
+                  //     child: Row(
+                  //       children: [
+                  //         const Icon(
+                  //           Icons.save_rounded,
+                  //           color: IsmChatColors.blackColor,
+                  //         ),
+                  //         IsmChatDimens.boxWidth8,
+                  //         const Text(IsmChatStrings.save)
+                  //       ],
+                  //     ),
+                  //   ),
                   PopupMenuItem(
                     value: 3,
                     child: Row(
