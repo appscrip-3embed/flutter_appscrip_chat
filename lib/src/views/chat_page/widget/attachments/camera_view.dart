@@ -43,6 +43,7 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                 systemOverlayStyle: const SystemUiOverlayStyle(
                   statusBarIconBrightness: Brightness.light,
                   statusBarColor: IsmChatColors.blackColor,
+                  statusBarBrightness: Brightness.light,
                 ),
                 backgroundColor: IsmChatColors.blackColor,
                 elevation: 0,
