@@ -10,3 +10,4 @@ export 'no_message.dart';
 export 'page_dailog.dart';
 export 'responsive_builder_view.dart';
 export 'tap_handler.dart';
+export 'voice/voice.dart';

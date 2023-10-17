@@ -34,6 +34,7 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   fluttertoast: ^8.2.1
+  gallery_saver: ^2.3.2
   geocode: ^1.0.2
   geocoding: ^2.1.0
   geolocator: ^10.1.0
@@ -44,7 +45,6 @@ dependencies:
   http: ^0.13.6
   image: ^4.1.2
   image_cropper: ^4.0.1
-  image_gallery_saver: ^2.0.3
   image_painter: ^0.6.1
   image_picker: ^1.0.4
   internet_file: ^1.2.0
