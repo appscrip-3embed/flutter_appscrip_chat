@@ -19,14 +19,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_cropper/image_cropper.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+// import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:open_filex/open_filex.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -1544,6 +1544,7 @@ class IsmChatPageController extends GetxController
 
   void takePhoto() async {
     var file = await cameraController.takePicture();
+    // await file.saveTo(file.path);
     if (kIsWeb) {
       Get.back();
       var bytes = await file.readAsBytes();
@@ -1572,7 +1573,7 @@ class IsmChatPageController extends GetxController
           CameraLensDirection.front) {
         var imageBytes = await file.readAsBytes();
         var file2 = File(file.path);
-        // When using the front camera; flip the image
+
         var originalImage = img.decodeImage(imageBytes);
         var fixedImage = img.flipHorizontal(originalImage!);
         var fixedFile = await file2.writeAsBytes(
@@ -2062,63 +2063,76 @@ class IsmChatPageController extends GetxController
 
   /// call function for Save Media
   Future<void> saveMedia(IsmChatMessageModel message) async {
-    Directory? directory;
     try {
-      if (GetPlatform.isAndroid) {
-        if (await IsmChatUtility.requestPermission(Permission.storage) &&
-            // access media location needed for android 10/Q
-            await IsmChatUtility.requestPermission(
-                Permission.accessMediaLocation) &&
-            // manage external storage needed for android 11/R
-            await IsmChatUtility.requestPermission(
-              Permission.photos,
-            )) {
-          directory = await path_provider.getExternalStorageDirectory();
-          var newPath = '';
-          var paths = directory!.path.split('/');
-          for (var x = 1; x < paths.length; x++) {
-            var folder = paths[x];
-            if (folder != 'Android') {
-              newPath += '/$folder';
-            } else {
-              break;
-            }
-          }
-          newPath = '$newPath/ChatApp';
-          directory = Directory(newPath);
-        } else {
-          await openAppSettings();
-
-          return;
-        }
+      bool? isMediaSave;
+      if (IsmChatConstants.videoExtensions
+          .contains(message.attachments?.first.extension)) {
+        isMediaSave = await GallerySaver.saveVideo(
+            message.attachments?.first.mediaUrl ?? '');
       } else {
-        if (await IsmChatUtility.requestPermission(Permission.photos)) {
-          directory = await path_provider.getTemporaryDirectory();
-        } else {
-          await openAppSettings();
-
-          return;
-        }
+        isMediaSave = await GallerySaver.saveImage(
+            message.attachments?.first.mediaUrl ?? '');
       }
 
-      if (!await directory.exists()) {
-        await directory.create(recursive: true);
-      }
-      if (await directory.exists()) {
-        var saveFile =
-            File('${directory.path}/${message.attachments?.first.name}');
+      // ********** With out package and create folder name
+      //  Directory? directory;
+      // if (GetPlatform.isAndroid) {
+      //   if (await IsmChatUtility.requestPermission(Permission.storage) &&
+      //       // access media location needed for android 10/Q
+      //       await IsmChatUtility.requestPermission(
+      //           Permission.accessMediaLocation) &&
+      //       // manage external storage needed for android 11/R
+      //       await IsmChatUtility.requestPermission(
+      //         Permission.manageExternalStorage,
+      //       )) {
+      //     directory = await path_provider.getExternalStorageDirectory();
+      //     var newPath = '';
+      //     var paths = directory!.path.split('/');
+      //     for (var x = 1; x < paths.length; x++) {
+      //       var folder = paths[x];
+      //       if (folder != 'Android') {
+      //         newPath += '/$folder';
+      //       } else {
+      //         break;
+      //       }
+      //     }
+      //     newPath = '$newPath/ChatApp';
+      //     directory = Directory(newPath);
+      //   } else {
+      //     await openAppSettings();
+      //     return;
+      //   }
+      // } else {
+      //   if (await IsmChatUtility.requestPermission(Permission.photos)) {
+      //     directory = await path_provider.getTemporaryDirectory();
+      //   } else {
+      //     await openAppSettings();
+      //     return;
+      //   }
+      // }
 
-        await dio.download(
-          message.attachments?.first.mediaUrl ?? '',
-          saveFile.path,
-        );
+      // if (!await directory.exists()) {
+      //   await directory.create(recursive: true);
+      // }
+      // if (await directory.exists()) {
+      //   var saveFile =
+      //       File('${directory.path}/${message.attachments?.first.name}');
 
-        if (GetPlatform.isIOS) {
-          await ImageGallerySaver.saveFile(saveFile.path,
-              name: message.attachments?.first.name, isReturnPathOfIOS: true);
-        }
+      //   await dio.download(
+      //     message.attachments?.first.mediaUrl ?? '',
+      //     saveFile.path,
+      //   );
+
+      //   if (GetPlatform.isIOS) {
+      //     await ImageGallerySaver
+      //     saveFile(saveFile.path,
+      //         name: message.attachments?.first.name, isReturnPathOfIOS: true);
+      //   }
+      // }
+
+      if (isMediaSave == true) {
+        IsmChatUtility.showToast('Save your media');
       }
-      IsmChatUtility.showToast('Save your media');
     } catch (e, st) {
       IsmChatLog.error('Error downloading :- $e\n$st');
     }

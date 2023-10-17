@@ -238,19 +238,21 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                           IsmChatColors.whiteColor,
                 ),
                 itemBuilder: (context) => [
-                  PopupMenuItem(
-                    value: 1,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.search_rounded,
-                          color: IsmChatConfig.chatTheme.primaryColor,
-                        ),
-                        IsmChatDimens.boxWidth8,
-                        const Text(IsmChatStrings.search)
-                      ],
+                  if (IsmChatProperties.chatPageProperties.features
+                      .contains(IsmChatFeature.searchMessage))
+                    PopupMenuItem(
+                      value: 1,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.search_rounded,
+                            color: IsmChatConfig.chatTheme.primaryColor,
+                          ),
+                          IsmChatDimens.boxWidth8,
+                          const Text(IsmChatStrings.search)
+                        ],
+                      ),
                     ),
-                  ),
                   if (IsmChatProperties.chatPageProperties.features
                       .contains(IsmChatFeature.chageWallpaper))
                     PopupMenuItem(

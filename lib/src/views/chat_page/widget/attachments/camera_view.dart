@@ -6,6 +6,7 @@ import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class IsmChatCameraView extends StatefulWidget {
@@ -32,6 +33,20 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
           removeTop: true,
           context: context,
           child: Scaffold(
+            extendBodyBehindAppBar: true,
+            appBar: PreferredSize(
+              preferredSize: Size(
+                Get.width,
+                IsmChatDimens.zero,
+              ),
+              child: AppBar(
+                systemOverlayStyle: const SystemUiOverlayStyle(
+                  statusBarIconBrightness: Brightness.light,
+                ),
+                backgroundColor: IsmChatColors.blackColor,
+                elevation: 0,
+              ),
+            ),
             backgroundColor: IsmChatColors.blackColor,
             body: Stack(
               alignment: Alignment.center,

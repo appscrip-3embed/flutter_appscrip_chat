@@ -617,7 +617,8 @@ enum IsmChatFeature {
   reply,
   forward,
   reaction,
-  chageWallpaper;
+  chageWallpaper,
+  searchMessage;
 }
 
 enum IsmChatDbBox { main, pending }
