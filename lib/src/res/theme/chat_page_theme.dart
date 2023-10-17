@@ -15,6 +15,7 @@ class IsmChatPageThemeData {
     this.sendButtonThemData,
     this.textFiledThemData,
     this.centerMessageThemData,
+    this.replyMessageThem,
   });
 
   final double? profileImageSize;
@@ -30,4 +31,5 @@ class IsmChatPageThemeData {
   final IsmChatSendButtonThemData? sendButtonThemData;
   final IsmChatTextFiledThemData? textFiledThemData;
   final IsmChatCenterMessageThemData? centerMessageThemData;
+  final IsmChatReplyMessageThem? replyMessageThem;
 }

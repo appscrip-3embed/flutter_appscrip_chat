@@ -63,9 +63,22 @@ class _ReplyMessage extends StatelessWidget {
                     width: IsmChatDimens.four,
                     height: IsmChatDimens.fifty,
                     child: ColoredBox(
-                      color: replyingMyMessage
-                          ? IsmChatColors.yellowColor
-                          : IsmChatColors.blueColor,
+                      color: IsmChatConfig
+                                  .chatTheme.chatPageTheme?.replyMessageThem !=
+                              null
+                          ? replyingMyMessage
+                              ? IsmChatConfig.chatTheme.chatPageTheme
+                                      ?.replyMessageThem?.selfReplayMessage ??
+                                  IsmChatColors.yellowColor
+                              : IsmChatConfig
+                                      .chatTheme
+                                      .chatPageTheme
+                                      ?.replyMessageThem
+                                      ?.opponentReplayMessage ??
+                                  IsmChatColors.blueColor
+                          : replyingMyMessage
+                              ? IsmChatColors.yellowColor
+                              : IsmChatColors.blueColor,
                     ),
                   ),
                   Padding(
@@ -81,9 +94,20 @@ class _ReplyMessage extends StatelessWidget {
                                       .capitalizeFirst ??
                                   '',
                           style: IsmChatStyles.w500Black14.copyWith(
-                            color: replyingMyMessage
-                                ? IsmChatColors.yellowColor
-                                : IsmChatColors.blueColor,
+                            color: IsmChatConfig.chatTheme.chatPageTheme
+                                        ?.replyMessageThem !=
+                                    null
+                                ? replyingMyMessage
+                                    ? IsmChatConfig.chatTheme.chatPageTheme
+                                        ?.replyMessageThem?.selfReplayMessage
+                                    : IsmChatConfig
+                                        .chatTheme
+                                        .chatPageTheme
+                                        ?.replyMessageThem
+                                        ?.opponentReplayMessage
+                                : replyingMyMessage
+                                    ? IsmChatColors.yellowColor
+                                    : IsmChatColors.blueColor,
                           ),
                         ),
                         ConstrainedBox(

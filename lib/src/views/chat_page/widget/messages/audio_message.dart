@@ -55,29 +55,41 @@ class IsmChatAudioMessage extends StatelessWidget {
 }
 
 /// document will be added
-class Noises extends StatelessWidget {
+class Noises extends StatefulWidget {
   const Noises({Key? key, this.color}) : super(key: key);
   final Color? color;
+
+  @override
+  State<Noises> createState() => _NoisesState();
+}
+
+class _NoisesState extends State<Noises> {
+  List<Widget>? widgetList;
+
+  @override
+  void initState() {
+    super.initState();
+    widgetList = List.generate(27, (index) => _singleNoise(context));
+  }
 
   @override
   Widget build(BuildContext context) => FittedBox(
         child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [for (int i = 0; i < 27; i++) _singleNoise(context)],
+          children: widgetList ?? [],
         ),
       );
 
   Widget _singleNoise(BuildContext context) {
     final height = 40 * math.Random().nextDouble() + 2;
-
     return Container(
       margin: EdgeInsets.symmetric(horizontal: IsmChatDimens.one),
       width: IsmChatDimens.two,
       height: height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(IsmChatDimens.fifty),
-        color: color,
+        color: widget.color,
       ),
     );
   }
