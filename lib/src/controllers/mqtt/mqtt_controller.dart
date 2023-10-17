@@ -392,6 +392,10 @@ class IsmChatMqttController extends GetxController {
       return;
     }
 
+    if (!Get.isRegistered<IsmChatConversationsController>()) {
+      return;
+    }
+
     var conversationController = Get.find<IsmChatConversationsController>();
     var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: message.conversationId);
