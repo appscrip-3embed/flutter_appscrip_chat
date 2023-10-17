@@ -28,6 +28,7 @@ class IsmPageRoutes {
   static const String media = '/media';
   static const String location = '/location';
   static const String webMediaPreivew = '/webMediaPreivew';
+  static const String eidtMedia = '/eidtMedia';
   static const String messageMediaPreivew = '/messageMediaPreivew';
   static const String cameraView = '/cameraView';
   static const String searchMessage = '/searchMessage';

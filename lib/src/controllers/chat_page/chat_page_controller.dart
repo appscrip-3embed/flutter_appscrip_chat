@@ -1573,7 +1573,7 @@ class IsmChatPageController extends GetxController
       }
 
       fileSize = await IsmChatUtility.fileToSize(imagePath!);
-      await Get.to(const IsmChatImageEditView());
+      IsmChatRouteManagement.goToMediaEditView();
     }
   }
 

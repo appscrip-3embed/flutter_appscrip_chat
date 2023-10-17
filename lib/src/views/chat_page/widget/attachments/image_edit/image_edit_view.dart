@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 class IsmChatImageEditView extends StatelessWidget {
   const IsmChatImageEditView({Key? key}) : super(key: key);
 
+  static const String route = IsmPageRoutes.eidtMedia;
+
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
         builder: (controller) => Scaffold(
