@@ -19,7 +19,7 @@ class IsmChatConversationUpdate extends StatelessWidget {
         ),
         padding: IsmChatDimens.edgeInsets8_4,
         child: Text(
-          '${message.initiator} changed this group ${message.customType == IsmChatCustomMessageType.conversationTitleUpdated ? 'title' : 'profile'}',
+          '${message.initiator} changed the ${message.customType == IsmChatCustomMessageType.conversationTitleUpdated ? 'title' : 'profile picture'} of the group',
           // textAlign: TextAlign.center,
           style: IsmChatConfig
                   .chatTheme.chatPageTheme?.centerMessageThemData?.textStyle ??

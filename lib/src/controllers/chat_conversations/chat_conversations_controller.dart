@@ -24,6 +24,8 @@ class IsmChatConversationsController extends GetxController {
   /// This variable use for type user name for searcing feature
   TextEditingController userSearchNameController = TextEditingController();
 
+  TextEditingController globalSearchController = TextEditingController();
+
   /// This variable use for get all method and varibles from IsmChatCommonController
   IsmChatCommonController get _commonController =>
       Get.find<IsmChatCommonController>();
@@ -36,6 +38,13 @@ class IsmChatConversationsController extends GetxController {
   List<IsmChatConversationModel> get conversations => _conversations;
   set conversations(List<IsmChatConversationModel> value) =>
       _conversations.value = value;
+
+  /// This variable use for store conversation details
+  final _searchConversationList = <IsmChatConversationModel>[].obs;
+  List<IsmChatConversationModel> get searchConversationList =>
+      _searchConversationList;
+  set searchConversationList(List<IsmChatConversationModel> value) =>
+      _searchConversationList.value = value;
 
   /// This variable use for store public and open conversation details
   final _publicAndOpenConversation = <IsmChatConversationModel>[].obs;
@@ -90,6 +99,12 @@ class IsmChatConversationsController extends GetxController {
 
   /// This variabel use for store refreshcontroller on chat empty list
   final refreshControllerOnEmptyList = RefreshController(
+    initialRefresh: false,
+    initialLoadStatus: LoadStatus.idle,
+  );
+
+  /// This variabel use for store refreshcontroller on search conversation list
+  final searchConversationrefreshController = RefreshController(
     initialRefresh: false,
     initialLoadStatus: LoadStatus.idle,
   );
@@ -255,6 +270,11 @@ class IsmChatConversationsController extends GetxController {
   /// When you have scroll or you want get pagination then you have use it.
   var conversationScrollController = ScrollController();
 
+  /// This variabel use for search conversation scrolling controller
+  ///
+  /// When you have scroll or you want get pagination then you have use it.
+  var searchConversationScrollController = ScrollController();
+
   /// This variable use for store filete conversation list
   ///
   /// When user add conversaiton `IsmChatProperties.conversationProperties.conversationPredicate` in `IsmChatApp`
@@ -276,6 +296,11 @@ class IsmChatConversationsController extends GetxController {
   /// This StreamSubscription listen internet `on` or `off` when app in running
   StreamSubscription<ConnectivityResult>? connectivitySubscription;
 
+  final _userMeessages = <IsmChatMessageModel>[].obs;
+  List<IsmChatMessageModel> get userMeessages => _userMeessages;
+  set userMeessages(List<IsmChatMessageModel> value) =>
+      _userMeessages.value = value;
+
   @override
   onInit() async {
     super.onInit();
@@ -292,18 +317,15 @@ class IsmChatConversationsController extends GetxController {
     await getChatConversations();
     await Get.find<IsmChatMqttController>().getChatConversationsUnreadCount();
     await getBackGroundAssets();
-    conversationScrollController.addListener(() async {
-      if (conversationScrollController.offset.toInt() ==
-          conversationScrollController.position.maxScrollExtent.toInt()) {
-        await getChatConversations(
-          skip: conversations.length.pagination(),
-        );
-      }
-    });
-
-    if (await IsmChatUtility.isNetworkAvailable) {
-      sendPendingMessgae();
-    }
+    await getUserMessges(
+      senderIds: [
+        IsmChatConfig.communicationConfig.userConfig.userId.isNotEmpty
+            ? IsmChatConfig.communicationConfig.userConfig.userId
+            : userDetails?.userId ?? ''
+      ],
+    );
+    scrollListener();
+    sendPendingMessgae();
   }
 
   @override
@@ -320,6 +342,7 @@ class IsmChatConversationsController extends GetxController {
 
   void onDispose() {
     conversationScrollController.dispose();
+    searchConversationScrollController.dispose();
     connectivitySubscription?.cancel();
   }
 
@@ -340,6 +363,30 @@ class IsmChatConversationsController extends GetxController {
         }
       }
     }
+  }
+
+  void scrollListener() async {
+    conversationScrollController.addListener(
+      () async {
+        if (conversationScrollController.offset.toInt() ==
+            conversationScrollController.position.maxScrollExtent.toInt()) {
+          await getChatConversations(
+            skip: conversations.length.pagination(),
+          );
+        }
+      },
+    );
+    searchConversationScrollController.addListener(
+      () async {
+        if (searchConversationScrollController.offset.toInt() ==
+            searchConversationScrollController.position.maxScrollExtent
+                .toInt()) {
+          await getChatConversations(
+            skip: searchConversationList.length.pagination(),
+          );
+        }
+      },
+    );
   }
 
   Widget isRenderScreenWidget() {
@@ -715,6 +762,32 @@ class IsmChatConversationsController extends GetxController {
     }
   }
 
+  Future<void> getChatSearchConversations({
+    int skip = 0,
+    ApiCallOrigin? origin,
+    int chatLimit = 20,
+  }) async {
+    if (searchConversationList.isEmpty) {
+      isConversationsLoading = true;
+    }
+
+    var response = await _viewModel.getChatConversations(
+      skip,
+      chatLimit: chatLimit,
+    );
+
+    searchConversationList = response;
+
+    if (origin == ApiCallOrigin.referesh) {
+      searchConversationrefreshController.refreshCompleted(
+        resetFooterState: true,
+      );
+    } else if (origin == ApiCallOrigin.loadMore) {
+      searchConversationrefreshController.loadComplete();
+    }
+    isConversationsLoading = false;
+  }
+
   Future<void> getBlockUser() async {
     var users = await _viewModel.getBlockUser(skip: 0, limit: 20);
     if (users != null) {
@@ -1055,6 +1128,60 @@ class IsmChatConversationsController extends GetxController {
         }
       } else if (isMessageSent) {
         await getChatConversations();
+      }
+    }
+  }
+
+  Future<void> getUserMessges({
+    List<String>? ids,
+    List<String>? messageTypes,
+    List<String>? customTypes,
+    List<String>? attachmentTypes,
+    String? showInConversation,
+    List<String>? senderIds,
+    String? parentMessageId,
+    int? lastMessageTimestamp,
+    bool? conversationStatusMessage,
+    String? searchTag,
+    String? fetchConversationDetails,
+    bool deliveredToMe = false,
+    bool senderIdsExclusive = true,
+    int limit = 20,
+    int? skip = 0,
+    int? sort = -1,
+    bool isLoading = false,
+  }) async {
+    var response = await _viewModel.getUserMessges(
+      attachmentTypes: attachmentTypes,
+      conversationStatusMessage: conversationStatusMessage,
+      customTypes: customTypes,
+      deliveredToMe: deliveredToMe,
+      fetchConversationDetails: fetchConversationDetails,
+      ids: ids,
+      lastMessageTimestamp: lastMessageTimestamp,
+      limit: limit,
+      messageTypes: messageTypes,
+      parentMessageId: parentMessageId,
+      searchTag: searchTag,
+      senderIds: senderIds,
+      senderIdsExclusive: senderIdsExclusive,
+      showInConversation: showInConversation,
+      skip: skip,
+      sort: sort,
+      isLoading: isLoading,
+    );
+    if (response != null) {
+      userMeessages = response;
+      for (var message in userMeessages) {
+        var isSender =
+            message.deliveredTo?.any((e) => e.userId == senderIds?.first);
+        if (isSender == false) {
+          await Future.delayed(const Duration(milliseconds: 10));
+          await pingMessageDelivered(
+            conversationId: message.conversationId ?? '',
+            messageId: message.messageId ?? '',
+          );
+        }
       }
     }
   }

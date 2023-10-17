@@ -295,15 +295,18 @@ class _CreateChatBottomSheet extends StatelessWidget {
             onPressed: _startConversation,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.people_rounded,
-                  color: IsmChatConfig.chatTheme.primaryColor,
+                SizedBox(
+                  width: IsmChatDimens.fifty,
+                  child: Icon(
+                    Icons.people_rounded,
+                    color: IsmChatConfig.chatTheme.primaryColor,
+                  ),
                 ),
                 IsmChatDimens.boxWidth8,
                 Text(
-                  '1 to 1 Conversation',
+                  '1 to 1 ${IsmChatStrings.conversation}',
                   style: IsmChatStyles.w400White18.copyWith(
                     color: IsmChatConfig.chatTheme.primaryColor,
                   ),
@@ -315,15 +318,18 @@ class _CreateChatBottomSheet extends StatelessWidget {
             onPressed: () => _startConversation(true),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.groups_rounded,
-                  color: IsmChatConfig.chatTheme.primaryColor,
+                SizedBox(
+                  width: IsmChatDimens.fifty,
+                  child: Icon(
+                    Icons.groups_rounded,
+                    color: IsmChatConfig.chatTheme.primaryColor,
+                  ),
                 ),
                 IsmChatDimens.boxWidth8,
                 Text(
-                  'Group Conversation',
+                  IsmChatStrings.groupConversation,
                   style: IsmChatStyles.w400White18.copyWith(
                     color: IsmChatConfig.chatTheme.primaryColor,
                   ),
@@ -337,16 +343,19 @@ class _CreateChatBottomSheet extends StatelessWidget {
               IsmChatConversationType.public,
             ),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.group_add_outlined,
-                  color: IsmChatConfig.chatTheme.primaryColor,
+                SizedBox(
+                  width: IsmChatDimens.fifty,
+                  child: Icon(
+                    Icons.group_add_outlined,
+                    color: IsmChatConfig.chatTheme.primaryColor,
+                  ),
                 ),
                 IsmChatDimens.boxWidth8,
                 Text(
-                  'Public Conversation',
+                  IsmChatStrings.publicConversation,
                   style: IsmChatStyles.w400White18.copyWith(
                     color: IsmChatConfig.chatTheme.primaryColor,
                   ),
@@ -361,15 +370,41 @@ class _CreateChatBottomSheet extends StatelessWidget {
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.reduce_capacity_outlined,
-                  color: IsmChatConfig.chatTheme.primaryColor,
+                SizedBox(
+                  width: IsmChatDimens.fifty,
+                  child: Icon(
+                    Icons.reduce_capacity_outlined,
+                    color: IsmChatConfig.chatTheme.primaryColor,
+                  ),
                 ),
                 IsmChatDimens.boxWidth8,
                 Text(
-                  'Open Conversation',
+                  IsmChatStrings.openConversation,
+                  style: IsmChatStyles.w400White18.copyWith(
+                    color: IsmChatConfig.chatTheme.primaryColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: IsmChatRouteManagement.goToBroadcastView,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: IsmChatDimens.fifty,
+                  child: Icon(
+                    Icons.campaign_outlined,
+                    color: IsmChatConfig.chatTheme.primaryColor,
+                  ),
+                ),
+                IsmChatDimens.boxWidth8,
+                Text(
+                  IsmChatStrings.boradcastMessge,
                   style: IsmChatStyles.w400White18.copyWith(
                     color: IsmChatConfig.chatTheme.primaryColor,
                   ),

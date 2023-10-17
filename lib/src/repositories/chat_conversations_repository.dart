@@ -68,10 +68,18 @@ class IsmChatConversationsRepository {
   Future<List<IsmChatConversationModel>?> getChatConversations({
     required int skip,
     required int limit,
+    String? searchTag,
   }) async {
     try {
+      String? url;
+      if (searchTag != null && searchTag.isNotEmpty) {
+        url =
+            '${IsmChatAPI.getChatConversations}?searchTag=$searchTag&skip=$skip&limit=$limit';
+      } else {
+        url = '${IsmChatAPI.getChatConversations}?skip=$skip&limit=$limit';
+      }
       var response = await _apiWrapper.get(
-        '${IsmChatAPI.getChatConversations}?includeConversationStatusMessagesInUnreadMessagesCount=false&skip=$skip&limit=$limit',
+        url,
         headers: IsmChatUtility.tokenCommonHeader(),
       );
       if (response.hasError) {
@@ -461,6 +469,44 @@ class IsmChatConversationsRepository {
           .toList();
     } catch (e, st) {
       IsmChatLog.error('Get observer user $e, $st');
+      return null;
+    }
+  }
+
+  Future<List<IsmChatMessageModel>?> getUserMessges({
+    List<String>? ids,
+    List<String>? messageTypes,
+    List<String>? customTypes,
+    List<String>? attachmentTypes,
+    String? showInConversation,
+    List<String>? senderIds,
+    String? parentMessageId,
+    int? lastMessageTimestamp,
+    bool? conversationStatusMessage,
+    String? searchTag,
+    String? fetchConversationDetails,
+    bool deliveredToMe = false,
+    bool senderIdsExclusive = true,
+    int limit = 20,
+    int? skip = 0,
+    int? sort = -1,
+    bool isLoading = false,
+  }) async {
+    try {
+      var response = await _apiWrapper.get(
+          '${IsmChatAPI.userchatMessages}?senderIdsExclusive=$senderIdsExclusive&deliveredToMe=$deliveredToMe&senderIds=${senderIds?.join(',')}&limit=$limit&skip=$skip&sort=$sort',
+          headers: IsmChatUtility.tokenCommonHeader(),
+          showLoader: isLoading);
+
+      if (response.hasError) {
+        return null;
+      }
+      var data = jsonDecode(response.data);
+      return (data['messages'] as List)
+          .map((e) => IsmChatMessageModel.fromMap(e as Map<String, dynamic>))
+          .toList();
+    } catch (e, st) {
+      IsmChatLog.error('Get user messages $e, $st');
       return null;
     }
   }

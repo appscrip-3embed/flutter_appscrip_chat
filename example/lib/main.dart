@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/res/res.dart';
 import 'package:chat_component_example/utilities/utilities.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:url_strategy/url_strategy.dart';
+
 import 'data/data.dart';
 import 'views/views.dart';
 
@@ -28,45 +30,7 @@ Future<void> initialize() async {
   setPathUrlStrategy();
   if (!kIsWeb) {
     await Firebase.initializeApp();
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-    await messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgorundHandler);
-
-    // when app is killed
-    final initialMessage = await messaging.getInitialMessage();
-    IsmChatLog.error('recieved messgae on app killed step1');
-    if (initialMessage != null) {
-      IsmChatLog.error('recieved messgae on app killed step2');
-      LocalNoticeService().cancelAllNotification();
-      LocalNoticeService().addNotification(
-        '', // Add the  sender user name here
-        '', // MessageName
-        DateTime.now().millisecondsSinceEpoch + 1 * 1000,
-        sound: '',
-        channel: 'message',
-      );
-    }
-
-    // when app is in background
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? message) async {
-      IsmChatLog.error('recieved messgae on app background');
-      LocalNoticeService().cancelAllNotification();
-      LocalNoticeService().addNotification(
-        '', // Add the  sender user name here
-        '', // MessageName
-        DateTime.now().millisecondsSinceEpoch + 1 * 1000,
-        sound: '',
-        channel: 'message',
-      );
-    });
   }
   dbWrapper = await DBWrapper.create();
   await AppConfig.getUserData();
@@ -91,10 +55,35 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  final PushNotificationService _notificationService =
+      PushNotificationService();
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _notificationService.requestNotificationService();
+    _notificationService.initialize();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    // if ([AppLifecycleState.detached, AppLifecycleState.inactive]
+    //     .contains(state)) return;
+    if (AppLifecycleState.paused == state) {
+      IsmChatLog.error('app in backgorund');
+    }
+    if (AppLifecycleState.detached == state) {
+      IsmChatLog.error('app in killed');
+    }
   }
 
   @override
@@ -130,5 +119,44 @@ class _MyAppState extends State<MyApp> {
         getPages: AppPages.pages,
       ),
     );
+  }
+}
+
+class PushNotificationService {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  void requestNotificationService() async {
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (![AuthorizationStatus.authorized, AuthorizationStatus.provisional]
+        .contains(settings.authorizationStatus)) {
+      AppSettings.openAppSettings();
+    }
+  }
+
+  Future<void> initialize() async {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      IsmChatLog.error('Got a message whilst in the foreground!');
+      IsmChatLog.error('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        IsmChatLog.error(
+            'Message also contained a notification: ${message.notification}');
+      }
+    });
+  }
+
+  Future<String?> getToken() async {
+    String? token = await messaging.getToken();
+    IsmChatLog.error('Token: $token');
+    return token;
   }
 }

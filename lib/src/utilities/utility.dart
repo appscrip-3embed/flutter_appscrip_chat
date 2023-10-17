@@ -48,19 +48,23 @@ class IsmChatUtility {
     );
   }
 
-  static Future<T?> openFullScreenBottomSheet<T>(Widget child,
-          {bool isDismissible = false,
-          bool ignoreSafeArea = false,
-          bool enableDrag = false,
-          Color? backgroundColor,
-          ShapeBorder? shape}) async =>
-      await Get.bottomSheet<T>(child,
-          isDismissible: isDismissible,
-          isScrollControlled: true,
-          ignoreSafeArea: ignoreSafeArea,
-          enableDrag: enableDrag,
-          backgroundColor: backgroundColor,
-          shape: shape);
+  static Future<T?> openFullScreenBottomSheet<T>(
+    Widget child, {
+    bool isDismissible = false,
+    bool ignoreSafeArea = false,
+    bool enableDrag = false,
+    Color? backgroundColor,
+    ShapeBorder? shape,
+  }) async =>
+      await Get.bottomSheet<T>(
+        child,
+        isDismissible: isDismissible,
+        isScrollControlled: true,
+        ignoreSafeArea: ignoreSafeArea,
+        enableDrag: enableDrag,
+        backgroundColor: backgroundColor,
+        shape: shape,
+      );
 
   /// Returns true if the internet connection is available.
   static Future<bool> get isNetworkAvailable async {

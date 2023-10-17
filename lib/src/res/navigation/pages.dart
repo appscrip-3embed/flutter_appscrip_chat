@@ -45,6 +45,26 @@ class IsmChatPages {
       binding: IsmChatConversationsBinding(),
     ),
     GetPage(
+      name: IsmChatMessageSearchView.route,
+      page: IsmChatMessageSearchView.new,
+      binding: IsmChatConversationsBinding(),
+    ),
+    GetPage(
+      name: IsmChatConversationSearchView.route,
+      page: IsmChatConversationSearchView.new,
+      binding: IsmChatConversationsBinding(),
+    ),
+    GetPage(
+      name: IsmChatGlobalSearchView.route,
+      page: IsmChatGlobalSearchView.new,
+      binding: IsmChatConversationsBinding(),
+    ),
+    GetPage(
+      name: IsmChatUserSearchView.route,
+      page: IsmChatUserSearchView.new,
+      binding: IsmChatConversationsBinding(),
+    ),
+    GetPage(
       name: IsmChatPageView.route,
       page: IsmChatPageView.new,
       binding: IsmChatPageBinding(),

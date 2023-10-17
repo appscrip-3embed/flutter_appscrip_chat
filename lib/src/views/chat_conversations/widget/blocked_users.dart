@@ -10,10 +10,11 @@ class IsmChatBlockedUsersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: IsmChatAppBar(
-            title: Text(
-          IsmChatStrings.blockedUsers,
-          style: IsmChatStyles.w600White18,
-        )),
+          title: Text(
+            IsmChatStrings.blockedUsers,
+            style: IsmChatStyles.w600White18,
+          ),
+        ),
         body: GetX<IsmChatConversationsController>(
           builder: (controller) => controller.blockUsers.isEmpty
               ? const Center(
@@ -34,7 +35,6 @@ class IsmChatBlockedUsersView extends StatelessWidget {
                       subtitle: Text(
                         user.userIdentifier,
                       ),
-                      // TODO: Implement unblock API here
                       trailing: ElevatedButton(
                         onPressed: () {
                           if (!Responsive.isWebAndTablet(context)) {

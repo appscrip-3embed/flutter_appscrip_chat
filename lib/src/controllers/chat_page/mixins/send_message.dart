@@ -45,21 +45,22 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       _controller.conversation = _controller.conversation
           ?.copyWith(conversationId: conversationId.toString());
       var dbConversationModel = IsmChatConversationModel(
-        conversationId: conversationId.toString(),
-        conversationImageUrl: _controller.conversation!.conversationImageUrl,
-        conversationTitle: _controller.conversation!.conversationTitle,
-        isGroup: false,
-        lastMessageSentAt: _controller.conversation?.lastMessageSentAt ?? 0,
-        messagingDisabled: _controller.conversation?.messagingDisabled,
-        membersCount: _controller.conversation?.membersCount,
-        unreadMessagesCount: _controller.conversation?.unreadMessagesCount,
-        messages: [],
-        opponentDetails: _controller.conversation?.opponentDetails,
-        lastMessageDetails: _controller.conversation?.lastMessageDetails
-            ?.copyWith(deliverCount: 0),
-        config: _controller.conversation?.config,
-        metaData: _controller.conversation?.metaData,
-      );
+          conversationId: conversationId.toString(),
+          conversationImageUrl: _controller.conversation!.conversationImageUrl,
+          conversationTitle: _controller.conversation!.conversationTitle,
+          isGroup: false,
+          lastMessageSentAt: _controller.conversation?.lastMessageSentAt ?? 0,
+          messagingDisabled: _controller.conversation?.messagingDisabled,
+          membersCount: _controller.conversation?.membersCount,
+          unreadMessagesCount: _controller.conversation?.unreadMessagesCount,
+          messages: [],
+          opponentDetails: _controller.conversation?.opponentDetails,
+          lastMessageDetails: _controller.conversation?.lastMessageDetails
+              ?.copyWith(deliverCount: 0),
+          config: _controller.conversation?.config,
+          metaData: _controller.conversation?.metaData,
+          conversationType: _controller.conversation?.conversationType);
+
       await IsmChatConfig.dbWrapper!
           .createAndUpdateConversation(dbConversationModel);
       return conversationId.toString();

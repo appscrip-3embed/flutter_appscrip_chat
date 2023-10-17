@@ -19,12 +19,13 @@ class IsmChatPageViewModel {
     bool isTemporaryChat = false,
   }) async {
     var messages = await _repository.getChatMessages(
-        conversationId: conversationId,
-        lastMessageTimestamp: lastMessageTimestamp,
-        limit: limit,
-        skip: pagination ?? 0,
-        searchText: searchText,
-        isLoading: isLoading);
+      conversationId: conversationId,
+      lastMessageTimestamp: lastMessageTimestamp,
+      limit: limit,
+      skip: pagination ?? 0,
+      searchText: searchText,
+      isLoading: isLoading,
+    );
 
     if (messages == null) {
       return [];
@@ -36,11 +37,11 @@ class IsmChatPageViewModel {
           IsmChatActionEvents.reactionAdd.name,
           IsmChatActionEvents.reactionRemove.name,
           IsmChatActionEvents.conversationDetailsUpdated.name,
-          if (e.memberId !=
-              IsmChatConfig.communicationConfig.userConfig.userId) ...[
-            IsmChatActionEvents.removeAdmin.name,
-            IsmChatActionEvents.addAdmin.name,
-          ]
+          // if (e.memberId !=
+          //     IsmChatConfig.communicationConfig.userConfig.userId) ...[
+          //   IsmChatActionEvents.removeAdmin.name,
+          //   IsmChatActionEvents.addAdmin.name,
+          // ]
         ].contains(e.action));
     if (searchText == null || searchText.isEmpty) {
       if (Get.find<IsmChatPageController>().messages.isNotEmpty) {
@@ -121,9 +122,10 @@ class IsmChatPageViewModel {
     required bool isLoading,
   }) async =>
       await _repository.changeGroupTitle(
-          conversationTitle: conversationTitle,
-          conversationId: conversationId,
-          isLoading: isLoading);
+        conversationTitle: conversationTitle,
+        conversationId: conversationId,
+        isLoading: isLoading,
+      );
 
   /// change group title
   Future<IsmChatResponseModel?> changeGroupProfile({
@@ -311,6 +313,7 @@ class IsmChatPageViewModel {
     if (!response!.hasError) {
       await IsmChatConfig.dbWrapper!
           .clearAllMessage(conversationId: conversationId);
+      await Get.find<IsmChatConversationsController>().getChatConversations();
     }
   }
 
@@ -477,8 +480,6 @@ class IsmChatPageViewModel {
 
   Future<List<UserDetails>?> getReacton({required Reaction reaction}) async =>
       await _repository.getReacton(reaction: reaction);
-
- 
 
   Future<IsmChatResponseModel?> sendBroadcastMessage(
           {required List<String> userIds,

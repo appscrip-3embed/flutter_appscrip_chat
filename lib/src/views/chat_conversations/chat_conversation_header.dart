@@ -27,7 +27,7 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final VoidCallback? onSignOut;
 
-  /// Defines the height of the [IsmChatListHeader]
+  /// Defines the height of the IsmChatListHeader
   final double? height;
 
   final double? width;
@@ -48,11 +48,24 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
                         IsRenderConversationScreen.userView;
                     Scaffold.of(context).openDrawer();
                   }
-                : () => Get.bottomSheet(
-                      IsmChatLogutBottomSheet(
-                        signOutTap: () => onSignOut?.call(),
+                : () => IsmChatUtility.openFullScreenBottomSheet(
+                      IsmChatUserView(
+                        signOutTap: () async {
+                          await Get.dialog(IsmChatAlertDialogBox(
+                            title: '${IsmChatStrings.logout}?',
+                            content: const Text(IsmChatStrings.logoutMessage),
+                            actionLabels: const [
+                              IsmChatStrings.logout,
+                            ],
+                            callbackActions: [
+                              () {
+                                Get.back();
+                                onSignOut?.call();
+                              },
+                            ],
+                          ));
+                        },
                       ),
-                      elevation: IsmChatDimens.twenty,
                       enableDrag: true,
                       backgroundColor: IsmChatColors.whiteColor,
                       shape: RoundedRectangleBorder(
@@ -174,19 +187,21 @@ class _MoreIcon extends StatelessWidget {
         }
       },
       itemBuilder: (_) => [
-        PopupMenuItem(
-          value: 1,
-          child: Row(
-            children: [
-              Icon(
-                Icons.groups_rounded,
-                color: IsmChatConfig.chatTheme.primaryColor,
-              ),
-              IsmChatDimens.boxWidth8,
-              const Text(IsmChatStrings.boradcastMessge),
-            ],
-          ),
-        ),
+        if (Responsive.isWebAndTablet(context)) ...[
+          PopupMenuItem(
+            value: 1,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.groups_rounded,
+                  color: IsmChatConfig.chatTheme.primaryColor,
+                ),
+                IsmChatDimens.boxWidth8,
+                const Text(IsmChatStrings.boradcastMessge),
+              ],
+            ),
+          )
+        ],
         PopupMenuItem(
           value: 2,
           child: Row(
@@ -255,19 +270,19 @@ class _MoreIcon extends StatelessWidget {
 }
 
 class _SearchAction extends StatelessWidget {
-  const _SearchAction({required this.onTap});
+  _SearchAction({required this.onTap});
 
   final void Function(BuildContext, IsmChatConversationModel, bool) onTap;
+
+  final controller = Get.find<IsmChatConversationsController>();
 
   @override
   Widget build(BuildContext context) => IconButton(
         color: IsmChatConfig.chatTheme.primaryColor,
         onPressed: () {
-          Scaffold.of(context).openDrawer();
-          showSearch<void>(
-            context: context,
-            delegate: IsmChatSearchDelegate(onChatTap: onTap),
-          );
+          controller.isConversationsLoading = true;
+          controller.searchConversationList.clear();
+          IsmChatRouteManagement.goToGlobalSearchView();
         },
         icon: const Icon(Icons.search_rounded),
       );

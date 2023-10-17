@@ -263,6 +263,7 @@ class IsmChatDBWrapper {
   ) async {
     try {
       var resposne = await getAllConversations();
+
       if (resposne.isEmpty) {
         await chatConversationBox.put(
           conversationModel.conversationId!,
@@ -288,6 +289,7 @@ class IsmChatDBWrapper {
           config: conversationModel.config,
           metaData: conversationModel.metaData,
         );
+
         await saveConversation(conversation: conversation);
       }
     } catch (e, st) {

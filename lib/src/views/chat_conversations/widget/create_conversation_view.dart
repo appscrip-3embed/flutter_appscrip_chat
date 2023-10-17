@@ -72,7 +72,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                     fillColor: IsmChatConfig.chatTheme.primaryColor,
                     controller: controller.userSearchNameController,
                     style: IsmChatStyles.w400White16,
-                    hint: 'Search user...',
+                    hint: IsmChatStrings.searchUser,
                     hintStyle: IsmChatStyles.w400White16,
                     onChanged: (value) {
                       if (value.trim().isEmpty) {
@@ -193,36 +193,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                           indexBarData: _isGroupConversation ?? false
                               ? const []
                               : SuspensionUtil.getTagIndexList(
-                                  controller.forwardedList)
-                          // [
-                          //     'A',
-                          //     'B',
-                          //     'C',
-                          //     'D',
-                          //     'E',
-                          //     'F',
-                          //     'G',
-                          //     'H',
-                          //     'I',
-                          //     'J',
-                          //     'K',
-                          //     'L',
-                          //     'M',
-                          //     'N',
-                          //     'O',
-                          //     'P',
-                          //     'Q',
-                          //     'R',
-                          //     'S',
-                          //     'T',
-                          //     'U',
-                          //     'V',
-                          //     'W',
-                          //     'X',
-                          //     'Y',
-                          //     'Z'
-                          //   ]
-                          ,
+                                  controller.forwardedList),
                           indexBarMargin: IsmChatDimens.edgeInsets10,
                           indexBarHeight: IsmChatDimens.percentHeight(5),
                           indexBarWidth: IsmChatDimens.forty,
@@ -261,16 +232,29 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                     } else {
                                       var ismChatConversation =
                                           IsmChatConversationModel(
-                                        messagingDisabled: false,
-                                        conversationImageUrl: user
-                                            .userDetails.userProfileImageUrl,
-                                        isGroup: false,
-                                        opponentDetails: user.userDetails,
-                                        unreadMessagesCount: 0,
-                                        lastMessageDetails: null,
-                                        lastMessageSentAt: 0,
-                                        membersCount: 1,
-                                      );
+                                              messagingDisabled: false,
+                                              conversationImageUrl: user
+                                                  .userDetails
+                                                  .userProfileImageUrl,
+                                              isGroup: false,
+                                              opponentDetails: user.userDetails,
+                                              unreadMessagesCount: 0,
+                                              lastMessageDetails:
+                                                  LastMessageDetails(
+                                                sentByMe: true,
+                                                showInConversation: true,
+                                                sentAt: DateTime.now()
+                                                    .millisecondsSinceEpoch,
+                                                senderName: '',
+                                                messageType: 0,
+                                                messageId: '',
+                                                conversationId: '',
+                                                body: '',
+                                              ),
+                                              lastMessageSentAt: 0,
+                                              membersCount: 1,
+                                              conversationType:
+                                                  _conversationType);
                                       ismChatConversation =
                                           ismChatConversation.copyWith(
                                         conversationId:
