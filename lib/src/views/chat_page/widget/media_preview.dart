@@ -78,6 +78,7 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
         appBar: AppBar(
           systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarIconBrightness: Brightness.light,
+            statusBarColor: IsmChatColors.blackColor,
           ),
           backgroundColor: IsmChatColors.blackColor,
           title: Column(
