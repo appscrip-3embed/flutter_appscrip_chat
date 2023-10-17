@@ -68,6 +68,18 @@ class IsmChatPageController extends GetxController
 
   final participnatsEditingController = TextEditingController();
 
+  var noises = <int, Widget>{};
+
+  Widget getNoise(int sentAt, [bool sentByMe = true]) {
+    if (!noises.keys.contains(sentAt)) {
+      var color = sentByMe ? Colors.white : Colors.grey;
+      var noiseList = List.generate(27, (index) => $SingleNoise(color: color));
+      var noise = Noises(noises: noiseList);
+      noises[sentAt] = noise;
+    }
+    return noises[sentAt]!;
+  }
+
   final RxBool _showEmojiBoard = false.obs;
   bool get showEmojiBoard => _showEmojiBoard.value;
   set showEmojiBoard(bool value) => _showEmojiBoard.value = value;
