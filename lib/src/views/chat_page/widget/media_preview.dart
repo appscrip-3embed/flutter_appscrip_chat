@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
@@ -73,8 +74,11 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        backgroundColor: IsmChatColors.blackColor,
+        // backgroundColor: IsmChatColors.redColor,
         appBar: AppBar(
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarIconBrightness: Brightness.light,
+          ),
           backgroundColor: IsmChatColors.blackColor,
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
