@@ -134,21 +134,3 @@ class ChatList extends StatelessWidget {
     );
   }
 }
-
-class Prefred extends StatelessWidget implements PreferredSizeWidget {
-  const Prefred({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return PreferredSize(
-        preferredSize: preferredSize,
-        child: const SizedBox(
-          child: Center(
-            child: Text('Rahul'),
-          ),
-        ));
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(100);
-}

@@ -1102,7 +1102,6 @@ class IsmChatPageController extends GetxController
 
         if (messagesScrollController.offset.toInt() ==
             messagesScrollController.position.maxScrollExtent.toInt()) {
-          IsmChatLog.error('Rahul');
           _controller.canCallCurrentApi = false;
           getMessagesFromAPI(forPagination: true, lastMessageTimestamp: 0);
         }

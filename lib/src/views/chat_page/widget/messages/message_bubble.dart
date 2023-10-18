@@ -5,12 +5,18 @@ import 'package:get/get.dart';
 class MessageBubble extends StatelessWidget {
   MessageBubble({
     super.key,
-    required this.message,
-    required this.showMessageInCenter,
+    IsmChatMessageModel? message,
+    this.showMessageInCenter = false,
     this.index,
-  });
+  }) : _message = message ??
+            IsmChatMessageModel(
+              body: '',
+              sentAt: DateTime.now().millisecondsSinceEpoch,
+              customType: IsmChatCustomMessageType.text,
+              sentByMe: true,
+            );
 
-  final IsmChatMessageModel message;
+  final IsmChatMessageModel _message;
   final bool showMessageInCenter;
   final int? index;
   final GlobalKey globalKey = GlobalKey();
@@ -19,7 +25,7 @@ class MessageBubble extends StatelessWidget {
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
         builder: (controller) => Container(
           key: globalKey,
-          margin: message.reactions?.isNotEmpty == true && !showMessageInCenter
+          margin: _message.reactions?.isNotEmpty == true && !showMessageInCenter
               ? IsmChatDimens.edgeInsetsB25
               : null,
           padding: showMessageInCenter ? IsmChatDimens.edgeInsets4 : null,
@@ -40,9 +46,9 @@ class MessageBubble extends StatelessWidget {
           decoration: showMessageInCenter
               ? null
               : BoxDecoration(
-                  color: message.backgroundColor,
-                  border: Border.all(color: message.borderColor!),
-                  borderRadius: message.sentByMe
+                  color: _message.backgroundColor,
+                  border: Border.all(color: _message.borderColor!),
+                  borderRadius: _message.sentByMe
                       ? IsmChatConfig.chatTheme.chatPageTheme?.selfMessageTheme
                               ?.borderRadius ??
                           BorderRadius.circular(IsmChatDimens.twelve).copyWith(
@@ -60,7 +66,7 @@ class MessageBubble extends StatelessWidget {
                 padding: !showMessageInCenter
                     ? IsmChatDimens.edgeInsets5_5_5_20
                     : IsmChatDimens.edgeInsets0,
-                child: message.customType!.messageType(message),
+                child: _message.customType!.messageType(_message),
               ),
               if (!showMessageInCenter) ...[
                 Positioned(
@@ -70,35 +76,35 @@ class MessageBubble extends StatelessWidget {
                     color: Colors.transparent,
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: message.sentByMe
+                      mainAxisAlignment: _message.sentByMe
                           ? MainAxisAlignment.end
                           : MainAxisAlignment.start,
                       children: [
                         Text(
-                          message.sentAt.toTimeString(),
-                          style: (message.sentByMe
+                          _message.sentAt.toTimeString(),
+                          style: (_message.sentByMe
                                   ? IsmChatStyles.w400White10
                                   : IsmChatStyles.w400Grey10)
                               .copyWith(
-                            color: message.style.color,
+                            color: _message.style.color,
                           ),
                         ),
-                        if (message.sentByMe &&
-                            message.customType !=
+                        if (_message.sentByMe &&
+                            _message.customType !=
                                 IsmChatCustomMessageType
                                     .deletedForEveryone) ...[
                           IsmChatDimens.boxWidth2,
                           Icon(
-                            message.messageId?.isEmpty == true
+                            _message.messageId?.isEmpty == true
                                 ? Icons.watch_later_outlined
-                                : message.deliveredToAll ?? false
+                                : _message.deliveredToAll ?? false
                                     ? Icons.done_all_rounded
                                     : Icons.done_rounded,
-                            color: message.messageId!.isEmpty
+                            color: _message.messageId!.isEmpty
                                 ? IsmChatConfig.chatTheme.chatPageTheme
                                         ?.unreadCheckColor ??
                                     Colors.white
-                                : message.readByAll ?? false
+                                : _message.readByAll ?? false
                                     ? IsmChatConfig.chatTheme.chatPageTheme
                                             ?.readCheckColor ??
                                         Colors.blue
@@ -128,7 +134,7 @@ class MessageBubble extends StatelessWidget {
                                 controller.holdController?.forward();
                                 controller.showOverlayWeb(
                                   globalKey.currentContext!,
-                                  message,
+                                  _message,
                                   controller.holdAnimation!,
                                 );
                               }
@@ -146,7 +152,7 @@ class MessageBubble extends StatelessWidget {
                               ),
                               child: Icon(
                                 Icons.expand_more_rounded,
-                                color: message.textColor,
+                                color: _message.textColor,
                               ),
                             ),
                           ),

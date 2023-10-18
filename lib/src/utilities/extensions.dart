@@ -476,6 +476,21 @@ extension BlockStatus on IsmChatConversationModel {
   }
 }
 
+extension ConversationCount on List<IsmChatConversationModel> {
+  int get unreadCount {
+    var i = 0;
+    var count = 0;
+    while (i < length) {
+      var conversaiton = this[i];
+      if (conversaiton.unreadMessagesCount != 0) {
+        count++;
+      }
+      i++;
+    }
+    return count;
+  }
+}
+
 extension MenuIcon on IsmChatFocusMenuType {
   IconData get icon {
     switch (this) {
