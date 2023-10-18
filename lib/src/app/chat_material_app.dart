@@ -141,6 +141,18 @@ class IsmChatApp extends StatelessWidget {
   static Future<List<IsmChatConversationModel>?> getAllConversation() async =>
       IsmChatConfig.dbWrapper?.getAllConversations();
 
+  /// Call this funcation for get all conversation list with conversation preidcate
+  static Future<List<IsmChatConversationModel>> get userConversations =>
+      getAllConversation().then((conversations) => (conversations ?? [])
+          .where(
+              IsmChatProperties.conversationProperties.conversationPredicate ??
+                  (_) => true)
+          .toList());
+
+  /// Call this funcation for get all conversation unreadCount
+  static Future<int> get unreadCount =>
+      userConversations.then((value) => value.unreadCount);
+
   /// Call this function for update conversation Details in meta data
   static Future<void> updateConversation(
           {required String conversationId,
