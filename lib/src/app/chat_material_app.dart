@@ -141,7 +141,7 @@ class IsmChatApp extends StatelessWidget {
   static Future<List<IsmChatConversationModel>?> getAllConversation() async =>
       IsmChatConfig.dbWrapper?.getAllConversations();
 
-  /// Call this funcation for get all conversation list with conversation preidcate
+  /// Call this funcation for get all conversation list with conversation predicate
   static Future<List<IsmChatConversationModel>> get userConversations =>
       getAllConversation().then((conversations) => (conversations ?? [])
           .where(
@@ -149,7 +149,7 @@ class IsmChatApp extends StatelessWidget {
                   (_) => true)
           .toList());
 
-  /// Call this funcation for get all conversation unreadCount
+  /// Call this funcation for get all conversation unreadCount with predicate
   static Future<int> get unreadCount =>
       userConversations.then((value) => value.unreadCount);
 
@@ -350,12 +350,16 @@ class IsmChatApp extends StatelessWidget {
     await controller.goToChatPage();
   }
 
+  /// This variable use for store conversation unread count value
+  /// This variable update when call api UnreadConverstaion on every action in chat
   static final RxString _unReadConversationMessages = ''.obs;
   static String get unReadConversationMessages =>
       _unReadConversationMessages.value;
   static set unReadConversationMessages(String value) =>
       _unReadConversationMessages.value = value;
 
+  /// This variable use for mqtt connected or not
+  /// This variable update when mqtt connection on app initlized
   static final RxBool _isMqttConnected = false.obs;
   static bool get isMqttConnected => _isMqttConnected.value;
   static set isMqttConnected(bool value) => _isMqttConnected.value = value;
