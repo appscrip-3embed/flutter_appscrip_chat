@@ -387,18 +387,17 @@ class IsmChatMqttController extends GetxController {
 
   void _handleMessage(IsmChatMessageModel message) async {
     await Future.delayed(const Duration(milliseconds: 100));
-
     if (message.senderInfo?.userId == _communicationConfig.userConfig.userId) {
       return;
     }
-
     if (!Get.isRegistered<IsmChatConversationsController>()) {
       return;
     }
-
     var conversationController = Get.find<IsmChatConversationsController>();
     var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: message.conversationId);
+    await Future.delayed(const Duration(milliseconds: 50));
+
     if (conversation == null && Get.isRegistered<IsmChatPageController>()) {
       final controller = Get.find<IsmChatPageController>();
 
@@ -454,15 +453,16 @@ class IsmChatMqttController extends GetxController {
         conversation.messages?.add(message);
       }
     }
+
     await IsmChatConfig.dbWrapper!.saveConversation(conversation: conversation);
     unawaited(conversationController.getConversationsFromDB());
     await conversationController.pingMessageDelivered(
       conversationId: message.conversationId!,
       messageId: message.messageId!,
     );
+
     _handleUnreadMessages(message.senderInfo?.userId ?? '');
 
-    // To handle messages in chatList
     if (!Get.isRegistered<IsmChatPageController>()) {
       return;
     }

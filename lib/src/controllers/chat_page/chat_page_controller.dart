@@ -1284,7 +1284,7 @@ class IsmChatPageController extends GetxController
     if (adminCount == 1 && isUserAdmin) {
       var members = groupMembers.where((e) => !e.isAdmin).toList();
       var member = members[Random().nextInt(members.length)];
-      await makeAdmin(member.userId, false);
+      await makeAdmin(member.userId, member.userName, false);
     }
     var didLeft = await leaveConversation(conversation!.conversationId!);
     if (didLeft) {

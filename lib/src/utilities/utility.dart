@@ -115,15 +115,15 @@ class IsmChatUtility {
   /// this is for change decode string to encode string
   static String encodePayload(String value) => utf8.fuse(base64).encode(value);
 
-  static void showToast(String message) {
+  static void showToast(String message, {int timeOutInSec = 1}) {
     Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.CENTER,
-      timeInSecForIosWeb: 1,
+      timeInSecForIosWeb: timeOutInSec,
       backgroundColor: IsmChatConfig.chatTheme.backgroundColor,
       textColor: IsmChatConfig.chatTheme.primaryColor,
-      fontSize: 16.0,
+      fontSize: IsmChatDimens.sixteen,
     );
   }
 
@@ -294,4 +294,42 @@ class IsmChatUtility {
     final bytes = response.bodyBytes;
     return bytes;
   }
+
+  // static Future<PdfPageImage?> getImageFromPdfWithFile(String path) async {
+  //   final document = await PdfDocument.openFile(path);
+
+  //   final page = await document.getPage(1);
+
+  //   final image = await page.render(
+  //     width: page.width, //decrement for less quality
+  //     height: page.height,
+  //     format: PdfPageImageFormat.jpeg,
+  //     backgroundColor: '#ffffff',
+
+  //     // Crop rect in image for render
+  //     //cropRect: Rect.fromLTRB(left, top, right, bottom),
+  //   );
+  //   await document.close();
+
+  //   return image;
+  // }
+
+  // static Future<PdfPageImage?> getImageFromPdfWithUrl(String url) async {
+  //   final document = await PdfDocument.openData(InternetFile.get(url));
+
+  //   final page = await document.getPage(1);
+
+  //   final image = await page.render(
+  //     width: page.width * 2, //decrement for less quality
+  //     height: page.height * 2,
+  //     format: PdfPageImageFormat.jpeg,
+  //     backgroundColor: '#ffffff',
+
+  //     // Crop rect in image for render
+  //     //cropRect: Rect.fromLTRB(left, top, right, bottom),
+  //   );
+  //   await document.close();
+
+  //   return image;
+  // }
 }
