@@ -584,6 +584,9 @@ extension ModelConversion on IsmChatConversationModel {
         IsmChatCustomMessageType.deletedForEveryone,
         IsmChatCustomMessageType.memberJoin,
         IsmChatCustomMessageType.memberLeave,
+        IsmChatCustomMessageType.conversationCreated,
+        IsmChatCustomMessageType.conversationImageUpdated,
+        IsmChatCustomMessageType.conversationTitleUpdated,
       ].contains(lastMessageDetails!.customType)) {
         return const SizedBox.shrink();
       }

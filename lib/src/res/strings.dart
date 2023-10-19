@@ -159,4 +159,6 @@ class IsmChatStrings {
   static const String messages = 'Messages';
 
   static const String people = 'People';
+  static const String newString = 'New';
+  static const String newConversation = 'New Conversation';
 }
