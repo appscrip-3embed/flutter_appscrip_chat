@@ -1,7 +1,12 @@
 part of '../chat_page_controller.dart';
 
 mixin IsmChatPageGetMessageMixin {
-  IsmChatPageController get _controller => Get.find<IsmChatPageController>();
+  IsmChatPageController get _controller {
+    if (!Get.isRegistered<IsmChatPageController>()) {
+      IsmChatPageBinding().dependencies();
+    }
+    return Get.find<IsmChatPageController>();
+  }
 
   Future<void> getMessagesFromDB(String conversationId) async {
     var messages = await IsmChatConfig.dbWrapper!.getMessage(conversationId);

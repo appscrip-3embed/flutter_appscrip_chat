@@ -36,6 +36,7 @@ class IsmChatPageController extends GetxController
         IsmChatPageGetMessageMixin,
         IsmChatGroupAdminMixin {
   IsmChatPageController(this._viewModel);
+
   final IsmChatPageViewModel _viewModel;
 
   final _conversationController = Get.find<IsmChatConversationsController>();
