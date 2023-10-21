@@ -1,7 +1,12 @@
 part of '../chat_page_controller.dart';
 
 mixin IsmChatGroupAdminMixin {
-  IsmChatPageController get _controller => Get.find<IsmChatPageController>();
+  IsmChatPageController get _controller {
+    if (!Get.isRegistered<IsmChatPageController>()) {
+      IsmChatPageBinding().dependencies();
+    }
+    return Get.find<IsmChatPageController>();
+  }
 
   IsmChatConversationsController get _ismChatConversationsController =>
       Get.find<IsmChatConversationsController>();
