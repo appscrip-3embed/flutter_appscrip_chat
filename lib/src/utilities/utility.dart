@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -22,18 +23,15 @@ class IsmChatUtility {
 
   /// Show loader
   static void showLoader() async {
-    var isLoaderOpen = Get.isDialogOpen;
-    if (isLoaderOpen != null) {
-      await Get.dialog<void>(
-        const IsmChatLoadingDialog(),
-        barrierDismissible: false,
-      );
-    }
+    closeLoader();
+    await Get.dialog<void>(
+      const IsmChatLoadingDialog(),
+      barrierDismissible: false,
+    );
   }
 
   static void closeLoader() {
-    var isLoaderOpen = Get.isDialogOpen;
-    if (isLoaderOpen != null) {
+    if (Get.isDialogOpen == true) {
       Get.back(closeOverlays: false, canPop: true);
     }
   }

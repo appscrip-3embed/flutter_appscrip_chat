@@ -10,15 +10,13 @@ mixin IsmChatPageGetMessageMixin {
 
   Future<void> getMessagesFromDB(String conversationId) async {
     var messages = await IsmChatConfig.dbWrapper!.getMessage(conversationId);
-    if (messages == null || messages.isEmpty) {
+    if (messages?.isEmpty ?? false || messages == null) {
       _controller.messages.clear();
-      _controller.isMessagesLoading = false;
       return;
     }
     _controller.messages = _controller._viewModel.sortMessages(messages!);
 
     if (_controller.messages.isEmpty) {
-      _controller.isMessagesLoading = false;
       return;
     }
     _controller.isMessagesLoading = false;
