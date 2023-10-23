@@ -259,45 +259,44 @@ class _IsmChatPageView extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Expanded(
-                        child: Visibility(
-                          visible: !controller.isMessagesLoading,
-                          replacement: const IsmChatLoadingDialog(),
-                          child: Stack(
-                            alignment: Alignment.bottomLeft,
-                            children: [
-                              Visibility(
-                                visible: controller.messages.isNotEmpty &&
-                                    controller.messages.length != 1,
-                                replacement: emptyChatPlaceholder ??
-                                    const IsmChatEmptyView(
-                                      icon: Icon(Icons.chat_outlined),
-                                      text: IsmChatStrings.noMessages,
+                        child: Stack(
+                          alignment: Alignment.bottomLeft,
+                          children: [
+                            controller.isMessagesLoading
+                                ? const IsmChatLoadingDialog()
+                                : Visibility(
+                                    visible: controller.messages.isNotEmpty &&
+                                        controller.messages.length != 1,
+                                    replacement: emptyChatPlaceholder ??
+                                        const IsmChatEmptyView(
+                                          icon: Icon(Icons.chat_outlined),
+                                          text: IsmChatStrings.noMessages,
+                                        ),
+                                    child: Align(
+                                      alignment: Alignment.topCenter,
+                                      child: ListView.builder(
+                                        controller:
+                                            controller.messagesScrollController,
+                                        shrinkWrap: true,
+                                        keyboardDismissBehavior:
+                                            ScrollViewKeyboardDismissBehavior
+                                                .onDrag,
+                                        padding: IsmChatDimens.edgeInsets4_8,
+                                        reverse: true,
+                                        addAutomaticKeepAlives: true,
+                                        itemCount: controller.messages.length,
+                                        itemBuilder: (_, index) =>
+                                            IsmChatMessage(
+                                                index, messageWidgetBuilder),
+                                      ),
                                     ),
-                                child: Align(
-                                  alignment: Alignment.topCenter,
-                                  child: ListView.builder(
-                                    controller:
-                                        controller.messagesScrollController,
-                                    shrinkWrap: true,
-                                    keyboardDismissBehavior:
-                                        ScrollViewKeyboardDismissBehavior
-                                            .onDrag,
-                                    padding: IsmChatDimens.edgeInsets4_8,
-                                    reverse: true,
-                                    addAutomaticKeepAlives: true,
-                                    itemCount: controller.messages.length,
-                                    itemBuilder: (_, index) => IsmChatMessage(
-                                        index, messageWidgetBuilder),
                                   ),
-                                ),
-                              ),
-                              Obx(
-                                () => controller.showMentionUserList
-                                    ? const MentionUserList()
-                                    : const SizedBox.shrink(),
-                              ),
-                            ],
-                          ),
+                            Obx(
+                              () => controller.showMentionUserList
+                                  ? const MentionUserList()
+                                  : const SizedBox.shrink(),
+                            ),
+                          ],
                         ),
                       ),
                       controller.isActionAllowed == true
