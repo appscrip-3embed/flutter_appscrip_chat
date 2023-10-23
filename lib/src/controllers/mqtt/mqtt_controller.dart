@@ -354,7 +354,11 @@ class IsmChatMqttController extends GetxController {
             message.notificationTitle ?? '',
             mqttMessage ?? '',
             icon: const Icon(Icons.message),
-            onTap: (snack) {},
+            onTap: (snack) {
+              if (IsmChatConfig.onSnckBarTap != null) {
+                IsmChatConfig.onSnckBarTap?.call(message);
+              }
+            },
           );
         }
         messageId = message.messageId!;
@@ -374,18 +378,21 @@ class IsmChatMqttController extends GetxController {
           mqttMessage ?? '',
           icon: const Icon(Icons.message),
           onTap: (snack) async {
-            final controller = Get.find<IsmChatConversationsController>();
-            final conversation = controller.conversations
-                .cast<IsmChatConversationModel?>()
-                .firstWhere(
-                  (e) => e?.conversationId == message.conversationId,
-                  orElse: () => null,
-                );
-            if (conversation != null) {
-              await IsmChatApp.chatFromOutsideWithConversation(
-                ismChatConversation: conversation,
-              );
+            if (IsmChatConfig.onSnckBarTap != null) {
+              IsmChatConfig.onSnckBarTap?.call(message);
             }
+            // final controller = Get.find<IsmChatConversationsController>();
+            // final conversation = controller.conversations
+            //     .cast<IsmChatConversationModel?>()
+            //     .firstWhere(
+            //       (e) => e?.conversationId == message.conversationId,
+            //       orElse: () => null,
+            //     );
+            // if (conversation != null) {
+            //   await IsmChatApp.chatFromOutsideWithConversation(
+            //     ismChatConversation: conversation,
+            //   );
+            // }
           },
         );
       }

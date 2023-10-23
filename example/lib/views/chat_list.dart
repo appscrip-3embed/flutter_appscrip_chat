@@ -51,6 +51,9 @@ class ChatList extends StatelessWidget {
           ),
         ),
         showAppBar: true,
+        onSnckBarTap: (p0) {
+          IsmChatLog.error(p0);
+        },
 
         onSignOut: controller.onSignOut,
         onChatTap: (_, __) => RouteManagement.goToChatMessages(),

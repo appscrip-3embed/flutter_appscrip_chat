@@ -4,35 +4,37 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatApp extends StatelessWidget {
-  IsmChatApp(
-      {super.key,
-      this.communicationConfig,
-      required this.onChatTap,
-      this.onCreateChatTap,
-      this.showCreateChatIcon = false,
-      this.chatTheme,
-      this.chatDarkTheme,
-      this.loadingDialog,
-      this.databaseName,
-      this.onSignOut,
-      this.showAppBar = false,
-      this.enableGroupChat = false,
-      this.createChatIcon,
-      this.name,
-      this.nameBuilder,
-      this.profileImageUrl,
-      this.profileImageBuilder,
-      this.subtitle,
-      this.subtitleBuilder,
-      this.actions,
-      this.endActions,
-      this.onProfileWidget,
-      this.isSlidableEnable,
-      this.emptyConversationPlaceholder,
-      this.allowDelete = false,
-      this.useDataBase = true,
-      this.itemBuilder,
-      this.fontFamily}) {
+  IsmChatApp({
+    super.key,
+    this.communicationConfig,
+    required this.onChatTap,
+    this.onSnckBarTap,
+    this.onCreateChatTap,
+    this.showCreateChatIcon = false,
+    this.chatTheme,
+    this.chatDarkTheme,
+    this.loadingDialog,
+    this.databaseName,
+    this.onSignOut,
+    this.showAppBar = false,
+    this.enableGroupChat = false,
+    this.createChatIcon,
+    this.name,
+    this.nameBuilder,
+    this.profileImageUrl,
+    this.profileImageBuilder,
+    this.subtitle,
+    this.subtitleBuilder,
+    this.actions,
+    this.endActions,
+    this.onProfileWidget,
+    this.isSlidableEnable,
+    this.emptyConversationPlaceholder,
+    this.allowDelete = false,
+    this.useDataBase = true,
+    this.itemBuilder,
+    this.fontFamily,
+  }) {
     assert(IsmChatConfig.isInitialized,
         'ChatHiveBox is not initialized\nYou are getting this error because the Database class is not initialized, to initialize ChatHiveBox class call AppscripChatComponent.initialize() before your runApp()');
     assert(IsmChatConfig.configInitilized || communicationConfig != null,
@@ -60,6 +62,7 @@ class IsmChatApp extends StatelessWidget {
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
     IsmChatConfig.onChatTap = onChatTap;
+    IsmChatConfig.onSnckBarTap = onSnckBarTap;
     IsmChatConfig.isGroupChatEnabled = enableGroupChat;
   }
 
@@ -108,6 +111,8 @@ class IsmChatApp extends StatelessWidget {
   /// `IsmChatConversationModel` gives data of current chat, it could be used for local storage or state variables
   ///
   final void Function(BuildContext, IsmChatConversationModel) onChatTap;
+
+  final void Function(IsmChatMessageModel)? onSnckBarTap;
 
   /// A callback for `navigating` to the create chat screen
   ///
