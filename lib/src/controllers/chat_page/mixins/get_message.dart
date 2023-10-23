@@ -12,11 +12,13 @@ mixin IsmChatPageGetMessageMixin {
     var messages = await IsmChatConfig.dbWrapper!.getMessage(conversationId);
     if (messages?.isEmpty ?? false || messages == null) {
       _controller.messages.clear();
+      _controller.isMessagesLoading = false;
       return;
     }
     _controller.messages = _controller._viewModel.sortMessages(messages!);
 
     if (_controller.messages.isEmpty) {
+      _controller.isMessagesLoading = false;
       return;
     }
     _controller.isMessagesLoading = false;
@@ -49,9 +51,8 @@ mixin IsmChatPageGetMessageMixin {
       lastMessageTimestamp: timeStamp,
       isGroup: _controller.conversation?.isGroup ?? false,
     );
-    if (_controller.messages.isEmpty) {
-      _controller.isMessagesLoading = false;
-    }
+
+    _controller.isMessagesLoading = false;
 
     if (data != null) {
       await getMessagesFromDB(conversationID);
