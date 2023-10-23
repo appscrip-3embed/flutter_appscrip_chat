@@ -376,8 +376,9 @@ class IsmChatPageController extends GetxController
         await Future.wait([
           getMessagesFromAPI(),
           getConverstaionDetails(
-              conversationId: conversation?.conversationId ?? '',
-              includeMembers: conversation?.isGroup == true ? true : false),
+            conversationId: conversation?.conversationId ?? '',
+            includeMembers: conversation?.isGroup == true ? true : false,
+          ),
         ]);
         await _conversationController.readAllMessages(
           conversationId: conversation?.conversationId ?? '',

@@ -316,6 +316,8 @@ class IsmChatApp extends StatelessWidget {
       IsmChatConversationsBinding().dependencies();
     }
     var controller = Get.find<IsmChatConversationsController>();
+    Get.put(IsmChatDeviceConfig()).init();
+
     controller.navigateToMessages(ismChatConversation);
     (onNavigateToChat ?? IsmChatConfig.onChatTap)
         .call(Get.context!, ismChatConversation);
