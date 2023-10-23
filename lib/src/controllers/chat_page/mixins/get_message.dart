@@ -10,7 +10,7 @@ mixin IsmChatPageGetMessageMixin {
 
   Future<void> getMessagesFromDB(String conversationId) async {
     var messages = await IsmChatConfig.dbWrapper!.getMessage(conversationId);
-    if (messages?.isEmpty ?? false || messages == null) {
+    if (messages == null || messages.isEmpty) {
       _controller.messages.clear();
       _controller.isMessagesLoading = false;
       return;
