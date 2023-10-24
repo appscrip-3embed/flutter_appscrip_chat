@@ -348,6 +348,9 @@ class IsmChatMqttController extends GetxController {
           DateTime.now().millisecondsSinceEpoch + 1 * 1000,
           sound: '',
           channel: 'message',
+          payload: {
+            'conversationId': message.conversationId ?? '',
+          },
         );
         if (Platform.isAndroid) {
           Get.snackbar(
@@ -365,13 +368,13 @@ class IsmChatMqttController extends GetxController {
       }
     } else {
       LocalNoticeService().cancelAllNotification();
-      LocalNoticeService().addNotification(
-        message.notificationTitle ?? '',
-        mqttMessage ?? '',
-        DateTime.now().millisecondsSinceEpoch + 1 * 1000,
-        sound: '',
-        channel: 'message',
-      );
+      LocalNoticeService().addNotification(message.notificationTitle ?? '',
+          mqttMessage ?? '', DateTime.now().millisecondsSinceEpoch + 1 * 1000,
+          sound: '',
+          channel: 'message',
+          payload: {
+            'conversationId': message.conversationId ?? '',
+          });
       if (Platform.isAndroid) {
         Get.snackbar(
           message.notificationTitle ?? '',
