@@ -381,18 +381,6 @@ class IsmChatMqttController extends GetxController {
             if (IsmChatConfig.onSnckBarTap != null) {
               IsmChatConfig.onSnckBarTap?.call(message);
             }
-            // final controller = Get.find<IsmChatConversationsController>();
-            // final conversation = controller.conversations
-            //     .cast<IsmChatConversationModel?>()
-            //     .firstWhere(
-            //       (e) => e?.conversationId == message.conversationId,
-            //       orElse: () => null,
-            //     );
-            // if (conversation != null) {
-            //   await IsmChatApp.chatFromOutsideWithConversation(
-            //     ismChatConversation: conversation,
-            //   );
-            // }
           },
         );
       }

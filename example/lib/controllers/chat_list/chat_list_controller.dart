@@ -17,8 +17,8 @@ class ChatListController extends GetxController {
 
   @override
   void onInit() {
-    userDetails = AppConfig.userDetail!;
     super.onInit();
+    userDetails = AppConfig.userDetail!;
   }
 
   void onSignOut() {

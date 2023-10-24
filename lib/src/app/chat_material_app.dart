@@ -8,7 +8,6 @@ class IsmChatApp extends StatelessWidget {
     super.key,
     this.communicationConfig,
     required this.onChatTap,
-    this.onSnckBarTap,
     this.onCreateChatTap,
     this.showCreateChatIcon = false,
     this.chatTheme,
@@ -62,7 +61,7 @@ class IsmChatApp extends StatelessWidget {
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
     IsmChatConfig.onChatTap = onChatTap;
-    IsmChatConfig.onSnckBarTap = onSnckBarTap;
+
     IsmChatConfig.isGroupChatEnabled = enableGroupChat;
   }
 
@@ -111,8 +110,6 @@ class IsmChatApp extends StatelessWidget {
   /// `IsmChatConversationModel` gives data of current chat, it could be used for local storage or state variables
   ///
   final void Function(BuildContext, IsmChatConversationModel) onChatTap;
-
-  final void Function(IsmChatMessageModel)? onSnckBarTap;
 
   /// A callback for `navigating` to the create chat screen
   ///
@@ -194,12 +191,14 @@ class IsmChatApp extends StatelessWidget {
         deleteFromServer: deleteFromServer,
       );
 
-  static void initializeMqtt(IsmChatCommunicationConfig communicationConfig) {
+  static void initializeMqtt(IsmChatCommunicationConfig communicationConfig,
+      {Function(IsmChatMessageModel)? onSnckBarTap}) {
     IsmChatConfig.communicationConfig = communicationConfig;
     IsmChatConfig.configInitilized = true;
     if (!Get.isRegistered<IsmChatMqttController>()) {
       IsmChatMqttBinding().dependencies();
     }
+    IsmChatConfig.onSnckBarTap = onSnckBarTap;
   }
 
   static void addListener(Function(Map<String, dynamic>) listener) {
