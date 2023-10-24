@@ -526,6 +526,11 @@ class IsmChatMqttController extends GetxController {
               message.notificationTitle ?? '',
               mqttMessage ?? '',
               icon: const Icon(Icons.message),
+              onTap: (snack) {
+                if (IsmChatConfig.onSnckBarTap != null) {
+                  IsmChatConfig.onSnckBarTap?.call(message);
+                }
+              },
             );
           }
           messageId = message.messageId!;
@@ -544,6 +549,11 @@ class IsmChatMqttController extends GetxController {
             message.notificationTitle ?? '',
             mqttMessage ?? '',
             icon: const Icon(Icons.message),
+            onTap: (snack) {
+              if (IsmChatConfig.onSnckBarTap != null) {
+                IsmChatConfig.onSnckBarTap?.call(message);
+              }
+            },
           );
         }
         messageId = message.messageId!;

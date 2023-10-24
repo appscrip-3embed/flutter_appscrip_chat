@@ -862,7 +862,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
 
     if (chatConversationResponse == null && !_controller.isTemporaryChat) {
       conversationId = await createConversation(
-        pushNotifications: pushNotifications,
         userId: [userId],
         metaData: _controller.conversation?.metaData,
         searchableTags: [

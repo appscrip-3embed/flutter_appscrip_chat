@@ -14,6 +14,7 @@ class IsmChatConfig {
   static String dbName = IsmChatStrings.dbname;
   static bool isInitialized = false;
   static Duration animationDuration = const Duration(milliseconds: 300);
+  static void Function(IsmChatMessageModel)? onSnckBarTap;
 
   static IsmChatThemeData get chatTheme => Get.isDarkMode
       ? _chatDarkTheme ?? IsmChatThemeData.light()
