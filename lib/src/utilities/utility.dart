@@ -325,7 +325,7 @@ class IsmChatUtility {
   //     format: PdfPageImageFormat.jpeg,
   //     backgroundColor: '#ffffff',
 
-  //     // Crop rect in image for render
+  //     // Crop rect in image for renderx
   //     //cropRect: Rect.fromLTRB(left, top, right, bottom),
   //   );
   //   await document.close();

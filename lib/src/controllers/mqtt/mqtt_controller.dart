@@ -36,14 +36,14 @@ class IsmChatMqttController extends GetxController {
   var actionStreamController =
       StreamController<Map<String, dynamic>>.broadcast();
 
-  final RxString _userId = ''.obs;
-  String get userId => _userId.value;
-  set userId(String value) => _userId.value = value;
+  // final RxString _userId = ''.obs;
+  // String get userId => _userId.value;
+  // set userId(String value) => _userId.value = value;
 
   @override
   void onInit() async {
     _communicationConfig = IsmChatConfig.communicationConfig;
-    userId = _communicationConfig.userConfig.userId;
+    // userId = _communicationConfig.userConfig.userId;
     messageTopic =
         '/${_communicationConfig.projectConfig.accountId}/${_communicationConfig.projectConfig.projectId}/Message/${_communicationConfig.userConfig.userId}';
     statusTopic =

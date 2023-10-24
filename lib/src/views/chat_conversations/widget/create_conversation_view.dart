@@ -203,7 +203,8 @@ class IsmChatCreateConversationView extends StatelessWidget {
                             var user = controller.forwardedList[index];
                             var susTag = user.getSuspensionTag();
                             if (user.userDetails.userId ==
-                                Get.find<IsmChatMqttController>().userId) {
+                                IsmChatConfig
+                                    .communicationConfig.userConfig.userId) {
                               return const SizedBox.shrink();
                             }
                             return Column(

@@ -233,8 +233,8 @@ class IsmChatForwardView extends StatelessWidget {
                                   var user = controller.forwardedList[index];
                                   var susTag = user.getSuspensionTag();
                                   if (user.userDetails.userId ==
-                                      Get.find<IsmChatMqttController>()
-                                          .userId) {
+                                      IsmChatConfig.communicationConfig
+                                          .userConfig.userId) {
                                     return const SizedBox.shrink();
                                   }
                                   return Column(
@@ -244,10 +244,33 @@ class IsmChatForwardView extends StatelessWidget {
                                         child: _buildSusWidget(susTag),
                                       ),
                                       ListTile(
-                                        onTap: () {
-                                          controller.onForwardUserTap(index);
-                                          controller
-                                              .isSelectedUser(user.userDetails);
+                                        onTap: () async {
+                                          if (controller
+                                                  .selectedUserList.length <=
+                                              5) {
+                                            controller.onForwardUserTap(index);
+                                            controller.isSelectedUser(
+                                                user.userDetails);
+                                          } else {
+                                            await Get.dialog(
+                                              AlertDialog(
+                                                title: const Text(
+                                                    'Alert message...'),
+                                                content: const Text(
+                                                    'You can only share with up to 5 chats'),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: Get.back,
+                                                    child: const Text(
+                                                      'Okay',
+                                                      style: TextStyle(
+                                                          fontSize: 15),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          }
                                         },
                                         dense: true,
                                         mouseCursor: SystemMouseCursors.click,
