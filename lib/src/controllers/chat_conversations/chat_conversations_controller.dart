@@ -871,7 +871,7 @@ class IsmChatConversationsController extends GetxController {
       metaData: metaData,
       isLoading: isLoading,
     );
-    if (response?.hasError ?? false) {
+    if (!response!.hasError) {
       await getChatConversations();
     }
   }
