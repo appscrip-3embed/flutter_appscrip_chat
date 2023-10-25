@@ -309,7 +309,11 @@ class _IsmChatPageView extends StatelessWidget {
                                                         .chatPageProperties
                                                         .messageAllowedConfig
                                                         ?.isShowTextfiledConfig
-                                                        ?.shwoMessage ??
+                                                        ?.shwoMessage
+                                                        .call(
+                                                            context,
+                                                            controller
+                                                                .conversation!) ??
                                                     '',
                                               )
                                             : Container(
