@@ -866,11 +866,14 @@ class IsmChatConversationsController extends GetxController {
     required IsmChatMetaData metaData,
     bool isLoading = false,
   }) async {
-    await _viewModel.updateConversation(
+    var response = await _viewModel.updateConversation(
       conversationId: conversationId,
       metaData: metaData,
       isLoading: isLoading,
     );
+    if (response?.hasError ?? false) {
+      await getChatConversations();
+    }
   }
 
   Future<void> updateConversationSetting({

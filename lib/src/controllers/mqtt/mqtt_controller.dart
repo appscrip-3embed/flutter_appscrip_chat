@@ -520,6 +520,9 @@ class IsmChatMqttController extends GetxController {
             DateTime.now().millisecondsSinceEpoch + 1 * 1000,
             sound: '',
             channel: 'message',
+            payload: {
+              'conversationId': message.conversationId ?? '',
+            },
           );
           if (Platform.isAndroid) {
             Get.snackbar(
@@ -543,6 +546,9 @@ class IsmChatMqttController extends GetxController {
           DateTime.now().millisecondsSinceEpoch + 1 * 1000,
           sound: '',
           channel: 'message',
+          payload: {
+            'conversationId': message.conversationId ?? '',
+          },
         );
         if (Platform.isAndroid) {
           Get.snackbar(

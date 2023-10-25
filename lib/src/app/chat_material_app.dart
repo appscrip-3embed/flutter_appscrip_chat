@@ -158,7 +158,9 @@ class IsmChatApp extends StatelessWidget {
           {required String conversationId,
           required IsmChatMetaData metaData}) async =>
       await Get.find<IsmChatConversationsController>().updateConversation(
-          conversationId: conversationId, metaData: metaData);
+        conversationId: conversationId,
+        metaData: metaData,
+      );
 
   /// Call this function for update conversation setting in meta data
   static Future<void> updateConversationSetting({

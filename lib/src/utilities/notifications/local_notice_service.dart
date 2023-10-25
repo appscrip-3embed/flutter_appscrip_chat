@@ -38,6 +38,8 @@
 ///
 ///
 
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 // #1
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -80,6 +82,7 @@ class LocalNoticeService {
     int endTime, {
     String sound = '',
     String channel = 'default',
+    required Map<String, dynamic> payload,
   }) async {
     tzData.initializeTimeZones();
 
@@ -110,15 +113,11 @@ class LocalNoticeService {
     const id = 0;
 
     await _localNotificationsPlugin.zonedSchedule(
-      id,
-      title,
-      body,
-      scheduleTime,
-      noticeDetail,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      androidAllowWhileIdle: true,
-    );
+        id, title, body, scheduleTime, noticeDetail,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        androidAllowWhileIdle: true,
+        payload: jsonEncode(payload));
   }
 
   void cancelAllNotification() {
