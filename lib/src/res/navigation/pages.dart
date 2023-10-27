@@ -154,5 +154,10 @@ class IsmChatPages {
       page: IsmChatImageEditView.new,
       binding: IsmChatPageBinding(),
     ),
+    GetPage(
+      name: IsmChatGalleryAssetsView.route,
+      page: IsmChatGalleryAssetsView.new,
+      binding: IsmChatPageBinding(),
+    ),
   ];
 }

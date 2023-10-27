@@ -136,7 +136,6 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                         imagePath: file.first,
                                       )));
                                     } else {
-                                      Get.back();
                                       IsmChatRouteManagement
                                           .goToWallpaperPreview(
                                         assetSrNo: 100,

@@ -47,7 +47,9 @@ class MessageBubble extends StatelessWidget {
               ? null
               : BoxDecoration(
                   color: _message.backgroundColor,
-                  border: Border.all(color: _message.borderColor!),
+                  border: _message.borderColor != null
+                      ? Border.all(color: _message.borderColor!)
+                      : null,
                   borderRadius: _message.sentByMe
                       ? IsmChatConfig.chatTheme.chatPageTheme?.selfMessageTheme
                               ?.borderRadius ??
@@ -66,7 +68,7 @@ class MessageBubble extends StatelessWidget {
                 padding: !showMessageInCenter
                     ? IsmChatDimens.edgeInsets5_5_5_20
                     : IsmChatDimens.edgeInsets0,
-                child: _message.customType!.messageType(_message),
+                child: _message.customType?.messageType(_message),
               ),
               if (!showMessageInCenter) ...[
                 Positioned(
@@ -100,7 +102,7 @@ class MessageBubble extends StatelessWidget {
                                 : _message.deliveredToAll ?? false
                                     ? Icons.done_all_rounded
                                     : Icons.done_rounded,
-                            color: _message.messageId!.isEmpty
+                            color: _message.messageId?.isEmpty == true
                                 ? IsmChatConfig.chatTheme.chatPageTheme
                                         ?.unreadCheckColor ??
                                     Colors.white

@@ -5,16 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-class GalleryAssetsView extends StatefulWidget {
-  const GalleryAssetsView({super.key, this.assetList});
+class IsmChatGalleryAssetsView extends StatefulWidget {
+  const IsmChatGalleryAssetsView({super.key, this.assetList});
 
   final List<XFile?>? assetList;
 
+  static const String route = IsmPageRoutes.alleryAssetsView;
+
   @override
-  State<GalleryAssetsView> createState() => _GalleryAssetsViewState();
+  State<IsmChatGalleryAssetsView> createState() =>
+      _IsmChatGalleryAssetsViewState();
 }
 
-class _GalleryAssetsViewState extends State<GalleryAssetsView> {
+class _IsmChatGalleryAssetsViewState extends State<IsmChatGalleryAssetsView> {
   final ismChatPageController = Get.find<IsmChatPageController>();
 
   @override

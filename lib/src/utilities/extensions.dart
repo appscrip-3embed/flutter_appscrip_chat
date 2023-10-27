@@ -697,7 +697,7 @@ extension LastMessageBody on LastMessageDetails {
         return reactionType?.isNotEmpty == true
             ? sentByMe
                 ? 'You ${isReacted ? 'reacted' : 'removed'} ${reactionType?.reactionString} ${isReacted ? 'to' : 'from'} a message'
-                : '${isReacted ? 'Reacted' : 'Removed'} ${reactionType?.reactionString} ${isReacted ? 'to' : 'from'} a message'
+                : '$senderName ${isReacted ? 'reacted' : 'removed'} ${reactionType?.reactionString} ${isReacted ? 'to' : 'from'} a message'
             : body;
     }
   }

@@ -238,60 +238,70 @@ class IsmChatForwardView extends StatelessWidget {
                                     return const SizedBox.shrink();
                                   }
                                   return Column(
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Offstage(
                                         offstage: user.isShowSuspension != true,
                                         child: _buildSusWidget(susTag),
                                       ),
-                                      ListTile(
-                                        onTap: () async {
-                                          if (controller
-                                                  .selectedUserList.length <=
-                                              5) {
-                                            controller.onForwardUserTap(index);
-                                            controller.isSelectedUser(
-                                                user.userDetails);
-                                          } else {
-                                            await Get.dialog(
-                                              AlertDialog(
-                                                title: const Text(
-                                                    'Alert message...'),
-                                                content: const Text(
-                                                    'You can only share with up to 5 chats'),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: Get.back,
-                                                    child: const Text(
-                                                      'Okay',
-                                                      style: TextStyle(
-                                                          fontSize: 15),
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            );
-                                          }
-                                        },
-                                        dense: true,
-                                        mouseCursor: SystemMouseCursors.click,
-                                        tileColor: user.isUserSelected
+                                      ColoredBox(
+                                        color: user.isUserSelected
                                             ? IsmChatConfig
                                                 .chatTheme.primaryColor!
                                                 .withOpacity(.2)
-                                            : null,
-                                        leading: IsmChatImage.profile(
-                                          user.userDetails.userProfileImageUrl,
-                                          name: user.userDetails.userName,
-                                        ),
-                                        title: Text(
-                                          user.userDetails.userName,
-                                          style: IsmChatStyles.w600Black14,
-                                        ),
-                                        subtitle: Text(
-                                          user.userDetails.userIdentifier,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: IsmChatStyles.w400Black12,
+                                            : Colors.transparent,
+                                        child: ListTile(
+                                          onTap: !user.isUserSelected &&
+                                                  controller
+                                                          .forwardedList
+                                                          .selectedUsers
+                                                          .length >
+                                                      4
+                                              ? () {
+                                                  Get.dialog(
+                                                    AlertDialog(
+                                                      title: const Text(
+                                                          'Alert message...'),
+                                                      content: const Text(
+                                                          'You can only share with up to 5 chats'),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: Get.back,
+                                                          child: const Text(
+                                                            'Okay',
+                                                            style: TextStyle(
+                                                                fontSize: 15),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  );
+                                                }
+                                              : () async {
+                                                  controller
+                                                      .onForwardUserTap(index);
+
+                                                  controller.isSelectedUser(
+                                                      user.userDetails);
+                                                },
+                                          dense: true,
+                                          mouseCursor: SystemMouseCursors.click,
+                                          leading: IsmChatImage.profile(
+                                            user.userDetails
+                                                .userProfileImageUrl,
+                                            name: user.userDetails.userName,
+                                          ),
+                                          title: Text(
+                                            user.userDetails.userName,
+                                            style: IsmChatStyles.w600Black14,
+                                          ),
+                                          subtitle: Text(
+                                            user.userDetails.userIdentifier,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: IsmChatStyles.w400Black12,
+                                          ),
+                                          autofocus: true,
                                         ),
                                       ),
                                     ],

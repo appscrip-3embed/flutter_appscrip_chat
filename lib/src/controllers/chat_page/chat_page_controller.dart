@@ -24,7 +24,6 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_cropper/image_cropper.dart';
-// import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -905,7 +904,7 @@ class IsmChatPageController extends GetxController
     if (result.isEmpty) {
       return;
     }
-    await Get.to<void>(GalleryAssetsView(
+    await Get.to<void>(IsmChatGalleryAssetsView(
       assetList: result,
     ));
   }
@@ -1346,6 +1345,7 @@ class IsmChatPageController extends GetxController
       }
     } else if (message.customType == IsmChatCustomMessageType.file) {
       var localPath = message.attachments?.first.mediaUrl;
+
       if (localPath == null) {
         return;
       }
@@ -1628,6 +1628,7 @@ class IsmChatPageController extends GetxController
 
   /// function to show dialog for changing the group title
   void showDialogForChangeGroupTitle() async {
+    groupTitleController.text = conversation!.chatName;
     await Get.dialog(IsmChatAlertDialogBox(
       title: IsmChatStrings.enterNewGroupTitle,
       content: TextFormField(
@@ -2008,8 +2009,8 @@ class IsmChatPageController extends GetxController
   }
 
   Future<void> deleteReacton({required Reaction reaction}) async {
-    await viewModel.deleteReacton(reaction: reaction);
-    if (Responsive.isWebAndTablet(Get.context!)) {
+    var response = await viewModel.deleteReacton(reaction: reaction);
+    if (response != null && !response.hasError) {
       await _controller.conversationController.getChatConversations();
     }
   }

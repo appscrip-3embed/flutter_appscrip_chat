@@ -186,7 +186,7 @@ class AuthController extends GetxController {
       await Get.dialog(
         AlertDialog(
           title: const Text('Alert message...'),
-          content: const Text('Already registered this user'),
+          content: const Text('This email address has already been registered'),
           actions: [
             TextButton(
               onPressed: Get.back,

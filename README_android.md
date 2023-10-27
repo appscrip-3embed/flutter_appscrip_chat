@@ -91,10 +91,12 @@ Path: `android` > `app` > `main` > `AndroidMenifest.xml`
                 android:name="androidx.core.content.FileProvider"
                 android:authorities="${applicationId}.fileProvider"
                 android:exported="false"
-                android:grantUriPermissions="true">
+                android:grantUriPermissions="true"
+                tools:replace="android:authorities">
             <meta-data
                     android:name="android.support.FILE_PROVIDER_PATHS"
-                    android:resource="@xml/filepaths"/>
+                    android:resource="@xml/filepaths"
+                    tools:replace="android:resource" />
         </provider>  
     </application>
     ```
@@ -110,11 +112,20 @@ Path: `android` > `app` > `src` > `main` > `res` > `xml` > `filepaths.xml`
 1. Add versions inside android
 
     ```xml
-    <?xml version="1.0" encoding="utf-8"?>
+    <!-- <?xml version="1.0" encoding="utf-8"?>
 
     <resources>
         <external-path name="external_storage_directory" path="." />
-    </resources>
+    </resources> -->
+    <paths>
+    <external-path name="external-path" path="."/>
+    <external-cache-path name="external-cache-path" path="."/>
+    <external-files-path name="external-files-path" path="."/>
+    <files-path name="files_path" path="."/>
+    <cache-path name="cache-path" path="."/>
+    <root-path name="root" path="."/>
+
+</paths>
     ```
 
 ---
@@ -146,12 +157,25 @@ Path: `android` > `app` > `build.gradle`
 
 ---
 
+### Make these changes to your android level `build.gradle`
+
+Path: `android`  > `build.gradle`
+
 ### Make these changes in `gradle.properties`
 
-```properties
-android.useAndroidX=true
-android.enableJetifier=true
+```subprojects {
+    project.configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'com.android.support'
+                    && !details.requested.name.contains('multidex') ) {
+                details.useVersion "27.1.1"
+            }
+        }
+    }
+}
 ```
+
+---
 
 Android Setup is done
 

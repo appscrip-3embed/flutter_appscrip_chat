@@ -221,6 +221,7 @@ class IsmChatUtility {
       {required String urlPath, required String fileName}) async {
     File? file;
     String? path;
+
     if (urlPath.isValidUrl) {
       final url = Uri.parse(urlPath);
       final response = await http.get(url);

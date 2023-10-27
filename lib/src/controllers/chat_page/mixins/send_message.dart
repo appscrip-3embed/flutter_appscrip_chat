@@ -1074,8 +1074,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     if (reaction.messageId.isEmpty) {
       return;
     }
-    await _controller.viewModel.addReacton(reaction: reaction);
-    if (Responsive.isWebAndTablet(Get.context!)) {
+    var response = await _controller.viewModel.addReacton(reaction: reaction);
+    if (response != null && !response.hasError) {
       await _controller.conversationController.getChatConversations();
     }
   }

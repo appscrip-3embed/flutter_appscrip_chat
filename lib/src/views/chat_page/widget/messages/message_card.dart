@@ -76,18 +76,21 @@ class _MessageCardState extends State<MessageCard>
       builder: (controller) => GestureDetector(
             onHorizontalDragUpdate: widget.showMessageInCenter
                 ? null
-                : (details) {
-                    if (details.delta.dx > 1) {
-                      _runAnimation(
-                        onRight: true,
-                      );
-                    }
-                    if (details.delta.dx < -1) {
-                      _runAnimation(
-                        onRight: false,
-                      );
-                    }
-                  },
+                : widget.message.customType ==
+                        IsmChatCustomMessageType.deletedForEveryone
+                    ? null
+                    : (details) {
+                        if (details.delta.dx > 1) {
+                          _runAnimation(
+                            onRight: true,
+                          );
+                        }
+                        if (details.delta.dx < -1) {
+                          _runAnimation(
+                            onRight: false,
+                          );
+                        }
+                      },
             child: SlideTransition(
               position: animation!,
               child: InkWell(

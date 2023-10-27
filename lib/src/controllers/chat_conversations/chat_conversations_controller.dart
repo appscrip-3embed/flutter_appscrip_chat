@@ -953,12 +953,13 @@ class IsmChatConversationsController extends GetxController {
       limit: limit,
       conversationType: conversationType,
     );
-    if (response == null) {
+    if (response?.isEmpty == true) {
       isLoadResponse = true;
       publicAndOpenConversation = [];
       return;
     }
-    publicAndOpenConversation = response;
+
+    publicAndOpenConversation.addAll(response ?? []);
     callApiOrNot = true;
   }
 
@@ -1003,12 +1004,13 @@ class IsmChatConversationsController extends GetxController {
     }
   }
 
-  Future<List<UserDetails>> getObservationUser(
-      {required String conversationId,
-      int skip = 0,
-      int limit = 20,
-      bool isLoading = false,
-      String? searchText}) async {
+  Future<List<UserDetails>> getObservationUser({
+    required String conversationId,
+    int skip = 0,
+    int limit = 20,
+    bool isLoading = false,
+    String? searchText,
+  }) async {
     var res = await _viewModel.getObservationUser(
       conversationId: conversationId,
       isLoading: isLoading,

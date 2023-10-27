@@ -34,28 +34,41 @@ class _ImagePainterWidgetState extends State<IsmChatImagePainterWidget> {
           ),
           backgroundColor: IsmChatConfig.chatTheme.primaryColor,
           actions: [
-            InkWell(
-              child: const Icon(
-                Icons.save_alt,
-                color: IsmChatColors.whiteColor,
-              ),
-              onTap: () async {
+            TextButton(
+              onPressed: () async {
                 IsmChatUtility.showLoader();
                 final image = await _imageKey.currentState?.exportImage();
-                final extensionSplite = widget.file.path.split('.');
-                final extension = extensionSplite[1];
+
+                final pathSplite = widget.file.path.split('/').last;
+                final extensionSplite = pathSplite.split('.');
+
+                final extension = extensionSplite.last;
+                IsmChatLog.error('imagePath $extension');
                 final directory =
                     (await getApplicationDocumentsDirectory()).path;
                 await Directory('$directory/sample').create(recursive: true);
                 final fullPath =
                     '$directory/sample/${DateTime.now().millisecondsSinceEpoch}.$extension';
+
                 final imgFile = File(fullPath);
                 imgFile.writeAsBytesSync(image!);
                 IsmChatUtility.closeLoader();
                 Get.back<File>(result: imgFile);
                 IsmChatLog.success('Image edit file $imgFile');
               },
-              // onPressed: saveImage,
+              style: ButtonStyle(
+                  side: const MaterialStatePropertyAll(
+                    BorderSide(
+                      color: IsmChatColors.whiteColor,
+                    ),
+                  ),
+                  padding: MaterialStatePropertyAll(IsmChatDimens.edgeInsets10),
+                  textStyle:
+                      MaterialStateProperty.all(IsmChatStyles.w400White16)),
+              child: Text(
+                'Done',
+                style: IsmChatStyles.w600White16,
+              ),
             ),
             IsmChatDimens.boxWidth20,
           ],
