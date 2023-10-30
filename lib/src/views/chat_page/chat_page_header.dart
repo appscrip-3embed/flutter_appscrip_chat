@@ -133,7 +133,8 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                         controller.conversation!,
                                         controller.conversation?.chatName ??
                                             '') ??
-                                controller.conversation!.chatName,
+                                controller.conversation?.chatName ??
+                                '',
                             style: IsmChatConfig.chatTheme.chatPageHeaderTheme
                                     ?.titleStyle ??
                                 IsmChatStyles.w600White16,

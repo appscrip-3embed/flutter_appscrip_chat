@@ -15,4 +15,17 @@ class IsmChatMqttViewModel {
     }
     return response;
   }
+
+  Future<List<IsmChatConversationModel>?> getChatConversations({
+    required int skip,
+    required int limit,
+    String? searchTag,
+    bool includeConversationStatusMessagesInUnreadMessagesCount = false,
+  }) async =>
+      await _repository.getChatConversations(
+        includeConversationStatusMessagesInUnreadMessagesCount:
+            includeConversationStatusMessagesInUnreadMessagesCount,
+        skip: skip,
+        limit: limit,
+      );
 }

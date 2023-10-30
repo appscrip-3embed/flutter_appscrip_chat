@@ -137,7 +137,7 @@ class IsmChatApp extends StatelessWidget {
     }
   }
 
-  /// Call this function for Get all Conversation List
+  /// Call this function for Get all Conversation List from DB
   static Future<List<IsmChatConversationModel>?> getAllConversation() async =>
       IsmChatConfig.dbWrapper?.getAllConversations();
 
@@ -175,10 +175,27 @@ class IsmChatApp extends StatelessWidget {
         isLoading: isLoading,
       );
 
-  /// Call this function for Get Conversation List When on click
+  /// Call this function for Get Conversation List with store local db When on click
   static Future<void> getChatConversation() async {
     if (Get.isRegistered<IsmChatConversationsController>()) {
       await Get.find<IsmChatConversationsController>().getChatConversations();
+    }
+  }
+
+  /// Call this function for Get Conversation List with out local db
+  /// You can call this funcation after MQTT controller intilized
+  static Future<void> getChatConversationWithOutDB({
+    int skip = 0,
+    int limit = 20,
+    bool includeConversationStatusMessagesInUnreadMessagesCount = false,
+  }) async {
+    if (Get.isRegistered<IsmChatMqttController>()) {
+      await Get.find<IsmChatMqttController>().getChatConversations(
+        skip: skip,
+        limit: limit,
+        includeConversationStatusMessagesInUnreadMessagesCount:
+            includeConversationStatusMessagesInUnreadMessagesCount,
+      );
     }
   }
 
