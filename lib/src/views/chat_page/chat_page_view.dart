@@ -219,7 +219,8 @@ class _IsmChatPageView extends StatelessWidget {
                                                       .placeholder ??
                                                   const IsmChatEmptyView(
                                                     icon: Icon(
-                                                        Icons.chat_outlined),
+                                                      Icons.chat_outlined,
+                                                    ),
                                                     text: IsmChatStrings
                                                         .noMessages,
                                                   ),

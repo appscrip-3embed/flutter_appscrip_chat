@@ -167,11 +167,13 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                                   IsmChatDimens.boxWidth2,
                                 ],
                               ],
-                            _Message(
-                              message: widget._message!,
-                              showMessageInCenter: showMessageInCenter,
-                              index: widget.index,
-                            ),
+                            if (Get.isRegistered<IsmChatPageController>()) ...[
+                              _Message(
+                                message: widget._message!,
+                                showMessageInCenter: showMessageInCenter,
+                                index: widget.index,
+                              )
+                            ],
                             if (theme?.selfMessageTheme?.showProfile != null)
                               if (theme?.selfMessageTheme?.showProfile ==
                                       true &&

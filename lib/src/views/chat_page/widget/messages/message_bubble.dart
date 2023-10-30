@@ -19,6 +19,7 @@ class MessageBubble extends GetView<IsmChatPageController> {
   final IsmChatMessageModel _message;
   final bool showMessageInCenter;
   final int? index;
+
   final GlobalKey globalKey = GlobalKey();
 
   @override
