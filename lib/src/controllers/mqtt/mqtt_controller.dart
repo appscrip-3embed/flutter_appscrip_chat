@@ -1133,20 +1133,16 @@ class IsmChatMqttController extends GetxController {
   Future<void> getChatConversationsUnreadCount({
     bool isLoading = false,
   }) async {
-    var response =
-        await _viewModel.getChatConversationsUnreadCount(isLoading: isLoading);
+    var response = await _viewModel.getChatConversationsUnreadCount(
+      isLoading: isLoading,
+    );
     IsmChatApp.unReadConversationMessages = response;
   }
 
-  Future<List<IsmChatConversationModel>?> getChatConversations({
-    int skip = 0,
-    int limit = 20,
-    bool includeConversationStatusMessagesInUnreadMessagesCount = false,
+  Future<String> getChatConversationsCount({
+    bool isLoading = false,
   }) async =>
-      await _viewModel.getChatConversations(
-        includeConversationStatusMessagesInUnreadMessagesCount:
-            includeConversationStatusMessagesInUnreadMessagesCount,
-        skip: skip,
-        limit: limit,
+      await _viewModel.getChatConversationsUnreadCount(
+        isLoading: isLoading,
       );
 }

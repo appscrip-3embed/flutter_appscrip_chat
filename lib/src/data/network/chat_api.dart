@@ -29,6 +29,8 @@ class IsmChatAPI {
   static const String conversationUnreadCount =
       '${chatConversation}s/unread/count';
 
+  static const String conversationCount = '${chatConversation}s/count';
+
   static const String conversationMembers = '$chatConversation/members';
   static const String eligibleMembers = '$chatConversation/eligible/members';
   static const String leaveConversation = '$chatConversation/leave';

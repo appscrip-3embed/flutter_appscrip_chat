@@ -8,24 +8,24 @@ class IsmChatMqttViewModel {
   Future<String> getChatConversationsUnreadCount({
     bool isLoading = false,
   }) async {
-    var response =
-        await _repository.getChatConversationsUnreadCount(isLoading: isLoading);
+    var response = await _repository.getChatConversationsUnreadCount(
+      isLoading: isLoading,
+    );
     if (response == null) {
       return '';
     }
     return response;
   }
 
-  Future<List<IsmChatConversationModel>?> getChatConversations({
-    required int skip,
-    required int limit,
-    String? searchTag,
-    bool includeConversationStatusMessagesInUnreadMessagesCount = false,
-  }) async =>
-      await _repository.getChatConversations(
-        includeConversationStatusMessagesInUnreadMessagesCount:
-            includeConversationStatusMessagesInUnreadMessagesCount,
-        skip: skip,
-        limit: limit,
-      );
+  Future<String> getChatConversationsCount({
+    bool isLoading = false,
+  }) async {
+    var response = await _repository.getChatConversationsCount(
+      isLoading: isLoading,
+    );
+    if (response == null) {
+      return '';
+    }
+    return response;
+  }
 }
