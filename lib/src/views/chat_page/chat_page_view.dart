@@ -242,10 +242,15 @@ class _IsmChatPageView extends StatelessWidget {
                                                   itemCount: controller
                                                       .messages.length,
                                                   itemBuilder: (_, index) =>
-                                                      IsmChatMessage(
-                                                    index,
-                                                    controller.messages[index],
-                                                  ),
+                                                      controller
+                                                              .controllerIsRegister
+                                                          ? IsmChatMessage(
+                                                              index,
+                                                              controller
+                                                                      .messages[
+                                                                  index],
+                                                            )
+                                                          : IsmChatDimens.box0,
                                                 ),
                                               ),
                                             ),

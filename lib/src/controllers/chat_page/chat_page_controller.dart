@@ -449,6 +449,8 @@ class IsmChatPageController extends GetxController
 
   UserDetails? currentUser;
 
+  bool get controllerIsRegister => Get.isRegistered<IsmChatPageController>();
+
   @override
   void onInit() {
     super.onInit();
