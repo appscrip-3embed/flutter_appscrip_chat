@@ -381,17 +381,17 @@ class IsmChatPageViewModel {
     return indexedMap;
   }
 
-  Future<void> addReacton({required Reaction reaction}) async {
+  Future<IsmChatResponseModel?> addReacton({required Reaction reaction}) async {
     var response = await _repository.addReacton(reaction: reaction);
 
     if (response == null || response.hasError) {
-      return;
+      return null;
     }
 
     var allMessages =
         await IsmChatConfig.dbWrapper!.getMessage(reaction.conversationId);
     if (allMessages == null) {
-      return;
+      return null;
     }
 
     var message =
@@ -430,18 +430,20 @@ class IsmChatPageViewModel {
     var controller = Get.find<IsmChatPageController>();
     controller.didReactedLast = true;
     await controller.getMessagesFromDB(reaction.conversationId);
+    return response;
   }
 
-  Future<void> deleteReacton({required Reaction reaction}) async {
+  Future<IsmChatResponseModel?> deleteReacton(
+      {required Reaction reaction}) async {
     var response = await _repository.deleteReacton(reaction: reaction);
     if (response == null || response.hasError) {
-      return;
+      return null;
     }
 
     var allMessages =
         await IsmChatConfig.dbWrapper!.getMessage(reaction.conversationId);
     if (allMessages == null) {
-      return;
+      return null;
     }
 
     var message =
@@ -476,6 +478,7 @@ class IsmChatPageViewModel {
     var controller = Get.find<IsmChatPageController>();
     controller.didReactedLast = true;
     await controller.getMessagesFromDB(reaction.conversationId);
+    return response;
   }
 
   Future<List<UserDetails>?> getReacton({required Reaction reaction}) async =>

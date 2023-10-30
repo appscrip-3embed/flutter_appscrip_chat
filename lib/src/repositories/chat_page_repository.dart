@@ -490,7 +490,6 @@ class IsmChatPageRepository {
       return response;
     } catch (e, st) {
       IsmChatLog.error('Add reaction  $e', st);
-
       return null;
     }
   }

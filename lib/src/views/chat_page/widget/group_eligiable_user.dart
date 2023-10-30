@@ -181,7 +181,8 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
                             var user = controller.groupEligibleUser[index];
                             var susTag = user.getSuspensionTag();
                             if (user.userDetails.userId ==
-                                Get.find<IsmChatMqttController>().userId) {
+                                IsmChatConfig
+                                    .communicationConfig.userConfig.userId) {
                               return const SizedBox.shrink();
                             }
                             return IsmChatTapHandler(

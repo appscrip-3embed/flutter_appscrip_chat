@@ -150,9 +150,10 @@ mixin IsmChatPageGetMessageMixin on GetxController {
       }
       _controller.isCoverationApiDetails = false;
       var data = await _controller.viewModel.getConverstaionDetails(
-          conversationId: conversationId,
-          includeMembers: includeMembers,
-          isLoading: isLoading);
+        conversationId: conversationId,
+        includeMembers: includeMembers,
+        isLoading: isLoading,
+      );
 
       if (data.data != null &&
           (_controller.conversation?.conversationId == conversationId)) {
@@ -195,6 +196,7 @@ mixin IsmChatPageGetMessageMixin on GetxController {
       if (data.statusCode == 400 && conversationId.isNotEmpty) {
         _controller.isActionAllowed = true;
       }
+
       _controller.isCoverationApiDetails = true;
     }
   }

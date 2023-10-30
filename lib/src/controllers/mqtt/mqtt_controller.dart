@@ -36,14 +36,10 @@ class IsmChatMqttController extends GetxController {
   var actionStreamController =
       StreamController<Map<String, dynamic>>.broadcast();
 
-  final RxString _userId = ''.obs;
-  String get userId => _userId.value;
-  set userId(String value) => _userId.value = value;
-
   @override
   void onInit() async {
     _communicationConfig = IsmChatConfig.communicationConfig;
-    userId = _communicationConfig.userConfig.userId;
+
     messageTopic =
         '/${_communicationConfig.projectConfig.accountId}/${_communicationConfig.projectConfig.projectId}/Message/${_communicationConfig.userConfig.userId}';
     statusTopic =
@@ -140,13 +136,13 @@ class IsmChatMqttController extends GetxController {
             .map((e) => e.toString())
             .contains(action)) {
           var actionModel = IsmChatMqttActionModel.fromMap(payload);
-          _handleAction(actionModel);
+          await _handleAction(actionModel);
         }
         actionStreamController.add(payload);
       } else {
         var message = IsmChatMessageModel.fromMap(payload);
         _handleLocalNotification(message);
-        _handleMessage(message);
+        await _handleMessage(message);
       }
     });
   }
@@ -192,13 +188,13 @@ class IsmChatMqttController extends GetxController {
     IsmChatLog.info('MQTT pong');
   }
 
-  void _handleAction(IsmChatMqttActionModel actionModel) {
+  Future<void> _handleAction(IsmChatMqttActionModel actionModel) async {
     switch (actionModel.action) {
       case IsmChatActionEvents.typingEvent:
         _handleTypingEvent(actionModel);
         break;
       case IsmChatActionEvents.conversationCreated:
-        _handleCreateConversation(actionModel);
+        await _handleCreateConversation(actionModel);
         _handleUnreadMessages(actionModel.userDetails?.userId ?? '');
 
         break;
@@ -385,20 +381,19 @@ class IsmChatMqttController extends GetxController {
     );
   }
 
-  void _handleMessage(IsmChatMessageModel message) async {
+  Future<void> _handleMessage(IsmChatMessageModel message) async {
     await Future.delayed(const Duration(milliseconds: 100));
-
     if (message.senderInfo?.userId == _communicationConfig.userConfig.userId) {
       return;
     }
-
     if (!Get.isRegistered<IsmChatConversationsController>()) {
       return;
     }
-
     var conversationController = Get.find<IsmChatConversationsController>();
     var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: message.conversationId);
+    await Future.delayed(const Duration(milliseconds: 50));
+
     if (conversation == null && Get.isRegistered<IsmChatPageController>()) {
       final controller = Get.find<IsmChatPageController>();
 
@@ -454,15 +449,16 @@ class IsmChatMqttController extends GetxController {
         conversation.messages?.add(message);
       }
     }
+
     await IsmChatConfig.dbWrapper!.saveConversation(conversation: conversation);
     unawaited(conversationController.getConversationsFromDB());
     await conversationController.pingMessageDelivered(
       conversationId: message.conversationId!,
       messageId: message.messageId!,
     );
+
     _handleUnreadMessages(message.senderInfo?.userId ?? '');
 
-    // To handle messages in chatList
     if (!Get.isRegistered<IsmChatPageController>()) {
       return;
     }
@@ -1014,7 +1010,8 @@ class IsmChatMqttController extends GetxController {
     }
   }
 
-  void _handleCreateConversation(IsmChatMqttActionModel actionModel) async {
+  Future<void> _handleCreateConversation(
+      IsmChatMqttActionModel actionModel) async {
     if (actionModel.opponentDetails?.userId ==
         _communicationConfig.userConfig.userId) {
       return;

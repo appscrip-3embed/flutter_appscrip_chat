@@ -69,6 +69,7 @@ class IsmChatConversationsRepository {
     required int skip,
     required int limit,
     String? searchTag,
+    bool includeConversationStatusMessagesInUnreadMessagesCount = false,
   }) async {
     try {
       String? url;
@@ -76,7 +77,8 @@ class IsmChatConversationsRepository {
         url =
             '${IsmChatAPI.getChatConversations}?searchTag=$searchTag&skip=$skip&limit=$limit';
       } else {
-        url = '${IsmChatAPI.getChatConversations}?skip=$skip&limit=$limit';
+        url =
+            '${IsmChatAPI.getChatConversations}?includeConversationStatusMessagesInUnreadMessagesCount=$includeConversationStatusMessagesInUnreadMessagesCount&skip=$skip&limit=$limit';
       }
       var response = await _apiWrapper.get(
         url,

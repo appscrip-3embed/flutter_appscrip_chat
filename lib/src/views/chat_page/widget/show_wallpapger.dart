@@ -65,7 +65,7 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                             color: IsmChatColors.redColor,
                           ),
                           Text(
-                            'Remove custom wallpaper',
+                            IsmChatStrings.removeWallpaper,
                             style: IsmChatStyles.w600red16,
                           )
                         ],
@@ -90,11 +90,11 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                   controller: _tabController,
                   tabs: [
                     Text(
-                      'Photos',
+                      IsmChatStrings.photos,
                       style: IsmChatStyles.w600Black16,
                     ),
                     Text(
-                      'Colors',
+                      IsmChatStrings.colors,
                       style: IsmChatStyles.w600Black16,
                     ),
                   ]),
@@ -122,6 +122,7 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                             if (index == 0) {
                               return IsmChatTapHandler(
                                 onTap: () async {
+                                  Get.back();
                                   var file = await IsmChatUtility.pickMedia(
                                     ImageSource.gallery,
                                   );
@@ -160,7 +161,7 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                         size: IsmChatDimens.thirty,
                                       ),
                                       Text(
-                                        'My Photos',
+                                        IsmChatStrings.myPhotos,
                                         style: IsmChatStyles.w400Black14,
                                       )
                                     ],

@@ -51,18 +51,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
         initState: (_) {
-          converstaionController.callApiOrNot = true;
-          converstaionController.profileImage = '';
-          converstaionController.forwardedList.clear();
-          converstaionController.selectedUserList.clear();
-          converstaionController.addGrouNameController.clear();
-          converstaionController.forwardedList.selectedUsers.clear();
-          converstaionController.userSearchNameController.clear();
-          converstaionController.showSearchField = false;
-          converstaionController.isLoadResponse = false;
-          converstaionController.getNonBlockUserList(
-            opponentId: IsmChatConfig.communicationConfig.userConfig.userId,
-          );
+          converstaionController.initCreateConversation();
         },
         builder: (controller) => Scaffold(
           resizeToAvoidBottomInset: false,
@@ -102,8 +91,8 @@ class IsmChatCreateConversationView extends StatelessWidget {
                   )
                 : Text(
                     _isGroupConversation ?? false
-                        ? 'New  ${_conversationType == IsmChatConversationType.public ? 'Public' : _conversationType == IsmChatConversationType.open ? 'Open' : 'Group'} Conversation'
-                        : 'New Conversation',
+                        ? '${IsmChatStrings.newString}  ${_conversationType == IsmChatConversationType.public ? 'Public' : _conversationType == IsmChatConversationType.open ? 'Open' : 'Group'} Conversation'
+                        : IsmChatStrings.newConversation,
                     style: IsmChatStyles.w600White18,
                   ),
             action: [
@@ -214,7 +203,8 @@ class IsmChatCreateConversationView extends StatelessWidget {
                             var user = controller.forwardedList[index];
                             var susTag = user.getSuspensionTag();
                             if (user.userDetails.userId ==
-                                Get.find<IsmChatMqttController>().userId) {
+                                IsmChatConfig
+                                    .communicationConfig.userConfig.userId) {
                               return const SizedBox.shrink();
                             }
                             return Column(
@@ -433,12 +423,13 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                   );
                                   return;
                                 }
+
                                 var userIds = <String>[];
                                 for (var x in controller.selectedUserList) {
                                   userIds.add(x.userId);
                                 }
-                                var ismChatConversation =
-                                    IsmChatConversationModel(
+
+                                var conversation = IsmChatConversationModel(
                                   messagingDisabled: false,
                                   userIds: userIds,
                                   conversationTitle:
@@ -447,6 +438,16 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                   isGroup: true,
                                   opponentDetails: controller.userDetails,
                                   unreadMessagesCount: 0,
+                                  createdAt:
+                                      DateTime.now().millisecondsSinceEpoch,
+                                  createdByUserName: IsmChatConfig
+                                          .communicationConfig
+                                          .userConfig
+                                          .userName
+                                          .isNotEmpty
+                                      ? IsmChatConfig.communicationConfig
+                                          .userConfig.userName
+                                      : controller.userDetails?.userName ?? '',
                                   lastMessageDetails: LastMessageDetails(
                                     sentByMe: true,
                                     showInConversation: true,
@@ -460,15 +461,15 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                   ),
                                   lastMessageSentAt: 0,
                                   conversationType: _conversationType,
-                                  membersCount: controller
-                                      .forwardedList.selectedUsers.length,
+                                  membersCount:
+                                      controller.selectedUserList.length + 1,
                                 );
+                                IsmChatLog.error(conversation.toMap());
                                 Get.back<void>();
                                 IsmChatProperties
                                     .conversationProperties.onChatTap!
-                                    .call(context, ismChatConversation);
-                                controller
-                                    .navigateToMessages(ismChatConversation);
+                                    .call(context, conversation);
+                                controller.navigateToMessages(conversation);
                                 await controller.goToChatPage();
                               },
                             ),

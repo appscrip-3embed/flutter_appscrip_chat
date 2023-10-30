@@ -556,7 +556,11 @@ class IsmChatConversationsController extends GetxController {
       bytes = await file.first?.readAsBytes();
       extension = file.first?.path.split('.').last;
     }
-    await getPresignedUrl(extension!, bytes!);
+    await getPresignedUrl(
+      extension!,
+      bytes!,
+      true,
+    );
   }
 
   /// function to pick image for group profile
@@ -573,8 +577,9 @@ class IsmChatConversationsController extends GetxController {
   // / get Api for presigned Url.....
   Future<void> getPresignedUrl(
     String mediaExtension,
-    Uint8List bytes,
-  ) async {
+    Uint8List bytes, [
+    bool isLoading = false,
+  ]) async {
     var response = await _commonController.getPresignedUrl(
       isLoading: true,
       userIdentifier: userDetails?.userIdentifier ?? '',
@@ -585,7 +590,10 @@ class IsmChatConversationsController extends GetxController {
       return;
     }
     var responseCode = await _commonController.updatePresignedUrl(
-        presignedUrl: response.presignedUrl, bytes: bytes);
+      presignedUrl: response.presignedUrl,
+      bytes: bytes,
+      isLoading: isLoading,
+    );
     if (responseCode == 200) {
       profileImage = response.mediaUrl!;
     }
@@ -948,12 +956,13 @@ class IsmChatConversationsController extends GetxController {
       limit: limit,
       conversationType: conversationType,
     );
-    if (response == null) {
+    if (response?.isEmpty == true) {
       isLoadResponse = true;
       publicAndOpenConversation = [];
       return;
     }
-    publicAndOpenConversation = response;
+
+    publicAndOpenConversation.addAll(response ?? []);
     callApiOrNot = true;
   }
 
@@ -998,12 +1007,13 @@ class IsmChatConversationsController extends GetxController {
     }
   }
 
-  Future<List<UserDetails>> getObservationUser(
-      {required String conversationId,
-      int skip = 0,
-      int limit = 20,
-      bool isLoading = false,
-      String? searchText}) async {
+  Future<List<UserDetails>> getObservationUser({
+    required String conversationId,
+    int skip = 0,
+    int limit = 20,
+    bool isLoading = false,
+    String? searchText,
+  }) async {
     var res = await _viewModel.getObservationUser(
       conversationId: conversationId,
       isLoading: isLoading,
@@ -1187,5 +1197,20 @@ class IsmChatConversationsController extends GetxController {
         }
       }
     }
+  }
+
+  void initCreateConversation() async {
+    callApiOrNot = true;
+    profileImage = '';
+    forwardedList.clear();
+    selectedUserList.clear();
+    addGrouNameController.clear();
+    forwardedList.selectedUsers.clear();
+    userSearchNameController.clear();
+    showSearchField = false;
+    isLoadResponse = false;
+    await getNonBlockUserList(
+      opponentId: IsmChatConfig.communicationConfig.userConfig.userId,
+    );
   }
 }

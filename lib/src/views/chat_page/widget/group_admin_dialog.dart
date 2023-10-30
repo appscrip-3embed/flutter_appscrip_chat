@@ -38,9 +38,9 @@ class IsmChatGroupAdminDialog extends StatelessWidget {
                   PopupMenuItem(
                     onTap: () {
                       if (isAdmin) {
-                        controller.removeAdmin(user.userId);
+                        controller.removeAdmin(user.userId, user.userName);
                       } else {
-                        controller.makeAdmin(user.userId);
+                        controller.makeAdmin(user.userId, user.userName);
                       }
                     },
                     padding: IsmChatDimens.edgeInsets24_0,

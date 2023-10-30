@@ -377,6 +377,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     String? nameWithExtension;
     Uint8List? bytes;
     bool? isNetWorkUrl;
+    Uint8List? thumbnailBytes;
+    String? thumbnailNameWithExtension;
+    String? thumbnailMediaId;
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     final result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
@@ -399,13 +402,25 @@ mixin IsmChatPageSendMessageMixin on GetxController {
               _controller.conversation?.chatName ?? ''
             ]);
       }
-      for (var x in result!.files) {
+      for (var x in result?.files ?? []) {
         var sizeMedia = kIsWeb
             ? IsmChatUtility.formatBytes(
                 int.parse(x.bytes!.length.toString()),
               )
             : await IsmChatUtility.fileToSize(File(x.path!));
         if (sizeMedia.size()) {
+          final document = await PdfDocument.openFile(x.path ?? '');
+          final page = await document.getPage(1);
+          final pdfImage = await page.render(
+            width: page.width,
+            height: page.height,
+            backgroundColor: '#ffffff',
+          );
+          await page.close();
+          thumbnailBytes = pdfImage?.bytes;
+          thumbnailNameWithExtension = pdfImage?.format.toString();
+          thumbnailMediaId = sentAt.toString();
+
           bytes = x.bytes;
           nameWithExtension = x.name;
           documentMessage = IsmChatMessageModel(
@@ -416,8 +431,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             attachments: [
               AttachmentModel(
                 attachmentType: IsmChatMediaType.file,
-                thumbnailUrl: kIsWeb ? '' : x.path,
-                size: x.bytes!.length,
+                thumbnailUrl: kIsWeb ? '' : pdfImage?.bytes.toString(),
+                size: x.bytes?.length,
                 name: nameWithExtension,
                 mimeType: x.extension,
                 mediaUrl: kIsWeb ? x.bytes.toString() : x.path,
@@ -464,7 +479,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
               : conversationController.userDetails?.userName ?? '';
       await ismPostMediaUrl(
         isNetWorkUrl: isNetWorkUrl ?? false,
-        imageAndFile: true,
+        imageAndFile: false,
         bytes: bytes,
         createdAt: sentAt,
         ismChatChatMessageModel: documentMessage,
@@ -474,6 +489,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         notificationBody: 'Sent you an Document',
         notificationTitle: notificationTitle,
         isTemporaryChat: _controller.isTemporaryChat,
+        thumbnailNameWithExtension: thumbnailNameWithExtension,
+        thumbnailMediaId: thumbnailMediaId,
+        thumbnailBytes: thumbnailBytes,
+        thumbanilMediaType: IsmChatMediaType.image.value,
       );
     }
   }
@@ -1073,8 +1092,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     if (reaction.messageId.isEmpty) {
       return;
     }
-    await _controller.viewModel.addReacton(reaction: reaction);
-    if (Responsive.isWebAndTablet(Get.context!)) {
+    var response = await _controller.viewModel.addReacton(reaction: reaction);
+    if (response != null && !response.hasError) {
       await _controller.conversationController.getChatConversations();
     }
   }

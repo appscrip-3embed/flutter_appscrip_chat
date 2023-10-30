@@ -123,7 +123,7 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
                       itemBuilder: (_, index) => IsmChatMessage(
                         index,
                         controller.messages[index],
-                        isIgnorTap: true,
+                        isIgnorTap: false,
                       ),
                     ),
                   ),

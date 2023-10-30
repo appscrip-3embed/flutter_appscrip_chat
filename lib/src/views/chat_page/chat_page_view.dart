@@ -219,7 +219,8 @@ class _IsmChatPageView extends StatelessWidget {
                                                       .placeholder ??
                                                   const IsmChatEmptyView(
                                                     icon: Icon(
-                                                        Icons.chat_outlined),
+                                                      Icons.chat_outlined,
+                                                    ),
                                                     text: IsmChatStrings
                                                         .noMessages,
                                                   ),
@@ -241,10 +242,15 @@ class _IsmChatPageView extends StatelessWidget {
                                                   itemCount: controller
                                                       .messages.length,
                                                   itemBuilder: (_, index) =>
-                                                      IsmChatMessage(
-                                                    index,
-                                                    controller.messages[index],
-                                                  ),
+                                                      controller
+                                                              .controllerIsRegister
+                                                          ? IsmChatMessage(
+                                                              index,
+                                                              controller
+                                                                      .messages[
+                                                                  index],
+                                                            )
+                                                          : IsmChatDimens.box0,
                                                 ),
                                               ),
                                             ),

@@ -59,6 +59,9 @@ class _IsmChatObserverUsersViewState extends State<IsmChatObserverUsersView> {
               onPressed: () {
                 isSearch = !isSearch;
                 setState(() {});
+                future = converstaionController.getObservationUser(
+                    conversationId: widget._conversationId);
+                setState(() {});
               },
               icon:
                   Icon(!isSearch ? Icons.search_rounded : Icons.close_rounded),
