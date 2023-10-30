@@ -504,7 +504,8 @@ class IsmChatMqttController extends GetxController {
     } else {
       mqttMessage = message.notificationBody;
     }
-    if (message.events?.sendPushNotification == false) {
+    if (message.events != null &&
+        message.events?.sendPushNotification == false) {
       return;
     }
 
