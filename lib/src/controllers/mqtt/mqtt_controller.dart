@@ -1142,7 +1142,7 @@ class IsmChatMqttController extends GetxController {
   Future<String> getChatConversationsCount({
     bool isLoading = false,
   }) async =>
-      await _viewModel.getChatConversationsUnreadCount(
+      await _viewModel.getChatConversationsCount(
         isLoading: isLoading,
       );
 }
