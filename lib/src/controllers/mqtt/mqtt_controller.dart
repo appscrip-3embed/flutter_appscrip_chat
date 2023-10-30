@@ -504,6 +504,10 @@ class IsmChatMqttController extends GetxController {
     } else {
       mqttMessage = message.notificationBody;
     }
+    if (message.events?.sendPushNotification == false) {
+      return;
+    }
+
     if (!Responsive.isWebAndTablet(Get.context!)) {
       if (Get.isRegistered<IsmChatPageController>()) {
         var chatController = Get.find<IsmChatPageController>();
