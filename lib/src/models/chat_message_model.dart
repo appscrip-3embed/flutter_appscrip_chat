@@ -143,7 +143,9 @@ class IsmChatMessageModel {
         conversationDetails:
             map['conversationDetails'] as Map<String, dynamic>? ?? {},
         events: map['events'] != null
-            ? IsmChatEvents.fromMap(map['events'])
+            ? map['events'].runtimeType == String
+                ? IsmChatEvents.fromJson(map['events'])
+                : IsmChatEvents.fromMap(map['events'])
             : null);
 
     if (IsmChatConfig.configInitilized) {
