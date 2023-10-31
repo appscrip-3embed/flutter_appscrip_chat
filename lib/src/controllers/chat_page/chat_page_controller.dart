@@ -1681,14 +1681,12 @@ class IsmChatPageController extends GetxController
         () {
           userBlockOrNot
               ? unblockUser(
-                  opponentId: conversation?.opponentDetails!.userId ?? '',
-                  lastMessageTimeStamp: lastMessageTimsStamp,
+                  opponentId: conversation?.opponentDetails?.userId ?? '',
                   includeMembers: includeMembers,
                   isLoading: true,
                 )
               : blockUser(
-                  opponentId: conversation?.opponentDetails!.userId ?? '',
-                  lastMessageTimeStamp: lastMessageTimsStamp,
+                  opponentId: conversation?.opponentDetails?.userId ?? '',
                   includeMembers: includeMembers,
                   isLoading: true,
                 );
@@ -1706,7 +1704,6 @@ class IsmChatPageController extends GetxController
           callbackActions: [
             () => unblockUser(
                 opponentId: conversation?.opponentDetails?.userId ?? '',
-                lastMessageTimeStamp: messages.last.sentAt,
                 isLoading: true),
           ],
         ),
@@ -1875,13 +1872,11 @@ class IsmChatPageController extends GetxController
 
   Future<void> blockUser(
       {required String opponentId,
-      required int lastMessageTimeStamp,
       bool includeMembers = false,
       bool isLoading = false,
       bool fromUser = false}) async {
     var data = await viewModel.blockUser(
         opponentId: opponentId,
-        lastMessageTimeStamp: lastMessageTimeStamp,
         conversationId: conversation?.conversationId ?? '',
         isLoading: isLoading);
     if (data != null) {
@@ -1901,7 +1896,6 @@ class IsmChatPageController extends GetxController
 
   Future<void> unblockUser({
     required String opponentId,
-    required int lastMessageTimeStamp,
     bool includeMembers = false,
     bool isLoading = false,
     bool fromUser = false,

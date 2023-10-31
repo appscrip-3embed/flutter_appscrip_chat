@@ -180,6 +180,40 @@ class IsmChatApp extends StatelessWidget {
     }
   }
 
+  /// Call this function for unblock user form out side
+  static Future<void> unblockUser({
+    required String opponentId,
+    bool includeMembers = false,
+    bool isLoading = false,
+    bool fromUser = false,
+  }) async {
+    if (Get.isRegistered<IsmChatPageController>()) {
+      await Get.find<IsmChatPageController>().blockUser(
+        opponentId: opponentId,
+        includeMembers: includeMembers,
+        isLoading: isLoading,
+        fromUser: fromUser,
+      );
+    }
+  }
+
+  /// Call this function for block user form out side
+  static Future<void> blockUser({
+    required String opponentId,
+    bool includeMembers = false,
+    bool isLoading = false,
+    bool fromUser = false,
+  }) async {
+    if (Get.isRegistered<IsmChatPageController>()) {
+      await Get.find<IsmChatPageController>().blockUser(
+        opponentId: opponentId,
+        includeMembers: includeMembers,
+        isLoading: isLoading,
+        fromUser: fromUser,
+      );
+    }
+  }
+
   /// Call this function on SignOut to delete the data stored locally in the Local Database
   static void logout() async {
     await Get.find<IsmChatMqttController>().unSubscribe();
