@@ -49,7 +49,7 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                 .conversation?.conversationId));
                         assetList.removeAt(assetIndex);
                         await conversationController.updateUserData(
-                          {'assetList': assetList},
+                          metaData: {'assetList': assetList},
                         );
                         IsmChatUtility.closeLoader();
                         await conversationController.getUserData(

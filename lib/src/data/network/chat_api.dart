@@ -9,7 +9,7 @@ class IsmChatAPI {
   static const String user = '$baseUrl/chat/user';
   static const String userDetails = '$baseUrl/chat/user/details';
   static const String allUsers = '$baseUrl/chat/users';
-  static const String updateUsers = '$baseUrl/chat/user';
+  static const String updateUsers = user;
   static const String authenticate = '$allUsers/authenticate';
 
   static const String chatConversation = '$baseUrl/chat/conversation';

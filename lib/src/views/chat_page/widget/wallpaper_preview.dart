@@ -247,7 +247,7 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                         });
                       }
                       await conversationController.updateUserData(
-                        {'assetList': assetList},
+                        metaData: {'assetList': assetList},
                       );
 
                       IsmChatUtility.closeLoader();
@@ -282,7 +282,7 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                         });
                       }
                       await conversationController.updateUserData(
-                        {'assetList': assetList},
+                        metaData: {'assetList': assetList},
                       );
                       IsmChatUtility.closeLoader();
                     }

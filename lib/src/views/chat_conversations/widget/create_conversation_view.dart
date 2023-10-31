@@ -530,7 +530,7 @@ class _GroupChatImageAndName extends StatelessWidget {
                   right: IsmChatDimens.four,
                   child: IsmChatTapHandler(
                     onTap: () {
-                      if (kIsWeb) {
+                      if (Responsive.isWebAndTablet(context)) {
                         controller.ismUploadImage(ImageSource.gallery);
                       } else {
                         Get.bottomSheet<void>(

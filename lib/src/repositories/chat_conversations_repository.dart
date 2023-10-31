@@ -147,9 +147,20 @@ class IsmChatConversationsRepository {
     }
   }
 
-  Future<UserDetails?> updateUserData(Map<String, dynamic> metaData) async {
+  Future<UserDetails?> updateUserData({
+    String? userProfileImageUrl,
+    String? userName,
+    String? userIdentifier,
+    Map<String, dynamic>? metaData,
+  }) async {
     try {
-      var requestData = {'metaData': metaData};
+      var requestData = {
+        if (userProfileImageUrl != null)
+          'userProfileImageUrl': userProfileImageUrl,
+        if (userName != null) 'userName': userName,
+        if (userIdentifier != null) 'userIdentifier': userIdentifier,
+        if (metaData != null) 'metaData': metaData,
+      };
       var response = await _apiWrapper.patch(
         IsmChatAPI.updateUsers,
         payload: requestData,
