@@ -84,78 +84,62 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     bool isTemporaryChat = false,
     bool sendPushNotification = true,
   }) async {
-    var isSendMessage = false;
-    if (IsmChatProperties
-            .chatPageProperties.messageAllowedConfig?.isMessgeAllowed ==
-        null) {
-      isSendMessage = true;
-    } else {
-      if (await IsmChatProperties
-              .chatPageProperties.messageAllowedConfig?.isMessgeAllowed
-              ?.call(Get.context!,
-                  Get.find<IsmChatPageController>().conversation!) ??
-          true) {
-        isSendMessage = true;
+    if (_controller.conversation?.customType != 'Broadcasting') {
+      var isMessageSent = await _controller.commonController.sendMessage(
+        showInConversation: true,
+        encrypted: true,
+        events: {
+          'updateUnreadCount': true,
+          'sendPushNotification': sendPushNotification
+        },
+        attachments: attachments,
+        mentionedUsers: mentionedUsers,
+        metaData: metaData,
+        messageType: messageType,
+        customType: customType,
+        parentMessageId: parentMessageId,
+        deviceId: deviceId,
+        conversationId: conversationId,
+        notificationBody: notificationBody,
+        notificationTitle: notificationTitle,
+        body: IsmChatUtility.encodePayload(body),
+        createdAt: createdAt,
+        isTemporaryChat: isTemporaryChat,
+      );
+
+      if (isMessageSent && !isTemporaryChat) {
+        _controller.didReactedLast = false;
+        await _controller.getMessagesFromDB(conversationId);
       }
-    }
-    if (isSendMessage) {
-      if (_controller.conversation?.customType != 'Broadcasting') {
-        var isMessageSent = await _controller.commonController.sendMessage(
+    } else {
+      if (_controller.conversation?.members?.isNotEmpty == true &&
+          (_controller.conversation?.members?.length ?? 0) >= 2) {
+        await sendBroadcastMessage(
+          userIds: (_controller.conversation?.members ?? [])
+              .map((e) => e.userId)
+              .toList(),
           showInConversation: true,
           encrypted: true,
-          events: {
-            'updateUnreadCount': true,
-            'sendPushNotification': sendPushNotification
-          },
-          attachments: attachments,
-          mentionedUsers: mentionedUsers,
-          metaData: metaData,
+          events: {'updateUnreadCount': true, 'sendPushNotification': true},
           messageType: messageType,
-          customType: customType,
-          parentMessageId: parentMessageId,
           deviceId: deviceId,
-          conversationId: conversationId,
+          body: IsmChatUtility.encodePayload(body),
           notificationBody: notificationBody,
           notificationTitle: notificationTitle,
-          body: IsmChatUtility.encodePayload(body),
+          attachments: attachments,
+          customType: customType,
+          isLoading: false,
+          metaData: metaData,
+          searchableTags: [notificationBody],
           createdAt: createdAt,
-          isTemporaryChat: isTemporaryChat,
         );
-
-        if (isMessageSent && !isTemporaryChat) {
-          _controller.didReactedLast = false;
-          await _controller.getMessagesFromDB(conversationId);
-        }
       } else {
-        if (_controller.conversation?.members?.isNotEmpty == true &&
-            (_controller.conversation?.members?.length ?? 0) >= 2) {
-          await sendBroadcastMessage(
-            userIds: (_controller.conversation?.members ?? [])
-                .map((e) => e.userId)
-                .toList(),
-            showInConversation: true,
-            encrypted: true,
-            events: {'updateUnreadCount': true, 'sendPushNotification': true},
-            messageType: messageType,
-            deviceId: deviceId,
-            body: IsmChatUtility.encodePayload(body),
-            notificationBody: notificationBody,
-            notificationTitle: notificationTitle,
-            attachments: attachments,
-            customType: customType,
-            isLoading: false,
-            metaData: metaData,
-            searchableTags: [notificationBody],
-            createdAt: createdAt,
-          );
-        } else {
-          await Get.dialog(
-            const IsmChatAlertDialogBox(
-              title: IsmChatStrings.broadcastAlert,
-              cancelLabel: 'Okay',
-            ),
-          );
-        }
+        await Get.dialog(
+          const IsmChatAlertDialogBox(
+            title: IsmChatStrings.broadcastAlert,
+            cancelLabel: 'Okay',
+          ),
+        );
       }
     }
   }

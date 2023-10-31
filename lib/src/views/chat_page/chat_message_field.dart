@@ -360,10 +360,19 @@ class _MicOrSendButton extends StatelessWidget {
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
                 onTap: () async {
-                  if (controller.showSendButton) {
+                  if (await IsmChatProperties.chatPageProperties
+                          .messageAllowedConfig?.isMessgeAllowed
+                          ?.call(
+                              Get.context!,
+                              Get.find<IsmChatPageController>()
+                                  .conversation!) ??
+                      true) {
                     if (!controller.conversation!.isChattingAllowed) {
                       controller.showDialogCheckBlockUnBlock();
-                    } else {
+                      return;
+                    }
+
+                    if (controller.showSendButton) {
                       if (controller.isEnableRecordingAudio) {
                         var audioPath =
                             await controller.recordAudio.stop() ?? '';
@@ -431,10 +440,6 @@ class _MicOrSendButton extends StatelessWidget {
                               '',
                         );
                       }
-                    }
-                  } else {
-                    if (!controller.conversation!.isChattingAllowed) {
-                      controller.showDialogCheckBlockUnBlock();
                     } else {
                       if (controller.showEmojiBoard) {
                         controller.toggleEmojiBoard();
@@ -724,12 +729,18 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
           if (!controller.conversation!.isChattingAllowed) {
             controller.showDialogCheckBlockUnBlock();
           } else {
-            await Get.bottomSheet(
-              const IsmChatAttachmentCard(),
-              enterBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
-              exitBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
-              elevation: 0,
-            );
+            if (await IsmChatProperties
+                    .chatPageProperties.messageAllowedConfig?.isMessgeAllowed
+                    ?.call(Get.context!,
+                        Get.find<IsmChatPageController>().conversation!) ??
+                true) {
+              await Get.bottomSheet(
+                const IsmChatAttachmentCard(),
+                enterBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
+                exitBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
+                elevation: 0,
+              );
+            }
           }
         },
         color: IsmChatConfig
