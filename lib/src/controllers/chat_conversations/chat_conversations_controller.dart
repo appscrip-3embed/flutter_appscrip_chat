@@ -840,8 +840,18 @@ class IsmChatConversationsController extends GetxController {
     }
   }
 
-  Future<void> updateUserData(Map<String, dynamic> metaData) async {
-    await _viewModel.updateUserData(metaData);
+  Future<void> updateUserData({
+    String? userProfileImageUrl,
+    String? userName,
+    String? userIdentifier,
+    Map<String, dynamic>? metaData,
+  }) async {
+    await _viewModel.updateUserData(
+      userProfileImageUrl: userProfileImageUrl,
+      userName: userName,
+      userIdentifier: userIdentifier,
+      metaData: metaData,
+    );
   }
 
   void onSearch(String query) {

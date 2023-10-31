@@ -163,7 +163,6 @@ class AuthController extends GetxController {
 
       Utility.showLoader();
       await ismGetPresignedUrl(extension, bytes);
-
       Get.back();
     }
   }

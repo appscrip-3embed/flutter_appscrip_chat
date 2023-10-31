@@ -46,14 +46,6 @@ class IsmChatPageController extends GetxController
   IsmChatPageController(this.viewModel);
   final IsmChatPageViewModel viewModel;
 
-  // final _conversationController = Get.find<IsmChatConversationsController>();
-
-  final Rx<IsmChatConversationModel?> _conversation =
-      Rx<IsmChatConversationModel?>(null);
-  IsmChatConversationModel? get conversation => _conversation.value;
-  set conversation(IsmChatConversationModel? value) =>
-      _conversation.value = value;
-
   var messageFieldFocusNode = FocusNode();
 
   var chatInputController = TextEditingController();
@@ -69,6 +61,7 @@ class IsmChatPageController extends GetxController
   final participnatsEditingController = TextEditingController();
 
   var noises = <int, Widget>{};
+  var memoryImage = <int, MemoryImage>{};
 
   Widget getNoise(int sentAt, [bool sentByMe = true]) {
     if (!noises.keys.contains(sentAt)) {
@@ -79,6 +72,19 @@ class IsmChatPageController extends GetxController
     }
     return noises[sentAt]!;
   }
+
+  MemoryImage getMemoryImage(int sentAt, Uint8List bytes) {
+    if (!memoryImage.keys.contains(sentAt)) {
+      memoryImage[sentAt] = MemoryImage(bytes);
+    }
+    return memoryImage[sentAt] ?? MemoryImage(Uint8List(0));
+  }
+
+  final Rx<IsmChatConversationModel?> _conversation =
+      Rx<IsmChatConversationModel?>(null);
+  IsmChatConversationModel? get conversation => _conversation.value;
+  set conversation(IsmChatConversationModel? value) =>
+      _conversation.value = value;
 
   final RxBool _showEmojiBoard = false.obs;
   bool get showEmojiBoard => _showEmojiBoard.value;
@@ -161,11 +167,6 @@ class IsmChatPageController extends GetxController
   final Completer<GoogleMapController> googleMapCompleter =
       Completer<GoogleMapController>();
 
-  var _cameras = <CameraDescription>[];
-
-  late CameraController _frontCameraController;
-  late CameraController _backCameraController;
-
   CameraController get cameraController =>
       isFrontCameraSelected ? _frontCameraController : _backCameraController;
 
@@ -214,12 +215,6 @@ class IsmChatPageController extends GetxController
   String get dataSize => _dataSize.value;
   set dataSize(String value) => _dataSize.value = value;
 
-  LayerLink messageHoldLink = LayerLink();
-
-  Timer? conversationDetailsApTimer;
-
-  Timer? forVideoRecordTimer;
-
   final RxBool _isEnableRecordingAudio = false.obs;
   bool get isEnableRecordingAudio => _isEnableRecordingAudio.value;
   set isEnableRecordingAudio(bool value) =>
@@ -237,9 +232,7 @@ class IsmChatPageController extends GetxController
 
   final RxBool _isTyping = true.obs;
   bool get isTyping => _isTyping.value;
-  set isTyping(bool value) {
-    _isTyping.value = value;
-  }
+  set isTyping(bool value) => _isTyping.value = value;
 
   final RxBool _showDownSideButton = false.obs;
   bool get showDownSideButton => _showDownSideButton.value;
@@ -299,21 +292,12 @@ class IsmChatPageController extends GetxController
 
   final RxBool _canCallCurrentApi = false.obs;
   bool get canCallCurrentApi => _canCallCurrentApi.value;
-  set canCallCurrentApi(bool value) {
-    _canCallCurrentApi.value = value;
-  }
+  set canCallCurrentApi(bool value) => _canCallCurrentApi.value = value;
 
   final _groupEligibleUser = <SelectedForwardUser>[].obs;
   List<SelectedForwardUser> get groupEligibleUser => _groupEligibleUser;
-  set groupEligibleUser(List<SelectedForwardUser> value) {
-    _groupEligibleUser.value = value;
-  }
-
-  List<SelectedForwardUser> groupEligibleUserDuplicate = [];
-
-  List<MentionModel> userMentionedList = [];
-
-  List<Emoji> reactions = [];
+  set groupEligibleUser(List<SelectedForwardUser> value) =>
+      _groupEligibleUser.value = value;
 
   final _userReactionList = <UserDetails>[].obs;
   List<UserDetails> get userReactionList => _userReactionList;
@@ -366,7 +350,51 @@ class IsmChatPageController extends GetxController
   bool get isLoadingContact => _isLoadingContact.value;
   set isLoadingContact(bool value) => _isLoadingContact.value = value;
 
+  final RxString _audioPaht = ''.obs;
+  String get audioPaht => _audioPaht.value;
+  set audioPaht(String value) => _audioPaht.value = value;
+
+  final _searchMessages = <IsmChatMessageModel>[].obs;
+  List<IsmChatMessageModel> get searchMessages => _searchMessages;
+  set searchMessages(List<IsmChatMessageModel> value) =>
+      _searchMessages.value = value;
+
+  final RxBool _isTemporaryChat = false.obs;
+  bool get isTemporaryChat => _isTemporaryChat.value;
+  set isTemporaryChat(bool value) => _isTemporaryChat.value = value;
+
+  var _cameras = <CameraDescription>[];
+
+  late CameraController _frontCameraController;
+  late CameraController _backCameraController;
+
+  LayerLink messageHoldLink = LayerLink();
+
+  Timer? conversationDetailsApTimer;
+
+  Timer? forVideoRecordTimer;
+
+  List<SelectedForwardUser> groupEligibleUserDuplicate = [];
+
+  List<MentionModel> userMentionedList = [];
+
+  List<Emoji> reactions = [];
+
   bool didReactedLast = false;
+
+  final Dio dio = Dio();
+
+  final ismChatDebounce = IsmChatDebounce();
+
+  AnimationController? holdController;
+
+  Animation<double>? holdAnimation;
+
+  var arguments = Get.arguments as Map<String, dynamic>? ?? {};
+
+  UserDetails? currentUser;
+
+  bool get controllerIsRegister => Get.isRegistered<IsmChatPageController>();
 
   List<Map<String, List<IsmChatMessageModel>>> sortMediaList(
       List<IsmChatMessageModel> messages) {
@@ -421,35 +449,6 @@ class IsmChatPageController extends GetxController
     }
     return allMessages;
   }
-
-  final RxString _audioPaht = ''.obs;
-  String get audioPaht => _audioPaht.value;
-  set audioPaht(String value) => _audioPaht.value = value;
-
-  final _searchMessages = <IsmChatMessageModel>[].obs;
-  List<IsmChatMessageModel> get searchMessages => _searchMessages;
-  set searchMessages(List<IsmChatMessageModel> value) =>
-      _searchMessages.value = value;
-
-  final RxBool _isTemporaryChat = false.obs;
-  bool get isTemporaryChat => _isTemporaryChat.value;
-  set isTemporaryChat(bool value) {
-    _isTemporaryChat.value = value;
-  }
-
-  final Dio dio = Dio();
-
-  final ismChatDebounce = IsmChatDebounce();
-
-  AnimationController? holdController;
-
-  Animation<double>? holdAnimation;
-
-  var arguments = Get.arguments as Map<String, dynamic>? ?? {};
-
-  UserDetails? currentUser;
-
-  bool get controllerIsRegister => Get.isRegistered<IsmChatPageController>();
 
   @override
   void onInit() {
