@@ -96,7 +96,6 @@ class IsmChatPageViewModel {
 
   Future<IsmChatResponseModel?> blockUser(
       {required String opponentId,
-      required int lastMessageTimeStamp,
       required String conversationId,
       bool isLoading = false}) async {
     var response = await _repository.blockUser(

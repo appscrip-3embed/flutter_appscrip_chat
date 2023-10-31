@@ -515,7 +515,18 @@ class _GroupChatImageAndName extends StatelessWidget {
                       } else {
                         Get.back();
                         Get.bottomSheet<void>(
-                          const IsmChatProfilePhotoBottomSheet(),
+                          IsmChatProfilePhotoBottomSheet(
+                            onCameraTap: () async {
+                              Get.back();
+                              await controller
+                                  .ismUploadImage(ImageSource.camera);
+                            },
+                            onGalleryTap: () async {
+                              Get.back();
+                              await controller
+                                  .ismUploadImage(ImageSource.gallery);
+                            },
+                          ),
                           elevation: 0,
                         );
                       }
@@ -534,7 +545,18 @@ class _GroupChatImageAndName extends StatelessWidget {
                         controller.ismUploadImage(ImageSource.gallery);
                       } else {
                         Get.bottomSheet<void>(
-                          const IsmChatProfilePhotoBottomSheet(),
+                          IsmChatProfilePhotoBottomSheet(
+                            onCameraTap: () async {
+                              Get.back();
+                              await controller
+                                  .ismUploadImage(ImageSource.camera);
+                            },
+                            onGalleryTap: () async {
+                              Get.back();
+                              await controller
+                                  .ismUploadImage(ImageSource.gallery);
+                            },
+                          ),
                           elevation: 0,
                         );
                       }

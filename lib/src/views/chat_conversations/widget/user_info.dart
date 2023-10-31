@@ -9,13 +9,14 @@ class IsmChatUserView extends StatelessWidget {
   const IsmChatUserView({super.key, this.signOutTap});
 
   final VoidCallback? signOutTap;
-
   static const String route = IsmPageRoutes.userView;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
         builder: (controller) {
-          controller.profileImage = controller.userDetails?.profileUrl ?? '';
+          if (controller.profileImage.isEmpty) {
+            controller.profileImage = controller.userDetails?.profileUrl ?? '';
+          }
           return Scaffold(
             backgroundColor: IsmChatColors.whiteColor,
             appBar: IsmChatAppBar(
@@ -62,7 +63,16 @@ class IsmChatUserView extends StatelessWidget {
                               controller.ismUploadImage(ImageSource.gallery);
                             } else {
                               Get.bottomSheet<void>(
-                                const IsmChatProfilePhotoBottomSheet(),
+                                IsmChatProfilePhotoBottomSheet(
+                                  onCameraTap: () async {
+                                    controller
+                                        .updateUserDetails(ImageSource.camera);
+                                  },
+                                  onGalleryTap: () async {
+                                    controller
+                                        .updateUserDetails(ImageSource.gallery);
+                                  },
+                                ),
                                 elevation: 0,
                               );
                             }

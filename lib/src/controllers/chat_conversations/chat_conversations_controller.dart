@@ -531,9 +531,6 @@ class IsmChatConversationsController extends GetxController {
       final chatPageController = Get.find<IsmChatPageController>();
       if (conversationId == chatPageController.conversation?.conversationId) {
         chatPageController.unblockUser(
-          lastMessageTimeStamp: chatPageController.messages.isEmpty
-              ? DateTime.now().millisecondsSinceEpoch
-              : chatPageController.messages.last.sentAt,
           opponentId: opponentId,
           includeMembers: true,
           isLoading: false,
@@ -542,10 +539,10 @@ class IsmChatConversationsController extends GetxController {
     }
   }
 
-  void ismUploadImage(ImageSource imageSource) async {
+  Future<String> ismUploadImage(ImageSource imageSource) async {
     var file = await IsmChatUtility.pickMedia(imageSource);
     if (file.isEmpty) {
-      return;
+      return '';
     }
     Uint8List? bytes;
     String? extension;
@@ -556,7 +553,7 @@ class IsmChatConversationsController extends GetxController {
       bytes = await file.first?.readAsBytes();
       extension = file.first?.path.split('.').last;
     }
-    await getPresignedUrl(
+    return await getPresignedUrl(
       extension!,
       bytes!,
       true,
@@ -575,7 +572,7 @@ class IsmChatConversationsController extends GetxController {
   }
 
   // / get Api for presigned Url.....
-  Future<void> getPresignedUrl(
+  Future<String> getPresignedUrl(
     String mediaExtension,
     Uint8List bytes, [
     bool isLoading = false,
@@ -587,7 +584,7 @@ class IsmChatConversationsController extends GetxController {
     );
 
     if (response == null) {
-      return;
+      return '';
     }
     var responseCode = await _commonController.updatePresignedUrl(
       presignedUrl: response.presignedUrl,
@@ -597,6 +594,7 @@ class IsmChatConversationsController extends GetxController {
     if (responseCode == 200) {
       profileImage = response.mediaUrl!;
     }
+    return profileImage;
   }
 
   /// This will be used to fetch all the users associated with the current user
@@ -1222,5 +1220,14 @@ class IsmChatConversationsController extends GetxController {
     await getNonBlockUserList(
       opponentId: IsmChatConfig.communicationConfig.userConfig.userId,
     );
+  }
+
+  void updateUserDetails(ImageSource source) async {
+    Get.back();
+    final imageUrl = await ismUploadImage(source);
+    if (imageUrl.isNotEmpty) {
+      await updateUserData(userProfileImageUrl: imageUrl);
+      await getUserData();
+    }
   }
 }
