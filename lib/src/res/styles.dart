@@ -224,4 +224,9 @@ class IsmChatStyles {
       fontSize: IsmChatDimens.ten,
       fontWeight: FontWeight.w700,
       fontFamily: IsmChatConfig.fontFamily);
+  static TextStyle w700Black10 = TextStyle(
+      color: IsmChatColors.blackColor,
+      fontSize: IsmChatDimens.ten,
+      fontWeight: FontWeight.w700,
+      fontFamily: IsmChatConfig.fontFamily);
 }

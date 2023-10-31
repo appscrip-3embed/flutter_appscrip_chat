@@ -229,9 +229,10 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
                         style: IsmChatConfig.chatTheme.chatListCardThemData
                                 ?.trailingTextStyle
                                 ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: IsmChatDimens.seventy) ??
-                            IsmChatStyles.w700White10,
+                              fontWeight: FontWeight.bold,
+                              fontSize: IsmChatDimens.seventy,
+                            ) ??
+                            IsmChatStyles.w700Black10,
                         textAlign: TextAlign.center,
                         maxLines: 1,
                       ),
