@@ -227,11 +227,7 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
                             ? widget.conversation.unreadMessagesCount.toString()
                             : '99+',
                         style: IsmChatConfig.chatTheme.chatListCardThemData
-                                ?.trailingTextStyle
-                                ?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: IsmChatDimens.seventy,
-                            ) ??
+                                ?.trailingTextStyle ??
                             IsmChatStyles.w700Black10,
                         textAlign: TextAlign.center,
                         maxLines: 1,
