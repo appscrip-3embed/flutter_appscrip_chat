@@ -1169,9 +1169,6 @@ class IsmChatPageController extends GetxController
     bool userBlockOrNot, [
     bool includeMembers = false,
   ]) async {
-    var lastMessageTimsStamp = messages.isEmpty
-        ? DateTime.now().millisecondsSinceEpoch
-        : messages.last.sentAt;
     await Get.dialog(IsmChatAlertDialogBox(
       title: userBlockOrNot
           ? IsmChatStrings.doWantUnBlckUser
@@ -1184,13 +1181,11 @@ class IsmChatPageController extends GetxController
           userBlockOrNot
               ? unblockUser(
                   opponentId: conversation?.opponentDetails!.userId ?? '',
-                  lastMessageTimeStamp: lastMessageTimsStamp,
                   includeMembers: includeMembers,
                   isLoading: true,
                 )
               : blockUser(
                   opponentId: conversation?.opponentDetails!.userId ?? '',
-                  lastMessageTimeStamp: lastMessageTimsStamp,
                   includeMembers: includeMembers,
                   isLoading: true,
                 );
@@ -1208,7 +1203,6 @@ class IsmChatPageController extends GetxController
           callbackActions: [
             () => unblockUser(
                 opponentId: conversation?.opponentDetails?.userId ?? '',
-                lastMessageTimeStamp: messages.last.sentAt,
                 isLoading: true),
           ],
         ),
@@ -1368,17 +1362,17 @@ class IsmChatPageController extends GetxController
     }
   }
 
-  Future<void> blockUser(
-      {required String opponentId,
-      required int lastMessageTimeStamp,
-      bool includeMembers = false,
-      bool isLoading = false,
-      bool fromUser = false}) async {
+  Future<void> blockUser({
+    required String opponentId,
+    bool includeMembers = false,
+    bool isLoading = false,
+    bool fromUser = false,
+  }) async {
     var data = await _viewModel.blockUser(
-        opponentId: opponentId,
-        lastMessageTimeStamp: lastMessageTimeStamp,
-        conversationId: conversation?.conversationId ?? '',
-        isLoading: isLoading);
+      opponentId: opponentId,
+      conversationId: conversation?.conversationId ?? '',
+      isLoading: isLoading,
+    );
     if (data != null) {
       IsmChatUtility.showToast(IsmChatStrings.blockedSuccessfully);
       await Future.wait([
@@ -1396,7 +1390,6 @@ class IsmChatPageController extends GetxController
 
   Future<void> unblockUser({
     required String opponentId,
-    required int lastMessageTimeStamp,
     bool includeMembers = false,
     bool isLoading = false,
     bool fromUser = false,

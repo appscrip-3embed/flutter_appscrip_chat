@@ -251,13 +251,15 @@ class IsmChatPageViewModel {
           includeMembers: includeMembers,
           isLoading: isLoading);
 
-  Future<IsmChatResponseModel?> blockUser(
-      {required String opponentId,
-      required int lastMessageTimeStamp,
-      required String conversationId,
-      bool isLoading = false}) async {
+  Future<IsmChatResponseModel?> blockUser({
+    required String opponentId,
+    required String conversationId,
+    bool isLoading = false,
+  }) async {
     var response = await _repository.blockUser(
-        opponentId: opponentId, isLoading: isLoading);
+      opponentId: opponentId,
+      isLoading: isLoading,
+    );
 
     return response;
   }
