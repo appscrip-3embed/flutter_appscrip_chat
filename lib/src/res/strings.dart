@@ -165,4 +165,6 @@ class IsmChatStrings {
   static const String colors = 'Colors';
   static const String removeWallpaper = 'Remove custom wallpaper';
   static const String myPhotos = 'My Photos';
+  static const String addYourName = 'Add your name...';
+  static const String addYourEmail = 'Add your email...';
 }

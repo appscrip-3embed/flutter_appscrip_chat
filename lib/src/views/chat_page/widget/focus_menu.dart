@@ -137,6 +137,7 @@ class IsmChatFocusMenu extends StatelessWidget {
                 Padding(
                   padding: IsmChatDimens.edgeInsets8,
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: message.sentByMe
                         ? CrossAxisAlignment.end

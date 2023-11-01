@@ -55,12 +55,14 @@ class IsmChatConversationsViewModel {
     String? userName,
     String? userIdentifier,
     Map<String, dynamic>? metaData,
+    bool isloading = false,
   }) async =>
       await _repository.updateUserData(
         userIdentifier: userIdentifier,
         userName: userName,
         userProfileImageUrl: userProfileImageUrl,
         metaData: metaData,
+        isloading: isloading,
       );
 
   Future<IsmChatUserListModel?> getUserList({

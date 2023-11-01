@@ -108,29 +108,32 @@ class IsmChatFileMessage extends StatelessWidget {
                                 : IsmChatColors.greyColor)
                             .withOpacity(0.2),
                         padding: IsmChatDimens.edgeInsets4,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SvgPicture.asset(
-                              IsmChatAssets.pdfSvg,
-                              height: IsmChatDimens.thirtyTwo,
-                              width: IsmChatDimens.thirtyTwo,
-                            ),
-                            IsmChatDimens.boxWidth4,
-                            Flexible(
-                              child: Text(
-                                message.attachments?.first.name ?? '',
-                                style: (message.sentByMe
-                                        ? IsmChatStyles.w400White12
-                                        : IsmChatStyles.w400Black12)
-                                    .copyWith(
-                                  color: message.style.color,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SvgPicture.asset(
+                                IsmChatAssets.pdfSvg,
+                                height: IsmChatDimens.thirtyTwo,
+                                width: IsmChatDimens.thirtyTwo,
                               ),
-                            ),
-                          ],
+                              IsmChatDimens.boxWidth4,
+                              Flexible(
+                                child: Text(
+                                  message.attachments?.first.name ?? '',
+                                  style: (message.sentByMe
+                                          ? IsmChatStyles.w400White12
+                                          : IsmChatStyles.w400Black12)
+                                      .copyWith(
+                                    color: message.style.color,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
