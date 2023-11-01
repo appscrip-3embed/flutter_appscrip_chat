@@ -62,6 +62,7 @@ class IsmChatPageController extends GetxController
 
   var noises = <int, Widget>{};
   var memoryImage = <int, MemoryImage>{};
+  var googleMaps = <int, GoogleMap>{};
 
   Widget getNoise(int sentAt, [bool sentByMe = true]) {
     if (!noises.keys.contains(sentAt)) {
@@ -78,6 +79,44 @@ class IsmChatPageController extends GetxController
       memoryImage[sentAt] = MemoryImage(bytes);
     }
     return memoryImage[sentAt] ?? MemoryImage(Uint8List(0));
+  }
+
+  GoogleMap getGoogleMap(
+    int sentAt,
+    LatLng position,
+    Set<Marker> markers,
+  ) {
+    if (!googleMaps.keys.contains(sentAt)) {
+      googleMaps[sentAt] = GoogleMap(
+        onMapCreated: (mapController) {
+          if (!googleMapCompleter.isCompleted) {
+            googleMapCompleter.complete(mapController);
+          }
+        },
+        initialCameraPosition: CameraPosition(
+          target: position,
+          zoom: 16,
+        ),
+        markers: markers,
+        myLocationButtonEnabled: false,
+        myLocationEnabled: false,
+        rotateGesturesEnabled: false,
+        scrollGesturesEnabled: false,
+        buildingsEnabled: true,
+        mapToolbarEnabled: false,
+        tiltGesturesEnabled: false,
+        zoomControlsEnabled: false,
+        zoomGesturesEnabled: false,
+        trafficEnabled: false,
+      );
+    }
+    return googleMaps[sentAt] ??
+        GoogleMap(
+          initialCameraPosition: CameraPosition(
+            target: position,
+            zoom: 16,
+          ),
+        );
   }
 
   final Rx<IsmChatConversationModel?> _conversation =

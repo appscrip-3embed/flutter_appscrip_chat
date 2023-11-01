@@ -130,8 +130,11 @@ class IsmChatConversationsRepository {
 
   Future<UserDetails?> getUserData({bool isLoading = false}) async {
     try {
-      var response = await _apiWrapper.get(IsmChatAPI.userDetails,
-          headers: IsmChatUtility.tokenCommonHeader(), showLoader: isLoading);
+      var response = await _apiWrapper.get(
+        IsmChatAPI.userDetails,
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading,
+      );
       if (response.hasError) {
         return null;
       }
@@ -152,6 +155,7 @@ class IsmChatConversationsRepository {
     String? userName,
     String? userIdentifier,
     Map<String, dynamic>? metaData,
+    bool isloading = false,
   }) async {
     try {
       var requestData = {
@@ -165,6 +169,7 @@ class IsmChatConversationsRepository {
         IsmChatAPI.updateUsers,
         payload: requestData,
         headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isloading,
       );
       if (response.hasError) {
         return null;
