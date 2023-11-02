@@ -228,7 +228,7 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
                             : '99+',
                         style: IsmChatConfig.chatTheme.chatListCardThemData
                                 ?.trailingTextStyle ??
-                            IsmChatStyles.w700Black10,
+                            IsmChatStyles.w700White10,
                         textAlign: TextAlign.center,
                         maxLines: 1,
                       ),
