@@ -24,7 +24,14 @@ class IsmChatConversationsController extends GetxController {
   /// This variable use for type user name for searcing feature
   TextEditingController userSearchNameController = TextEditingController();
 
+  /// This variable use for type global for searcing feature
   TextEditingController globalSearchController = TextEditingController();
+
+  /// This variable use for store login user name
+  TextEditingController userNameController = TextEditingController();
+
+  /// This variable use for store login user email
+  TextEditingController userEmailController = TextEditingController();
 
   /// This variable use for get all method and varibles from IsmChatCommonController
   IsmChatCommonController get _commonController =>
@@ -296,10 +303,26 @@ class IsmChatConversationsController extends GetxController {
   /// This StreamSubscription listen internet `on` or `off` when app in running
   StreamSubscription<ConnectivityResult>? connectivitySubscription;
 
+  /// This variable use for store user messages which is get from local db
+
   final _userMeessages = <IsmChatMessageModel>[].obs;
   List<IsmChatMessageModel> get userMeessages => _userMeessages;
   set userMeessages(List<IsmChatMessageModel> value) =>
       _userMeessages.value = value;
+
+  /// This variable use for check type user name type or not
+  ///
+  /// This variable listen when change own name
+  final RxBool _isUserNameType = false.obs;
+  bool get isUserNameType => _isUserNameType.value;
+  set isUserNameType(bool value) => _isUserNameType.value = value;
+
+  /// This variable use for check type user email type or not
+  ///
+  /// This variable listen when change own eamil
+  final RxBool _isUserEmailType = false.obs;
+  bool get isUserEmailType => _isUserEmailType.value;
+  set isUserEmailType(bool value) => _isUserEmailType.value = value;
 
   @override
   onInit() async {
@@ -402,7 +425,7 @@ class IsmChatConversationsController extends GetxController {
       case IsRenderConversationScreen.createConverstaionView:
         return IsmChatCreateConversationView();
       case IsRenderConversationScreen.userView:
-        return const IsmChatUserView();
+        return IsmChatUserView();
       case IsRenderConversationScreen.broadcastView:
         return const IsmChatBroadCastView();
       case IsRenderConversationScreen.openConverationView:
@@ -531,9 +554,6 @@ class IsmChatConversationsController extends GetxController {
       final chatPageController = Get.find<IsmChatPageController>();
       if (conversationId == chatPageController.conversation?.conversationId) {
         chatPageController.unblockUser(
-          lastMessageTimeStamp: chatPageController.messages.isEmpty
-              ? DateTime.now().millisecondsSinceEpoch
-              : chatPageController.messages.last.sentAt,
           opponentId: opponentId,
           includeMembers: true,
           isLoading: false,
@@ -542,10 +562,10 @@ class IsmChatConversationsController extends GetxController {
     }
   }
 
-  void ismUploadImage(ImageSource imageSource) async {
+  Future<String> ismUploadImage(ImageSource imageSource) async {
     var file = await IsmChatUtility.pickMedia(imageSource);
     if (file.isEmpty) {
-      return;
+      return '';
     }
     Uint8List? bytes;
     String? extension;
@@ -556,7 +576,7 @@ class IsmChatConversationsController extends GetxController {
       bytes = await file.first?.readAsBytes();
       extension = file.first?.path.split('.').last;
     }
-    await getPresignedUrl(
+    return await getPresignedUrl(
       extension!,
       bytes!,
       true,
@@ -575,7 +595,7 @@ class IsmChatConversationsController extends GetxController {
   }
 
   // / get Api for presigned Url.....
-  Future<void> getPresignedUrl(
+  Future<String> getPresignedUrl(
     String mediaExtension,
     Uint8List bytes, [
     bool isLoading = false,
@@ -587,7 +607,7 @@ class IsmChatConversationsController extends GetxController {
     );
 
     if (response == null) {
-      return;
+      return '';
     }
     var responseCode = await _commonController.updatePresignedUrl(
       presignedUrl: response.presignedUrl,
@@ -597,6 +617,7 @@ class IsmChatConversationsController extends GetxController {
     if (responseCode == 200) {
       profileImage = response.mediaUrl!;
     }
+    return profileImage;
   }
 
   /// This will be used to fetch all the users associated with the current user
@@ -845,12 +866,14 @@ class IsmChatConversationsController extends GetxController {
     String? userName,
     String? userIdentifier,
     Map<String, dynamic>? metaData,
+    bool isloading = false,
   }) async {
     await _viewModel.updateUserData(
       userProfileImageUrl: userProfileImageUrl,
       userName: userName,
       userIdentifier: userIdentifier,
       metaData: metaData,
+      isloading: isloading,
     );
   }
 
@@ -1222,5 +1245,19 @@ class IsmChatConversationsController extends GetxController {
     await getNonBlockUserList(
       opponentId: IsmChatConfig.communicationConfig.userConfig.userId,
     );
+  }
+
+  void updateUserDetails(ImageSource source) async {
+    Get.back();
+    final imageUrl = await ismUploadImage(source);
+    if (imageUrl.isNotEmpty) {
+      await updateUserData(
+        userProfileImageUrl: imageUrl,
+        isloading: true,
+      );
+      await getUserData(
+        isLoading: true,
+      );
+    }
   }
 }

@@ -87,7 +87,12 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                   if (widget._message?.customType !=
                       IsmChatCustomMessageType.deletedForEveryone) {
                     if (!Responsive.isWebAndTablet(context)) {
-                      controller.showOverlay(context, widget._message!);
+                      if (!controller.conversation!.isChattingAllowed) {
+                        controller.showDialogCheckBlockUnBlock();
+                        return;
+                      } else {
+                        controller.showOverlay(context, widget._message!);
+                      }
                     }
                   } else {
                     controller.isMessageSeleted = true;
@@ -121,7 +126,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                       ? IsmChatDimens.edgeInsets0
                       : IsmChatDimens.edgeInsets0_4,
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (isGroup &&
                           !showMessageInCenter &&
@@ -225,51 +230,10 @@ class _Message extends GetView<IsmChatPageController> {
         child: Stack(
           clipBehavior: Clip.none,
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: message.sentByMe
-                  ? CrossAxisAlignment.end
-                  : CrossAxisAlignment.start,
-              children: [
-                if (!showMessageInCenter &&
-                    (controller.conversation!.isGroup ?? false) &&
-                    !message.sentByMe) ...[
-                  SizedBox(
-                    width: IsmChatDimens.percentWidth(0.4),
-                    child: Padding(
-                      padding: IsmChatDimens.edgeInsetsL2,
-                      child: Text(
-                        message.senderInfo?.userName ?? '',
-                        style: IsmChatStyles.w400Black10,
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign:
-                            message.sentByMe ? TextAlign.end : TextAlign.start,
-                        maxLines: 1,
-                      ),
-                    ),
-                  ),
-                  IsmChatDimens.boxHeight2,
-                ],
-                if (message.messageType == IsmChatMessageType.forward) ...[
-                  const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.shortcut_outlined),
-                      Text(
-                        IsmChatStrings.forwarded,
-                      ),
-                    ],
-                  )
-                ],
-                MessageCard(
-                  showMessageInCenter: showMessageInCenter,
-                  message: message,
-                  index: index,
-                ),
-              ],
+            MessageCard(
+              showMessageInCenter: showMessageInCenter,
+              message: message,
+              index: index,
             ),
             if (message.reactions?.isNotEmpty == true)
               Positioned(

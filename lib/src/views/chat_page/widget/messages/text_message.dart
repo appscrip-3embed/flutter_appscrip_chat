@@ -1,6 +1,7 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:get/get.dart';
 
 class IsmChatTextMessage extends StatelessWidget {
@@ -21,18 +22,48 @@ class IsmChatTextMessage extends StatelessWidget {
             padding: IsmChatDimens.edgeInsets4,
             child: RichText(
               text: TextSpan(
-                text:
-                    message.mentionedUsers.isNullOrEmpty ? message.body : null,
+                text: message.mentionedUsers.isNullOrEmpty &&
+                        message.body.phoneNumerList.isNullOrEmpty
+                    ? message.body
+                    : null,
                 style: message.style,
-                children: message.mentionedUsers.isNullOrEmpty
+                children: message.mentionedUsers.isNullOrEmpty &&
+                        message.body.phoneNumerList.isNullOrEmpty
                     ? null
                     : message.mentionList
                         .map(
                           (e) => TextSpan(
                             recognizer: TapGestureRecognizer()
-                              ..onTap = !e.isMentioned
+                              ..onTap = !(e.isMentioned || e.isPhoneNumber)
                                   ? null
                                   : () async {
+                                      if (e.isPhoneNumber) {
+                                        await Get.dialog(
+                                          IsmChatAlertDialogBox(
+                                            title: IsmChatStrings
+                                                .thisPhoneNumberNotonChat,
+                                            actionLabels: [
+                                              '${IsmChatStrings.dial} ${e.text}',
+                                              IsmChatStrings.addToContact,
+                                            ],
+                                            callbackActions: [
+                                              () {
+                                                IsmChatUtility.dialNumber(
+                                                  e.text,
+                                                );
+                                              },
+                                              () async {
+                                                final contact = Contact(
+                                                    phones: [Phone(e.text)]);
+                                                await FlutterContacts
+                                                    .openExternalInsert(
+                                                        contact);
+                                              },
+                                            ],
+                                          ),
+                                        );
+                                        return;
+                                      }
                                       var user = message.mentionedUsers
                                           ?.where((user) =>
                                               user.userName.toLowerCase() ==
@@ -68,7 +99,7 @@ class IsmChatTextMessage extends StatelessWidget {
                                     },
                             text: e.text,
                             style: (message.style).copyWith(
-                              color: e.isMentioned
+                              color: e.isMentioned || e.isPhoneNumber
                                   ? message.sentByMe
                                       ? IsmChatConfig.chatTheme.mentionColor
                                       : IsmChatConfig.chatTheme.primaryColor

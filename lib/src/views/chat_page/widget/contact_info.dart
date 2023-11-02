@@ -2,7 +2,6 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class IsmChatContactsInfoView extends StatelessWidget {
   IsmChatContactsInfoView({super.key, List<Contact>? contacts})
@@ -85,13 +84,8 @@ class IsmChatContactsInfoView extends StatelessWidget {
                         Expanded(
                           child: TextButton.icon(
                             onPressed: () async {
-                              var sms = Uri(
-                                scheme: 'sms',
-                                path: contact?.phones.first.number ?? '',
-                              );
-                              if (await canLaunchUrl(sms)) {
-                                await launchUrl(sms);
-                              }
+                              IsmChatUtility.toSMS(
+                                  contact?.phones.first.number ?? '');
                             },
                             icon: Icon(
                               Icons.message_rounded,
@@ -104,13 +98,8 @@ class IsmChatContactsInfoView extends StatelessWidget {
                         Expanded(
                           child: TextButton.icon(
                             onPressed: () async {
-                              var tel = Uri(
-                                scheme: 'tel',
-                                path: contact?.phones.first.number ?? '',
-                              );
-                              if (await canLaunchUrl(tel)) {
-                                await launchUrl(tel);
-                              }
+                              IsmChatUtility.dialNumber(
+                                  contact?.phones.first.number ?? '');
                             },
                             icon: Icon(
                               Icons.call_outlined,

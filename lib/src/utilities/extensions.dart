@@ -36,6 +36,17 @@ extension MatchString on String {
       toLowerCase().contains('www');
 
   bool get isAlphabet => RegExp(r'^[A-Za-z]+$').hasMatch(this);
+
+  List<String> get phoneNumerList {
+    var exp =
+        RegExp(r'[+]?[(]?[0-9]{2,3}[)]?[\-\s\.]?[0-9]{2,5}[\-\s\.]?[0-9]{4,5}');
+    var matches = exp.allMatches(this);
+    var phoneNumerList = <String>[];
+    for (var match in matches) {
+      phoneNumerList.add(substring(match.start, match.end));
+    }
+    return phoneNumerList;
+  }
 }
 
 extension MessagePagination on int {
@@ -252,86 +263,6 @@ extension DateFormats on DateTime {
 }
 
 extension ChildWidget on IsmChatCustomMessageType {
-  Widget messageType(IsmChatMessageModel message) {
-    switch (this) {
-      case IsmChatCustomMessageType.text:
-        return IsmChatTextMessage(message);
-
-      case IsmChatCustomMessageType.reply:
-        return IsmChatReplyMessage(message);
-
-      case IsmChatCustomMessageType.forward:
-        return IsmChatForwardMessage(message);
-
-      case IsmChatCustomMessageType.image:
-        return IsmChatImageMessage(message);
-
-      case IsmChatCustomMessageType.video:
-        return IsmChatVideoMessage(message);
-
-      case IsmChatCustomMessageType.audio:
-        return IsmChatAudioMessage(message);
-
-      case IsmChatCustomMessageType.file:
-        return IsmChatFileMessage(message);
-
-      case IsmChatCustomMessageType.location:
-        return IsmChatLocationMessage(message);
-
-      case IsmChatCustomMessageType.block:
-        return IsmChatBlockedMessage(message);
-
-      case IsmChatCustomMessageType.unblock:
-        return IsmChatBlockedMessage(message);
-
-      case IsmChatCustomMessageType.deletedForMe:
-        return IsmChatDeletedMessage(message);
-
-      case IsmChatCustomMessageType.deletedForEveryone:
-        return IsmChatDeletedMessage(message);
-
-      case IsmChatCustomMessageType.link:
-        return IsmChatLinkMessage(message);
-
-      case IsmChatCustomMessageType.date:
-        return IsmChatDateMessage(message);
-
-      case IsmChatCustomMessageType.conversationCreated:
-        return IsmChatConversationCreatedMessage(message);
-
-      case IsmChatCustomMessageType.removeMember:
-        return IsmChatAddRemoveMember(message, isAdded: false);
-
-      case IsmChatCustomMessageType.addMember:
-        return IsmChatAddRemoveMember(message);
-
-      case IsmChatCustomMessageType.addAdmin:
-        return IsmChatAddRevokeAdmin(message);
-
-      case IsmChatCustomMessageType.removeAdmin:
-        return IsmChatAddRevokeAdmin(message, isAdded: false);
-
-      case IsmChatCustomMessageType.memberLeave:
-        return IsmChatMemberLeaveAndJoin(message, didLeft: true);
-
-      case IsmChatCustomMessageType.conversationTitleUpdated:
-      case IsmChatCustomMessageType.conversationImageUpdated:
-        return IsmChatConversationUpdate(message);
-
-      case IsmChatCustomMessageType.contact:
-        return IsmChatContactMessage(message);
-
-      case IsmChatCustomMessageType.memberJoin:
-        return IsmChatMemberLeaveAndJoin(message, didLeft: false);
-
-      case IsmChatCustomMessageType.observerJoin:
-        return IsmChatObserverLeaveAndJoin(message);
-
-      case IsmChatCustomMessageType.observerLeave:
-        return IsmChatObserverLeaveAndJoin(message, didLeft: true);
-    }
-  }
-
   bool get canCopy => [
         IsmChatCustomMessageType.text,
         IsmChatCustomMessageType.link,
@@ -786,40 +717,94 @@ extension ReactionLastMessgae on String {
 }
 
 extension MentionMessage on IsmChatMessageModel {
-  List<LocalMention> get mentionList {
+  List<LocalMentionAndPhoneNumber> get mentionList {
     try {
-      var splitMessages = body.split('@');
-      var messageList = <LocalMention>[];
-      messageList.add(
-        LocalMention(
-          text: splitMessages.first,
-          isMentioned: false,
-        ),
-      );
-      var length = mentionedUsers!.length;
+      var messageList = <LocalMentionAndPhoneNumber>[];
+      var phoneNumerList = body.phoneNumerList;
 
-      var splitLength = splitMessages.length;
-
-      for (var i = 0; i < length; i++) {
-        var mention = mentionedUsers![i];
+      if (body.contains('@')) {
+        var splitMessages = body.split('@');
         messageList.add(
-          LocalMention(
-            text: '@${mention.userName.capitalizeFirst}',
-            isMentioned: true,
+          LocalMentionAndPhoneNumber(
+            text: splitMessages.first,
+            isMentioned: false,
+            isPhoneNumber: false,
+          ),
+        );
+        var length = mentionedUsers!.length;
+
+        var splitLength = splitMessages.length;
+
+        for (var i = 0; i < length; i++) {
+          var mention = mentionedUsers![i];
+          messageList.add(
+            LocalMentionAndPhoneNumber(
+              text: '@${mention.userName.capitalizeFirst}',
+              isMentioned: true,
+              isPhoneNumber: false,
+            ),
+          );
+
+          if (splitLength < length || i < length) {
+            messageList.add(
+              LocalMentionAndPhoneNumber(
+                text: splitMessages[i + 1]
+                    .split(mention.userName.capitalizeFirst!)
+                    .last,
+                isMentioned: false,
+                isPhoneNumber: false,
+              ),
+            );
+          }
+        }
+      } else {
+        var splitMessages = body.split(' ');
+        messageList.add(
+          LocalMentionAndPhoneNumber(
+            text: splitMessages.first,
+            isMentioned: false,
+            isPhoneNumber: false,
           ),
         );
 
-        if (splitLength < length || i < length) {
-          messageList.add(
-            LocalMention(
-              text: splitMessages[i + 1]
-                  .split(mention.userName.capitalizeFirst!)
-                  .last,
-              isMentioned: false,
-            ),
-          );
+        var length = phoneNumerList.length;
+
+        var splitLength = splitMessages.length;
+
+        for (var i = 0; i < length; i++) {
+          var number = phoneNumerList[i];
+          if (splitLength != 1) {
+            messageList.add(
+              LocalMentionAndPhoneNumber(
+                text: '  $number',
+                isMentioned: false,
+                isPhoneNumber: true,
+              ),
+            );
+
+            if (splitLength < length || i < length) {
+              messageList.add(
+                LocalMentionAndPhoneNumber(
+                  text: splitMessages[i + 1].split(number).last,
+                  isMentioned: false,
+                  isPhoneNumber: false,
+                ),
+              );
+            }
+          }
         }
       }
+
+      if (phoneNumerList.isNotEmpty) {
+        var messageWithPhone = <LocalMentionAndPhoneNumber>[];
+        for (var x in messageList) {
+          var isPhone = phoneNumerList.any((e) => x.text.trim() == e.trim());
+          x = x.copyWith(isPhoneNumber: isPhone);
+          messageWithPhone.add(x);
+        }
+        messageList = messageWithPhone;
+      }
+
       return messageList;
     } catch (e, st) {
       IsmChatLog.error(e, st);

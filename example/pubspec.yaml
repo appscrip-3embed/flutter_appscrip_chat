@@ -37,7 +37,7 @@ dependencies:
   file_picker: ^5.2.10
   firebase_core: ^2.15.1
   firebase_messaging: ^14.6.7
-  flutter_screenutil: ^5.5.3+2
+  flutter_screenutil: ^5.9.0
   flutter_svg: ^2.0.7
   flutter_localizations:
     sdk: flutter
@@ -49,6 +49,8 @@ dependencies:
   hive_flutter: ^1.1.0
   url_strategy: ^0.2.0
   app_settings: ^5.1.1
+  google_maps_flutter_android: ^2.5.3
+  google_maps_flutter_platform_interface: ^2.4.1
 
 dev_dependencies:
   flutter_test:

@@ -18,9 +18,11 @@ class IsmChatInputField extends StatelessWidget {
     this.maxLines,
     this.minLines,
     this.textCapitalization,
+    this.readOnly = false,
+    this.focusNode,
     super.key,
   });
-
+  final FocusNode? focusNode;
   final TextEditingController? controller;
   final Widget? suffixIcon;
   final String? hint;
@@ -36,11 +38,13 @@ class IsmChatInputField extends StatelessWidget {
   final int? maxLines;
   final int? minLines;
   final TextCapitalization? textCapitalization;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) => Padding(
         padding: padding ?? IsmChatDimens.edgeInsets10_4,
         child: TextFormField(
+          focusNode: focusNode,
           maxLines: maxLines,
           minLines: minLines,
           textCapitalization:
@@ -50,6 +54,7 @@ class IsmChatInputField extends StatelessWidget {
           textInputAction: textInputAction ?? TextInputAction.search,
           autofocus: autofocus ?? true,
           style: style ?? IsmChatStyles.w500White16,
+          readOnly: readOnly,
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: hint,

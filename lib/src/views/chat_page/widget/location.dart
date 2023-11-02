@@ -7,7 +7,6 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:uuid/uuid.dart';
 
 /// show the Forward Message View
 class IsmChatLocationWidget extends StatefulWidget {
@@ -22,9 +21,6 @@ class IsmChatLocationWidget extends StatefulWidget {
 class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
   final Completer<GoogleMapController> mapController = Completer();
   final ismChatPageController = Get.find<IsmChatPageController>();
-  var uuid = const Uuid();
-
-  final String sessionToken = '122334';
 
   GeoCode geoCode = GeoCode();
 
@@ -245,8 +241,8 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                   var addresses = await GeocodingPlatform
                                       .instance
                                       .placemarkFromCoordinates(
-                                    latLng!.latitude,
-                                    latLng!.longitude,
+                                    latLng?.latitude ?? 0,
+                                    latLng?.longitude ?? 0,
                                   );
                                   if (addresses.isNotEmpty) {
                                     controller.sendLocation(

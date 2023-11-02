@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatAlertDialogBox extends StatelessWidget {
-  const IsmChatAlertDialogBox(
-      {super.key,
-      this.title = 'Are you sure?',
-      this.actionLabels,
-      this.callbackActions,
-      this.cancelLabel = IsmChatStrings.cancel,
-      this.onCancel,
-      this.content,
-      this.contentPadding,
-      this.contentTextStyle})
-      : assert(
+  const IsmChatAlertDialogBox({
+    super.key,
+    this.title = 'Are you sure?',
+    this.actionLabels,
+    this.callbackActions,
+    this.cancelLabel = IsmChatStrings.cancel,
+    this.onCancel,
+    this.content,
+    this.contentPadding,
+    this.contentTextStyle,
+  }) : assert(
           (actionLabels == null && callbackActions == null) ||
               (actionLabels != null &&
                   callbackActions != null &&

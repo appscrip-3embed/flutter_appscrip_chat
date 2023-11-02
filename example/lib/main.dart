@@ -56,15 +56,17 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  final PushNotificationService _notificationService =
-      PushNotificationService();
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _notificationService.requestNotificationService();
-    _notificationService.initialize();
+    if (!kIsWeb) {
+      final PushNotificationService notificationService =
+          PushNotificationService();
+      notificationService.requestNotificationService();
+
+      notificationService.initialize();
+    }
   }
 
   @override

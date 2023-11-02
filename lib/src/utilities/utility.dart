@@ -13,6 +13,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class IsmChatUtility {
   const IsmChatUtility._();
@@ -294,6 +295,26 @@ class IsmChatUtility {
     var response = await http.get(Uri.parse(url));
     final bytes = response.bodyBytes;
     return bytes;
+  }
+
+  static void dialNumber(String phoneNumber) async {
+    var number = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    if (await canLaunchUrl(number)) {
+      await launchUrl(number);
+    }
+  }
+
+  static void toSMS(String phoneNumber) async {
+    var sms = Uri(
+      scheme: 'sms',
+      path: phoneNumber,
+    );
+    if (await canLaunchUrl(sms)) {
+      await launchUrl(sms);
+    }
   }
 
   // static Future<PdfPageImage?> getImageFromPdfWithFile(String path) async {
