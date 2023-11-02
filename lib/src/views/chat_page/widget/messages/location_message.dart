@@ -7,18 +7,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class IsmChatLocationMessage extends StatelessWidget {
-  IsmChatLocationMessage(this.message, {super.key})
-      : googleMap = Get.find<IsmChatPageController>()
-            .getGoogleMap(message.sentAt, message.body.position, <Marker>{
-          Marker(
-            markerId: const MarkerId('2'),
-            position: message.body.position,
-            infoWindow: const InfoWindow(title: 'Shared Location'),
-          )
-        });
+  const IsmChatLocationMessage(this.message, {super.key});
 
   final IsmChatMessageModel message;
-  final Widget googleMap;
 
   @override
   Widget build(BuildContext context) => IsmChatTapHandler(
@@ -42,7 +33,30 @@ class IsmChatLocationMessage extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(IsmChatDimens.ten),
                     child: IgnorePointer(
-                      child: googleMap,
+                      child: GoogleMap(
+                        initialCameraPosition: CameraPosition(
+                          target: message.body.position,
+                          zoom: 16,
+                        ),
+                        markers: {
+                          Marker(
+                            markerId: const MarkerId('2'),
+                            position: message.body.position,
+                            infoWindow:
+                                const InfoWindow(title: 'Shared Location'),
+                          )
+                        },
+                        myLocationButtonEnabled: false,
+                        myLocationEnabled: false,
+                        rotateGesturesEnabled: false,
+                        scrollGesturesEnabled: false,
+                        buildingsEnabled: true,
+                        mapToolbarEnabled: false,
+                        tiltGesturesEnabled: false,
+                        zoomControlsEnabled: false,
+                        zoomGesturesEnabled: false,
+                        trafficEnabled: false,
+                      ),
                     ),
                   ),
                 ),

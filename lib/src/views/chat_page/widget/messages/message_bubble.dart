@@ -8,23 +8,24 @@ class MessageBubble extends GetView<IsmChatPageController> {
     IsmChatMessageModel? message,
     this.showMessageInCenter = false,
     this.index,
-  }) : _message = message ??
+  })  : _message = message ??
             IsmChatMessageModel(
               body: '',
               sentAt: 0,
               customType: IsmChatCustomMessageType.text,
               sentByMe: true,
-            );
+            ),
+        _globalKey = Get.find<IsmChatPageController>()
+            .getGlobalKey(message?.sentAt ?? 0);
 
   final IsmChatMessageModel _message;
   final bool showMessageInCenter;
   final int? index;
-
-  final GlobalKey globalKey = GlobalKey();
+  final GlobalKey _globalKey;
 
   @override
   Widget build(BuildContext context) => Container(
-        key: globalKey,
+        key: Responsive.isWebAndTablet(context) ? _globalKey : null,
         margin: _message.reactions?.isNotEmpty == true && !showMessageInCenter
             ? IsmChatDimens.edgeInsetsB25
             : null,
@@ -68,7 +69,74 @@ class MessageBubble extends GetView<IsmChatPageController> {
               padding: !showMessageInCenter
                   ? IsmChatDimens.edgeInsets5_5_5_20
                   : IsmChatDimens.edgeInsets0,
-              child: _message.customType?.messageType(_message),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: _message.sentByMe
+                        ? CrossAxisAlignment.end
+                        : CrossAxisAlignment.start,
+                    children: [
+                      if (!showMessageInCenter &&
+                          (controller.conversation!.isGroup ?? false) &&
+                          !_message.sentByMe) ...[
+                        Padding(
+                          padding: IsmChatDimens.edgeInsetsL2,
+                          child: FittedBox(
+                            child: Text(
+                              _message.senderInfo?.userName ?? '',
+                              style: IsmChatStyles.w400Black10,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: _message.sentByMe
+                                  ? TextAlign.end
+                                  : TextAlign.start,
+                              maxLines: 1,
+                            ),
+                          ),
+                        ),
+                      ],
+                      if (_message.messageType ==
+                          IsmChatMessageType.forward) ...[
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.shortcut_outlined,
+                              color: IsmChatColors.whiteColor,
+                              size: IsmChatDimens.fifteen,
+                            ),
+                            Text(
+                              IsmChatStrings.forwarded,
+                              style: _message.sentByMe
+                                  ? IsmChatStyles.w400White12.copyWith(
+                                      color: IsmChatConfig
+                                              .chatTheme
+                                              .chatPageTheme
+                                              ?.selfMessageTheme
+                                              ?.textColor ??
+                                          IsmChatColors.whiteColor,
+                                    )
+                                  : IsmChatStyles.w400Black12.copyWith(
+                                      color: IsmChatConfig
+                                              .chatTheme
+                                              .chatPageTheme
+                                              ?.selfMessageTheme
+                                              ?.textColor ??
+                                          IsmChatColors.blackColor,
+                                    ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ],
+                  ),
+                  IsmChatMessageWrapper(_message),
+                ],
+              ),
             ),
             if (!showMessageInCenter) ...[
               Positioned(
@@ -132,12 +200,16 @@ class MessageBubble extends GetView<IsmChatPageController> {
                                 controller.messageHoldOverlayEntry != null) {
                               controller.closeOveray();
                             } else {
-                              controller.holdController?.forward();
-                              controller.showOverlayWeb(
-                                globalKey.currentContext!,
-                                _message,
-                                controller.holdAnimation!,
-                              );
+                              if (!controller.conversation!.isChattingAllowed) {
+                                controller.showDialogCheckBlockUnBlock();
+                              } else {
+                                controller.holdController?.forward();
+                                controller.showOverlayWeb(
+                                  _globalKey.currentContext!,
+                                  _message,
+                                  controller.holdAnimation!,
+                                );
+                              }
                             }
                           },
                           child: Container(

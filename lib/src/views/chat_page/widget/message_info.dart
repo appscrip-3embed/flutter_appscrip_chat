@@ -78,33 +78,32 @@ class IsmChatMessageInfo extends StatelessWidget {
                           : CrossAxisAlignment.start,
                       children: [
                         Container(
-                            padding: IsmChatDimens.edgeInsets4,
-                            constraints: BoxConstraints(
-                              maxWidth: (Responsive.isWebAndTablet(context))
-                                  ? context.width * .25
-                                  : context.width * .8,
-                              minWidth: Responsive.isWebAndTablet(context)
-                                  ? context.width * .06
-                                  : context.width * .1,
+                          padding: IsmChatDimens.edgeInsets4,
+                          constraints: BoxConstraints(
+                            maxWidth: (Responsive.isWebAndTablet(context))
+                                ? context.width * .25
+                                : context.width * .8,
+                            minWidth: Responsive.isWebAndTablet(context)
+                                ? context.width * .06
+                                : context.width * .1,
+                          ),
+                          decoration: BoxDecoration(
+                            color: _message?.sentByMe ?? false
+                                ? IsmChatConfig.chatTheme.primaryColor
+                                : IsmChatConfig.chatTheme.backgroundColor,
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(IsmChatDimens.twelve),
+                              topLeft: _message?.sentByMe ?? false
+                                  ? Radius.circular(IsmChatDimens.twelve)
+                                  : Radius.circular(IsmChatDimens.four),
+                              bottomLeft: Radius.circular(IsmChatDimens.twelve),
+                              bottomRight: _message?.sentByMe ?? false
+                                  ? Radius.circular(IsmChatDimens.four)
+                                  : Radius.circular(IsmChatDimens.twelve),
                             ),
-                            decoration: BoxDecoration(
-                              color: _message?.sentByMe ?? false
-                                  ? IsmChatConfig.chatTheme.primaryColor
-                                  : IsmChatConfig.chatTheme.backgroundColor,
-                              borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(IsmChatDimens.twelve),
-                                topLeft: _message?.sentByMe ?? false
-                                    ? Radius.circular(IsmChatDimens.twelve)
-                                    : Radius.circular(IsmChatDimens.four),
-                                bottomLeft:
-                                    Radius.circular(IsmChatDimens.twelve),
-                                bottomRight: _message?.sentByMe ?? false
-                                    ? Radius.circular(IsmChatDimens.four)
-                                    : Radius.circular(IsmChatDimens.twelve),
-                              ),
-                            ),
-                            child:
-                                _message?.customType!.messageType(_message!)),
+                          ),
+                          child: IsmChatMessageWrapper(_message!),
+                        ),
                         Padding(
                           padding: IsmChatDimens.edgeInsets0_4,
                           child: Row(

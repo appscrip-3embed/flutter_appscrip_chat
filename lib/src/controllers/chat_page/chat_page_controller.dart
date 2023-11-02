@@ -62,7 +62,7 @@ class IsmChatPageController extends GetxController
 
   var noises = <int, Widget>{};
   var memoryImage = <int, MemoryImage>{};
-  var googleMaps = <int, GoogleMap>{};
+  var globalKeys = <int, GlobalKey>{};
 
   Widget getNoise(int sentAt, [bool sentByMe = true]) {
     if (!noises.keys.contains(sentAt)) {
@@ -74,49 +74,18 @@ class IsmChatPageController extends GetxController
     return noises[sentAt]!;
   }
 
+  GlobalKey getGlobalKey(int sentAt) {
+    if (!globalKeys.keys.contains(sentAt)) {
+      globalKeys[sentAt] = GlobalKey();
+    }
+    return globalKeys[sentAt]!;
+  }
+
   MemoryImage getMemoryImage(int sentAt, Uint8List bytes) {
     if (!memoryImage.keys.contains(sentAt)) {
       memoryImage[sentAt] = MemoryImage(bytes);
     }
     return memoryImage[sentAt] ?? MemoryImage(Uint8List(0));
-  }
-
-  GoogleMap getGoogleMap(
-    int sentAt,
-    LatLng position,
-    Set<Marker> markers,
-  ) {
-    if (!googleMaps.keys.contains(sentAt)) {
-      googleMaps[sentAt] = GoogleMap(
-        onMapCreated: (mapController) {
-          if (!googleMapCompleter.isCompleted) {
-            googleMapCompleter.complete(mapController);
-          }
-        },
-        initialCameraPosition: CameraPosition(
-          target: position,
-          zoom: 16,
-        ),
-        markers: markers,
-        myLocationButtonEnabled: false,
-        myLocationEnabled: false,
-        rotateGesturesEnabled: false,
-        scrollGesturesEnabled: false,
-        buildingsEnabled: true,
-        mapToolbarEnabled: false,
-        tiltGesturesEnabled: false,
-        zoomControlsEnabled: false,
-        zoomGesturesEnabled: false,
-        trafficEnabled: false,
-      );
-    }
-    return googleMaps[sentAt] ??
-        GoogleMap(
-          initialCameraPosition: CameraPosition(
-            target: position,
-            zoom: 16,
-          ),
-        );
   }
 
   final Rx<IsmChatConversationModel?> _conversation =
@@ -202,9 +171,6 @@ class IsmChatPageController extends GetxController
   List<SelectedContact> get searchContactList => _searchContactList;
   set searchContactList(List<SelectedContact> value) =>
       _searchContactList.value = value;
-
-  final Completer<GoogleMapController> googleMapCompleter =
-      Completer<GoogleMapController>();
 
   CameraController get cameraController =>
       isFrontCameraSelected ? _frontCameraController : _backCameraController;
