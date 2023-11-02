@@ -9,7 +9,6 @@ class Dimens {
 
   /// Get the width with the percent value of the screen width.
   static double percentWidth(double percentValue) => percentValue.sw;
-
   static final double eight = 8.sp;
   static final double ten = 10.sp;
   static final double sixTeen = 16.sp;

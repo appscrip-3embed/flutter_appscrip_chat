@@ -92,7 +92,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       useInheritedMediaQuery: true,
-      designSize: const Size(375, 745),
+      designSize: Responsive.isWeb(context)
+          ? const Size(1450, 745)
+          : Responsive.isTablet(context)
+              ? const Size(1100, 745)
+              : const Size(375, 745),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (_, child) => child!,
