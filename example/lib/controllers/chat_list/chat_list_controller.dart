@@ -22,10 +22,6 @@ class ChatListController extends GetxController {
   bool get firstTapConversation => _firstTapConversation.value;
   set firstTapConversation(bool value) => _firstTapConversation.value = value;
 
-  // final RxBool _firstUpdateWidget = false.obs;
-  // bool get firstUpdateWidget => _firstUpdateWidget.value;
-  // set firstUpdateWidget(bool value) => _firstUpdateWidget.value = value;
-
   @override
   void onInit() {
     super.onInit();
