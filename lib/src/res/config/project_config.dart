@@ -6,6 +6,7 @@ class IsmChatProjectConfig {
     required this.keySetId,
     required this.licenseKey,
     required this.projectId,
+    this.chatApisBaseUrl,
   });
   final String accountId;
   final String appSecret;
@@ -13,4 +14,5 @@ class IsmChatProjectConfig {
   final String keySetId;
   final String licenseKey;
   final String projectId;
+  final String? chatApisBaseUrl;
 }

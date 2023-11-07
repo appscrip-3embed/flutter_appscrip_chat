@@ -537,7 +537,7 @@ class IsmChatMqttController extends GetxController {
               },
             );
           }
-          messageId = message.messageId!;
+          messageId = message.messageId ?? '';
         }
       } else {
         LocalNoticeService().cancelAllNotification();

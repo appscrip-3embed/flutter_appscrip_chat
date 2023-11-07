@@ -21,7 +21,6 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -1672,9 +1671,6 @@ class IsmChatPageController extends GetxController
     bool userBlockOrNot, [
     bool includeMembers = false,
   ]) async {
-    var lastMessageTimsStamp = messages.isEmpty
-        ? DateTime.now().millisecondsSinceEpoch
-        : messages.last.sentAt;
     await Get.dialog(IsmChatAlertDialogBox(
       title: userBlockOrNot
           ? IsmChatStrings.doWantUnBlckUser

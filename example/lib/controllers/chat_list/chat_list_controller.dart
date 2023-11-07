@@ -32,6 +32,8 @@ class ChatListController extends GetxController {
   subscribeToTopic() async {
     //  await FirebaseMessaging.instance
     //     .subscribeToTopic('/topics/chat-${userDetails.userId}');
+
+    IsmChatLog.error('chat-${userDetails.userId}');
     await FirebaseMessaging.instance
         .subscribeToTopic('chat-${userDetails.userId}');
   }
