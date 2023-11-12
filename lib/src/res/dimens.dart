@@ -38,6 +38,8 @@ class IsmChatDimens {
   static final double twentySeven = 27.sp;
   static final double twentyEight = 28.sp;
   static final double thirtyTwo = 32.sp;
+  static final double thirtyFive = 35.sp;
+
   static final double thirty = 30.sp;
 
   static final double forty = 40.sp;

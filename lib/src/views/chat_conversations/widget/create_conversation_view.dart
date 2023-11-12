@@ -213,95 +213,101 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                   offstage: user.isShowSuspension != true,
                                   child: _buildSusWidget(susTag),
                                 ),
-                                ListTile(
-                                  onTap: () async {
-                                    if (_isGroupConversation ?? false) {
-                                      controller.onForwardUserTap(index);
-                                      controller
-                                          .isSelectedUser(user.userDetails);
-                                    } else {
-                                      var ismChatConversation =
-                                          IsmChatConversationModel(
-                                              messagingDisabled: false,
-                                              conversationImageUrl: user
-                                                  .userDetails
-                                                  .userProfileImageUrl,
-                                              isGroup: false,
-                                              opponentDetails: user.userDetails,
-                                              unreadMessagesCount: 0,
-                                              lastMessageDetails:
-                                                  LastMessageDetails(
-                                                sentByMe: true,
-                                                showInConversation: true,
-                                                sentAt: DateTime.now()
-                                                    .millisecondsSinceEpoch,
-                                                senderName: '',
-                                                messageType: 0,
-                                                messageId: '',
-                                                conversationId: '',
-                                                body: '',
-                                              ),
-                                              lastMessageSentAt: 0,
-                                              membersCount: 1,
-                                              conversationType:
-                                                  _conversationType);
-                                      ismChatConversation =
-                                          ismChatConversation.copyWith(
-                                        conversationId:
-                                            controller.getConversationId(
-                                          user.userDetails.userId,
-                                        ),
-                                      );
-                                      Get.back<void>();
-                                      IsmChatProperties
-                                          .conversationProperties.onChatTap!
-                                          .call(_, ismChatConversation);
-                                      controller.navigateToMessages(
-                                          ismChatConversation);
-                                      await controller.goToChatPage();
-                                    }
-                                  },
-                                  dense: true,
-                                  mouseCursor: SystemMouseCursors.click,
-                                  tileColor: user.isUserSelected
-                                      ? IsmChatConfig.chatTheme.backgroundColor
-                                      : null,
-                                  leading: IsmChatImage.profile(
-                                    user.userDetails.userProfileImageUrl,
-                                    name: user.userDetails.userName,
-                                  ),
-                                  title: Text(
-                                    user.userDetails.userName,
-                                    style: IsmChatStyles.w600Black14,
-                                  ),
-                                  subtitle: Text(
-                                    user.userDetails.userIdentifier,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: IsmChatStyles.w400Black12,
-                                  ),
-                                  trailing: !_isGroupConversation!
-                                      ? null
-                                      : Container(
-                                          padding: IsmChatDimens.edgeInsets8_4,
-                                          decoration: BoxDecoration(
-                                            color: IsmChatConfig
-                                                .chatTheme.primaryColor
-                                                ?.withOpacity(.2),
-                                            borderRadius: BorderRadius.circular(
-                                                IsmChatDimens.eight),
+                                ColoredBox(
+                                  color: user.isUserSelected
+                                      ? IsmChatConfig.chatTheme.primaryColor!
+                                          .withOpacity(.2)
+                                      : Colors.transparent,
+                                  child: ListTile(
+                                    onTap: () async {
+                                      if (_isGroupConversation ?? false) {
+                                        controller.onForwardUserTap(index);
+                                        controller
+                                            .isSelectedUser(user.userDetails);
+                                      } else {
+                                        var ismChatConversation =
+                                            IsmChatConversationModel(
+                                                messagingDisabled: false,
+                                                conversationImageUrl: user
+                                                    .userDetails
+                                                    .userProfileImageUrl,
+                                                isGroup: false,
+                                                opponentDetails:
+                                                    user.userDetails,
+                                                unreadMessagesCount: 0,
+                                                lastMessageDetails:
+                                                    LastMessageDetails(
+                                                  sentByMe: true,
+                                                  showInConversation: true,
+                                                  sentAt: DateTime.now()
+                                                      .millisecondsSinceEpoch,
+                                                  senderName: '',
+                                                  messageType: 0,
+                                                  messageId: '',
+                                                  conversationId: '',
+                                                  body: '',
+                                                ),
+                                                lastMessageSentAt: 0,
+                                                membersCount: 1,
+                                                conversationType:
+                                                    _conversationType);
+                                        ismChatConversation =
+                                            ismChatConversation.copyWith(
+                                          conversationId:
+                                              controller.getConversationId(
+                                            user.userDetails.userId,
                                           ),
-                                          child: Text(
-                                            user.isUserSelected
-                                                ? 'Remove'
-                                                : 'Add',
-                                            style: IsmChatStyles.w400Black12
-                                                .copyWith(
+                                        );
+                                        Get.back<void>();
+                                        IsmChatProperties
+                                            .conversationProperties.onChatTap!
+                                            .call(_, ismChatConversation);
+                                        controller.navigateToMessages(
+                                            ismChatConversation);
+                                        await controller.goToChatPage();
+                                      }
+                                    },
+                                    dense: true,
+                                    mouseCursor: SystemMouseCursors.click,
+                                    leading: IsmChatImage.profile(
+                                      user.userDetails.userProfileImageUrl,
+                                      name: user.userDetails.userName,
+                                    ),
+                                    title: Text(
+                                      user.userDetails.userName,
+                                      style: IsmChatStyles.w600Black14,
+                                    ),
+                                    subtitle: Text(
+                                      user.userDetails.userIdentifier,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: IsmChatStyles.w400Black12,
+                                    ),
+                                    trailing: !_isGroupConversation!
+                                        ? null
+                                        : Container(
+                                            padding:
+                                                IsmChatDimens.edgeInsets8_4,
+                                            decoration: BoxDecoration(
                                               color: IsmChatConfig
-                                                  .chatTheme.primaryColor,
+                                                  .chatTheme.primaryColor
+                                                  ?.withOpacity(.2),
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      IsmChatDimens.eight),
+                                            ),
+                                            child: Text(
+                                              user.isUserSelected
+                                                  ? 'Remove'
+                                                  : 'Add',
+                                              style: IsmChatStyles.w400Black12
+                                                  .copyWith(
+                                                color: IsmChatConfig
+                                                    .chatTheme.primaryColor,
+                                              ),
                                             ),
                                           ),
-                                        ),
+                                  ),
                                 ),
                               ],
                             );

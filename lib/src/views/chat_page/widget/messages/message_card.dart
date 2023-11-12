@@ -117,31 +117,46 @@ class _MessageCardState extends State<MessageCard>
                     controller.tapForMediaPreview(widget.message);
                   }
                 },
-                child: AutoScrollTag(
-                  controller: controller.messagesScrollController,
-                  index: widget.index,
-                  key: Key('scroll-${widget.message.messageId}'),
-                  child: kIsWeb
-                      ? MessageBubble(
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    AutoScrollTag(
+                      controller: controller.messagesScrollController,
+                      index: widget.index,
+                      key: Key('scroll-${widget.message.messageId}'),
+                      child: kIsWeb
+                          ? MessageBubble(
+                              message: widget.message,
+                              showMessageInCenter: widget.showMessageInCenter,
+                              index: widget.index,
+                            )
+                          : Hero(
+                              tag: widget.message,
+                              child: IsmChatProperties
+                                      .chatPageProperties.messageBuilder
+                                      ?.call(
+                                          context,
+                                          widget.message,
+                                          widget.message.customType!,
+                                          widget.showMessageInCenter) ??
+                                  MessageBubble(
+                                    message: widget.message,
+                                    showMessageInCenter:
+                                        widget.showMessageInCenter,
+                                    index: widget.index,
+                                  ),
+                            ),
+                    ),
+                    if (widget.message.reactions?.isNotEmpty == true)
+                      Positioned(
+                        right: widget.message.sentByMe ? 0 : null,
+                        left: widget.message.sentByMe ? null : 0,
+                        bottom: IsmChatDimens.six,
+                        child: ImsChatReaction(
                           message: widget.message,
-                          showMessageInCenter: widget.showMessageInCenter,
-                          index: widget.index,
-                        )
-                      : Hero(
-                          tag: widget.message,
-                          child: IsmChatProperties
-                                  .chatPageProperties.messageBuilder
-                                  ?.call(
-                                      context,
-                                      widget.message,
-                                      widget.message.customType!,
-                                      widget.showMessageInCenter) ??
-                              MessageBubble(
-                                message: widget.message,
-                                showMessageInCenter: widget.showMessageInCenter,
-                                index: widget.index,
-                              ),
                         ),
+                      ),
+                  ],
                 ),
               ),
             ),

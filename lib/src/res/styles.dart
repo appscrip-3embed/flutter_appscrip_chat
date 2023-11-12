@@ -220,10 +220,31 @@ class IsmChatStyles {
       fontFamily: IsmChatConfig.fontFamily);
 
   static TextStyle w700White10 = TextStyle(
-      color: IsmChatColors.whiteColor,
-      fontSize: IsmChatDimens.ten,
-      fontWeight: FontWeight.w700,
-      fontFamily: IsmChatConfig.fontFamily);
+    color: IsmChatColors.whiteColor,
+    fontSize: IsmChatDimens.ten,
+    fontWeight: FontWeight.w700,
+    fontFamily: IsmChatConfig.fontFamily,
+  );
+  static TextStyle w700White12 = TextStyle(
+    color: IsmChatColors.whiteColor,
+    fontSize: IsmChatDimens.twelve,
+    fontWeight: FontWeight.w700,
+    fontFamily: IsmChatConfig.fontFamily,
+  );
+
+  static TextStyle w700White14 = TextStyle(
+    color: IsmChatColors.whiteColor,
+    fontSize: IsmChatDimens.forteen,
+    fontWeight: FontWeight.w700,
+    fontFamily: IsmChatConfig.fontFamily,
+  );
+
+  static TextStyle w700White16 = TextStyle(
+    color: IsmChatColors.whiteColor,
+    fontSize: IsmChatDimens.sixteen,
+    fontWeight: FontWeight.w700,
+    fontFamily: IsmChatConfig.fontFamily,
+  );
   static TextStyle w700Black10 = TextStyle(
       color: IsmChatColors.blackColor,
       fontSize: IsmChatDimens.ten,

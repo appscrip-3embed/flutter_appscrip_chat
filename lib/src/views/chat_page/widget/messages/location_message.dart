@@ -40,7 +40,7 @@ class IsmChatLocationMessage extends StatelessWidget {
                         ),
                         markers: {
                           Marker(
-                            markerId: const MarkerId('2'),
+                            markerId: const MarkerId('1'),
                             position: message.body.position,
                             infoWindow:
                                 const InfoWindow(title: 'Shared Location'),

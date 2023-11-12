@@ -20,10 +20,12 @@ class _IsmDocsViewState extends State<IsmDocsView>
 
   @override
   void initState() {
-    var storeSortDocs = chatPageController.sortMessages(widget.mediaListDocs);
-    storeWidgetDocsList =
-        chatPageController.sortMediaList(storeSortDocs).reversed.toList();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var storeSortDocs = chatPageController.sortMessages(widget.mediaListDocs);
+      storeWidgetDocsList =
+          chatPageController.sortMediaList(storeSortDocs).reversed.toList();
+    });
   }
 
   @override
@@ -53,30 +55,22 @@ class _IsmDocsViewState extends State<IsmDocsView>
                         key,
                         style: IsmChatStyles.w400Black14,
                       ),
-                      IsmChatDimens.boxHeight10,
-                      ListView.separated(
+                      GridView.builder(
                         physics: const ScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: value.length,
-                        itemBuilder: (context, valueIndex) => GestureDetector(
+                        addAutomaticKeepAlives: true,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 6,
+                          crossAxisSpacing: 6,
+                        ),
+                        itemBuilder: (context, valueIndex) => IsmChatTapHandler(
                           onTap: () => Get.find<IsmChatPageController>()
                               .tapForMediaPreview(value[valueIndex]),
-                          child: SizedBox(
-                            height: context.width * 0.15,
-                            width: double.maxFinite,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: IsmChatColors.blueGreyColor,
-                                borderRadius:
-                                    BorderRadius.circular(IsmChatDimens.twelve),
-                              ),
-                              padding: IsmChatDimens.edgeInsets4,
-                              child: IsmChatFileMessage(value[valueIndex]),
-                            ),
-                          ),
+                          child: IsmChatFileMessage(value[valueIndex]),
                         ),
-                        separatorBuilder: (_, index) =>
-                            IsmChatDimens.boxHeight10,
                       ),
                     ],
                   );

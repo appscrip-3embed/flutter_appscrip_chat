@@ -21,7 +21,6 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -795,6 +794,7 @@ class IsmChatPageController extends GetxController
         );
         break;
       case IsmChatAttachmentType.location:
+        textEditingController.clear();
         IsmChatRouteManagement.goToLocation();
         break;
       case IsmChatAttachmentType.contact:
@@ -819,20 +819,6 @@ class IsmChatPageController extends GetxController
           }
 
           searchContactList = List.from(contactList);
-
-          // try {
-          //   print('rasfddsf');
-          //   var url = Uri(
-          //     scheme: 'tel',
-          //     path: '+1234567890',
-          //   );
-          //   if (await canLaunchUrl(url)) {
-          //     await launchUrl(url);
-          //   }
-          // } catch (e) {
-          //   debugPrint(e.toString());
-          // }
-          // final contact = await FlutterContacts.openExternalPick();
 
           if (contactList.isEmpty) {
             isLoadingContact = true;
@@ -1383,9 +1369,11 @@ class IsmChatPageController extends GetxController
         IsmChatLog.error('$e');
       }
     } else if (message.customType == IsmChatCustomMessageType.audio) {
-      await Get.dialog(IsmChatAudioPlayer(
-        message: message,
-      ));
+      await Get.dialog(
+        AudioPreview(
+          message: message,
+        ),
+      );
     } else if (message.customType == IsmChatCustomMessageType.contact) {
       IsmChatRouteManagement.goToContactInfoView(contacts: message.contacts);
     }

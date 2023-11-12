@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
@@ -76,11 +75,11 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: IsmChatColors.blackColor,
         appBar: AppBar(
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarIconBrightness: Brightness.light,
-            statusBarColor: IsmChatColors.blackColor,
-            statusBarBrightness: Brightness.light,
-          ),
+          // systemOverlayStyle: const SystemUiOverlayStyle(
+          //   statusBarIconBrightness: Brightness.light,
+          //   statusBarColor: IsmChatColors.blackColor,
+          //   statusBarBrightness: Brightness.light,
+          // ),
           backgroundColor: IsmChatColors.blackColor,
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,4 +216,72 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
           ),
         ),
       );
+}
+
+class AudioPreview extends StatelessWidget {
+  const AudioPreview({super.key, required this.message});
+
+  final IsmChatMessageModel message;
+
+  @override
+  Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
+      builder: (controller) => Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextButton.icon(
+                    onPressed: () async {
+                      Get.back();
+                      await controller.shareMedia(message);
+                    },
+                    icon: const Icon(
+                      Icons.share_rounded,
+                      color: IsmChatColors.whiteColor,
+                    ),
+                    label: Text(
+                      IsmChatStrings.share,
+                      style: IsmChatStyles.w700White16,
+                    ),
+                  ),
+                  TextButton.icon(
+                    onPressed: () async {
+                      Get.back();
+                      await controller.saveMedia(message);
+                    },
+                    icon: const Icon(
+                      Icons.save_rounded,
+                      color: IsmChatColors.whiteColor,
+                    ),
+                    label: Text(
+                      IsmChatStrings.save,
+                      style: IsmChatStyles.w700White16,
+                    ),
+                  ),
+                  TextButton.icon(
+                    onPressed: () async {
+                      Get.back();
+                      await controller.showDialogForMessageDelete(message,
+                          fromMediaPrivew: true);
+                    },
+                    icon: const Icon(
+                      Icons.delete_rounded,
+                      color: IsmChatColors.whiteColor,
+                    ),
+                    label: Text(
+                      IsmChatStrings.delete,
+                      style: IsmChatStyles.w700White16,
+                    ),
+                  )
+                ],
+              ),
+              IsmChatAudioPlayer(
+                message: message,
+              ),
+            ],
+          ));
 }
