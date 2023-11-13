@@ -48,7 +48,6 @@ dependencies:
   internet_file: ^1.2.0
   intl: ^0.18.0
   just_audio: ^0.9.34
-  link_preview_generator: ^1.2.0
   mqtt_client: ^10.0.0
   open_filex: ^4.3.2
   path_provider: ^2.0.13

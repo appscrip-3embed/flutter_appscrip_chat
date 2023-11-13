@@ -300,32 +300,40 @@ class IsmChatBroadCastView extends StatelessWidget {
                                               user.isShowSuspension != true,
                                           child: _GetSuspensionTag(
                                               susTag: susTag)),
-                                      ListTile(
-                                        onTap: () {
-                                          controller.onForwardUserTap(index);
-                                          controller
-                                              .isSelectedUser(user.userDetails);
-                                        },
-                                        dense: true,
-                                        mouseCursor: SystemMouseCursors.click,
-                                        tileColor: user.isUserSelected
+                                      ColoredBox(
+                                        color: user.isUserSelected
                                             ? IsmChatConfig
                                                 .chatTheme.primaryColor!
                                                 .withOpacity(.2)
-                                            : null,
-                                        leading: IsmChatImage.profile(
-                                          user.userDetails.userProfileImageUrl,
-                                          name: user.userDetails.userName,
-                                        ),
-                                        title: Text(
-                                          user.userDetails.userName,
-                                          style: IsmChatStyles.w600Black14,
-                                        ),
-                                        subtitle: Text(
-                                          user.userDetails.userIdentifier,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: IsmChatStyles.w400Black12,
+                                            : Colors.transparent,
+                                        child: ListTile(
+                                          onTap: () {
+                                            controller.onForwardUserTap(index);
+                                            controller.isSelectedUser(
+                                                user.userDetails);
+                                          },
+                                          dense: true,
+                                          mouseCursor: SystemMouseCursors.click,
+                                          // tileColor: user.isUserSelected
+                                          //     ? IsmChatConfig
+                                          //         .chatTheme.primaryColor!
+                                          //         .withOpacity(.2)
+                                          //     : null,
+                                          leading: IsmChatImage.profile(
+                                            user.userDetails
+                                                .userProfileImageUrl,
+                                            name: user.userDetails.userName,
+                                          ),
+                                          title: Text(
+                                            user.userDetails.userName,
+                                            style: IsmChatStyles.w600Black14,
+                                          ),
+                                          subtitle: Text(
+                                            user.userDetails.userIdentifier,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: IsmChatStyles.w400Black12,
+                                          ),
                                         ),
                                       ),
                                     ],

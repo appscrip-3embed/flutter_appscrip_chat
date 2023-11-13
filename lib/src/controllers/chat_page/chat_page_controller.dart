@@ -11,6 +11,7 @@ import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
 import 'package:appscrip_chat_component/src/views/chat_page/widget/profile_change.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:camera/camera.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dio/dio.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
@@ -54,6 +55,8 @@ class IsmChatPageController extends GetxController
   var messagesScrollController = AutoScrollController();
 
   var searchMessageScrollController = ScrollController();
+
+  var carouselController = CarouselController();
 
   final textEditingController = TextEditingController();
 
@@ -165,6 +168,11 @@ class IsmChatPageController extends GetxController
   final RxList<SelectedContact> _contactList = <SelectedContact>[].obs;
   List<SelectedContact> get contactList => _contactList;
   set contactList(List<SelectedContact> value) => _contactList.value = value;
+
+  final RxList<SelectedContact> _contactSelectedList = <SelectedContact>[].obs;
+  List<SelectedContact> get contactSelectedList => _contactSelectedList;
+  set contactSelectedList(List<SelectedContact> value) =>
+      _contactSelectedList.value = value;
 
   final RxList<SelectedContact> _searchContactList = <SelectedContact>[].obs;
   List<SelectedContact> get searchContactList => _searchContactList;
@@ -636,7 +644,7 @@ class IsmChatPageController extends GetxController
     handleList(contactList);
   }
 
-  showMentionsUserList(String value) async {
+  void showMentionsUserList(String value) async {
     if (!conversation!.isGroup!) {
       return;
     }
@@ -651,7 +659,7 @@ class IsmChatPageController extends GetxController
         .toList();
   }
 
-  updateMentionUser(String value) {
+  void updateMentionUser(String value) {
     var tempList = chatInputController.text.split('@');
     var remainingText = tempList.sublist(0, tempList.length - 1).join('@');
     var updatedText = '$remainingText@${value.capitalizeFirst} ';
@@ -757,10 +765,30 @@ class IsmChatPageController extends GetxController
     showAttachment = !showAttachment;
   }
 
-  /// This function will be used in [Forward Screen and New conversation screen] to Select or Unselect users
-  void onSelectedContactTap(int index) {
+  /// This function will be used in [Contact Screen ] to Select or Unselect users
+  void onSelectedContactTap(int index, SelectedContact contact) {
     contactList[index].isConotactSelected =
         !contactList[index].isConotactSelected;
+    final checkContact =
+        contactSelectedList.any((e) => e.contact.id == contact.contact.id);
+    if (checkContact) {
+      contactSelectedList
+          .removeWhere((e) => e.contact.id == contact.contact.id);
+    } else {
+      contactSelectedList.add(contact);
+    }
+  }
+
+  void setContatWithSelectedContact() {
+    var temContactList = <SelectedContact>[];
+    for (final contact in searchContactList) {
+      final checkContact =
+          contactSelectedList.any((e) => e.contact.id == contact.contact.id);
+      contact.isConotactSelected = checkContact;
+      temContactList.add(contact);
+    }
+    contactList.clear();
+    contactList = temContactList;
   }
 
   /// This function will be used in [Add participants Screen] to Select or Unselect users
@@ -794,10 +822,12 @@ class IsmChatPageController extends GetxController
         );
         break;
       case IsmChatAttachmentType.location:
+        textEditingController.clear();
         IsmChatRouteManagement.goToLocation();
         break;
       case IsmChatAttachmentType.contact:
         contactList.clear();
+        contactSelectedList.clear();
         textEditingController.clear();
         isSearchSelect = false;
         isLoadingContact = false;
@@ -810,33 +840,21 @@ class IsmChatPageController extends GetxController
               if (!((x.phones.first.number.contains('@')) &&
                       (x.phones.first.number.contains('.com'))) &&
                   x.displayName.isNotEmpty) {
-                contactList.add(
-                  SelectedContact(isConotactSelected: false, contact: x),
-                );
+                final isContactContain = contactList.any((element) =>
+                    element.contact.phones.first.number ==
+                    x.phones.first.number);
+                if (!isContactContain) {
+                  contactList.add(
+                    SelectedContact(isConotactSelected: false, contact: x),
+                  );
+                }
               }
             }
           }
-
           searchContactList = List.from(contactList);
-
-          // try {
-          //   print('rasfddsf');
-          //   var url = Uri(
-          //     scheme: 'tel',
-          //     path: '+1234567890',
-          //   );
-          //   if (await canLaunchUrl(url)) {
-          //     await launchUrl(url);
-          //   }
-          // } catch (e) {
-          //   debugPrint(e.toString());
-          // }
-          // final contact = await FlutterContacts.openExternalPick();
-
           if (contactList.isEmpty) {
             isLoadingContact = true;
           }
-
           handleList(contactList);
         }
 
@@ -910,9 +928,11 @@ class IsmChatPageController extends GetxController
     if (result.isEmpty) {
       return;
     }
-    await Get.to<void>(IsmChatGalleryAssetsView(
-      assetList: result,
-    ));
+
+    IsmChatRouteManagement.goToGalleryAssetsView(result);
+    // await Get.to<void>(IsmChatGalleryAssetsView(
+    //   assetList: result,
+    // ));
   }
 
   Future<void> selectAssets(List<XFile?> assetList) async {
@@ -1382,9 +1402,11 @@ class IsmChatPageController extends GetxController
         IsmChatLog.error('$e');
       }
     } else if (message.customType == IsmChatCustomMessageType.audio) {
-      await Get.dialog(IsmChatAudioPlayer(
-        message: message,
-      ));
+      await Get.dialog(
+        AudioPreview(
+          message: message,
+        ),
+      );
     } else if (message.customType == IsmChatCustomMessageType.contact) {
       IsmChatRouteManagement.goToContactInfoView(contacts: message.contacts);
     }

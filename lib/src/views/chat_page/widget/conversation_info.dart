@@ -308,12 +308,16 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                                     ''),
                                           );
                                         }
-                                      : () async {
-                                          await controller.showUserDetails(
-                                            member,
-                                            fromMessagePage: false,
-                                          );
-                                        }
+                                      : IsmChatConfig.communicationConfig
+                                                  .userConfig.userId ==
+                                              member.userId
+                                          ? null
+                                          : () async {
+                                              await controller.showUserDetails(
+                                                member,
+                                                fromMessagePage: false,
+                                              );
+                                            }
                                   : controller.conversation!.usersOwnDetails
                                               ?.isAdmin ??
                                           false
@@ -327,12 +331,16 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                             ),
                                           );
                                         }
-                                      : () async {
-                                          await controller.showUserDetails(
-                                            member,
-                                            fromMessagePage: false,
-                                          );
-                                        },
+                                      : IsmChatConfig.communicationConfig
+                                                  .userConfig.userId ==
+                                              member.userId
+                                          ? null
+                                          : () async {
+                                              await controller.showUserDetails(
+                                                member,
+                                                fromMessagePage: false,
+                                              );
+                                            },
                               trailing: member.isAdmin
                                   ? Text(
                                       IsmChatStrings.admin,

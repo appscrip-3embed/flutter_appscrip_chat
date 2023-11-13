@@ -188,7 +188,7 @@ class IsmChatRouteManagement {
     Get.toNamed(IsmChatImageEditView.route);
   }
 
-  static void goToGalleryAssetsView(List<XFile?>? fileList) {
+  static void goToGalleryAssetsView(List<XFile?> fileList) {
     Get.toNamed(IsmChatGalleryAssetsView.route, arguments: {
       'fileList': fileList,
     });

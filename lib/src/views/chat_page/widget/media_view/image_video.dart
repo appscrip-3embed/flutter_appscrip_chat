@@ -20,10 +20,13 @@ class _IsmMediaViewState extends State<IsmMediaView>
 
   @override
   void initState() {
-    var storeSortLinks = chatPageController.sortMessages(widget.mediaList);
-    storeWidgetMediaList =
-        chatPageController.sortMediaList(storeSortLinks).reversed.toList();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var storeSortMedia = chatPageController.sortMessages(widget.mediaList);
+      storeWidgetMediaList =
+          chatPageController.sortMediaList(storeSortMedia).reversed.toList();
+      setState(() {});
+    });
   }
 
   @override
@@ -80,7 +83,7 @@ class _IsmMediaViewState extends State<IsmMediaView>
                               ? Icons.audio_file_rounded
                               : Icons.description_rounded;
 
-                          return GestureDetector(
+                          return IsmChatTapHandler(
                             onTap: () => Get.find<IsmChatPageController>()
                                 .tapForMediaPreview(value[valueIndex]),
                             child: Stack(

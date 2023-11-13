@@ -1,7 +1,7 @@
+import 'package:any_link_preview/any_link_preview.dart';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:link_preview_generator/link_preview_generator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// IsmMedia class is for showing the conversation media
@@ -23,10 +23,14 @@ class _IsmLinksViewState extends State<IsmLinksView>
 
   @override
   void initState() {
-    var storeSortLinks = chatPageController.sortMessages(widget.mediaListLinks);
-    storeWidgetLinksList =
-        chatPageController.sortMediaList(storeSortLinks).reversed.toList();
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var storeSortLinks =
+          chatPageController.sortMessages(widget.mediaListLinks);
+      storeWidgetLinksList =
+          chatPageController.sortMediaList(storeSortLinks).reversed.toList();
+    });
   }
 
   @override
@@ -62,37 +66,24 @@ class _IsmLinksViewState extends State<IsmLinksView>
                         addAutomaticKeepAlives: true,
                         shrinkWrap: true,
                         itemCount: value.length,
-                        itemBuilder: (context, valueIndex) => Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(IsmChatDimens.ten)),
-                          child: IsmChatTapHandler(
-                            onTap: () => Get.find<IsmChatPageController>()
-                                .tapForMediaPreview(value[valueIndex]),
-                            child: Container(
-                              padding: IsmChatDimens.edgeInsets10,
-                              width: context.width * 0.8,
-                              child: _LinkPreview(
-                                link: value[valueIndex].body,
-                                child: LinkPreviewGenerator(
-                                  bodyMaxLines: 3,
-                                  link:
-                                      value[valueIndex].body.convertToValidUrl,
-                                  linkPreviewStyle: LinkPreviewStyle.small,
-                                  showGraphic: true,
-                                  backgroundColor: Colors.transparent,
-                                  titleStyle: IsmChatStyles.w500Black16,
-                                  removeElevation: true,
-                                  bodyTextOverflow: TextOverflow.ellipsis,
-                                  cacheDuration: const Duration(minutes: 5),
-                                  errorWidget: Text(
-                                      IsmChatStrings.errorLoadingPreview,
-                                      style: IsmChatStyles.w400White12),
-                                  placeholderWidget: Text('Loading preview...',
-                                      style: IsmChatStyles.w400White12),
-                                ),
-                              ),
-                            ),
+                        itemBuilder: (context, valueIndex) => Container(
+                          padding: IsmChatDimens.edgeInsets10,
+                          width: context.width * 0.8,
+                          child: AnyLinkPreview(
+                            displayDirection: UIDirection.uiDirectionHorizontal,
+                            bodyMaxLines: 5,
+                            urlLaunchMode: LaunchMode.externalApplication,
+                            removeElevation: true,
+                            bodyTextOverflow: TextOverflow.ellipsis,
+                            cache: const Duration(minutes: 5),
+                            link: value[valueIndex].body.convertToValidUrl,
+                            backgroundColor: Colors.transparent,
+                            titleStyle: IsmChatStyles.w500Black16,
+                            errorWidget: Text(
+                                IsmChatStrings.errorLoadingPreview,
+                                style: IsmChatStyles.w400White12),
+                            placeholderWidget: Text('Loading preview...',
+                                style: IsmChatStyles.w400White12),
                           ),
                         ),
                         separatorBuilder: (_, index) =>

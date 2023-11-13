@@ -69,73 +69,76 @@ class MessageBubble extends GetView<IsmChatPageController> {
               padding: !showMessageInCenter
                   ? IsmChatDimens.edgeInsets5_5_5_20
                   : IsmChatDimens.edgeInsets0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: _message.sentByMe
-                        ? CrossAxisAlignment.end
-                        : CrossAxisAlignment.start,
-                    children: [
-                      if (!showMessageInCenter &&
-                          (controller.conversation!.isGroup ?? false) &&
-                          !_message.sentByMe) ...[
-                        Padding(
-                          padding: IsmChatDimens.edgeInsetsL2,
-                          child: FittedBox(
-                            child: Text(
-                              _message.senderInfo?.userName ?? '',
-                              style: IsmChatStyles.w400Black10,
-                              softWrap: true,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: _message.sentByMe
-                                  ? TextAlign.end
-                                  : TextAlign.start,
-                              maxLines: 1,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: _message.sentByMe
+                          ? CrossAxisAlignment.end
+                          : CrossAxisAlignment.start,
+                      children: [
+                        if (!showMessageInCenter &&
+                            (controller.conversation!.isGroup ?? false) &&
+                            !_message.sentByMe) ...[
+                          Padding(
+                            padding: IsmChatDimens.edgeInsetsL2,
+                            child: FittedBox(
+                              child: Text(
+                                _message.senderInfo?.userName ?? '',
+                                style: IsmChatStyles.w400Black10,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: _message.sentByMe
+                                    ? TextAlign.end
+                                    : TextAlign.start,
+                                maxLines: 1,
+                              ),
                             ),
                           ),
-                        ),
+                        ],
+                        if (_message.messageType ==
+                            IsmChatMessageType.forward) ...[
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.shortcut_outlined,
+                                color: IsmChatColors.whiteColor,
+                                size: IsmChatDimens.fifteen,
+                              ),
+                              Text(
+                                IsmChatStrings.forwarded,
+                                style: _message.sentByMe
+                                    ? IsmChatStyles.w400White12.copyWith(
+                                        color: IsmChatConfig
+                                                .chatTheme
+                                                .chatPageTheme
+                                                ?.selfMessageTheme
+                                                ?.textColor ??
+                                            IsmChatColors.whiteColor,
+                                      )
+                                    : IsmChatStyles.w400Black12.copyWith(
+                                        color: IsmChatConfig
+                                                .chatTheme
+                                                .chatPageTheme
+                                                ?.selfMessageTheme
+                                                ?.textColor ??
+                                            IsmChatColors.blackColor,
+                                      ),
+                              ),
+                            ],
+                          )
+                        ],
                       ],
-                      if (_message.messageType ==
-                          IsmChatMessageType.forward) ...[
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.shortcut_outlined,
-                              color: IsmChatColors.whiteColor,
-                              size: IsmChatDimens.fifteen,
-                            ),
-                            Text(
-                              IsmChatStrings.forwarded,
-                              style: _message.sentByMe
-                                  ? IsmChatStyles.w400White12.copyWith(
-                                      color: IsmChatConfig
-                                              .chatTheme
-                                              .chatPageTheme
-                                              ?.selfMessageTheme
-                                              ?.textColor ??
-                                          IsmChatColors.whiteColor,
-                                    )
-                                  : IsmChatStyles.w400Black12.copyWith(
-                                      color: IsmChatConfig
-                                              .chatTheme
-                                              .chatPageTheme
-                                              ?.selfMessageTheme
-                                              ?.textColor ??
-                                          IsmChatColors.blackColor,
-                                    ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ],
-                  ),
-                  IsmChatMessageWrapper(_message),
-                ],
+                    ),
+                    IsmChatMessageWrapper(_message),
+                  ],
+                ),
               ),
             ),
             if (!showMessageInCenter) ...[

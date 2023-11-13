@@ -79,7 +79,7 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
           systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarIconBrightness: Brightness.light,
             statusBarColor: IsmChatColors.blackColor,
-            statusBarBrightness: Brightness.light,
+            statusBarBrightness: Brightness.dark,
           ),
           backgroundColor: IsmChatColors.blackColor,
           title: Column(
@@ -217,4 +217,72 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
           ),
         ),
       );
+}
+
+class AudioPreview extends StatelessWidget {
+  const AudioPreview({super.key, required this.message});
+
+  final IsmChatMessageModel message;
+
+  @override
+  Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
+      builder: (controller) => Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextButton.icon(
+                    onPressed: () async {
+                      Get.back();
+                      await controller.shareMedia(message);
+                    },
+                    icon: const Icon(
+                      Icons.share_rounded,
+                      color: IsmChatColors.whiteColor,
+                    ),
+                    label: Text(
+                      IsmChatStrings.share,
+                      style: IsmChatStyles.w700White16,
+                    ),
+                  ),
+                  TextButton.icon(
+                    onPressed: () async {
+                      Get.back();
+                      await controller.saveMedia(message);
+                    },
+                    icon: const Icon(
+                      Icons.save_rounded,
+                      color: IsmChatColors.whiteColor,
+                    ),
+                    label: Text(
+                      IsmChatStrings.save,
+                      style: IsmChatStyles.w700White16,
+                    ),
+                  ),
+                  TextButton.icon(
+                    onPressed: () async {
+                      Get.back();
+                      await controller.showDialogForMessageDelete(message,
+                          fromMediaPrivew: true);
+                    },
+                    icon: const Icon(
+                      Icons.delete_rounded,
+                      color: IsmChatColors.whiteColor,
+                    ),
+                    label: Text(
+                      IsmChatStrings.delete,
+                      style: IsmChatStyles.w700White16,
+                    ),
+                  )
+                ],
+              ),
+              IsmChatAudioPlayer(
+                message: message,
+              ),
+            ],
+          ));
 }

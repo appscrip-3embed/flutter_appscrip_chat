@@ -171,7 +171,7 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
             children: [
               Stack(children: [
                 SizedBox(
-                    height: 285,
+                    height: IsmChatDimens.percentHeight(.35),
                     width: Get.width,
                     child: GoogleMap(
                       initialCameraPosition: _kGooglePlex,
@@ -187,8 +187,8 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                       },
                     )),
                 Positioned(
-                  right: 20,
-                  top: 20,
+                  right: IsmChatDimens.twenty,
+                  top: IsmChatDimens.twenty,
                   child: Align(
                       alignment: Alignment.topRight,
                       child: InkWell(
@@ -200,12 +200,12 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                             borderRadius: BorderRadius.circular(20),
                             color: Colors.white.withOpacity(0.8),
                           ),
-                          height: 35,
-                          width: 35,
-                          child: const Icon(
+                          height: IsmChatDimens.thirtyFive,
+                          width: IsmChatDimens.thirtyFive,
+                          child: Icon(
                             Icons.my_location,
                             color: Colors.grey,
-                            size: 20,
+                            size: IsmChatDimens.twenty,
                           ),
                         ),
                       )),
@@ -218,7 +218,7 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                     children: [
                       IsmChatDimens.boxHeight16,
                       Padding(
-                        padding: const EdgeInsets.only(left: 10),
+                        padding: EdgeInsets.only(left: IsmChatDimens.ten),
                         child: Text(
                           'Nearby Places',
                           style: IsmChatStyles.w400Grey10,
@@ -293,25 +293,12 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                             ),
                           )
                         ]
-                      ]
-                      // else if (controller.predictionList.length == 1) ...[
-                      //   Column(
-                      //     children: [
-                      //       SizedBox(
-                      //         height: IsmChatDimens.hundred,
-                      //       ),
-                      //       Center(
-                      //         child: Text(IsmChatStrings.noDataFound,
-                      //             style: IsmChatStyles.w500Black14),
-                      //       ),
-                      //     ],
-                      //   )
-                      // ]
-                      else ...[
+                      ] else ...[
                         ListView.builder(
                             shrinkWrap: true,
+                            keyboardDismissBehavior:
+                                ScrollViewKeyboardDismissBehavior.onDrag,
                             physics: const ScrollPhysics(),
-                            addAutomaticKeepAlives: true,
                             itemCount: controller.predictionList.length,
                             itemBuilder: (context, index) {
                               var prediction = controller.predictionList[index];

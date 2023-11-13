@@ -169,7 +169,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                           ],
                         ],
                       if (Get.isRegistered<IsmChatPageController>()) ...[
-                        _Message(
+                        MessageCard(
                           message: widget._message!,
                           showMessageInCenter: showMessageInCenter,
                           index: widget.index,
@@ -211,40 +211,4 @@ class _IsmChatMessageState extends State<IsmChatMessage>
       ),
     );
   }
-}
-
-class _Message extends GetView<IsmChatPageController> {
-  const _Message({
-    required this.message,
-    required this.showMessageInCenter,
-    required this.index,
-  });
-
-  final IsmChatMessageModel message;
-  final bool showMessageInCenter;
-  final int index;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-        padding: IsmChatDimens.edgeInsetsL4,
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            MessageCard(
-              showMessageInCenter: showMessageInCenter,
-              message: message,
-              index: index,
-            ),
-            if (message.reactions?.isNotEmpty == true)
-              Positioned(
-                right: message.sentByMe ? 0 : null,
-                left: message.sentByMe ? null : 0,
-                bottom: IsmChatDimens.six,
-                child: ImsChatReaction(
-                  message: message,
-                ),
-              ),
-          ],
-        ),
-      );
 }

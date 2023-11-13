@@ -1,7 +1,7 @@
+import 'package:any_link_preview/any_link_preview.dart';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:link_preview_generator/link_preview_generator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class IsmChatLinkMessage extends StatelessWidget {
@@ -23,11 +23,11 @@ class IsmChatLinkMessage extends StatelessWidget {
           child: _LinkPreview(
             sentByMe: message.sentByMe,
             link: message.body,
-            child: LinkPreviewGenerator(
-              bodyMaxLines: 3,
+            child: AnyLinkPreview(
+              displayDirection: UIDirection.uiDirectionHorizontal,
+              bodyMaxLines: 5,
               link: message.body.convertToValidUrl,
-              linkPreviewStyle: LinkPreviewStyle.small,
-              showGraphic: true,
+              urlLaunchMode: LaunchMode.externalApplication,
               backgroundColor: Colors.transparent,
               removeElevation: true,
               bodyStyle: (message.sentByMe
@@ -38,7 +38,7 @@ class IsmChatLinkMessage extends StatelessWidget {
               ),
               titleStyle: message.style,
               bodyTextOverflow: TextOverflow.ellipsis,
-              cacheDuration: const Duration(minutes: 5),
+              cache: const Duration(minutes: 5),
               errorWidget: Text(
                 IsmChatStrings.errorLoadingPreview,
                 style: (message.sentByMe
