@@ -1,34 +1,26 @@
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:photo_view/photo_view.dart';
 
-class IsmChatGalleryAssetsView extends StatefulWidget {
-  const IsmChatGalleryAssetsView({super.key, this.assetList});
-
-  final List<XFile?>? assetList;
+class IsmChatGalleryAssetsView extends StatelessWidget {
+  IsmChatGalleryAssetsView({
+    super.key,
+  });
 
   static const String route = IsmPageRoutes.alleryAssetsView;
 
-  @override
-  State<IsmChatGalleryAssetsView> createState() =>
-      _IsmChatGalleryAssetsViewState();
-}
-
-class _IsmChatGalleryAssetsViewState extends State<IsmChatGalleryAssetsView> {
-  final ismChatPageController = Get.find<IsmChatPageController>();
-
-  @override
-  void initState() {
-    super.initState();
-    ismChatPageController.selectAssets(widget.assetList ?? []);
-  }
+  final argument = Get.arguments['fileList'] as List<XFile?>? ?? [];
 
   @override
   Widget build(BuildContext context) =>
-      GetX<IsmChatPageController>(builder: (controller) {
+      GetX<IsmChatPageController>(initState: (state) {
+        state.controller?.selectAssets(argument);
+      }, builder: (controller) {
         if (controller.listOfAssetsPath.isNotEmpty) {
           return WillPopScope(
             onWillPop: () async {
@@ -192,27 +184,48 @@ class _IsmChatGalleryAssetsViewState extends State<IsmChatGalleryAssetsView> {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    IsmChatConstants.imageExtensions.contains(controller
-                            .listOfAssetsPath[controller.assetsIndex].mediaUrl!
-                            .split('.')
-                            .last)
-                        ? SizedBox(
-                            height: IsmChatDimens.percentHeight(1),
-                            child: Image.file(
-                              File(controller
-                                  .listOfAssetsPath[controller.assetsIndex]
-                                  .mediaUrl
-                                  .toString()),
-                              fit: BoxFit.contain,
-                            ),
-                          )
-                        : VideoViewPage(
-                            showVideoPlaying: true,
-                            path: controller
+                    CarouselSlider.builder(
+                      carouselController: controller.carouselController,
+                      itemBuilder:
+                          (BuildContext context, int index, int realIndex) {
+                        final url =
+                            controller.listOfAssetsPath[realIndex].mediaUrl ??
+                                '';
+                        return IsmChatConstants.imageExtensions.contains(
+                                controller.listOfAssetsPath[realIndex].mediaUrl!
+                                    .split('.')
+                                    .last)
+                            ? PhotoView(
+                                imageProvider: url.isValidUrl
+                                    ? NetworkImage(url) as ImageProvider
+                                    : FileImage(File(url)),
+                                loadingBuilder: (context, event) =>
+                                    const IsmChatLoadingDialog(),
+                                wantKeepAlive: true,
+                              )
+                            : VideoViewPage(
+                                path: url,
+                                showVideoPlaying: true,
+                              );
+                      },
+                      options: CarouselOptions(
+                        height: IsmChatDimens.percentHeight(1),
+                        viewportFraction: 1,
+                        enlargeCenterPage: true,
+                        initialPage: 0,
+                        enableInfiniteScroll: false,
+                        onPageChanged: (index, _) async {
+                          controller.assetsIndex = index;
+                          controller.isVideoVisible = false;
+                          controller.dataSize = await IsmChatUtility.fileToSize(
+                            File(controller
                                 .listOfAssetsPath[controller.assetsIndex]
-                                .mediaUrl
-                                .toString(),
-                          ),
+                                .mediaUrl!),
+                          );
+                        },
+                      ),
+                      itemCount: controller.listOfAssetsPath.length,
+                    ),
                     Positioned(
                       bottom: IsmChatDimens.ten,
                       child: Container(
@@ -233,6 +246,8 @@ class _IsmChatGalleryAssetsViewState extends State<IsmChatGalleryAssetsView> {
                               onTap: () async {
                                 controller.assetsIndex = index;
                                 controller.isVideoVisible = false;
+                                await controller.carouselController
+                                    .animateToPage(index);
                                 controller.dataSize =
                                     await IsmChatUtility.fileToSize(
                                   File(controller

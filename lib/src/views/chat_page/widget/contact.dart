@@ -50,12 +50,15 @@ class IsmChatContactView extends StatelessWidget {
                     },
                   )
                 : Text(
-                    'Contacts to send ...  ${controller.contactList.selectedContact.isEmpty ? '' : controller.contactList.selectedContact.length}',
+                    'Contacts to send ...  ${controller.contactSelectedList.selectedContact.isEmpty ? '' : controller.contactList.selectedContact.length}',
                     style: IsmChatStyles.w600White18,
                   ),
             action: [
               IconButton(
                 onPressed: () {
+                  if (controller.isSearchSelect) {
+                    controller.setContatWithSelectedContact();
+                  }
                   controller.isSearchSelect = !controller.isSearchSelect;
                   controller.textEditingController.clear();
                 },
@@ -74,7 +77,7 @@ class IsmChatContactView extends StatelessWidget {
               controller.sendContact(
                 conversationId: controller.conversation?.conversationId ?? '',
                 userId: controller.conversation?.opponentDetails?.userId ?? '',
-                contacts: controller.contactList.selectedContact
+                contacts: controller.contactSelectedList.selectedContact
                     .map((e) => e.contact)
                     .toList(),
               );
@@ -91,25 +94,24 @@ class IsmChatContactView extends StatelessWidget {
               ? controller.isLoadingContact
                   ? Center(
                       child: Text(
-                        'No contact found',
+                        IsmChatStrings.noContact,
                         style: IsmChatStyles.w600Black16,
                       ),
                     )
                   : const IsmChatLoadingDialog()
               : Column(
                   children: [
-                    if (controller.contactList.selectedContact.isNotEmpty) ...[
-                      SizedBox(
+                    if (controller.contactSelectedList.isNotEmpty) ...[
+                      Container(
+                        color: IsmChatColors.whiteColor,
                         height: IsmChatDimens.eighty,
                         child: ListView.separated(
                           padding: IsmChatDimens.edgeInsets10_0,
                           scrollDirection: Axis.horizontal,
-                          itemCount:
-                              controller.contactList.selectedContact.length,
+                          itemCount: controller.contactSelectedList.length,
                           separatorBuilder: (_, __) => IsmChatDimens.boxWidth8,
                           itemBuilder: (context, index) {
-                            var user =
-                                controller.contactList.selectedContact[index];
+                            var user = controller.contactSelectedList[index];
                             return InkWell(
                               onTap: () {
                                 controller.onSelectedContactTap(
@@ -117,6 +119,7 @@ class IsmChatContactView extends StatelessWidget {
                                     controller
                                         .contactList.selectedContact[index],
                                   ),
+                                  user,
                                 );
                               },
                               child: SizedBox(
@@ -198,36 +201,8 @@ class IsmChatContactView extends StatelessWidget {
                         ),
                         indexBarMargin: IsmChatDimens.edgeInsets10,
                         indexBarData: SuspensionUtil.getTagIndexList(
-                            controller.contactList),
-                        // [
-                        //     'A',
-                        //     'B',
-                        //     'C',
-                        //     'D',
-                        //     'E',
-                        //     'F',
-                        //     'G',
-                        //     'H',
-                        //     'I',
-                        //     'J',
-                        //     'K',
-                        //     'L',
-                        //     'M',
-                        //     'N',
-                        //     'O',
-                        //     'P',
-                        //     'Q',
-                        //     'R',
-                        //     'S',
-                        //     'T',
-                        //     'U',
-                        //     'V',
-                        //     'W',
-                        //     'X',
-                        //     'Y',
-                        //     'Z'
-                        //   ],
-
+                          controller.contactList,
+                        ),
                         indexBarHeight: IsmChatDimens.percentHeight(5),
                         indexBarWidth: IsmChatDimens.forty,
                         indexBarItemHeight: IsmChatDimens.twenty,
@@ -264,24 +239,6 @@ class IsmChatContactView extends StatelessWidget {
                               (before.length) + searchText.length);
                           var after = user.contact.displayName
                               .substring((before.length) + (match.length));
-                          // String? subBefore;
-                          // String? subMatch;
-                          // String? subAfter;
-                          // if (searchText.isAlphabet) {
-                          //   subBefore = subTitle?.substring(
-                          //     0,
-                          //     subTitle.toLowerCase().indexOf(
-                          //           searchText.toLowerCase(),
-                          //         ),
-                          //   );
-                          //   subMatch = subTitle?.substring(
-                          //       subBefore?.length ?? 0,
-                          //       (subBefore?.length ?? 0) + searchText.length);
-                          //   subAfter = subTitle?.substring(
-                          //     (subBefore?.length ?? 0) +
-                          //         (subMatch?.length ?? 0),
-                          //   );
-                          // }
 
                           return Column(
                             children: [
@@ -295,7 +252,29 @@ class IsmChatContactView extends StatelessWidget {
                                       .chatTheme.primaryColor!
                                       .withOpacity(0.2),
                                   onTap: () {
-                                    controller.onSelectedContactTap(index);
+                                    if (!user.isConotactSelected &&
+                                        controller.contactSelectedList.length >=
+                                            5) {
+                                      Get.dialog(
+                                        AlertDialog(
+                                          title: const Text('Alert message...'),
+                                          content: const Text(
+                                              'You can only share with up to 5 contacts'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: Get.back,
+                                              child: const Text(
+                                                'Okay',
+                                                style: TextStyle(fontSize: 15),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    } else {
+                                      controller.onSelectedContactTap(
+                                          index, user);
+                                    }
                                   },
                                   dense: true,
                                   leading: IsmChatImage.profile(
@@ -328,30 +307,7 @@ class IsmChatContactView extends StatelessWidget {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: IsmChatStyles.w400Black12,
-                                  )
-                                  // :
-                                  //  RichText(
-                                  //     text: TextSpan(
-                                  //       text: subBefore,
-                                  //       style: IsmChatStyles.w400Black12,
-                                  //       children: [
-                                  //         TextSpan(
-                                  //           text: subMatch,
-                                  //           style: TextStyle(
-                                  //             color: IsmChatConfig
-                                  //                 .chatTheme.primaryColor,
-                                  //             fontWeight: FontWeight.w600,
-                                  //           ),
-                                  //         ),
-                                  //         TextSpan(
-                                  //           text: subAfter,
-                                  //         ),
-                                  //       ],
-                                  //     ),
-                                  //     maxLines: 1,
-                                  //     overflow: TextOverflow.ellipsis,
-                                  //   ),
-                                  )
+                                  ))
                             ],
                           );
                         },
