@@ -190,11 +190,11 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                             !isGroup &&
                             !showMessageInCenter &&
                             widget._message?.sentByMe == true) ...[
-                          // if (IsmChatProperties
-                          //         .chatPageProperties.messageBuilder ==
-                          //     null) ...[
-                          //   IsmChatDimens.boxWidth4,
-                          // ],
+                          if (IsmChatProperties
+                                  .chatPageProperties.messageBuilder ==
+                              null) ...[
+                            IsmChatDimens.boxWidth4,
+                          ],
                           IsmChatImage.profile(
                             IsmChatConfig.communicationConfig.userConfig
                                     .userProfile ??
