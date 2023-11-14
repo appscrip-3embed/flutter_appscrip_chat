@@ -126,7 +126,13 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                       ? IsmChatDimens.edgeInsets0
                       : IsmChatDimens.edgeInsets0_4,
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment:
+                        theme?.selfMessageTheme?.showProfile != null &&
+                                theme?.selfMessageTheme?.showProfile
+                                        ?.isPostionBottom ==
+                                    true
+                            ? CrossAxisAlignment.end
+                            : CrossAxisAlignment.start,
                     children: [
                       if (isGroup &&
                           !showMessageInCenter &&
@@ -147,10 +153,12 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                         )
                       ],
                       if (theme?.opponentMessageTheme?.showProfile != null)
-                        if (theme?.opponentMessageTheme?.showProfile == true &&
+                        if (theme?.opponentMessageTheme?.showProfile
+                                    ?.isShowProfile ==
+                                true &&
                             !isGroup &&
                             !showMessageInCenter &&
-                            !widget._message!.sentByMe) ...[
+                            !(widget._message?.sentByMe == true)) ...[
                           IsmChatImage.profile(
                             IsmChatConfig.communicationConfig.userConfig
                                         .imageBaseUrl !=
@@ -176,15 +184,17 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                         )
                       ],
                       if (theme?.selfMessageTheme?.showProfile != null)
-                        if (theme?.selfMessageTheme?.showProfile == true &&
+                        if (theme?.selfMessageTheme?.showProfile
+                                    ?.isShowProfile ==
+                                true &&
                             !isGroup &&
                             !showMessageInCenter &&
-                            widget._message!.sentByMe) ...[
-                          if (IsmChatProperties
-                                  .chatPageProperties.messageBuilder ==
-                              null) ...[
-                            IsmChatDimens.boxWidth4,
-                          ],
+                            widget._message?.sentByMe == true) ...[
+                          // if (IsmChatProperties
+                          //         .chatPageProperties.messageBuilder ==
+                          //     null) ...[
+                          //   IsmChatDimens.boxWidth4,
+                          // ],
                           IsmChatImage.profile(
                             IsmChatConfig.communicationConfig.userConfig
                                     .userProfile ??
