@@ -24,9 +24,8 @@ class IsmChatMessageField extends StatelessWidget {
         builder: (controller) {
           var messageBody = controller.replayMessage?.customType ==
                   IsmChatCustomMessageType.location
-              ? 'Location'
+              ? IsmChatStrings.location
               : controller.replayMessage?.body ?? '';
-
           return Row(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -724,28 +723,39 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
   const _AttachmentIcon();
 
   @override
-  Widget build(BuildContext context) => IconButton(
-        onPressed: () async {
-          if (!controller.conversation!.isChattingAllowed) {
-            controller.showDialogCheckBlockUnBlock();
-          } else {
-            if (await IsmChatProperties
-                    .chatPageProperties.messageAllowedConfig?.isMessgeAllowed
-                    ?.call(Get.context!,
-                        Get.find<IsmChatPageController>().conversation!) ??
-                true) {
-              await Get.bottomSheet(
-                const IsmChatAttachmentCard(),
-                enterBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
-                exitBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
-                elevation: 0,
-              );
-            }
-          }
-        },
-        color: IsmChatConfig
-                .chatTheme.chatPageTheme?.textFiledThemData?.attchmentColor ??
-            IsmChatConfig.chatTheme.primaryColor,
-        icon: const Icon(Icons.attach_file_rounded),
+  Widget build(BuildContext context) => Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (IsmChatProperties.chatPageProperties.messageFieldSuffix !=
+              null) ...[
+            IsmChatProperties.chatPageProperties.messageFieldSuffix!
+          ],
+          IconButton(
+            onPressed: () async {
+              if (!controller.conversation!.isChattingAllowed) {
+                controller.showDialogCheckBlockUnBlock();
+              } else {
+                if (await IsmChatProperties.chatPageProperties
+                        .messageAllowedConfig?.isMessgeAllowed
+                        ?.call(Get.context!,
+                            Get.find<IsmChatPageController>().conversation!) ??
+                    true) {
+                  await Get.bottomSheet(
+                    const IsmChatAttachmentCard(),
+                    enterBottomSheetDuration:
+                        IsmChatConstants.bottomSheetDuration,
+                    exitBottomSheetDuration:
+                        IsmChatConstants.bottomSheetDuration,
+                    elevation: 0,
+                  );
+                }
+              }
+            },
+            color: IsmChatConfig.chatTheme.chatPageTheme?.textFiledThemData
+                    ?.attchmentColor ??
+                IsmChatConfig.chatTheme.primaryColor,
+            icon: const Icon(Icons.attach_file_rounded),
+          ),
+        ],
       );
 }

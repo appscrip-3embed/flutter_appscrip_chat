@@ -378,6 +378,7 @@ class IsmChatPageController extends GetxController
   var _cameras = <CameraDescription>[];
 
   late CameraController _frontCameraController;
+
   late CameraController _backCameraController;
 
   LayerLink messageHoldLink = LayerLink();
@@ -1159,6 +1160,8 @@ class IsmChatPageController extends GetxController
         if (messageFieldFocusNode.hasFocus) {
           showEmojiBoard = false;
         }
+        IsmChatProperties.chatPageProperties.meessageFieldFocusNode
+            ?.call(Get.context!, conversation!, messageFieldFocusNode.hasFocus);
       },
     );
   }

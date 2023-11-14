@@ -14,13 +14,7 @@ class ChatListController extends GetxController {
 
   UserDetailsModel userDetails = UserDetailsModel();
 
-  final RxBool _chatPageVisible = false.obs;
-  bool get chatPageVisible => _chatPageVisible.value;
-  set chatPageVisible(bool value) => _chatPageVisible.value = value;
-
-  final RxBool _firstTapConversation = false.obs;
-  bool get firstTapConversation => _firstTapConversation.value;
-  set firstTapConversation(bool value) => _firstTapConversation.value = value;
+  bool isBottomVisibile = true;
 
   @override
   void onInit() {

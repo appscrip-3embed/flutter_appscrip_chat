@@ -12,12 +12,18 @@ class IsmChatPageProperties {
     this.messageAllowedConfig,
     this.onForwardTap,
     this.emojiIcon,
+    this.meessageFieldFocusNode,
+    this.messageFieldSuffix,
   });
 
   final Widget? placeholder;
 
   /// Provide this widget show emoji icon in message type input filed
   final Widget? emojiIcon;
+
+  /// It is an optional parameter you can provide any widget
+  /// You can pass tap handler on this widget for any uses
+  final Widget? messageFieldSuffix;
 
   final MessageWidgetBuilder? messageBuilder;
 
@@ -35,9 +41,11 @@ class IsmChatPageProperties {
 
   final IsmChatPageHeaderProperties? header;
 
-  /// It is an optional parameter you can you for meessage send allow or not
+  /// It is an optional parameter you can use for meessage send allow or not
   final MessageAllowedConfig? messageAllowedConfig;
 
+  /// It is an optional parameter you can use for attachments configuration
+  /// you can use for size and how to show per Lines
   final AttachmentConfig? attachmentConfig;
 
   /// Required parameter
@@ -50,4 +58,8 @@ class IsmChatPageProperties {
   ///
   /// `IsmChatConversationModel` gives data of current chat, it could be used for local storage or state variables
   final ConversationVoidCallback? onForwardTap;
+
+  /// It is an optional parameter for Message send text fieled
+  /// You can check keyboard open or not with this parameter
+  final MeessageFieldFocusNode? meessageFieldFocusNode;
 }

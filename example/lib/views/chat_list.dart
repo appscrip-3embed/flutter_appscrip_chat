@@ -50,6 +50,23 @@ class ChatList extends StatelessWidget {
               ),
             ),
             chatPageProperties: IsmChatPageProperties(
+              // header: IsmChatPageHeaderProperties(
+              //   bottom: controller.isBottomVisibile
+              //       ? (p0, p1) {
+              //           return const PreferredSize(
+              //             preferredSize: Size.fromHeight(200),
+              //             child: ColoredBox(
+              //               color: AppColors.primaryColorDark,
+              //             ),
+              //           );
+              //         }
+              //       : null,
+              // ),
+              // meessageFieldFocusNode: (_, coverstaion, value) {
+              //   IsmChatLog.info(value);
+              //   controller.isBottomVisibile = !controller.isBottomVisibile;
+              //   controller.update();
+              // },
               placeholder: IsmChatEmptyView(
                 icon: Icon(
                   Icons.chat_outlined,
@@ -122,6 +139,11 @@ class ChatList extends StatelessWidget {
               isSlidableEnable: (_, conversation) {
                 return true;
               },
+              // cardElementBuilders: const IsmChatCardProperties(
+              // onProfileTap: (p0, p1) {
+              //   IsmChatLog.error('Yes i am tap');
+              // },
+              // )
 
               // endActionSlidableEnable: (p0, p1) => true,
               // startActionSlidableEnable: (p0, p1) => true,

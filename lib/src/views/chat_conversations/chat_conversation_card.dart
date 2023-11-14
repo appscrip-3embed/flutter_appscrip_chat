@@ -13,6 +13,7 @@ class IsmChatConversationCard extends StatefulWidget {
     this.profileImageUrl,
     this.subtitle,
     this.isShowBackgroundColor,
+    this.onProfileTap,
     super.key,
   });
 
@@ -25,6 +26,7 @@ class IsmChatConversationCard extends StatefulWidget {
   final ConversationWidgetCallback? subtitleBuilder;
   final ConversationStringCallback? subtitle;
   final bool? isShowBackgroundColor;
+  final ConversationVoidCallback? onProfileTap;
 
   @override
   State<IsmChatConversationCard> createState() =>
@@ -74,18 +76,26 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
                       width: IsmChatDimens.fifty,
                     ),
                   ] else ...[
-                    widget.profileImageBuilder?.call(
-                            context,
-                            widget.conversation,
-                            widget.conversation.profileUrl) ??
-                        IsmChatImage.profile(
-                          widget.profileImageUrl?.call(
-                                  context,
-                                  widget.conversation,
-                                  widget.conversation.profileUrl) ??
-                              widget.conversation.profileUrl,
-                          name: widget.conversation.chatName,
-                        ),
+                    IsmChatTapHandler(
+                      onTap: widget.onProfileTap != null
+                          ? () {
+                              widget.onProfileTap
+                                  ?.call(context, widget.conversation);
+                            }
+                          : null,
+                      child: widget.profileImageBuilder?.call(
+                              context,
+                              widget.conversation,
+                              widget.conversation.profileUrl) ??
+                          IsmChatImage.profile(
+                            widget.profileImageUrl?.call(
+                                    context,
+                                    widget.conversation,
+                                    widget.conversation.profileUrl) ??
+                                widget.conversation.profileUrl,
+                            name: widget.conversation.chatName,
+                          ),
+                    ),
                   ],
                   if (widget.conversation.conversationType ==
                       IsmChatConversationType.open) ...[
@@ -120,7 +130,7 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
                                     widget.conversation.profileUrl) ??
                                 widget.conversation.profileUrl,
                             name: widget.conversation.chatName,
-                            dimensions: 45,
+                            dimensions: IsmChatDimens.fortyFive,
                           ),
                     ),
                   ],

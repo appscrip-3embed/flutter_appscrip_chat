@@ -180,6 +180,8 @@ class _ConversationList extends StatelessWidget {
                           ),
                 child: Obx(
                   () => IsmChatConversationCard(
+                    onProfileTap: IsmChatProperties.conversationProperties
+                        .cardElementBuilders?.onProfileTap,
                     isShowBackgroundColor: Responsive.isWebAndTablet(context)
                         ? controller.currentConversationId ==
                             conversation.conversationId
