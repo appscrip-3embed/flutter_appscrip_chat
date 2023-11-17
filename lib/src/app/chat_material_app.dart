@@ -381,12 +381,15 @@ class IsmChatApp extends StatelessWidget {
     required IsmChatConversationModel ismChatConversation,
     void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
     Duration duration = const Duration(milliseconds: 100),
+    bool isShowLoader = true,
   }) async {
-    IsmChatUtility.showLoader();
+    if (isShowLoader) {
+      IsmChatUtility.showLoader();
 
-    await Future.delayed(duration);
+      await Future.delayed(duration);
 
-    IsmChatUtility.closeLoader();
+      IsmChatUtility.closeLoader();
+    }
 
     if (!Get.isRegistered<IsmChatConversationsController>()) {
       IsmChatCommonBinding().dependencies();
