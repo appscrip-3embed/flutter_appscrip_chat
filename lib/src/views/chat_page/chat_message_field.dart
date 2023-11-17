@@ -22,11 +22,7 @@ class IsmChatMessageField extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
         builder: (controller) {
-          var messageBody = controller.replayMessage?.customType ==
-                  IsmChatCustomMessageType.location
-              ? 'Location'
-              : controller.replayMessage?.body ?? '';
-
+          var messageBody = controller.getMessageBody(controller.replayMessage);
           return Row(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,

@@ -2159,4 +2159,14 @@ class IsmChatPageController extends GetxController
       IsmChatLog.error('Error downloading :- $e\n$st');
     }
   }
+
+  String getMessageBody(IsmChatMessageModel? replayMessage) {
+    if (replayMessage?.customType == IsmChatCustomMessageType.location) {
+      return IsmChatStrings.location;
+    } else if (replayMessage?.customType == IsmChatCustomMessageType.contact) {
+      return IsmChatStrings.contact;
+    } else {
+      return replayMessage?.body ?? '';
+    }
+  }
 }
