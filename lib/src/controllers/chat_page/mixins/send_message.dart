@@ -816,7 +816,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var contactMessage = IsmChatMessageModel(
-        body: jsonEncode(contacts.map((e) => e.toJson()).toList()),
+        body: jsonEncode(contacts
+            .map((e) => e.toJson(withPhoto: false, withThumbnail: false))
+            .toList()),
         conversationId: conversationId,
         senderInfo: _controller.currentUser,
         customType: IsmChatCustomMessageType.contact,

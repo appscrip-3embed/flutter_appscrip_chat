@@ -174,4 +174,8 @@ class IsmChatStrings {
 
   static const String thisPhoneNumberNotonChat =
       'This phone number is not on chat';
+
+  static const String location = 'Location';
+
+  static const String contact = 'Contact';
 }
