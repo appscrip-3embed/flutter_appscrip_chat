@@ -24,21 +24,36 @@ class IsmChatUtility {
 
   /// Show loader
   static void showLoader() async {
-    var isLoaderOpen = Get.isDialogOpen;
-    if (isLoaderOpen != null) {
-      await Get.dialog<void>(
-        const IsmChatLoadingDialog(),
-        barrierDismissible: false,
-      );
-    }
+    closeLoader();
+    await Get.dialog<void>(
+      const IsmChatLoadingDialog(),
+      barrierDismissible: false,
+    );
   }
 
   static void closeLoader() {
-    var isLoaderOpen = Get.isDialogOpen;
-    if (isLoaderOpen != null) {
+    if (Get.isDialogOpen == true) {
       Get.back(closeOverlays: false, canPop: true);
     }
   }
+
+  // /// Show loader
+  // static void showLoader() async {
+  //   var isLoaderOpen = Get.isDialogOpen;
+  //   if (isLoaderOpen != null) {
+  //     await Get.dialog<void>(
+  //       const IsmChatLoadingDialog(),
+  //       barrierDismissible: false,
+  //     );
+  //   }
+  // }
+
+  // static void closeLoader() {
+  //   var isLoaderOpen = Get.isDialogOpen;
+  //   if (isLoaderOpen != null) {
+  //     Get.back(closeOverlays: false, canPop: true);
+  //   }
+  // }
 
   static Future<void> showErrorDialog(String message) async {
     await Get.dialog(
