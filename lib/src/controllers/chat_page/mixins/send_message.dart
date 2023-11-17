@@ -899,10 +899,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       sentByMe: true,
       metaData: IsmChatMetaData(
         parentMessageBody: _controller.isreplying
-            ? _controller.replayMessage?.customType ==
-                    IsmChatCustomMessageType.location
-                ? 'Location'
-                : _controller.replayMessage?.body
+            ? _controller.getMessageBody(_controller.replayMessage)
             : '',
         parentMessageInitiator:
             _controller.isreplying ? _controller.replayMessage?.sentByMe : null,

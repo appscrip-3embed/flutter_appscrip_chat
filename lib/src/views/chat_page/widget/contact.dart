@@ -136,7 +136,8 @@ class IsmChatContactView extends StatelessWidget {
                                           width: IsmChatDimens.forty,
                                           height: IsmChatDimens.forty,
                                           child: IsmChatImage.profile(
-                                            user.contact.photo != null
+                                            user.contact.photo?.isNotEmpty ==
+                                                    true
                                                 ? user.contact.photo!.toString()
                                                 : '',
                                             name: user.contact.displayName,
@@ -278,7 +279,7 @@ class IsmChatContactView extends StatelessWidget {
                                   },
                                   dense: true,
                                   leading: IsmChatImage.profile(
-                                    user.contact.photo != null
+                                    user.contact.photo?.isNotEmpty == true
                                         ? user.contact.photo!.toString()
                                         : '',
                                     name: user.contact.displayName,
