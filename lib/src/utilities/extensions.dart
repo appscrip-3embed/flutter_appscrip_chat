@@ -201,20 +201,6 @@ extension DateConvertor on int {
     return date.toDateString();
   }
 
-  // String toMessageMonthString() {
-  //   if (this == 0 || this == -1) {
-  //     return '';
-  //   }
-  //   var now = DateTime.now();
-  //   var date = toDate();
-  //   if (now.isSameMonth(date)) {
-  //     return 'This Month';
-  //   }
-  //     late DateFormat dateFormat;
-  //     dateFormat = DateFormat('yMMMM');
-  //     return dateFormat.format(date);
-  // }
-
   String toMessageMonthString() {
     if (this == 0 || this == -1) {
       return '';
