@@ -35,8 +35,9 @@ class IsmChatContactMessage extends StatelessWidget {
                             ? message.contacts.length
                             : 3, (index) {
                       var data = message.contacts[index];
+                      IsmChatLog.error(data.photo);
                       if (index == 0) {
-                        return data.photo != null
+                        return data.photo?.isNotEmpty == true
                             ? IsmChatImage.profile(
                                 (data.photo).toString(),
                                 name: data.displayName,
@@ -48,7 +49,7 @@ class IsmChatContactMessage extends StatelessWidget {
 
                       return Positioned(
                         left: index * IsmChatDimens.fifteen,
-                        child: data.photo != null
+                        child: data.photo?.isNotEmpty == true
                             ? IsmChatImage.profile(
                                 (data.photo).toString(),
                                 name: data.displayName,

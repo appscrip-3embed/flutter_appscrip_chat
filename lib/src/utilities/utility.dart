@@ -268,17 +268,6 @@ class IsmChatUtility {
     return false;
   }
 
-  // void _handleInvalidPermissions(PermissionStatus permissionStatus) {
-  //   if (permissionStatus == PermissionStatus.denied) {
-  //     final snackBar = SnackBar(content: Text('Access to contact data denied'));
-  //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  //   } else if (permissionStatus == PermissionStatus.permanentlyDenied) {
-  //     final snackBar =
-  //         SnackBar(content: Text('Contact data not available on device'));
-  //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  //   }
-  // }
-
   static Widget circularProgressBar(
           [Color? backgroundColor, Color? animatedColor]) =>
       DecoratedBox(
@@ -316,42 +305,4 @@ class IsmChatUtility {
       await launchUrl(sms);
     }
   }
-
-  // static Future<PdfPageImage?> getImageFromPdfWithFile(String path) async {
-  //   final document = await PdfDocument.openFile(path);
-
-  //   final page = await document.getPage(1);
-
-  //   final image = await page.render(
-  //     width: page.width, //decrement for less quality
-  //     height: page.height,
-  //     format: PdfPageImageFormat.jpeg,
-  //     backgroundColor: '#ffffff',
-
-  //     // Crop rect in image for render
-  //     //cropRect: Rect.fromLTRB(left, top, right, bottom),
-  //   );
-  //   await document.close();
-
-  //   return image;
-  // }
-
-  // static Future<PdfPageImage?> getImageFromPdfWithUrl(String url) async {
-  //   final document = await PdfDocument.openData(InternetFile.get(url));
-
-  //   final page = await document.getPage(1);
-
-  //   final image = await page.render(
-  //     width: page.width * 2, //decrement for less quality
-  //     height: page.height * 2,
-  //     format: PdfPageImageFormat.jpeg,
-  //     backgroundColor: '#ffffff',
-
-  //     // Crop rect in image for renderx
-  //     //cropRect: Rect.fromLTRB(left, top, right, bottom),
-  //   );
-  //   await document.close();
-
-  //   return image;
-  // }
 }
