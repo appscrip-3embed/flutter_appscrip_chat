@@ -83,8 +83,7 @@ class _MemeroyImage extends StatelessWidget {
     if (imageUrl.isNotEmpty) {
       bytes = imageUrl.strigToUnit8List;
     }
-
-    return bytes == null
+    return bytes == null || bytes.isEmpty
         ? Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
