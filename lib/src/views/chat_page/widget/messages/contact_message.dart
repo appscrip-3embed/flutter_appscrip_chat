@@ -35,7 +35,7 @@ class IsmChatContactMessage extends StatelessWidget {
                             ? message.contacts.length
                             : 3, (index) {
                       var data = message.contacts[index];
-                      IsmChatLog.error(data.photo);
+
                       if (index == 0) {
                         return data.photo?.isNotEmpty == true
                             ? IsmChatImage.profile(

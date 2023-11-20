@@ -233,6 +233,13 @@ extension DateConvertor on int {
 
     return dateFormat.format(timestamp);
   }
+
+  String get getTime {
+    final timeStamp = DateTime.fromMillisecondsSinceEpoch(this);
+    final time = DateFormat.jm().format(timeStamp);
+    final monthDay = DateFormat.MMMd().format(timeStamp);
+    return '$monthDay, $time';
+  }
 }
 
 extension DateFormats on DateTime {

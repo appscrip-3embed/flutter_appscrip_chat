@@ -51,7 +51,7 @@ dependencies:
   mqtt_client: ^10.0.0
   open_filex: ^4.3.2
   path_provider: ^2.0.13
-  pdfx: ^2.4.0
+  pdfx: ^2.5.0
   permission_handler: ^11.0.1
   photo_view: ^0.14.0
   pull_to_refresh: ^2.0.0

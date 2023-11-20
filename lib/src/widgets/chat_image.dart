@@ -156,10 +156,8 @@ class _NetworkImage extends StatelessWidget {
                   child: CircularProgressIndicator.adaptive(),
                 ),
         ),
-        errorWidget: (context, url, error) {
-          IsmChatLog.error('ImageError - $url\n$error');
-          return _ErrorImage(isProfileImage: _isProfileImage, name: _name);
-        },
+        errorWidget: (context, url, error) =>
+            _ErrorImage(isProfileImage: _isProfileImage, name: _name),
       );
 }
 

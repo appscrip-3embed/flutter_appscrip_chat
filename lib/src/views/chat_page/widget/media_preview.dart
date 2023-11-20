@@ -65,11 +65,7 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
     super.initState();
     initiated = widget._initiated ?? false;
     mediaIndex = widget._mediaIndex ?? 0;
-    final timeStamp =
-        DateTime.fromMillisecondsSinceEpoch(widget._mediaTime ?? 0);
-    final time = DateFormat.jm().format(timeStamp);
-    final monthDay = DateFormat.MMMd().format(timeStamp);
-    mediaTime = '$monthDay, $time';
+    mediaTime = (widget._mediaTime ?? 0).getTime;
   }
 
   @override
