@@ -33,6 +33,10 @@ class IsmChatMqttController extends GetxController {
   List<IsmChatTypingModel> get typingUsers => _typingUsers;
   set typingUsers(List<IsmChatTypingModel> value) => _typingUsers.value = value;
 
+  final RxBool _isAppBackground = false.obs;
+  bool get isAppInBackground => _isAppBackground.value;
+  set isAppInBackground(bool value) => _isAppBackground.value = value;
+
   var actionStreamController =
       StreamController<Map<String, dynamic>>.broadcast();
 
@@ -466,13 +470,14 @@ class IsmChatMqttController extends GetxController {
     if (chatController.conversation?.conversationId != message.conversationId) {
       return;
     }
-
     unawaited(chatController.getMessagesFromDB(message.conversationId!));
     await Future.delayed(const Duration(milliseconds: 30));
-    await chatController.readSingleMessage(
-      conversationId: message.conversationId!,
-      messageId: message.messageId!,
-    );
+    if (isAppInBackground == false) {
+      await chatController.readSingleMessage(
+        conversationId: message.conversationId!,
+        messageId: message.messageId!,
+      );
+    }
   }
 
   void _handleLocalNotification(IsmChatMessageModel message) {

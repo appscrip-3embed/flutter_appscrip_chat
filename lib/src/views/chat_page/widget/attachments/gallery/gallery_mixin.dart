@@ -38,10 +38,12 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
         if (IsmChatConstants.imageExtensions
             .contains(file!.path.split('.').last)) {
           ismChatPageController.listOfAssetsPath.add(
-            AttachmentModel(
-              mediaUrl: file.path.toString(),
-              attachmentType: IsmChatMediaType.image,
-            ),
+            AttachmentCaptionModel(
+                caption: '',
+                attachmentModel: AttachmentModel(
+                  mediaUrl: file.path.toString(),
+                  attachmentType: IsmChatMediaType.image,
+                )),
           );
         } else {
           var thumbTempPath = await VideoCompress.getFileThumbnail(
@@ -51,17 +53,22 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
           );
 
           ismChatPageController.listOfAssetsPath.add(
-            AttachmentModel(
-              thumbnailUrl: thumbTempPath.path,
-              mediaUrl: file.path.toString(),
-              attachmentType: IsmChatMediaType.video,
-            ),
+            AttachmentCaptionModel(
+                caption: '',
+                attachmentModel: AttachmentModel(
+                  thumbnailUrl: thumbTempPath.path,
+                  mediaUrl: file.path.toString(),
+                  attachmentType: IsmChatMediaType.video,
+                )),
           );
         }
       }
       dataSize = await IsmChatUtility.fileToSize(
         File(ismChatPageController
-            .listOfAssetsPath[ismChatPageController.assetsIndex].mediaUrl!),
+                .listOfAssetsPath[ismChatPageController.assetsIndex]
+                .attachmentModel
+                .mediaUrl ??
+            ''),
       );
     } else {
       Get.back<void>();
@@ -106,27 +113,40 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                 ),
                 actions: [
                   IsmChatConstants.imageExtensions.contains(controller
-                          .listOfAssetsPath[controller.assetsIndex].mediaUrl!
-                          .split('.')
-                          .last)
+                              .listOfAssetsPath[controller.assetsIndex]
+                              .attachmentModel
+                              .mediaUrl ??
+                          ''.split('.').last)
                       ? Row(
                           children: [
                             InkWell(
                               onTap: () async {
                                 await controller.cropImage(File(controller
-                                    .listOfAssetsPath[controller.assetsIndex]
-                                    .mediaUrl!));
+                                        .listOfAssetsPath[
+                                            controller.assetsIndex]
+                                        .attachmentModel
+                                        .mediaUrl ??
+                                    ''));
+
                                 controller.listOfAssetsPath[
                                     controller
                                         .assetsIndex] = controller
                                     .listOfAssetsPath[controller.assetsIndex]
                                     .copyWith(
-                                        mediaUrl: controller.imagePath?.path);
+                                  attachmentModel: controller
+                                      .listOfAssetsPath[controller.assetsIndex]
+                                      .attachmentModel
+                                      .copyWith(
+                                          mediaUrl: controller.imagePath?.path),
+                                );
+
                                 dataSize = await IsmChatUtility.fileToSize(
                                   File(ismChatPageController
-                                      .listOfAssetsPath[
-                                          ismChatPageController.assetsIndex]
-                                      .mediaUrl!),
+                                          .listOfAssetsPath[
+                                              ismChatPageController.assetsIndex]
+                                          .attachmentModel
+                                          .mediaUrl ??
+                                      ''),
                                 );
                               },
                               child: const Icon(
@@ -143,20 +163,30 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                                       controller
                                           .listOfAssetsPath[
                                               controller.assetsIndex]
+                                          .attachmentModel
                                           .mediaUrl!,
                                     ),
                                   ),
                                 );
+
                                 controller.listOfAssetsPath[
                                     controller
                                         .assetsIndex] = controller
                                     .listOfAssetsPath[controller.assetsIndex]
-                                    .copyWith(mediaUrl: mediaFile!.path);
+                                    .copyWith(
+                                  attachmentModel: controller
+                                      .listOfAssetsPath[controller.assetsIndex]
+                                      .attachmentModel
+                                      .copyWith(
+                                          mediaUrl: controller.imagePath?.path),
+                                );
                                 dataSize = await IsmChatUtility.fileToSize(
                                   File(ismChatPageController
-                                      .listOfAssetsPath[
-                                          ismChatPageController.assetsIndex]
-                                      .mediaUrl!),
+                                          .listOfAssetsPath[
+                                              ismChatPageController.assetsIndex]
+                                          .attachmentModel
+                                          .mediaUrl ??
+                                      ''),
                                 );
                               },
                               child: const Icon(
@@ -190,10 +220,11 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                                   index: controller.assetsIndex,
                                   file: File(
                                     controller
-                                        .listOfAssetsPath[
-                                            controller.assetsIndex]
-                                        .mediaUrl
-                                        .toString(),
+                                            .listOfAssetsPath[
+                                                controller.assetsIndex]
+                                            .attachmentModel
+                                            .mediaUrl ??
+                                        '',
                                   ),
                                   durationInSeconds: 30,
                                 ));
@@ -202,12 +233,20 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                                     controller
                                         .assetsIndex] = controller
                                     .listOfAssetsPath[controller.assetsIndex]
-                                    .copyWith(mediaUrl: mediaFile?.path);
+                                    .copyWith(
+                                  attachmentModel: controller
+                                      .listOfAssetsPath[controller.assetsIndex]
+                                      .attachmentModel
+                                      .copyWith(
+                                          mediaUrl: controller.imagePath?.path),
+                                );
                                 dataSize = await IsmChatUtility.fileToSize(
                                   File(ismChatPageController
-                                      .listOfAssetsPath[
-                                          ismChatPageController.assetsIndex]
-                                      .mediaUrl!),
+                                          .listOfAssetsPath[
+                                              ismChatPageController.assetsIndex]
+                                          .attachmentModel
+                                          .mediaUrl ??
+                                      ''),
                                 );
                               },
                               icon: const Icon(
@@ -242,25 +281,29 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                   fit: StackFit.expand,
                   children: [
                     IsmChatConstants.imageExtensions.contains(controller
-                            .listOfAssetsPath[controller.assetsIndex].mediaUrl!
+                            .listOfAssetsPath[controller.assetsIndex]
+                            .attachmentModel
+                            .mediaUrl!
                             .split('.')
                             .last)
                         ? SizedBox(
                             height: IsmChatDimens.percentHeight(1),
                             child: Image.file(
                               File(controller
-                                  .listOfAssetsPath[controller.assetsIndex]
-                                  .mediaUrl
-                                  .toString()),
+                                      .listOfAssetsPath[controller.assetsIndex]
+                                      .attachmentModel
+                                      .mediaUrl ??
+                                  ''),
                               fit: BoxFit.contain,
                             ),
                           )
                         : VideoViewPage(
                             showVideoPlaying: true,
                             path: controller
-                                .listOfAssetsPath[controller.assetsIndex]
-                                .mediaUrl
-                                .toString(),
+                                    .listOfAssetsPath[controller.assetsIndex]
+                                    .attachmentModel
+                                    .mediaUrl ??
+                                '',
                           ),
                     Positioned(
                       bottom: IsmChatDimens.ten,
@@ -284,9 +327,11 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                                 controller.isVideoVisible = false;
                                 dataSize = await IsmChatUtility.fileToSize(
                                   File(ismChatPageController
-                                      .listOfAssetsPath[
-                                          ismChatPageController.assetsIndex]
-                                      .mediaUrl!),
+                                          .listOfAssetsPath[
+                                              ismChatPageController.assetsIndex]
+                                          .attachmentModel
+                                          .mediaUrl ??
+                                      ''),
                                 );
                               },
                               child: Stack(
@@ -305,14 +350,17 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                                             : null),
                                     width: IsmChatDimens.sixty,
                                     child: IsmChatImage(
-                                      media.attachmentType ==
+                                      media.attachmentModel.attachmentType ==
                                               IsmChatMediaType.video
-                                          ? media.thumbnailUrl.toString()
-                                          : media.mediaUrl.toString(),
+                                          ? media.attachmentModel
+                                                  .thumbnailUrl ??
+                                              ''
+                                          : media.attachmentModel.mediaUrl ??
+                                              '',
                                       isNetworkImage: false,
                                     ),
                                   ),
-                                  if (media.attachmentType ==
+                                  if (media.attachmentModel.attachmentType ==
                                       IsmChatMediaType.video)
                                     Container(
                                       alignment: Alignment.center,

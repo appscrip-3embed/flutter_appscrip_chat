@@ -176,4 +176,5 @@ class IsmChatStrings {
       'This phone number is not on chat';
 
   static const String contact = 'Contact';
+  static const String addCaption = 'Add a caption...';
 }

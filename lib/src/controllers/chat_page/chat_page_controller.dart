@@ -214,9 +214,10 @@ class IsmChatPageController extends GetxController
   String get backgroundColor => _backgroundColor.value;
   set backgroundColor(String value) => _backgroundColor.value = value;
 
-  final RxList<AttachmentModel> _listOfAssetsPath = <AttachmentModel>[].obs;
-  List<AttachmentModel> get listOfAssetsPath => _listOfAssetsPath;
-  set listOfAssetsPath(List<AttachmentModel> value) =>
+  final RxList<AttachmentCaptionModel> _listOfAssetsPath =
+      <AttachmentCaptionModel>[].obs;
+  List<AttachmentCaptionModel> get listOfAssetsPath => _listOfAssetsPath;
+  set listOfAssetsPath(List<AttachmentCaptionModel> value) =>
       _listOfAssetsPath.value = value;
 
   final RxInt _assetsIndex = 0.obs;
@@ -942,9 +943,12 @@ class IsmChatPageController extends GetxController
       if (IsmChatConstants.imageExtensions
           .contains(file?.path.split('.').last)) {
         listOfAssetsPath.add(
-          AttachmentModel(
-            mediaUrl: file?.path,
-            attachmentType: IsmChatMediaType.image,
+          AttachmentCaptionModel(
+            caption: '',
+            attachmentModel: AttachmentModel(
+              mediaUrl: file?.path,
+              attachmentType: IsmChatMediaType.image,
+            ),
           ),
         );
       } else {
@@ -955,16 +959,19 @@ class IsmChatPageController extends GetxController
         );
 
         listOfAssetsPath.add(
-          AttachmentModel(
-            thumbnailUrl: thumbTempPath.path,
-            mediaUrl: file?.path ?? '',
-            attachmentType: IsmChatMediaType.video,
+          AttachmentCaptionModel(
+            caption: '',
+            attachmentModel: AttachmentModel(
+              thumbnailUrl: thumbTempPath.path,
+              mediaUrl: file?.path ?? '',
+              attachmentType: IsmChatMediaType.video,
+            ),
           ),
         );
       }
     }
     dataSize = await IsmChatUtility.fileToSize(
-      File(listOfAssetsPath[assetsIndex].mediaUrl!),
+      File(listOfAssetsPath[assetsIndex].attachmentModel.mediaUrl ?? ''),
     );
   }
 

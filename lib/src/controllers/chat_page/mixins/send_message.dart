@@ -147,7 +147,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
   void sendMedia() async {
     var isMaxSize = false;
     for (var x in _controller.listOfAssetsPath) {
-      var sizeMedia = await IsmChatUtility.fileToSize(File(x.mediaUrl!));
+      var sizeMedia = await IsmChatUtility.fileToSize(
+          File(x.attachmentModel.mediaUrl ?? ''));
       if (sizeMedia.split(' ').last == 'KB') {
         continue;
       }
@@ -160,7 +161,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
 
     if (isMaxSize == false) {
       Get.back<void>();
-
       sendPhotoAndVideo();
     } else {
       await Get.dialog(
@@ -206,14 +206,15 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             conversationId: _controller.conversation?.conversationId ?? '',
             userId: _controller.conversation?.opponentDetails?.userId ?? '',
             webMediaModel: media,
+            caption: '',
           );
         } else {
           await sendVideo(
-            webMediaModel: media,
-            isThumbnail: true,
-            conversationId: _controller.conversation?.conversationId ?? '',
-            userId: _controller.conversation?.opponentDetails?.userId ?? '',
-          );
+              webMediaModel: media,
+              isThumbnail: true,
+              conversationId: _controller.conversation?.conversationId ?? '',
+              userId: _controller.conversation?.opponentDetails?.userId ?? '',
+              caption: '');
         }
       }
       IsmChatUtility.closeLoader();
@@ -225,18 +226,20 @@ mixin IsmChatPageSendMessageMixin on GetxController {
   void sendPhotoAndVideo() async {
     if (_controller.listOfAssetsPath.isNotEmpty) {
       for (var media in _controller.listOfAssetsPath) {
-        if (media.attachmentType == IsmChatMediaType.image) {
+        if (media.attachmentModel.attachmentType == IsmChatMediaType.image) {
           await sendImage(
-              conversationId: _controller.conversation?.conversationId ?? '',
-              userId: _controller.conversation?.opponentDetails?.userId ?? '',
-              imagePath: File(
-                media.mediaUrl!,
-              ));
+            conversationId: _controller.conversation?.conversationId ?? '',
+            userId: _controller.conversation?.opponentDetails?.userId ?? '',
+            imagePath: File(
+              media.attachmentModel.mediaUrl ?? '',
+            ),
+            caption: media.caption,
+          );
         } else {
           await sendVideo(
-            file: File(media.mediaUrl!),
+            file: File(media.attachmentModel.mediaUrl ?? ''),
             isThumbnail: true,
-            thumbnailFiles: File(media.thumbnailUrl!),
+            thumbnailFiles: File(media.attachmentModel.thumbnailUrl ?? ''),
             conversationId: _controller.conversation?.conversationId ?? '',
             userId: _controller.conversation?.opponentDetails?.userId ?? '',
           );
@@ -488,6 +491,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     required String conversationId,
     required String userId,
     WebMediaModel? webMediaModel,
+    String? caption,
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
@@ -551,6 +555,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       conversationId: conversationId,
       senderInfo: _controller.currentUser,
       customType: IsmChatCustomMessageType.video,
+      metaData: IsmChatMetaData(
+        captionMessage: caption,
+      ),
       attachments: [
         AttachmentModel(
           attachmentType: IsmChatMediaType.video,
@@ -613,11 +620,13 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     );
   }
 
-  Future<void> sendImage(
-      {required String conversationId,
-      required String userId,
-      File? imagePath,
-      WebMediaModel? webMediaModel}) async {
+  Future<void> sendImage({
+    required String conversationId,
+    required String userId,
+    File? imagePath,
+    WebMediaModel? webMediaModel,
+    String? caption,
+  }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null && !_controller.isTemporaryChat) {
@@ -662,6 +671,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       conversationId: conversationId,
       senderInfo: _controller.currentUser,
       customType: IsmChatCustomMessageType.image,
+      metaData: IsmChatMetaData(
+        captionMessage: caption,
+      ),
       attachments: [
         AttachmentModel(
           attachmentType: IsmChatMediaType.image,

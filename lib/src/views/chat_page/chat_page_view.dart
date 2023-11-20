@@ -16,12 +16,37 @@ class IsmChatPageView extends StatefulWidget {
   State<IsmChatPageView> createState() => _IsmChatPageViewState();
 }
 
-class _IsmChatPageViewState extends State<IsmChatPageView> {
+class _IsmChatPageViewState extends State<IsmChatPageView>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     if (!Get.isRegistered<IsmChatPageController>()) {
       IsmChatPageBinding().dependencies();
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    final mqttController = Get.find<IsmChatMqttController>();
+    if (AppLifecycleState.resumed == state) {
+      mqttController.isAppInBackground = false;
+      IsmChatLog.error('app in resumed');
+    }
+    if (AppLifecycleState.paused == state) {
+      mqttController.isAppInBackground = true;
+      IsmChatLog.error('app in backgorund');
+    }
+    if (AppLifecycleState.detached == state) {
+      IsmChatLog.error('app in killed');
     }
   }
 

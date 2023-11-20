@@ -11,32 +11,51 @@ class IsmChatVideoMessage extends StatelessWidget {
   Widget build(BuildContext context) => Stack(
         alignment: Alignment.center,
         children: [
-          SizedBox(
-            height: Responsive.isWebAndTablet(context)
-                ? IsmChatDimens.percentHeight(.3)
-                : kIsWeb
+          Column(
+            children: [
+              SizedBox(
+                height: Responsive.isWebAndTablet(context)
                     ? IsmChatDimens.percentHeight(.3)
-                    : null,
-            child: kIsWeb
-                ? message.attachments?.first.thumbnailUrl?.isValidUrl == true
-                    ? IsmChatImage(
+                    : kIsWeb
+                        ? IsmChatDimens.percentHeight(.3)
+                        : null,
+                child: kIsWeb
+                    ? message.attachments?.first.thumbnailUrl?.isValidUrl ==
+                            true
+                        ? IsmChatImage(
+                            message.attachments?.first.thumbnailUrl ?? '',
+                            isNetworkImage: message
+                                    .attachments?.first.mediaUrl?.isValidUrl ??
+                                false,
+                          )
+                        : Image.memory(
+                            message.attachments?.first.thumbnailUrl!
+                                    .strigToUnit8List ??
+                                Uint8List(0),
+                            fit: BoxFit.cover,
+                          )
+                    : IsmChatImage(
                         message.attachments?.first.thumbnailUrl ?? '',
                         isNetworkImage:
                             message.attachments?.first.mediaUrl?.isValidUrl ??
                                 false,
-                      )
-                    : Image.memory(
-                        message.attachments?.first.thumbnailUrl!
-                                .strigToUnit8List ??
-                            Uint8List(0),
-                        fit: BoxFit.cover,
-                      )
-                : IsmChatImage(
-                    message.attachments?.first.thumbnailUrl ?? '',
-                    isNetworkImage:
-                        message.attachments?.first.mediaUrl?.isValidUrl ??
-                            false,
+                      ),
+              ),
+              if (message.metaData?.captionMessage?.isNotEmpty == true) ...[
+                Container(
+                  padding: IsmChatDimens.edgeInsetsTop5,
+                  width: IsmChatDimens.percentWidth(.6),
+                  child: Text(
+                    message.metaData?.captionMessage ?? '',
+                    style: message.style.copyWith(
+                      fontSize: IsmChatDimens.tharteen,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
                   ),
+                )
+              ]
+            ],
           ),
           Icon(
             Icons.play_circle,
