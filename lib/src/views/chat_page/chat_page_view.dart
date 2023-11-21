@@ -39,6 +39,12 @@ class _IsmChatPageViewState extends State<IsmChatPageView>
     final mqttController = Get.find<IsmChatMqttController>();
     if (AppLifecycleState.resumed == state) {
       mqttController.isAppInBackground = false;
+      controller.readAllMessages(
+        conversationId: controller.conversation?.conversationId ?? '',
+        timestamp: controller.messages.isNotEmpty
+            ? DateTime.now().millisecondsSinceEpoch
+            : controller.conversation?.lastMessageSentAt ?? 0,
+      );
       IsmChatLog.error('app in resumed');
     }
     if (AppLifecycleState.paused == state) {

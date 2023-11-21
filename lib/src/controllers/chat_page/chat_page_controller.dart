@@ -1966,7 +1966,9 @@ class IsmChatPageController extends GetxController
     required int timestamp,
   }) async {
     await viewModel.readAllMessages(
-        conversationId: conversationId, timestamp: timestamp);
+      conversationId: conversationId,
+      timestamp: timestamp,
+    );
   }
 
   Future<void> deleteMessageForEveryone(

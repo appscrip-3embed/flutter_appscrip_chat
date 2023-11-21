@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/controllers/mqtt/clients/mobile_client.dart'
     if (dart.library.html) 'clients/web_client.dart';
@@ -457,8 +456,8 @@ class IsmChatMqttController extends GetxController {
     await IsmChatConfig.dbWrapper!.saveConversation(conversation: conversation);
     unawaited(conversationController.getConversationsFromDB());
     await conversationController.pingMessageDelivered(
-      conversationId: message.conversationId!,
-      messageId: message.messageId!,
+      conversationId: message.conversationId ?? '',
+      messageId: message.messageId ?? '',
     );
 
     _handleUnreadMessages(message.senderInfo?.userId ?? '');
@@ -470,12 +469,12 @@ class IsmChatMqttController extends GetxController {
     if (chatController.conversation?.conversationId != message.conversationId) {
       return;
     }
-    unawaited(chatController.getMessagesFromDB(message.conversationId!));
+    unawaited(chatController.getMessagesFromDB(message.conversationId ?? ''));
     await Future.delayed(const Duration(milliseconds: 30));
     if (isAppInBackground == false) {
       await chatController.readSingleMessage(
-        conversationId: message.conversationId!,
-        messageId: message.messageId!,
+        conversationId: message.conversationId ?? '',
+        messageId: message.messageId ?? '',
       );
     }
   }
@@ -602,12 +601,12 @@ class IsmChatMqttController extends GetxController {
   }
 
   void _handleTypingEvent(IsmChatMqttActionModel actionModel) {
-    if (actionModel.userDetails!.userId ==
+    if (actionModel.userDetails?.userId ==
         _communicationConfig.userConfig.userId) {
       return;
     }
     var user = IsmChatTypingModel(
-      conversationId: actionModel.conversationId!,
+      conversationId: actionModel.conversationId ?? '',
       userName: actionModel.userDetails?.userName ?? '',
     );
     typingUsers.add(user);
