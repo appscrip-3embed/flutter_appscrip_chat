@@ -41,6 +41,7 @@ class IsmChatMqttController extends GetxController {
 
   @override
   void onInit() async {
+    super.onInit();
     _communicationConfig = IsmChatConfig.communicationConfig;
 
     messageTopic =
@@ -50,7 +51,6 @@ class IsmChatMqttController extends GetxController {
     await initializeMqttClient();
     await connectClient();
     unawaited(getChatConversationsUnreadCount());
-    super.onInit();
   }
 
   Future<void> initializeMqttClient() async {
