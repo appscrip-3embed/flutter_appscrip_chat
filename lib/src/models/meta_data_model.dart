@@ -21,6 +21,7 @@ class IsmChatMetaData {
   });
 
   factory IsmChatMetaData.fromMap(Map<String, dynamic> map) => IsmChatMetaData(
+        captionMessage: map['captionMessage'] as String? ?? '',
         replayMessageCustomType: map['replayMessageCustomType'] != null
             ? IsmChatCustomMessageType.fromString(
                 map['replayMessageCustomType'])
