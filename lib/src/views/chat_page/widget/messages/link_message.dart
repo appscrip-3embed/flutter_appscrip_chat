@@ -16,7 +16,7 @@ class IsmChatLinkMessage extends StatelessWidget {
   Widget build(BuildContext context) => ConstrainedBox(
         constraints: BoxConstraints(
           maxWidth: context.width * 0.8,
-          maxHeight: context.height * 0.22,
+          maxHeight: context.height * 0.25,
         ),
         child: Material(
           color: Colors.transparent,
@@ -24,7 +24,7 @@ class IsmChatLinkMessage extends StatelessWidget {
             sentByMe: message.sentByMe,
             link: message.body,
             child: AnyLinkPreview(
-              displayDirection: UIDirection.uiDirectionHorizontal,
+              previewHeight: IsmChatDimens.oneHundredFifty,
               bodyMaxLines: 5,
               link: message.body.convertToValidUrl,
               urlLaunchMode: LaunchMode.externalApplication,
@@ -77,44 +77,46 @@ class _LinkPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IsmChatTapHandler(
         onTap: () => launchUrl(Uri.parse(link.convertToValidUrl)),
-        child: Column(
-          crossAxisAlignment:
-              sentByMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: (sentByMe
-                        ? IsmChatColors.whiteColor
-                        : IsmChatColors.greyColor)
-                    .withOpacity(0.2),
-                borderRadius: BorderRadius.circular(IsmChatDimens.eight),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment:
+                sentByMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: (sentByMe
+                          ? IsmChatColors.whiteColor
+                          : IsmChatColors.greyColor)
+                      .withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(IsmChatDimens.eight),
+                ),
+                padding: IsmChatDimens.edgeInsets8_10,
+                child: child,
               ),
-              padding: IsmChatDimens.edgeInsets8_10,
-              child: child,
-            ),
-            IsmChatDimens.boxHeight4,
-            Padding(
-              padding: IsmChatDimens.edgeInsets4_0,
-              child: FittedBox(
-                child: Text(
-                  link,
-                  style: (sentByMe
-                          ? IsmChatStyles.w400White14
-                          : IsmChatStyles.w400Black14)
-                      .copyWith(
-                    decoration: TextDecoration.underline,
-                    decorationColor: sentByMe
-                        ? IsmChatColors.whiteColor
-                        : IsmChatColors.greyColor,
+              IsmChatDimens.boxHeight4,
+              Padding(
+                padding: IsmChatDimens.edgeInsets4_0,
+                child: FittedBox(
+                  child: Text(
+                    link,
+                    style: (sentByMe
+                            ? IsmChatStyles.w400White14
+                            : IsmChatStyles.w400Black14)
+                        .copyWith(
+                      decoration: TextDecoration.underline,
+                      decorationColor: sentByMe
+                          ? IsmChatColors.whiteColor
+                          : IsmChatColors.greyColor,
+                    ),
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
                   ),
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
 }

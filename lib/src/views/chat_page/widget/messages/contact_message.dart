@@ -10,80 +10,83 @@ class IsmChatContactMessage extends StatelessWidget {
   final IsmChatMessageModel message;
 
   @override
-  Widget build(BuildContext context) => Container(
-        width: message.contacts.length == 1
-            ? IsmChatDimens.oneHundredSeventy
-            : null,
-        decoration: BoxDecoration(
-          color: IsmChatConfig.chatTheme.backgroundColor,
-          borderRadius: BorderRadius.circular(IsmChatDimens.eight),
-        ),
-        padding: IsmChatDimens.edgeInsets10,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  width: message.contacts.length == 1
-                      ? IsmChatDimens.fifty
-                      : IsmChatDimens.seventy,
-                  child: Stack(
-                    children: List.generate(
-                        message.contacts.length <= 3
-                            ? message.contacts.length
-                            : 3, (index) {
-                      var data = message.contacts[index];
+  Widget build(BuildContext context) => Material(
+        color: Colors.transparent,
+        child: Container(
+          width: message.contacts.length == 1
+              ? IsmChatDimens.oneHundredSeventy
+              : null,
+          decoration: BoxDecoration(
+            color: IsmChatConfig.chatTheme.backgroundColor,
+            borderRadius: BorderRadius.circular(IsmChatDimens.eight),
+          ),
+          padding: IsmChatDimens.edgeInsets10,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: message.contacts.length == 1
+                        ? IsmChatDimens.fifty
+                        : IsmChatDimens.seventy,
+                    child: Stack(
+                      children: List.generate(
+                          message.contacts.length <= 3
+                              ? message.contacts.length
+                              : 3, (index) {
+                        var data = message.contacts[index];
 
-                      if (index == 0) {
-                        return data.photo?.isNotEmpty == true
-                            ? IsmChatImage.profile(
-                                (data.photo).toString(),
-                                name: data.displayName,
-                                isNetworkImage: false,
-                                isBytes: true,
-                              )
-                            : const _NoImageWidget();
-                      }
+                        if (index == 0) {
+                          return data.photo?.isNotEmpty == true
+                              ? IsmChatImage.profile(
+                                  (data.photo).toString(),
+                                  name: data.displayName,
+                                  isNetworkImage: false,
+                                  isBytes: true,
+                                )
+                              : const _NoImageWidget();
+                        }
 
-                      return Positioned(
-                        left: index * IsmChatDimens.fifteen,
-                        child: data.photo?.isNotEmpty == true
-                            ? IsmChatImage.profile(
-                                (data.photo).toString(),
-                                name: data.displayName,
-                                isNetworkImage: false,
-                                isBytes: true,
-                              )
-                            : const _NoImageWidget(),
-                      );
-                    }),
+                        return Positioned(
+                          left: index * IsmChatDimens.fifteen,
+                          child: data.photo?.isNotEmpty == true
+                              ? IsmChatImage.profile(
+                                  (data.photo).toString(),
+                                  name: data.displayName,
+                                  isNetworkImage: false,
+                                  isBytes: true,
+                                )
+                              : const _NoImageWidget(),
+                        );
+                      }),
+                    ),
                   ),
-                ),
-                Flexible(
+                  Flexible(
+                    child: Text(
+                      message.contacts.length == 1
+                          ? message.contacts.first.displayName
+                          : '${message.contacts.first.displayName} and ${message.contacts.length - 1} other contact',
+                      style: IsmChatStyles.w600Black14,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  )
+                ],
+              ),
+              const Divider(
+                thickness: 1,
+              ),
+              if (!Responsive.isWebAndTablet(context))
+                Center(
                   child: Text(
-                    message.contacts.length == 1
-                        ? message.contacts.first.displayName
-                        : '${message.contacts.first.displayName} and ${message.contacts.length - 1} other contact',
-                    style: IsmChatStyles.w600Black14,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                    'View ${message.contacts.length != 1 ? 'All' : ''}',
+                    style: IsmChatStyles.w600Black12,
                   ),
                 )
-              ],
-            ),
-            const Divider(
-              thickness: 1,
-            ),
-            if (!Responsive.isWebAndTablet(context))
-              Center(
-                child: Text(
-                  'View ${message.contacts.length != 1 ? 'All' : ''}',
-                  style: IsmChatStyles.w600Black12,
-                ),
-              )
-          ],
+            ],
+          ),
         ),
       );
 }

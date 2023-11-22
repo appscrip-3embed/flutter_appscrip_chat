@@ -177,4 +177,10 @@ class IsmChatStrings {
 
   static const String contact = 'Contact';
   static const String addCaption = 'Add a caption...';
+  static const String sentContact = 'Sent you a Contact';
+  static const String sentLocation = 'Sent you a Location';
+  static const String sentImage = 'Sent you an Image';
+  static const String sentVideo = 'Sent you an Video';
+  static const String sentDoc = 'Sent you an Document';
+  static const String sentAudio = 'Sent you a Audio';
 }

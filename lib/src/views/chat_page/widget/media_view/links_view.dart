@@ -44,7 +44,7 @@ class _IsmLinksViewState extends State<IsmLinksView>
                 ),
               )
             : ListView.separated(
-                physics: const ScrollPhysics(),
+                physics: const ClampingScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: storeWidgetLinksList.length,
                 separatorBuilder: (_, index) => IsmChatDimens.boxHeight10,
@@ -62,28 +62,31 @@ class _IsmLinksViewState extends State<IsmLinksView>
                       ),
                       IsmChatDimens.boxHeight10,
                       ListView.separated(
-                        physics: const ScrollPhysics(),
+                        physics: const ClampingScrollPhysics(),
                         addAutomaticKeepAlives: true,
                         shrinkWrap: true,
                         itemCount: value.length,
-                        itemBuilder: (context, valueIndex) => Container(
-                          padding: IsmChatDimens.edgeInsets10,
-                          width: context.width * 0.8,
-                          child: AnyLinkPreview(
-                            displayDirection: UIDirection.uiDirectionHorizontal,
-                            bodyMaxLines: 5,
-                            urlLaunchMode: LaunchMode.externalApplication,
-                            removeElevation: true,
-                            bodyTextOverflow: TextOverflow.ellipsis,
-                            cache: const Duration(minutes: 5),
-                            link: value[valueIndex].body.convertToValidUrl,
-                            backgroundColor: Colors.transparent,
-                            titleStyle: IsmChatStyles.w500Black16,
-                            errorWidget: Text(
-                                IsmChatStrings.errorLoadingPreview,
-                                style: IsmChatStyles.w400White12),
-                            placeholderWidget: Text('Loading preview...',
-                                style: IsmChatStyles.w400White12),
+                        itemBuilder: (context, valueIndex) => IsmChatTapHandler(
+                          child: Container(
+                            padding: IsmChatDimens.edgeInsets10,
+                            width: context.width * 0.8,
+                            child: AnyLinkPreview(
+                              displayDirection:
+                                  UIDirection.uiDirectionHorizontal,
+                              bodyMaxLines: 4,
+                              urlLaunchMode: LaunchMode.externalApplication,
+                              removeElevation: true,
+                              bodyTextOverflow: TextOverflow.ellipsis,
+                              cache: const Duration(minutes: 5),
+                              link: value[valueIndex].body.convertToValidUrl,
+                              backgroundColor: Colors.transparent,
+                              titleStyle: IsmChatStyles.w500Black16,
+                              errorWidget: Text(
+                                  IsmChatStrings.errorLoadingPreview,
+                                  style: IsmChatStyles.w400White12),
+                              placeholderWidget: Text('Loading preview...',
+                                  style: IsmChatStyles.w400White12),
+                            ),
                           ),
                         ),
                         separatorBuilder: (_, index) =>
@@ -93,39 +96,5 @@ class _IsmLinksViewState extends State<IsmLinksView>
                   );
                 },
               ),
-      );
-}
-
-class _LinkPreview extends StatelessWidget {
-  const _LinkPreview({
-    required this.child,
-    required this.link,
-  });
-
-  final Widget child;
-  final String link;
-
-  @override
-  Widget build(BuildContext context) => IsmChatTapHandler(
-        onTap: () => launchUrl(Uri.parse(link.convertToValidUrl)),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: IsmChatDimens.edgeInsets8_10,
-              child: child,
-            ),
-            IsmChatDimens.boxHeight4,
-            Padding(
-              padding: IsmChatDimens.edgeInsets4_0,
-              child: Text(
-                link,
-                style: IsmChatStyles.w500GreyLight12,
-                softWrap: true,
-                maxLines: null,
-              ),
-            ),
-          ],
-        ),
       );
 }

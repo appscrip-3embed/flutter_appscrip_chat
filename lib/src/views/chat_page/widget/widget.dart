@@ -27,3 +27,4 @@ export 'user_info.dart';
 export 'wallpaper_preview.dart';
 export 'web_widget/web_media_preview.dart';
 export 'web_widget/web_widget.dart';
+export 'show_profile.dart';

@@ -51,7 +51,14 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
               )
       ..setLooping(false)
       ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        _controller.addListener(() {
+          if (_controller.value.isBuffering == true) {
+            updateState();
+          } else {
+            updateState();
+          }
+        });
+
         _controller.pause();
       });
   }
@@ -77,9 +84,15 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
             : widget.path.isValidUrl
                 ? VideoPlayerController.network(widget.path)
                 : VideoPlayerController.file(File(widget.path))
-          // ..setLooping(true)
           ..initialize().then((_) {
-            // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+            _controller.addListener(() {
+              if (_controller.value.isBuffering == true) {
+                updateState();
+              } else {
+                updateState();
+              }
+            });
+
             _controller.pause();
           });
       });

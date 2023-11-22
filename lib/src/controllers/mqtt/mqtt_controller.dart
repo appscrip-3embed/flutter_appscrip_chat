@@ -43,7 +43,6 @@ class IsmChatMqttController extends GetxController {
   void onInit() async {
     super.onInit();
     _communicationConfig = IsmChatConfig.communicationConfig;
-
     messageTopic =
         '/${_communicationConfig.projectConfig.accountId}/${_communicationConfig.projectConfig.projectId}/Message/${_communicationConfig.userConfig.userId}';
     statusTopic =

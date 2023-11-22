@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/models/models.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/foundation.dart';
 
 class IsmChatMetaData {
@@ -17,11 +17,14 @@ class IsmChatMetaData {
     this.customType,
     this.assetList,
     this.duration,
-    this.captionMessage,
+    this.replayMessageCustomType,
   });
 
   factory IsmChatMetaData.fromMap(Map<String, dynamic> map) => IsmChatMetaData(
-        captionMessage: map['captionMessage'] as String? ?? '',
+        replayMessageCustomType: map['replayMessageCustomType'] != null
+            ? IsmChatCustomMessageType.fromString(
+                map['replayMessageCustomType'])
+            : null,
         country: map['country'] as String? ?? '',
         parentMessageBody: map['parentMessageBody'] as String? ?? '',
         locationAddress: map['locationAddress'] as String? ?? '',
@@ -50,8 +53,12 @@ class IsmChatMetaData {
         duration: Duration(seconds: map['duration'] as int? ?? 0),
       );
 
-  factory IsmChatMetaData.fromJson(String source) =>
-      IsmChatMetaData.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory IsmChatMetaData.fromJson(String? source) {
+    if (source?.isEmpty == true || source == null) {
+      return IsmChatMetaData();
+    }
+    return IsmChatMetaData.fromMap(jsonDecode(source) as Map<String, dynamic>);
+  }
   final String? country;
   final String? parentMessageBody;
   final String? locationAddress;
@@ -64,6 +71,7 @@ class IsmChatMetaData {
   final List<Map<String, IsmChatBackgroundModel>>? assetList;
   final Duration? duration;
   final String? captionMessage;
+  final IsmChatCustomMessageType? replayMessageCustomType;
 
   IsmChatMetaData copyWith({
     String? country,
@@ -78,6 +86,7 @@ class IsmChatMetaData {
     List<Map<String, IsmChatBackgroundModel>>? assetList,
     Duration? duration,
     String? captionMessage,
+    IsmChatCustomMessageType? replayMessageCustomType,
   }) =>
       IsmChatMetaData(
         country: country ?? this.country,
@@ -93,6 +102,8 @@ class IsmChatMetaData {
         assetList: assetList ?? this.assetList,
         duration: duration ?? this.duration,
         captionMessage: captionMessage ?? this.captionMessage,
+        replayMessageCustomType:
+            replayMessageCustomType ?? this.replayMessageCustomType,
       );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
@@ -119,12 +130,15 @@ class IsmChatMetaData {
         if (assetList != null && assetList?.isNotEmpty == true)
           'assetList': assetList,
         if (duration != null) 'duration': duration?.inSeconds,
+        if (replayMessageCustomType != null)
+          'replayMessageCustomType': replayMessageCustomType?.name
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
+      'IsmChatMetaData(country: $country, parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, locationSubAddress: $locationSubAddress, profilePic: $profilePic, lastName: $lastName, firstName: $firstName, parentMessageInitiator: $parentMessageInitiator, customType: $customType, assetList: $assetList, duration: $duration, replayMessageCustomType: $replayMessageCustomType)';
       'IsmChatMetaData(country: $country, parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, locationSubAddress: $locationSubAddress, profilePic: $profilePic, lastName: $lastName, firstName: $firstName, parentMessageInitiator: $parentMessageInitiator, customType: $customType, assetList: $assetList, duration: $duration, captionMessage: $captionMessage)';
 
   @override
@@ -143,6 +157,10 @@ class IsmChatMetaData {
         listEquals(other.assetList, assetList) &&
         other.duration == duration &&
         other.captionMessage == captionMessage;
+        mapEquals(other.customType, customType) &&
+        listEquals(other.assetList, assetList) &&
+        other.duration == duration &&
+        other.replayMessageCustomType == replayMessageCustomType;
   }
 
   @override
@@ -159,4 +177,7 @@ class IsmChatMetaData {
       assetList.hashCode ^
       duration.hashCode ^
       captionMessage.hashCode;
+      assetList.hashCode ^
+      duration.hashCode ^
+      replayMessageCustomType.hashCode;
 }

@@ -327,7 +327,11 @@ class IsmChatMessageModel {
       ? (jsonDecode(body) as List)
           .map((e) => Contact.fromJson(e as Map<String, dynamic>))
           .toList()
-      : [];
+      : metaData?.replayMessageCustomType == IsmChatCustomMessageType.contact
+          ? (jsonDecode(body) as List)
+              .map((e) => Contact.fromJson(e as Map<String, dynamic>))
+              .toList()
+          : [];
 
   String body;
   String? action;
