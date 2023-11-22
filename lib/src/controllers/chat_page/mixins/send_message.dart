@@ -574,9 +574,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         customType: _controller.isreplying
             ? IsmChatCustomMessageType.reply
             : IsmChatCustomMessageType.video,
-        metaData: IsmChatMetaData(
-        captionMessage: caption,
-      ),attachments: [
+        attachments: [
           AttachmentModel(
             attachmentType: IsmChatMediaType.video,
             thumbnailUrl: webMediaModel != null
@@ -606,6 +604,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         sentByMe: true,
         isUploading: true,
         metaData: IsmChatMetaData(
+          captionMessage: caption,
           replayMessageCustomType:
               _controller.isreplying ? IsmChatCustomMessageType.video : null,
           parentMessageBody: _controller.isreplying
@@ -704,9 +703,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         customType: _controller.isreplying
             ? IsmChatCustomMessageType.reply
             : IsmChatCustomMessageType.image,
-        metaData: IsmChatMetaData(
-        captionMessage: caption,
-      ),attachments: [
+        attachments: [
           AttachmentModel(
             attachmentType: IsmChatMediaType.image,
             thumbnailUrl: kIsWeb
@@ -736,6 +733,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         sentByMe: true,
         isUploading: true,
         metaData: IsmChatMetaData(
+          captionMessage: caption,
           replayMessageCustomType:
               _controller.isreplying ? IsmChatCustomMessageType.image : null,
           parentMessageBody: _controller.isreplying

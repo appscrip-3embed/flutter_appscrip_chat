@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/foundation.dart';
 
 class IsmChatMetaData {
   IsmChatMetaData({
@@ -18,6 +17,7 @@ class IsmChatMetaData {
     this.assetList,
     this.duration,
     this.replayMessageCustomType,
+    this.captionMessage,
   });
 
   factory IsmChatMetaData.fromMap(Map<String, dynamic> map) => IsmChatMetaData(
@@ -138,8 +138,7 @@ class IsmChatMetaData {
 
   @override
   String toString() =>
-      'IsmChatMetaData(country: $country, parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, locationSubAddress: $locationSubAddress, profilePic: $profilePic, lastName: $lastName, firstName: $firstName, parentMessageInitiator: $parentMessageInitiator, customType: $customType, assetList: $assetList, duration: $duration, replayMessageCustomType: $replayMessageCustomType)';
-      'IsmChatMetaData(country: $country, parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, locationSubAddress: $locationSubAddress, profilePic: $profilePic, lastName: $lastName, firstName: $firstName, parentMessageInitiator: $parentMessageInitiator, customType: $customType, assetList: $assetList, duration: $duration, captionMessage: $captionMessage)';
+      'IsmChatMetaData(country: $country, parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, locationSubAddress: $locationSubAddress, profilePic: $profilePic, lastName: $lastName, firstName: $firstName, parentMessageInitiator: $parentMessageInitiator, customType: $customType, assetList: $assetList, duration: $duration, replayMessageCustomType: $replayMessageCustomType, captionMessage: $captionMessage)';
 
   @override
   bool operator ==(covariant IsmChatMetaData other) {
@@ -156,10 +155,7 @@ class IsmChatMetaData {
         mapEquals(other.customType, customType) &&
         listEquals(other.assetList, assetList) &&
         other.duration == duration &&
-        other.captionMessage == captionMessage;
-        mapEquals(other.customType, customType) &&
-        listEquals(other.assetList, assetList) &&
-        other.duration == duration &&
+        other.captionMessage == captionMessage &&
         other.replayMessageCustomType == replayMessageCustomType;
   }
 
@@ -176,8 +172,6 @@ class IsmChatMetaData {
       customType.hashCode ^
       assetList.hashCode ^
       duration.hashCode ^
-      captionMessage.hashCode;
-      assetList.hashCode ^
-      duration.hashCode ^
+      captionMessage.hashCode ^
       replayMessageCustomType.hashCode;
 }
