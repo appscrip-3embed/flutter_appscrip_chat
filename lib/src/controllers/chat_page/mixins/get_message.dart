@@ -174,7 +174,6 @@ mixin IsmChatPageGetMessageMixin on GetxController {
         _controller.conversationController.mediaListLinks = _controller.messages
             .where((e) => [
                   IsmChatCustomMessageType.link,
-                  IsmChatCustomMessageType.location,
                 ].contains(e.customType))
             .toList();
 

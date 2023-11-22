@@ -1381,7 +1381,6 @@ class IsmChatPageController extends GetxController
       }
     } else if (message.customType == IsmChatCustomMessageType.file) {
       var localPath = message.attachments?.first.mediaUrl;
-
       if (localPath == null) {
         return;
       }
@@ -1522,6 +1521,7 @@ class IsmChatPageController extends GetxController
                       .toList() ??
                   [],
               initiatorId: messages.last.initiatorId,
+              metaData: messages.last.metaData,
             ),
             unreadMessagesCount: 0,
           );

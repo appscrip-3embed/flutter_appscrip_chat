@@ -24,14 +24,14 @@ class ChatList extends StatelessWidget {
                 selfMessageTheme: IsmChatMessageThemeData(
                   borderColor: Colors.grey,
                   // showProfile: ShowProfile(
-                  //   isShowProfile: false,
+                  //   isShowProfile: true,
                   //   isPostionBottom: false,
                   // ),
                 ),
                 opponentMessageTheme: IsmChatMessageThemeData(
                   borderColor: AppColors.primaryColorLight,
                   // showProfile: ShowProfile(
-                  //   isShowProfile: false,
+                  //   isShowProfile: true,
                   //   isPostionBottom: false,
                   // ),
                 ),

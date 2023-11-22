@@ -77,9 +77,11 @@ class IsmChatContactView extends StatelessWidget {
               controller.sendContact(
                 conversationId: controller.conversation?.conversationId ?? '',
                 userId: controller.conversation?.opponentDetails?.userId ?? '',
-                contacts: controller.contactSelectedList.selectedContact
-                    .map((e) => e.contact)
-                    .toList(),
+                contacts:
+                    controller.contactSelectedList.selectedContact.map((e) {
+                  IsmChatLog.error(e.contact.displayName);
+                  return e.contact;
+                }).toList(),
               );
             },
             elevation: 0,

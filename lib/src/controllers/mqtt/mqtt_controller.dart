@@ -41,8 +41,8 @@ class IsmChatMqttController extends GetxController {
 
   @override
   void onInit() async {
+    super.onInit();
     _communicationConfig = IsmChatConfig.communicationConfig;
-
     messageTopic =
         '/${_communicationConfig.projectConfig.accountId}/${_communicationConfig.projectConfig.projectId}/Message/${_communicationConfig.userConfig.userId}';
     statusTopic =
@@ -50,7 +50,6 @@ class IsmChatMqttController extends GetxController {
     await initializeMqttClient();
     await connectClient();
     unawaited(getChatConversationsUnreadCount());
-    super.onInit();
   }
 
   Future<void> initializeMqttClient() async {

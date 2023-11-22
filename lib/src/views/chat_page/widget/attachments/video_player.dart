@@ -49,10 +49,17 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
             : VideoPlayerController.file(
                 File(widget.path),
               )
-      ..setLooping(true)
+      ..setLooping(false)
       ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        _controller.play();
+        _controller.addListener(() {
+          if (_controller.value.isBuffering == true) {
+            updateState();
+          } else {
+            updateState();
+          }
+        });
+
+        _controller.pause();
       });
   }
 
@@ -77,10 +84,16 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
             : widget.path.isValidUrl
                 ? VideoPlayerController.network(widget.path)
                 : VideoPlayerController.file(File(widget.path))
-          ..setLooping(true)
           ..initialize().then((_) {
-            // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-            _controller.play();
+            _controller.addListener(() {
+              if (_controller.value.isBuffering == true) {
+                updateState();
+              } else {
+                updateState();
+              }
+            });
+
+            _controller.pause();
           });
       });
     }
@@ -103,7 +116,7 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
         body: VisibilityDetector(
           key: const Key('Video_Player'),
           onVisibilityChanged: (VisibilityInfo info) {
-            if (Get.find<IsmChatPageController>().isVideoVisible) {
+            if (chatPageController.isVideoVisible) {
               if (info.visibleFraction == 0) {
                 _controller.pause();
               } else {
@@ -181,7 +194,6 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
                     _controller.value.isPlaying
                         ? _controller.pause()
                         : _controller.play();
-
                     updateState();
                   },
                   child: CircleAvatar(

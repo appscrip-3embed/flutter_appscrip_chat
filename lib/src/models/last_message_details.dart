@@ -8,6 +8,9 @@ class LastMessageDetails {
 
   factory LastMessageDetails.fromMap(Map<String, dynamic> map) {
     var details = LastMessageDetails(
+      metaData: map['metaData'] != null
+          ? IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>)
+          : null,
       showInConversation: map['showInConversation'] as bool? ?? false,
       sentAt: map['sentAt'] as int? ?? 0,
       senderName: map['senderName'] as String? ??
@@ -75,6 +78,10 @@ class LastMessageDetails {
       memberId: map['memberId'] as String? ?? '',
     );
     details = details.copyWith(
+      body: details.metaData?.replayMessageCustomType ==
+              IsmChatCustomMessageType.contact
+          ? IsmChatStrings.contact
+          : details.body,
       sentByMe: details.senderId.isNotEmpty
           ? details.senderId ==
               IsmChatConfig.communicationConfig.userConfig.userId
@@ -85,7 +92,6 @@ class LastMessageDetails {
   }
 
   LastMessageDetails({
-    this.id = 0,
     required this.showInConversation,
     required this.sentAt,
     required this.senderName,
@@ -107,8 +113,9 @@ class LastMessageDetails {
     this.initiatorId,
     this.memberName,
     this.memberId,
+    this.metaData,
   });
-  int id;
+
   final bool showInConversation;
   final int sentAt;
   final String senderName;
@@ -130,6 +137,7 @@ class LastMessageDetails {
   final String? initiatorId;
   final String? memberName;
   final String? memberId;
+  final IsmChatMetaData? metaData;
 
   String get adminOpponentName =>
       memberId == IsmChatConfig.communicationConfig.userConfig.userId
@@ -158,6 +166,7 @@ class LastMessageDetails {
     String? initiatorId,
     String? memberName,
     String? memberId,
+    IsmChatMetaData? metaData,
   }) =>
       LastMessageDetails(
         showInConversation: showInConversation ?? this.showInConversation,
@@ -180,6 +189,7 @@ class LastMessageDetails {
         initiatorId: initiatorId ?? this.initiatorId,
         memberName: memberName ?? this.memberName,
         memberId: memberId ?? this.memberId,
+        metaData: metaData ?? this.metaData,
       );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
@@ -203,13 +213,14 @@ class LastMessageDetails {
         'initiatorId': initiatorId,
         'memberName': memberName,
         'memberId': memberId,
+        'metaData': metaData?.toMap(),
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'LastMessageDetails(showInConversation: $showInConversation, sentAt: $sentAt, senderName: $senderName, senderId: $senderId, messageType: $messageType, messageId: $messageId, conversationId: $conversationId, body: $body, customType: $customType, deliverCount: $deliverCount, readCount: $readCount, sentByMe: $sentByMe, members: $members,  reactionType : $reactionType, action : $action, deliveredTo :$deliveredTo, readBy : $readBy, initiatorId : $initiatorId, memberName : $memberName, memberId : $memberId)';
+      'LastMessageDetails(showInConversation: $showInConversation, sentAt: $sentAt, senderName: $senderName, senderId: $senderId, messageType: $messageType, messageId: $messageId, conversationId: $conversationId, body: $body, customType: $customType, deliverCount: $deliverCount, readCount: $readCount, sentByMe: $sentByMe, members: $members,  reactionType : $reactionType, action : $action, deliveredTo :$deliveredTo, readBy : $readBy, initiatorId : $initiatorId, memberName : $memberName, memberId : $memberId, metaData : $metaData)';
 
   @override
   bool operator ==(covariant LastMessageDetails other) {
@@ -234,7 +245,8 @@ class LastMessageDetails {
         other.deliveredTo == deliveredTo &&
         other.initiatorId == initiatorId &&
         other.memberName == memberName &&
-        other.memberId == messageId;
+        other.memberId == messageId &&
+        other.metaData == metaData;
   }
 
   @override
@@ -258,5 +270,6 @@ class LastMessageDetails {
       deliveredTo.hashCode ^
       initiatorId.hashCode ^
       memberName.hashCode ^
-      memberId.hashCode;
+      memberId.hashCode ^
+      metaData.hashCode;
 }

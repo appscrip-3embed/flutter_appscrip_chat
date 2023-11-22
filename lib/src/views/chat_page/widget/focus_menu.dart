@@ -108,22 +108,22 @@ class IsmChatFocusMenu extends StatelessWidget {
             ),
           ),
         )
-      : Scaffold(
-          backgroundColor: Colors.transparent,
-          body: SafeArea(
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    if (Responsive.isWebAndTablet(context)) {
-                      var controller = Get.find<IsmChatPageController>();
-                      controller.closeOveray();
-                    } else {
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: BackdropFilter(
+      : IsmChatTapHandler(
+          onTap: () {
+            if (Responsive.isWebAndTablet(context)) {
+              var controller = Get.find<IsmChatPageController>();
+              controller.closeOveray();
+            } else {
+              Navigator.pop(context);
+            }
+          },
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: SafeArea(
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  BackdropFilter(
                     filter: ImageFilter.blur(
                       sigmaX: blur ?? 4,
                       sigmaY: blur ?? 4,
@@ -133,98 +133,109 @@ class IsmChatFocusMenu extends StatelessWidget {
                           .withOpacity(0.5),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: IsmChatDimens.edgeInsets8,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: message.sentByMe
-                        ? CrossAxisAlignment.end
-                        : CrossAxisAlignment.start,
-                    children: [
-                      if (canReact && !controller.isTemporaryChat)
-                        _FocusAnimationBuilder(
-                          animation: animation,
-                          child: ReactionGrid(message),
-                        ),
-                      IsmChatDimens.boxHeight8,
-                      Hero(
-                        tag: message,
-                        child: MessageBubble(
-                          message: message,
-                          showMessageInCenter: false,
-                        ),
-                      ),
-                      IsmChatDimens.boxHeight8,
-                      _FocusAnimationBuilder(
-                        animation: animation,
-                        child: Container(
-                          width: IsmChatDimens.oneHundredSeventy,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(IsmChatDimens.sixteen),
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          child: GetBuilder<IsmChatPageController>(
-                              builder: (controller) => ListView.builder(
-                                    itemCount: message.focusMenuList.length,
-                                    shrinkWrap: true,
-                                    itemBuilder: (_, index) {
-                                      var item = message.focusMenuList[index];
-                                      return IsmChatTapHandler(
-                                        onTap: () {
-                                          Get.back();
-                                          controller.closeOveray();
-                                          controller.onMenuItemSelected(
-                                            item,
-                                            message,
-                                          );
-                                        },
-                                        child: Container(
-                                          height: IsmChatDimens.forty,
-                                          padding: IsmChatDimens.edgeInsets16_0,
-                                          decoration: BoxDecoration(
-                                            color: item ==
-                                                    IsmChatFocusMenuType.delete
-                                                ? IsmChatColors.redColor
-                                                : IsmChatConfig
-                                                    .chatTheme.backgroundColor,
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                item.toString(),
-                                                style: IsmChatStyles.w400Black12
-                                                    .copyWith(
+                  Center(
+                    child: Padding(
+                      padding: IsmChatDimens.edgeInsets8,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: message.sentByMe
+                              ? CrossAxisAlignment.end
+                              : CrossAxisAlignment.start,
+                          children: [
+                            if (canReact && !controller.isTemporaryChat)
+                              _FocusAnimationBuilder(
+                                animation: animation,
+                                child: ReactionGrid(message),
+                              ),
+                            IsmChatDimens.boxHeight8,
+                            Hero(
+                              tag: message,
+                              child: MessageBubble(
+                                message: message,
+                                showMessageInCenter: false,
+                              ),
+                            ),
+                            IsmChatDimens.boxHeight8,
+                            _FocusAnimationBuilder(
+                              animation: animation,
+                              child: Container(
+                                width: IsmChatDimens.oneHundredSeventy,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      IsmChatDimens.sixteen),
+                                ),
+                                clipBehavior: Clip.antiAlias,
+                                child: GetBuilder<IsmChatPageController>(
+                                    builder: (controller) => ListView.builder(
+                                          itemCount:
+                                              message.focusMenuList.length,
+                                          shrinkWrap: true,
+                                          itemBuilder: (_, index) {
+                                            var item =
+                                                message.focusMenuList[index];
+                                            return IsmChatTapHandler(
+                                              onTap: () {
+                                                Get.back();
+                                                controller.closeOveray();
+                                                controller.onMenuItemSelected(
+                                                  item,
+                                                  message,
+                                                );
+                                              },
+                                              child: Container(
+                                                height: IsmChatDimens.forty,
+                                                padding: IsmChatDimens
+                                                    .edgeInsets16_0,
+                                                decoration: BoxDecoration(
                                                   color: item ==
                                                           IsmChatFocusMenuType
                                                               .delete
-                                                      ? IsmChatColors.whiteColor
-                                                      : null,
+                                                      ? IsmChatColors.redColor
+                                                      : IsmChatConfig.chatTheme
+                                                          .backgroundColor,
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      item.toString(),
+                                                      style: IsmChatStyles
+                                                          .w400Black12
+                                                          .copyWith(
+                                                        color: item ==
+                                                                IsmChatFocusMenuType
+                                                                    .delete
+                                                            ? IsmChatColors
+                                                                .whiteColor
+                                                            : null,
+                                                      ),
+                                                    ),
+                                                    const Spacer(),
+                                                    Icon(
+                                                      item.icon,
+                                                      color: item ==
+                                                              IsmChatFocusMenuType
+                                                                  .delete
+                                                          ? IsmChatColors
+                                                              .whiteColor
+                                                          : null,
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                              const Spacer(),
-                                              Icon(
-                                                item.icon,
-                                                color: item ==
-                                                        IsmChatFocusMenuType
-                                                            .delete
-                                                    ? IsmChatColors.whiteColor
-                                                    : null,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  )),
+                                            );
+                                          },
+                                        )),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );

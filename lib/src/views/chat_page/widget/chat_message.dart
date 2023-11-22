@@ -57,7 +57,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
       IsmChatCustomMessageType.memberJoin,
       IsmChatCustomMessageType.observerJoin,
       IsmChatCustomMessageType.observerLeave,
-    ].contains(widget._message?.customType!);
+    ].contains(widget._message?.customType);
     isGroup = coverstaionController.currentConversation?.isGroup ?? false;
   }
 
@@ -83,7 +83,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
         child: IsmChatTapHandler(
           onLongPress: showMessageInCenter
               ? null
-              : () {
+              : () async {
                   if (widget._message?.customType !=
                       IsmChatCustomMessageType.deletedForEveryone) {
                     if (!Responsive.isWebAndTablet(context)) {
@@ -91,7 +91,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                         controller.showDialogCheckBlockUnBlock();
                         return;
                       } else {
-                        controller.showOverlay(context, widget._message!);
+                        await controller.showOverlay(context, widget._message!);
                       }
                     }
                   } else {
@@ -152,7 +152,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                           ),
                         )
                       ],
-                      if (theme?.opponentMessageTheme?.showProfile != null)
+                      if (theme?.opponentMessageTheme?.showProfile != null) ...[
                         if (theme?.opponentMessageTheme?.showProfile
                                     ?.isShowProfile ==
                                 true &&
@@ -176,6 +176,9 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                             IsmChatDimens.boxWidth2,
                           ],
                         ],
+                      ] else ...[
+                        IsmChatDimens.boxWidth4,
+                      ],
                       if (Get.isRegistered<IsmChatPageController>()) ...[
                         MessageCard(
                           message: widget._message!,

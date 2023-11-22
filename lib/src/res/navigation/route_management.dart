@@ -193,4 +193,8 @@ class IsmChatRouteManagement {
       'fileList': fileList,
     });
   }
+
+  static void goToProfilePicView(UserDetails user) {
+    Get.toNamed(IsmChatProfilePicView.route, arguments: {'user': user});
+  }
 }

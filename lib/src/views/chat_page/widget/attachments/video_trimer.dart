@@ -33,7 +33,7 @@ class _VideoTrimmerViewState extends State<IsmVideoTrimmerView> {
   void initState() {
     super.initState();
     endValue = widget.durationInSeconds.obs;
-    Get.find<IsmChatPageController>().isVideoVisible = true;
+
     loadVideo();
   }
 

@@ -1,5 +1,6 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 /// IsmMedia class is for showing the conversation media
@@ -39,7 +40,7 @@ class _IsmDocsViewState extends State<IsmDocsView>
                 ),
               )
             : ListView.separated(
-                physics: const ScrollPhysics(),
+                physics: const ClampingScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: storeWidgetDocsList.length,
                 separatorBuilder: (_, index) => IsmChatDimens.boxHeight10,
@@ -55,23 +56,41 @@ class _IsmDocsViewState extends State<IsmDocsView>
                         key,
                         style: IsmChatStyles.w400Black14,
                       ),
-                      GridView.builder(
-                        physics: const ScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: value.length,
+                      ListView.separated(
+                        physics: const ClampingScrollPhysics(),
                         addAutomaticKeepAlives: true,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 6,
-                          crossAxisSpacing: 6,
+                        shrinkWrap: true,
+                        itemBuilder: (_, index) => ListTile(
+                          onTap: () {
+                            chatPageController.tapForMediaPreview(value[index]);
+                          },
+                          contentPadding: IsmChatDimens.edgeInsets0,
+                          dense: true,
+                          title: Text(
+                            value[index].attachments?.first.name ?? '',
+                            style: IsmChatStyles.w400Black14,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          subtitle: Text(
+                            IsmChatUtility.formatBytes(
+                                value[index].attachments?.first.size ?? 0),
+                            style: IsmChatStyles.w400Black10,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          trailing: Text(
+                              value[index].sentAt.toLastMessageTimeString()),
+                          leading: SvgPicture.asset(
+                            IsmChatAssets.pdfSvg,
+                            height: IsmChatDimens.thirtyTwo,
+                            width: IsmChatDimens.thirtyTwo,
+                          ),
                         ),
-                        itemBuilder: (context, valueIndex) => IsmChatTapHandler(
-                          onTap: () => Get.find<IsmChatPageController>()
-                              .tapForMediaPreview(value[valueIndex]),
-                          child: IsmChatFileMessage(value[valueIndex]),
+                        separatorBuilder: (_, index) => Divider(
+                          color: IsmChatColors.greyColor.withOpacity(.5),
                         ),
-                      ),
+                        itemCount: value.length,
+                      )
                     ],
                   );
                 },

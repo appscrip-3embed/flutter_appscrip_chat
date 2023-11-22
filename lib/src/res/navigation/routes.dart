@@ -38,4 +38,5 @@ class IsmPageRoutes {
   static const String messageSearch = '/messageSearch';
   static const String userSearch = '/userSearch';
   static const String globalSearch = '/globalSearch';
+  static const String profilePicView = '/profilePicView';
 }

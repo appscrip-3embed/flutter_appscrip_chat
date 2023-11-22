@@ -107,9 +107,15 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                       child: Stack(
                         alignment: Alignment.bottomRight,
                         children: [
-                          IsmChatImage.profile(
-                            controller.conversation?.profileUrl ?? '',
-                            dimensions: IsmChatDimens.hundred,
+                          IsmChatTapHandler(
+                            onTap: () {
+                              IsmChatRouteManagement.goToProfilePicView(
+                                  controller.conversation!.opponentDetails!);
+                            },
+                            child: IsmChatImage.profile(
+                              controller.conversation?.profileUrl ?? '',
+                              dimensions: IsmChatDimens.hundred,
+                            ),
                           ),
                           if (controller.conversation?.isGroup ?? false)
                             CircleAvatar(
@@ -149,8 +155,8 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                         '${controller.conversation?.membersCount} ${IsmChatStrings.participants}',
                         style: IsmChatStyles.w400Grey14,
                       ),
-                      IsmChatDimens.boxHeight10,
                     ],
+                    IsmChatDimens.boxHeight10,
                     Column(
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.start,
