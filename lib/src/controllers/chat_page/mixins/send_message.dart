@@ -110,6 +110,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       if (isMessageSent && !isTemporaryChat) {
         _controller.didReactedLast = false;
         await _controller.getMessagesFromDB(conversationId);
+        if (kIsWeb && Responsive.isWebAndTablet(Get.context!)) {
+          await conversationController.getConversationsFromDB();
+        }
       }
     } else {
       if (_controller.conversation?.members?.isNotEmpty == true &&
@@ -375,6 +378,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       allowCompression: true,
       withData: true,
     );
+
     if (result?.files.isNotEmpty ?? false) {
       final chatConversationResponse = await IsmChatConfig.dbWrapper!
           .getConversation(conversationId: conversationId);
@@ -389,14 +393,20 @@ mixin IsmChatPageSendMessageMixin on GetxController {
               _controller.conversation?.chatName ?? ''
             ]);
       }
-      for (var x in result?.files ?? []) {
-        var sizeMedia = kIsWeb
+      final resultFiles = result?.files ?? [];
+
+      for (var x in resultFiles) {
+        var sizeMedia = kIsWeb && Responsive.isWebAndTablet(Get.context!)
             ? IsmChatUtility.formatBytes(
-                int.parse(x.bytes!.length.toString()),
+                int.parse((x.bytes?.length ?? 0).toString()),
               )
-            : await IsmChatUtility.fileToSize(File(x.path!));
+            : await IsmChatUtility.fileToSize(File(x.path ?? ''));
+
+        bytes = Uint8List.fromList(x.bytes as List<int>);
         if (sizeMedia.size()) {
-          final document = await PdfDocument.openFile(x.path ?? '');
+          final document = kIsWeb && Responsive.isWebAndTablet(Get.context!)
+              ? await PdfDocument.openData(x.bytes ?? Uint8List(0))
+              : await PdfDocument.openFile(x.path ?? '');
           final page = await document.getPage(1);
           final pdfImage = await page.render(
             width: page.width,
@@ -404,56 +414,59 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             backgroundColor: '#ffffff',
           );
           await page.close();
+
           thumbnailBytes = pdfImage?.bytes;
           thumbnailNameWithExtension = pdfImage?.format.toString();
           thumbnailMediaId = sentAt.toString();
 
-          bytes = x.bytes;
           nameWithExtension = x.name;
+
           documentMessage = IsmChatMessageModel(
-              body: 'Document',
-              conversationId: conversationId,
-              senderInfo: _controller.currentUser,
-              customType: _controller.isreplying
-                  ? IsmChatCustomMessageType.reply
-                  : IsmChatCustomMessageType.file,
-              attachments: [
-                AttachmentModel(
-                  attachmentType: IsmChatMediaType.file,
-                  thumbnailUrl: kIsWeb ? '' : pdfImage?.bytes.toString(),
-                  size: x.bytes?.length,
-                  name: nameWithExtension,
-                  mimeType: x.extension,
-                  mediaUrl: kIsWeb ? x.bytes.toString() : x.path,
-                  mediaId: sentAt.toString(),
-                  extension: x.extension,
-                )
-              ],
-              deliveredToAll: false,
-              messageId: '',
-              deviceId: _controller._deviceConfig.deviceId ?? '',
-              messageType: _controller.isreplying
-                  ? IsmChatMessageType.reply
-                  : IsmChatMessageType.normal,
-              messagingDisabled: false,
-              parentMessageId: _controller.isreplying
-                  ? _controller.replayMessage?.messageId
+            body: 'Document',
+            conversationId: conversationId,
+            senderInfo: _controller.currentUser,
+            customType: _controller.isreplying
+                ? IsmChatCustomMessageType.reply
+                : IsmChatCustomMessageType.file,
+            attachments: [
+              AttachmentModel(
+                attachmentType: IsmChatMediaType.file,
+                thumbnailUrl: pdfImage?.bytes.toString(),
+                size: bytes.length,
+                name: nameWithExtension,
+                mimeType: x.extension,
+                mediaUrl: kIsWeb && Responsive.isWebAndTablet(Get.context!)
+                    ? (bytes).toString()
+                    : x.path,
+                mediaId: sentAt.toString(),
+                extension: x.extension,
+              )
+            ],
+            deliveredToAll: false,
+            messageId: '',
+            deviceId: _controller._deviceConfig.deviceId ?? '',
+            messageType: _controller.isreplying
+                ? IsmChatMessageType.reply
+                : IsmChatMessageType.normal,
+            messagingDisabled: false,
+            parentMessageId: _controller.isreplying
+                ? _controller.replayMessage?.messageId
+                : '',
+            readByAll: false,
+            sentAt: sentAt,
+            sentByMe: true,
+            isUploading: true,
+            metaData: IsmChatMetaData(
+              replayMessageCustomType:
+                  _controller.isreplying ? IsmChatCustomMessageType.file : null,
+              parentMessageBody: _controller.isreplying
+                  ? _controller.getMessageBody(_controller.replayMessage)
                   : '',
-              readByAll: false,
-              sentAt: sentAt,
-              sentByMe: true,
-              isUploading: true,
-              metaData: IsmChatMetaData(
-                replayMessageCustomType: _controller.isreplying
-                    ? IsmChatCustomMessageType.file
-                    : null,
-                parentMessageBody: _controller.isreplying
-                    ? _controller.getMessageBody(_controller.replayMessage)
-                    : '',
-                parentMessageInitiator: _controller.isreplying
-                    ? _controller.replayMessage?.sentByMe
-                    : null,
-              ));
+              parentMessageInitiator: _controller.isreplying
+                  ? _controller.replayMessage?.sentByMe
+                  : null,
+            ),
+          );
         } else {
           await Get.dialog(
             const IsmChatAlertDialogBox(
@@ -1061,102 +1074,107 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     Uint8List? thumbnailBytes,
     bool isTemporaryChat = false,
   }) async {
-    PresignedUrlModel? presignedUrlModel;
-    if (_controller.isTemporaryChat) {
-      presignedUrlModel = await _controller.commonController.getPresignedUrl(
-        isLoading: false,
-        mediaExtension:
-            ismChatChatMessageModel.attachments?.first.extension ?? '',
-        userIdentifier:
-            IsmChatConfig.communicationConfig.userConfig.userEmail ?? '',
-      );
-    } else {
-      presignedUrlModel = await commonController.postMediaUrl(
-        conversationId: ismChatChatMessageModel.conversationId ?? '',
-        nameWithExtension: nameWithExtension,
-        mediaType: mediaType,
-        mediaId: mediaId,
-      );
-    }
-
-    var mediaUrlPath = '';
-    var thumbnailUrlPath = '';
-    if (presignedUrlModel != null) {
-      var mediaUrl = await commonController.updatePresignedUrl(
-        presignedUrl: _controller.isTemporaryChat
-            ? presignedUrlModel.presignedUrl
-            : presignedUrlModel.mediaPresignedUrl,
-        bytes: bytes,
-        isLoading: false,
-      );
-      if (mediaUrl == 200) {
-        mediaUrlPath = presignedUrlModel.mediaUrl ?? '';
-        mediaId = _controller.isTemporaryChat
-            ? mediaId
-            : presignedUrlModel.mediaId ?? '';
-      }
-    }
-    if (!imageAndFile!) {
+    try {
       PresignedUrlModel? presignedUrlModel;
       if (_controller.isTemporaryChat) {
         presignedUrlModel = await _controller.commonController.getPresignedUrl(
           isLoading: false,
-          mediaExtension: thumbnailNameWithExtension?.split('.').last ?? '',
+          mediaExtension:
+              ismChatChatMessageModel.attachments?.first.extension ?? '',
           userIdentifier:
               IsmChatConfig.communicationConfig.userConfig.userEmail ?? '',
         );
       } else {
         presignedUrlModel = await commonController.postMediaUrl(
           conversationId: ismChatChatMessageModel.conversationId ?? '',
-          nameWithExtension: thumbnailNameWithExtension ?? '',
-          mediaType: thumbanilMediaType ?? 0,
-          mediaId: thumbnailMediaId ?? '',
+          nameWithExtension: nameWithExtension,
+          mediaType: mediaType,
+          mediaId: mediaId,
         );
       }
 
+      var mediaUrlPath = '';
+      var thumbnailUrlPath = '';
       if (presignedUrlModel != null) {
         var mediaUrl = await commonController.updatePresignedUrl(
           presignedUrl: _controller.isTemporaryChat
               ? presignedUrlModel.presignedUrl
-              : presignedUrlModel.thumbnailPresignedUrl,
-          bytes: thumbnailBytes,
+              : presignedUrlModel.mediaPresignedUrl,
+          bytes: bytes,
           isLoading: false,
         );
         if (mediaUrl == 200) {
-          thumbnailUrlPath = _controller.isTemporaryChat
-              ? presignedUrlModel.mediaUrl ?? ''
-              : presignedUrlModel.thumbnailUrl ?? '';
+          mediaUrlPath = presignedUrlModel.mediaUrl ?? '';
+          mediaId = _controller.isTemporaryChat
+              ? mediaId
+              : presignedUrlModel.mediaId ?? '';
         }
       }
-    }
-    if (mediaUrlPath.isNotEmpty) {
-      var attachment = [
-        {
-          'thumbnailUrl': !imageAndFile ? thumbnailUrlPath : mediaUrlPath,
-          'size': ismChatChatMessageModel.attachments?.first.size ?? 0,
-          'name': ismChatChatMessageModel.attachments?.first.name,
-          'mimeType': ismChatChatMessageModel.attachments?.first.mimeType,
-          'mediaUrl': mediaUrlPath,
-          'mediaId': mediaId,
-          'extension': ismChatChatMessageModel.attachments?.first.extension,
-          'attachmentType':
-              ismChatChatMessageModel.attachments?.first.attachmentType?.value,
+      if (!imageAndFile!) {
+        PresignedUrlModel? presignedUrlModel;
+        if (_controller.isTemporaryChat) {
+          presignedUrlModel =
+              await _controller.commonController.getPresignedUrl(
+            isLoading: false,
+            mediaExtension: thumbnailNameWithExtension?.split('.').last ?? '',
+            userIdentifier:
+                IsmChatConfig.communicationConfig.userConfig.userEmail ?? '',
+          );
+        } else {
+          presignedUrlModel = await commonController.postMediaUrl(
+            conversationId: ismChatChatMessageModel.conversationId ?? '',
+            nameWithExtension: thumbnailNameWithExtension ?? '',
+            mediaType: thumbanilMediaType ?? 0,
+            mediaId: thumbnailMediaId ?? '',
+          );
         }
-      ];
-      sendMessage(
-        body: ismChatChatMessageModel.body,
-        conversationId: ismChatChatMessageModel.conversationId!,
-        createdAt: createdAt,
-        deviceId: ismChatChatMessageModel.deviceId ?? '',
-        messageType: ismChatChatMessageModel.messageType?.value ?? 0,
-        notificationBody: notificationBody,
-        notificationTitle: notificationTitle,
-        attachments: attachment,
-        customType: ismChatChatMessageModel.customType?.name,
-        metaData: ismChatChatMessageModel.metaData,
-        isTemporaryChat: isTemporaryChat,
-        parentMessageId: ismChatChatMessageModel.parentMessageId,
-      );
+
+        if (presignedUrlModel != null) {
+          var mediaUrl = await commonController.updatePresignedUrl(
+            presignedUrl: _controller.isTemporaryChat
+                ? presignedUrlModel.presignedUrl
+                : presignedUrlModel.thumbnailPresignedUrl,
+            bytes: thumbnailBytes,
+            isLoading: false,
+          );
+          if (mediaUrl == 200) {
+            thumbnailUrlPath = _controller.isTemporaryChat
+                ? presignedUrlModel.mediaUrl ?? ''
+                : presignedUrlModel.thumbnailUrl ?? '';
+          }
+        }
+      }
+      if (mediaUrlPath.isNotEmpty) {
+        var attachment = [
+          {
+            'thumbnailUrl': !imageAndFile ? thumbnailUrlPath : mediaUrlPath,
+            'size': ismChatChatMessageModel.attachments?.first.size ?? 0,
+            'name': ismChatChatMessageModel.attachments?.first.name,
+            'mimeType': ismChatChatMessageModel.attachments?.first.mimeType,
+            'mediaUrl': mediaUrlPath,
+            'mediaId': mediaId,
+            'extension': ismChatChatMessageModel.attachments?.first.extension,
+            'attachmentType': ismChatChatMessageModel
+                .attachments?.first.attachmentType?.value,
+          }
+        ];
+        sendMessage(
+          body: ismChatChatMessageModel.body,
+          conversationId: ismChatChatMessageModel.conversationId!,
+          createdAt: createdAt,
+          deviceId: ismChatChatMessageModel.deviceId ?? '',
+          messageType: ismChatChatMessageModel.messageType?.value ?? 0,
+          notificationBody: notificationBody,
+          notificationTitle: notificationTitle,
+          attachments: attachment,
+          customType: ismChatChatMessageModel.customType?.name,
+          metaData: ismChatChatMessageModel.metaData,
+          isTemporaryChat: isTemporaryChat,
+          parentMessageId: ismChatChatMessageModel.parentMessageId,
+        );
+      }
+    } catch (e, st) {
+      IsmChatLog.error(e, st);
     }
   }
 

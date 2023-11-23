@@ -52,7 +52,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                           IsmChatColors.whiteColor,
                 )),
           ),
-          child: AppBar(
+          child: IsmChatAppBar(
             leadingWidth: Responsive.isWebAndTablet(context)
                 ? IsmChatDimens.twenty
                 : null,
@@ -230,7 +230,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
             ),
             bottom: IsmChatProperties.chatPageProperties.header?.bottom
                 ?.call(context, controller.conversation!),
-            actions: [
+            action: [
               PopupMenuButton<int>(
                 icon: Icon(
                   Icons.more_vert,

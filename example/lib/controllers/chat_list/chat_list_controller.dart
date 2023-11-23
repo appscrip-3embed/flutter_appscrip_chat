@@ -4,6 +4,7 @@ import 'package:chat_component_example/models/models.dart';
 import 'package:chat_component_example/res/res.dart';
 import 'package:chat_component_example/view_models/view_models.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import '../../utilities/config.dart';
@@ -20,7 +21,9 @@ class ChatListController extends GetxController {
   void onInit() {
     super.onInit();
     userDetails = AppConfig.userDetail!;
-    subscribeToTopic();
+    if (!kIsWeb) {
+      subscribeToTopic();
+    }
   }
 
   subscribeToTopic() async {
