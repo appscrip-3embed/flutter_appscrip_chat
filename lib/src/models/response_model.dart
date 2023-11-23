@@ -11,6 +11,17 @@ class IsmChatResponseModel {
         errorCode: map['errorCode'] as int,
       );
 
+  factory IsmChatResponseModel.message(
+    String message, {
+    bool isSuccess = false,
+    int? errorCode,
+  }) =>
+      IsmChatResponseModel(
+        data: jsonEncode({'message': message}),
+        hasError: !isSuccess,
+        errorCode: errorCode ?? 1000,
+      );
+
   const IsmChatResponseModel({
     required this.data,
     required this.hasError,

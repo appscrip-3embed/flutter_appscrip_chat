@@ -19,6 +19,7 @@ class IsmChatApp extends StatelessWidget {
     this.useDataBase = true,
     this.noChatSelectedPlaceholder,
     this.sideWidgetWidth,
+    this.isShowMqttConnectErrorDailog = false,
     this.fontFamily,
   }) {
     assert(IsmChatConfig.isInitialized,
@@ -45,6 +46,7 @@ class IsmChatApp extends StatelessWidget {
     }
     IsmChatConfig.useDatabase = useDataBase;
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
+    IsmChatConfig.isShowMqttConnectErrorDailog = isShowMqttConnectErrorDailog;
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
     IsmChatProperties.isGroupChatEnabled = enableGroupChat;
@@ -55,6 +57,8 @@ class IsmChatApp extends StatelessWidget {
       IsmChatProperties.conversationProperties = conversationProperties!;
     }
   }
+
+  final bool isShowMqttConnectErrorDailog;
 
   /// Required field
   ///
@@ -255,10 +259,13 @@ class IsmChatApp extends StatelessWidget {
       );
 
   /// Call this funcation for the initialize mqtt
-  static void initializeMqtt(IsmChatCommunicationConfig communicationConfig,
-      {IsmChatThemeData? chatTheme,
-      IsmChatThemeData? chatDarkTheme,
-      Function(IsmChatMessageModel)? onSnckBarTap}) {
+  static void initializeMqtt(
+    IsmChatCommunicationConfig communicationConfig, {
+    IsmChatThemeData? chatTheme,
+    IsmChatThemeData? chatDarkTheme,
+    Function(IsmChatMessageModel)? onSnckBarTap,
+    bool isShowMqttConnectErrorDailog = false,
+  }) {
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
@@ -268,6 +275,7 @@ class IsmChatApp extends StatelessWidget {
       IsmChatMqttBinding().dependencies();
     }
     IsmChatConfig.onSnckBarTap = onSnckBarTap;
+    IsmChatConfig.isShowMqttConnectErrorDailog = isShowMqttConnectErrorDailog;
   }
 
   /// Call this funcation on to listener for mqtt events

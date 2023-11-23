@@ -15,6 +15,7 @@ class IsmChatConfig {
   static bool isInitialized = false;
   static Duration animationDuration = const Duration(milliseconds: 300);
   static void Function(IsmChatMessageModel)? onSnckBarTap;
+  static bool isShowMqttConnectErrorDailog = false;
 
   static IsmChatThemeData get chatTheme => Get.isDarkMode
       ? _chatDarkTheme ?? IsmChatThemeData.light()

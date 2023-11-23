@@ -6,11 +6,11 @@ class IsmChatMqttClient {
 
   static Future<void> initializeMqttClient(String deviceId) async {
     client = MqttServerClient(
-      'connections.isometrik.io',
+      IsmChatConfig.communicationConfig.mqttConfig.hostName,
       '${IsmChatConfig.communicationConfig.userConfig.userId}$deviceId',
     );
 
-    client?.port = 2052;
+    client?.port = IsmChatConfig.communicationConfig.mqttConfig.port;
     client?.secure = false;
   }
 }

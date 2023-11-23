@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -54,6 +55,51 @@ class IsmChatUtility {
   //     Get.back(closeOverlays: false, canPop: true);
   //   }
   // }
+
+  /// Show error dialog from response model
+  static Future<void> showInfoDialog(
+    IsmChatResponseModel data, {
+    bool isSuccess = false,
+    String? title,
+    String? label,
+    VoidCallback? onTap,
+  }) async {
+    if (Get.isDialogOpen ?? false) {
+      return;
+    }
+    await Get.dialog(
+      CupertinoAlertDialog(
+        title: Text(
+          title ?? (isSuccess ? 'Success' : 'Error'),
+        ),
+        content: Text(
+          jsonDecode(data.data)['message'] as String,
+        ),
+        actions: [
+          CupertinoDialogAction(
+            onPressed: Get.back,
+            isDefaultAction: true,
+            child: Text(
+              'Okay',
+              style: IsmChatStyles.w400Black14,
+            ),
+          ),
+          if (label != null)
+            CupertinoDialogAction(
+              onPressed: () {
+                Get.back();
+                onTap?.call();
+              },
+              isDefaultAction: true,
+              child: Text(
+                label,
+                style: IsmChatStyles.w400Black14,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
 
   static Future<void> showErrorDialog(String message) async {
     await Get.dialog(

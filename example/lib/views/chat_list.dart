@@ -37,6 +37,7 @@ class ChatList extends StatelessWidget {
                 ),
               ),
             ),
+            isShowMqttConnectErrorDailog: true,
             communicationConfig: IsmChatCommunicationConfig(
               userConfig: IsmChatUserConfig(
                   userToken: AppConfig.userDetail?.userToken ?? '',

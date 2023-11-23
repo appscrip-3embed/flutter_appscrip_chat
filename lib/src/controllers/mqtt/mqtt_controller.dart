@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/controllers/mqtt/clients/mobile_client.dart'
     if (dart.library.html) 'clients/web_client.dart';
@@ -84,8 +85,16 @@ class IsmChatMqttController extends GetxController {
       }
     } on NoConnectionException catch (e) {
       IsmChatLog.error('NoConnectionException - $e');
+      if (IsmChatConfig.isShowMqttConnectErrorDailog) {
+        await IsmChatUtility.showInfoDialog(
+            IsmChatResponseModel.message(e.toString()));
+      }
     } on SocketException catch (e) {
       IsmChatLog.error('SocketException - $e');
+      if (IsmChatConfig.isShowMqttConnectErrorDailog) {
+        await IsmChatUtility.showInfoDialog(
+            IsmChatResponseModel.message(e.toString()));
+      }
     }
   }
 
