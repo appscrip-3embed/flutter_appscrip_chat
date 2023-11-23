@@ -10,12 +10,13 @@ class IsmChatConversationModel {
           json.decode(source) as Map<String, dynamic>);
 
   factory IsmChatConversationModel.fromMap(Map<String, dynamic> map) {
+   
     var model = IsmChatConversationModel(
         updatedAt: map['updatedAt'] as int? ?? 0,
         unreadMessagesCount: map['unreadMessagesCount'] as int? ?? 0,
         userIds: map['userIds'] == null
             ? []
-            : List<String>.from(map['userIds'] as List<dynamic>),
+            : List<String>.from(map['userIds'] as List),
         privateOneToOne: map['privateOneToOne'] as bool? ?? false,
         opponentDetails: map['opponentDetails'] == null
             ? null
@@ -47,8 +48,8 @@ class IsmChatConversationModel {
         createdByUserName: map['createdByUserName'] as String? ?? '',
         conversationType: IsmChatConversationType.fromValue(
             map['conversationType'] as int? ?? 0),
-        conversationTitle: map['conversationTitle'] as String?,
-        conversationImageUrl: map['conversationImageUrl'] as String?,
+        conversationTitle: map['conversationTitle'] as String? ?? '',
+        conversationImageUrl: map['conversationImageUrl'] as String? ?? '',
         conversationId: map['conversationId'] as String? ?? '',
         config: map['config'] != null
             ? ConversationConfigModel.fromMap(
@@ -82,7 +83,6 @@ class IsmChatConversationModel {
         IsmChatActionEvents.conversationCreated.name) {
       return model.copyWith(unreadMessagesCount: 0);
     }
-
     return model;
   }
 
@@ -144,10 +144,19 @@ class IsmChatConversationModel {
 
   String get replyName => opponentDetails?.userName ?? '';
 
-  String get chatName => conversationTitle ?? opponentDetails?.userName ?? '';
+  String get chatName {
+    if (conversationTitle.isNullOrEmpty) {
+      return opponentDetails?.userName ?? '';
+    }
+    return conversationTitle ?? '';
+  }
 
-  String get profileUrl =>
-      conversationImageUrl ?? opponentDetails?.profileUrl ?? '';
+  String get profileUrl {
+    if (conversationImageUrl.isNullOrEmpty) {
+      return opponentDetails?.profileUrl ?? '';
+    }
+    return conversationImageUrl ?? '';
+  }
 
   IsmChatConversationModel copyWith({
     int? updatedAt,

@@ -1,6 +1,8 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 class IsmChatConversationCard extends StatefulWidget {
   const IsmChatConversationCard(
@@ -44,6 +46,13 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
     return IsmChatTapHandler(
       onTap: widget.onTap,
       child: Container(
+        color: kIsWeb && Responsive.isWebAndTablet(context)
+            ? Get.find<IsmChatConversationsController>()
+                        .currentConversationId ==
+                    widget.conversation.conversationId
+                ? IsmChatConfig.chatTheme.primaryColor?.withOpacity(.2)
+                : null
+            : null,
         padding:
             IsmChatDimens.edgeInsets10_05.copyWith(left: IsmChatDimens.two),
         width: IsmChatDimens.percentWidth(1),

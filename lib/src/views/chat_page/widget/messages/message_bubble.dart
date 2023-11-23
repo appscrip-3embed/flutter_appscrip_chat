@@ -15,8 +15,10 @@ class MessageBubble extends GetView<IsmChatPageController> {
               customType: IsmChatCustomMessageType.text,
               sentByMe: true,
             ),
-        _globalKey = Get.find<IsmChatPageController>()
-            .getGlobalKey(message?.sentAt ?? 0);
+        _globalKey = Responsive.isWebAndTablet(Get.context!)
+            ? GlobalKey()
+            : Get.find<IsmChatPageController>()
+                .getGlobalKey(message?.sentAt ?? 0);
 
   final IsmChatMessageModel _message;
   final bool showMessageInCenter;

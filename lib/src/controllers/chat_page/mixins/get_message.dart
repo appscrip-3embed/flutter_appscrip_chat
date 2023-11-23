@@ -258,7 +258,7 @@ mixin IsmChatPageGetMessageMixin on GetxController {
           ),
           unreadMessagesCount: 0,
         );
-        IsmChatLog.error(conversation.lastMessageDetails?.body);
+
         await IsmChatConfig.dbWrapper!
             .saveConversation(conversation: conversation);
         await conversationController.getConversationsFromDB();

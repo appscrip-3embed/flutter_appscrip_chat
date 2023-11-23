@@ -147,6 +147,7 @@ class IsmChatDBWrapper {
 
     String? map;
     List<String>? listMap;
+
     switch (dbBox) {
       case IsmChatDbBox.main:
         map = await chatConversationBox.get(conversationId);
@@ -155,10 +156,12 @@ class IsmChatDBWrapper {
         listMap = await pendingMessageBox.get(conversationId);
         break;
     }
+
     if (dbBox == IsmChatDbBox.main) {
       if (map == null) {
         return null;
       }
+
       return IsmChatConversationModel.fromJson(map);
     }
     if (listMap == null || listMap.isEmpty) {
@@ -180,21 +183,27 @@ class IsmChatDBWrapper {
         conversation.conversationId!.trim().isEmpty) {
       return false;
     }
-    switch (dbBox) {
-      case IsmChatDbBox.main:
-        await chatConversationBox.put(
-                conversation.conversationId ?? '', conversation.toJson())
-            as Map<String, dynamic>?;
-        break;
-      case IsmChatDbBox.pending:
-        await pendingMessageBox.put(
-            conversation.conversationId ?? '',
-            conversation.messages?.isEmpty == true
-                ? []
-                : conversation.messages!.map((e) => e.toJson()).toList());
-        break;
+
+    try {
+      switch (dbBox) {
+        case IsmChatDbBox.main:
+          await chatConversationBox.put(
+                  conversation.conversationId ?? '', conversation.toJson())
+              as Map<String, dynamic>?;
+          break;
+        case IsmChatDbBox.pending:
+          await pendingMessageBox.put(
+              conversation.conversationId ?? '',
+              conversation.messages?.isEmpty == true
+                  ? []
+                  : conversation.messages!.map((e) => e.toJson()).toList());
+          break;
+      }
+      return true;
+    } catch (e, st) {
+      print('$e $st');
+      return false;
     }
-    return true;
   }
 
   Future<List<IsmChatMessageModel>?> getMessage(String conversationId,
@@ -236,6 +245,7 @@ class IsmChatDBWrapper {
       case IsmChatDbBox.main:
         var conversation = await getConversation(
             conversationId: message.conversationId, dbBox: dbBox);
+
         conversation?.messages?.add(message);
         await saveConversation(conversation: conversation!, dbBox: dbBox);
         break;

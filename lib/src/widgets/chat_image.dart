@@ -56,20 +56,42 @@ class IsmChatImage extends StatelessWidget {
                       imageUrl: imageUrl,
                       name: _name,
                     )
-                  : _AssetImage(imageUrl: imageUrl),
+                  : _AssetImage(
+                      imageUrl: imageUrl,
+                      name: _name,
+                    ),
         ),
       );
 }
 
 class _AssetImage extends StatelessWidget {
-  const _AssetImage({required this.imageUrl});
+  const _AssetImage({required this.imageUrl, required this.name});
   final String imageUrl;
+  final String name;
 
   @override
-  Widget build(BuildContext context) => Image.file(
+  Widget build(BuildContext context) {
+    try {
+      return Image.file(
         File(imageUrl),
         fit: BoxFit.cover,
       );
+    } catch (e) {
+      return Container(
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: IsmChatConfig.chatTheme.primaryColor!.withOpacity(0.2),
+          shape: BoxShape.circle,
+        ),
+        child: Text(
+          name[0],
+          style: IsmChatStyles.w600Black24.copyWith(
+            color: IsmChatConfig.chatTheme.primaryColor,
+          ),
+        ),
+      );
+    }
+  }
 }
 
 class _MemeroyImage extends StatelessWidget {

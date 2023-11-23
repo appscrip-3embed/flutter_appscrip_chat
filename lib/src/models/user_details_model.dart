@@ -1,31 +1,32 @@
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/src/models/models.dart';
+import 'package:appscrip_chat_component/src/utilities/utilities.dart';
 
 class UserDetails {
   factory UserDetails.fromJson(String source) =>
       UserDetails.fromMap(json.decode(source) as Map<String, dynamic>);
 
   factory UserDetails.fromMap(Map<String, dynamic> map) => UserDetails(
-      userProfileImageUrl: map['userProfileImageUrl'] as String? ?? '',
-      userName: map['userName'] as String? ?? '',
-      userIdentifier: map['userIdentifier'] as String? ?? '',
-      userId: map['userId'] as String? ?? '',
-      online: map['online'] as bool? ?? false,
-      memberName: map['memberName'] as String? ?? '',
-      memberId: map['memberId'] as String? ?? '',
-      metaData: map['metaData'] == null
-          ? IsmChatMetaData()
-          : IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
-      lastSeen: map['lastSeen'] as int? ?? 0,
-      timestamp: map['timestamp'] as int? ?? 0,
-      visibility: map['visibility'] != null ? map['visibility'] as bool : true,
-      notification:
-          map['notification'] != null ? map['notification'] as bool : null,
-      language: map['language'] != null ? map['language'] as String : null,
-      order: map['order'] != null ? map['order'] as int : null,
-      wordCount: map['wordCount'] != null ? map['wordCount'] as int : null,
-      isAdmin: map['isAdmin'] as bool? ?? false);
+        userProfileImageUrl: map['userProfileImageUrl'] as String? ?? '',
+        userName: map['userName'] as String? ?? '',
+        userIdentifier: map['userIdentifier'] as String? ?? '',
+        userId: map['userId'] as String? ?? '',
+        online: map['online'] as bool? ?? false,
+        memberName: map['memberName'] as String? ?? '',
+        memberId: map['memberId'] as String? ?? '',
+        metaData: map['metaData'] == null
+            ? IsmChatMetaData()
+            : IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
+        lastSeen: map['lastSeen'] as int? ?? 0,
+        timestamp: map['timestamp'] as int? ?? 0,
+        visibility: map['visibility'] as bool? ?? false,
+        notification: map['notification'] as bool? ?? false,
+        language: map['language'] as String? ?? '',
+        order: map['order'] as int? ?? 0,
+        wordCount: map['wordCount'] as int? ?? 0,
+        isAdmin: map['isAdmin'] as bool? ?? false,
+      );
 
   UserDetails({
     required this.userProfileImageUrl,
@@ -64,7 +65,13 @@ class UserDetails {
   final int? wordCount;
   final int? order;
 
-  String get profileUrl => metaData?.profilePic ?? userProfileImageUrl;
+  String get profileUrl {
+    if (metaData == null || metaData?.profilePic.isNullOrEmpty == true) {
+      return userProfileImageUrl;
+    }
+
+    return metaData?.profilePic ?? '';
+  }
 
   UserDetails copyWith({
     String? userProfileImageUrl,

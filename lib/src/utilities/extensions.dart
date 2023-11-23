@@ -24,6 +24,10 @@ extension NullCheck<T> on Iterable<T>? {
   bool get isNullOrEmpty => this == null || this?.isEmpty == true;
 }
 
+extension NullStringExtension on String? {
+  bool get isNullOrEmpty => this == null || (this?.trim() ?? '').isEmpty;
+}
+
 extension MatchString on String {
   bool didMatch(String other) => toLowerCase().contains(other.toLowerCase());
 

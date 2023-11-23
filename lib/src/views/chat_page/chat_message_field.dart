@@ -121,8 +121,10 @@ class IsmChatMessageField extends StatelessWidget {
                       child: Focus(
                         autofocus: true,
                         child: Container(
-                          margin: IsmChatDimens.edgeInsets4
-                              .copyWith(bottom: IsmChatDimens.eight),
+                          margin: IsmChatDimens.edgeInsets4.copyWith(
+                              bottom: controller.isreplying
+                                  ? IsmChatDimens.twelve
+                                  : IsmChatDimens.eight),
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: IsmChatConfig.chatTheme.chatPageTheme

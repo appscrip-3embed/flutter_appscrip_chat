@@ -11,6 +11,16 @@ class IsmChatAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.height,
     this.action,
     this.backIcon,
+    this.leading,
+    this.leadingWidth,
+    this.shadowColor,
+    this.backgroundColor,
+    this.centerTitle,
+    this.elevation,
+    this.shape,
+    this.surfaceTintColor,
+    this.titleSpacing,
+    this.bottom,
     super.key,
   });
 
@@ -20,7 +30,26 @@ class IsmChatAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   final VoidCallback? onBack;
 
+  final Color? shadowColor;
+
+  final Color? surfaceTintColor;
+
+  final Color? backgroundColor;
+
+  final Widget? leading;
+
+  final bool? centerTitle;
+
   final List<Widget>? action;
+
+  final ShapeBorder? shape;
+  final double? titleSpacing;
+
+  final double? elevation;
+
+  final double? leadingWidth;
+
+  final PreferredSizeWidget? bottom;
 
   @override
   Size get preferredSize =>
@@ -28,18 +57,27 @@ class IsmChatAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) => AppBar(
-        backgroundColor: IsmChatConfig.chatTheme.primaryColor,
-        leading: IconButton(
-          onPressed: onBack ?? Get.back,
-          icon: Icon(
-            Responsive.isWebAndTablet(context)
-                ? Icons.close_rounded
-                : backIcon ?? Icons.arrow_back_rounded,
-            color: IsmChatColors.whiteColor,
-          ),
-        ),
+        bottom: bottom,
+        titleSpacing: titleSpacing,
+        centerTitle: centerTitle ?? true,
+        shape: shape,
+        elevation: elevation,
+        surfaceTintColor: surfaceTintColor,
+        shadowColor: shadowColor,
+        leadingWidth: leadingWidth,
+        backgroundColor:
+            backgroundColor ?? IsmChatConfig.chatTheme.primaryColor,
+        leading: leading ??
+            IconButton(
+              onPressed: onBack ?? Get.back,
+              icon: Icon(
+                Responsive.isWebAndTablet(context)
+                    ? Icons.close_rounded
+                    : backIcon ?? Icons.arrow_back_rounded,
+                color: IsmChatColors.whiteColor,
+              ),
+            ),
         title: title,
-        centerTitle: true,
         actions: action,
       );
 }

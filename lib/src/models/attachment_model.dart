@@ -24,7 +24,6 @@ class AttachmentModel {
       );
 
   AttachmentModel({
-    this.id = 0,
     this.thumbnailUrl,
     this.size,
     this.name,
@@ -35,7 +34,6 @@ class AttachmentModel {
     this.attachmentType,
   });
 
-  int id;
   String? thumbnailUrl;
   int? size;
   String? name;
