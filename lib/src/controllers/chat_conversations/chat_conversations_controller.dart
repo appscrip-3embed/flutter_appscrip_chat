@@ -460,6 +460,7 @@ class IsmChatConversationsController extends GetxController {
         return IsmChatUserInfo(
           user: contactDetails,
           conversationId: userConversationId,
+          fromMessagePage: true,
         );
       case IsRenderChatPageScreen.messageSearchView:
         return const IsmChatSearchMessgae();
