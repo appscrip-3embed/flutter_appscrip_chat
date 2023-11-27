@@ -59,18 +59,13 @@ class ChatList extends StatelessWidget {
               ),
             ),
             chatPageProperties: IsmChatPageProperties(
-              // header: IsmChatPageHeaderProperties(
-              //   bottom: controller.isBottomVisibile
-              //       ? (p0, p1) {
-              //           return const PreferredSize(
-              //             preferredSize: Size.fromHeight(200),
-              //             child: ColoredBox(
-              //               color: AppColors.primaryColorDark,
-              //             ),
-              //           );
-              //         }
-              //       : null,
-              // ),
+              header: IsmChatPageHeaderProperties(
+                  // height: (p0, p1) => 100,
+                  // bottom: (p0, p1) {
+                  //   return const ColoredBox(
+                  //       color: Colors.black, child: Text('Rahul Saryam'));
+                  // },
+                  ),
               // meessageFieldFocusNode: (_, coverstaion, value) {
               //   IsmChatLog.info(value);
               //   controller.isBottomVisibile = !controller.isBottomVisibile;

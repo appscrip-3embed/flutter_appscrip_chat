@@ -1,10 +1,10 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
-typedef ConversationCallback = PreferredSizeWidget Function(
-  BuildContext,
-  IsmChatConversationModel,
-);
+// typedef ConversationCallback = PreferredSizeWidget Function(
+//   BuildContext,
+//   IsmChatConversationModel,
+// );
 
 typedef ConversationCardCallback = Widget Function(
   BuildContext,
