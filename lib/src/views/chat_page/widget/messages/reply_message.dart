@@ -37,88 +37,99 @@ class _ReplyMessage extends StatelessWidget {
               (message.metaData?.parentMessageInitiator ?? false);
           return Material(
             color: Colors.transparent,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(IsmChatDimens.eight),
-              child: Container(
-                constraints: BoxConstraints(
-                  minHeight: IsmChatDimens.twentyEight,
-                ),
-                decoration: BoxDecoration(
-                  color: (message.sentByMe
-                          ? IsmChatColors.whiteColor
-                          : IsmChatColors.greyColor)
-                      .withOpacity(0.2),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    SizedBox(
-                      width: IsmChatDimens.four,
-                      height: IsmChatDimens.fifty,
-                      child: ColoredBox(
-                        color: IsmChatConfig.chatTheme.chatPageTheme
-                                    ?.replyMessageThem !=
-                                null
-                            ? replyingMyMessage
-                                ? IsmChatConfig.chatTheme.chatPageTheme
-                                        ?.replyMessageThem?.selfReplayMessage ??
-                                    IsmChatColors.yellowColor
-                                : IsmChatConfig
-                                        .chatTheme
-                                        .chatPageTheme
-                                        ?.replyMessageThem
-                                        ?.opponentReplayMessage ??
-                                    IsmChatColors.blueColor
-                            : replyingMyMessage
-                                ? IsmChatColors.yellowColor
-                                : IsmChatColors.blueColor,
-                      ),
-                    ),
-                    Padding(
-                      padding: IsmChatDimens.edgeInsets4,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            replyingMyMessage
-                                ? IsmChatStrings.you
-                                : controller.conversation?.replyName
-                                        .capitalizeFirst ??
-                                    '',
-                            style: IsmChatStyles.w500Black14.copyWith(
-                              color: IsmChatConfig.chatTheme.chatPageTheme
-                                          ?.replyMessageThem !=
-                                      null
-                                  ? replyingMyMessage
-                                      ? IsmChatConfig.chatTheme.chatPageTheme
-                                          ?.replyMessageThem?.selfReplayMessage
-                                      : IsmChatConfig
+            child: IsmChatTapHandler(
+              onTap: () {
+                controller.scrollToMessage(message.parentMessageId ?? '');
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(IsmChatDimens.eight),
+                child: Container(
+                  constraints: BoxConstraints(
+                    minHeight: IsmChatDimens.twentyEight,
+                  ),
+                  decoration: BoxDecoration(
+                    color: (message.sentByMe
+                            ? IsmChatColors.whiteColor
+                            : IsmChatColors.greyColor)
+                        .withOpacity(0.2),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      SizedBox(
+                        width: IsmChatDimens.four,
+                        height: IsmChatDimens.fifty,
+                        child: ColoredBox(
+                          color: IsmChatConfig.chatTheme.chatPageTheme
+                                      ?.replyMessageThem !=
+                                  null
+                              ? replyingMyMessage
+                                  ? IsmChatConfig
                                           .chatTheme
                                           .chatPageTheme
                                           ?.replyMessageThem
-                                          ?.opponentReplayMessage
-                                  : replyingMyMessage
-                                      ? IsmChatColors.yellowColor
-                                      : IsmChatColors.blueColor,
-                            ),
-                          ),
-                          ConstrainedBox(
-                            constraints: BoxConstraints(
-                              maxWidth: IsmChatDimens.percentWidth(.2),
-                            ),
-                            child: Text(
-                              message.metaData?.parentMessageBody ?? '',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: message.style,
-                            ),
-                          ),
-                        ],
+                                          ?.selfReplayMessage ??
+                                      IsmChatColors.yellowColor
+                                  : IsmChatConfig
+                                          .chatTheme
+                                          .chatPageTheme
+                                          ?.replyMessageThem
+                                          ?.opponentReplayMessage ??
+                                      IsmChatColors.blueColor
+                              : replyingMyMessage
+                                  ? IsmChatColors.yellowColor
+                                  : IsmChatColors.blueColor,
+                        ),
                       ),
-                    ),
-                    IsmChatDimens.boxWidth8,
-                  ],
+                      Padding(
+                        padding: IsmChatDimens.edgeInsets4,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              replyingMyMessage
+                                  ? IsmChatStrings.you
+                                  : controller.conversation?.replyName
+                                          .capitalizeFirst ??
+                                      '',
+                              style: IsmChatStyles.w500Black14.copyWith(
+                                color: IsmChatConfig.chatTheme.chatPageTheme
+                                            ?.replyMessageThem !=
+                                        null
+                                    ? replyingMyMessage
+                                        ? IsmChatConfig
+                                            .chatTheme
+                                            .chatPageTheme
+                                            ?.replyMessageThem
+                                            ?.selfReplayMessage
+                                        : IsmChatConfig
+                                            .chatTheme
+                                            .chatPageTheme
+                                            ?.replyMessageThem
+                                            ?.opponentReplayMessage
+                                    : replyingMyMessage
+                                        ? IsmChatColors.yellowColor
+                                        : IsmChatColors.blueColor,
+                              ),
+                            ),
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxWidth: IsmChatDimens.percentWidth(.2),
+                              ),
+                              child: Text(
+                                message.metaData?.parentMessageBody ?? '',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: message.style,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      IsmChatDimens.boxWidth8,
+                    ],
+                  ),
                 ),
               ),
             ),

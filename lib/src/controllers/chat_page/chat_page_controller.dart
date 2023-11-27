@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 import 'dart:math';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
@@ -1420,6 +1421,80 @@ class IsmChatPageController extends GetxController
     }
   }
 
+  void tapForMediaPreviewWithMetaData(IsmChatMessageModel message) async {
+    if ([IsmChatCustomMessageType.image, IsmChatCustomMessageType.video]
+        .contains(message.metaData?.replayMessageCustomType)) {
+      var mediaList = messages
+          .where((item) => [
+                IsmChatCustomMessageType.image,
+                IsmChatCustomMessageType.video
+              ].contains(item.metaData?.replayMessageCustomType))
+          .toList();
+      var selectedMediaIndex = mediaList.indexOf(message);
+
+      if (Responsive.isWebAndTablet(Get.context!)) {
+        {
+          await Get.dialog(IsmWebMessageMediaPreview(
+            mediaIndex: selectedMediaIndex,
+            messageData: mediaList,
+            mediaUserName: message.chatName,
+            initiated: message.sentByMe,
+            mediaTime: message.sentAt,
+          ));
+        }
+      } else {
+        IsmChatRouteManagement.goToMediaPreview(
+          mediaIndex: selectedMediaIndex,
+          messageData: mediaList,
+          mediaUserName: message.chatName,
+          initiated: message.sentByMe,
+          mediaTime: message.sentAt,
+        );
+      }
+    } else if (message.metaData?.replayMessageCustomType ==
+        IsmChatCustomMessageType.file) {
+      var localPath = message.attachments?.first.mediaUrl;
+      if (localPath == null) {
+        return;
+      }
+      try {
+        if (!kIsWeb) {
+          final path = await IsmChatUtility.makeDirectoryWithUrl(
+              urlPath: message.attachments?.first.mediaUrl ?? '',
+              fileName: message.attachments?.first.name ?? '');
+
+          if (path.path.isNotEmpty) {
+            localPath = path.path;
+          }
+        }
+
+        if (kIsWeb) {
+          if (localPath.isValidUrl) {
+            IsmChatBlob.fileDownloadWithUrl(localPath);
+          } else {
+            IsmChatBlob.fileDownloadWithBytes(
+              localPath.strigToUnit8List,
+              downloadName: message.attachments?.first.name,
+            );
+          }
+        } else {
+          await OpenFilex.open(localPath);
+        }
+      } catch (e) {
+        IsmChatLog.error('$e');
+      }
+    } else if (message.customType == IsmChatCustomMessageType.audio) {
+      await Get.dialog(
+        AudioPreview(
+          message: message,
+        ),
+      );
+    } else if (message.metaData?.replayMessageCustomType ==
+        IsmChatCustomMessageType.contact) {
+      IsmChatRouteManagement.goToContactInfoView(contacts: message.contacts);
+    }
+  }
+
   void toggleCamera() async {
     areCamerasInitialized = false;
     if (!Responsive.isWebAndTablet(Get.context!)) {
@@ -2104,7 +2179,7 @@ class IsmChatPageController extends GetxController
             message.attachments?.first.mediaUrl ?? '');
       }
 
-      // ********** With out package and create folder name
+      // ********** With out package and create folder name and download any files
       //  Directory? directory;
       // if (GetPlatform.isAndroid) {
       //   if (await IsmChatUtility.requestPermission(Permission.storage) &&

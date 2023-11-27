@@ -2,6 +2,7 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:photo_view/photo_view.dart';
 
 class IsmChatProfilePicView extends StatelessWidget {
   IsmChatProfilePicView({super.key});
@@ -34,8 +35,11 @@ class IsmChatProfilePicView extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: Image.network(user.profileUrl),
-      ),
+          child: PhotoView(
+        imageProvider: NetworkImage(user.profileUrl),
+        loadingBuilder: (context, event) => const IsmChatLoadingDialog(),
+        wantKeepAlive: true,
+      )),
     );
   }
 }

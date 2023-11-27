@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-// import 'package:swipe_to/swipe_to.dart';
 
 class MessageCard extends StatefulWidget {
   MessageCard({
@@ -105,8 +104,16 @@ class _MessageCardState extends State<MessageCard>
                 onTap: () {
                   controller.closeOveray();
                   if (widget.message.messageType == IsmChatMessageType.reply) {
-                    controller
-                        .scrollToMessage(widget.message.parentMessageId ?? '');
+                    if ([
+                      IsmChatCustomMessageType.image,
+                      IsmChatCustomMessageType.video,
+                      IsmChatCustomMessageType.file,
+                      if (!Responsive.isWebAndTablet(context))
+                        IsmChatCustomMessageType.contact,
+                    ].contains(
+                        widget.message.metaData?.replayMessageCustomType)) {
+                      controller.tapForMediaPreviewWithMetaData(widget.message);
+                    }
                   } else if ([
                     IsmChatCustomMessageType.image,
                     IsmChatCustomMessageType.video,

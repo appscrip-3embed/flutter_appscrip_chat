@@ -131,11 +131,11 @@ class PushNotificationService {
 
   Future<void> initialize() async {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      IsmChatLog.error('Got a message whilst in the foreground!');
-      IsmChatLog.error('Message data: ${message.data}');
+      IsmChatLog.success('Got a message whilst in the foreground!');
+      IsmChatLog.success('Message data: ${message.data}');
 
       if (message.notification != null) {
-        IsmChatLog.error(
+        IsmChatLog.success(
             'Message also contained a notification: ${message.notification}');
       }
     });
@@ -143,7 +143,7 @@ class PushNotificationService {
 
   Future<String?> getToken() async {
     String? token = await messaging.getToken();
-    IsmChatLog.error('Token: $token');
+    IsmChatLog.success('Token: $token');
     return token;
   }
 }

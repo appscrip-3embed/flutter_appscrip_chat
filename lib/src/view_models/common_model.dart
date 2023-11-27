@@ -17,8 +17,8 @@ class IsmChatCommonViewModel {
       bytes: bytes,
       isLoading: isLoading,
     );
-    if (!respone!.hasError) {
-      return respone.errorCode;
+    if (!(respone?.hasError == true)) {
+      return respone?.errorCode;
     }
     return null;
   }
