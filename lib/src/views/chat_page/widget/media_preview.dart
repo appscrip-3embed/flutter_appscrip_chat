@@ -177,9 +177,13 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
           child: CarouselSlider.builder(
             itemBuilder: (BuildContext context, int index, int realIndex) {
               var url =
-                  widget._messageData![index].attachments!.first.mediaUrl ?? '';
-              return widget._messageData![index].customType ==
-                      IsmChatCustomMessageType.image
+                  widget._messageData?[index].attachments?.first.mediaUrl ?? '';
+              var customType = (widget._messageData?[index].messageType ==
+                      IsmChatMessageType.normal)
+                  ? widget._messageData![index].customType
+                  : widget
+                      ._messageData?[index].metaData?.replayMessageCustomType;
+              return customType == IsmChatCustomMessageType.image
                   ? PhotoView(
                       imageProvider: url.isValidUrl
                           ? NetworkImage(url) as ImageProvider

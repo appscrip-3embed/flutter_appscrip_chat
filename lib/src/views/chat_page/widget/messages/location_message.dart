@@ -1,5 +1,3 @@
-// ignore_for_file: must_be_immutable
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

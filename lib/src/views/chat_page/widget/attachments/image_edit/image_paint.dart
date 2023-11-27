@@ -43,7 +43,7 @@ class _ImagePainterWidgetState extends State<IsmChatImagePainterWidget> {
                 final extensionSplite = pathSplite.split('.');
 
                 final extension = extensionSplite.last;
-                IsmChatLog.error('imagePath $extension');
+
                 final directory =
                     (await getApplicationDocumentsDirectory()).path;
                 await Directory('$directory/sample').create(recursive: true);

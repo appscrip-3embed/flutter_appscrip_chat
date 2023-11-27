@@ -15,7 +15,7 @@ class IsmChatFileMessage extends StatelessWidget {
         ? MemoryImage(Uint8List(0))
         : Get.find<IsmChatPageController>().getMemoryImage(message.sentAt,
             (message.attachments?.first.thumbnailUrl ?? '').strigToUnit8List);
-    IsmChatLog.error(memoryImage);
+
     return Stack(
       alignment: Alignment.center,
       children: [
