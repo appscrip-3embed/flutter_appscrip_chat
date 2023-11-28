@@ -60,10 +60,12 @@ class ChatList extends StatelessWidget {
             ),
             chatPageProperties: IsmChatPageProperties(
               header: IsmChatPageHeaderProperties(
-                  // height: (p0, p1) => 100,
+                  // height: (p0, p1) => 200,
                   // bottom: (p0, p1) {
-                  //   return const ColoredBox(
-                  //       color: Colors.black, child: Text('Rahul Saryam'));
+                  //   return Container(
+                  //       alignment: Alignment.center,
+                  //       width: double.infinity,
+                  //       child: const Text('Rahul Saryam'));
                   // },
                   ),
               // meessageFieldFocusNode: (_, coverstaion, value) {
