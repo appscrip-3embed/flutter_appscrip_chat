@@ -20,6 +20,9 @@ class ChatList extends StatelessWidget {
           body: IsmChatApp(
             chatTheme: IsmChatThemeData(
               primaryColor: AppColors.primaryColorLight,
+              // chatPageHeaderTheme: IsmChatHeaderThemeData(
+              //   iconColor: Colors.red,
+              // ),
               chatPageTheme: IsmChatPageThemeData(
                 selfMessageTheme: IsmChatMessageThemeData(
                   borderColor: Colors.grey,

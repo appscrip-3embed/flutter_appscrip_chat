@@ -71,9 +71,11 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                 controller.closeOveray();
                                 await controller.updateLastMessage();
                               },
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.arrow_back_rounded,
-                                color: IsmChatColors.whiteColor,
+                                color: IsmChatConfig.chatTheme
+                                        .chatPageHeaderTheme?.iconColor ??
+                                    IsmChatColors.whiteColor,
                               ),
                             )
                           ] else ...[
