@@ -10,7 +10,6 @@ class IsmChatConversationModel {
           json.decode(source) as Map<String, dynamic>);
 
   factory IsmChatConversationModel.fromMap(Map<String, dynamic> map) {
-   
     var model = IsmChatConversationModel(
         updatedAt: map['updatedAt'] as int? ?? 0,
         unreadMessagesCount: map['unreadMessagesCount'] as int? ?? 0,
