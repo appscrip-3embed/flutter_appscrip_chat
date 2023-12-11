@@ -164,7 +164,8 @@ class IsmChatFocusMenu extends StatelessWidget {
                                 width: IsmChatDimens.oneHundredSeventy,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(
-                                      IsmChatDimens.sixteen),
+                                    IsmChatDimens.sixteen,
+                                  ),
                                 ),
                                 clipBehavior: Clip.antiAlias,
                                 child: GetBuilder<IsmChatPageController>(
@@ -193,8 +194,13 @@ class IsmChatFocusMenu extends StatelessWidget {
                                                           IsmChatFocusMenuType
                                                               .delete
                                                       ? IsmChatColors.redColor
-                                                      : IsmChatConfig.chatTheme
-                                                          .backgroundColor,
+                                                      : IsmChatConfig
+                                                              .chatTheme
+                                                              .chatPageTheme
+                                                              ?.onMessageFocusbackgroundColor ??
+                                                          IsmChatConfig
+                                                              .chatTheme
+                                                              .backgroundColor,
                                                 ),
                                                 child: Row(
                                                   children: [
