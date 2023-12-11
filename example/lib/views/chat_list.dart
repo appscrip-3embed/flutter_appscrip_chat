@@ -62,36 +62,38 @@ class ChatList extends StatelessWidget {
               ),
             ),
             chatPageProperties: IsmChatPageProperties(
-              header: IsmChatPageHeaderProperties(
-                  // height: (p0, p1) => 200,
-                  // bottom: (p0, p1) {
-                  //   return Container(
-                  //       alignment: Alignment.center,
-                  //       width: double.infinity,
-                  //       child: const Text('Rahul Saryam'));
-                  // },
+                header: IsmChatPageHeaderProperties(
+                    // height: (p0, p1) => 200,
+                    // bottom: (p0, p1) {
+                    //   return Container(
+                    //       alignment: Alignment.center,
+                    //       width: double.infinity,
+                    //       child: const Text('Rahul Saryam'));
+                    // },
+                    ),
+                // meessageFieldFocusNode: (_, coverstaion, value) {
+                //   IsmChatLog.info(value);
+                //   controller.isBottomVisibile = !controller.isBottomVisibile;
+                //   controller.update();
+                // },
+                placeholder: IsmChatEmptyView(
+                  icon: Icon(
+                    Icons.chat_outlined,
+                    size: IsmChatDimens.fifty,
+                    color: IsmChatColors.greyColor,
                   ),
-              // meessageFieldFocusNode: (_, coverstaion, value) {
-              //   IsmChatLog.info(value);
-              //   controller.isBottomVisibile = !controller.isBottomVisibile;
-              //   controller.update();
-              // },
-              placeholder: IsmChatEmptyView(
-                icon: Icon(
-                  Icons.chat_outlined,
-                  size: IsmChatDimens.fifty,
-                  color: IsmChatColors.greyColor,
+                  text: 'No Messages',
                 ),
-                text: 'No Messages',
-              ),
-              attachments: const [
-                IsmChatAttachmentType.camera,
-                IsmChatAttachmentType.gallery,
-                IsmChatAttachmentType.document,
-                if (!kIsWeb) IsmChatAttachmentType.location,
-                if (!kIsWeb) IsmChatAttachmentType.contact,
-              ],
-            ),
+                attachments: const [
+                  IsmChatAttachmentType.camera,
+                  IsmChatAttachmentType.gallery,
+                  IsmChatAttachmentType.document,
+                  if (!kIsWeb) IsmChatAttachmentType.location,
+                  if (!kIsWeb) IsmChatAttachmentType.contact,
+                ],
+                features: [
+                  IsmChatFeature.reply,
+                ]),
             noChatSelectedPlaceholder: Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
