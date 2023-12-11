@@ -31,15 +31,16 @@ class MessageCard extends StatelessWidget {
             ? null
             : !canReply
                 ? null
-                : () {
+                : (details) {
                     controller.onReplyTap(
-                        controller.messages.reversed.toList()[index]);
+                      controller.messages.reversed.toList()[index],
+                    );
                   },
         onRightSwipe: showMessageInCenter || message.sentByMe
             ? null
             : !canReply
                 ? null
-                : () {
+                : (details) {
                     controller.onReplyTap(
                         controller.messages.reversed.toList()[index]);
                   },
