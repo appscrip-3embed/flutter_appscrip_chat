@@ -246,6 +246,23 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                     latLng?.longitude ?? 0,
                                   );
                                   if (addresses.isNotEmpty) {
+                                    controller.sendLocation(
+                                      conversationId: controller
+                                              .conversation?.conversationId ??
+                                          '',
+                                      userId: controller.conversation
+                                              ?.opponentDetails?.userId ??
+                                          '',
+                                      latitude: latLng!.latitude,
+                                      longitude: latLng!.longitude,
+                                      placeId: '',
+                                      locationName: '${addresses.first.name}',
+                                      locationSubName:
+                                          '${addresses.first.subLocality} ${addresses.first.subAdministrativeArea}',
+                                    );
+
+                                    IsmChatUtility.closeLoader();
+                                    Get.back<void>();
                                     if (await IsmChatProperties
                                             .chatPageProperties
                                             .messageAllowedConfig
@@ -255,25 +272,7 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                                 Get.find<
                                                         IsmChatPageController>()
                                                     .conversation!) ??
-                                        true) {
-                                      controller.sendLocation(
-                                        conversationId: controller
-                                                .conversation?.conversationId ??
-                                            '',
-                                        userId: controller.conversation
-                                                ?.opponentDetails?.userId ??
-                                            '',
-                                        latitude: latLng!.latitude,
-                                        longitude: latLng!.longitude,
-                                        placeId: '',
-                                        locationName: '${addresses.first.name}',
-                                        locationSubName:
-                                            '${addresses.first.subLocality} ${addresses.first.subAdministrativeArea}',
-                                      );
-                                    }
-
-                                    IsmChatUtility.closeLoader();
-                                    Get.back<void>();
+                                        true) {}
                                   }
                                 },
                                 child: Column(
@@ -317,7 +316,7 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                               var prediction = controller.predictionList[index];
 
                               return IsmChatTapHandler(
-                                onTap: () {
+                                onTap: () async {
                                   controller.sendLocation(
                                       conversationId: controller
                                               .conversation?.conversationId ??
@@ -340,6 +339,13 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                       locationSubName: controller.predictionList[index].vicinity ?? '');
 
                                   Get.back<void>();
+                                  if (await IsmChatProperties.chatPageProperties
+                                          .messageAllowedConfig?.isMessgeAllowed
+                                          ?.call(
+                                              Get.context!,
+                                              Get.find<IsmChatPageController>()
+                                                  .conversation!) ??
+                                      true) {}
                                 },
                                 child: ListTile(
                                   minLeadingWidth: 0,

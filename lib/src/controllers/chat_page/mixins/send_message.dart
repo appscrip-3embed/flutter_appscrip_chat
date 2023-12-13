@@ -164,7 +164,13 @@ mixin IsmChatPageSendMessageMixin on GetxController {
 
     if (isMaxSize == false) {
       Get.back<void>();
-      sendPhotoAndVideo();
+      if (await IsmChatProperties
+              .chatPageProperties.messageAllowedConfig?.isMessgeAllowed
+              ?.call(Get.context!,
+                  Get.find<IsmChatPageController>().conversation!) ??
+          true) {
+        sendPhotoAndVideo();
+      }
     } else {
       await Get.dialog(
         const IsmChatAlertDialogBox(

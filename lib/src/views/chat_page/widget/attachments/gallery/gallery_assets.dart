@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -375,15 +374,7 @@ class IsmChatGalleryAssetsView extends StatelessWidget {
                           IsmChatDimens.boxWidth8,
                           IsmChatStartChatFAB(
                             onTap: () async {
-                              if (await IsmChatProperties.chatPageProperties
-                                      .messageAllowedConfig?.isMessgeAllowed
-                                      ?.call(
-                                          Get.context!,
-                                          Get.find<IsmChatPageController>()
-                                              .conversation!) ??
-                                  true) {
-                                controller.sendMedia();
-                              }
+                              controller.sendMedia();
                             },
                             icon: const Icon(
                               Icons.send,
