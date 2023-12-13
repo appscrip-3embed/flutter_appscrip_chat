@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -69,18 +70,26 @@ class IsmChatImageEditView extends StatelessWidget {
           ),
           floatingActionButton: FloatingActionButton(
             backgroundColor: IsmChatConfig.chatTheme.primaryColor,
-            onPressed: () {
+            onPressed: () async {
               if (controller.fileSize.size()) {
-                controller.sendImage(
-                    conversationId:
-                        controller.conversation?.conversationId ?? '',
-                    userId:
-                        controller.conversation?.opponentDetails?.userId ?? '',
-                    imagePath: controller.imagePath!);
+                if (await IsmChatProperties.chatPageProperties
+                        .messageAllowedConfig?.isMessgeAllowed
+                        ?.call(Get.context!,
+                            Get.find<IsmChatPageController>().conversation!) ??
+                    true) {
+                  await controller.sendImage(
+                      conversationId:
+                          controller.conversation?.conversationId ?? '',
+                      userId:
+                          controller.conversation?.opponentDetails?.userId ??
+                              '',
+                      imagePath: controller.imagePath!);
+                }
+
                 Get.back<void>();
                 Get.back<void>();
               } else {
-                Get.dialog(
+                await Get.dialog(
                   const IsmChatAlertDialogBox(
                     title: 'You can not send image more than 20 MB.',
                     cancelLabel: 'Okay',

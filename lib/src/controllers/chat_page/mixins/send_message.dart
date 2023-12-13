@@ -418,9 +418,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           thumbnailBytes = pdfImage?.bytes;
           thumbnailNameWithExtension = pdfImage?.format.toString();
           thumbnailMediaId = sentAt.toString();
-
           nameWithExtension = x.name;
-
           documentMessage = IsmChatMessageModel(
             body: 'Document',
             conversationId: conversationId,
@@ -478,39 +476,45 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       }
     }
 
-    if (documentMessage != null) {
-      _controller.messages.add(documentMessage);
-      _controller.isreplying = false;
+    if (await IsmChatProperties
+            .chatPageProperties.messageAllowedConfig?.isMessgeAllowed
+            ?.call(Get.context!,
+                Get.find<IsmChatPageController>().conversation!) ??
+        true) {
+      if (documentMessage != null) {
+        _controller.messages.add(documentMessage);
+        _controller.isreplying = false;
 
-      if (!_controller.isTemporaryChat) {
-        await IsmChatConfig.dbWrapper!
-            .saveMessage(documentMessage, IsmChatDbBox.pending);
-        if (kIsWeb && Responsive.isWebAndTablet(Get.context!)) {
-          _controller.updateLastMessagOnCurrentTime(documentMessage);
+        if (!_controller.isTemporaryChat) {
+          await IsmChatConfig.dbWrapper!
+              .saveMessage(documentMessage, IsmChatDbBox.pending);
+          if (kIsWeb && Responsive.isWebAndTablet(Get.context!)) {
+            _controller.updateLastMessagOnCurrentTime(documentMessage);
+          }
         }
-      }
 
-      var notificationTitle =
-          IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-              ? IsmChatConfig.communicationConfig.userConfig.userName
-              : conversationController.userDetails?.userName ?? '';
-      await ismPostMediaUrl(
-        isNetWorkUrl: isNetWorkUrl ?? false,
-        imageAndFile: false,
-        bytes: bytes,
-        createdAt: sentAt,
-        ismChatChatMessageModel: documentMessage,
-        mediaId: sentAt.toString(),
-        mediaType: IsmChatMediaType.file.value,
-        nameWithExtension: nameWithExtension ?? '',
-        notificationBody: IsmChatStrings.sentDoc,
-        notificationTitle: notificationTitle,
-        isTemporaryChat: _controller.isTemporaryChat,
-        thumbnailNameWithExtension: thumbnailNameWithExtension,
-        thumbnailMediaId: thumbnailMediaId,
-        thumbnailBytes: thumbnailBytes,
-        thumbanilMediaType: IsmChatMediaType.image.value,
-      );
+        var notificationTitle =
+            IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
+                ? IsmChatConfig.communicationConfig.userConfig.userName
+                : conversationController.userDetails?.userName ?? '';
+        await ismPostMediaUrl(
+          isNetWorkUrl: isNetWorkUrl ?? false,
+          imageAndFile: false,
+          bytes: bytes,
+          createdAt: sentAt,
+          ismChatChatMessageModel: documentMessage,
+          mediaId: sentAt.toString(),
+          mediaType: IsmChatMediaType.file.value,
+          nameWithExtension: nameWithExtension ?? '',
+          notificationBody: IsmChatStrings.sentDoc,
+          notificationTitle: notificationTitle,
+          isTemporaryChat: _controller.isTemporaryChat,
+          thumbnailNameWithExtension: thumbnailNameWithExtension,
+          thumbnailMediaId: thumbnailMediaId,
+          thumbnailBytes: thumbnailBytes,
+          thumbanilMediaType: IsmChatMediaType.image.value,
+        );
+      }
     }
   }
 

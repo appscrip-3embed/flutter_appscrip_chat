@@ -353,18 +353,28 @@ class IsmChatForwardView extends StatelessWidget {
                                       .call(context,
                                           controller.currentConversation!);
                                 }
-                                await controller.sendForwardMessage(
-                                  customType: _message?.customType?.name ?? '',
-                                  userIds: controller.selectedUserList
-                                      .map((e) => e.userId)
-                                      .toList(),
-                                  body: _message?.body ?? '',
-                                  metaData: _message?.metaData,
-                                  attachments: _message?.attachments
-                                      ?.map((e) => e.toMap())
-                                      .toList(),
-                                  isLoading: true,
-                                );
+
+                                if (await IsmChatProperties.chatPageProperties
+                                        .messageAllowedConfig?.isMessgeAllowed
+                                        ?.call(
+                                            Get.context!,
+                                            Get.find<IsmChatPageController>()
+                                                .conversation!) ??
+                                    true) {
+                                  await controller.sendForwardMessage(
+                                    customType:
+                                        _message?.customType?.name ?? '',
+                                    userIds: controller.selectedUserList
+                                        .map((e) => e.userId)
+                                        .toList(),
+                                    body: _message?.body ?? '',
+                                    metaData: _message?.metaData,
+                                    attachments: _message?.attachments
+                                        ?.map((e) => e.toMap())
+                                        .toList(),
+                                    isLoading: true,
+                                  );
+                                }
                               },
                               elevation: 0,
                               shape: const CircleBorder(),

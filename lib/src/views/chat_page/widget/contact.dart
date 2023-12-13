@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -74,13 +75,21 @@ class IsmChatContactView extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               Get.back();
-              controller.sendContact(
-                conversationId: controller.conversation?.conversationId ?? '',
-                userId: controller.conversation?.opponentDetails?.userId ?? '',
-                contacts: controller.contactSelectedList.selectedContact
-                    .map((e) => e.contact)
-                    .toList(),
-              );
+
+              if (await IsmChatProperties
+                      .chatPageProperties.messageAllowedConfig?.isMessgeAllowed
+                      ?.call(Get.context!,
+                          Get.find<IsmChatPageController>().conversation!) ??
+                  true) {
+                controller.sendContact(
+                  conversationId: controller.conversation?.conversationId ?? '',
+                  userId:
+                      controller.conversation?.opponentDetails?.userId ?? '',
+                  contacts: controller.contactSelectedList.selectedContact
+                      .map((e) => e.contact)
+                      .toList(),
+                );
+              }
             },
             elevation: 0,
             shape: const CircleBorder(),

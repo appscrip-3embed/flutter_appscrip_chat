@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:geocode/geocode.dart';
 import 'package:geocoding/geocoding.dart';
@@ -245,20 +246,32 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                     latLng?.longitude ?? 0,
                                   );
                                   if (addresses.isNotEmpty) {
-                                    controller.sendLocation(
-                                      conversationId: controller
-                                              .conversation?.conversationId ??
-                                          '',
-                                      userId: controller.conversation
-                                              ?.opponentDetails?.userId ??
-                                          '',
-                                      latitude: latLng!.latitude,
-                                      longitude: latLng!.longitude,
-                                      placeId: '',
-                                      locationName: '${addresses.first.name}',
-                                      locationSubName:
-                                          '${addresses.first.subLocality} ${addresses.first.subAdministrativeArea}',
-                                    );
+                                    if (await IsmChatProperties
+                                            .chatPageProperties
+                                            .messageAllowedConfig
+                                            ?.isMessgeAllowed
+                                            ?.call(
+                                                Get.context!,
+                                                Get.find<
+                                                        IsmChatPageController>()
+                                                    .conversation!) ??
+                                        true) {
+                                      controller.sendLocation(
+                                        conversationId: controller
+                                                .conversation?.conversationId ??
+                                            '',
+                                        userId: controller.conversation
+                                                ?.opponentDetails?.userId ??
+                                            '',
+                                        latitude: latLng!.latitude,
+                                        longitude: latLng!.longitude,
+                                        placeId: '',
+                                        locationName: '${addresses.first.name}',
+                                        locationSubName:
+                                            '${addresses.first.subLocality} ${addresses.first.subAdministrativeArea}',
+                                      );
+                                    }
+
                                     IsmChatUtility.closeLoader();
                                     Get.back<void>();
                                   }

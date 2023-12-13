@@ -358,28 +358,27 @@ class _MicOrSendButton extends StatelessWidget {
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
                 onTap: () async {
-                  if (await IsmChatProperties.chatPageProperties
-                          .messageAllowedConfig?.isMessgeAllowed
-                          ?.call(
-                              Get.context!,
-                              Get.find<IsmChatPageController>()
-                                  .conversation!) ??
-                      true) {
-                    if (!controller.conversation!.isChattingAllowed) {
-                      controller.showDialogCheckBlockUnBlock();
-                      return;
-                    }
+                  if (!controller.conversation!.isChattingAllowed) {
+                    controller.showDialogCheckBlockUnBlock();
+                    return;
+                  }
 
-                    if (controller.showSendButton) {
-                      if (controller.isEnableRecordingAudio) {
-                        var audioPath =
-                            await controller.recordAudio.stop() ?? '';
-                        controller.forVideoRecordTimer?.cancel();
-                        controller.showSendButton = false;
+                  if (controller.showSendButton) {
+                    if (controller.isEnableRecordingAudio) {
+                      var audioPath = await controller.recordAudio.stop() ?? '';
+                      controller.forVideoRecordTimer?.cancel();
+                      controller.showSendButton = false;
 
-                        controller.isEnableRecordingAudio = false;
-                        String? sizeMedia;
-                        WebMediaModel? webMediaModel;
+                      controller.isEnableRecordingAudio = false;
+                      String? sizeMedia;
+                      WebMediaModel? webMediaModel;
+                      if (await IsmChatProperties.chatPageProperties
+                              .messageAllowedConfig?.isMessgeAllowed
+                              ?.call(
+                                  Get.context!,
+                                  Get.find<IsmChatPageController>()
+                                      .conversation!) ??
+                          true) {
                         if (kIsWeb) {
                           var bytes =
                               await IsmChatUtility.fetchBytesFromBlobUrl(
@@ -427,66 +426,65 @@ class _MicOrSendButton extends StatelessWidget {
                             ),
                           );
                         }
-                      } else {
-                        await controller.getMentionedUserList(
-                            controller.chatInputController.text.trim());
-                        controller.sendTextMessage(
-                          conversationId:
-                              controller.conversation?.conversationId ?? '',
-                          userId: controller
-                                  .conversation?.opponentDetails?.userId ??
-                              '',
-                        );
                       }
                     } else {
-                      if (controller.showEmojiBoard) {
-                        controller.toggleEmojiBoard();
-                      }
+                      await controller.getMentionedUserList(
+                          controller.chatInputController.text.trim());
+                      controller.sendTextMessage(
+                        conversationId:
+                            controller.conversation?.conversationId ?? '',
+                        userId:
+                            controller.conversation?.opponentDetails?.userId ??
+                                '',
+                      );
+                    }
+                  } else {
+                    if (controller.showEmojiBoard) {
+                      controller.toggleEmojiBoard();
+                    }
 
-                      var allowPermission = false;
-                      if (kIsWeb) {
-                        final state =
-                            await IsmChatBlob.checkPermission('microphone');
-                        if (state == 'prompt') {
-                          unawaited(Get.dialog(
-                            const IsmChatAlertDialogBox(
-                              title: IsmChatStrings.micePermission,
-                              cancelLabel: IsmChatStrings.ok,
-                            ),
-                          ));
-                          await controller.recordAudio.hasPermission();
-                          return;
-                        } else if (state == 'denied') {
-                          await Get.dialog(
-                            const IsmChatAlertDialogBox(
-                              title: IsmChatStrings.micePermissionBlock,
-                              cancelLabel: IsmChatStrings.ok,
-                            ),
-                          );
-                        } else {
-                          allowPermission = true;
-                        }
+                    var allowPermission = false;
+                    if (kIsWeb) {
+                      final state =
+                          await IsmChatBlob.checkPermission('microphone');
+                      if (state == 'prompt') {
+                        unawaited(Get.dialog(
+                          const IsmChatAlertDialogBox(
+                            title: IsmChatStrings.micePermission,
+                            cancelLabel: IsmChatStrings.ok,
+                          ),
+                        ));
+                        await controller.recordAudio.hasPermission();
+                        return;
+                      } else if (state == 'denied') {
+                        await Get.dialog(
+                          const IsmChatAlertDialogBox(
+                            title: IsmChatStrings.micePermissionBlock,
+                            cancelLabel: IsmChatStrings.ok,
+                          ),
+                        );
                       } else {
-                        if (await controller.recordAudio.hasPermission()) {
-                          allowPermission = true;
-                        }
+                        allowPermission = true;
                       }
-                      if (allowPermission) {
-                        if (!(controller.conversation?.lastMessageDetails
-                                    ?.customType ==
-                                IsmChatCustomMessageType.removeMember &&
-                            controller
-                                    .conversation?.lastMessageDetails?.userId ==
-                                IsmChatConfig
-                                    .communicationConfig.userConfig.userId)) {
-                          controller.isEnableRecordingAudio = true;
-                          controller.showSendButton = true;
-                          controller.forVideoRecordTimer =
-                              Timer.periodic(const Duration(seconds: 1), (_) {
-                            controller.seconds++;
-                          });
-                          await controller.recordAudio.start();
-                        }
+                    } else {
+                      if (await controller.recordAudio.hasPermission()) {
+                        allowPermission = true;
+                      }
+                    }
+                    if (allowPermission) {
+                      if (!(controller.conversation?.lastMessageDetails
+                                  ?.customType ==
+                              IsmChatCustomMessageType.removeMember &&
+                          controller.conversation?.lastMessageDetails?.userId ==
+                              IsmChatConfig
+                                  .communicationConfig.userConfig.userId)) {
+                        controller.isEnableRecordingAudio = true;
+                        controller.showSendButton = true;
+                        controller.forVideoRecordTimer =
+                            Timer.periodic(const Duration(seconds: 1), (_) {
+                          controller.seconds++;
+                        });
+                        await controller.recordAudio.start();
                       }
                     }
                   }
@@ -734,20 +732,13 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
               if (!controller.conversation!.isChattingAllowed) {
                 controller.showDialogCheckBlockUnBlock();
               } else {
-                if (await IsmChatProperties.chatPageProperties
-                        .messageAllowedConfig?.isMessgeAllowed
-                        ?.call(Get.context!,
-                            Get.find<IsmChatPageController>().conversation!) ??
-                    true) {
-                  await Get.bottomSheet(
-                    const IsmChatAttachmentCard(),
-                    enterBottomSheetDuration:
-                        IsmChatConstants.bottomSheetDuration,
-                    exitBottomSheetDuration:
-                        IsmChatConstants.bottomSheetDuration,
-                    elevation: 0,
-                  );
-                }
+                await Get.bottomSheet(
+                  const IsmChatAttachmentCard(),
+                  enterBottomSheetDuration:
+                      IsmChatConstants.bottomSheetDuration,
+                  exitBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
+                  elevation: 0,
+                );
               }
             },
             color: IsmChatConfig.chatTheme.chatPageTheme?.textFiledThemData
