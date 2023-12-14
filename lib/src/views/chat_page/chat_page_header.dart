@@ -264,6 +264,8 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                             ),
                           ),
                           PopupMenuButton<int>(
+                            color: IsmChatConfig.chatTheme.chatPageHeaderTheme
+                                ?.popupBackgroundColor,
                             icon: Icon(
                               Icons.more_vert,
                               color: IsmChatConfig.chatTheme.chatPageHeaderTheme

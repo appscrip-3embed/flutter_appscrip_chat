@@ -9,6 +9,7 @@ class IsmChatHeaderThemeData {
     this.shadowColor,
     this.subtileStyle,
     this.titleStyle,
+    this.popupBackgroundColor,
   });
 
   IsmChatHeaderThemeData.light()
@@ -17,7 +18,8 @@ class IsmChatHeaderThemeData {
         elevation = _kelevation,
         shadowColor = IsmChatColors.greyColor,
         titleStyle = IsmChatStyles.w400Black14,
-        subtileStyle = IsmChatStyles.w400Black12;
+        subtileStyle = IsmChatStyles.w400Black12,
+        popupBackgroundColor = IsmChatColors.whiteColor;
 
   IsmChatHeaderThemeData.dark()
       : backgroundColor = IsmChatColors.backgroundColorDark,
@@ -25,9 +27,12 @@ class IsmChatHeaderThemeData {
         elevation = _kelevation,
         shadowColor = IsmChatColors.greyColor,
         titleStyle = IsmChatStyles.w400White14,
-        subtileStyle = IsmChatStyles.w400White12;
+        subtileStyle = IsmChatStyles.w400White12,
+        popupBackgroundColor = IsmChatColors.whiteColor;
   final Color? backgroundColor;
   final Color? iconColor;
+  final Color? popupBackgroundColor;
+
   final double? elevation;
   final Color? shadowColor;
   final TextStyle? titleStyle;
