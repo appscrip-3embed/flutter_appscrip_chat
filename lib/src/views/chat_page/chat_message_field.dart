@@ -428,15 +428,23 @@ class _MicOrSendButton extends StatelessWidget {
                         }
                       }
                     } else {
-                      await controller.getMentionedUserList(
-                          controller.chatInputController.text.trim());
-                      controller.sendTextMessage(
-                        conversationId:
-                            controller.conversation?.conversationId ?? '',
-                        userId:
-                            controller.conversation?.opponentDetails?.userId ??
-                                '',
-                      );
+                      if (await IsmChatProperties.chatPageProperties
+                              .messageAllowedConfig?.isMessgeAllowed
+                              ?.call(
+                                  Get.context!,
+                                  Get.find<IsmChatPageController>()
+                                      .conversation!) ??
+                          true) {
+                        await controller.getMentionedUserList(
+                            controller.chatInputController.text.trim());
+                        controller.sendTextMessage(
+                          conversationId:
+                              controller.conversation?.conversationId ?? '',
+                          userId: controller
+                                  .conversation?.opponentDetails?.userId ??
+                              '',
+                        );
+                      }
                     }
                   } else {
                     if (controller.showEmojiBoard) {
