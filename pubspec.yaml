@@ -40,7 +40,7 @@ dependencies:
   google_maps_flutter: ^2.0.6
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  http: ^0.13.6
+  http: ^0.13.4
   image: ^4.1.2
   image_cropper: ^4.0.1
   image_painter: ^0.6.1

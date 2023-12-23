@@ -514,7 +514,7 @@ class IsmChatMqttController extends GetxController {
     } else if (message.customType == IsmChatCustomMessageType.link) {
       mqttMessage = message.notificationBody;
     } else {
-      mqttMessage = message.notificationBody;
+      mqttMessage = message.body;
     }
     if (message.events != null &&
         message.events?.sendPushNotification == false) {
@@ -538,9 +538,11 @@ class IsmChatMqttController extends GetxController {
             },
           );
           if (Platform.isAndroid) {
+            IsmChatLog.error(mqttMessage ?? '');
             Get.snackbar(
               message.notificationTitle ?? '',
               mqttMessage ?? '',
+              backgroundColor: IsmChatColors.redColor,
               icon: const Icon(Icons.message),
               onTap: (snack) {
                 if (IsmChatConfig.onSnckBarTap != null) {
@@ -564,9 +566,11 @@ class IsmChatMqttController extends GetxController {
           },
         );
         if (Platform.isAndroid) {
+          IsmChatLog.error(mqttMessage ?? '');
           Get.snackbar(
             message.notificationTitle ?? '',
             mqttMessage ?? '',
+            backgroundColor: IsmChatColors.whiteColor,
             icon: const Icon(Icons.message),
             onTap: (snack) {
               if (IsmChatConfig.onSnckBarTap != null) {
