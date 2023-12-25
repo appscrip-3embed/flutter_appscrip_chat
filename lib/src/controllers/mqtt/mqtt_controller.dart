@@ -1167,11 +1167,22 @@ class IsmChatMqttController extends GetxController {
         isLoading: isLoading,
       );
 
-  Future<bool> deleteChatFormDB(String? conversationId) async {
-    if (conversationId == null || conversationId.isEmpty) {
-      return false;
+  Future<bool> deleteChatFormDB(String isometrickChatId) async {
+    final conversations = await getAllConversationFromDB();
+    if (conversations != null || conversations?.isNotEmpty == true) {
+      var conversation = conversations?.firstWhere(
+          (element) => element.opponentDetails?.userId == isometrickChatId,
+          orElse: IsmChatConversationModel.new);
+
+      if (conversation?.conversationId != null) {
+        await IsmChatConfig.dbWrapper
+            ?.removeConversation(conversation?.conversationId ?? '');
+        return true;
+      }
     }
-    await IsmChatConfig.dbWrapper?.removeConversation(conversationId);
-    return true;
+    return false;
   }
+
+  Future<List<IsmChatConversationModel>?> getAllConversationFromDB() async =>
+      await IsmChatConfig.dbWrapper?.getAllConversations();
 }

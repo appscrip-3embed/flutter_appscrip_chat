@@ -142,12 +142,13 @@ class IsmChatApp extends StatelessWidget {
   }
 
   /// Call this function for Get all Conversation List from DB
-  static Future<List<IsmChatConversationModel>?> getAllConversation() async =>
-      IsmChatConfig.dbWrapper?.getAllConversations();
+  static Future<List<IsmChatConversationModel>?>
+      getAllConversationFromDB() async =>
+          await Get.find<IsmChatMqttController>().getAllConversationFromDB();
 
   /// Call this funcation for get all conversation list with conversation predicate
   static Future<List<IsmChatConversationModel>> get userConversations =>
-      getAllConversation().then((conversations) => (conversations ?? [])
+      getAllConversationFromDB().then((conversations) => (conversations ?? [])
           .where(
               IsmChatProperties.conversationProperties.conversationPredicate ??
                   (_) => true)
@@ -252,19 +253,31 @@ class IsmChatApp extends StatelessWidget {
   static Future<void> deleteChat(
     String conversationId, {
     bool deleteFromServer = true,
-  }) async =>
-      await Get.find<IsmChatConversationsController>().deleteChat(
-        conversationId,
-        deleteFromServer: deleteFromServer,
-      );
+  }) async {
+    assert(
+      conversationId.isNotEmpty,
+      '''Input Error: Please make sure that required fields are filled out.
+      conversationId cannot be empty.''',
+    );
+    await Get.find<IsmChatConversationsController>().deleteChat(
+      conversationId,
+      deleteFromServer: deleteFromServer,
+    );
+  }
 
   /// Call this function on to delete chat the data stored locally in the Local Database
   ///
   /// The chat will be deleted locally in all cases
-  static Future<bool> deleteChatFormDB(String conversationId) async =>
-      await Get.find<IsmChatMqttController>().deleteChatFormDB(
-        conversationId,
-      );
+  static Future<bool> deleteChatFormDB(String isometrickChatId) async {
+    assert(
+      isometrickChatId.isNotEmpty,
+      '''Input Error: Please make sure that required fields are filled out.
+      isometrickChatId cannot be empty.''',
+    );
+    return await Get.find<IsmChatMqttController>().deleteChatFormDB(
+      isometrickChatId,
+    );
+  }
 
   /// Call this funcation for the initialize mqtt
   static void initializeMqtt(
