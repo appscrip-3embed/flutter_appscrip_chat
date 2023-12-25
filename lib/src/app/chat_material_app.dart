@@ -244,7 +244,7 @@ class IsmChatApp extends StatelessWidget {
     ]);
   }
 
-  /// Call this function on to delete chat the data stored locally in the Local Database
+  /// Call this function on to delete chat with and local the data stored locally in the Local Database
   ///
   /// [deleteFromServer] - is a `boolean` parameter which signifies whether or not to delete the chat from server
   ///
@@ -256,6 +256,14 @@ class IsmChatApp extends StatelessWidget {
       await Get.find<IsmChatConversationsController>().deleteChat(
         conversationId,
         deleteFromServer: deleteFromServer,
+      );
+
+  /// Call this function on to delete chat the data stored locally in the Local Database
+  ///
+  /// The chat will be deleted locally in all cases
+  static Future<bool> deleteChatFormDB(String conversationId) async =>
+      await Get.find<IsmChatMqttController>().deleteChatFormDB(
+        conversationId,
       );
 
   /// Call this funcation for the initialize mqtt

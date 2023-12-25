@@ -1166,4 +1166,12 @@ class IsmChatMqttController extends GetxController {
       await _viewModel.getChatConversationsCount(
         isLoading: isLoading,
       );
+
+  Future<bool> deleteChatFormDB(String? conversationId) async {
+    if (conversationId == null || conversationId.isEmpty) {
+      return false;
+    }
+    await IsmChatConfig.dbWrapper?.removeConversation(conversationId);
+    return true;
+  }
 }
