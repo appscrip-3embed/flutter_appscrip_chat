@@ -12,11 +12,13 @@ class IsmChatCommonRepository {
     bool isLoading = false,
   }) async {
     try {
-      var response = await _apiWrapper.put(presignedUrl!,
-          payload: bytes,
-          headers: {},
-          forAwsUpload: true,
-          showLoader: isLoading);
+      var response = await _apiWrapper.put(
+        presignedUrl ?? '',
+        payload: bytes,
+        headers: {},
+        forAwsUpload: true,
+        showLoader: isLoading,
+      );
       if (response.hasError) {
         return null;
       }
@@ -40,6 +42,8 @@ class IsmChatCommonRepository {
         headers: IsmChatUtility.commonHeader(),
         showLoader: isLoading,
       );
+
+      IsmChatLog.error(IsmChatUtility.commonHeader());
       if (response.hasError) {
         return null;
       }

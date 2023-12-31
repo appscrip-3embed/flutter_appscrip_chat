@@ -616,7 +616,7 @@ class IsmChatConversationsController extends GetxController {
       isLoading: isLoading,
     );
     if (responseCode == 200) {
-      profileImage = response.mediaUrl!;
+      profileImage = response.mediaUrl ?? '';
     }
     return profileImage;
   }
