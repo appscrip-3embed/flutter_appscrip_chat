@@ -10,6 +10,8 @@ class IsmChatHeaderThemeData {
     this.subtileStyle,
     this.titleStyle,
     this.popupBackgroundColor,
+    this.popupShape,
+    this.popupshadowColor,
   });
 
   IsmChatHeaderThemeData.light()
@@ -19,7 +21,9 @@ class IsmChatHeaderThemeData {
         shadowColor = IsmChatColors.greyColor,
         titleStyle = IsmChatStyles.w400Black14,
         subtileStyle = IsmChatStyles.w400Black12,
-        popupBackgroundColor = IsmChatColors.whiteColor;
+        popupBackgroundColor = IsmChatColors.whiteColor,
+        popupShape = null,
+        popupshadowColor = IsmChatColors.whiteColor;
 
   IsmChatHeaderThemeData.dark()
       : backgroundColor = IsmChatColors.backgroundColorDark,
@@ -28,7 +32,9 @@ class IsmChatHeaderThemeData {
         shadowColor = IsmChatColors.greyColor,
         titleStyle = IsmChatStyles.w400White14,
         subtileStyle = IsmChatStyles.w400White12,
-        popupBackgroundColor = IsmChatColors.whiteColor;
+        popupBackgroundColor = IsmChatColors.whiteColor,
+        popupShape = null,
+        popupshadowColor = IsmChatColors.whiteColor;
   final Color? backgroundColor;
   final Color? iconColor;
   final Color? popupBackgroundColor;
@@ -37,5 +43,7 @@ class IsmChatHeaderThemeData {
   final Color? shadowColor;
   final TextStyle? titleStyle;
   final TextStyle? subtileStyle;
+  final ShapeBorder? popupShape;
+  final Color? popupshadowColor;
   static const double _kelevation = 1;
 }

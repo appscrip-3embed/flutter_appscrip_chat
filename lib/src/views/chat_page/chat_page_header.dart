@@ -272,6 +272,10 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                       ?.iconColor ??
                                   IsmChatColors.whiteColor,
                             ),
+                            shape: IsmChatConfig
+                                .chatTheme.chatPageHeaderTheme?.popupShape,
+                            shadowColor: IsmChatConfig.chatTheme
+                                .chatPageHeaderTheme?.popupshadowColor,
                             itemBuilder: (context) => [
                               if (IsmChatProperties.chatPageProperties.features
                                   .contains(IsmChatFeature.searchMessage))

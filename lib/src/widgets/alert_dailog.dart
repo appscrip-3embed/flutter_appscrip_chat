@@ -12,6 +12,7 @@ class IsmChatAlertDialogBox extends StatelessWidget {
     this.onCancel,
     this.content,
     this.contentPadding,
+    this.shape,
     this.contentTextStyle,
   }) : assert(
           (actionLabels == null && callbackActions == null) ||
@@ -28,6 +29,7 @@ class IsmChatAlertDialogBox extends StatelessWidget {
   final VoidCallback? onCancel;
   final Widget? content;
   final TextStyle? contentTextStyle;
+  final ShapeBorder? shape;
   final EdgeInsetsGeometry? contentPadding;
 
   @override
@@ -35,11 +37,15 @@ class IsmChatAlertDialogBox extends StatelessWidget {
       ? AlertDialog(
           actionsPadding: IsmChatDimens.edgeInsets16,
           title: Text(title),
-          backgroundColor: IsmChatColors.whiteColor,
+          backgroundColor: IsmChatConfig
+                  .chatTheme.chatPageHeaderTheme?.popupBackgroundColor ??
+              IsmChatColors.whiteColor,
           titleTextStyle: IsmChatStyles.w600Black14,
           contentPadding: contentPadding,
           contentTextStyle: contentTextStyle,
           content: content,
+          shape:
+              IsmChatConfig.chatTheme.chatPageHeaderTheme?.popupShape ?? shape,
           actions: [
             IsmChatTapHandler(
               onTap: onCancel ??
