@@ -239,10 +239,12 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
                                             opponentId:
                                                 widget._user?.userId ?? '',
                                             fromUser: true,
+                                            userBlockOrNot: isUserBlock,
                                           )
                                         : controller.blockUser(
                                             opponentId:
                                                 widget._user?.userId ?? '',
+                                            userBlockOrNot: isUserBlock,
                                           );
                                   },
                                 ],

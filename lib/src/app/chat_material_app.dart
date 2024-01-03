@@ -207,11 +207,12 @@ class IsmChatApp extends StatelessWidget {
     bool fromUser = false,
   }) async {
     if (Get.isRegistered<IsmChatPageController>()) {
-      await Get.find<IsmChatPageController>().blockUser(
+      await Get.find<IsmChatPageController>().unblockUser(
         opponentId: opponentId,
         includeMembers: includeMembers,
         isLoading: isLoading,
         fromUser: fromUser,
+        userBlockOrNot: true,
       );
     }
   }
@@ -229,6 +230,7 @@ class IsmChatApp extends StatelessWidget {
         includeMembers: includeMembers,
         isLoading: isLoading,
         fromUser: fromUser,
+        userBlockOrNot: false,
       );
     }
   }

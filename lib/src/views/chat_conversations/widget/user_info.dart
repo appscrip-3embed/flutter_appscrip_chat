@@ -255,7 +255,9 @@ class IsmChatUserView extends StatelessWidget {
                             onPressed: () {
                               if (!Responsive.isWebAndTablet(context)) {
                                 controller.unblockUser(
-                                    opponentId: user.userId, isLoading: true);
+                                  opponentId: user.userId,
+                                  isLoading: true,
+                                );
                               } else {
                                 controller.unblockUserForWeb(user.userId);
 

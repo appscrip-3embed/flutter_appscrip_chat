@@ -14,6 +14,7 @@ class IsmChatPageProperties {
     this.emojiIcon,
     this.meessageFieldFocusNode,
     this.messageFieldSuffix,
+    this.onCallBlockUnblock,
   });
 
   final Widget? placeholder;
@@ -62,4 +63,15 @@ class IsmChatPageProperties {
   /// It is an optional parameter for Message send text fieled
   /// You can check keyboard open or not with this parameter
   final MeessageFieldFocusNode? meessageFieldFocusNode;
+
+  /// Optional parameter
+  ///
+  /// Primarily designed for block, UnBlock to User
+  ///
+  /// ```dart
+  /// Future<ConversationVoidCallback>? onCallBlockUnblock
+  /// ```
+  ///
+  /// `IsmChatConversationModel` gives data of current chat, it could be used for local storage or state variables
+  final FutureConversationVoidCallback? onCallBlockUnblock;
 }

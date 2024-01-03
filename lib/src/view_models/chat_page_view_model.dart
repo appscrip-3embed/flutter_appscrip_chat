@@ -94,14 +94,18 @@ class IsmChatPageViewModel {
           includeMembers: includeMembers,
           isLoading: isLoading);
 
-  Future<IsmChatResponseModel?> blockUser(
+  Future<bool> blockUser(
       {required String opponentId,
       required String conversationId,
       bool isLoading = false}) async {
     var response = await _repository.blockUser(
         opponentId: opponentId, isLoading: isLoading);
 
-    return response;
+    if (response?.hasError ?? true) {
+      return false;
+    }
+
+    return true;
   }
 
   /// Add members to a conversation

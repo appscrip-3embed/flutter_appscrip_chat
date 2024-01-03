@@ -85,6 +85,7 @@ class ChatList extends StatelessWidget {
                 ),
                 text: 'No Messages',
               ),
+
               attachments: const [
                 IsmChatAttachmentType.camera,
                 IsmChatAttachmentType.gallery,

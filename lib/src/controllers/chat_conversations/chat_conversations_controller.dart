@@ -558,6 +558,7 @@ class IsmChatConversationsController extends GetxController {
           opponentId: opponentId,
           includeMembers: true,
           isLoading: false,
+          userBlockOrNot: true,
         );
       }
     }

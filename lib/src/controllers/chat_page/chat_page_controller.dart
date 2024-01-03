@@ -1777,29 +1777,33 @@ class IsmChatPageController extends GetxController
     bool userBlockOrNot, [
     bool includeMembers = false,
   ]) async {
-    await Get.dialog(IsmChatAlertDialogBox(
-      title: userBlockOrNot
-          ? IsmChatStrings.doWantUnBlckUser
-          : IsmChatStrings.doWantBlckUser,
-      actionLabels: [
-        userBlockOrNot ? IsmChatStrings.unblock : IsmChatStrings.block,
-      ],
-      callbackActions: [
-        () {
-          userBlockOrNot
-              ? unblockUser(
-                  opponentId: conversation?.opponentDetails?.userId ?? '',
-                  includeMembers: includeMembers,
-                  isLoading: true,
-                )
-              : blockUser(
-                  opponentId: conversation?.opponentDetails?.userId ?? '',
-                  includeMembers: includeMembers,
-                  isLoading: true,
-                );
-        },
-      ],
-    ));
+    await Get.dialog(
+      IsmChatAlertDialogBox(
+        title: userBlockOrNot
+            ? IsmChatStrings.doWantUnBlckUser
+            : IsmChatStrings.doWantBlckUser,
+        actionLabels: [
+          userBlockOrNot ? IsmChatStrings.unblock : IsmChatStrings.block,
+        ],
+        callbackActions: [
+          () {
+            userBlockOrNot
+                ? unblockUser(
+                    opponentId: conversation?.opponentDetails?.userId ?? '',
+                    includeMembers: includeMembers,
+                    isLoading: true,
+                    userBlockOrNot: userBlockOrNot,
+                  )
+                : blockUser(
+                    opponentId: conversation?.opponentDetails?.userId ?? '',
+                    includeMembers: includeMembers,
+                    isLoading: true,
+                    userBlockOrNot: userBlockOrNot,
+                  );
+          },
+        ],
+      ),
+    );
   }
 
   void showDialogCheckBlockUnBlock() async {
@@ -1811,7 +1815,8 @@ class IsmChatPageController extends GetxController
           callbackActions: [
             () => unblockUser(
                 opponentId: conversation?.opponentDetails?.userId ?? '',
-                isLoading: true),
+                isLoading: true,
+                userBlockOrNot: true),
           ],
         ),
       );
@@ -1977,16 +1982,29 @@ class IsmChatPageController extends GetxController
     }
   }
 
-  Future<void> blockUser(
-      {required String opponentId,
-      bool includeMembers = false,
-      bool isLoading = false,
-      bool fromUser = false}) async {
-    var data = await viewModel.blockUser(
-        opponentId: opponentId,
-        conversationId: conversation?.conversationId ?? '',
-        isLoading: isLoading);
-    if (data != null) {
+  Future<void> blockUser({
+    required String opponentId,
+    bool includeMembers = false,
+    bool isLoading = false,
+    bool fromUser = false,
+    required bool userBlockOrNot,
+  }) async {
+    bool? blokedUser;
+    if (IsmChatProperties.chatPageProperties.onCallBlockUnblock != null) {
+      blokedUser = await IsmChatProperties.chatPageProperties.onCallBlockUnblock
+              ?.call(Get.context!, conversation!) ??
+          false;
+    } else {
+      blokedUser = await viewModel.blockUser(
+          opponentId: opponentId,
+          conversationId: conversation?.conversationId ?? '',
+          isLoading: isLoading);
+    }
+
+    if (!blokedUser) {
+      return;
+    }
+    if (blokedUser == true) {
       IsmChatUtility.showToast(IsmChatStrings.blockedSuccessfully);
       await Future.wait([
         conversationController.getBlockUser(),
@@ -2001,18 +2019,26 @@ class IsmChatPageController extends GetxController
     }
   }
 
-  Future<void> unblockUser({
-    required String opponentId,
-    bool includeMembers = false,
-    bool isLoading = false,
-    bool fromUser = false,
-  }) async {
-    var isBlocked = await conversationController.unblockUser(
-      opponentId: opponentId,
-      isLoading: isLoading,
-      fromUser: fromUser,
-    );
-    if (!isBlocked) {
+  Future<void> unblockUser(
+      {required String opponentId,
+      bool includeMembers = false,
+      bool isLoading = false,
+      bool fromUser = false,
+      required bool userBlockOrNot}) async {
+    bool isUnblockUser;
+    if (IsmChatProperties.chatPageProperties.onCallBlockUnblock != null) {
+      isUnblockUser = await IsmChatProperties
+              .chatPageProperties.onCallBlockUnblock
+              ?.call(Get.context!, conversation!) ??
+          false;
+    } else {
+      isUnblockUser = await conversationController.unblockUser(
+        opponentId: opponentId,
+        isLoading: isLoading,
+        fromUser: fromUser,
+      );
+    }
+    if (!isUnblockUser) {
       return;
     }
     chatInputController.clear();
