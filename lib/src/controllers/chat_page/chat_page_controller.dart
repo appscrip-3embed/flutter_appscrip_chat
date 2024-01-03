@@ -1992,7 +1992,7 @@ class IsmChatPageController extends GetxController
     bool? blokedUser;
     if (IsmChatProperties.chatPageProperties.onCallBlockUnblock != null) {
       blokedUser = await IsmChatProperties.chatPageProperties.onCallBlockUnblock
-              ?.call(Get.context!, conversation!) ??
+              ?.call(Get.context!, conversation!, userBlockOrNot) ??
           false;
     } else {
       blokedUser = await viewModel.blockUser(
@@ -2027,10 +2027,13 @@ class IsmChatPageController extends GetxController
       required bool userBlockOrNot}) async {
     bool isUnblockUser;
     if (IsmChatProperties.chatPageProperties.onCallBlockUnblock != null) {
-      isUnblockUser = await IsmChatProperties
-              .chatPageProperties.onCallBlockUnblock
-              ?.call(Get.context!, conversation!) ??
-          false;
+      isUnblockUser =
+          await IsmChatProperties.chatPageProperties.onCallBlockUnblock?.call(
+                Get.context!,
+                conversation!,
+                userBlockOrNot,
+              ) ??
+              false;
     } else {
       isUnblockUser = await conversationController.unblockUser(
         opponentId: opponentId,

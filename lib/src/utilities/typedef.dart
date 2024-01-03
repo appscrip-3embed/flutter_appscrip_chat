@@ -36,6 +36,7 @@ typedef ConversationVoidCallback = void Function(
 typedef FutureConversationVoidCallback = Future<bool> Function(
   BuildContext,
   IsmChatConversationModel,
+  bool,
 );
 
 typedef ConversationStringCallback = String? Function(
