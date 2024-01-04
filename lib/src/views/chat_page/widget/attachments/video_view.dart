@@ -20,6 +20,8 @@ class IsmChatVideoView extends StatefulWidget {
 class _IsmChatVideoViewState extends State<IsmChatVideoView> {
   final chatPageController = Get.find<IsmChatPageController>();
 
+  TextEditingController textEditingController = TextEditingController();
+
   File? videoFile;
   String dataSize = '';
 
@@ -79,39 +81,62 @@ class _IsmChatVideoViewState extends State<IsmChatVideoView> {
           ],
         )),
         floatingActionButton: Padding(
-          padding: IsmChatDimens.edgeInsetsBottom50,
-          child: FloatingActionButton(
-            backgroundColor: IsmChatConfig.chatTheme.primaryColor,
-            onPressed: () async {
-              if (dataSize.size()) {
-                await chatPageController.sendVideo(
-                  file: videoFile,
-                  conversationId:
-                      chatPageController.conversation?.conversationId ?? '',
-                  userId: chatPageController
-                          .conversation?.opponentDetails?.userId ??
-                      '',
-                );
-                Get.back<void>();
-                Get.back<void>();
-                if (await IsmChatProperties.chatPageProperties
-                        .messageAllowedConfig?.isMessgeAllowed
-                        ?.call(Get.context!,
-                            Get.find<IsmChatPageController>().conversation!) ??
-                    true) {}
-              } else {
-                await Get.dialog(
-                  const IsmChatAlertDialogBox(
-                    title: 'You can not send video more than 20 MB.',
-                    cancelLabel: 'Okay',
-                  ),
-                );
-              }
-            },
-            child: const Icon(
-              Icons.send,
-              color: IsmChatColors.whiteColor,
-            ),
+          padding: IsmChatDimens.edgeInsetsBottom50
+              .copyWith(left: IsmChatDimens.thirty),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                child: IsmChatInputField(
+                  fillColor: IsmChatColors.greyColor,
+                  autofocus: false,
+                  padding: IsmChatDimens.edgeInsets0,
+                  hint: IsmChatStrings.addCaption,
+                  hintStyle: IsmChatStyles.w400White16,
+                  cursorColor: IsmChatColors.whiteColor,
+                  style: IsmChatStyles.w400White16,
+                  controller: textEditingController,
+                  onChanged: (value) {},
+                ),
+              ),
+              IsmChatDimens.boxWidth8,
+              FloatingActionButton(
+                backgroundColor: IsmChatConfig.chatTheme.primaryColor,
+                onPressed: () async {
+                  if (dataSize.size()) {
+                    await chatPageController.sendVideo(
+                      caption: textEditingController.text,
+                      file: videoFile,
+                      conversationId:
+                          chatPageController.conversation?.conversationId ?? '',
+                      userId: chatPageController
+                              .conversation?.opponentDetails?.userId ??
+                          '',
+                    );
+                    Get.back<void>();
+                    Get.back<void>();
+                    if (await IsmChatProperties.chatPageProperties
+                            .messageAllowedConfig?.isMessgeAllowed
+                            ?.call(
+                                Get.context!,
+                                Get.find<IsmChatPageController>()
+                                    .conversation!) ??
+                        true) {}
+                  } else {
+                    await Get.dialog(
+                      const IsmChatAlertDialogBox(
+                        title: 'You can not send video more than 20 MB.',
+                        cancelLabel: 'Okay',
+                      ),
+                    );
+                  }
+                },
+                child: const Icon(
+                  Icons.send,
+                  color: IsmChatColors.whiteColor,
+                ),
+              ),
+            ],
           ),
         ),
       );

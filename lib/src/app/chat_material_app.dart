@@ -143,8 +143,12 @@ class IsmChatApp extends StatelessWidget {
 
   /// Call this function for Get all Conversation List from DB
   static Future<List<IsmChatConversationModel>?>
-      getAllConversationFromDB() async =>
-          await Get.find<IsmChatMqttController>().getAllConversationFromDB();
+      getAllConversationFromDB() async {
+    if (Get.isRegistered<IsmChatMqttController>()) {
+      return await Get.find<IsmChatMqttController>().getAllConversationFromDB();
+    }
+    return null;
+  }
 
   /// Call this funcation for get all conversation list with conversation predicate
   static Future<List<IsmChatConversationModel>> get userConversations =>

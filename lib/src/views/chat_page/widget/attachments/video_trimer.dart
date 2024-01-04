@@ -111,21 +111,12 @@ class _VideoTrimmerViewState extends State<IsmVideoTrimmerView> {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: IsmChatDimens.percentHeight(.1),
-                      ),
-                      AspectRatio(
-                        aspectRatio:
-                            trimmer.videoPlayerController!.value.aspectRatio,
-                        child: VideoViewer(
-                          trimmer: trimmer,
-                        ),
-                      ),
-                    ],
+                  AspectRatio(
+                    aspectRatio:
+                        trimmer.videoPlayerController!.value.aspectRatio,
+                    child: VideoViewer(
+                      trimmer: trimmer,
+                    ),
                   ),
                   AnimatedOpacity(
                     duration: const Duration(milliseconds: 250),
@@ -149,7 +140,8 @@ class _VideoTrimmerViewState extends State<IsmVideoTrimmerView> {
             Align(
               alignment: Alignment.topCenter,
               child: Padding(
-                padding: const EdgeInsets.only(top: 120),
+                padding: IsmChatDimens.edgeInsetsTop10
+                    .copyWith(top: IsmChatDimens.hundred + IsmChatDimens.ten),
                 child: SizedBox(
                   width: IsmChatDimens.percentWidth(.95),
                   child: TrimViewer(

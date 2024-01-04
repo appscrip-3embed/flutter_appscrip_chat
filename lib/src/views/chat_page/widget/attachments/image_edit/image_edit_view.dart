@@ -13,6 +13,9 @@ class IsmChatImageEditView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
+        initState: (state) {
+          state.controller?.textEditingController.clear();
+        },
         builder: (controller) => Scaffold(
           backgroundColor: IsmChatColors.blackColor,
           appBar: AppBar(
@@ -68,36 +71,62 @@ class IsmChatImageEditView extends StatelessWidget {
             width: IsmChatDimens.percentWidth(1),
             alignment: Alignment.center,
           ),
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: IsmChatConfig.chatTheme.primaryColor,
-            onPressed: () async {
-              if (controller.fileSize.size()) {
-                await controller.sendImage(
-                    conversationId:
-                        controller.conversation?.conversationId ?? '',
-                    userId:
-                        controller.conversation?.opponentDetails?.userId ?? '',
-                    imagePath: controller.imagePath!);
-
-                Get.back<void>();
-                Get.back<void>();
-                if (await IsmChatProperties.chatPageProperties
-                        .messageAllowedConfig?.isMessgeAllowed
-                        ?.call(Get.context!,
-                            Get.find<IsmChatPageController>().conversation!) ??
-                    true) {}
-              } else {
-                await Get.dialog(
-                  const IsmChatAlertDialogBox(
-                    title: 'You can not send image more than 20 MB.',
-                    cancelLabel: 'Okay',
+          floatingActionButton: Padding(
+            padding: IsmChatDimens.edgeInsetsLeft10
+                .copyWith(left: IsmChatDimens.thirty),
+            child: Row(
+              children: [
+                Expanded(
+                  child: IsmChatInputField(
+                    fillColor: IsmChatColors.greyColor,
+                    autofocus: false,
+                    padding: IsmChatDimens.edgeInsets0,
+                    hint: IsmChatStrings.addCaption,
+                    hintStyle: IsmChatStyles.w400White16,
+                    cursorColor: IsmChatColors.whiteColor,
+                    style: IsmChatStyles.w400White16,
+                    controller: controller.textEditingController,
+                    onChanged: (value) {},
                   ),
-                );
-              }
-            },
-            child: const Icon(
-              Icons.send,
-              color: IsmChatColors.whiteColor,
+                ),
+                IsmChatDimens.boxWidth8,
+                FloatingActionButton(
+                  backgroundColor: IsmChatConfig.chatTheme.primaryColor,
+                  onPressed: () async {
+                    if (controller.fileSize.size()) {
+                      await controller.sendImage(
+                          caption: controller.textEditingController.text,
+                          conversationId:
+                              controller.conversation?.conversationId ?? '',
+                          userId: controller
+                                  .conversation?.opponentDetails?.userId ??
+                              '',
+                          imagePath: controller.imagePath!);
+
+                      Get.back<void>();
+                      Get.back<void>();
+                      if (await IsmChatProperties.chatPageProperties
+                              .messageAllowedConfig?.isMessgeAllowed
+                              ?.call(
+                                  Get.context!,
+                                  Get.find<IsmChatPageController>()
+                                      .conversation!) ??
+                          true) {}
+                    } else {
+                      await Get.dialog(
+                        const IsmChatAlertDialogBox(
+                          title: 'You can not send image more than 20 MB.',
+                          cancelLabel: 'Okay',
+                        ),
+                      );
+                    }
+                  },
+                  child: const Icon(
+                    Icons.send,
+                    color: IsmChatColors.whiteColor,
+                  ),
+                ),
+              ],
             ),
           ),
         ),

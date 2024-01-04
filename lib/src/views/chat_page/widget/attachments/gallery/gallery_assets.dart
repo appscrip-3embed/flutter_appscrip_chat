@@ -23,10 +23,9 @@ class IsmChatGalleryAssetsView extends StatelessWidget {
         state.controller?.textEditingController.clear();
       }, builder: (controller) {
         if (controller.listOfAssetsPath.isNotEmpty) {
-          return WillPopScope(
-            onWillPop: () async {
+          return PopScope(
+            onPopInvoked: (value) async {
               controller.listOfAssetsPath.clear();
-              return true;
             },
             child: Scaffold(
               resizeToAvoidBottomInset: true,

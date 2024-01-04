@@ -538,11 +538,11 @@ class IsmChatMqttController extends GetxController {
             },
           );
           if (Platform.isAndroid) {
-            IsmChatLog.error(mqttMessage ?? '');
             Get.snackbar(
               message.notificationTitle ?? '',
               mqttMessage ?? '',
-              backgroundColor: IsmChatColors.redColor,
+              backgroundColor:
+                  IsmChatConfig.chatTheme.notificationBackgroundColor,
               icon: const Icon(Icons.message),
               onTap: (snack) {
                 if (IsmChatConfig.onSnckBarTap != null) {
@@ -570,7 +570,8 @@ class IsmChatMqttController extends GetxController {
           Get.snackbar(
             message.notificationTitle ?? '',
             mqttMessage ?? '',
-            backgroundColor: IsmChatColors.whiteColor,
+            backgroundColor:
+                IsmChatConfig.chatTheme.notificationBackgroundColor,
             icon: const Icon(Icons.message),
             onTap: (snack) {
               if (IsmChatConfig.onSnckBarTap != null) {

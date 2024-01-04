@@ -246,6 +246,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           );
         } else {
           await sendVideo(
+            caption: media.caption,
             file: File(media.attachmentModel.mediaUrl ?? ''),
             isThumbnail: true,
             thumbnailFiles: File(media.attachmentModel.thumbnailUrl ?? ''),

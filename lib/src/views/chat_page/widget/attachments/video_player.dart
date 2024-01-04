@@ -28,8 +28,8 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
   String _videoDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     final hours = twoDigits(duration.inHours);
-    final minutes = twoDigits(duration.inMinutes);
-    final seconds = twoDigits(duration.inSeconds);
+    final minutes = twoDigits(duration.inMinutes % 60);
+    final seconds = twoDigits(duration.inSeconds % 60);
 
     return [if (duration.inHours > 0) hours, minutes, seconds].join(':');
   }
@@ -39,13 +39,15 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
     super.initState();
     chatPageController.isVideoVisible = true;
     _controller = kIsWeb
-        ? VideoPlayerController.network(
-            widget.path.isValidUrl
-                ? widget.path
-                : IsmChatBlob.blobToUrl(widget.path.strigToUnit8List),
+        ? VideoPlayerController.networkUrl(
+            Uri.parse(
+              widget.path.isValidUrl
+                  ? widget.path
+                  : IsmChatBlob.blobToUrl(widget.path.strigToUnit8List),
+            ),
           )
         : widget.path.isValidUrl
-            ? VideoPlayerController.network(widget.path)
+            ? VideoPlayerController.networkUrl(Uri.parse(widget.path))
             : VideoPlayerController.file(
                 File(widget.path),
               )
@@ -76,13 +78,13 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
         chatPageController.isVideoVisible = true;
         _controller.pause();
         _controller = kIsWeb
-            ? VideoPlayerController.network(
-                widget.path.isValidUrl
+            ? VideoPlayerController.networkUrl(
+                Uri.parse(widget.path.isValidUrl
                     ? widget.path
-                    : IsmChatBlob.blobToUrl(widget.path.strigToUnit8List),
+                    : IsmChatBlob.blobToUrl(widget.path.strigToUnit8List)),
               )
             : widget.path.isValidUrl
-                ? VideoPlayerController.network(widget.path)
+                ? VideoPlayerController.networkUrl(Uri.parse(widget.path))
                 : VideoPlayerController.file(File(widget.path))
           ..initialize().then((_) {
             _controller.addListener(() {

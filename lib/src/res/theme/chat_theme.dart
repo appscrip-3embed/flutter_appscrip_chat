@@ -9,6 +9,7 @@ class IsmChatThemeData with Diagnosticable {
     Color? verticalDividerColor,
     Color? backgroundColor,
     Color? mentionColor,
+    Color? notificationBackgroundColor,
     FloatingActionButtonThemeData? floatingActionButtonTheme,
     IconThemeData? iconTheme,
     this.chatPageHeaderTheme,
@@ -17,6 +18,8 @@ class IsmChatThemeData with Diagnosticable {
   })  : primaryColor = primaryColor ?? IsmChatThemeData.light().primaryColor,
         backgroundColor =
             backgroundColor ?? IsmChatThemeData.light().backgroundColor,
+        notificationBackgroundColor = notificationBackgroundColor ??
+            IsmChatThemeData.light().notificationBackgroundColor,
         mentionColor = mentionColor ?? IsmChatThemeData.light().mentionColor,
         floatingActionButtonTheme = floatingActionButtonTheme ??
             IsmChatThemeData.light().floatingActionButtonTheme,
@@ -33,6 +36,7 @@ class IsmChatThemeData with Diagnosticable {
         primaryColor: IsmChatColors.primaryColorLight,
         backgroundColor: IsmChatColors.backgroundColorLight,
         mentionColor: IsmChatColors.yellowColor,
+        notificationBackgroundColor: IsmChatColors.whiteColor,
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: IsmChatColors.primaryColorLight,
           foregroundColor: IsmChatColors.whiteColor,
@@ -48,6 +52,7 @@ class IsmChatThemeData with Diagnosticable {
         chatListTheme: const IsmChatListThemeData.dark(),
         primaryColor: IsmChatColors.primaryColorDark,
         mentionColor: IsmChatColors.yellowColor,
+        notificationBackgroundColor: IsmChatColors.whiteColor,
         backgroundColor: IsmChatColors.backgroundColorDark,
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: IsmChatColors.primaryColorDark,
@@ -65,6 +70,8 @@ class IsmChatThemeData with Diagnosticable {
   final Color? backgroundColor;
 
   final Color? mentionColor;
+
+  final Color? notificationBackgroundColor;
 
   final IsmChatListThemeData? chatListTheme;
 

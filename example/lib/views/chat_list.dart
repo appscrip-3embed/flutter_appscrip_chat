@@ -63,6 +63,10 @@ class ChatList extends StatelessWidget {
               ),
             ),
             chatPageProperties: IsmChatPageProperties(
+              // onCallBlockUnblock: (p0, p1, p2) async {
+              //   IsmChatLog.error(p2);
+              //   return true;
+              // },
               header: IsmChatPageHeaderProperties(
                   // height: (p0, p1) => 200,
                   // bottom: (p0, p1) {
