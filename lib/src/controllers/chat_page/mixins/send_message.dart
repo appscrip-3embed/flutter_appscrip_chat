@@ -164,6 +164,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
 
     if (isMaxSize == false) {
       Get.back<void>();
+
       if (await IsmChatProperties
               .chatPageProperties.messageAllowedConfig?.isMessgeAllowed
               ?.call(Get.context!,
@@ -257,6 +258,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       }
       _controller.listOfAssetsPath.clear();
     }
+    IsmChatLog.error('step11');
   }
 
   void sendAudio(
