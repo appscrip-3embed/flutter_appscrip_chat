@@ -545,8 +545,8 @@ class IsmChatPageRepository {
     try {
       var response = await _apiWrapper.get(
         query.trim().isNotEmpty
-            ? 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&name=$query&radius=1000000&key=${IsmChatConstants.mapAPIKey}'
-            : 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=500&key=${IsmChatConstants.mapAPIKey}',
+            ? 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&name=$query&radius=1000000&key=${IsmChatConfig.communicationConfig.projectConfig.googleApiKey ?? IsmChatConstants.mapAPIKey}'
+            : 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=500&key=${IsmChatConfig.communicationConfig.projectConfig.googleApiKey ?? IsmChatConstants.mapAPIKey}',
         headers: {},
       );
       if (response.hasError) {

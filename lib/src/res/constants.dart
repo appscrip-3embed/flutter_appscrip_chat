@@ -1,3 +1,5 @@
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+
 class IsmChatAssets {
   const IsmChatAssets._();
 

@@ -48,8 +48,6 @@ dependencies:
   hive_flutter: ^1.1.0
   url_strategy: ^0.2.0
   app_settings: ^5.1.1
-  google_maps_flutter_android: ^2.5.3
-  google_maps_flutter_platform_interface: ^2.4.1
   flutter_screenutil: ^5.9.0
 
 dev_dependencies:

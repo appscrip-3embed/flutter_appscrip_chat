@@ -33,11 +33,10 @@ dependencies:
     sdk: flutter
   fluttertoast: ^8.2.1
   gallery_saver: ^2.3.2
-  geocode: ^1.0.2
   geocoding: ^2.1.0
   geolocator: ^10.1.0
   get: ^4.6.5
-  google_maps_flutter: ^2.0.6
+  google_maps_flutter: ^2.5.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   http: ^0.13.4
