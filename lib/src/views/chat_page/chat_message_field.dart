@@ -257,27 +257,33 @@ class _MicOrSendButton extends StatelessWidget {
                       controller.isActionAllowed
                   ? null
                   : (val) async {
-                      if (!controller.conversation!.isChattingAllowed) {
-                        controller.showDialogCheckBlockUnBlock();
-                      } else {
-                        var isPermission = false;
-                        if (await controller.recordAudio.hasPermission()) {
-                          isPermission = true;
-                        }
-                        if (!(controller.conversation?.lastMessageDetails
-                                    ?.customType ==
-                                IsmChatCustomMessageType.removeMember &&
-                            controller
-                                    .conversation?.lastMessageDetails?.userId ==
-                                IsmChatConfig
-                                    .communicationConfig.userConfig.userId)) {
-                          if (isPermission) {
-                            controller.isEnableRecordingAudio = true;
-                            controller.forVideoRecordTimer =
-                                Timer.periodic(const Duration(seconds: 1), (_) {
-                              controller.seconds++;
-                            });
-                            await controller.recordAudio.start();
+                      final isMessgeAllowed = await IsmChatConfig
+                              .messageAllowedConfig?.isMessgeAllowed
+                              ?.call(context, controller.conversation!) ??
+                          true;
+                      if (isMessgeAllowed) {
+                        if (!controller.conversation!.isChattingAllowed) {
+                          controller.showDialogCheckBlockUnBlock();
+                        } else {
+                          var isPermission = false;
+                          if (await controller.recordAudio.hasPermission()) {
+                            isPermission = true;
+                          }
+                          if (!(controller.conversation?.lastMessageDetails
+                                      ?.customType ==
+                                  IsmChatCustomMessageType.removeMember &&
+                              controller.conversation?.lastMessageDetails
+                                      ?.userId ==
+                                  IsmChatConfig
+                                      .communicationConfig.userConfig.userId)) {
+                            if (isPermission) {
+                              controller.isEnableRecordingAudio = true;
+                              controller.forVideoRecordTimer = Timer.periodic(
+                                  const Duration(seconds: 1), (_) {
+                                controller.seconds++;
+                              });
+                              await controller.recordAudio.start();
+                            }
                           }
                         }
                       }
@@ -286,19 +292,30 @@ class _MicOrSendButton extends StatelessWidget {
                   controller.showSendButton && controller.isEnableRecordingAudio
                       ? null
                       : (val) async {
-                          var allowPermission = false;
-                          if (await controller.recordAudio.hasPermission()) {
-                            allowPermission = true;
-                          }
-                          if (allowPermission) {
-                            controller.forVideoRecordTimer?.cancel();
-                            controller.showSendButton = true;
-                            controller.audioPaht =
-                                await controller.recordAudio.stop() ?? '';
+                          final isMessgeAllowed = await IsmChatConfig
+                                  .messageAllowedConfig?.isMessgeAllowed
+                                  ?.call(context, controller.conversation!) ??
+                              true;
+                          if (isMessgeAllowed) {
+                            var allowPermission = false;
+                            if (await controller.recordAudio.hasPermission()) {
+                              allowPermission = true;
+                            }
+                            if (allowPermission) {
+                              controller.forVideoRecordTimer?.cancel();
+                              controller.showSendButton = true;
+                              controller.audioPaht =
+                                  await controller.recordAudio.stop() ?? '';
+                            }
                           }
                         },
               onTap: () async {
-                if (controller.showSendButton) {
+                final isMessgeAllowed = await IsmChatConfig
+                        .messageAllowedConfig?.isMessgeAllowed
+                        ?.call(context, controller.conversation!) ??
+                    true;
+
+                if (controller.showSendButton && isMessgeAllowed) {
                   if (!controller.conversation!.isChattingAllowed) {
                     controller.showDialogCheckBlockUnBlock();
                   } else {
@@ -387,15 +404,21 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
   @override
   Widget build(BuildContext context) => IconButton(
         onPressed: () async {
-          if (!controller.conversation!.isChattingAllowed) {
-            controller.showDialogCheckBlockUnBlock();
-          } else {
-            await Get.bottomSheet(
-              IsmChatAttachmentCard(attachments),
-              enterBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
-              exitBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
-              elevation: 0,
-            );
+          final isMessgeAllowed = await IsmChatConfig
+                  .messageAllowedConfig?.isMessgeAllowed
+                  ?.call(context, controller.conversation!) ??
+              true;
+          if (isMessgeAllowed) {
+            if (!controller.conversation!.isChattingAllowed) {
+              controller.showDialogCheckBlockUnBlock();
+            } else {
+              await Get.bottomSheet(
+                IsmChatAttachmentCard(attachments),
+                enterBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
+                exitBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
+                elevation: 0,
+              );
+            }
           }
         },
         color: IsmChatConfig.chatTheme.primaryColor,

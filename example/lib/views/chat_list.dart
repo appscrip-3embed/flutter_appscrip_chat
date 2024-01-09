@@ -58,6 +58,7 @@ class ChatList extends StatelessWidget {
         onCreateChatTap: RouteManagement.goToUserList,
         enableGroupChat: true,
         allowDelete: true,
+
         emptyConversationPlaceholder: const IsmChatEmptyView(
           text: 'Create conversation',
           icon: Icon(

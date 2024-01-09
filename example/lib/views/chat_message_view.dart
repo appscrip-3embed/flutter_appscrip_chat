@@ -10,6 +10,7 @@ class ChatMessageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IsmChatPageView(
+      header: IsmChatHeader(),
       emptyChatPlaceholder: IsmChatEmptyView(
         icon: Icon(
           Icons.chat_outlined,
@@ -18,6 +19,7 @@ class ChatMessageView extends StatelessWidget {
         ),
         text: 'No Messages',
       ),
+
       // header: IsmChatHeader(
       //   popupItems: (p0, p1) => [
       //     IsmChatPopItem(
@@ -29,43 +31,11 @@ class ChatMessageView extends StatelessWidget {
       //     )
       //   ],
       // ),
-      // messageAllowedConfig: MessageAllowedConfig(
-      //   isShowTextfiledConfig: IsShowTextfiledConfig(
-      //       isShowMessageAllowed: (_, conversation) => true,
-      //       shwoMessage: 'fsdsf'),
-      //   isMessgeAllowed: (_, conversation) async {
-      //     bool? isValue;
-      //     await Get.dialog(
-      //       AlertDialog(
-      //         title: const Text('Alert message...'),
-      //         content: const Text('Incorrect userIdentifier or password.'),
-      //         actions: [
-      //           TextButton(
-      //             onPressed: () {
-      //               isValue = true;
-      //               Get.back();
-      //             },
-      //             child: const Text(
-      //               'Yes',
-      //               style: TextStyle(fontSize: 15),
-      //             ),
-      //           ),
-      //           TextButton(
-      //             onPressed: () {
-      //               Get.back();
-      //             },
-      //             child: const Text(
-      //               'No',
-      //               style: TextStyle(fontSize: 15),
-      //             ),
-      //           )
-      //         ],
-      //       ),
-      //     );
-
-      //     return isValue;
-      //   },
-      // )
+      messageAllowedConfig: MessageAllowedConfig(
+        isMessgeAllowed: (_, conversation) async {
+          return null;
+        },
+      ),
     );
   }
 }

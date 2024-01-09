@@ -154,6 +154,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                   addAutomaticKeepAlives: true,
                   itemBuilder: (_, index) {
                     var conversation = controller.conversations[index];
+
                     if (widget.itemBuilder != null) {
                       return widget.itemBuilder!.call(_, index, conversation);
                     }

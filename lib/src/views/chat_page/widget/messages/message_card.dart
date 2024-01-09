@@ -27,23 +27,23 @@ class MessageCard extends StatelessWidget {
         animationDuration: IsmChatConstants.swipeDuration,
         iconColor: IsmChatConfig.chatTheme.primaryColor,
         iconSize: 24,
-        onLeftSwipe: showMessageInCenter || !message.sentByMe
-            ? null
-            : !canReply
-                ? null
-                : (details) {
-                    controller.onReplyTap(
-                      controller.messages.reversed.toList()[index],
-                    );
-                  },
-        onRightSwipe: showMessageInCenter || message.sentByMe
-            ? null
-            : !canReply
-                ? null
-                : (details) {
-                    controller.onReplyTap(
-                        controller.messages.reversed.toList()[index]);
-                  },
+        // onLeftSwipe: showMessageInCenter || !message.sentByMe
+        //     ? null
+        //     : !canReply
+        //         ? null
+        //         : (details) {
+        //             controller.onReplyTap(
+        //               controller.messages.reversed.toList()[index],
+        //             );
+        //           },
+        // onRightSwipe: showMessageInCenter || message.sentByMe
+        //     ? null
+        //     : !canReply
+        //         ? null
+        //         : (details) {
+        //             controller.onReplyTap(
+        //                 controller.messages.reversed.toList()[index]);
+        //           },
         child: GestureDetector(
           onTap: () async {
             if (message.messageType == IsmChatMessageType.reply) {
