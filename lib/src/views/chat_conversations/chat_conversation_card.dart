@@ -43,6 +43,7 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
     return IsmChatTapHandler(
       onTap: widget.onTap,
       child: Container(
