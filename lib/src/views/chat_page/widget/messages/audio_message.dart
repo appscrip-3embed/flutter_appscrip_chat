@@ -11,9 +11,7 @@ class IsmChatAudioMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     var url = message.attachments!.first.mediaUrl!;
     return Material(
-      color: message.sentByMe
-          ? IsmChatConfig.chatTheme.primaryColor!
-          : IsmChatConfig.chatTheme.backgroundColor!,
+      color: Colors.transparent,
       child: Stack(
         alignment: Alignment.center,
         children: [
