@@ -22,6 +22,7 @@ class ChatList extends StatelessWidget {
               // backgroundColor: Colors.white,
               borderColor: Colors.grey,
               showProfile: false,
+              textColor: Colors.black,
             ),
             opponentMessageTheme: IsmChatMessageThemeData(
               // backgroundColor: Colors.white,

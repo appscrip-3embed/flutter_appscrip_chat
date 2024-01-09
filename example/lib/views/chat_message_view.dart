@@ -31,11 +31,11 @@ class ChatMessageView extends StatelessWidget {
       //     )
       //   ],
       // ),
-      messageAllowedConfig: MessageAllowedConfig(
-        isMessgeAllowed: (_, conversation) async {
-          return null;
-        },
-      ),
+      // messageAllowedConfig: MessageAllowedConfig(
+      //   isMessgeAllowed: (_, conversation) async {
+      //     return null;
+      //   },
+      // ),
     );
   }
 }

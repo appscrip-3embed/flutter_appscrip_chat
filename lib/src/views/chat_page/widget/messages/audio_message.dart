@@ -12,8 +12,8 @@ class IsmChatAudioMessage extends StatelessWidget {
     var url = message.attachments!.first.mediaUrl!;
     return Material(
       color: message.sentByMe
-          ? IsmChatConfig.chatTheme.primaryColor
-          : IsmChatConfig.chatTheme.backgroundColor,
+          ? IsmChatConfig.chatTheme.primaryColor!
+          : IsmChatConfig.chatTheme.backgroundColor!,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -21,21 +21,11 @@ class IsmChatAudioMessage extends StatelessWidget {
             audioSrc: url,
             played: false,
             me: message.sentByMe,
-            meBgColor: IsmChatConfig.chatTheme.chatPageTheme?.selfMessageTheme
-                    ?.backgroundColor ??
-                IsmChatConfig.chatTheme.primaryColor!,
-            mePlayIconColor: IsmChatConfig.chatTheme.chatPageTheme
-                    ?.selfMessageTheme?.backgroundColor ??
-                IsmChatConfig.chatTheme.primaryColor!,
-            contactBgColor: IsmChatConfig.chatTheme.chatPageTheme
-                    ?.opponentMessageTheme?.backgroundColor ??
-                IsmChatConfig.chatTheme.backgroundColor!,
-            contactPlayIconColor: IsmChatConfig.chatTheme.chatPageTheme
-                    ?.opponentMessageTheme?.backgroundColor ??
-                IsmChatConfig.chatTheme.backgroundColor!,
-            contactFgColor: IsmChatConfig.chatTheme.chatPageTheme
-                    ?.selfMessageTheme?.backgroundColor ??
-                IsmChatConfig.chatTheme.primaryColor!,
+            meBgColor: IsmChatConfig.chatTheme.primaryColor!,
+            mePlayIconColor: IsmChatConfig.chatTheme.primaryColor!,
+            contactBgColor: IsmChatConfig.chatTheme.backgroundColor!,
+            contactPlayIconColor: IsmChatConfig.chatTheme.backgroundColor!,
+            contactFgColor: IsmChatConfig.chatTheme.primaryColor!,
             onPlay: () {},
           ),
           if (message.isUploading == true)
