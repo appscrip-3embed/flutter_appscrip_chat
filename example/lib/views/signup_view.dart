@@ -11,7 +11,7 @@ import '../widgets/widgets.dart';
 /// The view part of the [IsmSignupView], which will be used to
 /// show the Signup view page
 class SignupView extends StatelessWidget {
-  const SignupView({Key? key}) : super(key: key);
+  const SignupView({super.key});
 
   static const String route = AppRoutes.signUp;
 

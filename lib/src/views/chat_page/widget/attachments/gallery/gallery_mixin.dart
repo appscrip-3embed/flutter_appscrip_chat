@@ -2,6 +2,7 @@
 // Use of this source code is governed by an Apache license that can be found
 // in the LICENSE file.
 import 'dart:io';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -156,7 +157,7 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                             IsmChatDimens.boxWidth16,
                             InkWell(
                               onTap: () async {
-                                var mediaFile = await Get.to<File>(
+                                await Get.to<File>(
                                   IsmChatImagePainterWidget(
                                     file: File(
                                       controller
@@ -214,8 +215,8 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                             IconButton(
                               onPressed: () async {
                                 controller.isVideoVisible = true;
-                                var mediaFile =
-                                    await Get.to<File>(IsmVideoTrimmerView(
+
+                                await Get.to<File>(IsmVideoTrimmerView(
                                   index: controller.assetsIndex,
                                   file: File(
                                     controller

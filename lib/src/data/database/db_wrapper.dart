@@ -201,7 +201,7 @@ class IsmChatDBWrapper {
       }
       return true;
     } catch (e, st) {
-      print('$e $st');
+      IsmChatLog.error('$e $st');
       return false;
     }
   }

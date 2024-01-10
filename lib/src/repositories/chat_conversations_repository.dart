@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
@@ -89,10 +90,24 @@ class IsmChatConversationsRepository {
       }
       var data = jsonDecode(response.data);
 
-      var listData = (data['conversations'] as List)
-          .map((e) =>
-              IsmChatConversationModel.fromMap(e as Map<String, dynamic>))
-          .toList();
+      var listData = (data['conversations'] as List<dynamic>)
+          .cast<Map<String, dynamic>>()
+          .map((e) {
+        final c = IsmChatConversationModel.fromMap(e);
+        final result = IsmChatConfig.conversationParser?.call(c, e);
+        final conversation = result?.$1 ?? c;
+        final updateServer = result?.$2 ?? false;
+        if (updateServer) {
+          if (conversation.metaData != null) {
+            unawaited(updateConversation(
+              conversationId: conversation.conversationId ?? '',
+              metaData: conversation.metaData!,
+            ));
+          }
+          // call update API unawaited
+        }
+        return conversation;
+      }).toList();
       listData.sort(
         (a, b) => a.lastMessageDetails!.sentAt
             .compareTo(b.lastMessageDetails!.sentAt),

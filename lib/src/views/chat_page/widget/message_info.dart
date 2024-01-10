@@ -109,20 +109,20 @@ class IsmChatMessageInfo extends StatelessWidget {
                           child: Row(
                             children: [
                               Text(
-                                _message?.sentAt.toTimeString() ?? '',
+                                _message.sentAt.toTimeString(),
                                 style: IsmChatStyles.w400Grey10,
                               ),
-                              if (_message?.sentByMe ?? false) ...[
+                              if (_message.sentByMe) ...[
                                 IsmChatDimens.boxWidth2,
                                 Icon(
-                                  _message?.messageId!.isEmpty == true
+                                  _message.messageId!.isEmpty == true
                                       ? Icons.watch_later_rounded
-                                      : _message?.deliveredToAll ?? false
+                                      : _message.deliveredToAll ?? false
                                           ? Icons.done_all_rounded
                                           : Icons.done_rounded,
-                                  color: _message?.messageId!.isEmpty == true
+                                  color: _message.messageId!.isEmpty == true
                                       ? Colors.grey
-                                      : _message?.readByAll ?? false
+                                      : _message.readByAll ?? false
                                           ? Colors.blue
                                           : Colors.grey,
                                   size: IsmChatDimens.forteen,

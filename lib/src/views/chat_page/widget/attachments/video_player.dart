@@ -11,8 +11,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoViewPage extends StatefulWidget {
   const VideoViewPage(
-      {Key? key, required this.path, this.showVideoPlaying = false})
-      : super(key: key);
+      {super.key, required this.path, this.showVideoPlaying = false});
   final String path;
   final bool showVideoPlaying;
 

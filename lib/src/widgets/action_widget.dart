@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 
 class IsmChatActionWidget extends StatelessWidget {
   const IsmChatActionWidget({
-    Key? key,
+    super.key,
     required this.onTap,
     this.decoration,
     required this.icon,
     this.label,
     this.labelStyle,
-  }) : super(key: key);
+  });
 
   final VoidCallback onTap;
   final Decoration? decoration;

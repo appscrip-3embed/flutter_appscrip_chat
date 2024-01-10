@@ -9,6 +9,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+import 'package:record/record.dart';
 
 class SendMessageIntent extends Intent {
   const SendMessageIntent();
@@ -492,7 +495,13 @@ class _MicOrSendButton extends StatelessWidget {
                             Timer.periodic(const Duration(seconds: 1), (_) {
                           controller.seconds++;
                         });
-                        await controller.recordAudio.start();
+                        final dir = await getApplicationDocumentsDirectory();
+                        final audioPath = p.join(
+                          dir.path,
+                          'audio_${DateTime.now().millisecondsSinceEpoch}.m4a',
+                        );
+                        await controller.recordAudio
+                            .start(const RecordConfig(), path: audioPath);
                       }
                     }
                   }

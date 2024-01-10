@@ -92,7 +92,7 @@ class IsmChatAlertDialogBox extends StatelessWidget {
                       child: Text(label),
                     ),
                   );
-                }).toList(),
+                }),
                 SimpleDialogOption(
                   child: IsmChatTapHandler(
                     onTap: onCancel ?? Get.back,

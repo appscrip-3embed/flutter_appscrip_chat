@@ -56,9 +56,9 @@ class IsmChatAudioMessage extends StatelessWidget {
 /// document will be added
 class Noises extends StatelessWidget {
   const Noises({
-    Key? key,
+    super.key,
     required this.noises,
-  }) : super(key: key);
+  });
   final List<Widget> noises;
 
   @override

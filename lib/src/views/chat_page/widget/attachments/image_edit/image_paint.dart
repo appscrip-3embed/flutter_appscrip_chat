@@ -7,8 +7,7 @@ import 'package:image_painter/image_painter.dart';
 import 'package:path_provider/path_provider.dart';
 
 class IsmChatImagePainterWidget extends StatefulWidget {
-  const IsmChatImagePainterWidget({Key? key, required this.file})
-      : super(key: key);
+  const IsmChatImagePainterWidget({super.key, required this.file});
 
   final File file;
 

@@ -59,3 +59,6 @@ typedef MeessageFieldFocusNode = void Function(
   IsmChatConversationModel,
   bool,
 );
+
+typedef ConversationParser = (IsmChatConversationModel, bool)? Function(
+    IsmChatConversationModel, Map<String, dynamic>);

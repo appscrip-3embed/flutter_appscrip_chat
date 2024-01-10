@@ -9,6 +9,7 @@
 /// sell copies of the Software, and to permit persons to whom
 /// the Software is furnished to do so, subject to the following
 /// conditions:
+library;
 
 /// The above copyright notice and this permission notice shall be
 /// included in all copies or substantial portions of the Software.
@@ -43,7 +44,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 // #1
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest.dart' as tzData;
+import 'package:timezone/data/latest.dart' as tz_data;
 // #2
 import 'package:timezone/timezone.dart' as tz;
 
@@ -84,7 +85,7 @@ class LocalNoticeService {
     String channel = 'default',
     required Map<String, dynamic> payload,
   }) async {
-    tzData.initializeTimeZones();
+    tz_data.initializeTimeZones();
 
     final scheduleTime =
         tz.TZDateTime.fromMillisecondsSinceEpoch(tz.local, endTime);
@@ -116,7 +117,7 @@ class LocalNoticeService {
         id, title, body, scheduleTime, noticeDetail,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
-        androidAllowWhileIdle: true,
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
         payload: jsonEncode(payload));
   }
 

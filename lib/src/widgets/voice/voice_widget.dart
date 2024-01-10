@@ -9,7 +9,7 @@ import 'package:just_audio/just_audio.dart' as jsaudio;
 
 class VoiceMessage extends StatefulWidget {
   const VoiceMessage({
-    Key? key,
+    super.key,
     required this.me,
     required this.noise,
     this.audioSrc,
@@ -24,7 +24,7 @@ class VoiceMessage extends StatefulWidget {
     this.contactPlayIconColor = Colors.black26,
     this.contactPlayIconBgColor = Colors.grey,
     this.meFgColor = const Color(0xffffffff),
-  }) : super(key: key);
+  });
 
   final String? audioSrc;
   final Future<File>? audioFile;

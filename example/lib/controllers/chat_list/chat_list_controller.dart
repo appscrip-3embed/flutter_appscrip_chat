@@ -2,7 +2,6 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/main.dart';
 import 'package:chat_component_example/models/models.dart';
 import 'package:chat_component_example/res/res.dart';
-import 'package:chat_component_example/view_models/view_models.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -10,9 +9,6 @@ import 'package:get/get.dart';
 import '../../utilities/config.dart';
 
 class ChatListController extends GetxController {
-  final ChatListViewModel _viewModel;
-  ChatListController(this._viewModel);
-
   UserDetailsModel userDetails = UserDetailsModel();
 
   bool isBottomVisibile = true;

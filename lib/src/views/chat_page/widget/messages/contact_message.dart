@@ -41,7 +41,7 @@ class IsmChatContactMessage extends StatelessWidget {
                         if (index == 0) {
                           return data.photo?.isNotEmpty == true
                               ? IsmChatImage.profile(
-                                  (data.photo).toString(),
+                                  data.photo.toString(),
                                   name: data.displayName,
                                   isNetworkImage: false,
                                   isBytes: true,
@@ -53,7 +53,7 @@ class IsmChatContactMessage extends StatelessWidget {
                           left: index * IsmChatDimens.fifteen,
                           child: data.photo?.isNotEmpty == true
                               ? IsmChatImage.profile(
-                                  (data.photo).toString(),
+                                  data.photo.toString(),
                                   name: data.displayName,
                                   isNetworkImage: false,
                                   isBytes: true,

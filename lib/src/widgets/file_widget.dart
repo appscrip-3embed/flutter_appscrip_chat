@@ -5,7 +5,7 @@ import 'package:internet_file/internet_file.dart';
 import 'package:pdfx/pdfx.dart';
 
 class IsmChatPdfView extends StatefulWidget {
-  const IsmChatPdfView({Key? key, this.filePath}) : super(key: key);
+  const IsmChatPdfView({super.key, this.filePath});
 
   final String? filePath;
 

@@ -29,7 +29,7 @@ class NoiseBuilder extends StatelessWidget {
                 animation: CurvedAnimation(
                     parent: _animationController!, curve: Curves.ease),
                 builder: (context, child) => Positioned(
-                  left: _animationController!.value,
+                  left: _animationController.value,
                   child: Container(
                     height: IsmChatDimens.eighty,
                     width: IsmChatDimens.oneHundredTwenty,

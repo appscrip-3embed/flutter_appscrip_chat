@@ -21,6 +21,7 @@ class IsmChatApp extends StatelessWidget {
     this.sideWidgetWidth,
     this.isShowMqttConnectErrorDailog = false,
     this.fontFamily,
+    this.conversationParser,
   }) {
     assert(IsmChatConfig.isInitialized,
         'ChatHiveBox is not initialized\nYou are getting this error because the Database class is not initialized, to initialize ChatHiveBox class call AppscripChatComponent.initialize() before your runApp()');
@@ -36,6 +37,7 @@ class IsmChatApp extends StatelessWidget {
     // );
     IsmChatConfig.dbName = databaseName ?? IsmChatStrings.dbname;
     IsmChatConfig.fontFamily = fontFamily;
+    IsmChatConfig.conversationParser = conversationParser;
     IsmChatProperties.loadingDialog = loadingDialog;
 
     IsmChatProperties.sideWidgetWidth = sideWidgetWidth;
@@ -94,6 +96,9 @@ class IsmChatApp extends StatelessWidget {
   final double? sideWidgetWidth;
 
   final String? fontFamily;
+
+  /// This callback is to be used if you want to make certain changes while conversation data is being parsed from the API
+  final ConversationParser? conversationParser;
 
   /// Call this function for show outside widget
   ///

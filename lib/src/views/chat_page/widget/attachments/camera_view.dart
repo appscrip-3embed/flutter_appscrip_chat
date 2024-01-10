@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class IsmChatCameraView extends StatefulWidget {
-  const IsmChatCameraView({Key? key}) : super(key: key);
+  const IsmChatCameraView({super.key});
 
   static const String route = IsmPageRoutes.cameraView;
 

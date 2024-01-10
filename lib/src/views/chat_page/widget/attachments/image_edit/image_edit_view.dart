@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 
 /// show the Photo and Video editing view page
 class IsmChatImageEditView extends StatelessWidget {
-  const IsmChatImageEditView({Key? key}) : super(key: key);
+  const IsmChatImageEditView({super.key});
 
   static const String route = IsmPageRoutes.eidtMedia;
 

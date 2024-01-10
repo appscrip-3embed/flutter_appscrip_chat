@@ -233,7 +233,7 @@ class IsmChatPageController extends GetxController
   set isEnableRecordingAudio(bool value) =>
       _isEnableRecordingAudio.value = value;
 
-  final recordAudio = Record();
+  final recordAudio = AudioRecorder();
 
   final RxInt _seconds = 0.obs;
   int get seconds => _seconds.value;

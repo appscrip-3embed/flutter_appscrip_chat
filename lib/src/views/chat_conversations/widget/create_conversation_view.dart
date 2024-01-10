@@ -34,7 +34,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
           children: <Widget>[
             Text(
               susTag,
-              textScaleFactor: 1.5,
+              textScaler: const TextScaler.linear(1.5),
               style: IsmChatStyles.w600Black14,
             ),
             if (!Responsive.isWebAndTablet(Get.context!))
@@ -220,7 +220,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                       : Colors.transparent,
                                   child: ListTile(
                                     onTap: () async {
-                                      if (_isGroupConversation ?? false) {
+                                      if (_isGroupConversation) {
                                         controller.onForwardUserTap(index);
                                         controller
                                             .isSelectedUser(user.userDetails);

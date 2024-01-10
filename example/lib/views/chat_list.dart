@@ -18,6 +18,11 @@ class ChatList extends StatelessWidget {
       builder: (controller) {
         return Scaffold(
           body: IsmChatApp(
+            // conversationParser: (conversation, data) {
+            //   AppLog(conversation);
+            //   AppLog.info('checkData $data');
+            //   return true;
+            // },
             chatTheme: IsmChatThemeData(
               chatPageHeaderTheme: IsmChatHeaderThemeData(),
               primaryColor: AppColors.primaryColorLight,

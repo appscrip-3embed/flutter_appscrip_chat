@@ -49,15 +49,15 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                 : null,
             image: _imagePath != null
                 ? DecorationImage(
-                    image: _imagePath!.path.contains('blob')
-                        ? NetworkImage(_imagePath!.path)
-                        : _imagePath!.path.contains(
+                    image: _imagePath.path.contains('blob')
+                        ? NetworkImage(_imagePath.path)
+                        : _imagePath.path.contains(
                                 'packages/appscrip_chat_component/assets')
                             ? AssetImage(
-                                _imagePath!.path,
+                                _imagePath.path,
                               ) as ImageProvider
                             : FileImage(
-                                File(_imagePath!.path),
+                                File(_imagePath.path),
                               ),
                     fit: BoxFit.cover,
                   )
@@ -206,14 +206,14 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                         Get.find<IsmChatConversationsController>();
                     if (_imagePath != null) {
                       IsmChatUtility.showLoader();
-                      pageController.backgroundImage = _imagePath!.path;
+                      pageController.backgroundImage = _imagePath.path;
                       pageController.backgroundColor = '';
                       if (_assetSrNo == 100) {
                         var file = _imagePath;
-                        var bytes = await file?.readAsBytes();
-                        var fileExtension = file?.path.split('.').last;
+                        var bytes = await file.readAsBytes();
+                        var fileExtension = file.path.split('.').last;
                         await conversationController.getPresignedUrl(
-                            fileExtension!, bytes!);
+                            fileExtension, bytes);
                       }
                       var assetList = conversationController
                               .userDetails?.metaData?.assetList ??
@@ -228,7 +228,7 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                             isImage: true,
                             imageUrl: _assetSrNo == 100
                                 ? conversationController.profileImage
-                                : _imagePath!.path,
+                                : _imagePath.path,
                             srNoBackgroundAssset:
                                 _assetSrNo == 100 ? 100 : _assetSrNo,
                           )
@@ -240,7 +240,7 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                             isImage: true,
                             imageUrl: _assetSrNo == 100
                                 ? conversationController.profileImage
-                                : _imagePath!.path,
+                                : _imagePath.path,
                             srNoBackgroundAssset:
                                 _assetSrNo == 100 ? 100 : _assetSrNo,
                           )
@@ -266,7 +266,7 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                         assetList[assetIndex] = {
                           '${pageController.conversation?.conversationId}':
                               IsmChatBackgroundModel(
-                            color: _backgroundColor!,
+                            color: _backgroundColor,
                             isImage: false,
                             srNoBackgroundAssset: _assetSrNo,
                           )
@@ -275,7 +275,7 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                         assetList.add({
                           '${pageController.conversation?.conversationId}':
                               IsmChatBackgroundModel(
-                            color: _backgroundColor!,
+                            color: _backgroundColor,
                             isImage: false,
                             srNoBackgroundAssset: _assetSrNo,
                           )

@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 /// IsmMedia class is for showing the conversation media
 class IsmDocsView extends StatefulWidget {
-  const IsmDocsView({Key? key, required this.mediaListDocs}) : super(key: key);
+  const IsmDocsView({super.key, required this.mediaListDocs});
 
   final List<IsmChatMessageModel> mediaListDocs;
 
