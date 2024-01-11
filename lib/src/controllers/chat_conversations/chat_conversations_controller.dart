@@ -1219,12 +1219,14 @@ class IsmChatConversationsController extends GetxController {
       isLoading: isLoading,
     );
     if (response != null) {
-      userMeessages = response;
+      userMeessages = response.reversed.toList();
       for (var message in userMeessages) {
         var isSender =
             message.deliveredTo?.any((e) => e.userId == senderIds?.first);
         if (isSender == false) {
-          await Future.delayed(const Duration(milliseconds: 10));
+          await Future.delayed(
+            const Duration(milliseconds: 100),
+          );
           await pingMessageDelivered(
             conversationId: message.conversationId ?? '',
             messageId: message.messageId ?? '',

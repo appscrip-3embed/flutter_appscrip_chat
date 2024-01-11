@@ -646,6 +646,7 @@ class IsmChatMqttController extends GetxController {
                 (e) => e?.messageId == actionModel.messageId,
                 orElse: () => null,
               );
+
       if (message != null) {
         var isDelivered = message.deliveredTo
             ?.any((e) => e.userId == actionModel.userDetails?.userId);
@@ -658,26 +659,29 @@ class IsmChatMqttController extends GetxController {
             ),
           );
         }
-
         message.deliveredToAll =
             message.deliveredTo?.length == (conversation.membersCount ?? 0) - 1;
-        conversation.messages?.last = message;
+        final messageIndex = conversation.messages
+            ?.indexWhere((e) => e.messageId == actionModel.messageId);
+        if (messageIndex != -1) {
+          conversation.messages?[
+              messageIndex ?? conversation.messages?.length ?? 0] = message;
+          conversation = conversation.copyWith(
+            lastMessageDetails: conversation.lastMessageDetails?.copyWith(
+              deliverCount: message.deliveredTo?.length,
+              deliveredTo: message.deliveredTo,
+            ),
+          );
 
-        conversation = conversation.copyWith(
-          lastMessageDetails: conversation.lastMessageDetails?.copyWith(
-            deliverCount: message.deliveredTo?.length,
-            deliveredTo: message.deliveredTo,
-          ),
-        );
-
-        await IsmChatConfig.dbWrapper!
-            .saveConversation(conversation: conversation);
-        if (Get.isRegistered<IsmChatPageController>()) {
-          await Get.find<IsmChatPageController>()
-              .getMessagesFromDB(actionModel.conversationId!);
+          await IsmChatConfig.dbWrapper!
+              .saveConversation(conversation: conversation);
+          if (Get.isRegistered<IsmChatPageController>()) {
+            await Get.find<IsmChatPageController>()
+                .getMessagesFromDB(actionModel.conversationId!);
+          }
+          unawaited(Get.find<IsmChatConversationsController>()
+              .getConversationsFromDB());
         }
-        unawaited(Get.find<IsmChatConversationsController>()
-            .getConversationsFromDB());
       }
     }
   }
