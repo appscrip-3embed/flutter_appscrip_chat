@@ -553,7 +553,7 @@ class IsmChatMqttController extends GetxController {
             LocalNoticeService().showFlutterNotification(
               message.notificationTitle ?? '',
               mqttMessage ?? '',
-              messageModel: message,
+              conversataionId: message.conversationId ?? '',
             );
           }
           messageId = message.messageId ?? '';
@@ -587,7 +587,7 @@ class IsmChatMqttController extends GetxController {
           LocalNoticeService().showFlutterNotification(
             message.notificationTitle ?? '',
             mqttMessage ?? '',
-            messageModel: message,
+            conversataionId: message.conversationId ?? '',
           );
         }
         messageId = message.messageId!;

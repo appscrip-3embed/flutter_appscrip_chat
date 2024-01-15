@@ -41,7 +41,6 @@ library;
 
 import 'dart:convert';
 
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/foundation.dart';
 // #1
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -104,7 +103,7 @@ class LocalNoticeService {
   }
 
   void showFlutterNotification(String title, String body,
-      {required IsmChatMessageModel messageModel}) {
+      {required String conversataionId}) {
     _localNotificationsPlugin.show(
       0,
       title,
@@ -127,7 +126,9 @@ class LocalNoticeService {
           styleInformation: const BigTextStyleInformation(''),
         ),
       ),
-      payload: messageModel.toJson(),
+      payload: jsonEncode({
+        'conversationId': conversataionId,
+      }),
     );
   }
 
