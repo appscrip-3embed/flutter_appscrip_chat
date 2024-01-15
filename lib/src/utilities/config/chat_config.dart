@@ -28,4 +28,5 @@ class IsmChatConfig {
 
   static set chatDarkTheme(IsmChatThemeData data) => _chatDarkTheme = data;
   static String? fontFamily;
+  static String? notificationIconPath;
 }

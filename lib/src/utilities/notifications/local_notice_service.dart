@@ -41,6 +41,7 @@ library;
 
 import 'dart:convert';
 
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/foundation.dart';
 // #1
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -65,16 +66,15 @@ class LocalNoticeService {
     description:
         'This channel is used for important notifications.', // description
     importance: Importance.high,
-    showBadge: true,
-    playSound: true,
   );
 
   Future<void> setup() async {
-    const androidSetting = AndroidInitializationSettings('@mipmap/ic_launcher');
+    final androidSetting = AndroidInitializationSettings(
+        IsmChatConfig.notificationIconPath ?? '@mipmap/ic_launcher');
     const iosSetting =
         DarwinInitializationSettings(requestSoundPermission: true);
 
-    const initSettings =
+    final initSettings =
         InitializationSettings(android: androidSetting, iOS: iosSetting);
 
     await _localNotificationsPlugin
@@ -110,20 +110,20 @@ class LocalNoticeService {
       body,
       NotificationDetails(
         iOS: const DarwinNotificationDetails(
-          presentBadge: false,
+          presentBadge: true,
           presentAlert: true,
-          presentBanner: true,
           presentSound: true,
         ),
         android: AndroidNotificationDetails(
           channel.id,
           channel.name,
-          channelDescription: channel.description!,
-          icon: '@mipmap/ic_launcher',
+          channelDescription: channel.description ?? '',
           importance: Importance.high,
           priority: Priority.high,
+          ticker: 'ticker',
           playSound: true,
-          styleInformation: const BigTextStyleInformation(''),
+          icon: IsmChatConfig.notificationIconPath ?? '@mipmap/ic_launcher',
+          color: IsmChatConfig.chatTheme.notificationColor,
         ),
       ),
       payload: jsonEncode({
