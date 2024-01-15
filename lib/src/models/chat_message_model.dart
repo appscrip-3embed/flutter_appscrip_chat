@@ -272,6 +272,67 @@ class IsmChatMessageModel {
         events: null,
       );
 
+  List<Contact> get contacts => customType == IsmChatCustomMessageType.contact
+      ? (jsonDecode(body) as List)
+          .map((e) => Contact.fromJson(e as Map<String, dynamic>))
+          .toList()
+      : metaData?.replayMessageCustomType == IsmChatCustomMessageType.contact
+          ? (jsonDecode(body) as List)
+              .map((e) => Contact.fromJson(e as Map<String, dynamic>))
+              .toList()
+          : [];
+
+  Map<String, dynamic> toMap() => {
+        'body': IsmChatUtility.encodePayload(body),
+        'action': action,
+        'updatedAt': updatedAt,
+        'sentAt': sentAt,
+        'unreadMessagesCount': unreadMessagesCount,
+        'userName': userName,
+        'userId': userId,
+        'searchableTags': searchableTags,
+        'privateOneToOne': privateOneToOne,
+        'showInConversation': showInConversation,
+        'readByAll': readByAll,
+        'senderInfo': senderInfo?.toMap(),
+        'metaData': metaData?.toMap(),
+        'messagingDisabled': messagingDisabled,
+        'membersCount': membersCount,
+        'lastReadAt': lastReadAt?.map((x) => x.toMap()).toList(),
+        'attachments': attachments?.map((x) => x.toMap()).toList(),
+        'lastMessageSentAt': lastMessageSentAt,
+        'isGroup': isGroup,
+        'deliveredToAll': deliveredToAll,
+        'customType': customType?.value,
+        'createdByUserName': createdByUserName,
+        'createdByUserImageUrl': createdByUserImageUrl,
+        'createdBy': createdBy,
+        'conversationType': conversationType,
+        'conversationTitle': conversationTitle,
+        'conversationImageUrl': conversationImageUrl,
+        'conversationId': conversationId,
+        'parentMessageId': parentMessageId,
+        'messageId': messageId,
+        'deviceId': deviceId,
+        'adminCount': adminCount,
+        'messageType': messageType?.value,
+        'sentByMe': sentByMe,
+        'mentionedUsers': mentionedUsers?.map((e) => e.toMap()).toList(),
+        'initiatorId': initiatorId,
+        'initiatorName': initiatorName,
+        'members': members?.map((e) => e.toMap()).toList(),
+        'memberId': memberId,
+        'memberName': memberName,
+        'reactions': reactions,
+        'notificationBody': notificationBody,
+        'notificationTitle': notificationTitle,
+        'readBy': readBy?.map((e) => e.toMap()).toList(),
+        'deliveredTo': deliveredTo?.map((e) => e.toMap()).toList(),
+        'isUploading': isUploading,
+        'conversationDetails': conversationDetails,
+        'events': events,
+      };
+
   IsmChatMessageModel({
     required this.body,
     this.action,
@@ -322,16 +383,6 @@ class IsmChatMessageModel {
     this.conversationDetails,
     this.events,
   });
-
-  List<Contact> get contacts => customType == IsmChatCustomMessageType.contact
-      ? (jsonDecode(body) as List)
-          .map((e) => Contact.fromJson(e as Map<String, dynamic>))
-          .toList()
-      : metaData?.replayMessageCustomType == IsmChatCustomMessageType.contact
-          ? (jsonDecode(body) as List)
-              .map((e) => Contact.fromJson(e as Map<String, dynamic>))
-              .toList()
-          : [];
 
   String body;
   String? action;
@@ -492,57 +543,6 @@ class IsmChatMessageModel {
         conversationDetails: conversationDetails ?? this.conversationDetails,
         events: events ?? this.events,
       );
-
-  Map<String, dynamic> toMap() => {
-        'body': IsmChatUtility.encodePayload(body),
-        'action': action,
-        'updatedAt': updatedAt,
-        'sentAt': sentAt,
-        'unreadMessagesCount': unreadMessagesCount,
-        'userName': userName,
-        'userId': userId,
-        'searchableTags': searchableTags,
-        'privateOneToOne': privateOneToOne,
-        'showInConversation': showInConversation,
-        'readByAll': readByAll,
-        'senderInfo': senderInfo?.toMap(),
-        'metaData': metaData?.toMap(),
-        'messagingDisabled': messagingDisabled,
-        'membersCount': membersCount,
-        'lastReadAt': lastReadAt?.map((x) => x.toMap()).toList(),
-        'attachments': attachments?.map((x) => x.toMap()).toList(),
-        'lastMessageSentAt': lastMessageSentAt,
-        'isGroup': isGroup,
-        'deliveredToAll': deliveredToAll,
-        'customType': customType?.value,
-        'createdByUserName': createdByUserName,
-        'createdByUserImageUrl': createdByUserImageUrl,
-        'createdBy': createdBy,
-        'conversationType': conversationType,
-        'conversationTitle': conversationTitle,
-        'conversationImageUrl': conversationImageUrl,
-        'conversationId': conversationId,
-        'parentMessageId': parentMessageId,
-        'messageId': messageId,
-        'deviceId': deviceId,
-        'adminCount': adminCount,
-        'messageType': messageType?.value,
-        'sentByMe': sentByMe,
-        'mentionedUsers': mentionedUsers?.map((e) => e.toMap()).toList(),
-        'initiatorId': initiatorId,
-        'initiatorName': initiatorName,
-        'members': members?.map((e) => e.toMap()).toList(),
-        'memberId': memberId,
-        'memberName': memberName,
-        'reactions': reactions,
-        'notificationBody': notificationBody,
-        'notificationTitle': notificationTitle,
-        'readBy': readBy?.map((e) => e.toMap()).toList(),
-        'deliveredTo': deliveredTo?.map((e) => e.toMap()).toList(),
-        'isUploading': isUploading,
-        'conversationDetails': conversationDetails,
-        'events': events,
-      };
 
   String toJson() => json.encode(toMap());
 

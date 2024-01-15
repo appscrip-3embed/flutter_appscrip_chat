@@ -526,10 +526,47 @@ class IsmChatMqttController extends GetxController {
         var chatController = Get.find<IsmChatPageController>();
         if (chatController.conversation?.conversationId !=
             message.conversationId) {
+          if (IsmChatConfig.showNotification != null) {
+            IsmChatConfig.showNotification?.call(
+              message.notificationTitle ?? '',
+              mqttMessage ?? '',
+              message.conversationId ?? '',
+            );
+          } else {
+            LocalNoticeService().cancelAllNotification();
+            LocalNoticeService().addNotification(
+              message.notificationTitle ?? '', // Add the  sender user name here
+              mqttMessage ?? '', // MessageName
+              DateTime.now().millisecondsSinceEpoch + 1 * 1000,
+              sound: '',
+              channel: 'message',
+              payload: {
+                'conversationId': message.conversationId ?? '',
+              },
+            );
+            if (Platform.isAndroid) {
+              LocalNoticeService().showFlutterNotification(
+                message.notificationTitle ?? '',
+                mqttMessage ?? '',
+                conversataionId: message.conversationId ?? '',
+              );
+            }
+          }
+
+          messageId = message.messageId ?? '';
+        }
+      } else {
+        if (IsmChatConfig.showNotification != null) {
+          IsmChatConfig.showNotification?.call(
+            message.notificationTitle ?? '',
+            mqttMessage ?? '',
+            message.conversationId ?? '',
+          );
+        } else {
           LocalNoticeService().cancelAllNotification();
           LocalNoticeService().addNotification(
-            message.notificationTitle ?? '', // Add the  sender user name here
-            mqttMessage ?? '', // MessageName
+            message.notificationTitle ?? '',
+            mqttMessage ?? '',
             DateTime.now().millisecondsSinceEpoch + 1 * 1000,
             sound: '',
             channel: 'message',
@@ -538,48 +575,14 @@ class IsmChatMqttController extends GetxController {
             },
           );
           if (Platform.isAndroid) {
-            Get.snackbar(
+            LocalNoticeService().showFlutterNotification(
               message.notificationTitle ?? '',
               mqttMessage ?? '',
-              backgroundColor:
-                  IsmChatConfig.chatTheme.notificationBackgroundColor,
-              icon: const Icon(Icons.message),
-              onTap: (snack) {
-                if (IsmChatConfig.onSnckBarTap != null) {
-                  IsmChatConfig.onSnckBarTap?.call(message);
-                }
-              },
+              conversataionId: message.conversationId ?? '',
             );
           }
-          messageId = message.messageId ?? '';
         }
-      } else {
-        LocalNoticeService().cancelAllNotification();
-        LocalNoticeService().addNotification(
-          message.notificationTitle ?? '',
-          mqttMessage ?? '',
-          DateTime.now().millisecondsSinceEpoch + 1 * 1000,
-          sound: '',
-          channel: 'message',
-          payload: {
-            'conversationId': message.conversationId ?? '',
-          },
-        );
-        if (Platform.isAndroid) {
-          IsmChatLog.error(mqttMessage ?? '');
-          Get.snackbar(
-            message.notificationTitle ?? '',
-            mqttMessage ?? '',
-            backgroundColor:
-                IsmChatConfig.chatTheme.notificationBackgroundColor,
-            icon: const Icon(Icons.message),
-            onTap: (snack) {
-              if (IsmChatConfig.onSnckBarTap != null) {
-                IsmChatConfig.onSnckBarTap?.call(message);
-              }
-            },
-          );
-        }
+
         messageId = message.messageId!;
       }
     } else {

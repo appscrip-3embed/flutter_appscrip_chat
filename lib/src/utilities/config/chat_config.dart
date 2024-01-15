@@ -14,7 +14,11 @@ class IsmChatConfig {
   static String dbName = IsmChatStrings.dbname;
   static bool isInitialized = false;
   static Duration animationDuration = const Duration(milliseconds: 300);
-  static void Function(IsmChatMessageModel)? onSnckBarTap;
+  static void Function(
+    String title,
+    String body,
+    String conversationId,
+  )? showNotification;
   static bool isShowMqttConnectErrorDailog = false;
 
   /// This callback is to be used if you want to make certain changes while conversation data is being parsed from the API
@@ -28,4 +32,5 @@ class IsmChatConfig {
 
   static set chatDarkTheme(IsmChatThemeData data) => _chatDarkTheme = data;
   static String? fontFamily;
+  static String? notificationIconPath;
 }
