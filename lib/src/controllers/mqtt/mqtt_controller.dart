@@ -528,9 +528,9 @@ class IsmChatMqttController extends GetxController {
             message.conversationId) {
           if (IsmChatConfig.showNotification != null) {
             IsmChatConfig.showNotification?.call(
-              body: mqttMessage ?? '',
-              title: message.notificationTitle ?? '',
-              conversationId: message.conversationId ?? '',
+              mqttMessage ?? '',
+              message.notificationTitle ?? '',
+              message.conversationId ?? '',
             );
           } else {
             LocalNoticeService().cancelAllNotification();
@@ -558,9 +558,9 @@ class IsmChatMqttController extends GetxController {
       } else {
         if (IsmChatConfig.showNotification != null) {
           IsmChatConfig.showNotification?.call(
-            body: mqttMessage ?? '',
-            title: message.notificationTitle ?? '',
-            conversationId: message.conversationId ?? '',
+            mqttMessage ?? '',
+            message.notificationTitle ?? '',
+            message.conversationId ?? '',
           );
         } else {
           LocalNoticeService().cancelAllNotification();

@@ -296,11 +296,11 @@ class IsmChatApp extends StatelessWidget {
     IsmChatThemeData? chatTheme,
     IsmChatThemeData? chatDarkTheme,
     String? notificationIconPath,
-    Function({
-      required String title,
-      required String body,
-      required String conversationId,
-    })? showNotification,
+    void Function(
+      String,
+      String,
+      String,
+    )? showNotification,
     bool isShowMqttConnectErrorDailog = false,
   }) {
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
