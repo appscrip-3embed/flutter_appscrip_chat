@@ -528,8 +528,8 @@ class IsmChatMqttController extends GetxController {
             message.conversationId) {
           if (IsmChatConfig.showNotification != null) {
             IsmChatConfig.showNotification?.call(
-              mqttMessage ?? '',
               message.notificationTitle ?? '',
+              mqttMessage ?? '',
               message.conversationId ?? '',
             );
           } else {
@@ -558,8 +558,8 @@ class IsmChatMqttController extends GetxController {
       } else {
         if (IsmChatConfig.showNotification != null) {
           IsmChatConfig.showNotification?.call(
-            mqttMessage ?? '',
             message.notificationTitle ?? '',
+            mqttMessage ?? '',
             message.conversationId ?? '',
           );
         } else {
