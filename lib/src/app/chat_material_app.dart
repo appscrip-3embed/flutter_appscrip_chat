@@ -296,7 +296,11 @@ class IsmChatApp extends StatelessWidget {
     IsmChatThemeData? chatTheme,
     IsmChatThemeData? chatDarkTheme,
     String? notificationIconPath,
-    Function(IsmChatMessageModel)? onSnckBarTap,
+    Function({
+      required String title,
+      required String body,
+      required String conversationId,
+    })? showNotification,
     bool isShowMqttConnectErrorDailog = false,
   }) {
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
@@ -307,7 +311,7 @@ class IsmChatApp extends StatelessWidget {
     if (!Get.isRegistered<IsmChatMqttController>()) {
       IsmChatMqttBinding().dependencies();
     }
-    IsmChatConfig.onSnckBarTap = onSnckBarTap;
+    IsmChatConfig.showNotification = showNotification;
     IsmChatConfig.notificationIconPath = notificationIconPath;
     IsmChatConfig.isShowMqttConnectErrorDailog = isShowMqttConnectErrorDailog;
   }
