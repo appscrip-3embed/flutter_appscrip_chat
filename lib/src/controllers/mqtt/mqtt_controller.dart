@@ -538,17 +538,22 @@ class IsmChatMqttController extends GetxController {
             },
           );
           if (Platform.isAndroid) {
-            Get.snackbar(
+            // Get.snackbar(
+            //   message.notificationTitle ?? '',
+            //   mqttMessage ?? '',
+            //   backgroundColor:
+            //       IsmChatConfig.chatTheme.notificationBackgroundColor,
+            //   icon: const Icon(Icons.message),
+            //   onTap: (snack) {
+            //     if (IsmChatConfig.onSnckBarTap != null) {
+            //       IsmChatConfig.onSnckBarTap?.call(message);
+            //     }
+            //   },
+            // );
+            LocalNoticeService().showFlutterNotification(
               message.notificationTitle ?? '',
               mqttMessage ?? '',
-              backgroundColor:
-                  IsmChatConfig.chatTheme.notificationBackgroundColor,
-              icon: const Icon(Icons.message),
-              onTap: (snack) {
-                if (IsmChatConfig.onSnckBarTap != null) {
-                  IsmChatConfig.onSnckBarTap?.call(message);
-                }
-              },
+              messageModel: message,
             );
           }
           messageId = message.messageId ?? '';
@@ -566,18 +571,23 @@ class IsmChatMqttController extends GetxController {
           },
         );
         if (Platform.isAndroid) {
-          IsmChatLog.error(mqttMessage ?? '');
-          Get.snackbar(
+          // Get.snackbar(
+          //   message.notificationTitle ?? '',
+          //   mqttMessage ?? '',
+          //   backgroundColor:
+          //       IsmChatConfig.chatTheme.notificationBackgroundColor,
+          //   icon: const Icon(Icons.message),
+          //   onTap: (snack) {
+          //     if (IsmChatConfig.onSnckBarTap != null) {
+          //       IsmChatConfig.onSnckBarTap?.call(message);
+          //     }
+          //   },
+          // );
+
+          LocalNoticeService().showFlutterNotification(
             message.notificationTitle ?? '',
             mqttMessage ?? '',
-            backgroundColor:
-                IsmChatConfig.chatTheme.notificationBackgroundColor,
-            icon: const Icon(Icons.message),
-            onTap: (snack) {
-              if (IsmChatConfig.onSnckBarTap != null) {
-                IsmChatConfig.onSnckBarTap?.call(message);
-              }
-            },
+            messageModel: message,
           );
         }
         messageId = message.messageId!;
