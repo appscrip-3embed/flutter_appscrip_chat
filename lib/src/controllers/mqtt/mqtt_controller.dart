@@ -126,6 +126,7 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
           as Map<String, dynamic>;
 
       IsmChatLog('Mqtt event $payload');
+      await onMqttEvent(payload: payload);
     });
   }
 
