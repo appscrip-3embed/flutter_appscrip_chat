@@ -48,6 +48,8 @@ class ApiWrapper {
     bool showLoader = false,
   }) async {
     AppLog('Request - POST $api $payload');
+    AppLog('Header - POST $headers');
+
     var uri = Uri.parse(api);
     if (showLoader) {
       Utility.showLoader();

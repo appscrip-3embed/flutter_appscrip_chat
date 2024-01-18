@@ -336,44 +336,44 @@ class IsmChatGalleryAssetsView extends StatelessWidget {
                       },
                     ),
                   ),
-                  Padding(
-                    padding: IsmChatDimens.edgeInsets10_0,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: IsmChatInputField(
-                            fillColor: IsmChatColors.greyColor,
-                            autofocus: false,
-                            padding: IsmChatDimens.edgeInsets0,
-                            hint: IsmChatStrings.addCaption,
-                            hintStyle: IsmChatStyles.w400White16,
-                            cursorColor: IsmChatColors.whiteColor,
-                            style: IsmChatStyles.w400White16,
-                            controller: controller.textEditingController,
-                            onChanged: (value) {
-                              controller.listOfAssetsPath[
-                                      controller.assetsIndex] =
-                                  controller
-                                      .listOfAssetsPath[controller.assetsIndex]
-                                      .copyWith(
-                                caption: value,
-                              );
-                            },
-                          ),
-                        ),
-                        IsmChatDimens.boxWidth8,
-                        IsmChatStartChatFAB(
-                          onTap: () async {
-                            controller.sendMedia();
-                          },
-                          icon: const Icon(
-                            Icons.send,
-                            color: IsmChatColors.whiteColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: IsmChatDimens.edgeInsets10_0,
+                  //   child: Row(
+                  //     children: [
+                  //       Expanded(
+                  //         child: IsmChatInputField(
+                  //           fillColor: IsmChatColors.greyColor,
+                  //           autofocus: false,
+                  //           padding: IsmChatDimens.edgeInsets0,
+                  //           hint: IsmChatStrings.addCaption,
+                  //           hintStyle: IsmChatStyles.w400White16,
+                  //           cursorColor: IsmChatColors.whiteColor,
+                  //           style: IsmChatStyles.w400White16,
+                  //           controller: controller.textEditingController,
+                  //           onChanged: (value) {
+                  //             controller.listOfAssetsPath[
+                  //                     controller.assetsIndex] =
+                  //                 controller
+                  //                     .listOfAssetsPath[controller.assetsIndex]
+                  //                     .copyWith(
+                  //               caption: value,
+                  //             );
+                  //           },
+                  //         ),
+                  //       ),
+                  //       IsmChatDimens.boxWidth8,
+                  //       IsmChatStartChatFAB(
+                  //         onTap: () async {
+                  //           controller.sendMedia();
+                  //         },
+                  //         icon: const Icon(
+                  //           Icons.send,
+                  //           color: IsmChatColors.whiteColor,
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                 ],
               ),
             ),
