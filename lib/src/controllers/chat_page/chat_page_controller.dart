@@ -518,9 +518,9 @@ class IsmChatPageController extends GetxController
             userId: [],
             isGroup: true,
             searchableTags: [
-              IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-                  ? IsmChatConfig.communicationConfig.userConfig.userName
-                  : conversationController.userDetails?.userName ?? '',
+              IsmChatConfig.communicationConfig.userConfig.userName ??
+                  conversationController.userDetails?.userName ??
+                  '',
               conversation?.chatName ?? ''
             ],
           );
@@ -576,7 +576,7 @@ class IsmChatPageController extends GetxController
     currentUser = UserDetails(
       userProfileImageUrl:
           IsmChatConfig.communicationConfig.userConfig.userProfile ?? '',
-      userName: IsmChatConfig.communicationConfig.userConfig.userName,
+      userName: IsmChatConfig.communicationConfig.userConfig.userName ?? '',
       userIdentifier:
           IsmChatConfig.communicationConfig.userConfig.userEmail ?? '',
       userId: IsmChatConfig.communicationConfig.userConfig.userId,

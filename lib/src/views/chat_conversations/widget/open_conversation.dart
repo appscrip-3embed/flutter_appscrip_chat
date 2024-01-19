@@ -138,12 +138,9 @@ class _IsmChatOpenConversationViewState
                                       userName: IsmChatConfig
                                               .communicationConfig
                                               .userConfig
-                                              .userName
-                                              .isNotEmpty
-                                          ? IsmChatConfig.communicationConfig
-                                              .userConfig.userName
-                                          : controller.userDetails?.userName ??
-                                              '',
+                                              .userName ??
+                                          controller.userDetails?.userName ??
+                                          '',
                                       customType:
                                           IsmChatCustomMessageType.observerJoin,
                                       sentAt:

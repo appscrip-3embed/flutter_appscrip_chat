@@ -102,6 +102,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
           onTap: showMessageInCenter
               ? null
               : () {
+                  IsmChatUtility.dismissKeyBoard();
                   controller.onMessageSelect(widget._message!);
                 },
           child: AbsorbPointer(
@@ -136,7 +137,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                     children: [
                       if (isGroup &&
                           !showMessageInCenter &&
-                          !widget._message!.sentByMe) ...[
+                          !(widget._message?.sentByMe == true)) ...[
                         IsmChatTapHandler(
                           onTap: () async {
                             await controller.showUserDetails(
@@ -160,15 +161,26 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                             !showMessageInCenter &&
                             !(widget._message?.sentByMe == true)) ...[
                           IsmChatImage.profile(
-                            IsmChatConfig.communicationConfig.userConfig
-                                        .imageBaseUrl !=
-                                    null
-                                ? '${IsmChatConfig.communicationConfig.userConfig.imageBaseUrl}/${controller.conversation?.profileUrl}'
-                                : controller.conversation?.profileUrl ?? '',
-                            name: controller.conversation?.chatName,
+                            IsmChatProperties
+                                    .chatPageProperties.header?.profileImageUrl
+                                    ?.call(
+                                        context,
+                                        controller.conversation!,
+                                        controller.conversation?.profileUrl ??
+                                            '') ??
+                                controller.conversation?.profileUrl ??
+                                '',
+                            name: IsmChatProperties
+                                    .chatPageProperties.header?.title
+                                    ?.call(
+                                        context,
+                                        controller.conversation!,
+                                        controller.conversation?.chatName ??
+                                            '') ??
+                                controller.conversation?.chatName,
                             dimensions: IsmChatConfig.chatTheme.chatPageTheme
                                     ?.profileImageSize ??
-                                30,
+                                IsmChatDimens.thirty,
                           ),
                           if (IsmChatProperties
                                   .chatPageProperties.messageBuilder ==
@@ -204,14 +216,12 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                                 coverstaionController
                                     .userDetails?.userProfileImageUrl ??
                                 '',
-                            name: IsmChatConfig.communicationConfig.userConfig
-                                    .userName.isNotEmpty
-                                ? IsmChatConfig
-                                    .communicationConfig.userConfig.userName
-                                : coverstaionController.userDetails?.userName,
+                            name: IsmChatConfig
+                                    .communicationConfig.userConfig.userName ??
+                                coverstaionController.userDetails?.userName,
                             dimensions: IsmChatConfig.chatTheme.chatPageTheme
                                     ?.profileImageSize ??
-                                30,
+                                IsmChatDimens.thirty,
                           ),
                         ]
                     ],

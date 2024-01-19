@@ -32,17 +32,17 @@ class ChatList extends StatelessWidget {
               chatPageTheme: IsmChatPageThemeData(
                 selfMessageTheme: IsmChatMessageThemeData(
                   borderColor: Colors.grey,
-                  // showProfile: ShowProfile(
-                  //   isShowProfile: true,
-                  //   isPostionBottom: false,
-                  // ),
+                  showProfile: ShowProfile(
+                    isShowProfile: true,
+                    isPostionBottom: false,
+                  ),
                 ),
                 opponentMessageTheme: IsmChatMessageThemeData(
                   borderColor: AppColors.primaryColorLight,
-                  // showProfile: ShowProfile(
-                  //   isShowProfile: true,
-                  //   isPostionBottom: false,
-                  // ),
+                  showProfile: ShowProfile(
+                    isShowProfile: true,
+                    isPostionBottom: false,
+                  ),
                 ),
               ),
             ),

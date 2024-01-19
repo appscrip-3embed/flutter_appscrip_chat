@@ -948,9 +948,9 @@ class IsmChatConversationsController extends GetxController {
       body: IsmChatUtility.encodePayload(body),
       notificationBody: body,
       notificationTitle:
-          IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-              ? IsmChatConfig.communicationConfig.userConfig.userName
-              : userDetails?.userName ?? '',
+          IsmChatConfig.communicationConfig.userConfig.userName ??
+              userDetails?.userName ??
+              '',
       isLoading: isLoading,
       searchableTags: [body],
       customType: customType,
@@ -1077,9 +1077,9 @@ class IsmChatConversationsController extends GetxController {
       return;
     }
     var notificationTitle =
-        IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-            ? IsmChatConfig.communicationConfig.userConfig.userName
-            : userDetails?.userName ?? '';
+        IsmChatConfig.communicationConfig.userConfig.userName ??
+            userDetails?.userName ??
+            '';
     for (var x in messages!) {
       List<Map<String, dynamic>>? attachments;
       if ([

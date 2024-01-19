@@ -147,7 +147,10 @@ class _NetworkImage extends StatelessWidget {
         imageBuilder: (_, image) {
           try {
             if (imageUrl.isEmpty) {
-              return _ErrorImage(isProfileImage: _isProfileImage, name: _name);
+              return _ErrorImage(
+                isProfileImage: _isProfileImage,
+                name: _name,
+              );
             }
             return Container(
               decoration: BoxDecoration(
@@ -156,9 +159,11 @@ class _NetworkImage extends StatelessWidget {
                 image: DecorationImage(image: image, fit: BoxFit.cover),
               ),
             );
-          } catch (e, st) {
-            IsmChatLog.error(e, st);
-            return _ErrorImage(isProfileImage: _isProfileImage, name: _name);
+          } catch (e) {
+            return _ErrorImage(
+              isProfileImage: _isProfileImage,
+              name: _name,
+            );
           }
         },
         placeholder: (context, url) => Container(
@@ -169,7 +174,7 @@ class _NetworkImage extends StatelessWidget {
           ),
           child: _isProfileImage
               ? Text(
-                  _name[0],
+                  _name.isNotEmpty ? _name[0] : 'U',
                   style: IsmChatStyles.w600Black24.copyWith(
                     color: IsmChatConfig.chatTheme.primaryColor,
                   ),
@@ -202,7 +207,7 @@ class _ErrorImage extends StatelessWidget {
         ),
         child: _isProfileImage
             ? Text(
-                _name[0],
+                _name.isNotEmpty ? _name[0] : 'U',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 24,

@@ -274,9 +274,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           userId: [userId],
           metaData: _controller.conversation?.metaData,
           searchableTags: [
-            IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-                ? IsmChatConfig.communicationConfig.userConfig.userName
-                : conversationController.userDetails?.userName ?? '',
+            IsmChatConfig.communicationConfig.userConfig.userName ??
+                conversationController.userDetails?.userName ??
+                '',
             _controller.conversation?.chatName ?? ''
           ]);
     }
@@ -350,9 +350,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
 
     var notificationTitle =
-        IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-            ? IsmChatConfig.communicationConfig.userConfig.userName
-            : conversationController.userDetails?.userName ?? '';
+        IsmChatConfig.communicationConfig.userConfig.userName ??
+            conversationController.userDetails?.userName ??
+            '';
     await ismPostMediaUrl(
       isNetWorkUrl: isNetWorkUrl ?? false,
       imageAndFile: true,
@@ -396,9 +396,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             userId: [userId],
             metaData: _controller.conversation?.metaData,
             searchableTags: [
-              IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-                  ? IsmChatConfig.communicationConfig.userConfig.userName
-                  : conversationController.userDetails?.userName ?? '',
+              IsmChatConfig.communicationConfig.userConfig.userName ??
+                  conversationController.userDetails?.userName ??
+                  '',
               _controller.conversation?.chatName ?? ''
             ]);
       }
@@ -503,9 +503,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         }
 
         var notificationTitle =
-            IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-                ? IsmChatConfig.communicationConfig.userConfig.userName
-                : conversationController.userDetails?.userName ?? '';
+            IsmChatConfig.communicationConfig.userConfig.userName ??
+                conversationController.userDetails?.userName ??
+                '';
         await ismPostMediaUrl(
           isNetWorkUrl: isNetWorkUrl ?? false,
           imageAndFile: false,
@@ -543,9 +543,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           userId: [userId],
           metaData: _controller.conversation?.metaData,
           searchableTags: [
-            IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-                ? IsmChatConfig.communicationConfig.userConfig.userName
-                : conversationController.userDetails?.userName ?? '',
+            IsmChatConfig.communicationConfig.userConfig.userName ??
+                conversationController.userDetails?.userName ??
+                '',
             _controller.conversation?.chatName ?? ''
           ]);
     }
@@ -654,9 +654,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
 
     var notificationTitle =
-        IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-            ? IsmChatConfig.communicationConfig.userConfig.userName
-            : conversationController.userDetails?.userName ?? '';
+        IsmChatConfig.communicationConfig.userConfig.userName ??
+            conversationController.userDetails?.userName ??
+            '';
     await ismPostMediaUrl(
       isNetWorkUrl: isNetWorkUrl ?? false,
       imageAndFile: false,
@@ -690,9 +690,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         userId: [userId],
         metaData: _controller.conversation?.metaData,
         searchableTags: [
-          IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-              ? IsmChatConfig.communicationConfig.userConfig.userName
-              : conversationController.userDetails?.userName ?? '',
+          IsmChatConfig.communicationConfig.userConfig.userName ??
+              conversationController.userDetails?.userName ??
+              '',
           _controller.conversation?.chatName ?? ''
         ],
       );
@@ -783,9 +783,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
 
     var notificationTitle =
-        IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-            ? IsmChatConfig.communicationConfig.userConfig.userName
-            : conversationController.userDetails?.userName ?? '';
+        IsmChatConfig.communicationConfig.userConfig.userName ??
+            conversationController.userDetails?.userName ??
+            '';
 
     await ismPostMediaUrl(
       isNetWorkUrl: isNetWorkUrl ?? false,
@@ -818,9 +818,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           userId: [userId],
           metaData: _controller.conversation?.metaData,
           searchableTags: [
-            IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-                ? IsmChatConfig.communicationConfig.userConfig.userName
-                : conversationController.userDetails?.userName ?? '',
+            IsmChatConfig.communicationConfig.userConfig.userName ??
+                conversationController.userDetails?.userName ??
+                '',
             _controller.conversation?.chatName ?? ''
           ]);
     }
@@ -873,9 +873,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
 
     var notificationTitle =
-        IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-            ? IsmChatConfig.communicationConfig.userConfig.userName
-            : conversationController.userDetails?.userName ?? '';
+        IsmChatConfig.communicationConfig.userConfig.userName ??
+            conversationController.userDetails?.userName ??
+            '';
     sendMessage(
       metaData: locationMessage.metaData,
       deviceId: locationMessage.deviceId ?? '',
@@ -904,9 +904,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         userId: [userId],
         metaData: _controller.conversation?.metaData,
         searchableTags: [
-          IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-              ? IsmChatConfig.communicationConfig.userConfig.userName
-              : conversationController.userDetails?.userName ?? '',
+          IsmChatConfig.communicationConfig.userConfig.userName ??
+              conversationController.userDetails?.userName ??
+              '',
           _controller.conversation?.chatName ?? ''
         ],
       );
@@ -951,9 +951,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
 
     var notificationTitle =
-        IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-            ? IsmChatConfig.communicationConfig.userConfig.userName
-            : conversationController.userDetails?.userName ?? '';
+        IsmChatConfig.communicationConfig.userConfig.userName ??
+            conversationController.userDetails?.userName ??
+            '';
     sendMessage(
       metaData: contactMessage.metaData,
       deviceId: contactMessage.deviceId ?? '',
@@ -982,9 +982,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         userId: [userId],
         metaData: _controller.conversation?.metaData,
         searchableTags: [
-          IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-              ? IsmChatConfig.communicationConfig.userConfig.userName
-              : conversationController.userDetails?.userName ?? '',
+          IsmChatConfig.communicationConfig.userConfig.userName ??
+              conversationController.userDetails?.userName ??
+              '',
           _controller.conversation?.chatName ?? ''
         ],
       );
@@ -1048,9 +1048,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
 
     var notificationTitle =
-        IsmChatConfig.communicationConfig.userConfig.userName.isNotEmpty
-            ? IsmChatConfig.communicationConfig.userConfig.userName
-            : conversationController.userDetails?.userName ?? '';
+        IsmChatConfig.communicationConfig.userConfig.userName ??
+            conversationController.userDetails?.userName ??
+            '';
 
     sendMessage(
       isTemporaryChat: _controller.isTemporaryChat,

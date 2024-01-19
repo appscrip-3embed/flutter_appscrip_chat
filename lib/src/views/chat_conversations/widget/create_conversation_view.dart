@@ -449,11 +449,9 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                   createdByUserName: IsmChatConfig
                                           .communicationConfig
                                           .userConfig
-                                          .userName
-                                          .isNotEmpty
-                                      ? IsmChatConfig.communicationConfig
-                                          .userConfig.userName
-                                      : controller.userDetails?.userName ?? '',
+                                          .userName ??
+                                      controller.userDetails?.userName ??
+                                      '',
                                   lastMessageDetails: LastMessageDetails(
                                     sentByMe: true,
                                     showInConversation: true,

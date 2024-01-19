@@ -671,7 +671,9 @@ mixin IsmChatMqttEventMixin on GetxController {
         await controller.getMessagesFromDB(actionModel.conversationId!);
       }
     }
-    await Get.find<IsmChatConversationsController>().getConversationsFromDB();
+    if (Get.isRegistered<IsmChatConversationsController>()) {
+      await Get.find<IsmChatConversationsController>().getConversationsFromDB();
+    }
   }
 
   void _handleMessageDelelteForEveryOne(

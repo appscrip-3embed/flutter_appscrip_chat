@@ -351,7 +351,7 @@ SPEC CHECKSUMS:
   appscrip_chat_component: acd7eac10950d82a75badfe2af68da3872cf75ca
   audio_session: 4f3e461722055d21515cf3261b64c973c062f345
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
-  camera_avfoundation: 3125e8cd1a4387f6f31c6c63abb8a55892a9eeeb
+  camera_avfoundation: 8b8d780bcfb6a4a02b0fbe2b4bd17b5b71946e68
   connectivity_plus: bf0076dd84a130856aa636df1c71ccaff908fa1d
   device_info_plus: c6fb39579d0f423935b0c9ce7ee2f44b71b9fce6
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
@@ -367,7 +367,7 @@ SPEC CHECKSUMS:
   FirebaseCoreInternal: b444828ea7cfd594fca83046b95db98a2be4f290
   FirebaseInstallations: 033d199474164db20c8350736842a94fe717b960
   FirebaseMessaging: 9bc34a98d2e0237e1b121915120d4d48ddcf301e
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_contacts: edb1c5ce76aa433e20e6cb14c615f4c0b66e0983
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_native_image: 9c0b7451838484458e5b0fae007b86a4c2d4bdfe
@@ -376,18 +376,18 @@ SPEC CHECKSUMS:
   gallery_saver: 9fc173c9f4fcc48af53b2a9ebea1b643255be542
   geocoding_ios: a389ea40f6f548de6e63006a2e31bf66ff80769a
   geolocator_apple: 9157311f654584b9bb72686c55fc02a97b73f461
-  google_maps_flutter_ios: 590249c67f34f422122c232f2a626192adbc78ee
+  google_maps_flutter_ios: f135b968a67c05679e0a53538e900b5c174b0d99
   GoogleDataTransport: 57c22343ab29bc686febbf7cbb13bad167c2d8fe
   GoogleMaps: b47b67bd63d708477d6ff457da2d695c0d8ceb5f
   GoogleUtilities: 0759d1a57ebb953965c2dfe0ba4c82e95ccc2e34
   image_cropper: a3291c624a953049bc6a02e1f8c8ceb162a24b25
-  image_picker_ios: 4a8aadfbb6dc30ad5141a2ce3832af9214a705b5
+  image_picker_ios: 99dfe1854b4fa34d0364e74a78448a0151025425
   just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
   notification_permissions: 825ea1bf2a52ab585c53fd7b5e8e96876d735d4b
   open_filex: 6e26e659846ec990262224a12ef1c528bb4edbe4
-  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
+  path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
   pdfx: 7b876b09de8b7a0bf444a4f82b439ffcff4ee1ec
   permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
   photo_manager: 4f6810b7dfc4feb03b461ac1a70dacf91fba7604
@@ -396,16 +396,16 @@ SPEC CHECKSUMS:
   record_darwin: 1f6619f2abac4d1ca91d3eeab038c980d76f1517
   SDWebImage: f9258c58221ed854cfa0e2b80ee4033710b1c6d3
   share_plus: c3fef564749587fc939ef86ffb283ceac0baf9f5
-  shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
+  shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
   sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
-  url_launcher_ios: bf5ce03e0e2088bad9cc378ea97fa0ed5b49673b
+  url_launcher_ios: bbd758c6e7f9fd7b5b1d4cde34d2b95fcce5e812
   video_compress: fce97e4fb1dfd88175aa07d2ffc8a2f297f87fbe
-  video_player_avfoundation: e9e6f9cae7d7a6d9b43519b0aab382bca60fcfd1
+  video_player_avfoundation: 02011213dab73ae3687df27ce441fbbcc82b5579
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
 
-PODFILE CHECKSUM: 440196394199caa8d442952d4b06d9928ff565cf
+PODFILE CHECKSUM: 12e4b8a2daa1dd660e7e51f5cf433a58d377bddf
 
 COCOAPODS: 1.14.3
