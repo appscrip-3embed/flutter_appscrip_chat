@@ -1,5 +1,6 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class IsmChatHeaderThemeData {
   IsmChatHeaderThemeData({
@@ -12,6 +13,7 @@ class IsmChatHeaderThemeData {
     this.popupBackgroundColor,
     this.popupShape,
     this.popupshadowColor,
+    this.systemUiOverlayStyle,
   });
 
   IsmChatHeaderThemeData.light()
@@ -23,7 +25,8 @@ class IsmChatHeaderThemeData {
         subtileStyle = IsmChatStyles.w400Black12,
         popupBackgroundColor = IsmChatColors.whiteColor,
         popupShape = null,
-        popupshadowColor = IsmChatColors.whiteColor;
+        popupshadowColor = IsmChatColors.whiteColor,
+        systemUiOverlayStyle = null;
 
   IsmChatHeaderThemeData.dark()
       : backgroundColor = IsmChatColors.backgroundColorDark,
@@ -34,6 +37,7 @@ class IsmChatHeaderThemeData {
         subtileStyle = IsmChatStyles.w400White12,
         popupBackgroundColor = IsmChatColors.whiteColor,
         popupShape = null,
+        systemUiOverlayStyle = null,
         popupshadowColor = IsmChatColors.whiteColor;
   final Color? backgroundColor;
   final Color? iconColor;
@@ -46,4 +50,5 @@ class IsmChatHeaderThemeData {
   final ShapeBorder? popupShape;
   final Color? popupshadowColor;
   static const double _kelevation = 1;
+  final SystemUiOverlayStyle? systemUiOverlayStyle;
 }

@@ -32,13 +32,14 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
         builder: (controller) => PreferredSize(
           preferredSize: preferredSize,
           child: AnnotatedRegion<SystemUiOverlayStyle>(
-            value: SystemUiOverlayStyle(
-              statusBarBrightness: Brightness.dark,
-              statusBarIconBrightness: Brightness.light,
-              statusBarColor: IsmChatConfig
-                      .chatTheme.chatPageHeaderTheme?.backgroundColor ??
-                  IsmChatConfig.chatTheme.primaryColor,
-            ),
+            value: IsmChatConfig
+                    .chatTheme.chatPageHeaderTheme?.systemUiOverlayStyle ??
+                SystemUiOverlayStyle(
+                  statusBarBrightness: Brightness.dark,
+                  statusBarIconBrightness: Brightness.light,
+                  statusBarColor: IsmChatConfig.chatTheme.primaryColor ??
+                      IsmChatColors.primaryColorLight,
+                ),
             child: ColoredBox(
               color: IsmChatConfig
                       .chatTheme.chatPageHeaderTheme?.backgroundColor ??
