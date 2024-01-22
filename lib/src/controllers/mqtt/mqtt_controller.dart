@@ -127,7 +127,6 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
 
       IsmChatLog('Mqtt event $payload');
       await onMqttEvent(payload: payload);
-      unawaited(getChatConversationsUnreadCount());
     });
   }
 

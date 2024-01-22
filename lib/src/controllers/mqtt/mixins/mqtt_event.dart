@@ -236,6 +236,7 @@ mixin IsmChatMqttEventMixin on GetxController {
   }
 
   Future<void> _handleMessage(IsmChatMessageModel message) async {
+    _handleUnreadMessages(message.senderInfo?.userId ?? '');
     await Future.delayed(const Duration(milliseconds: 100));
     if (message.senderInfo?.userId ==
         _controller.communicationConfig.userConfig.userId) {
@@ -248,7 +249,6 @@ mixin IsmChatMqttEventMixin on GetxController {
     var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: message.conversationId);
     await Future.delayed(const Duration(milliseconds: 50));
-
     if (conversation == null && Get.isRegistered<IsmChatPageController>()) {
       final controller = Get.find<IsmChatPageController>();
 
@@ -311,8 +311,6 @@ mixin IsmChatMqttEventMixin on GetxController {
       conversationId: message.conversationId ?? '',
       messageId: message.messageId ?? '',
     );
-
-    _handleUnreadMessages(message.senderInfo?.userId ?? '');
 
     if (!Get.isRegistered<IsmChatPageController>()) {
       return;
