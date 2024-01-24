@@ -345,7 +345,7 @@ class IsmChatApp extends StatelessWidget {
   static Future<void> chatFromOutside({
     String profileImageUrl = '',
     required String name,
-    String? email,
+    required userIdentifier,
     required String userId,
     IsmChatMetaData? metaData,
     void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
@@ -376,7 +376,7 @@ class IsmChatApp extends StatelessWidget {
       var userDetails = UserDetails(
         userProfileImageUrl: profileImageUrl,
         userName: name,
-        userIdentifier: email ?? '',
+        userIdentifier: userIdentifier,
         userId: userId,
         online: false,
         lastSeen: 0,
