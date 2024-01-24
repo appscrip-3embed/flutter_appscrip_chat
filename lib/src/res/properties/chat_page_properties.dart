@@ -8,6 +8,7 @@ class IsmChatPageProperties {
     this.messageBuilder,
     this.attachments = IsmChatAttachmentType.values,
     this.features = IsmChatFeature.values,
+    this.isAllowedDeleteChatFromLocal = false,
     this.attachmentConfig,
     this.messageAllowedConfig,
     this.onForwardTap,
@@ -19,6 +20,8 @@ class IsmChatPageProperties {
   });
 
   final Widget? placeholder;
+
+  final bool isAllowedDeleteChatFromLocal;
 
   /// Provide this widget show emoji icon in message type input filed
   final Widget? emojiIcon;

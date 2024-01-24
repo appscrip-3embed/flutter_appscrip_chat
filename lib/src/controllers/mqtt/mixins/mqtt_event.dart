@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
@@ -68,12 +69,15 @@ mixin IsmChatMqttEventMixin on GetxController {
       case IsmChatActionEvents.userBlockConversation:
       case IsmChatActionEvents.userUnblockConversation:
         _handleBlockUserOrUnBlock(actionModel);
-        _handleUnreadMessages(actionModel.initiatorDetails!.userId);
+        _handleUnreadMessages(actionModel.initiatorDetails?.userId ?? '');
         break;
       case IsmChatActionEvents.clearConversation:
-      case IsmChatActionEvents.deleteConversationLocally:
         break;
+      case IsmChatActionEvents.deleteConversationLocally:
+        _handleDeletChatFromLocal(actionModel);
 
+        _handleUnreadMessages(actionModel.userDetails?.userId ?? '');
+        break;
       case IsmChatActionEvents.memberLeave:
       case IsmChatActionEvents.memberJoin:
         _handleMemberJoinAndLeave(actionModel);
@@ -976,7 +980,24 @@ mixin IsmChatMqttEventMixin on GetxController {
     if (userId == _controller.communicationConfig.userConfig.userId) {
       return;
     }
+
     await getChatConversationsUnreadCount();
+  }
+
+  void _handleDeletChatFromLocal(IsmChatMqttActionModel actionModel) async {
+    if (actionModel.userDetails?.userId ==
+        _controller.communicationConfig.userConfig.userId) {
+      return;
+    }
+
+    if (IsmChatProperties.chatPageProperties.isAllowedDeleteChatFromLocal) {
+      final deleteChat = await deleteChatFormDB('',
+          conversationId: actionModel.conversationId ?? '');
+
+      if (deleteChat) {
+        await Get.find<IsmChatConversationsController>().getChatConversations();
+      }
+    }
   }
 
   void _handleConversationUpdate(IsmChatMqttActionModel actionModel) async {
@@ -1016,6 +1037,7 @@ mixin IsmChatMqttEventMixin on GetxController {
     var response = await _controller.viewModel.getChatConversationsUnreadCount(
       isLoading: isLoading,
     );
+
     IsmChatApp.unReadConversationMessages = response;
   }
 
@@ -1026,18 +1048,24 @@ mixin IsmChatMqttEventMixin on GetxController {
         isLoading: isLoading,
       );
 
-  Future<bool> deleteChatFormDB(String isometrickChatId) async {
-    final conversations = await getAllConversationFromDB();
-    if (conversations != null || conversations?.isNotEmpty == true) {
-      var conversation = conversations?.firstWhere(
-          (element) => element.opponentDetails?.userId == isometrickChatId,
-          orElse: IsmChatConversationModel.new);
+  Future<bool> deleteChatFormDB(String isometrickChatId,
+      {String conversationId = ''}) async {
+    if (conversationId.isEmpty) {
+      final conversations = await getAllConversationFromDB();
+      if (conversations != null || conversations?.isNotEmpty == true) {
+        var conversation = conversations?.firstWhere(
+            (element) => element.opponentDetails?.userId == isometrickChatId,
+            orElse: IsmChatConversationModel.new);
 
-      if (conversation?.conversationId != null) {
-        await IsmChatConfig.dbWrapper
-            ?.removeConversation(conversation?.conversationId ?? '');
-        return true;
+        if (conversation?.conversationId != null) {
+          await IsmChatConfig.dbWrapper
+              ?.removeConversation(conversation?.conversationId ?? '');
+          return true;
+        }
       }
+    } else {
+      await IsmChatConfig.dbWrapper?.removeConversation(conversationId);
+      return true;
     }
     return false;
   }

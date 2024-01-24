@@ -124,7 +124,6 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
       var payload = jsonDecode(
               MqttPublishPayload.bytesToStringAsString(recMess.payload.message))
           as Map<String, dynamic>;
-
       IsmChatLog('Mqtt event $payload');
       await onMqttEvent(payload: payload);
     });
