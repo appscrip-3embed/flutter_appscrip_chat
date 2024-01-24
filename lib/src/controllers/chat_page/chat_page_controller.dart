@@ -1524,9 +1524,11 @@ class IsmChatPageController extends GetxController
       if (flashMode == FlashMode.off) {
         flashMode = FlashMode.always;
       } else if (flashMode == FlashMode.always) {
-        flashMode = FlashMode.always;
+        flashMode = FlashMode.auto;
       } else if (flashMode == FlashMode.auto) {
         flashMode = FlashMode.off;
+      } else {
+        flashMode = FlashMode.torch;
       }
     }
     cameraController.setFlashMode(flashMode);

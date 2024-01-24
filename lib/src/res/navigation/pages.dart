@@ -164,5 +164,10 @@ class IsmChatPages {
       page: IsmChatProfilePicView.new,
       binding: IsmChatPageBinding(),
     ),
+    GetPage(
+      name: IsmChatVideoView.route,
+      page: IsmChatVideoView.new,
+      binding: IsmChatPageBinding(),
+    ),
   ];
 }

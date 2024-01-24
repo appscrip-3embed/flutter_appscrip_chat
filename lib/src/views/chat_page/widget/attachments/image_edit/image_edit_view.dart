@@ -94,15 +94,6 @@ class IsmChatImageEditView extends StatelessWidget {
                   backgroundColor: IsmChatConfig.chatTheme.primaryColor,
                   onPressed: () async {
                     if (controller.fileSize.size()) {
-                      await controller.sendImage(
-                          caption: controller.textEditingController.text,
-                          conversationId:
-                              controller.conversation?.conversationId ?? '',
-                          userId: controller
-                                  .conversation?.opponentDetails?.userId ??
-                              '',
-                          imagePath: controller.imagePath!);
-
                       Get.back<void>();
                       Get.back<void>();
                       if (await IsmChatProperties.chatPageProperties
@@ -111,7 +102,16 @@ class IsmChatImageEditView extends StatelessWidget {
                                   Get.context!,
                                   Get.find<IsmChatPageController>()
                                       .conversation!) ??
-                          true) {}
+                          true) {
+                        await controller.sendImage(
+                            caption: controller.textEditingController.text,
+                            conversationId:
+                                controller.conversation?.conversationId ?? '',
+                            userId: controller
+                                    .conversation?.opponentDetails?.userId ??
+                                '',
+                            imagePath: controller.imagePath!);
+                      }
                     } else {
                       await Get.dialog(
                         const IsmChatAlertDialogBox(
