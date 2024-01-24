@@ -159,6 +159,8 @@ mixin IsmChatPageGetMessageMixin on GetxController {
           (_controller.conversation?.conversationId == conversationId)) {
         _controller.conversation =
             data.data.copyWith(conversationId: conversationId);
+        IsmChatProperties.chatPageProperties.onCoverstaionStatus
+            ?.call(Get.context!, _controller.conversation!);
 
         // controller.medialist is storing media i.e. Image, Video and Audio. //
         _controller.conversationController.mediaList = _controller.messages

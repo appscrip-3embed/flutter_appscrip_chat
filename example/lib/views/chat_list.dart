@@ -69,6 +69,9 @@ class ChatList extends StatelessWidget {
               ),
             ),
             chatPageProperties: IsmChatPageProperties(
+              onCoverstaionStatus: (p0, conversation) {
+                IsmChatLog.error(conversation.usersOwnDetails?.isDeleted);
+              },
               // onCallBlockUnblock: (p0, p1, p2) async {
               //   IsmChatLog.error(p2);
               //   return true;

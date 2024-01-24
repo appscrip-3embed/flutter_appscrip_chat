@@ -15,6 +15,7 @@ class IsmChatPageProperties {
     this.meessageFieldFocusNode,
     this.messageFieldSuffix,
     this.onCallBlockUnblock,
+    this.onCoverstaionStatus,
   });
 
   final Widget? placeholder;
@@ -54,7 +55,7 @@ class IsmChatPageProperties {
   /// Primarily designed for nagivating to Message screen
   ///
   /// ```dart
-  /// void Function(BuildContext, IsmChatConversationModel) onForwardTap;
+  /// ConversationVoidCallback? onForwardTap;
   /// ```
   ///
   /// `IsmChatConversationModel` gives data of current chat, it could be used for local storage or state variables
@@ -74,4 +75,15 @@ class IsmChatPageProperties {
   ///
   /// `IsmChatConversationModel` gives data of current chat, it could be used for local storage or state variables
   final FutureConversationVoidCallback? onCallBlockUnblock;
+
+  /// Required parameter
+  ///
+  /// Primarily designed for nagivating to Message screen
+  ///
+  /// ```dart
+  /// ConversationVoidCallback? onCoverstaionStatus;
+  /// ```
+  ///
+  /// `IsmChatConversationModel` gives data of current chat, it could be used for local storage or state variables
+  final ConversationVoidCallback? onCoverstaionStatus;
 }
