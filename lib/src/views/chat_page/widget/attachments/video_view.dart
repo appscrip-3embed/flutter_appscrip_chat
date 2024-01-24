@@ -9,26 +9,25 @@ import 'package:get/get.dart';
 class IsmChatVideoView extends StatefulWidget {
   const IsmChatVideoView({
     super.key,
-    required this.file,
   });
-  final File file;
 
+  static const String route = IsmPageRoutes.videoView;
   @override
   State<IsmChatVideoView> createState() => _IsmChatVideoViewState();
 }
 
 class _IsmChatVideoViewState extends State<IsmChatVideoView> {
-  final chatPageController = Get.find<IsmChatPageController>();
-
   TextEditingController textEditingController = TextEditingController();
-
   File? videoFile;
   String dataSize = '';
+
+  final controller = Get.find<IsmChatPageController>();
 
   @override
   void initState() {
     super.initState();
-    videoFile = widget.file;
+    final argumnet = Get.arguments as Map<String, dynamic>;
+    videoFile = argumnet['file'] as File;
     setSize();
   }
 
@@ -60,7 +59,8 @@ class _IsmChatVideoViewState extends State<IsmChatVideoView> {
             IconButton(
               onPressed: () async {
                 var trimFile = await Get.to<File>(
-                  IsmVideoTrimmerView(file: widget.file, durationInSeconds: 30),
+                  IsmVideoTrimmerView(
+                      file: videoFile ?? File(''), durationInSeconds: 30),
                 );
                 videoFile = trimFile;
                 dataSize = await IsmChatUtility.fileToSize(videoFile!);
@@ -104,24 +104,23 @@ class _IsmChatVideoViewState extends State<IsmChatVideoView> {
                 backgroundColor: IsmChatConfig.chatTheme.primaryColor,
                 onPressed: () async {
                   if (dataSize.size()) {
-                    await chatPageController.sendVideo(
-                      caption: textEditingController.text,
-                      file: videoFile,
-                      conversationId:
-                          chatPageController.conversation?.conversationId ?? '',
-                      userId: chatPageController
-                              .conversation?.opponentDetails?.userId ??
-                          '',
-                    );
                     Get.back<void>();
                     Get.back<void>();
+
                     if (await IsmChatProperties.chatPageProperties
                             .messageAllowedConfig?.isMessgeAllowed
-                            ?.call(
-                                Get.context!,
-                                Get.find<IsmChatPageController>()
-                                    .conversation!) ??
-                        true) {}
+                            ?.call(Get.context!, controller.conversation!) ??
+                        true) {
+                      await controller.sendVideo(
+                        caption: textEditingController.text,
+                        file: videoFile,
+                        conversationId:
+                            controller.conversation?.conversationId ?? '',
+                        userId:
+                            controller.conversation?.opponentDetails?.userId ??
+                                '',
+                      );
+                    }
                   } else {
                     await Get.dialog(
                       const IsmChatAlertDialogBox(

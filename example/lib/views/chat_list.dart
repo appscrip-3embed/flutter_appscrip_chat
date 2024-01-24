@@ -32,28 +32,29 @@ class ChatList extends StatelessWidget {
               chatPageTheme: IsmChatPageThemeData(
                 selfMessageTheme: IsmChatMessageThemeData(
                   borderColor: Colors.grey,
-                  showProfile: ShowProfile(
-                    isShowProfile: true,
-                    isPostionBottom: false,
-                  ),
+                  // showProfile: ShowProfile(
+                  //   isShowProfile: true,
+                  //   isPostionBottom: false,
+                  // ),
                 ),
                 opponentMessageTheme: IsmChatMessageThemeData(
                   borderColor: AppColors.primaryColorLight,
-                  showProfile: ShowProfile(
-                    isShowProfile: true,
-                    isPostionBottom: false,
-                  ),
+                  // showProfile: ShowProfile(
+                  //   isShowProfile: true,
+                  //   isPostionBottom: false,
+                  // ),
                 ),
               ),
             ),
             isShowMqttConnectErrorDailog: true,
             communicationConfig: IsmChatCommunicationConfig(
               userConfig: IsmChatUserConfig(
-                  userToken: AppConfig.userDetail?.userToken ?? '',
-                  userId: AppConfig.userDetail?.userId ?? '',
-                  userName: AppConfig.userDetail?.userName ?? '',
-                  userEmail: AppConfig.userDetail?.email ?? '',
-                  userProfile: ''),
+                userToken: AppConfig.userDetail?.userToken ?? '',
+                userId: AppConfig.userDetail?.userId ?? '',
+                // userName: AppConfig.userDetail?.userName,
+                userEmail: AppConfig.userDetail?.email ?? '',
+                userProfile: '',
+              ),
               mqttConfig: const IsmChatMqttConfig(
                 hostName: Constants.hostname,
                 port: Constants.port,

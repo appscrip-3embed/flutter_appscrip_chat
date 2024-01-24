@@ -314,27 +314,6 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
 
                               return IsmChatTapHandler(
                                 onTap: () async {
-                                  controller.sendLocation(
-                                      conversationId: controller
-                                              .conversation?.conversationId ??
-                                          '',
-                                      userId: controller.conversation
-                                              ?.opponentDetails?.userId ??
-                                          '',
-                                      latitude: controller.predictionList[index]
-                                              .geometry?.location?.lat ??
-                                          0,
-                                      longitude: controller
-                                              .predictionList[index]
-                                              .geometry
-                                              ?.location
-                                              ?.lng ??
-                                          0,
-                                      placeId:
-                                          controller.predictionList[index].placeId ?? '',
-                                      locationName: controller.predictionList[index].name ?? '',
-                                      locationSubName: controller.predictionList[index].vicinity ?? '');
-
                                   Get.back<void>();
                                   if (await IsmChatProperties.chatPageProperties
                                           .messageAllowedConfig?.isMessgeAllowed
@@ -342,7 +321,31 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                               Get.context!,
                                               Get.find<IsmChatPageController>()
                                                   .conversation!) ??
-                                      true) {}
+                                      true) {
+                                    controller.sendLocation(
+                                        conversationId: controller
+                                                .conversation?.conversationId ??
+                                            '',
+                                        userId: controller.conversation
+                                                ?.opponentDetails?.userId ??
+                                            '',
+                                        latitude: controller
+                                                .predictionList[index]
+                                                .geometry
+                                                ?.location
+                                                ?.lat ??
+                                            0,
+                                        longitude: controller
+                                                .predictionList[index]
+                                                .geometry
+                                                ?.location
+                                                ?.lng ??
+                                            0,
+                                        placeId:
+                                            controller.predictionList[index].placeId ?? '',
+                                        locationName: controller.predictionList[index].name ?? '',
+                                        locationSubName: controller.predictionList[index].vicinity ?? '');
+                                  }
                                 },
                                 child: ListTile(
                                   minLeadingWidth: 0,

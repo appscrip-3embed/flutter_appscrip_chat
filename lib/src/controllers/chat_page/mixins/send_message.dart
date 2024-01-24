@@ -164,7 +164,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
 
     if (isMaxSize == false) {
       Get.back<void>();
-
       if (await IsmChatProperties
               .chatPageProperties.messageAllowedConfig?.isMessgeAllowed
               ?.call(Get.context!,
@@ -258,7 +257,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       }
       _controller.listOfAssetsPath.clear();
     }
-    IsmChatLog.error('step11');
   }
 
   void sendAudio(
@@ -485,27 +483,27 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       }
     }
 
-    if (await IsmChatProperties
-            .chatPageProperties.messageAllowedConfig?.isMessgeAllowed
-            ?.call(Get.context!,
-                Get.find<IsmChatPageController>().conversation!) ??
-        true) {
-      if (documentMessage != null) {
-        _controller.messages.add(documentMessage);
-        _controller.isreplying = false;
+    if (documentMessage != null) {
+      _controller.messages.add(documentMessage);
+      _controller.isreplying = false;
 
-        if (!_controller.isTemporaryChat) {
-          await IsmChatConfig.dbWrapper!
-              .saveMessage(documentMessage, IsmChatDbBox.pending);
-          if (kIsWeb && Responsive.isWebAndTablet(Get.context!)) {
-            _controller.updateLastMessagOnCurrentTime(documentMessage);
-          }
+      if (!_controller.isTemporaryChat) {
+        await IsmChatConfig.dbWrapper!
+            .saveMessage(documentMessage, IsmChatDbBox.pending);
+        if (kIsWeb && Responsive.isWebAndTablet(Get.context!)) {
+          _controller.updateLastMessagOnCurrentTime(documentMessage);
         }
+      }
 
-        var notificationTitle =
-            IsmChatConfig.communicationConfig.userConfig.userName ??
-                conversationController.userDetails?.userName ??
-                '';
+      var notificationTitle =
+          IsmChatConfig.communicationConfig.userConfig.userName ??
+              conversationController.userDetails?.userName ??
+              '';
+      if (await IsmChatProperties
+              .chatPageProperties.messageAllowedConfig?.isMessgeAllowed
+              ?.call(Get.context!,
+                  Get.find<IsmChatPageController>().conversation!) ??
+          true) {
         await ismPostMediaUrl(
           isNetWorkUrl: isNetWorkUrl ?? false,
           imageAndFile: false,

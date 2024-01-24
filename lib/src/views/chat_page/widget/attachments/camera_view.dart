@@ -120,6 +120,11 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                               ),
                             GestureDetector(
                               onLongPressStart: (_) async {
+                                if ([FlashMode.always, FlashMode.auto]
+                                    .contains(controller.flashMode)) {
+                                  controller.toggleFlash(FlashMode.torch);
+                                }
+
                                 await controller.cameraController
                                     .startVideoRecording();
                                 controller.startTimer();
@@ -165,9 +170,8 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                                     ),
                                   );
                                 } else {
-                                  await Get.to<void>(IsmChatVideoView(
-                                    file: File(file.path),
-                                  ));
+                                  IsmChatRouteManagement.goToVideView(
+                                      file: File(file.path));
                                 }
                               },
                               onTap: controller.isRecording

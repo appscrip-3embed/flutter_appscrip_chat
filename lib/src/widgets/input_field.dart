@@ -76,6 +76,7 @@ class IsmChatInputField extends StatelessWidget {
           ),
           onChanged: onChanged,
           onFieldSubmitted: onFieldSubmitted,
+          enableSuggestions: false,
         ),
       );
 }

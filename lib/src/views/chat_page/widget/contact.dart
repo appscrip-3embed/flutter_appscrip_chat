@@ -75,7 +75,6 @@ class IsmChatContactView extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               Get.back();
-
               if (await IsmChatProperties
                       .chatPageProperties.messageAllowedConfig?.isMessgeAllowed
                       ?.call(Get.context!,

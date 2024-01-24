@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:get/get.dart';
@@ -163,6 +165,10 @@ class IsmChatRouteManagement {
     Get.toNamed(
       IsmChatCameraView.route,
     );
+  }
+
+  static void goToVideView({required File file}) {
+    Get.toNamed(IsmChatVideoView.route, arguments: {'file': file});
   }
 
   static void goToContactView() {

@@ -18,6 +18,7 @@ class AppConfig {
     }
 
     userDetail = UserDetailsModel.fromJson(data);
-    IsmChatLog.success(userDetail?.userToken);
+    // IsmChatLog.success(userDetail?.userToken);
+    // IsmChatLog.success(userDetail?.toMap());
   }
 }

@@ -32,6 +32,7 @@ class IsmPageRoutes {
   static const String messageMediaPreivew = '/messageMediaPreivew';
   static const String cameraView = '/cameraView';
   static const String alleryAssetsView = '/galleryAssetsView';
+  static const String videoView = '/videoView';
 
   static const String searchMessage = '/searchMessage';
   static const String conversationSearch = '/conversationSearch';
