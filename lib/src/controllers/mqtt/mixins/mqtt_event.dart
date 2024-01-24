@@ -984,15 +984,6 @@ mixin IsmChatMqttEventMixin on GetxController {
   }
 
   void _handleDeletChatFromLocal(IsmChatMqttActionModel actionModel) async {
-    // IsmChatLog.error(
-    //     'FromEvent ${actionModel.userDetails?.userId} ==  FromOwn ${_controller.communicationConfig.userConfig.userId}');
-    // IsmChatLog.error(
-    //     'Check ${IsmChatProperties.chatPageProperties.isAllowedDeleteChatFromLocal} ');
-
-    // if (actionModel.userDetails?.userId ==
-    //     _controller.communicationConfig.userConfig.userId) {
-    //   return;
-    // }
     if (IsmChatProperties.chatPageProperties.isAllowedDeleteChatFromLocal) {
       final deleteChat = await deleteChatFormDB('',
           conversationId: actionModel.conversationId ?? '');
