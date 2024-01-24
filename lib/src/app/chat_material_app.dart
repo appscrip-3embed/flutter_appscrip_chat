@@ -245,7 +245,7 @@ class IsmChatApp extends StatelessWidget {
   }
 
   /// Call this function on SignOut to delete the data stored locally in the Local Database
-  static void logout() async {
+  static Future<void> logout() async {
     await Get.find<IsmChatMqttController>().unSubscribe();
     await Get.find<IsmChatMqttController>().disconnect();
     await IsmChatConfig.dbWrapper?.deleteChatLocalDb();
@@ -254,6 +254,11 @@ class IsmChatApp extends StatelessWidget {
       Get.delete<IsmChatCommonController>(force: true),
       Get.delete<IsmChatMqttController>(force: true),
     ]);
+  }
+
+  /// Call this function for clear the data stored locally in the Local Database
+  static Future<void> clearChatLocalDb() async {
+    await IsmChatConfig.dbWrapper?.clearChatLocalDb();
   }
 
   /// Call this function on to delete chat with and local the data stored locally in the Local Database

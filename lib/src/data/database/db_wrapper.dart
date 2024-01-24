@@ -89,12 +89,17 @@ class IsmChatDBWrapper {
   /// delete chat object box
   Future<void> deleteChatLocalDb() async {
     await Future.wait([
-      userDetailsBox.clear(),
-      chatConversationBox.clear(),
-      pendingMessageBox.clear(),
+      clearChatLocalDb(),
       Get.find<IsmChatMqttController>().unSubscribe(),
       Get.find<IsmChatMqttController>().disconnect(),
     ]);
+    IsmChatLog.success('[DELETED] - All entries are removed from database');
+  }
+
+  Future<void> clearChatLocalDb() async {
+    await userDetailsBox.clear();
+    await chatConversationBox.clear();
+    await pendingMessageBox.clear();
     IsmChatLog.success('[CLEARED] - All entries are removed from database');
   }
 
