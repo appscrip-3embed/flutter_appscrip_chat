@@ -33,74 +33,78 @@ class IsmChatAlertDialogBox extends StatelessWidget {
   final EdgeInsetsGeometry? contentPadding;
 
   @override
-  Widget build(BuildContext context) => (actionLabels?.length ?? 0) <= 1
-      ? AlertDialog(
-          actionsPadding: IsmChatDimens.edgeInsets16,
-          title: Text(title),
-          backgroundColor: IsmChatConfig
-                  .chatTheme.chatPageHeaderTheme?.popupBackgroundColor ??
-              IsmChatColors.whiteColor,
-          titleTextStyle: IsmChatStyles.w600Black14,
-          contentPadding: contentPadding,
-          contentTextStyle: contentTextStyle,
-          content: content,
-          shape:
-              IsmChatConfig.chatTheme.chatPageHeaderTheme?.popupShape ?? shape,
-          actions: [
-            IsmChatTapHandler(
-              onTap: onCancel ??
-                  () {
-                    Get.back<void>();
-                  },
-              child: Text(
-                cancelLabel,
-                style: IsmChatStyles.w400Black14,
-              ),
-            ),
-            if (actionLabels != null) ...[
-              IsmChatDimens.boxWidth8,
-              IsmChatTapHandler(
-                onTap: () {
-                  Get.back<void>();
-                  callbackActions!.first();
-                },
-                child: Text(
-                  actionLabels!.first,
-                  style: IsmChatStyles.w400Black14,
-                ),
-              ),
-            ],
-          ],
-        )
-      : SimpleDialog(
-          title: Text(
-            title,
-            style: IsmChatStyles.w600Black14,
-          ),
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                ...actionLabels!.map<Widget>((label) {
-                  var action = callbackActions![actionLabels!.indexOf(label)];
-                  return SimpleDialogOption(
-                    child: IsmChatTapHandler(
+  Widget build(BuildContext context) => StatusBarTransparent(
+        child: (actionLabels?.length ?? 0) <= 1
+            ? AlertDialog(
+                actionsPadding: IsmChatDimens.edgeInsets16,
+                title: Text(title),
+                backgroundColor: IsmChatConfig
+                        .chatTheme.chatPageHeaderTheme?.popupBackgroundColor ??
+                    IsmChatColors.whiteColor,
+                titleTextStyle: IsmChatStyles.w600Black14,
+                contentPadding: contentPadding,
+                contentTextStyle: contentTextStyle,
+                content: content,
+                shape:
+                    IsmChatConfig.chatTheme.chatPageHeaderTheme?.popupShape ??
+                        shape,
+                actions: [
+                  IsmChatTapHandler(
+                    onTap: onCancel ??
+                        () {
+                          Get.back<void>();
+                        },
+                    child: Text(
+                      cancelLabel,
+                      style: IsmChatStyles.w400Black14,
+                    ),
+                  ),
+                  if (actionLabels != null) ...[
+                    IsmChatDimens.boxWidth8,
+                    IsmChatTapHandler(
                       onTap: () {
                         Get.back<void>();
-                        action();
+                        callbackActions!.first();
                       },
-                      child: Text(label),
+                      child: Text(
+                        actionLabels!.first,
+                        style: IsmChatStyles.w400Black14,
+                      ),
                     ),
-                  );
-                }),
-                SimpleDialogOption(
-                  child: IsmChatTapHandler(
-                    onTap: onCancel ?? Get.back,
-                    child: Text(cancelLabel),
-                  ),
+                  ],
+                ],
+              )
+            : SimpleDialog(
+                title: Text(
+                  title,
+                  style: IsmChatStyles.w600Black14,
                 ),
-              ],
-            )
-          ],
-        );
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      ...actionLabels!.map<Widget>((label) {
+                        var action =
+                            callbackActions![actionLabels!.indexOf(label)];
+                        return SimpleDialogOption(
+                          child: IsmChatTapHandler(
+                            onTap: () {
+                              Get.back<void>();
+                              action();
+                            },
+                            child: Text(label),
+                          ),
+                        );
+                      }),
+                      SimpleDialogOption(
+                        child: IsmChatTapHandler(
+                          onTap: onCancel ?? Get.back,
+                          child: Text(cancelLabel),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+      );
 }

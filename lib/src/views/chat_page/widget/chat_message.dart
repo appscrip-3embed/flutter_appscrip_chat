@@ -104,6 +104,9 @@ class _IsmChatMessageState extends State<IsmChatMessage>
               : () {
                   IsmChatUtility.dismissKeyBoard();
                   controller.onMessageSelect(widget._message!);
+                  if (controller.showEmojiBoard) {
+                    controller.toggleEmojiBoard(false, false);
+                  }
                 },
           child: AbsorbPointer(
             absorbing: controller.isMessageSeleted,
