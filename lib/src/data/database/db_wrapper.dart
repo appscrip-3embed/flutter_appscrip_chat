@@ -355,9 +355,11 @@ class IsmChatDBWrapper {
       case IsmChatDbBox.main:
         var conversation =
             await getConversation(conversationId: conversationId, dbBox: dbBox);
+
         if (conversation != null) {
           await chatConversationBox.delete(conversationId);
         }
+
         break;
       case IsmChatDbBox.pending:
         var pendingConversation =

@@ -739,7 +739,9 @@ class IsmChatConversationsController extends GetxController {
 
   Future<void> getConversationsFromDB() async {
     var dbConversations = await IsmChatConfig.dbWrapper!.getAllConversations();
+
     if (dbConversations.isEmpty == true) {
+      conversations.clear();
       return;
     }
     conversations.clear();
