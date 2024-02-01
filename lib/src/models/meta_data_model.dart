@@ -21,7 +21,9 @@ class IsmChatMetaData {
   });
 
   factory IsmChatMetaData.fromMap(Map<String, dynamic> map) => IsmChatMetaData(
-        captionMessage: map['captionMessage'] as String? ?? '',
+        captionMessage: map['captionMessage'] != null
+            ? IsmChatUtility.decodeString(map['captionMessage'] as String)
+            : '',
         replayMessageCustomType: map['replayMessageCustomType'] != null
             ? IsmChatCustomMessageType.fromString(
                 map['replayMessageCustomType'])
@@ -109,7 +111,7 @@ class IsmChatMetaData {
 
   Map<String, dynamic> toMap() => <String, dynamic>{
         if (captionMessage != null && captionMessage?.isNotEmpty == true)
-          'captionMessage': captionMessage,
+          'captionMessage': IsmChatUtility.encodeString(captionMessage ?? ''),
         if (country != null && country?.isNotEmpty == true) 'country': country,
         if (parentMessageBody != null && parentMessageBody?.isNotEmpty == true)
           'parentMessageBody': parentMessageBody,

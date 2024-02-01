@@ -85,7 +85,7 @@ class IsmChatCommonRepository {
         'attachments': attachments,
         'notificationBody': notificationBody,
         'notificationTitle': notificationTitle,
-        'searchableTags': [IsmChatUtility.decodePayload(body)],
+        'searchableTags': [IsmChatUtility.decodeString(body)],
         if (mentionedUsers?.isNotEmpty == true) 'mentionedUsers': mentionedUsers
       };
 

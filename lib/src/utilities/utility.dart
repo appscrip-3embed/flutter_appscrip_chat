@@ -166,7 +166,7 @@ class IsmChatUtility {
   }
 
   /// this is for change encoded string to decode string
-  static String decodePayload(String value) {
+  static String decodeString(String value) {
     try {
       return utf8.fuse(base64).decode(value);
     } catch (e) {
@@ -175,7 +175,7 @@ class IsmChatUtility {
   }
 
   /// this is for change decode string to encode string
-  static String encodePayload(String value) => utf8.fuse(base64).encode(value);
+  static String encodeString(String value) => utf8.fuse(base64).encode(value);
 
   static void showToast(String message, {int timeOutInSec = 1}) {
     Fluttertoast.showToast(

@@ -58,7 +58,7 @@ class IsmChatMqttActionModel {
         reactionsCount: map['reactionsCount'] as int? ?? 0,
         senderId: map['senderId'] as String? ?? '',
         body: map['body'] != null && (map['body'] as String).isNotEmpty
-            ? IsmChatUtility.decodePayload(map['body'] as String)
+            ? IsmChatUtility.decodeString(map['body'] as String)
             : '',
         messageType:
             IsmChatMessageType.fromValue(map['messageType'] as int? ?? 0),

@@ -12,7 +12,7 @@ class IsmChatMessageModel {
   factory IsmChatMessageModel.fromMap(Map<String, dynamic> map) {
     var model = IsmChatMessageModel(
         body: map['body'] != null && (map['body'] as String).isNotEmpty
-            ? IsmChatUtility.decodePayload(map['body'] as String)
+            ? IsmChatUtility.decodeString(map['body'] as String)
             : '',
         action: map['action'] as String? ?? '',
         updatedAt: map['updatedAt'] as int? ?? 0,
@@ -283,7 +283,7 @@ class IsmChatMessageModel {
           : [];
 
   Map<String, dynamic> toMap() => {
-        'body': IsmChatUtility.encodePayload(body),
+        'body': IsmChatUtility.encodeString(body),
         'action': action,
         'updatedAt': updatedAt,
         'sentAt': sentAt,

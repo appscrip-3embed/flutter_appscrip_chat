@@ -102,7 +102,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         conversationId: conversationId,
         notificationBody: notificationBody,
         notificationTitle: notificationTitle,
-        body: IsmChatUtility.encodePayload(body),
+        body: IsmChatUtility.encodeString(body),
         createdAt: createdAt,
         isTemporaryChat: isTemporaryChat,
       );
@@ -126,7 +126,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           events: {'updateUnreadCount': true, 'sendPushNotification': true},
           messageType: messageType,
           deviceId: deviceId,
-          body: IsmChatUtility.encodePayload(body),
+          body: IsmChatUtility.encodeString(body),
           notificationBody: notificationBody,
           notificationTitle: notificationTitle,
           attachments: attachments,

@@ -24,7 +24,7 @@ class LastMessageDetails {
       messageType: map['messageType'] as int? ?? 0,
       messageId: map['messageId'] as String? ?? map['userId'] as String? ?? '',
       conversationId: map['conversationId'] as String? ?? '',
-      body: IsmChatUtility.decodePayload(map['body'] as String? ?? ''),
+      body: IsmChatUtility.decodeString(map['body'] as String? ?? ''),
       deliverCount:
           map['deliveredTo'] != null ? (map['deliveredTo'] as List).length : 0,
       readCount: map['readBy'] != null ? (map['readBy'] as List).length : 0,
