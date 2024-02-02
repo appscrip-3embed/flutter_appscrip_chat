@@ -17,14 +17,17 @@ class EmojiBoard extends StatelessWidget {
           child: EmojiPicker(
             textEditingController: controller.chatInputController,
             config: Config(
-              emojiSizeMax: IsmChatDimens.twentyFour,
-              columns: 8,
-              bgColor: IsmChatConfig.chatTheme.backgroundColor!,
-              indicatorColor: IsmChatConfig.chatTheme.primaryColor!,
-              iconColorSelected: IsmChatConfig.chatTheme.primaryColor!,
-              skinToneDialogBgColor: IsmChatConfig.chatTheme.backgroundColor!,
-              skinToneIndicatorColor: IsmChatConfig.chatTheme.primaryColor!,
-              backspaceColor: IsmChatConfig.chatTheme.primaryColor!,
+              emojiViewConfig: EmojiViewConfig(
+                emojiSizeMax: IsmChatDimens.twentyFour,
+                columns: 8,
+                backgroundColor: IsmChatConfig.chatTheme.backgroundColor!,
+
+                // indicatorColor: IsmChatConfig.chatTheme.primaryColor!,
+                // iconColorSelected: IsmChatConfig.chatTheme.primaryColor!,
+                // skinToneDialogBgColor: IsmChatConfig.chatTheme.backgroundColor!,
+                // skinToneIndicatorColor: IsmChatConfig.chatTheme.primaryColor!,
+                // backspaceColor: IsmChatConfig.chatTheme.primaryColor!,
+              ),
             ),
             onBackspacePressed: () {
               controller.chatInputController.text = controller

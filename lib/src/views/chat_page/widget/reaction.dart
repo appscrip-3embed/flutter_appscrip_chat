@@ -82,6 +82,7 @@ class _ImsChatReactionState extends State<ImsChatReaction> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           EmojiCell.fromConfig(
+                            emojiBoxSize: 20,
                             emoji: reaction,
                             emojiSize: IsmChatDimens.eighteen,
                             onEmojiSelected: (_, emoji) {
@@ -91,10 +92,14 @@ class _ImsChatReactionState extends State<ImsChatReaction> {
                                   reactionType: reactionName ?? '');
                             },
                             config: Config(
-                              emojiSizeMax: IsmChatDimens.twentyFour,
-                              bgColor: IsmChatConfig.chatTheme.backgroundColor!,
-                              indicatorColor:
-                                  IsmChatConfig.chatTheme.primaryColor!,
+                              categoryViewConfig: CategoryViewConfig(
+                                  indicatorColor:
+                                      IsmChatConfig.chatTheme.primaryColor!),
+                              emojiViewConfig: EmojiViewConfig(
+                                emojiSizeMax: IsmChatDimens.twentyFour,
+                                backgroundColor:
+                                    IsmChatConfig.chatTheme.backgroundColor!,
+                              ),
                             ),
                           ),
                           Text(

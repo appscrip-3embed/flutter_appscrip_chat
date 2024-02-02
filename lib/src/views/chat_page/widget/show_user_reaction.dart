@@ -93,14 +93,19 @@ class _ImsChatShowUserReactionState extends State<ImsChatShowUserReaction>
                         AbsorbPointer(
                           absorbing: true,
                           child: EmojiCell.fromConfig(
+                            emojiBoxSize: 20,
                             emoji: reaction,
                             emojiSize: IsmChatDimens.twenty,
                             onEmojiSelected: (_, emoji) {},
                             config: Config(
-                              emojiSizeMax: IsmChatDimens.twentyFour,
-                              bgColor: IsmChatConfig.chatTheme.backgroundColor!,
-                              indicatorColor:
-                                  IsmChatConfig.chatTheme.primaryColor!,
+                              categoryViewConfig: CategoryViewConfig(
+                                  indicatorColor:
+                                      IsmChatConfig.chatTheme.primaryColor!),
+                              emojiViewConfig: EmojiViewConfig(
+                                emojiSizeMax: IsmChatDimens.twentyFour,
+                                backgroundColor:
+                                    IsmChatConfig.chatTheme.backgroundColor!,
+                              ),
                             ),
                           ),
                         ),
@@ -164,14 +169,19 @@ class _ImsChatShowUserReactionState extends State<ImsChatShowUserReaction>
                           height: IsmChatDimens.thirtyTwo,
                           width: IsmChatDimens.thirtyTwo,
                           child: EmojiCell.fromConfig(
+                            emojiBoxSize: 20,
                             emoji: reaction,
                             emojiSize: IsmChatDimens.twenty,
                             onEmojiSelected: (_, emoji) {},
                             config: Config(
-                              emojiSizeMax: IsmChatDimens.twentyFour,
-                              bgColor: IsmChatConfig.chatTheme.backgroundColor!,
-                              indicatorColor:
-                                  IsmChatConfig.chatTheme.primaryColor!,
+                              categoryViewConfig: CategoryViewConfig(
+                                  indicatorColor:
+                                      IsmChatConfig.chatTheme.primaryColor!),
+                              emojiViewConfig: EmojiViewConfig(
+                                emojiSizeMax: IsmChatDimens.twentyFour,
+                                backgroundColor:
+                                    IsmChatConfig.chatTheme.backgroundColor!,
+                              ),
                             ),
                           ),
                         ),

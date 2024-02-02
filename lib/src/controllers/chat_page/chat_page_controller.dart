@@ -20,7 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
-import 'package:gallery_saver/gallery_saver.dart';
+// import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_cropper/image_cropper.dart';
@@ -2203,11 +2203,11 @@ class IsmChatPageController extends GetxController
       bool? isMediaSave;
       if (IsmChatConstants.videoExtensions
           .contains(message.attachments?.first.extension)) {
-        isMediaSave = await GallerySaver.saveVideo(
-            message.attachments?.first.mediaUrl ?? '');
+        // isMediaSave = await GallerySaver.saveVideo(
+        //     message.attachments?.first.mediaUrl ?? '');
       } else {
-        isMediaSave = await GallerySaver.saveImage(
-            message.attachments?.first.mediaUrl ?? '');
+        // isMediaSave = await GallerySaver.saveImage(
+        //     message.attachments?.first.mediaUrl ?? '');
       }
 
       // ********** With out package and create folder name and download any files

@@ -19,7 +19,7 @@ dependencies:
   device_info_plus: ^9.0.0
   dio: ^5.2.1+1
   elegant_notification: ^1.11.0
-  emoji_picker_flutter: ^1.5.4
+  emoji_picker_flutter: ^2.0.0
   file_picker: ^6.1.1
   flutter:
     sdk: flutter
@@ -39,12 +39,11 @@ dependencies:
   google_maps_flutter: ^2.5.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  http: ^0.13.4
+  http: ^1.2.0
   image: ^4.1.2
-  image_cropper: ^4.0.1
+  image_cropper: ^5.0.1
   image_painter: ^0.6.1
   image_picker: ^1.0.4
-  internet_file: ^1.2.0
   intl: ^0.18.0
   just_audio: ^0.9.34
   mqtt_client: ^10.0.0
