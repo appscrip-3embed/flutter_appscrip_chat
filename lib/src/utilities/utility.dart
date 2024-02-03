@@ -382,7 +382,7 @@ class IsmChatUtility {
     }
   }
 
-  static Future<Uint8List> get(
+  static Future<Uint8List> getUint8ListFromUrl(
     String url, {
     InternetFileProgress? progress,
     String method = 'GET',

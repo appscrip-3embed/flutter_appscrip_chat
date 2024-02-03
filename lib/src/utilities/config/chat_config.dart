@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_setters_without_getters
 
+import 'package:alice/alice.dart';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:get/get.dart';
 
@@ -11,6 +12,7 @@ class IsmChatConfig {
   static IsmChatThemeData? _chatDarkTheme;
   static IsmChatDBWrapper? dbWrapper;
   static bool useDatabase = false;
+  static Alice? useAlice;
   static String dbName = IsmChatStrings.dbname;
   static bool isInitialized = false;
   static Duration animationDuration = const Duration(milliseconds: 300);

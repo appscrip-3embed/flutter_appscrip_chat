@@ -23,7 +23,7 @@ class _IsmChatPdfViewState extends State<IsmChatPdfView> {
       if (isNetowrk) {
         _pdfController = PdfController(
           document: PdfDocument.openData(
-            IsmChatUtility.get(
+            IsmChatUtility.getUint8ListFromUrl(
               widget.filePath ?? '',
             ),
           ),
