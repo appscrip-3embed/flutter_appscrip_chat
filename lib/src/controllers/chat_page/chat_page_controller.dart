@@ -2207,35 +2207,49 @@ class IsmChatPageController extends GetxController
   /// call function for Save Media
   Future<void> saveMedia(IsmChatMessageModel message) async {
     await IsmChatUtility.requestForGallery();
-    mediaDownloadProgress = 0;
-    snackBarController = Get.showSnackbar(
-      GetSnackBar(
-        messageText: Obx(() => CustomeSnackBar(
-              downloadProgress: mediaDownloadProgress,
-              downloadedFileCount: 1,
-              noOfFiles: 1,
-            )),
-      ),
-    );
-    if (IsmChatConstants.videoExtensions
-        .contains(message.attachments?.first.extension)) {
-      await IsmChatUtility.downloadMediaFromNetwork(
-        url: message.attachments?.first.mediaUrl ?? '',
-        isVideo: true,
-        downloadProgrees: (value) {
-          mediaDownloadProgress = value;
-        },
+    if ((message.attachments?.first.mediaUrl ?? '').isValidUrl) {
+      mediaDownloadProgress = 0;
+      snackBarController = Get.showSnackbar(
+        GetSnackBar(
+          messageText: Obx(() => CustomeSnackBar(
+                downloadProgress: mediaDownloadProgress,
+                downloadedFileCount: 1,
+                noOfFiles: 1,
+              )),
+        ),
       );
+      if (IsmChatConstants.videoExtensions
+          .contains(message.attachments?.first.extension)) {
+        await IsmChatUtility.downloadMediaFromNetworkPath(
+          url: message.attachments?.first.mediaUrl ?? '',
+          isVideo: true,
+          downloadProgrees: (value) {
+            mediaDownloadProgress = value;
+          },
+        );
+      } else {
+        await IsmChatUtility.downloadMediaFromNetworkPath(
+          url: message.attachments?.first.mediaUrl ?? '',
+          downloadProgrees: (value) {
+            mediaDownloadProgress = value;
+          },
+        );
+      }
+      if (snackBarController != null) {
+        await snackBarController?.close();
+      }
     } else {
-      await IsmChatUtility.downloadMediaFromNetwork(
-        url: message.attachments?.first.mediaUrl ?? '',
-        downloadProgrees: (value) {
-          mediaDownloadProgress = value;
-        },
-      );
-    }
-    if (snackBarController != null) {
-      await snackBarController?.close();
+      if (IsmChatConstants.videoExtensions
+          .contains(message.attachments?.first.extension)) {
+        await IsmChatUtility.downloadMediaFromLocalPath(
+          url: message.attachments?.first.mediaUrl ?? '',
+          isVideo: true,
+        );
+      } else {
+        await IsmChatUtility.downloadMediaFromLocalPath(
+          url: message.attachments?.first.mediaUrl ?? '',
+        );
+      }
     }
   }
 

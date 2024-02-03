@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -381,7 +382,60 @@ class IsmChatUtility {
     }
   }
 
-  static Future<void> downloadMediaFromNetwork({
+  static Future<Uint8List> get(
+    String url, {
+    InternetFileProgress? progress,
+    String method = 'GET',
+  }) async {
+    final completer = Completer<Uint8List>();
+    final httpClient = http.Client();
+    final request = http.Request(method, Uri.parse(url));
+    final response = httpClient.send(request);
+    var bytesList = <int>[];
+    var receivedLength = 0;
+    response.asStream().listen((http.StreamedResponse request) {
+      request.stream.listen(
+        (List<int> chunk) {
+          receivedLength += chunk.length;
+          final contentLength = request.contentLength ?? receivedLength;
+          progress?.call(receivedLength, contentLength);
+
+          bytesList.addAll(chunk);
+        },
+        onDone: () {
+          final bytes = Uint8List.fromList(bytesList);
+          completer.complete(bytes);
+        },
+        onError: completer.completeError,
+      );
+    }, onError: completer.completeError);
+    return completer.future;
+  }
+
+  static Future<void> downloadMediaFromLocalPath({
+    required String url,
+    bool isVideo = false,
+    String? albumName,
+  }) async {
+    try {
+      if (isVideo) {
+        await Gal.putVideo(
+          url,
+          album: albumName ?? 'IsmChat',
+        );
+      } else {
+        await Gal.putImage(
+          url,
+          album: albumName ?? 'IsmChat',
+        );
+      }
+      IsmChatUtility.showToast('Save your media');
+    } on GalException catch (e, st) {
+      IsmChatLog.error('error $e stack straas $st');
+    }
+  }
+
+  static Future<void> downloadMediaFromNetworkPath({
     required String url,
     bool isVideo = false,
     String? albumName,
