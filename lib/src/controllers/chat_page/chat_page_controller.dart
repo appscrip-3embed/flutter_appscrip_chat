@@ -2206,6 +2206,7 @@ class IsmChatPageController extends GetxController
         // isMediaSave = await GallerySaver.saveVideo(
         //     message.attachments?.first.mediaUrl ?? '');
       } else {
+        IsmChatLog.error(message.attachments?.first.mediaUrl);
         // isMediaSave = await GallerySaver.saveImage(
         //     message.attachments?.first.mediaUrl ?? '');
       }

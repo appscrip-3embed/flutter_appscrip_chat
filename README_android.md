@@ -11,7 +11,7 @@ Path: `android` > `app` > `main` > `AndroidMenifest.xml`
     ```xml
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"/>
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
@@ -74,7 +74,9 @@ Path: `android` > `app` > `main` > `AndroidMenifest.xml`
 
     ```xml
     <application
-        android:label="APPLICATION_NAME">
+        android:label="APPLICATION_NAME"
+        android:requestLegacyExternalStorage="true">
+
         <!--For Google map API key-->
         <meta-data android:name="com.google.android.geo.API_KEY"
            android:value="YOUR_MAPS_API_KEY"/>

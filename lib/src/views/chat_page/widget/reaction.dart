@@ -66,7 +66,7 @@ class _ImsChatReactionState extends State<ImsChatReaction> {
                 alignment: Alignment.center,
                 margin: IsmChatDimens.edgeInsetsR4,
                 width: IsmChatDimens.forty,
-                height: IsmChatDimens.twentyFour,
+                height: IsmChatDimens.twentyFive,
                 padding:
                     showCount && index == 2 ? IsmChatDimens.edgeInsets4 : null,
                 decoration: BoxDecoration(
@@ -82,9 +82,9 @@ class _ImsChatReactionState extends State<ImsChatReaction> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           EmojiCell.fromConfig(
-                            emojiBoxSize: 20,
+                            emojiBoxSize: IsmChatDimens.eighteen,
                             emoji: reaction,
-                            emojiSize: IsmChatDimens.eighteen,
+                            emojiSize: IsmChatDimens.fifteen,
                             onEmojiSelected: (_, emoji) {
                               widget._controller.showReactionUser(
                                   index: index,
