@@ -21,7 +21,6 @@ class EmojiBoard extends StatelessWidget {
                 showBackspaceButton: true,
                 enabled: true,
                 // customBottomActionBar: (config, state, showSearchView) {
-
                 // },
                 buttonIconColor: IsmChatColors.blackColor,
                 buttonColor: IsmChatConfig.chatTheme.backgroundColor ??

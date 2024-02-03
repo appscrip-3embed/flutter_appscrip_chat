@@ -20,7 +20,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
-// import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_cropper/image_cropper.dart';
@@ -61,6 +60,8 @@ class IsmChatPageController extends GetxController
   final textEditingController = TextEditingController();
 
   final participnatsEditingController = TextEditingController();
+
+  SnackbarController? snackBarController;
 
   var noises = <int, Widget>{};
   var memoryImage = <int, MemoryImage>{};
@@ -375,6 +376,12 @@ class IsmChatPageController extends GetxController
   final RxBool _isTemporaryChat = false.obs;
   bool get isTemporaryChat => _isTemporaryChat.value;
   set isTemporaryChat(bool value) => _isTemporaryChat.value = value;
+
+  final RxInt _mediaDownloadProgress = 0.obs;
+  int get mediaDownloadProgress => _mediaDownloadProgress.value;
+  set mediaDownloadProgress(int value) {
+    _mediaDownloadProgress.value = value;
+  }
 
   var _cameras = <CameraDescription>[];
 
@@ -2199,79 +2206,36 @@ class IsmChatPageController extends GetxController
 
   /// call function for Save Media
   Future<void> saveMedia(IsmChatMessageModel message) async {
-    try {
-      bool? isMediaSave;
-      if (IsmChatConstants.videoExtensions
-          .contains(message.attachments?.first.extension)) {
-        // isMediaSave = await GallerySaver.saveVideo(
-        //     message.attachments?.first.mediaUrl ?? '');
-      } else {
-        IsmChatLog.error(message.attachments?.first.mediaUrl);
-        // isMediaSave = await GallerySaver.saveImage(
-        //     message.attachments?.first.mediaUrl ?? '');
-      }
-
-      // ********** With out package and create folder name and download any files
-      //  Directory? directory;
-      // if (GetPlatform.isAndroid) {
-      //   if (await IsmChatUtility.requestPermission(Permission.storage) &&
-      //       // access media location needed for android 10/Q
-      //       await IsmChatUtility.requestPermission(
-      //           Permission.accessMediaLocation) &&
-      //       // manage external storage needed for android 11/R
-      //       await IsmChatUtility.requestPermission(
-      //         Permission.manageExternalStorage,
-      //       )) {
-      //     directory = await path_provider.getExternalStorageDirectory();
-      //     var newPath = '';
-      //     var paths = directory!.path.split('/');
-      //     for (var x = 1; x < paths.length; x++) {
-      //       var folder = paths[x];
-      //       if (folder != 'Android') {
-      //         newPath += '/$folder';
-      //       } else {
-      //         break;
-      //       }
-      //     }
-      //     newPath = '$newPath/ChatApp';
-      //     directory = Directory(newPath);
-      //   } else {
-      //     await openAppSettings();
-      //     return;
-      //   }
-      // } else {
-      //   if (await IsmChatUtility.requestPermission(Permission.photos)) {
-      //     directory = await path_provider.getTemporaryDirectory();
-      //   } else {
-      //     await openAppSettings();
-      //     return;
-      //   }
-      // }
-
-      // if (!await directory.exists()) {
-      //   await directory.create(recursive: true);
-      // }
-      // if (await directory.exists()) {
-      //   var saveFile =
-      //       File('${directory.path}/${message.attachments?.first.name}');
-
-      //   await dio.download(
-      //     message.attachments?.first.mediaUrl ?? '',
-      //     saveFile.path,
-      //   );
-
-      //   if (GetPlatform.isIOS) {
-      //     await ImageGallerySaver
-      //     saveFile(saveFile.path,
-      //         name: message.attachments?.first.name, isReturnPathOfIOS: true);
-      //   }
-      // }
-
-      if (isMediaSave == true) {
-        IsmChatUtility.showToast('Save your media');
-      }
-    } catch (e, st) {
-      IsmChatLog.error('Error downloading :- $e\n$st');
+    await IsmChatUtility.requestForGallery();
+    mediaDownloadProgress = 0;
+    snackBarController = Get.showSnackbar(
+      GetSnackBar(
+        messageText: Obx(() => CustomeSnackBar(
+              downloadProgress: mediaDownloadProgress,
+              downloadedFileCount: 1,
+              noOfFiles: 1,
+            )),
+      ),
+    );
+    if (IsmChatConstants.videoExtensions
+        .contains(message.attachments?.first.extension)) {
+      await IsmChatUtility.downloadMediaFromNetwork(
+        url: message.attachments?.first.mediaUrl ?? '',
+        isVideo: true,
+        downloadProgrees: (value) {
+          mediaDownloadProgress = value;
+        },
+      );
+    } else {
+      await IsmChatUtility.downloadMediaFromNetwork(
+        url: message.attachments?.first.mediaUrl ?? '',
+        downloadProgrees: (value) {
+          mediaDownloadProgress = value;
+        },
+      );
+    }
+    if (snackBarController != null) {
+      await snackBarController?.close();
     }
   }
 

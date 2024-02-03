@@ -604,7 +604,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             thumbnailUrl: webMediaModel != null
                 ? thumbnailBytes.toString()
                 : thumbnailFile?.path,
-            size: bytes!.length,
+            size: bytes?.length ?? 0,
             name: nameWithExtension,
             mimeType: extension,
             mediaUrl: webMediaModel != null

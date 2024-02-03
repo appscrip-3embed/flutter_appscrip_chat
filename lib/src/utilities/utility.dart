@@ -4,14 +4,17 @@ import 'dart:math';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gal/gal.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -330,14 +333,18 @@ class IsmChatUtility {
   }
 
   static Widget circularProgressBar(
-          [Color? backgroundColor, Color? animatedColor]) =>
+          [Color? backgroundColor, Color? animatedColor, double? value]) =>
       DecoratedBox(
         decoration: BoxDecoration(
-            color: backgroundColor?.withOpacity(.5),
-            borderRadius: BorderRadius.circular(15)),
+          color: backgroundColor?.withOpacity(.5),
+          borderRadius: BorderRadius.circular(15),
+        ),
         child: CircularProgressIndicator(
+          value: value,
           backgroundColor: animatedColor,
-          valueColor: AlwaysStoppedAnimation(backgroundColor?.withOpacity(.5)),
+          valueColor: AlwaysStoppedAnimation(
+            backgroundColor?.withOpacity(.5),
+          ),
         ),
       );
 
@@ -365,5 +372,105 @@ class IsmChatUtility {
     if (await canLaunchUrl(sms)) {
       await launchUrl(sms);
     }
+  }
+
+  static Future<void> requestForGallery() async {
+    final hasAccess = await Gal.hasAccess(toAlbum: true);
+    if (hasAccess == false) {
+      await Gal.requestAccess(toAlbum: true);
+    }
+  }
+
+  static Future<void> downloadMediaFromNetwork({
+    required String url,
+    bool isVideo = false,
+    String? albumName,
+    required Function(int) downloadProgrees,
+  }) async {
+    try {
+      final path = '${Directory.systemTemp.path}/${basename(url)}';
+      var dio = Dio();
+      final res = await dio.download(
+        url,
+        path,
+        onReceiveProgress: (count, total) async {
+          var percentage = ((count / total) * 100).floor();
+          downloadProgrees.call(percentage);
+        },
+      );
+      if (res.statusCode == 200) {
+        if (isVideo) {
+          await Gal.putVideo(
+            path,
+            album: albumName ?? 'IsmChat',
+          );
+        } else {
+          await Gal.putImage(
+            path,
+            album: albumName ?? 'IsmChat',
+          );
+        }
+
+        IsmChatUtility.showToast('Save your media');
+      }
+    } on GalException catch (e, st) {
+      IsmChatLog.error('error $e stack straas $st');
+    }
+
+    // ********** With out package and create folder name and download any files
+    //  Directory? directory;
+    // if (GetPlatform.isAndroid) {
+    //   if (await IsmChatUtility.requestPermission(Permission.storage) &&
+    //       // access media location needed for android 10/Q
+    //       await IsmChatUtility.requestPermission(
+    //           Permission.accessMediaLocation) &&
+    //       // manage external storage needed for android 11/R
+    //       await IsmChatUtility.requestPermission(
+    //         Permission.manageExternalStorage,
+    //       )) {
+    //     directory = await path_provider.getExternalStorageDirectory();
+    //     var newPath = '';
+    //     var paths = directory!.path.split('/');
+    //     for (var x = 1; x < paths.length; x++) {
+    //       var folder = paths[x];
+    //       if (folder != 'Android') {
+    //         newPath += '/$folder';
+    //       } else {
+    //         break;
+    //       }
+    //     }
+    //     newPath = '$newPath/ChatApp';
+    //     directory = Directory(newPath);
+    //   } else {
+    //     await openAppSettings();
+    //     return;
+    //   }
+    // } else {
+    //   if (await IsmChatUtility.requestPermission(Permission.photos)) {
+    //     directory = await path_provider.getTemporaryDirectory();
+    //   } else {
+    //     await openAppSettings();
+    //     return;
+    //   }
+    // }
+
+    // if (!await directory.exists()) {
+    //   await directory.create(recursive: true);
+    // }
+    // if (await directory.exists()) {
+    //   var saveFile =
+    //       File('${directory.path}/${message.attachments?.first.name}');
+
+    //   await dio.download(
+    //     message.attachments?.first.mediaUrl ?? '',
+    //     saveFile.path,
+    //   );
+
+    //   if (GetPlatform.isIOS) {
+    //     await ImageGallerySaver
+    //     saveFile(saveFile.path,
+    //         name: message.attachments?.first.name, isReturnPathOfIOS: true);
+    //   }
+    // }
   }
 }

@@ -22,12 +22,12 @@ class _IsmChatPdfViewState extends State<IsmChatPdfView> {
       final isNetowrk = widget.filePath!.contains('http');
       if (isNetowrk) {
         // _pdfController = PdfController(
-        // document: PdfDocument.openData(
-        // InternetFile.get(
-        //   widget.filePath ?? '',
-        // ),
-        // ),
-        // initialPage: 1,
+        //   document: PdfDocument.openData(
+        //     InternetFile.get(
+        //       widget.filePath ?? '',
+        //     ),
+        //   ),
+        //   initialPage: 1,
         // );
       } else {
         _pdfController = PdfController(
