@@ -171,6 +171,7 @@ class IsmChatStrings {
   static const String addToContact = 'Add to contacts';
   static const String noContact = 'No contact found';
   static const String location = 'Location';
+  static const String downloadingMedia = 'Downloading media...';
 
   static const String thisPhoneNumberNotonChat =
       'This phone number is not on chat';

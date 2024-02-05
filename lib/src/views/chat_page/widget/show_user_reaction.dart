@@ -69,16 +69,17 @@ class _ImsChatShowUserReactionState extends State<ImsChatShowUserReaction>
       child: Column(
         children: [
           Container(
-            padding: IsmChatDimens.edgeInsets10_0,
             alignment: Alignment.topLeft,
-            height: IsmChatDimens.fifty,
+            height: IsmChatDimens.sixty,
             child: TabBar(
+                padding: IsmChatDimens.edgeInsets10_05,
+                tabAlignment: reactionLength > 3 ? TabAlignment.start : null,
                 controller: _tabController,
                 isScrollable: reactionLength > 3 ? true : false,
                 tabs: [
                   Text(
                     '${IsmChatStrings.all} ${allReactions.length} ',
-                    style: IsmChatStyles.w400Black16,
+                    style: IsmChatStyles.w400Black18,
                   ),
                   ...List.generate(reactionLength, (index) {
                     var reactionValue = getIsmChatEmoji(
@@ -93,14 +94,19 @@ class _ImsChatShowUserReactionState extends State<ImsChatShowUserReaction>
                         AbsorbPointer(
                           absorbing: true,
                           child: EmojiCell.fromConfig(
+                            emojiBoxSize: IsmChatDimens.forty,
                             emoji: reaction,
-                            emojiSize: IsmChatDimens.twenty,
+                            emojiSize: IsmChatDimens.thirty,
                             onEmojiSelected: (_, emoji) {},
                             config: Config(
-                              emojiSizeMax: IsmChatDimens.twentyFour,
-                              bgColor: IsmChatConfig.chatTheme.backgroundColor!,
-                              indicatorColor:
-                                  IsmChatConfig.chatTheme.primaryColor!,
+                              categoryViewConfig: CategoryViewConfig(
+                                  indicatorColor:
+                                      IsmChatConfig.chatTheme.primaryColor!),
+                              emojiViewConfig: EmojiViewConfig(
+                                emojiSizeMax: IsmChatDimens.twentyFour,
+                                backgroundColor:
+                                    IsmChatConfig.chatTheme.backgroundColor!,
+                              ),
                             ),
                           ),
                         ),
@@ -164,14 +170,19 @@ class _ImsChatShowUserReactionState extends State<ImsChatShowUserReaction>
                           height: IsmChatDimens.thirtyTwo,
                           width: IsmChatDimens.thirtyTwo,
                           child: EmojiCell.fromConfig(
+                            emojiBoxSize: 20,
                             emoji: reaction,
                             emojiSize: IsmChatDimens.twenty,
                             onEmojiSelected: (_, emoji) {},
                             config: Config(
-                              emojiSizeMax: IsmChatDimens.twentyFour,
-                              bgColor: IsmChatConfig.chatTheme.backgroundColor!,
-                              indicatorColor:
-                                  IsmChatConfig.chatTheme.primaryColor!,
+                              categoryViewConfig: CategoryViewConfig(
+                                  indicatorColor:
+                                      IsmChatConfig.chatTheme.primaryColor!),
+                              emojiViewConfig: EmojiViewConfig(
+                                emojiSizeMax: IsmChatDimens.twentyFour,
+                                backgroundColor:
+                                    IsmChatConfig.chatTheme.backgroundColor!,
+                              ),
                             ),
                           ),
                         ),

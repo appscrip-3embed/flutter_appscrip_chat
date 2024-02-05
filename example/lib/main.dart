@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:alice/alice.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/res/res.dart';
@@ -18,7 +19,9 @@ import 'views/views.dart';
 
 DBWrapper? dbWrapper;
 
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+Alice? alice;
+
+// final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   await initialize();
@@ -58,7 +61,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    super.initState();
+    alice = Alice(
+      showNotification: true,
+      showInspectorOnShake: true,
+      showShareButton: true,
+    );
 
     if (!kIsWeb) {
       final PushNotificationService notificationService =
@@ -67,6 +74,7 @@ class _MyAppState extends State<MyApp> {
 
       notificationService.initialize();
     }
+    super.initState();
   }
 
   @override
@@ -83,7 +91,7 @@ class _MyAppState extends State<MyApp> {
       builder: (_, child) => child!,
       child: GetMaterialApp(
         key: const Key('ChatApp'),
-        navigatorKey: navigatorKey,
+        navigatorKey: alice?.getNavigatorKey(),
         title: 'Flutter chat',
         locale: const Locale('en', 'US'),
         localizationsDelegates: const [

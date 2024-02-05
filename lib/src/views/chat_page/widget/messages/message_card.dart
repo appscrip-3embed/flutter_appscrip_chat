@@ -93,6 +93,7 @@ class _MessageCardState extends State<MessageCard>
             child: SlideTransition(
               position: animation!,
               child: InkWell(
+                splashColor: IsmChatColors.transparent,
                 onHover: (value) {
                   if (value) {
                     controller.onMessageHoverIndex = widget.index;
@@ -100,7 +101,10 @@ class _MessageCardState extends State<MessageCard>
                     controller.onMessageHoverIndex = -1;
                   }
                 },
-                hoverColor: Colors.transparent,
+                borderRadius: BorderRadius.zero,
+                hoverColor: IsmChatColors.transparent,
+                focusColor: IsmChatColors.transparent,
+                highlightColor: IsmChatColors.transparent,
                 onTap: () {
                   controller.closeOveray();
                   if (widget.message.messageType == IsmChatMessageType.reply) {

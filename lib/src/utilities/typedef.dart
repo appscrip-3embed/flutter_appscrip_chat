@@ -1,11 +1,6 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
-// typedef ConversationCallback = PreferredSizeWidget Function(
-//   BuildContext,
-//   IsmChatConversationModel,
-// );
-
 typedef ConversationCardCallback = Widget Function(
   BuildContext,
   IsmChatConversationModel,
@@ -62,3 +57,8 @@ typedef MeessageFieldFocusNode = void Function(
 
 typedef ConversationParser = (IsmChatConversationModel, bool)? Function(
     IsmChatConversationModel, Map<String, dynamic>);
+
+typedef InternetFileProgress = void Function(
+  int receivedLength,
+  int contentLength,
+);

@@ -9,6 +9,7 @@ environment:
   flutter: ">=3.16.0"
 
 dependencies:
+  alice: ^0.4.1
   any_link_preview: ^3.0.0
   audioplayers: ^5.2.1
   azlistview: ^2.0.0
@@ -19,7 +20,7 @@ dependencies:
   device_info_plus: ^9.0.0
   dio: ^5.2.1+1
   elegant_notification: ^1.11.0
-  emoji_picker_flutter: ^1.5.4
+  emoji_picker_flutter: ^2.0.0
   file_picker: ^6.1.1
   flutter:
     sdk: flutter
@@ -32,19 +33,18 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   fluttertoast: ^8.2.1
-  gallery_saver: ^2.3.2
+  gal: ^2.2.3
   geocoding: ^2.1.0
   geolocator: ^10.1.0
   get: ^4.6.5
   google_maps_flutter: ^2.5.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  http: ^0.13.4
+  http: ^1.2.0
   image: ^4.1.2
-  image_cropper: ^4.0.1
+  image_cropper: ^5.0.1
   image_painter: ^0.6.1
   image_picker: ^1.0.4
-  internet_file: ^1.2.0
   intl: ^0.18.0
   just_audio: ^0.9.34
   mqtt_client: ^10.0.0
@@ -65,7 +65,7 @@ dependencies:
   video_player: ^2.6.0
   video_trimmer: ^3.0.1
   visibility_detector: ^0.4.0+2
-  wechat_assets_picker: ^8.5.0
+  # wechat_assets_picker: ^8.5.0
 
 dev_dependencies:
   flutter_lints: ^3.0.1

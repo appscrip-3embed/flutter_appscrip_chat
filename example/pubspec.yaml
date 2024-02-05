@@ -15,6 +15,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  alice: ^0.4.1
   flutter:
     sdk: flutter
 
@@ -32,7 +33,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   get: ^4.6.5
   hive: ^2.2.3
-  http: ^0.13.5
+  http: ^1.2.0
   path_provider: ^2.0.13
   file_picker: ^6.1.1
   firebase_core: ^2.15.1
@@ -42,7 +43,7 @@ dependencies:
     sdk: flutter
   image_picker: ^1.0.4
   email_validator: ^2.1.17
-  image_cropper: ^4.0.1
+  image_cropper: ^5.0.1
   notification_permissions: ^0.6.1
   visibility_detector: ^0.4.0+2
   hive_flutter: ^1.1.0

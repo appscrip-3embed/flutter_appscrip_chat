@@ -1,5 +1,6 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/controllers/controllers.dart';
+import 'package:chat_component_example/main.dart';
 import 'package:chat_component_example/res/res.dart';
 import 'package:chat_component_example/utilities/utilities.dart';
 import 'package:flutter/foundation.dart';
@@ -18,6 +19,7 @@ class ChatList extends StatelessWidget {
       builder: (controller) {
         return Scaffold(
           body: IsmChatApp(
+            useAlice: alice,
             // conversationParser: (conversation, data) {
             //   AppLog(conversation);
             //   AppLog.info('checkData $data');

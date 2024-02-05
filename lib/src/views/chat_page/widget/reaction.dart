@@ -66,7 +66,7 @@ class _ImsChatReactionState extends State<ImsChatReaction> {
                 alignment: Alignment.center,
                 margin: IsmChatDimens.edgeInsetsR4,
                 width: IsmChatDimens.forty,
-                height: IsmChatDimens.twentyFour,
+                height: IsmChatDimens.twentyFive,
                 padding:
                     showCount && index == 2 ? IsmChatDimens.edgeInsets4 : null,
                 decoration: BoxDecoration(
@@ -82,8 +82,9 @@ class _ImsChatReactionState extends State<ImsChatReaction> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           EmojiCell.fromConfig(
+                            emojiBoxSize: IsmChatDimens.eighteen,
                             emoji: reaction,
-                            emojiSize: IsmChatDimens.eighteen,
+                            emojiSize: IsmChatDimens.fifteen,
                             onEmojiSelected: (_, emoji) {
                               widget._controller.showReactionUser(
                                   index: index,
@@ -91,10 +92,14 @@ class _ImsChatReactionState extends State<ImsChatReaction> {
                                   reactionType: reactionName ?? '');
                             },
                             config: Config(
-                              emojiSizeMax: IsmChatDimens.twentyFour,
-                              bgColor: IsmChatConfig.chatTheme.backgroundColor!,
-                              indicatorColor:
-                                  IsmChatConfig.chatTheme.primaryColor!,
+                              categoryViewConfig: CategoryViewConfig(
+                                  indicatorColor:
+                                      IsmChatConfig.chatTheme.primaryColor!),
+                              emojiViewConfig: EmojiViewConfig(
+                                emojiSizeMax: IsmChatDimens.twentyFour,
+                                backgroundColor:
+                                    IsmChatConfig.chatTheme.backgroundColor!,
+                              ),
                             ),
                           ),
                           Text(

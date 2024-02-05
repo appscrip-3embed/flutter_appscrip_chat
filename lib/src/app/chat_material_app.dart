@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:alice/alice.dart';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class IsmChatApp extends StatelessWidget {
     this.noChatSelectedPlaceholder,
     this.sideWidgetWidth,
     this.isShowMqttConnectErrorDailog = false,
+    this.useAlice,
     this.fontFamily,
     this.conversationParser,
   }) {
@@ -35,7 +37,9 @@ class IsmChatApp extends StatelessWidget {
     //   (showAppBar && onSignOut != null) || (!showAppBar),
     //   'If showAppBar is set to true then a non-null callback must be passed to onSignOut parameter',
     // );
+
     IsmChatConfig.dbName = databaseName ?? IsmChatStrings.dbname;
+    IsmChatConfig.useAlice = useAlice;
     IsmChatConfig.fontFamily = fontFamily;
     IsmChatConfig.conversationParser = conversationParser;
     IsmChatProperties.loadingDialog = loadingDialog;
@@ -61,6 +65,8 @@ class IsmChatApp extends StatelessWidget {
   }
 
   final bool isShowMqttConnectErrorDailog;
+
+  final Alice? useAlice;
 
   /// Required field
   ///
@@ -307,7 +313,9 @@ class IsmChatApp extends StatelessWidget {
       String,
     )? showNotification,
     bool isShowMqttConnectErrorDailog = false,
+    Alice? useAlice,
   }) {
+    IsmChatConfig.useAlice = useAlice;
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();

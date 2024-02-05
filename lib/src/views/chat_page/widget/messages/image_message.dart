@@ -67,7 +67,9 @@ class IsmChatImageMessage extends StatelessWidget {
             ),
             if (message.isUploading == true)
               IsmChatUtility.circularProgressBar(
-                  IsmChatColors.blackColor, IsmChatColors.whiteColor),
+                IsmChatColors.blackColor,
+                IsmChatColors.whiteColor,
+              ),
           ],
         ),
       );

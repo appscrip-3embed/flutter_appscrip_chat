@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:alice/alice.dart';
+import 'package:alice/core/alice_http_extensions.dart';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -36,6 +38,7 @@ class IsmChatApiWrapper {
     try {
       final response = await http
           .get(uri, headers: headers)
+          .interceptWithAlice(IsmChatConfig.useAlice ?? Alice())
           .timeout(const Duration(seconds: 60));
 
       if (showLoader) {
@@ -77,6 +80,8 @@ class IsmChatApiWrapper {
             body: jsonEncode(payload),
             headers: headers,
           )
+          .interceptWithAlice(IsmChatConfig.useAlice ?? Alice(),
+              body: jsonEncode(payload))
           .timeout(const Duration(seconds: 60));
 
       if (showLoader) {
@@ -119,6 +124,8 @@ class IsmChatApiWrapper {
             body: forAwsUpload ? payload : jsonEncode(payload),
             headers: headers,
           )
+          .interceptWithAlice(IsmChatConfig.useAlice ?? Alice(),
+              body: forAwsUpload ? payload : jsonEncode(payload))
           .timeout(
             const Duration(seconds: 60),
           );
@@ -162,6 +169,8 @@ class IsmChatApiWrapper {
             body: jsonEncode(payload),
             headers: headers,
           )
+          .interceptWithAlice(IsmChatConfig.useAlice ?? Alice(),
+              body: jsonEncode(payload))
           .timeout(const Duration(seconds: 60));
 
       if (showLoader) {
@@ -203,6 +212,8 @@ class IsmChatApiWrapper {
             body: jsonEncode(payload),
             headers: headers,
           )
+          .interceptWithAlice(IsmChatConfig.useAlice ?? Alice(),
+              body: jsonEncode(payload))
           .timeout(const Duration(seconds: 60));
 
       if (showLoader) {

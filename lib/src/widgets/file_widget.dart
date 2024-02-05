@@ -1,7 +1,6 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:internet_file/internet_file.dart';
 import 'package:pdfx/pdfx.dart';
 
 class IsmChatPdfView extends StatefulWidget {
@@ -24,7 +23,7 @@ class _IsmChatPdfViewState extends State<IsmChatPdfView> {
       if (isNetowrk) {
         _pdfController = PdfController(
           document: PdfDocument.openData(
-            InternetFile.get(
+            IsmChatUtility.getUint8ListFromUrl(
               widget.filePath ?? '',
             ),
           ),
