@@ -102,7 +102,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         conversationId: conversationId,
         notificationBody: notificationBody,
         notificationTitle: notificationTitle,
-        body: IsmChatUtility.encodeString(body),
+        body: body,
         createdAt: createdAt,
         isTemporaryChat: isTemporaryChat,
       );
@@ -126,7 +126,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           events: {'updateUnreadCount': true, 'sendPushNotification': true},
           messageType: messageType,
           deviceId: deviceId,
-          body: IsmChatUtility.encodeString(body),
+          body: body,
           notificationBody: notificationBody,
           notificationTitle: notificationTitle,
           attachments: attachments,
@@ -844,6 +844,15 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       sentAt: sentAt,
       sentByMe: true,
       isUploading: true,
+      attachments: [
+        AttachmentModel(
+          address: locationSubName,
+          attachmentType: IsmChatMediaType.location,
+          latitude: latitude,
+          longitude: longitude,
+          title: locationName,
+        ),
+      ],
       metaData: IsmChatMetaData(
         replayMessageCustomType:
             _controller.isreplying ? IsmChatCustomMessageType.location : null,
@@ -878,12 +887,15 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       metaData: locationMessage.metaData,
       deviceId: locationMessage.deviceId ?? '',
       body: locationMessage.body,
-      customType: locationMessage.customType?.name,
+      customType: locationMessage.customType?.value,
       createdAt: locationMessage.sentAt,
       conversationId: locationMessage.conversationId ?? '',
       messageType: locationMessage.messageType?.value ?? 0,
       notificationBody: IsmChatStrings.sentLocation,
       notificationTitle: notificationTitle,
+      attachments: locationMessage.attachments != null
+          ? [locationMessage.attachments!.first.toMap().removeNullValues()]
+          : null,
       isTemporaryChat: _controller.isTemporaryChat,
       parentMessageId: locationMessage.parentMessageId,
     );
@@ -956,7 +968,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       metaData: contactMessage.metaData,
       deviceId: contactMessage.deviceId ?? '',
       body: contactMessage.body,
-      customType: contactMessage.customType?.name,
+      customType: contactMessage.customType?.value,
       createdAt: contactMessage.sentAt,
       conversationId: contactMessage.conversationId ?? '',
       messageType: contactMessage.messageType?.value ?? 0,
@@ -1055,7 +1067,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       metaData: textMessage.metaData,
       deviceId: textMessage.deviceId ?? '',
       body: textMessage.body,
-      customType: textMessage.customType?.name,
+      customType: textMessage.customType?.value,
       createdAt: sentAt,
       parentMessageId: textMessage.parentMessageId,
       conversationId: textMessage.conversationId ?? '',
@@ -1157,18 +1169,19 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       }
       if (mediaUrlPath.isNotEmpty) {
         var attachment = [
-          {
-            'thumbnailUrl': !imageAndFile ? thumbnailUrlPath : mediaUrlPath,
-            'size': ismChatChatMessageModel.attachments?.first.size ?? 0,
-            'name': ismChatChatMessageModel.attachments?.first.name,
-            'mimeType': ismChatChatMessageModel.attachments?.first.mimeType,
-            'mediaUrl': mediaUrlPath,
-            'mediaId': mediaId,
-            'extension': ismChatChatMessageModel.attachments?.first.extension,
-            'attachmentType': ismChatChatMessageModel
-                .attachments?.first.attachmentType?.value,
-          }
+          AttachmentModel(
+            thumbnailUrl: !imageAndFile ? thumbnailUrlPath : mediaUrlPath,
+            size: ismChatChatMessageModel.attachments?.first.size ?? 0,
+            name: ismChatChatMessageModel.attachments?.first.name,
+            mimeType: ismChatChatMessageModel.attachments?.first.mimeType,
+            mediaUrl: mediaUrlPath,
+            mediaId: mediaId,
+            extension: ismChatChatMessageModel.attachments?.first.extension,
+            attachmentType:
+                ismChatChatMessageModel.attachments?.first.attachmentType,
+          ).toMap().removeNullValues()
         ];
+
         sendMessage(
           body: ismChatChatMessageModel.body,
           conversationId: ismChatChatMessageModel.conversationId!,
@@ -1178,7 +1191,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           notificationBody: notificationBody,
           notificationTitle: notificationTitle,
           attachments: attachment,
-          customType: ismChatChatMessageModel.customType?.name,
+          customType: ismChatChatMessageModel.customType?.value,
           metaData: ismChatChatMessageModel.metaData,
           isTemporaryChat: isTemporaryChat,
           parentMessageId: ismChatChatMessageModel.parentMessageId,

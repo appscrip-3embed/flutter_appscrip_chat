@@ -283,7 +283,7 @@ class IsmChatMessageModel {
           : [];
 
   Map<String, dynamic> toMap() => {
-        'body': IsmChatUtility.encodeString(body),
+        'body': body,
         'action': action,
         'updatedAt': updatedAt,
         'sentAt': sentAt,

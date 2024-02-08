@@ -60,78 +60,35 @@ enum IsmChatCustomMessageType {
   observerLeave(25),
   date(100);
 
-  const IsmChatCustomMessageType(this.value);
+  const IsmChatCustomMessageType(this.number);
 
-  factory IsmChatCustomMessageType.fromValue(int val) {
-    switch (val) {
-      case 1:
-        return IsmChatCustomMessageType.text;
-      case 2:
-        return IsmChatCustomMessageType.reply;
-      case 3:
-        return IsmChatCustomMessageType.forward;
-      case 4:
-        return IsmChatCustomMessageType.image;
-      case 5:
-        return IsmChatCustomMessageType.video;
-      case 6:
-        return IsmChatCustomMessageType.audio;
-      case 7:
-        return IsmChatCustomMessageType.file;
-      case 8:
-        return IsmChatCustomMessageType.location;
-      case 9:
-        return IsmChatCustomMessageType.block;
-      case 10:
-        return IsmChatCustomMessageType.unblock;
-      case 11:
-        return IsmChatCustomMessageType.deletedForMe;
-      case 12:
-        return IsmChatCustomMessageType.deletedForEveryone;
-      case 13:
-        return IsmChatCustomMessageType.link;
-      case 14:
-        return IsmChatCustomMessageType.conversationCreated;
-      case 15:
-        return IsmChatCustomMessageType.removeMember;
-      case 16:
-        return IsmChatCustomMessageType.addMember;
-      case 17:
-        return IsmChatCustomMessageType.addAdmin;
-      case 18:
-        return IsmChatCustomMessageType.removeAdmin;
-      case 19:
-        return IsmChatCustomMessageType.memberLeave;
-      case 20:
-        return IsmChatCustomMessageType.conversationTitleUpdated;
-      case 21:
-        return IsmChatCustomMessageType.conversationImageUpdated;
-      case 22:
-        return IsmChatCustomMessageType.contact;
-      case 23:
-        return IsmChatCustomMessageType.memberJoin;
-      case 24:
-        return IsmChatCustomMessageType.observerJoin;
-      case 25:
-        return IsmChatCustomMessageType.observerLeave;
-      case 100:
-        return IsmChatCustomMessageType.date;
-      default:
-        return IsmChatCustomMessageType.text;
-    }
-  }
+  factory IsmChatCustomMessageType.fromValue(int data) =>
+      IsmChatCustomMessageType.values
+          .asMap()
+          .map((_, v) => MapEntry(v.number, v))[data] ??
+      IsmChatCustomMessageType.text;
 
   factory IsmChatCustomMessageType.fromString(String value) {
     const map = <String, IsmChatCustomMessageType>{
       'text': IsmChatCustomMessageType.text,
+      'AttachmentMessage:Text': IsmChatCustomMessageType.text,
       'file': IsmChatCustomMessageType.file,
+      'AttachmentMessage:File': IsmChatCustomMessageType.file,
       'replyText': IsmChatCustomMessageType.reply,
       'reply': IsmChatCustomMessageType.reply,
       'image': IsmChatCustomMessageType.image,
+      'AttachmentMessage:Image': IsmChatCustomMessageType.image,
+      'AttachmentMessage:Sticker': IsmChatCustomMessageType.image,
+      'AttachmentMessage:Gif': IsmChatCustomMessageType.image,
       'voice': IsmChatCustomMessageType.audio,
       'audio': IsmChatCustomMessageType.audio,
+      'AttachmentMessage:Audio': IsmChatCustomMessageType.audio,
       'video': IsmChatCustomMessageType.video,
+      'AttachmentMessage:Video': IsmChatCustomMessageType.video,
       'location': IsmChatCustomMessageType.location,
+      'AttachmentMessage:Location': IsmChatCustomMessageType.location,
+      'contact': IsmChatCustomMessageType.contact,
+      'AttachmentMessage:Contact': IsmChatCustomMessageType.contact,
       'block': IsmChatCustomMessageType.block,
       'unblock': IsmChatCustomMessageType.unblock,
       'conversationCreated': IsmChatCustomMessageType.conversationCreated,
@@ -146,12 +103,11 @@ enum IsmChatCustomMessageType {
           IsmChatCustomMessageType.conversationTitleUpdated,
       'conversationImageUpdated':
           IsmChatCustomMessageType.conversationImageUpdated,
-      'contact': IsmChatCustomMessageType.contact,
       'memberJoin': IsmChatCustomMessageType.memberJoin,
       'observerJoin': IsmChatCustomMessageType.observerJoin,
       'observerLeave': IsmChatCustomMessageType.observerLeave,
+      'date': IsmChatCustomMessageType.date,
     };
-
     var type = value.split('.').last;
     return map[type] ?? IsmChatCustomMessageType.text;
   }
@@ -256,11 +212,68 @@ enum IsmChatCustomMessageType {
     }
   }
 
-  final int value;
+  final int number;
 
   @override
   String toString() =>
       '${name[0].toUpperCase()}${name.substring(1).toLowerCase()}';
+
+  String get value {
+    switch (this) {
+      case IsmChatCustomMessageType.reply:
+        return 'reply';
+      case IsmChatCustomMessageType.forward:
+        return 'forward';
+      case IsmChatCustomMessageType.text:
+        return 'AttachmentMessage:Text';
+      case IsmChatCustomMessageType.image:
+        return 'AttachmentMessage:Image';
+      case IsmChatCustomMessageType.video:
+        return 'AttachmentMessage:Audio';
+      case IsmChatCustomMessageType.audio:
+        return 'AttachmentMessage:Audio';
+      case IsmChatCustomMessageType.file:
+        return 'AttachmentMessage:File';
+      case IsmChatCustomMessageType.location:
+        return 'AttachmentMessage:Location';
+      case IsmChatCustomMessageType.contact:
+        return 'AttachmentMessage:Contact';
+      case IsmChatCustomMessageType.link:
+        return 'link';
+      case IsmChatCustomMessageType.block:
+        return 'block';
+      case IsmChatCustomMessageType.unblock:
+        return 'unblock';
+      case IsmChatCustomMessageType.deletedForMe:
+        return 'deletedForMe';
+      case IsmChatCustomMessageType.deletedForEveryone:
+        return 'deletedForEveryone';
+      case IsmChatCustomMessageType.conversationCreated:
+        return 'conversationCreated';
+      case IsmChatCustomMessageType.removeMember:
+        return 'removeMember';
+      case IsmChatCustomMessageType.addMember:
+        return 'addMember';
+      case IsmChatCustomMessageType.addAdmin:
+        return 'addAdmin';
+      case IsmChatCustomMessageType.removeAdmin:
+        return 'removeAdmin';
+      case IsmChatCustomMessageType.memberLeave:
+        return 'memberLeave';
+      case IsmChatCustomMessageType.conversationTitleUpdated:
+        return 'conversationTitleUpdated';
+      case IsmChatCustomMessageType.conversationImageUpdated:
+        return 'conversationImageUpdated';
+      case IsmChatCustomMessageType.memberJoin:
+        return 'memberJoin';
+      case IsmChatCustomMessageType.observerJoin:
+        return 'observerJoin';
+      case IsmChatCustomMessageType.observerLeave:
+        return 'observerLeave';
+      case IsmChatCustomMessageType.date:
+        return 'date';
+    }
+  }
 }
 
 enum IsmChatConnectionState {
@@ -318,7 +331,11 @@ enum IsmChatMediaType {
   image(0),
   video(1),
   audio(2),
-  file(3);
+  file(3),
+  location(4),
+  sticker(5),
+  gif(6),
+  adminMessage(7);
 
   const IsmChatMediaType(this.value);
 
@@ -332,6 +349,14 @@ enum IsmChatMediaType {
         return IsmChatMediaType.audio;
       case 3:
         return IsmChatMediaType.file;
+      case 4:
+        return IsmChatMediaType.location;
+      case 5:
+        return IsmChatMediaType.sticker;
+      case 6:
+        return IsmChatMediaType.gif;
+      case 7:
+        return IsmChatMediaType.adminMessage;
       default:
         return IsmChatMediaType.image;
     }

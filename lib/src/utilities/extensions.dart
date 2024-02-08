@@ -1027,3 +1027,27 @@ extension ListMerging<T> on List<List<T>?> {
     return result;
   }
 }
+
+// This extension is to remove any key value pair from the map
+// where the value is null
+extension OnMap on Map<String, dynamic> {
+  Map<String, dynamic> removeNullValues() {
+    var result = <String, dynamic>{};
+    for (var entry in entries) {
+      var k = entry.key;
+      var v = entry.value;
+      if (v != null) {
+        if (!v.runtimeType.toString().contains('List') &&
+            v.runtimeType.toString().contains('Map')) {
+          result[k] = (v as Map<String, dynamic>).removeNullValues();
+        } else {
+          // if (v is String && v.trim().isEmpty) {
+          //   continue;
+          // }
+          result[k] = v;
+        }
+      }
+    }
+    return result;
+  }
+}

@@ -947,7 +947,7 @@ class IsmChatConversationsController extends GetxController {
       messageType: IsmChatMessageType.forward.value,
       encrypted: true,
       deviceId: _deviceConfig.deviceId ?? '',
-      body: IsmChatUtility.encodeString(body),
+      body: body,
       notificationBody: body,
       notificationTitle:
           IsmChatConfig.communicationConfig.userConfig.userName ??
@@ -1164,7 +1164,7 @@ class IsmChatConversationsController extends GetxController {
         conversationId: x.conversationId ?? '',
         notificationBody: x.body,
         notificationTitle: notificationTitle,
-        body: IsmChatUtility.encodeString(x.body),
+        body: x.body,
         createdAt: x.sentAt,
         isTemporaryChat: Get.isRegistered<IsmChatPageController>()
             ? Get.find<IsmChatPageController>().isTemporaryChat

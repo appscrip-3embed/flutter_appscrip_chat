@@ -5,19 +5,21 @@ import 'package:flutter/foundation.dart';
 
 class IsmChatMetaData {
   IsmChatMetaData({
-    this.country,
     this.parentMessageBody,
     this.locationAddress,
     this.locationSubAddress,
     this.profilePic,
     this.lastName,
     this.firstName,
+    this.contactName,
+    this.contactImageUrl,
+    this.contactIdentifier,
     this.parentMessageInitiator,
     this.customType,
     this.assetList,
     this.duration,
-    this.replayMessageCustomType,
     this.captionMessage,
+    this.replayMessageCustomType,
   });
 
   factory IsmChatMetaData.fromMap(Map<String, dynamic> map) => IsmChatMetaData(
@@ -28,7 +30,6 @@ class IsmChatMetaData {
             ? IsmChatCustomMessageType.fromString(
                 map['replayMessageCustomType'])
             : null,
-        country: map['country'] as String? ?? '',
         parentMessageBody: map['parentMessageBody'] as String? ?? '',
         locationAddress: map['locationAddress'] as String? ?? '',
         locationSubAddress: map['locationSubAddress'] as String? ?? '',
@@ -54,6 +55,9 @@ class IsmChatMetaData {
                 ),
               ).toList(),
         duration: Duration(seconds: map['duration'] as int? ?? 0),
+        contactName: map['contactName'] as String? ?? '',
+        contactImageUrl: map['contactImageUrl'] as String? ?? '',
+        contactIdentifier: map['contactIdentifier'] as String? ?? '',
       );
 
   factory IsmChatMetaData.fromJson(String? source) {
@@ -62,13 +66,16 @@ class IsmChatMetaData {
     }
     return IsmChatMetaData.fromMap(jsonDecode(source) as Map<String, dynamic>);
   }
-  final String? country;
+
   final String? parentMessageBody;
   final String? locationAddress;
   final String? locationSubAddress;
   final String? profilePic;
   final String? lastName;
   final String? firstName;
+  final String? contactName;
+  final String? contactImageUrl;
+  final String? contactIdentifier;
   final bool? parentMessageInitiator;
   final Map<String, dynamic>? customType;
   final List<Map<String, IsmChatBackgroundModel>>? assetList;
@@ -77,13 +84,15 @@ class IsmChatMetaData {
   final IsmChatCustomMessageType? replayMessageCustomType;
 
   IsmChatMetaData copyWith({
-    String? country,
     String? parentMessageBody,
     String? locationAddress,
     String? locationSubAddress,
     String? profilePic,
     String? lastName,
     String? firstName,
+    String? contactName,
+    String? contactImageUrl,
+    String? contactIdentifier,
     bool? parentMessageInitiator,
     Map<String, dynamic>? customType,
     List<Map<String, IsmChatBackgroundModel>>? assetList,
@@ -92,13 +101,15 @@ class IsmChatMetaData {
     IsmChatCustomMessageType? replayMessageCustomType,
   }) =>
       IsmChatMetaData(
-        country: country ?? this.country,
         parentMessageBody: parentMessageBody ?? this.parentMessageBody,
         locationAddress: locationAddress ?? this.locationAddress,
         locationSubAddress: locationSubAddress ?? this.locationSubAddress,
         profilePic: profilePic ?? this.profilePic,
         lastName: lastName ?? this.lastName,
         firstName: firstName ?? this.firstName,
+        contactName: contactName ?? this.contactName,
+        contactImageUrl: contactImageUrl ?? this.contactImageUrl,
+        contactIdentifier: contactIdentifier ?? this.contactIdentifier,
         parentMessageInitiator:
             parentMessageInitiator ?? this.parentMessageInitiator,
         customType: customType ?? this.customType,
@@ -110,50 +121,42 @@ class IsmChatMetaData {
       );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
-        if (captionMessage != null && captionMessage?.isNotEmpty == true)
-          'captionMessage': IsmChatUtility.encodeString(captionMessage ?? ''),
-        if (country != null && country?.isNotEmpty == true) 'country': country,
-        if (parentMessageBody != null && parentMessageBody?.isNotEmpty == true)
-          'parentMessageBody': parentMessageBody,
-        if (locationAddress != null && locationAddress?.isNotEmpty == true)
-          'locationAddress': locationAddress,
-        if (locationSubAddress != null &&
-            locationSubAddress?.isNotEmpty == true)
-          'locationSubAddress': locationSubAddress,
-        if (parentMessageInitiator != null)
-          'parentMessageInitiator': parentMessageInitiator,
-        if (profilePic != null && profilePic?.isNotEmpty == true)
-          'profilePic': profilePic,
-        if (firstName != null && firstName?.isNotEmpty == true)
-          'firstName': firstName,
-        if (lastName != null && lastName?.isNotEmpty == true)
-          'lastName': lastName,
-        if (customType != null && customType?.isNotEmpty == true)
-          'customType': customType,
-        if (assetList != null && assetList?.isNotEmpty == true)
-          'assetList': assetList,
-        if (duration != null) 'duration': duration?.inSeconds,
-        if (replayMessageCustomType != null)
-          'replayMessageCustomType': replayMessageCustomType?.name
+        'parentMessageBody': parentMessageBody,
+        'locationAddress': locationAddress,
+        'locationSubAddress': locationSubAddress,
+        'profilePic': profilePic,
+        'lastName': lastName,
+        'firstName': firstName,
+        'contactName': contactName,
+        'contactImageUrl': contactImageUrl,
+        'contactIdentifier': contactIdentifier,
+        'parentMessageInitiator': parentMessageInitiator,
+        'customType': customType,
+        'assetList': assetList,
+        'duration': duration?.inSeconds,
+        'captionMessage': captionMessage,
+        'replayMessageCustomType': replayMessageCustomType?.value,
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'IsmChatMetaData(country: $country, parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, locationSubAddress: $locationSubAddress, profilePic: $profilePic, lastName: $lastName, firstName: $firstName, parentMessageInitiator: $parentMessageInitiator, customType: $customType, assetList: $assetList, duration: $duration, replayMessageCustomType: $replayMessageCustomType, captionMessage: $captionMessage)';
+      'IsmChatMetaData(parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, locationSubAddress: $locationSubAddress, profilePic: $profilePic, lastName: $lastName, firstName: $firstName, contactName: $contactName, contactImageUrl: $contactImageUrl, contactIdentifier: $contactIdentifier, parentMessageInitiator: $parentMessageInitiator, customType: $customType, assetList: $assetList, duration: $duration, captionMessage: $captionMessage, replayMessageCustomType: $replayMessageCustomType)';
 
   @override
   bool operator ==(covariant IsmChatMetaData other) {
     if (identical(this, other)) return true;
 
-    return other.country == country &&
-        other.parentMessageBody == parentMessageBody &&
+    return other.parentMessageBody == parentMessageBody &&
         other.locationAddress == locationAddress &&
         other.locationSubAddress == locationSubAddress &&
         other.profilePic == profilePic &&
         other.lastName == lastName &&
         other.firstName == firstName &&
+        other.contactName == contactName &&
+        other.contactImageUrl == contactImageUrl &&
+        other.contactIdentifier == contactIdentifier &&
         other.parentMessageInitiator == parentMessageInitiator &&
         mapEquals(other.customType, customType) &&
         listEquals(other.assetList, assetList) &&
@@ -164,13 +167,15 @@ class IsmChatMetaData {
 
   @override
   int get hashCode =>
-      country.hashCode ^
       parentMessageBody.hashCode ^
       locationAddress.hashCode ^
       locationSubAddress.hashCode ^
       profilePic.hashCode ^
       lastName.hashCode ^
       firstName.hashCode ^
+      contactName.hashCode ^
+      contactImageUrl.hashCode ^
+      contactIdentifier.hashCode ^
       parentMessageInitiator.hashCode ^
       customType.hashCode ^
       assetList.hashCode ^
