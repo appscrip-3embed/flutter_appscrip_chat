@@ -11,15 +11,14 @@ class IsmChatMetaData {
     this.profilePic,
     this.lastName,
     this.firstName,
-    this.contactName,
-    this.contactImageUrl,
-    this.contactIdentifier,
+    this.contacts,
     this.parentMessageInitiator,
     this.customType,
     this.assetList,
     this.duration,
     this.captionMessage,
     this.replayMessageCustomType,
+    this.replyMessage,
   });
 
   factory IsmChatMetaData.fromMap(Map<String, dynamic> map) => IsmChatMetaData(
@@ -29,7 +28,10 @@ class IsmChatMetaData {
         replayMessageCustomType: map['replayMessageCustomType'] != null
             ? IsmChatCustomMessageType.fromString(
                 map['replayMessageCustomType'])
-            : null,
+            : map['parentMessageMessageType'] != null
+                ? IsmChatCustomMessageType.fromString(
+                    map['parentMessageMessageType'])
+                : null,
         parentMessageBody: map['parentMessageBody'] as String? ?? '',
         locationAddress: map['locationAddress'] as String? ?? '',
         locationSubAddress: map['locationSubAddress'] as String? ?? '',
@@ -55,9 +57,18 @@ class IsmChatMetaData {
                 ),
               ).toList(),
         duration: Duration(seconds: map['duration'] as int? ?? 0),
-        contactName: map['contactName'] as String? ?? '',
-        contactImageUrl: map['contactImageUrl'] as String? ?? '',
-        contactIdentifier: map['contactIdentifier'] as String? ?? '',
+        replyMessage: map['replyMessage'] != null
+            ? IsmChatReplyMessageModel.fromMap(
+                map['replyMessage'] as Map<String, dynamic>)
+            : null,
+        contacts: map['contacts'] != null
+            ? List<IsmChatContactMetaDatModel>.from(
+                (map['contacts'] as List<int>).map<IsmChatContactMetaDatModel?>(
+                  (x) => IsmChatContactMetaDatModel.fromMap(
+                      x as Map<String, dynamic>),
+                ),
+              )
+            : null,
       );
 
   factory IsmChatMetaData.fromJson(String? source) {
@@ -73,15 +84,14 @@ class IsmChatMetaData {
   final String? profilePic;
   final String? lastName;
   final String? firstName;
-  final String? contactName;
-  final String? contactImageUrl;
-  final String? contactIdentifier;
+  final List<IsmChatContactMetaDatModel>? contacts;
   final bool? parentMessageInitiator;
   final Map<String, dynamic>? customType;
   final List<Map<String, IsmChatBackgroundModel>>? assetList;
   final Duration? duration;
   final String? captionMessage;
   final IsmChatCustomMessageType? replayMessageCustomType;
+  final IsmChatReplyMessageModel? replyMessage;
 
   IsmChatMetaData copyWith({
     String? parentMessageBody,
@@ -90,15 +100,14 @@ class IsmChatMetaData {
     String? profilePic,
     String? lastName,
     String? firstName,
-    String? contactName,
-    String? contactImageUrl,
-    String? contactIdentifier,
+    List<IsmChatContactMetaDatModel>? contacts,
     bool? parentMessageInitiator,
     Map<String, dynamic>? customType,
     List<Map<String, IsmChatBackgroundModel>>? assetList,
     Duration? duration,
     String? captionMessage,
     IsmChatCustomMessageType? replayMessageCustomType,
+    IsmChatReplyMessageModel? replyMessage,
   }) =>
       IsmChatMetaData(
         parentMessageBody: parentMessageBody ?? this.parentMessageBody,
@@ -107,9 +116,7 @@ class IsmChatMetaData {
         profilePic: profilePic ?? this.profilePic,
         lastName: lastName ?? this.lastName,
         firstName: firstName ?? this.firstName,
-        contactName: contactName ?? this.contactName,
-        contactImageUrl: contactImageUrl ?? this.contactImageUrl,
-        contactIdentifier: contactIdentifier ?? this.contactIdentifier,
+        contacts: contacts ?? this.contacts,
         parentMessageInitiator:
             parentMessageInitiator ?? this.parentMessageInitiator,
         customType: customType ?? this.customType,
@@ -118,6 +125,7 @@ class IsmChatMetaData {
         captionMessage: captionMessage ?? this.captionMessage,
         replayMessageCustomType:
             replayMessageCustomType ?? this.replayMessageCustomType,
+        replyMessage: replyMessage ?? this.replyMessage,
       );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
@@ -127,22 +135,21 @@ class IsmChatMetaData {
         'profilePic': profilePic,
         'lastName': lastName,
         'firstName': firstName,
-        'contactName': contactName,
-        'contactImageUrl': contactImageUrl,
-        'contactIdentifier': contactIdentifier,
+        'contacts': contacts?.map((x) => x.toMap()).toList(),
         'parentMessageInitiator': parentMessageInitiator,
         'customType': customType,
         'assetList': assetList,
         'duration': duration?.inSeconds,
         'captionMessage': captionMessage,
         'replayMessageCustomType': replayMessageCustomType?.value,
+        'replyMessage': replyMessage?.toMap(),
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'IsmChatMetaData(parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, locationSubAddress: $locationSubAddress, profilePic: $profilePic, lastName: $lastName, firstName: $firstName, contactName: $contactName, contactImageUrl: $contactImageUrl, contactIdentifier: $contactIdentifier, parentMessageInitiator: $parentMessageInitiator, customType: $customType, assetList: $assetList, duration: $duration, captionMessage: $captionMessage, replayMessageCustomType: $replayMessageCustomType)';
+      'IsmChatMetaData(parentMessageBody: $parentMessageBody, locationAddress: $locationAddress, locationSubAddress: $locationSubAddress, profilePic: $profilePic, lastName: $lastName, firstName: $firstName, contacts: $contacts, parentMessageInitiator: $parentMessageInitiator, customType: $customType, assetList: $assetList, duration: $duration, captionMessage: $captionMessage, replayMessageCustomType: $replayMessageCustomType, replyMessage: $replyMessage)';
 
   @override
   bool operator ==(covariant IsmChatMetaData other) {
@@ -154,15 +161,14 @@ class IsmChatMetaData {
         other.profilePic == profilePic &&
         other.lastName == lastName &&
         other.firstName == firstName &&
-        other.contactName == contactName &&
-        other.contactImageUrl == contactImageUrl &&
-        other.contactIdentifier == contactIdentifier &&
+        listEquals(other.contacts, contacts) &&
         other.parentMessageInitiator == parentMessageInitiator &&
         mapEquals(other.customType, customType) &&
         listEquals(other.assetList, assetList) &&
         other.duration == duration &&
         other.captionMessage == captionMessage &&
-        other.replayMessageCustomType == replayMessageCustomType;
+        other.replayMessageCustomType == replayMessageCustomType &&
+        other.replyMessage == replyMessage;
   }
 
   @override
@@ -173,13 +179,12 @@ class IsmChatMetaData {
       profilePic.hashCode ^
       lastName.hashCode ^
       firstName.hashCode ^
-      contactName.hashCode ^
-      contactImageUrl.hashCode ^
-      contactIdentifier.hashCode ^
+      contacts.hashCode ^
       parentMessageInitiator.hashCode ^
       customType.hashCode ^
       assetList.hashCode ^
       duration.hashCode ^
       captionMessage.hashCode ^
-      replayMessageCustomType.hashCode;
+      replayMessageCustomType.hashCode ^
+      replyMessage.hashCode;
 }

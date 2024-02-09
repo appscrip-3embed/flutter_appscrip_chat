@@ -26,23 +26,6 @@ class SelectedContact extends ISuspensionBean {
         tagIndex: tagIndex ?? this.tagIndex,
       );
 
-  // Map<String, dynamic> toMap() => <String, dynamic>{
-  //       'isConotactSelected': isConotactSelected,
-  //       'contact': contact.toMap(),
-  //       'tagIndex': tagIndex,
-  //     };
-
-  // factory SelectedContact.fromMap(Map<String, dynamic> map) => SelectedContact(
-  //       isConotactSelected: map['isConotactSelected'] as bool? ?? false,
-  //       contact: Contact.fromMap(map['contact'] as Map<String, dynamic>),
-  //       tagIndex: map['tagIndex'] as String? ?? '',
-  //     );
-
-  // String toJson() => json.encode(toMap());
-
-  // factory SelectedContact.fromJson(String source) =>
-  //     SelectedContact.fromMap(json.decode(source) as Map<String, dynamic>);
-
   @override
   String toString() =>
       'SelectedContact(isConotactSelected: $isConotactSelected, contact: $contact, tagIndex: $tagIndex)';

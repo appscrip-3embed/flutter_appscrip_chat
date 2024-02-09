@@ -107,6 +107,7 @@ class _MessageCardState extends State<MessageCard>
                 highlightColor: IsmChatColors.transparent,
                 onTap: () {
                   controller.closeOveray();
+
                   if (widget.message.messageType == IsmChatMessageType.reply) {
                     if ([
                       IsmChatCustomMessageType.image,
@@ -115,7 +116,9 @@ class _MessageCardState extends State<MessageCard>
                       if (!Responsive.isWebAndTablet(context))
                         IsmChatCustomMessageType.contact,
                     ].contains(
-                        widget.message.metaData?.replayMessageCustomType)) {
+                        widget.message.metaData?.replayMessageCustomType ??
+                            widget.message.metaData?.replyMessage
+                                ?.parentMessageMessageType)) {
                       controller.tapForMediaPreviewWithMetaData(widget.message);
                     }
                   } else if ([

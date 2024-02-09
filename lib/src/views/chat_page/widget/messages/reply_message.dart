@@ -34,7 +34,9 @@ class _ReplyMessage extends StatelessWidget {
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
         builder: (controller) {
           var replyingMyMessage = message.sentByMe ==
-              (message.metaData?.parentMessageInitiator ?? false);
+              (message.metaData?.parentMessageInitiator ??
+                  message.metaData?.replyMessage?.parentMessageMessageType ??
+                  false);
           return Material(
             color: Colors.transparent,
             child: IsmChatTapHandler(
@@ -118,7 +120,10 @@ class _ReplyMessage extends StatelessWidget {
                                 maxWidth: IsmChatDimens.percentWidth(.2),
                               ),
                               child: Text(
-                                message.metaData?.parentMessageBody ?? '',
+                                message.metaData?.parentMessageBody ??
+                                    message.metaData?.replyMessage
+                                        ?.parentMessageBody ??
+                                    '',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: message.style,
