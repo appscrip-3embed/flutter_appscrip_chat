@@ -175,7 +175,8 @@ class IsmChatRouteManagement {
     Get.toNamed(IsmChatContactView.route);
   }
 
-  static void goToContactInfoView({required List<Contact> contacts}) {
+  static void goToContactInfoView(
+      {required List<IsmChatContactMetaDatModel> contacts}) {
     Get.toNamed(
       IsmChatContactsInfoView.route,
       arguments: {'contacts': contacts},

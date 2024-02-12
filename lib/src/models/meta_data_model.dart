@@ -63,7 +63,7 @@ class IsmChatMetaData {
             : null,
         contacts: map['contacts'] != null
             ? List<IsmChatContactMetaDatModel>.from(
-                (map['contacts'] as List<int>).map<IsmChatContactMetaDatModel?>(
+                (map['contacts'] as List).map<IsmChatContactMetaDatModel?>(
                   (x) => IsmChatContactMetaDatModel.fromMap(
                       x as Map<String, dynamic>),
                 ),

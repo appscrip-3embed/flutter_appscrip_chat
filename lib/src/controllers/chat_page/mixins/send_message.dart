@@ -444,7 +444,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           thumbnailMediaId = sentAt.toString();
           nameWithExtension = x.name;
           documentMessage = IsmChatMessageModel(
-            body: 'Document',
+            body: IsmChatStrings.document,
             conversationId: conversationId,
             senderInfo: _controller.currentUser,
             customType: _controller.isreplying
@@ -615,7 +615,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
 
     videoMessage = IsmChatMessageModel(
-        body: 'Video',
+        body: IsmChatStrings.video,
         conversationId: conversationId,
         senderInfo: _controller.currentUser,
         customType: _controller.isreplying
@@ -749,7 +749,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
 
     imageMessage = IsmChatMessageModel(
-      body: 'Image',
+      body: IsmChatStrings.image,
       conversationId: conversationId,
       senderInfo: _controller.currentUser,
       customType: _controller.isreplying
@@ -855,8 +855,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var locationMessage = IsmChatMessageModel(
-      body:
-          'https://www.google.com/maps/search/?api=1&map_action=map&query=$latitude%2C$longitude&query_place_id=$placeId',
+      body: IsmChatStrings.location,
+      //  'https://www.google.com/maps/search/?api=1&map_action=map&query=$latitude%2C$longitude&query_place_id=$placeId',
       conversationId: conversationId,
       senderInfo: _controller.currentUser,
       customType: _controller.isreplying
@@ -942,7 +942,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
-
     if (chatConversationResponse == null && !_controller.isTemporaryChat) {
       conversationId = await createConversation(
         userId: [userId],
@@ -955,9 +954,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         ],
       );
     }
+    IsmChatLog.error(contacts.first.toJson());
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var contactMessage = IsmChatMessageModel(
-      body: jsonEncode(contacts.map((e) => e.toJson()).toList()),
+      body: IsmChatStrings.contact,
       conversationId: conversationId,
       senderInfo: _controller.currentUser,
       customType: _controller.isreplying
@@ -976,6 +976,18 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       sentByMe: true,
       deviceId: _controller._deviceConfig.deviceId ?? '',
       metaData: IsmChatMetaData(
+        contacts: contacts
+            .map(
+              (e) => IsmChatContactMetaDatModel(
+                contactId: e.id,
+                contactName: e.displayName,
+                contactImageUrl: e.photo != null ? e.photo.toString() : '',
+                contactIdentifier: GetPlatform.isAndroid
+                    ? e.phones.first.normalizedNumber
+                    : e.phones.first.number,
+              ),
+            )
+            .toList(),
         replyMessage: _controller.isreplying
             ? IsmChatReplyMessageModel(
                 parentMessageMessageType: _controller.replayMessage?.customType,

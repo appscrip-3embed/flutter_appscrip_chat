@@ -123,8 +123,7 @@ class IsmChatStrings {
       "You're the only admin of the group, make a group admin or a random person will be assigned as group admin";
   static const String contactInfo = 'Contact Info';
   static const String userInfo = 'User Info';
-  static const String audio = 'audio';
-  static const String video = 'video';
+
   static const String loremIpsum =
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod';
   static const String demoDate = '25 Dec 2016';
@@ -170,12 +169,17 @@ class IsmChatStrings {
   static const String dial = 'Dial';
   static const String addToContact = 'Add to contacts';
   static const String noContact = 'No contact found';
-  static const String location = 'Location';
+
   static const String downloadingMedia = 'Downloading media...';
 
   static const String thisPhoneNumberNotonChat =
       'This phone number is not on chat';
 
+  static const String location = 'Location';
+  static const String image = 'Image';
+  static const String audio = 'Audio';
+  static const String video = 'Video';
+  static const String document = 'Document';
   static const String contact = 'Contact';
   static const String addCaption = 'Add a caption...';
   static const String sentContact = 'Sent you a Contact';
