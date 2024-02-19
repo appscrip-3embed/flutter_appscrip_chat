@@ -154,10 +154,14 @@ class IsmChatFocusMenu extends StatelessWidget {
                           IsmChatDimens.boxHeight8,
                           Hero(
                             tag: message,
-                            child: MessageBubble(
-                              message: message,
-                              showMessageInCenter: false,
-                            ),
+                            child: IsmChatProperties
+                                    .chatPageProperties.messageBuilder
+                                    ?.call(context, message,
+                                        message.customType!, false) ??
+                                MessageBubble(
+                                  message: message,
+                                  showMessageInCenter: false,
+                                ),
                           ),
                           IsmChatDimens.boxHeight8,
                           _FocusAnimationBuilder(

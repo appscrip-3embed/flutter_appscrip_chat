@@ -11,6 +11,7 @@ class StatusBarTransparent extends StatelessWidget {
         sized: false,
         value: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
+          systemNavigationBarColor: Colors.transparent,
         ),
         child: child,
       );

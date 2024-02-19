@@ -546,12 +546,14 @@ extension ModelConversion on IsmChatConversationModel {
                 ? Icons.done_all_rounded
                 : Icons.done_rounded,
         color: lastMessageDetails?.messageId.isEmpty == true
-            ? Colors.grey
+            ? IsmChatConfig.chatTheme.chatPageTheme?.unreadCheckColor ??
+                IsmChatColors.whiteColor
             : readByAll
-                ? Colors.blue
-                : IsmChatConfig.chatTheme.chatListCardThemData?.subTitleColor ??
-                    Colors.grey,
-        size: 16,
+                ? IsmChatConfig.chatTheme.chatPageTheme?.readCheckColor ??
+                    IsmChatColors.blueColor
+                : IsmChatConfig.chatTheme.chatPageTheme?.unreadCheckColor ??
+                    IsmChatColors.greyColor,
+        size: IsmChatDimens.sixteen,
       );
     } catch (e, st) {
       IsmChatLog.error(e, st);

@@ -188,4 +188,5 @@ class IsmChatStrings {
   static const String sentVideo = 'Sent you an Video';
   static const String sentDoc = 'Sent you an Document';
   static const String sentAudio = 'Sent you a Audio';
+  static const String messageInfo = 'Message Info';
 }

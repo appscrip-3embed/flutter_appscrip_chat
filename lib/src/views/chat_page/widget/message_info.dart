@@ -1,5 +1,6 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 // / The view part of the [IsmChatPageView], which will be used to
@@ -22,6 +23,14 @@ class IsmChatMessageInfo extends StatelessWidget {
         builder: (chatController) => Scaffold(
           backgroundColor: IsmChatColors.whiteColor,
           appBar: AppBar(
+            systemOverlayStyle: IsmChatConfig
+                    .chatTheme.chatPageHeaderTheme?.systemUiOverlayStyle ??
+                SystemUiOverlayStyle(
+                  statusBarBrightness: Brightness.dark,
+                  statusBarIconBrightness: Brightness.light,
+                  statusBarColor: IsmChatConfig.chatTheme.primaryColor ??
+                      IsmChatColors.primaryColorLight,
+                ),
             elevation: 0,
             leading: IconButton(
               onPressed: Responsive.isWebAndTablet(context)
@@ -35,12 +44,18 @@ class IsmChatMessageInfo extends StatelessWidget {
                 Responsive.isWebAndTablet(context)
                     ? Icons.close_rounded
                     : Icons.arrow_back_rounded,
-                color: IsmChatColors.whiteColor,
+                color: IsmChatConfig.chatTheme.chatPageHeaderTheme?.iconColor ??
+                    IsmChatColors.whiteColor,
               ),
             ),
-            backgroundColor: IsmChatConfig.chatTheme.primaryColor,
+            backgroundColor:
+                IsmChatConfig.chatTheme.chatPageHeaderTheme?.backgroundColor ??
+                    IsmChatConfig.chatTheme.primaryColor,
             titleSpacing: 1,
-            title: Text('Message Info', style: IsmChatStyles.w600White18),
+            title: Text(IsmChatStrings.messageInfo,
+                style:
+                    IsmChatConfig.chatTheme.chatPageHeaderTheme?.titleStyle ??
+                        IsmChatStyles.w600White18),
             centerTitle: true,
           ),
           body: SingleChildScrollView(
