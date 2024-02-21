@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:elegant_notification/elegant_notification.dart';
-import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -419,17 +418,10 @@ mixin IsmChatMqttEventMixin on GetxController {
             color: IsmChatConfig.chatTheme.primaryColor ?? Colors.blue,
           ),
           width: IsmChatDimens.twoHundredFifty,
-          notificationPosition: NotificationPosition.topRight,
-          animation: AnimationType.fromRight,
           title: Text(message.notificationTitle ?? ''),
-          description: Text(
-            mqttMessage ?? '',
-          ),
-          showProgressIndicator: true,
-          autoDismiss: true,
+          description: Text(mqttMessage ?? ''),
           progressIndicatorColor:
               IsmChatConfig.chatTheme.primaryColor ?? Colors.blue,
-          toastDuration: const Duration(seconds: 3),
         ).show(Get.find<IsmChatConversationsController>().context!);
       }
     }

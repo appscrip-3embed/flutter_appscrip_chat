@@ -236,41 +236,38 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                               IsmChatTapHandler(
                                 onTap: () async {
                                   IsmChatUtility.showLoader();
-                                  var addresses = await GeocodingPlatform
+                                  final addresses = await GeocodingPlatform
                                       .instance
-                                      .placemarkFromCoordinates(
+                                      ?.placemarkFromCoordinates(
                                     latLng?.latitude ?? 0,
                                     latLng?.longitude ?? 0,
                                   );
-                                  if (addresses.isNotEmpty) {
-                                    controller.sendLocation(
-                                      conversationId: controller
-                                              .conversation?.conversationId ??
-                                          '',
-                                      userId: controller.conversation
-                                              ?.opponentDetails?.userId ??
-                                          '',
-                                      latitude: latLng!.latitude,
-                                      longitude: latLng!.longitude,
-                                      placeId: '',
-                                      locationName: '${addresses.first.name}',
-                                      locationSubName:
-                                          '${addresses.first.subLocality} ${addresses.first.subAdministrativeArea}',
-                                    );
+                                  if (addresses == null) return;
+                                  if (addresses.isEmpty) return;
+                                  controller.sendLocation(
+                                    conversationId: controller
+                                            .conversation?.conversationId ??
+                                        '',
+                                    userId: controller.conversation
+                                            ?.opponentDetails?.userId ??
+                                        '',
+                                    latitude: latLng!.latitude,
+                                    longitude: latLng!.longitude,
+                                    placeId: '',
+                                    locationName: '${addresses.first.name}',
+                                    locationSubName:
+                                        '${addresses.first.subLocality} ${addresses.first.subAdministrativeArea}',
+                                  );
 
-                                    IsmChatUtility.closeLoader();
-                                    Get.back<void>();
-                                    if (await IsmChatProperties
-                                            .chatPageProperties
-                                            .messageAllowedConfig
-                                            ?.isMessgeAllowed
-                                            ?.call(
-                                                Get.context!,
-                                                Get.find<
-                                                        IsmChatPageController>()
-                                                    .conversation!) ??
-                                        true) {}
-                                  }
+                                  IsmChatUtility.closeLoader();
+                                  Get.back<void>();
+                                  if (await IsmChatProperties.chatPageProperties
+                                          .messageAllowedConfig?.isMessgeAllowed
+                                          ?.call(
+                                              Get.context!,
+                                              Get.find<IsmChatPageController>()
+                                                  .conversation!) ??
+                                      true) {}
                                 },
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
