@@ -238,11 +238,11 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                   IsmChatUtility.showLoader();
                                   var addresses = await GeocodingPlatform
                                       .instance
-                                      .placemarkFromCoordinates(
+                                      ?.placemarkFromCoordinates(
                                     latLng?.latitude ?? 0,
                                     latLng?.longitude ?? 0,
                                   );
-                                  if (addresses.isNotEmpty) {
+                                  if (addresses?.isNotEmpty == true) {
                                     controller.sendLocation(
                                       conversationId: controller
                                               .conversation?.conversationId ??
@@ -253,9 +253,9 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                       latitude: latLng!.latitude,
                                       longitude: latLng!.longitude,
                                       placeId: '',
-                                      locationName: '${addresses.first.name}',
+                                      locationName: addresses?.first.name ?? '',
                                       locationSubName:
-                                          '${addresses.first.subLocality} ${addresses.first.subAdministrativeArea}',
+                                          '${addresses?.first.subLocality ?? ''} ${addresses?.first.subAdministrativeArea ?? ''}',
                                     );
 
                                     IsmChatUtility.closeLoader();
