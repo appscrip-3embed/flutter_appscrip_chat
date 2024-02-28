@@ -169,6 +169,25 @@ class IsmChatUtility {
     return header;
   }
 
+  /// Token common Header for All api
+  static Map<String, String> accessTokenCommonHeader({
+    isDefaultContentType = false,
+  }) {
+    var header = <String, String>{
+      'licenseKey': IsmChatConfig.communicationConfig.projectConfig.licenseKey,
+      'appSecret': IsmChatConfig.communicationConfig.projectConfig.appSecret,
+      'userToken': IsmChatConfig.communicationConfig.userConfig.userToken,
+      'Authorization': IsmChatConfig.communicationConfig.userConfig.userToken
+    };
+    if (isDefaultContentType == true) {
+      header.addAll({
+        'Content-Type': 'application/json',
+      });
+    }
+
+    return header;
+  }
+
   /// this is for change encoded string to decode string
   static String decodeString(String value) {
     try {

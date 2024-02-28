@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:azlistview/azlistview.dart';
@@ -29,28 +31,33 @@ class IsmChatCreateConversationView extends StatelessWidget {
         height: IsmChatDimens.forty,
         width: double.infinity,
         alignment: Alignment.centerLeft,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              susTag,
-              textScaler: const TextScaler.linear(1.5),
-              style: IsmChatStyles.w600Black14,
-            ),
-            if (!Responsive.isWebAndTablet(Get.context!))
-              SizedBox(
-                  width: IsmChatDimens.percentWidth(.8),
-                  child: Divider(
-                    height: .0,
-                    indent: IsmChatDimens.ten,
-                  ))
-          ],
-        ),
+        child: susTag != '#'
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    susTag,
+                    textScaler: const TextScaler.linear(1.5),
+                    style: IsmChatStyles.w600Black14,
+                  ),
+                  if (!Responsive.isWebAndTablet(Get.context!))
+                    SizedBox(
+                        width: IsmChatDimens.percentWidth(.8),
+                        child: Divider(
+                          height: .0,
+                          indent: IsmChatDimens.ten,
+                        ))
+                ],
+              )
+            : Text(
+                '${IsmChatStrings.inviteToChat} ${IsmChatConfig.communicationConfig.projectConfig.appName}',
+                style: IsmChatStyles.w600Black14
+                    .copyWith(color: const Color(0xff9E9CAB))),
       );
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
-        initState: (_) {
+        initState: (_) async {
           converstaionController.initCreateConversation();
         },
         builder: (controller) => Scaffold(
@@ -151,9 +158,16 @@ class IsmChatCreateConversationView extends StatelessWidget {
                               if (scrollNotification.metrics.pixels >
                                   scrollNotification.metrics.maxScrollExtent *
                                       0.7) {
-                                controller.getNonBlockUserList(
+                                /// call the api only on down scroll
+                                if ((scrollNotification.dragDetails?.velocity
+                                            .pixelsPerSecond.dy ??
+                                        0) <
+                                    0) {
+                                  unawaited(controller.getNonBlockUserList(
                                     opponentId: IsmChatConfig
-                                        .communicationConfig.userConfig.userId);
+                                        .communicationConfig.userConfig.userId,
+                                  ));
+                                }
                               }
                             }
                           }
@@ -209,6 +223,8 @@ class IsmChatCreateConversationView extends StatelessWidget {
                             }
                             return Column(
                               children: [
+                                if (index == 0 && !_isGroupConversation!)
+                                  const ChatModes(),
                                 Offstage(
                                   offstage: user.isShowSuspension != true,
                                   child: _buildSusWidget(susTag),
@@ -587,5 +603,106 @@ class _GroupChatImageAndName extends StatelessWidget {
             IsmChatDimens.boxHeight4,
           ],
         ),
+      );
+}
+
+class ChatModes extends StatelessWidget {
+  const ChatModes({super.key});
+
+  @override
+  Widget build(BuildContext context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (IsmChatProperties.conversationProperties.enableGroupChat)
+            ListTile(
+              onTap: () async {
+                Get.back();
+                await Future.delayed(Durations.extralong1);
+                IsmChatRouteManagement.goToCreateChat(
+                  isGroupConversation: true,
+                  conversationType: IsmChatConversationType.private,
+                );
+              },
+              contentPadding: IsmChatDimens.edgeInsets10,
+              horizontalTitleGap: IsmChatDimens.ten,
+              title: Text(
+                IsmChatStrings.newGroup,
+                style: IsmChatStyles.w600Black14,
+              ),
+              dense: true,
+              mouseCursor: SystemMouseCursors.click,
+              leading: Container(
+                alignment: Alignment.center,
+                height: 60,
+                width: 60,
+                decoration: const BoxDecoration(
+                    shape: BoxShape.circle, color: Color(0xFFF3F3F9)),
+                child: const Icon(Icons.group),
+              ),
+            ),
+          ListTile(
+            contentPadding: IsmChatDimens.edgeInsets10,
+            horizontalTitleGap: IsmChatDimens.ten,
+            title: Text(
+              IsmChatStrings.newContact,
+              style: IsmChatStyles.w600Black14,
+            ),
+            dense: true,
+            mouseCursor: SystemMouseCursors.click,
+            leading: Container(
+              alignment: Alignment.center,
+              height: 60,
+              width: 60,
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle, color: Color(0xFFF3F3F9)),
+              child: const Icon(Icons.person_add),
+            ),
+          ),
+          ListTile(
+            contentPadding: IsmChatDimens.edgeInsets10,
+            horizontalTitleGap: IsmChatDimens.ten,
+            title: Text(
+              IsmChatStrings.newCommunity,
+              style: IsmChatStyles.w600Black14,
+            ),
+            dense: true,
+            mouseCursor: SystemMouseCursors.click,
+            leading: Container(
+              alignment: Alignment.center,
+              height: 60,
+              width: 60,
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle, color: Color(0xFFF3F3F9)),
+              child: const Icon(Icons.groups_2),
+            ),
+          ),
+          ListTile(
+            onTap: () async {
+              Get.back();
+              await Future.delayed(Durations.extralong1);
+              IsmChatRouteManagement.goToBroadcastView();
+            },
+            contentPadding: IsmChatDimens.edgeInsets10,
+            horizontalTitleGap: IsmChatDimens.ten,
+            title: Text(
+              IsmChatStrings.boradcastMessge,
+              style: IsmChatStyles.w600Black14,
+            ),
+            dense: true,
+            mouseCursor: SystemMouseCursors.click,
+            leading: Container(
+              alignment: Alignment.center,
+              height: 60,
+              width: 60,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Color(
+                  0xFFF3F3F9,
+                ),
+              ),
+              child: const Icon(Icons.campaign),
+            ),
+          )
+        ],
       );
 }

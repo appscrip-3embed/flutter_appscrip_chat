@@ -29,12 +29,14 @@ class SelectedForwardUser extends ISuspensionBean {
     required this.userDetails,
     required this.isBlocked,
     this.tagIndex,
+    this.localContacts,
   }) : _isUserSelected = isUserSelected.obs;
 
   final RxBool _isUserSelected;
   final UserDetails userDetails;
   final bool isBlocked;
   String? tagIndex;
+  final bool? localContacts;
 
   bool get isUserSelected => _isUserSelected.value;
   set isUserSelected(bool value) => _isUserSelected.value = value;

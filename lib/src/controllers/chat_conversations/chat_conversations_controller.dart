@@ -10,8 +10,10 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class IsmChatConversationsController extends GetxController {
@@ -656,47 +658,49 @@ class IsmChatConversationsController extends GetxController {
     if (opponentId != null) {
       users.removeWhere((e) => e.userId == opponentId);
     }
-
-    if (searchTag.isEmpty) {
-      forwardedList.addAll(List.from(users)
-          .map((e) => SelectedForwardUser(
-                isUserSelected: selectedUserList.isEmpty
-                    ? false
-                    : selectedUserList
-                        .any((d) => d.userId == (e as UserDetails).userId),
-                userDetails: e as UserDetails,
-                isBlocked: false,
-              ))
-          .toList());
-
-      forwardedListDuplicat = List<SelectedForwardUser>.from(forwardedList);
-    } else {
-      forwardedList = List.from(users)
-          .map((e) => SelectedForwardUser(
-                isUserSelected: selectedUserList.isEmpty
-                    ? false
-                    : selectedUserList
-                        .any((d) => d.userId == (e as UserDetails).userId),
-                userDetails: e as UserDetails,
-                isBlocked: false,
-              ))
-          .toList();
+    if (IsmChatConfig.communicationConfig.userConfig.accessToken != null) {
+      users.removeWhere((element) =>
+          !RegExp('[A-Z]').hasMatch(element.userName[0].toUpperCase()));
     }
 
-    handleList(forwardedList);
+    forwardedList.addAll(List.from(users)
+        .map((e) => SelectedForwardUser(
+              isUserSelected: selectedUserList.isEmpty
+                  ? false
+                  : selectedUserList
+                      .any((d) => d.userId == (e as UserDetails).userId),
+              userDetails: e as UserDetails,
+              isBlocked: false,
+            ))
+        .toList());
+
+    if (searchTag.isNotEmpty) {
+      forwardedListDuplicat = List<SelectedForwardUser>.from(forwardedList);
+    }
+    if (response != null) {
+      handleList(forwardedList);
+    }
     callApiOrNot = true;
+    if (response == null) {
+      unawaited(getContacts(isLoading: false, searchTag: searchTag));
+      return;
+    }
   }
 
   void handleList(List<SelectedForwardUser> list) {
     if (list.isEmpty) return;
     for (var i = 0, length = list.length; i < length; i++) {
       var tag = list[i].userDetails.userName[0].toUpperCase();
-      if (RegExp('[A-Z]').hasMatch(tag)) {
+      var isLocal = list[i].localContacts ?? false;
+      if (RegExp('[A-Z]').hasMatch(tag) && isLocal == false) {
         list[i].tagIndex = tag;
       } else {
-        list[i].tagIndex = '#';
+        if (isLocal == true) {
+          list[i].tagIndex = '#';
+        }
       }
     }
+
     // A-Z sort.
     SuspensionUtil.sortListBySuspensionTag(forwardedList);
 
@@ -1265,5 +1269,131 @@ class IsmChatConversationsController extends GetxController {
         isLoading: true,
       );
     }
+  }
+
+  /// Ask permission for contacts
+  Future<void> askPermissions() async {
+    if (await IsmChatUtility.requestPermission(Permission.contacts)) {
+      fillContact();
+    }
+  }
+
+  /// List of device fetch contacts...
+  List<ContactSyncModel> sendContactSync = [];
+
+  /// use for fast access the name through number
+  Map<String, String> hashMapSendContactSync = {};
+
+  /// get and fill the contact in useable model..
+  void fillContact() async {
+    final localList = [];
+    var contacts = await FlutterContacts.getContacts(
+        withProperties: true, withPhoto: true);
+    hashMapSendContactSync.clear();
+    for (var x in contacts) {
+      if (x.phones.isNotEmpty) {
+        final phone = x.phones.first.number;
+        if (!((phone.contains('@')) && (phone.contains('.com'))) &&
+            x.displayName.isNotEmpty) {
+          if (contacts.first.phones.isNotEmpty) {
+            if (contacts.first.phones.first.number.contains('+')) {
+              final code =
+                  contacts.first.phones.first.number.removeAllWhitespace;
+              localList.add(ContactSyncModel(
+                  contactNo: code.substring(3, code.length),
+                  countryCode: code.substring(0, 3),
+                  firstName: x.name.first,
+                  fullName: '${x.name.first} ${x.name.last}',
+                  lastName: x.name.last));
+              hashMapSendContactSync[code.substring(3, code.length)] =
+                  '${x.name.first} ${x.name.last}';
+            } else if (contacts.first.phones.first.normalizedNumber
+                .contains('+')) {
+              final code = contacts
+                  .first.phones.first.normalizedNumber.removeAllWhitespace;
+              localList.add(
+                ContactSyncModel(
+                  contactNo: code.substring(3, code.length),
+                  countryCode: code.substring(0, 3),
+                  firstName: x.name.first,
+                  fullName: '${x.name.first} ${x.name.last}',
+                  lastName: x.name.last,
+                ),
+              );
+              hashMapSendContactSync[code.substring(3, code.length)] =
+                  '${x.name.first} ${x.name.last}';
+            }
+          }
+        }
+      }
+    }
+    sendContactSync.clear();
+    sendContactSync = List.from(localList);
+  }
+
+  /// get the contact after filter contacts those registered or not registered basis on (isRegisteredUser)...
+  List<ContactSyncModel> getContactSyncUser = [];
+
+  /// to get the contacts..
+  Future<void> getContacts({
+    bool isLoading = true,
+    bool isRegisteredUser = false,
+    int skip = 0,
+    int limit = 20,
+    String searchTag = '',
+  }) async {
+    if (IsmChatConfig.communicationConfig.userConfig.accessToken != null) {
+      final res = await _viewModel.getContacts(
+          searchTag: searchTag,
+          isLoading: isLoading,
+          isRegisteredUser: isRegisteredUser,
+          limit: getContactSyncUser.isNotEmpty
+              ? limit.pagination(notEqualPagination: true)
+              : limit,
+          skip: skip);
+      if (res != null) {
+        getContactSyncUser.clear();
+        getContactSyncUser = res.data ?? [];
+        await removeDBUser();
+        forwardedList.addAll(List.from(
+          sendContactSync.map(
+            (e) => SelectedForwardUser(
+              localContacts: true,
+              isUserSelected: false,
+              userDetails: UserDetails(
+                  userProfileImageUrl: '',
+                  userName: hashMapSendContactSync[e.contactNo] ?? '',
+                  userIdentifier: '${e.countryCode ?? ''} ${e.contactNo}',
+                  userId: e.userId ?? '',
+                  online: false,
+                  lastSeen: DateTime.now().microsecondsSinceEpoch),
+              isBlocked: false,
+            ),
+          ),
+        ));
+      }
+      handleList(forwardedList);
+      update();
+    }
+  }
+
+  /// Use the funciton for the delete the user of local contacts from DB...
+  Future<void> removeDBUser() async {
+    forwardedList.removeWhere((element) => element.localContacts == true);
+  }
+
+  /// for upload and get the filter Users...
+  Future<void> addContact({
+    bool isLoading = true,
+  }) async {
+    final res = await _viewModel.addContact(
+      isLoading: isLoading,
+      payload: ContactSync(
+        createdUnderProjectId:
+            IsmChatConfig.communicationConfig.projectConfig.projectId,
+        data: sendContactSync,
+      ).toJson(),
+    );
+    if (res != null) {}
   }
 }

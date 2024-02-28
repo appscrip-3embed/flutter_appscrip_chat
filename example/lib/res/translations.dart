@@ -6,7 +6,7 @@ class AppTranslations extends Translations {
   Map<String, Map<String, String>> get keys => {
         'en': {
           TranslationKeys.login: 'Login',
-          TranslationKeys.signUp : 'SignUp',
+          TranslationKeys.signUp: 'SignUp',
           TranslationKeys.register: 'Register',
           TranslationKeys.required: '*Required',
           TranslationKeys.email: 'Email',
@@ -18,6 +18,7 @@ class AppTranslations extends Translations {
           TranslationKeys.symbol: 'Special symbols (@,\$,! etc)',
           TranslationKeys.lengthCharacters: 'atleast 8 characters',
           TranslationKeys.mustContain: 'Password must contain @character',
+          TranslationKeys.inviteToChat: 'Invite to',
         },
       };
 }

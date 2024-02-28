@@ -166,6 +166,7 @@ class _IsmChatConversationsState extends State<IsmChatConversations>
                     icon:
                         IsmChatProperties.conversationProperties.createChatIcon,
                     onTap: () {
+                      controller.askPermissions();
                       if (IsmChatProperties
                           .conversationProperties.enableGroupChat) {
                         Get.bottomSheet(

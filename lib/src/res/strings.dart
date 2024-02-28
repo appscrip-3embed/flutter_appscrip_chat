@@ -42,6 +42,7 @@ class IsmChatStrings {
   static const String observer = 'Observers';
 
   static const String boradcastMessge = 'Broadcast Messgaes';
+  static const String newBroadCast = 'New Broadcast';
 
   static const String clearChat = 'Clear chat';
   static const String wallpaper = 'Wallpaper';
@@ -52,6 +53,7 @@ class IsmChatStrings {
   static const String groupConversation = 'Group Conversation';
 
   static const String conversation = 'Conversation';
+  static const String newCommunity = 'New Community';
 
   static const String logout = 'Logout';
   static const String startConversation = 'Start Conversation';
@@ -160,6 +162,7 @@ class IsmChatStrings {
   static const String people = 'People';
   static const String newString = 'New';
   static const String newConversation = 'New Conversation';
+  static const String newContact = 'New Contact';
   static const String photos = 'Photos';
   static const String colors = 'Colors';
   static const String removeWallpaper = 'Remove custom wallpaper';
@@ -189,4 +192,5 @@ class IsmChatStrings {
   static const String sentDoc = 'Sent you an Document';
   static const String sentAudio = 'Sent you a Audio';
   static const String messageInfo = 'Message Info';
+  static const String inviteToChat = 'Invite to';
 }

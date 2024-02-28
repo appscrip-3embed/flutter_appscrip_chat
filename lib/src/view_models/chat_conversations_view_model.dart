@@ -314,4 +314,30 @@ class IsmChatConversationsViewModel {
     );
     return messages;
   }
+
+  /// upload the contacts
+  Future<IsmChatResponseModel?> addContact({
+    required bool isLoading,
+    required Map<String, dynamic> payload,
+  }) async =>
+      await _repository.addContact(
+        isLoading: isLoading,
+        payload: payload,
+      );
+
+  /// to get the contacts..
+  Future<ContactSync?> getContacts({
+    required bool isLoading,
+    required bool isRegisteredUser,
+    required int skip,
+    required int limit,
+    required String searchTag,
+  }) async =>
+      await _repository.getContacts(
+        isLoading: isLoading,
+        isRegisteredUser: isRegisteredUser,
+        skip: skip,
+        limit: limit,
+        searchTag: searchTag
+      );
 }

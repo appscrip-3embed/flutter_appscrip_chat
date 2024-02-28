@@ -237,11 +237,16 @@ class IsmChatApiWrapper {
     IsmChatLog.info(
         'Response - ${response.request?.method} ${response.statusCode} ${response.request?.url}\n${response.body}');
     switch (response.statusCode) {
+      case 204:
+        return IsmChatResponseModel(
+          data: '{}',
+          hasError: false,
+          errorCode: response.statusCode,
+        );
       case 200:
       case 201:
       case 202:
       case 203:
-      case 204:
       case 205:
       case 208:
         return IsmChatResponseModel(
