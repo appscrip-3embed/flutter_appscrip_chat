@@ -102,10 +102,10 @@ class _MemeroyImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Uint8List? bytes;
-    if (imageUrl.isNotEmpty) {
+    if (imageUrl.isNotEmpty && imageUrl != 'null') {
       bytes = imageUrl.strigToUnit8List;
     }
-    return bytes == null || bytes.isEmpty
+    return bytes == null || bytes.isEmpty == true
         ? Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(

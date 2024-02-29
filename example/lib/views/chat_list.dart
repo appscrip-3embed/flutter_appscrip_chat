@@ -51,6 +51,7 @@ class ChatList extends StatelessWidget {
             isShowMqttConnectErrorDailog: true,
             communicationConfig: IsmChatCommunicationConfig(
               userConfig: IsmChatUserConfig(
+                accessToken: null,
                 userToken: AppConfig.userDetail?.userToken ?? '',
                 userId: AppConfig.userDetail?.userId ?? '',
                 // userName: AppConfig.userDetail?.userName,

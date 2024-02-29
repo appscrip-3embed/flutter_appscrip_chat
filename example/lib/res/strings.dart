@@ -18,6 +18,7 @@ class TranslationKeys {
   static const String uppercase = 'uppercase';
   static const String symbol = 'symbol';
   static const String lengthCharacters = 'lengthCharacters';
+  static const String inviteToChat = 'Invite to';
 }
 
 class Strings {
@@ -38,6 +39,7 @@ class Strings {
   static String uppercase = TranslationKeys.uppercase.tr;
   static String symbol = TranslationKeys.symbol.tr;
   static String lengthCharacters = TranslationKeys.lengthCharacters.tr;
+  static String inviteToChat = TranslationKeys.inviteToChat.tr;
 
   static String passwordMustContain(String character) =>
       TranslationKeys.mustContain.trParams({'character': character});

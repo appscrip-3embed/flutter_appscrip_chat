@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -175,7 +174,8 @@ class IsmChatRouteManagement {
     Get.toNamed(IsmChatContactView.route);
   }
 
-  static void goToContactInfoView({required List<Contact> contacts}) {
+  static void goToContactInfoView(
+      {required List<IsmChatContactMetaDatModel> contacts}) {
     Get.toNamed(
       IsmChatContactsInfoView.route,
       arguments: {'contacts': contacts},

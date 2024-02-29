@@ -272,18 +272,36 @@ class IsmChatMessageModel {
         events: null,
       );
 
-  List<Contact> get contacts => customType == IsmChatCustomMessageType.contact
-      ? (jsonDecode(body) as List)
+  List<IsmChatContactMetaDatModel> get contacts {
+    if (customType == IsmChatCustomMessageType.contact) {
+      if (body == IsmChatStrings.contact) {
+        return metaData?.contacts ?? [];
+      }
+      final number = (jsonDecode(body) as List)
           .map((e) => Contact.fromJson(e as Map<String, dynamic>))
-          .toList()
-      : metaData?.replayMessageCustomType == IsmChatCustomMessageType.contact
-          ? (jsonDecode(body) as List)
-              .map((e) => Contact.fromJson(e as Map<String, dynamic>))
-              .toList()
-          : [];
+          .toList();
+      return number
+          .map(
+            (e) => IsmChatContactMetaDatModel(
+              contactId: e.id,
+              contactIdentifier: e.phones.first.normalizedNumber,
+              contactName: e.displayName,
+              contactImageUrl: e.photo != null ? e.photo.toString() : '',
+            ),
+          )
+          .toList();
+    }
+    //  else if (metaData?.replayMessageCustomType ==
+    //     IsmChatCustomMessageType.contact) {
+    //   return (jsonDecode(body) as List)
+    //       .map((e) => Contact.fromJson(e as Map<String, dynamic>))
+    //       .toList();
+    // }
+    return [];
+  }
 
   Map<String, dynamic> toMap() => {
-        'body': IsmChatUtility.encodeString(body),
+        'body': body,
         'action': action,
         'updatedAt': updatedAt,
         'sentAt': sentAt,

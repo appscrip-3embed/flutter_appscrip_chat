@@ -42,6 +42,7 @@ class IsmChatStrings {
   static const String observer = 'Observers';
 
   static const String boradcastMessge = 'Broadcast Messgaes';
+  static const String newBroadCast = 'New Broadcast';
 
   static const String clearChat = 'Clear chat';
   static const String wallpaper = 'Wallpaper';
@@ -52,6 +53,7 @@ class IsmChatStrings {
   static const String groupConversation = 'Group Conversation';
 
   static const String conversation = 'Conversation';
+  static const String newCommunity = 'New Community';
 
   static const String logout = 'Logout';
   static const String startConversation = 'Start Conversation';
@@ -123,8 +125,7 @@ class IsmChatStrings {
       "You're the only admin of the group, make a group admin or a random person will be assigned as group admin";
   static const String contactInfo = 'Contact Info';
   static const String userInfo = 'User Info';
-  static const String audio = 'audio';
-  static const String video = 'video';
+
   static const String loremIpsum =
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod';
   static const String demoDate = '25 Dec 2016';
@@ -161,6 +162,7 @@ class IsmChatStrings {
   static const String people = 'People';
   static const String newString = 'New';
   static const String newConversation = 'New Conversation';
+  static const String newContact = 'New Contact';
   static const String photos = 'Photos';
   static const String colors = 'Colors';
   static const String removeWallpaper = 'Remove custom wallpaper';
@@ -170,12 +172,17 @@ class IsmChatStrings {
   static const String dial = 'Dial';
   static const String addToContact = 'Add to contacts';
   static const String noContact = 'No contact found';
-  static const String location = 'Location';
+
   static const String downloadingMedia = 'Downloading media...';
 
   static const String thisPhoneNumberNotonChat =
       'This phone number is not on chat';
 
+  static const String location = 'Location';
+  static const String image = 'Image';
+  static const String audio = 'Audio';
+  static const String video = 'Video';
+  static const String document = 'Document';
   static const String contact = 'Contact';
   static const String addCaption = 'Add a caption...';
   static const String sentContact = 'Sent you a Contact';
@@ -184,4 +191,6 @@ class IsmChatStrings {
   static const String sentVideo = 'Sent you an Video';
   static const String sentDoc = 'Sent you an Document';
   static const String sentAudio = 'Sent you a Audio';
+  static const String messageInfo = 'Message Info';
+  static const String inviteToChat = 'Invite to';
 }

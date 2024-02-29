@@ -96,6 +96,7 @@ class IsmChatMessageField extends StatelessWidget {
                     shortcuts: {
                       LogicalKeySet(
                         LogicalKeyboardKey.enter,
+                        LogicalKeyboardKey.newKey,
                       ): const SendMessageIntent(),
                     },
                     child: Actions(

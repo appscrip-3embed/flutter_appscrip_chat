@@ -79,13 +79,13 @@ class IsmChatCommonRepository {
         'conversationId': conversationId,
         'body': body,
         'parentMessageId': parentMessageId,
-        'metaData': metaData?.toMap(),
+        'metaData': metaData?.toMap().removeNullValues(),
         'events': events,
         'customType': customType,
         'attachments': attachments,
         'notificationBody': notificationBody,
         'notificationTitle': notificationTitle,
-        'searchableTags': [IsmChatUtility.decodeString(body)],
+        'searchableTags': [body],
         if (mentionedUsers?.isNotEmpty == true) 'mentionedUsers': mentionedUsers
       };
 

@@ -102,7 +102,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         conversationId: conversationId,
         notificationBody: notificationBody,
         notificationTitle: notificationTitle,
-        body: IsmChatUtility.encodeString(body),
+        body: body,
         createdAt: createdAt,
         isTemporaryChat: isTemporaryChat,
       );
@@ -126,7 +126,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           events: {'updateUnreadCount': true, 'sendPushNotification': true},
           messageType: messageType,
           deviceId: deviceId,
-          body: IsmChatUtility.encodeString(body),
+          body: body,
           notificationBody: notificationBody,
           notificationTitle: notificationTitle,
           attachments: attachments,
@@ -307,7 +307,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     audioMessage = IsmChatMessageModel(
       body: 'Audio',
       conversationId: conversationId,
-      customType: IsmChatCustomMessageType.audio,
+      customType: _controller.isreplying
+          ? IsmChatCustomMessageType.reply
+          : IsmChatCustomMessageType.audio,
       senderInfo: _controller.currentUser,
       attachments: [
         AttachmentModel(
@@ -324,14 +326,29 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       deliveredToAll: false,
       messageId: '',
       deviceId: _controller._deviceConfig.deviceId ?? '',
-      messageType: IsmChatMessageType.normal,
+      messageType: _controller.isreplying
+          ? IsmChatMessageType.reply
+          : IsmChatMessageType.normal,
       messagingDisabled: false,
-      parentMessageId: '',
+      parentMessageId:
+          _controller.isreplying ? _controller.replayMessage?.messageId : '',
       readByAll: false,
       sentAt: sentAt,
       sentByMe: true,
       isUploading: true,
       metaData: IsmChatMetaData(
+        replyMessage: _controller.isreplying
+            ? IsmChatReplyMessageModel(
+                parentMessageMessageType: _controller.replayMessage?.customType,
+                parentMessageInitiator: _controller.replayMessage?.sentByMe,
+                parentMessageBody:
+                    _controller.getMessageBody(_controller.replayMessage),
+                parentMessageUserId:
+                    _controller.replayMessage?.senderInfo?.userId,
+                parentMessageUserName:
+                    _controller.replayMessage?.senderInfo?.userName ?? '',
+              )
+            : null,
         duration: duration ?? webMediaModel?.duration,
       ),
     );
@@ -427,7 +444,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           thumbnailMediaId = sentAt.toString();
           nameWithExtension = x.name;
           documentMessage = IsmChatMessageModel(
-            body: 'Document',
+            body: IsmChatStrings.document,
             conversationId: conversationId,
             senderInfo: _controller.currentUser,
             customType: _controller.isreplying
@@ -462,13 +479,19 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             sentByMe: true,
             isUploading: true,
             metaData: IsmChatMetaData(
-              replayMessageCustomType:
-                  _controller.isreplying ? IsmChatCustomMessageType.file : null,
-              parentMessageBody: _controller.isreplying
-                  ? _controller.getMessageBody(_controller.replayMessage)
-                  : '',
-              parentMessageInitiator: _controller.isreplying
-                  ? _controller.replayMessage?.sentByMe
+              replyMessage: _controller.isreplying
+                  ? IsmChatReplyMessageModel(
+                      parentMessageMessageType:
+                          _controller.replayMessage?.customType,
+                      parentMessageInitiator:
+                          _controller.replayMessage?.sentByMe,
+                      parentMessageBody:
+                          _controller.getMessageBody(_controller.replayMessage),
+                      parentMessageUserId:
+                          _controller.replayMessage?.senderInfo?.userId,
+                      parentMessageUserName:
+                          _controller.replayMessage?.senderInfo?.userName ?? '',
+                    )
                   : null,
             ),
           );
@@ -592,7 +615,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
 
     videoMessage = IsmChatMessageModel(
-        body: 'Video',
+        body: IsmChatStrings.video,
         conversationId: conversationId,
         senderInfo: _controller.currentUser,
         customType: _controller.isreplying
@@ -629,13 +652,18 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         isUploading: true,
         metaData: IsmChatMetaData(
           captionMessage: caption,
-          replayMessageCustomType:
-              _controller.isreplying ? IsmChatCustomMessageType.video : null,
-          parentMessageBody: _controller.isreplying
-              ? _controller.getMessageBody(_controller.replayMessage)
-              : '',
-          parentMessageInitiator: _controller.isreplying
-              ? _controller.replayMessage?.sentByMe
+          replyMessage: _controller.isreplying
+              ? IsmChatReplyMessageModel(
+                  parentMessageMessageType:
+                      _controller.replayMessage?.customType,
+                  parentMessageInitiator: _controller.replayMessage?.sentByMe,
+                  parentMessageBody:
+                      _controller.getMessageBody(_controller.replayMessage),
+                  parentMessageUserId:
+                      _controller.replayMessage?.senderInfo?.userId,
+                  parentMessageUserName:
+                      _controller.replayMessage?.senderInfo?.userName ?? '',
+                )
               : null,
         ));
 
@@ -721,52 +749,55 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
 
     imageMessage = IsmChatMessageModel(
-        body: 'Image',
-        conversationId: conversationId,
-        senderInfo: _controller.currentUser,
-        customType: _controller.isreplying
-            ? IsmChatCustomMessageType.reply
-            : IsmChatCustomMessageType.image,
-        attachments: [
-          AttachmentModel(
-            attachmentType: IsmChatMediaType.image,
-            thumbnailUrl: kIsWeb
-                ? webMediaModel?.platformFile.path
-                : compressedFile?.path,
-            size: kIsWeb ? webMediaModel?.platformFile.size : bytes!.length,
-            name: nameWithExtension,
-            mimeType: 'image/jpeg',
-            mediaUrl: kIsWeb
-                ? webMediaModel?.platformFile.path
-                : compressedFile?.path,
-            mediaId: mediaId,
-            extension: extension,
-          )
-        ],
-        deliveredToAll: false,
-        messageId: '',
-        deviceId: _controller._deviceConfig.deviceId ?? '',
-        messageType: _controller.isreplying
-            ? IsmChatMessageType.reply
-            : IsmChatMessageType.normal,
-        messagingDisabled: false,
-        parentMessageId:
-            _controller.isreplying ? _controller.replayMessage?.messageId : '',
-        readByAll: false,
-        sentAt: sentAt,
-        sentByMe: true,
-        isUploading: true,
-        metaData: IsmChatMetaData(
-          captionMessage: caption,
-          replayMessageCustomType:
-              _controller.isreplying ? IsmChatCustomMessageType.image : null,
-          parentMessageBody: _controller.isreplying
-              ? _controller.getMessageBody(_controller.replayMessage)
-              : '',
-          parentMessageInitiator: _controller.isreplying
-              ? _controller.replayMessage?.sentByMe
-              : null,
-        ));
+      body: IsmChatStrings.image,
+      conversationId: conversationId,
+      senderInfo: _controller.currentUser,
+      customType: _controller.isreplying
+          ? IsmChatCustomMessageType.reply
+          : IsmChatCustomMessageType.image,
+      attachments: [
+        AttachmentModel(
+          attachmentType: IsmChatMediaType.image,
+          thumbnailUrl:
+              kIsWeb ? webMediaModel?.platformFile.path : compressedFile?.path,
+          size: kIsWeb ? webMediaModel?.platformFile.size : bytes!.length,
+          name: nameWithExtension,
+          mimeType: 'image/jpeg',
+          mediaUrl:
+              kIsWeb ? webMediaModel?.platformFile.path : compressedFile?.path,
+          mediaId: mediaId,
+          extension: extension,
+        )
+      ],
+      deliveredToAll: false,
+      messageId: '',
+      deviceId: _controller._deviceConfig.deviceId ?? '',
+      messageType: _controller.isreplying
+          ? IsmChatMessageType.reply
+          : IsmChatMessageType.normal,
+      messagingDisabled: false,
+      parentMessageId:
+          _controller.isreplying ? _controller.replayMessage?.messageId : '',
+      readByAll: false,
+      sentAt: sentAt,
+      sentByMe: true,
+      isUploading: true,
+      metaData: IsmChatMetaData(
+        captionMessage: caption,
+        replyMessage: _controller.isreplying
+            ? IsmChatReplyMessageModel(
+                parentMessageMessageType: _controller.replayMessage?.customType,
+                parentMessageInitiator: _controller.replayMessage?.sentByMe,
+                parentMessageBody:
+                    _controller.getMessageBody(_controller.replayMessage),
+                parentMessageUserId:
+                    _controller.replayMessage?.senderInfo?.userId,
+                parentMessageUserName:
+                    _controller.replayMessage?.senderInfo?.userName ?? '',
+              )
+            : null,
+      ),
+    );
 
     _controller.messages.add(imageMessage);
     _controller.isreplying = false;
@@ -824,8 +855,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var locationMessage = IsmChatMessageModel(
-      body:
-          'https://www.google.com/maps/search/?api=1&map_action=map&query=$latitude%2C$longitude&query_place_id=$placeId',
+      body: IsmChatStrings.location,
+      //  'https://www.google.com/maps/search/?api=1&map_action=map&query=$latitude%2C$longitude&query_place_id=$placeId',
       conversationId: conversationId,
       senderInfo: _controller.currentUser,
       customType: _controller.isreplying
@@ -844,16 +875,28 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       sentAt: sentAt,
       sentByMe: true,
       isUploading: true,
+      attachments: [
+        AttachmentModel(
+          address: locationSubName,
+          attachmentType: IsmChatMediaType.location,
+          latitude: latitude,
+          longitude: longitude,
+          title: locationName,
+        ),
+      ],
       metaData: IsmChatMetaData(
-        replayMessageCustomType:
-            _controller.isreplying ? IsmChatCustomMessageType.location : null,
-        locationAddress: locationName,
-        locationSubAddress: locationSubName,
-        parentMessageBody: _controller.isreplying
-            ? _controller.getMessageBody(_controller.replayMessage)
-            : '',
-        parentMessageInitiator:
-            _controller.isreplying ? _controller.replayMessage?.sentByMe : null,
+        replyMessage: _controller.isreplying
+            ? IsmChatReplyMessageModel(
+                parentMessageMessageType: _controller.replayMessage?.customType,
+                parentMessageInitiator: _controller.replayMessage?.sentByMe,
+                parentMessageBody:
+                    _controller.getMessageBody(_controller.replayMessage),
+                parentMessageUserId:
+                    _controller.replayMessage?.senderInfo?.userId,
+                parentMessageUserName:
+                    _controller.replayMessage?.senderInfo?.userName ?? '',
+              )
+            : null,
       ),
     );
 
@@ -878,12 +921,15 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       metaData: locationMessage.metaData,
       deviceId: locationMessage.deviceId ?? '',
       body: locationMessage.body,
-      customType: locationMessage.customType?.name,
+      customType: locationMessage.customType?.value,
       createdAt: locationMessage.sentAt,
       conversationId: locationMessage.conversationId ?? '',
       messageType: locationMessage.messageType?.value ?? 0,
       notificationBody: IsmChatStrings.sentLocation,
       notificationTitle: notificationTitle,
+      attachments: locationMessage.attachments != null
+          ? [locationMessage.attachments!.first.toMap().removeNullValues()]
+          : null,
       isTemporaryChat: _controller.isTemporaryChat,
       parentMessageId: locationMessage.parentMessageId,
     );
@@ -896,7 +942,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
-
     if (chatConversationResponse == null && !_controller.isTemporaryChat) {
       conversationId = await createConversation(
         userId: [userId],
@@ -909,9 +954,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         ],
       );
     }
+    IsmChatLog.error(contacts.first.toJson());
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var contactMessage = IsmChatMessageModel(
-      body: jsonEncode(contacts.map((e) => e.toJson()).toList()),
+      body: IsmChatStrings.contact,
       conversationId: conversationId,
       senderInfo: _controller.currentUser,
       customType: _controller.isreplying
@@ -930,13 +976,30 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       sentByMe: true,
       deviceId: _controller._deviceConfig.deviceId ?? '',
       metaData: IsmChatMetaData(
-        replayMessageCustomType:
-            _controller.isreplying ? IsmChatCustomMessageType.contact : null,
-        parentMessageBody: _controller.isreplying
-            ? _controller.getMessageBody(_controller.replayMessage)
-            : '',
-        parentMessageInitiator:
-            _controller.isreplying ? _controller.replayMessage?.sentByMe : null,
+        contacts: contacts
+            .map(
+              (e) => IsmChatContactMetaDatModel(
+                contactId: e.id,
+                contactName: e.displayName,
+                contactImageUrl: e.photo != null ? e.photo.toString() : '',
+                contactIdentifier: GetPlatform.isAndroid
+                    ? e.phones.first.normalizedNumber
+                    : e.phones.first.number,
+              ),
+            )
+            .toList(),
+        replyMessage: _controller.isreplying
+            ? IsmChatReplyMessageModel(
+                parentMessageMessageType: _controller.replayMessage?.customType,
+                parentMessageInitiator: _controller.replayMessage?.sentByMe,
+                parentMessageBody:
+                    _controller.getMessageBody(_controller.replayMessage),
+                parentMessageUserId:
+                    _controller.replayMessage?.senderInfo?.userId,
+                parentMessageUserName:
+                    _controller.replayMessage?.senderInfo?.userName ?? '',
+              )
+            : null,
       ),
     );
 
@@ -956,7 +1019,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       metaData: contactMessage.metaData,
       deviceId: contactMessage.deviceId ?? '',
       body: contactMessage.body,
-      customType: contactMessage.customType?.name,
+      customType: contactMessage.customType?.value,
       createdAt: contactMessage.sentAt,
       conversationId: contactMessage.conversationId ?? '',
       messageType: contactMessage.messageType?.value ?? 0,
@@ -1008,13 +1071,18 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       sentAt: sentAt,
       sentByMe: true,
       metaData: IsmChatMetaData(
-        replayMessageCustomType:
-            _controller.isreplying ? IsmChatCustomMessageType.text : null,
-        parentMessageBody: _controller.isreplying
-            ? _controller.getMessageBody(_controller.replayMessage)
-            : '',
-        parentMessageInitiator:
-            _controller.isreplying ? _controller.replayMessage?.sentByMe : null,
+        replyMessage: _controller.isreplying
+            ? IsmChatReplyMessageModel(
+                parentMessageMessageType: _controller.replayMessage?.customType,
+                parentMessageInitiator: _controller.replayMessage?.sentByMe,
+                parentMessageBody:
+                    _controller.getMessageBody(_controller.replayMessage),
+                parentMessageUserId:
+                    _controller.replayMessage?.senderInfo?.userId,
+                parentMessageUserName:
+                    _controller.replayMessage?.senderInfo?.userName ?? '',
+              )
+            : null,
       ),
       mentionedUsers: _controller.userMentionedList.map(
         (e) {
@@ -1031,7 +1099,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         },
       ).toList(),
     );
-
     _controller.messages.add(textMessage);
     _controller.isreplying = false;
     _controller.chatInputController.clear();
@@ -1055,7 +1122,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       metaData: textMessage.metaData,
       deviceId: textMessage.deviceId ?? '',
       body: textMessage.body,
-      customType: textMessage.customType?.name,
+      customType: textMessage.customType?.value,
       createdAt: sentAt,
       parentMessageId: textMessage.parentMessageId,
       conversationId: textMessage.conversationId ?? '',
@@ -1157,18 +1224,19 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       }
       if (mediaUrlPath.isNotEmpty) {
         var attachment = [
-          {
-            'thumbnailUrl': !imageAndFile ? thumbnailUrlPath : mediaUrlPath,
-            'size': ismChatChatMessageModel.attachments?.first.size ?? 0,
-            'name': ismChatChatMessageModel.attachments?.first.name,
-            'mimeType': ismChatChatMessageModel.attachments?.first.mimeType,
-            'mediaUrl': mediaUrlPath,
-            'mediaId': mediaId,
-            'extension': ismChatChatMessageModel.attachments?.first.extension,
-            'attachmentType': ismChatChatMessageModel
-                .attachments?.first.attachmentType?.value,
-          }
+          AttachmentModel(
+            thumbnailUrl: !imageAndFile ? thumbnailUrlPath : mediaUrlPath,
+            size: ismChatChatMessageModel.attachments?.first.size ?? 0,
+            name: ismChatChatMessageModel.attachments?.first.name,
+            mimeType: ismChatChatMessageModel.attachments?.first.mimeType,
+            mediaUrl: mediaUrlPath,
+            mediaId: mediaId,
+            extension: ismChatChatMessageModel.attachments?.first.extension,
+            attachmentType:
+                ismChatChatMessageModel.attachments?.first.attachmentType,
+          ).toMap().removeNullValues()
         ];
+
         sendMessage(
           body: ismChatChatMessageModel.body,
           conversationId: ismChatChatMessageModel.conversationId!,
@@ -1178,7 +1246,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           notificationBody: notificationBody,
           notificationTitle: notificationTitle,
           attachments: attachment,
-          customType: ismChatChatMessageModel.customType?.name,
+          customType: ismChatChatMessageModel.customType?.value,
           metaData: ismChatChatMessageModel.metaData,
           isTemporaryChat: isTemporaryChat,
           parentMessageId: ismChatChatMessageModel.parentMessageId,

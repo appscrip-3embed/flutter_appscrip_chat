@@ -419,7 +419,7 @@ mixin IsmChatMqttEventMixin on GetxController {
             color: IsmChatConfig.chatTheme.primaryColor ?? Colors.blue,
           ),
           width: IsmChatDimens.twoHundredFifty,
-          notificationPosition: NotificationPosition.topRight,
+          // notificationPosition: NotificationPosition.topRight,
           animation: AnimationType.fromRight,
           title: Text(message.notificationTitle ?? ''),
           description: Text(

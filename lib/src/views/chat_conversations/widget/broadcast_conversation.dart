@@ -206,14 +206,20 @@ class IsmChatBroadCastView extends StatelessWidget {
                             if (scrollNotification.metrics.pixels >
                                 scrollNotification.metrics.maxScrollExtent *
                                     0.7) {
-                              controller.getNonBlockUserList(
-                                  opponentId: IsmChatConfig
-                                      .communicationConfig.userConfig.userId);
+                              if ((scrollNotification.dragDetails?.velocity
+                                          .pixelsPerSecond.dy ??
+                                      0) <
+                                  0) {
+                                controller.getNonBlockUserList(
+                                    opponentId: IsmChatConfig
+                                        .communicationConfig.userConfig.userId);
+                              }
                             }
                           }
                           return true;
                         },
-                        child: controller.isLoadResponse
+                        child: controller.isLoadResponse &&
+                                controller.forwardedList.isEmpty
                             ? Center(
                                 child: Text(
                                   IsmChatStrings.noUserFound,

@@ -543,4 +543,52 @@ class IsmChatConversationsRepository {
       return null;
     }
   }
+
+  /// to get the contacts..
+  Future<ContactSync?> getContacts({
+    required bool isLoading,
+    required bool isRegisteredUser,
+    required int skip,
+    required int limit,
+    required String searchTag,
+  }) async {
+    try {
+      final res = await _apiWrapper.get(
+        '${IsmChatAPI.contactGet}?q=$searchTag&skip=$skip&limit=$limit&isRegisteredUser=$isRegisteredUser',
+        headers:
+            IsmChatUtility.accessTokenCommonHeader(isDefaultContentType: true),
+        showLoader: isLoading,
+      );
+      if (res.hasError) {
+        return null;
+      }
+      return contactSyncFromJson(res.data);
+    } catch (e, st) {
+      IsmChatLog.error('Get user messages $e, $st');
+      return null;
+    }
+  }
+
+  /// For adding the contact..
+  Future<IsmChatResponseModel?> addContact({
+    required bool isLoading,
+    required Map<String, dynamic> payload,
+  }) async {
+    try {
+      final res = await _apiWrapper.post(
+        IsmChatAPI.contactSyncPost,
+        payload: payload,
+        headers:
+            IsmChatUtility.accessTokenCommonHeader(isDefaultContentType: true),
+        showLoader: isLoading,
+      );
+      if (res.hasError) {
+        return null;
+      }
+      return res;
+    } catch (e, st) {
+      IsmChatLog.error('Get user messages $e, $st');
+      return null;
+    }
+  }
 }

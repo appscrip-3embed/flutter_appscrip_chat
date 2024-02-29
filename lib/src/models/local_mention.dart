@@ -1,7 +1,16 @@
 import 'dart:convert';
 
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 class LocalMentionAndPhoneNumber {
+  factory LocalMentionAndPhoneNumber.fromMap(Map<String, dynamic> map) =>
+      LocalMentionAndPhoneNumber(
+        text: map['text'] as String,
+        isMentioned: map['isMentioned'] as bool,
+        isPhoneNumber: map['isPhoneNumber'] as bool,
+      );
+
+  factory LocalMentionAndPhoneNumber.fromJson(String source) =>
+      LocalMentionAndPhoneNumber.fromMap(
+          json.decode(source) as Map<String, dynamic>);
   const LocalMentionAndPhoneNumber({
     required this.text,
     required this.isMentioned,
@@ -32,16 +41,5 @@ class LocalMentionAndPhoneNumber {
         'isPhoneNumber': isPhoneNumber,
       };
 
-  factory LocalMentionAndPhoneNumber.fromMap(Map<String, dynamic> map) =>
-      LocalMentionAndPhoneNumber(
-        text: map['text'] as String,
-        isMentioned: map['isMentioned'] as bool,
-        isPhoneNumber: map['isPhoneNumber'] as bool,
-      );
-
   String toJson() => json.encode(toMap());
-
-  factory LocalMentionAndPhoneNumber.fromJson(String source) =>
-      LocalMentionAndPhoneNumber.fromMap(
-          json.decode(source) as Map<String, dynamic>);
 }

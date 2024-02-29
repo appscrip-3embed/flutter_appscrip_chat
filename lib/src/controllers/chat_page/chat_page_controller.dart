@@ -1458,7 +1458,8 @@ class IsmChatPageController extends GetxController
           mediaTime: message.sentAt,
         );
       }
-    } else if (message.metaData?.replayMessageCustomType ==
+    } else if ((message.metaData?.replayMessageCustomType ??
+            message.metaData?.replyMessage?.parentMessageMessageType) ==
         IsmChatCustomMessageType.file) {
       var localPath = message.attachments?.first.mediaUrl;
       if (localPath == null) {
@@ -1496,7 +1497,8 @@ class IsmChatPageController extends GetxController
           message: message,
         ),
       );
-    } else if (message.metaData?.replayMessageCustomType ==
+    } else if ((message.metaData?.replayMessageCustomType ??
+            message.metaData?.replyMessage?.parentMessageMessageType) ==
         IsmChatCustomMessageType.contact) {
       IsmChatRouteManagement.goToContactInfoView(contacts: message.contacts);
     }

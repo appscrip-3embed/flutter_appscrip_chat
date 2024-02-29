@@ -8,6 +8,7 @@ class IsmChatProjectConfig {
     required this.projectId,
     this.chatApisBaseUrl,
     this.googleApiKey,
+    this.appName = 'ISM',
   });
   final String accountId;
   final String appSecret;
@@ -17,4 +18,5 @@ class IsmChatProjectConfig {
   final String projectId;
   final String? chatApisBaseUrl;
   final String? googleApiKey;
+  final String appName;
 }

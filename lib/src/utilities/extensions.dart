@@ -54,16 +54,30 @@ extension MatchString on String {
 }
 
 extension MessagePagination on int {
-  int pagination({int endValue = 20}) {
+  int pagination({int endValue = 20, bool notEqualPagination = false}) {
     if (this == 0) {
       return this;
     }
-    if (this <= endValue) {
+
+    if (this <= endValue && notEqualPagination == false) {
       return endValue;
     }
     endValue = endValue + 20;
     return pagination(endValue: endValue);
   }
+
+  // int limitPagination({
+  //   int value = 30,
+  // }) {
+  //   if (this == 0) {
+  //     return this;
+  //   }
+  //   if (this <=value) {
+  //     return value;
+  //   }
+  //   value = value + 20;
+  //   return pagination(endValue: value);
+  // }
 }
 
 extension DistanceLatLng on LatLng {
@@ -546,12 +560,14 @@ extension ModelConversion on IsmChatConversationModel {
                 ? Icons.done_all_rounded
                 : Icons.done_rounded,
         color: lastMessageDetails?.messageId.isEmpty == true
-            ? Colors.grey
+            ? IsmChatConfig.chatTheme.chatPageTheme?.unreadCheckColor ??
+                IsmChatColors.whiteColor
             : readByAll
-                ? Colors.blue
-                : IsmChatConfig.chatTheme.chatListCardThemData?.subTitleColor ??
-                    Colors.grey,
-        size: 16,
+                ? IsmChatConfig.chatTheme.chatPageTheme?.readCheckColor ??
+                    IsmChatColors.blueColor
+                : IsmChatConfig.chatTheme.chatPageTheme?.unreadCheckColor ??
+                    IsmChatColors.greyColor,
+        size: IsmChatDimens.sixteen,
       );
     } catch (e, st) {
       IsmChatLog.error(e, st);
@@ -897,10 +913,13 @@ extension SizeOfMedia on String {
   }
 
   Uint8List get strigToUnit8List {
-    var list = Uint8List.fromList(
-      List.from(jsonDecode(this) as List),
-    );
-    return list;
+    if (isNotEmpty) {
+      var list = Uint8List.fromList(
+        List.from(jsonDecode(this) as List),
+      );
+      return list;
+    }
+    return Uint8List(0);
   }
 }
 
@@ -1023,6 +1042,30 @@ extension ListMerging<T> on List<List<T>?> {
     }
     if (seperator != null) {
       result.removeLast();
+    }
+    return result;
+  }
+}
+
+// This extension is to remove any key value pair from the map
+// where the value is null
+extension OnMap on Map<String, dynamic> {
+  Map<String, dynamic> removeNullValues() {
+    var result = <String, dynamic>{};
+    for (var entry in entries) {
+      var k = entry.key;
+      var v = entry.value;
+      if (v != null) {
+        if (!v.runtimeType.toString().contains('List') &&
+            v.runtimeType.toString().contains('Map')) {
+          result[k] = (v as Map<String, dynamic>).removeNullValues();
+        } else {
+          // if (v is String && v.trim().isEmpty) {
+          //   continue;
+          // }
+          result[k] = v;
+        }
+      }
     }
     return result;
   }

@@ -37,12 +37,11 @@ class IsmChatContactMessage extends StatelessWidget {
                               ? message.contacts.length
                               : 3, (index) {
                         var data = message.contacts[index];
-
                         if (index == 0) {
-                          return data.photo?.isNotEmpty == true
+                          return data.contactImageUrl != null
                               ? IsmChatImage.profile(
-                                  data.photo.toString(),
-                                  name: data.displayName,
+                                  data.contactImageUrl ?? '',
+                                  name: data.contactName ?? '',
                                   isNetworkImage: false,
                                   isBytes: true,
                                 )
@@ -51,10 +50,10 @@ class IsmChatContactMessage extends StatelessWidget {
 
                         return Positioned(
                           left: index * IsmChatDimens.fifteen,
-                          child: data.photo?.isNotEmpty == true
+                          child: data.contactImageUrl != null
                               ? IsmChatImage.profile(
-                                  data.photo.toString(),
-                                  name: data.displayName,
+                                  data.contactImageUrl ?? '',
+                                  name: data.contactName ?? '',
                                   isNetworkImage: false,
                                   isBytes: true,
                                 )
@@ -66,8 +65,8 @@ class IsmChatContactMessage extends StatelessWidget {
                   Flexible(
                     child: Text(
                       message.contacts.length == 1
-                          ? message.contacts.first.displayName
-                          : '${message.contacts.first.displayName} and ${message.contacts.length - 1} other contact',
+                          ? message.contacts.first.contactName ?? ''
+                          : '${message.contacts.first.contactName} and ${message.contacts.length - 1} other contact',
                       style: IsmChatStyles.w600Black14,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,

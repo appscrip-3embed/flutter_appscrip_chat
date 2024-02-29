@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class IsmChatPageView extends StatefulWidget {
@@ -128,6 +129,15 @@ class _IsmChatPageView extends StatelessWidget {
             resizeToAvoidBottomInset: true,
             appBar: controller.isMessageSeleted
                 ? AppBar(
+                    systemOverlayStyle: IsmChatConfig.chatTheme
+                            .chatPageHeaderTheme?.systemUiOverlayStyle ??
+                        SystemUiOverlayStyle(
+                          statusBarBrightness: Brightness.dark,
+                          statusBarIconBrightness: Brightness.light,
+                          statusBarColor:
+                              IsmChatConfig.chatTheme.primaryColor ??
+                                  IsmChatColors.primaryColorLight,
+                        ),
                     leading: IsmChatTapHandler(
                       onTap: () async {
                         controller.isMessageSeleted = false;
@@ -142,11 +152,17 @@ class _IsmChatPageView extends StatelessWidget {
                     titleSpacing: IsmChatDimens.four,
                     title: Text(
                       '${controller.selectedMessage.length} Messages',
-                      style: IsmChatStyles.w600White18,
+                      style: IsmChatConfig
+                              .chatTheme.chatPageHeaderTheme?.titleStyle ??
+                          IsmChatStyles.w600White18,
                     ),
-                    backgroundColor: IsmChatConfig.chatTheme.primaryColor,
-                    iconTheme:
-                        const IconThemeData(color: IsmChatColors.whiteColor),
+                    backgroundColor: IsmChatConfig
+                            .chatTheme.chatPageHeaderTheme?.backgroundColor ??
+                        IsmChatConfig.chatTheme.primaryColor,
+                    iconTheme: IconThemeData(
+                        color: IsmChatConfig
+                                .chatTheme.chatPageHeaderTheme?.iconColor ??
+                            IsmChatColors.whiteColor),
                     actions: [
                       IconButton(
                         onPressed: () async {
@@ -155,9 +171,11 @@ class _IsmChatPageView extends StatelessWidget {
                           controller.showDialogForDeleteMultipleMessage(
                               messageSenderSide, controller.selectedMessage);
                         },
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.delete_rounded,
-                          color: IsmChatColors.whiteColor,
+                          color: IsmChatConfig
+                                  .chatTheme.chatPageHeaderTheme?.iconColor ??
+                              IsmChatColors.whiteColor,
                         ),
                       ),
                     ],
