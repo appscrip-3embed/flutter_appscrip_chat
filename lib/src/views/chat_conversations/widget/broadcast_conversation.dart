@@ -218,7 +218,8 @@ class IsmChatBroadCastView extends StatelessWidget {
                           }
                           return true;
                         },
-                        child: controller.isLoadResponse
+                        child: controller.isLoadResponse &&
+                                controller.forwardedList.isEmpty
                             ? Center(
                                 child: Text(
                                   IsmChatStrings.noUserFound,

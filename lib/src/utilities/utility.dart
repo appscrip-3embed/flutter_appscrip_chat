@@ -177,7 +177,8 @@ class IsmChatUtility {
       'licenseKey': IsmChatConfig.communicationConfig.projectConfig.licenseKey,
       'appSecret': IsmChatConfig.communicationConfig.projectConfig.appSecret,
       'userToken': IsmChatConfig.communicationConfig.userConfig.userToken,
-      'Authorization': IsmChatConfig.communicationConfig.userConfig.userToken
+      'Authorization':
+          IsmChatConfig.communicationConfig.userConfig.accessToken ?? ''
     };
     if (isDefaultContentType == true) {
       header.addAll({

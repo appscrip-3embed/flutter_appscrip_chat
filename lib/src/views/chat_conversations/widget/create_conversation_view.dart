@@ -241,6 +241,9 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                         controller
                                             .isSelectedUser(user.userDetails);
                                       } else {
+                                        if (controller.forwardedList[index]
+                                                .localContacts ==
+                                            true) return;
                                         var ismChatConversation =
                                             IsmChatConversationModel(
                                                 messagingDisabled: false,

@@ -65,6 +65,19 @@ extension MessagePagination on int {
     endValue = endValue + 20;
     return pagination(endValue: endValue);
   }
+
+  // int limitPagination({
+  //   int value = 30,
+  // }) {
+  //   if (this == 0) {
+  //     return this;
+  //   }
+  //   if (this <=value) {
+  //     return value;
+  //   }
+  //   value = value + 20;
+  //   return pagination(endValue: value);
+  // }
 }
 
 extension DistanceLatLng on LatLng {

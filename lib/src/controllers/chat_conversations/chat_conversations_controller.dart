@@ -15,6 +15,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:timezone/timezone.dart';
 
 class IsmChatConversationsController extends GetxController {
   IsmChatConversationsController(this._viewModel);
@@ -681,7 +682,7 @@ class IsmChatConversationsController extends GetxController {
       handleList(forwardedList);
     }
     callApiOrNot = true;
-    if (response == null) {
+    if (response == null || searchTag.isNotEmpty) {
       unawaited(getContacts(isLoading: false, searchTag: searchTag));
       return;
     }
@@ -1295,10 +1296,9 @@ class IsmChatConversationsController extends GetxController {
         final phone = x.phones.first.number;
         if (!((phone.contains('@')) && (phone.contains('.com'))) &&
             x.displayName.isNotEmpty) {
-          if (contacts.first.phones.isNotEmpty) {
-            if (contacts.first.phones.first.number.contains('+')) {
-              final code =
-                  contacts.first.phones.first.number.removeAllWhitespace;
+          if (x.phones.isNotEmpty) {
+            if (x.phones.first.number.contains('+')) {
+              final code = x.phones.first.number.removeAllWhitespace;
               localList.add(ContactSyncModel(
                   contactNo: code.substring(3, code.length),
                   countryCode: code.substring(0, 3),
@@ -1307,10 +1307,10 @@ class IsmChatConversationsController extends GetxController {
                   lastName: x.name.last));
               hashMapSendContactSync[code.substring(3, code.length)] =
                   '${x.name.first} ${x.name.last}';
-            } else if (contacts.first.phones.first.normalizedNumber
-                .contains('+')) {
-              final code = contacts
-                  .first.phones.first.normalizedNumber.removeAllWhitespace;
+              hashMapSendContactSync['${x.name.first} ${x.name.last}'] =
+                  code.substring(3, code.length);
+            } else if (x.phones.first.normalizedNumber.contains('+')) {
+              final code = x.phones.first.normalizedNumber.removeAllWhitespace;
               localList.add(
                 ContactSyncModel(
                   contactNo: code.substring(3, code.length),
@@ -1322,6 +1322,8 @@ class IsmChatConversationsController extends GetxController {
               );
               hashMapSendContactSync[code.substring(3, code.length)] =
                   '${x.name.first} ${x.name.last}';
+              hashMapSendContactSync['${x.name.first} ${x.name.last}'] =
+                  code.substring(3, code.length);
             }
           }
         }
@@ -1329,10 +1331,18 @@ class IsmChatConversationsController extends GetxController {
     }
     sendContactSync.clear();
     sendContactSync = List.from(localList);
+    await addContact(isLoading: false);
   }
 
   /// get the contact after filter contacts those registered or not registered basis on (isRegisteredUser)...
   List<ContactSyncModel> getContactSyncUser = [];
+
+// void onContactSyncSearch(String value){
+//  final localList= sendContactSync.where((element) => (element.fullName ?? '').trim().toLowerCase().contains(value.toLowerCase().trim()));
+//  if(localList.isNotEmpty){
+//   form
+//  }
+// }
 
   /// to get the contacts..
   Future<void> getContacts({
@@ -1347,16 +1357,16 @@ class IsmChatConversationsController extends GetxController {
           searchTag: searchTag,
           isLoading: isLoading,
           isRegisteredUser: isRegisteredUser,
-          limit: getContactSyncUser.isNotEmpty
-              ? limit.pagination(notEqualPagination: true)
-              : limit,
-          skip: skip);
+          skip: getContactSyncUser.isNotEmpty
+              ? getContactSyncUser.length.pagination()
+              : 10,
+          limit: limit);
       if (res != null) {
-        getContactSyncUser.clear();
-        getContactSyncUser = res.data ?? [];
+        // getContactSyncUser.clear();
+        getContactSyncUser.addAll(res.data ?? []);
         await removeDBUser();
         forwardedList.addAll(List.from(
-          sendContactSync.map(
+          getContactSyncUser.map(
             (e) => SelectedForwardUser(
               localContacts: true,
               isUserSelected: false,
