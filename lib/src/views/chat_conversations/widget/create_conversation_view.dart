@@ -223,7 +223,11 @@ class IsmChatCreateConversationView extends StatelessWidget {
                             }
                             return Column(
                               children: [
-                                if (index == 0 && !_isGroupConversation!)
+                                if (index == 0 &&
+                                    !_isGroupConversation! &&
+                                    IsmChatConfig.communicationConfig.userConfig
+                                            .accessToken !=
+                                        null)
                                   const ChatModes(),
                                 Offstage(
                                   offstage: user.isShowSuspension != true,
