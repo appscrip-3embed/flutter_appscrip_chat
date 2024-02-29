@@ -15,7 +15,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:timezone/timezone.dart';
 
 class IsmChatConversationsController extends GetxController {
   IsmChatConversationsController(this._viewModel);
@@ -1337,13 +1336,6 @@ class IsmChatConversationsController extends GetxController {
   /// get the contact after filter contacts those registered or not registered basis on (isRegisteredUser)...
   List<ContactSyncModel> getContactSyncUser = [];
 
-// void onContactSyncSearch(String value){
-//  final localList= sendContactSync.where((element) => (element.fullName ?? '').trim().toLowerCase().contains(value.toLowerCase().trim()));
-//  if(localList.isNotEmpty){
-//   form
-//  }
-// }
-
   /// to get the contacts..
   Future<void> getContacts({
     bool isLoading = true,
@@ -1385,6 +1377,13 @@ class IsmChatConversationsController extends GetxController {
       handleList(forwardedList);
       update();
     }
+  }
+
+  void goToContactSync() {
+    askPermissions();
+    IsmChatRouteManagement.goToCreateChat(
+      isGroupConversation: false,
+    );
   }
 
   /// Use the funciton for the delete the user of local contacts from DB...
