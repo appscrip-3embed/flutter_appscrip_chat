@@ -241,52 +241,50 @@ class _IsmChatPageView extends StatelessWidget {
                                             child: Stack(
                                               alignment: Alignment.bottomLeft,
                                               children: [
-                                                Visibility(
-                                                  visible: controller
-                                                      .messages.isNotEmpty,
-                                                  replacement: IsmChatProperties
-                                                          .chatPageProperties
-                                                          .placeholder ??
-                                                      const IsmChatEmptyView(
-                                                        icon: Icon(
-                                                          Icons.chat_outlined,
+                                                controller.messages.isNotEmpty
+                                                    ? Align(
+                                                        alignment:
+                                                            Alignment.topCenter,
+                                                        child: ListView.builder(
+                                                          controller: controller
+                                                              .messagesScrollController,
+                                                          scrollDirection:
+                                                              Axis.vertical,
+                                                          shrinkWrap: true,
+                                                          keyboardDismissBehavior:
+                                                              ScrollViewKeyboardDismissBehavior
+                                                                  .onDrag,
+                                                          padding: IsmChatDimens
+                                                              .edgeInsets4_8,
+                                                          reverse: true,
+                                                          addAutomaticKeepAlives:
+                                                              true,
+                                                          itemCount: controller
+                                                              .messages.length,
+                                                          itemBuilder: (_,
+                                                                  index) =>
+                                                              controller
+                                                                      .controllerIsRegister
+                                                                  ? IsmChatMessage(
+                                                                      index,
+                                                                      controller
+                                                                              .messages[
+                                                                          index],
+                                                                    )
+                                                                  : IsmChatDimens
+                                                                      .box0,
                                                         ),
-                                                        text: IsmChatStrings
-                                                            .noMessages,
-                                                      ),
-                                                  child: Align(
-                                                    alignment:
-                                                        Alignment.topCenter,
-                                                    child: ListView.builder(
-                                                      controller: controller
-                                                          .messagesScrollController,
-                                                      scrollDirection:
-                                                          Axis.vertical,
-                                                      shrinkWrap: true,
-                                                      keyboardDismissBehavior:
-                                                          ScrollViewKeyboardDismissBehavior
-                                                              .onDrag,
-                                                      padding: IsmChatDimens
-                                                          .edgeInsets4_8,
-                                                      reverse: true,
-                                                      addAutomaticKeepAlives:
-                                                          true,
-                                                      itemCount: controller
-                                                          .messages.length,
-                                                      itemBuilder: (_, index) =>
-                                                          controller
-                                                                  .controllerIsRegister
-                                                              ? IsmChatMessage(
-                                                                  index,
-                                                                  controller
-                                                                          .messages[
-                                                                      index],
-                                                                )
-                                                              : IsmChatDimens
-                                                                  .box0,
-                                                    ),
-                                                  ),
-                                                ),
+                                                      )
+                                                    : IsmChatProperties
+                                                            .chatPageProperties
+                                                            .placeholder ??
+                                                        const IsmChatEmptyView(
+                                                          icon: Icon(
+                                                            Icons.chat_outlined,
+                                                          ),
+                                                          text: IsmChatStrings
+                                                              .noMessages,
+                                                        ),
                                                 Obx(() => Align(
                                                       alignment: Responsive
                                                               .isWebAndTablet(
