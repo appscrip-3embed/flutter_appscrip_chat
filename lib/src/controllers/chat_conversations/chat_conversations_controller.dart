@@ -1255,6 +1255,7 @@ class IsmChatConversationsController extends GetxController {
     await getNonBlockUserList(
       opponentId: IsmChatConfig.communicationConfig.userConfig.userId,
     );
+    await getContacts();
   }
 
   void updateUserDetails(ImageSource source) async {
