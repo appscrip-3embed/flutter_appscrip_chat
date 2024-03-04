@@ -157,7 +157,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                             if (scrollNotification is ScrollEndNotification) {
                               if (scrollNotification.metrics.pixels >
                                   scrollNotification.metrics.maxScrollExtent *
-                                      0.7) {
+                                      0.3) {
                                 /// call the api only on down scroll
                                 if ((scrollNotification.dragDetails?.velocity
                                             .pixelsPerSecond.dy ??

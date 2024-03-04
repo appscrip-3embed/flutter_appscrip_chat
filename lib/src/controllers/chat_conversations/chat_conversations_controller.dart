@@ -682,7 +682,7 @@ class IsmChatConversationsController extends GetxController {
     }
     callApiOrNot = true;
     if (response == null || searchTag.isNotEmpty) {
-      unawaited(getContacts(isLoading: false, searchTag: searchTag));
+      unawaited(getContacts(isLoading: true, searchTag: searchTag));
       return;
     }
   }
