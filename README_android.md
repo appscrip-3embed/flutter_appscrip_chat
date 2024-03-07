@@ -126,8 +126,8 @@ Path: `android` > `app` > `src` > `main` > `res` > `xml` > `filepaths.xml`
     <files-path name="files_path" path="."/>
     <cache-path name="cache-path" path="."/>
     <root-path name="root" path="."/>
-
-</paths>
+    </paths>
+    
     ```
 
 ---
