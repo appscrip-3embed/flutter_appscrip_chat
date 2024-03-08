@@ -82,6 +82,7 @@ class IsmChatConversationModel {
         IsmChatActionEvents.conversationCreated.name) {
       return model.copyWith(unreadMessagesCount: 0);
     }
+
     return model;
   }
 

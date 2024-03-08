@@ -116,9 +116,9 @@ class _MessageCardState extends State<MessageCard>
                       if (!Responsive.isWebAndTablet(context))
                         IsmChatCustomMessageType.contact,
                     ].contains(
-                        widget.message.metaData?.replayMessageCustomType ??
-                            widget.message.metaData?.replyMessage
-                                ?.parentMessageMessageType)) {
+                      widget.message.metaData?.replyMessage
+                          ?.parentMessageMessageType,
+                    )) {
                       controller.tapForMediaPreviewWithMetaData(widget.message);
                     }
                   } else if ([

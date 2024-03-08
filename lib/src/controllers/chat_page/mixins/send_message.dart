@@ -219,11 +219,12 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           );
         } else {
           await sendVideo(
-              webMediaModel: media,
-              isThumbnail: true,
-              conversationId: _controller.conversation?.conversationId ?? '',
-              userId: _controller.conversation?.opponentDetails?.userId ?? '',
-              caption: '');
+            webMediaModel: media,
+            isThumbnail: true,
+            conversationId: _controller.conversation?.conversationId ?? '',
+            userId: _controller.conversation?.opponentDetails?.userId ?? '',
+            caption: '',
+          );
         }
       }
       IsmChatUtility.closeLoader();
@@ -734,9 +735,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
 
     if (webMediaModel == null) {
       compressedFile = await FlutterNativeImage.compressImage(
-          imagePath?.path ?? '',
-          quality: 60,
-          percentage: 70);
+        imagePath?.path ?? '',
+        quality: 60,
+        percentage: 70,
+      );
       bytes = compressedFile.readAsBytesSync();
       nameWithExtension = compressedFile.path.split('/').last;
       mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
@@ -954,7 +956,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         ],
       );
     }
-    IsmChatLog.error(contacts.first.toJson());
+
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var contactMessage = IsmChatMessageModel(
       body: IsmChatStrings.contact,

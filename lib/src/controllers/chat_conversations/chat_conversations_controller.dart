@@ -665,10 +665,10 @@ class IsmChatConversationsController extends GetxController {
     if (opponentId != null) {
       users.removeWhere((e) => e.userId == opponentId);
     }
-    if (IsmChatConfig.communicationConfig.userConfig.accessToken != null) {
-      users.removeWhere((element) =>
-          !RegExp('[A-Z]').hasMatch(element.userName[0].toUpperCase()));
-    }
+    // if (IsmChatConfig.communicationConfig.userConfig.accessToken != null) {
+    //   users.removeWhere((element) =>
+    //       !RegExp('[A-Z]').hasMatch(element.userName[0].toUpperCase()));
+    // }
 
     if (searchTag.isEmpty) {
       forwardedList.addAll(List.from(users)

@@ -98,9 +98,9 @@ class IsmChatMessageWrapperWithMetaData extends StatelessWidget {
   IsmChatMessageWrapperWithMetaData(
     this.message, {
     super.key,
-  }) : replayMessageCustomType = message.metaData?.replayMessageCustomType ??
+  }) : replayMessageCustomType =
             message.metaData?.replyMessage?.parentMessageMessageType ??
-            IsmChatCustomMessageType.text;
+                IsmChatCustomMessageType.text;
 
   final IsmChatMessageModel message;
   final IsmChatCustomMessageType replayMessageCustomType;
@@ -121,7 +121,7 @@ class IsmChatMessageWrapperWithMetaData extends StatelessWidget {
         return IsmChatImageMessage(message);
 
       case IsmChatCustomMessageType.video:
-        return IsmChatVideoMessage(message);
+        return IsmChatTextMessage(message);
 
       case IsmChatCustomMessageType.audio:
         return IsmChatAudioMessage(message);
@@ -173,7 +173,7 @@ class IsmChatMessageWrapperWithMetaData extends StatelessWidget {
         return IsmChatConversationUpdate(message);
 
       case IsmChatCustomMessageType.contact:
-        return IsmChatContactMessage(message);
+        return IsmChatTextMessage(message);
 
       case IsmChatCustomMessageType.memberJoin:
         return IsmChatMemberLeaveAndJoin(message, didLeft: false);
