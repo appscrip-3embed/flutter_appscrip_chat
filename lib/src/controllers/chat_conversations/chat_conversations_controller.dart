@@ -633,7 +633,7 @@ class IsmChatConversationsController extends GetxController {
   /// This will be used to fetch all the users associated with the current user
   ///
   /// Will be used for Create chat and/or Forward message
-  Future<void> getNonBlockUserList({
+  Future<List<SelectedForwardUser>?> getNonBlockUserList({
     int sort = 1,
     int skip = 0,
     int limit = 20,
@@ -642,7 +642,7 @@ class IsmChatConversationsController extends GetxController {
     bool isLoading = false,
     bool isGroupConversation = false,
   }) async {
-    if (!callApiOrNot) return;
+    if (!callApiOrNot) return null;
     callApiOrNot = false;
     var response = await _viewModel.getNonBlockUserList(
       sort: sort,
@@ -706,6 +706,7 @@ class IsmChatConversationsController extends GetxController {
       unawaited(getContacts(isLoading: isLoading, searchTag: searchTag));
       return;
     }
+    return forwardedList;
   }
 
   void handleList(List<SelectedForwardUser> list) {

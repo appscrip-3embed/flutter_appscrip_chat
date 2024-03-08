@@ -121,7 +121,7 @@ class IsmChatMessageWrapperWithMetaData extends StatelessWidget {
         return IsmChatImageMessage(message);
 
       case IsmChatCustomMessageType.video:
-        return IsmChatTextMessage(message);
+        return IsmChatVideoMessage(message);
 
       case IsmChatCustomMessageType.audio:
         return IsmChatAudioMessage(message);
@@ -173,7 +173,7 @@ class IsmChatMessageWrapperWithMetaData extends StatelessWidget {
         return IsmChatConversationUpdate(message);
 
       case IsmChatCustomMessageType.contact:
-        return IsmChatTextMessage(message);
+        return IsmChatContactMessage(message);
 
       case IsmChatCustomMessageType.memberJoin:
         return IsmChatMemberLeaveAndJoin(message, didLeft: false);

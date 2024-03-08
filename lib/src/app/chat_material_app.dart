@@ -161,6 +161,15 @@ class IsmChatApp extends StatelessWidget {
     return null;
   }
 
+  /// Call this function for t all user List
+  static Future<List<SelectedForwardUser>?> getNonBlockUserList() async {
+    if (Get.isRegistered<IsmChatConversationsController>()) {
+      return await Get.find<IsmChatConversationsController>()
+          .getNonBlockUserList();
+    }
+    return null;
+  }
+
   /// Call this funcation for get all conversation list with conversation predicate
   static Future<List<IsmChatConversationModel>> get userConversations =>
       getAllConversationFromDB().then((conversations) => (conversations ?? [])
