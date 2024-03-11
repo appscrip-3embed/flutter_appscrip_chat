@@ -86,13 +86,14 @@ class IsmChatCreateConversationView extends StatelessWidget {
                         controller.handleList(controller.forwardedList);
                         return;
                       }
-                      controller.debounce.run(() {
+                      controller.debounce.run(() async {
                         controller.isLoadResponse = false;
-                        controller.getNonBlockUserList(
+                        await controller.getNonBlockUserList(
                           searchTag: value,
                           opponentId: IsmChatConfig
                               .communicationConfig.userConfig.userId,
                         );
+                        controller.searchOnLocalContacts(value);
                       });
                     },
                   )
@@ -118,6 +119,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                             tagIndex: e.tagIndex))
                         .toList();
                     controller.handleList(controller.forwardedList);
+                    controller.addContact(isLoading: false);
                   }
                   if (controller.isLoadResponse) {
                     controller.isLoadResponse = false;
