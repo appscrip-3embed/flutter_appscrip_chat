@@ -249,7 +249,13 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                       } else {
                                         if (controller.forwardedList[index]
                                                 .localContacts ==
-                                            true) return;
+                                            true) {
+                                          IsmChatUtility.toSMS(controller
+                                              .forwardedList[index]
+                                              .userDetails
+                                              .userIdentifier);
+                                          return;
+                                        }
                                         var ismChatConversation =
                                             IsmChatConversationModel(
                                                 messagingDisabled: false,
