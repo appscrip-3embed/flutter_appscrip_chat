@@ -22,6 +22,7 @@ class IsmChatBroadCastView extends StatelessWidget {
           converstaionController.showSearchField = false;
           converstaionController.isLoadResponse = false;
           converstaionController.getNonBlockUserList(
+            isGroupConversation: true,
             opponentId: converstaionController.userDetails?.userId,
           );
         },

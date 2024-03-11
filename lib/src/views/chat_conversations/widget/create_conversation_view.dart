@@ -58,7 +58,8 @@ class IsmChatCreateConversationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
         initState: (_) async {
-          converstaionController.initCreateConversation();
+          converstaionController
+              .initCreateConversation(_isGroupConversation ?? false);
         },
         builder: (controller) => Scaffold(
           resizeToAvoidBottomInset: false,
@@ -93,7 +94,9 @@ class IsmChatCreateConversationView extends StatelessWidget {
                           opponentId: IsmChatConfig
                               .communicationConfig.userConfig.userId,
                         );
-                        controller.searchOnLocalContacts(value);
+                        if (_isGroupConversation == false) {
+                          controller.searchOnLocalContacts(value);
+                        }
                       });
                     },
                   )
@@ -166,6 +169,8 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                         0) <
                                     0) {
                                   unawaited(controller.getNonBlockUserList(
+                                    isGroupConversation:
+                                        _isGroupConversation ?? false,
                                     opponentId: IsmChatConfig
                                         .communicationConfig.userConfig.userId,
                                   ));
