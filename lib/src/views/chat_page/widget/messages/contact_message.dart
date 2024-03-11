@@ -42,7 +42,7 @@ class IsmChatContactMessage extends StatelessWidget {
                           if (index == 0) {
                             return data.contactImageUrl != null
                                 ? IsmChatImage.profile(
-                                    backgroundColor: IsmChatColors.blackColor,
+                                    backgroundColor: IsmChatColors.blueColor,
                                     data.contactImageUrl ?? '',
                                     name: data.contactName ?? '',
                                     isNetworkImage: false,
@@ -56,7 +56,7 @@ class IsmChatContactMessage extends StatelessWidget {
                             left: index * IsmChatDimens.ten,
                             child: data.contactImageUrl != null
                                 ? IsmChatImage.profile(
-                                    backgroundColor: IsmChatColors.blackColor,
+                                    backgroundColor: IsmChatColors.blueColor,
                                     data.contactImageUrl ?? '',
                                     name: data.contactName ?? '',
                                     isNetworkImage: false,
