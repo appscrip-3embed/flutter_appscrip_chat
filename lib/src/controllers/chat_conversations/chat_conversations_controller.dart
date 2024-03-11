@@ -1389,6 +1389,7 @@ class IsmChatConversationsController extends GetxController {
         forwardedList.addAll(List.from(
           getContactSyncUser.map(
             (e) {
+              IsmChatLog.error(e.toJson());
               if (hashMapSendContactSync[e.contactNo ?? ''] != null) {
                 return SelectedForwardUser(
                   localContacts: true,
