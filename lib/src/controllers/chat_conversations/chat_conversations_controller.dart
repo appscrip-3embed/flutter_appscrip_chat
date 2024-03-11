@@ -665,10 +665,11 @@ class IsmChatConversationsController extends GetxController {
     if (opponentId != null) {
       users.removeWhere((e) => e.userId == opponentId);
     }
-    // if (IsmChatConfig.communicationConfig.userConfig.accessToken != null) {
-    //   users.removeWhere((element) =>
-    //       !RegExp('[A-Z]').hasMatch(element.userName[0].toUpperCase()));
-    // }
+
+    if (IsmChatConfig.communicationConfig.userConfig.accessToken != null) {
+      users.removeWhere((element) =>
+          !RegExp('[A-Z]').hasMatch(element.userName[0].toUpperCase()));
+    }
 
     if (searchTag.isEmpty) {
       forwardedList.addAll(List.from(users)
@@ -1380,7 +1381,7 @@ class IsmChatConversationsController extends GetxController {
               ? getContactSyncUser.length.pagination()
               : 10,
           limit: limit);
-      if (res != null) {
+      if (res != null && (res.data ?? []).isNotEmpty) {
         getContactSyncUser.addAll(res.data ?? []);
         await removeDBUser();
         forwardedList.addAll(List.from(
@@ -1393,7 +1394,8 @@ class IsmChatConversationsController extends GetxController {
                   userDetails: UserDetails(
                       userProfileImageUrl: '',
                       userName: hashMapSendContactSync[e.contactNo] ?? '',
-                      userIdentifier: '${e.countryCode ?? ''} ${e.contactNo}',
+                      userIdentifier:
+                          '${e.countryCode ?? ''} ${e.contactNo ?? ''}',
                       userId: e.userId ?? '',
                       online: false,
                       lastSeen: DateTime.now().microsecondsSinceEpoch),
