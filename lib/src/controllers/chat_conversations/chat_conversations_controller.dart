@@ -1368,7 +1368,7 @@ class IsmChatConversationsController extends GetxController {
   Future<void> getContacts({
     bool isLoading = true,
     bool isRegisteredUser = false,
-    int skip = 0,
+    int skip = 400,
     int limit = 20,
     String searchTag = '',
   }) async {
@@ -1386,41 +1386,27 @@ class IsmChatConversationsController extends GetxController {
       if (res != null && (res.data ?? []).isNotEmpty) {
         getContactSyncUser.addAll(res.data ?? []);
         await removeDBUser();
-        forwardedList.addAll(List.from(
-          getContactSyncUser.map(
-            (e) {
-              IsmChatLog.error(e.toJson());
-              if (hashMapSendContactSync[e.contactNo ?? ''] != null) {
-                return SelectedForwardUser(
-                  localContacts: true,
-                  isUserSelected: false,
-                  userDetails: UserDetails(
-                      userProfileImageUrl: '',
-                      userName: hashMapSendContactSync[e.contactNo ?? ''] ?? '',
-                      userIdentifier:
-                          '${e.countryCode ?? ''} ${e.contactNo ?? ''}',
-                      userId: e.userId ?? '',
-                      online: false,
-                      lastSeen: DateTime.now().microsecondsSinceEpoch),
-                  isBlocked: false,
-                );
-              } else {
-                SelectedForwardUser(
-                  localContacts: true,
-                  isUserSelected: false,
-                  userDetails: UserDetails(
-                      userProfileImageUrl: '',
-                      userName: '',
-                      userIdentifier: '',
-                      userId: '',
-                      online: false,
-                      lastSeen: DateTime.now().microsecondsSinceEpoch),
-                  isBlocked: false,
-                );
-              }
-            },
-          ),
-        ));
+        var forwardedListLocalList = <SelectedForwardUser>[];
+        for (var e in getContactSyncUser) {
+          if (hashMapSendContactSync[e.contactNo ?? ''] != null) {
+            forwardedListLocalList.add(
+              SelectedForwardUser(
+                localContacts: true,
+                isUserSelected: false,
+                userDetails: UserDetails(
+                    userProfileImageUrl: '',
+                    userName: hashMapSendContactSync[e.contactNo ?? ''] ?? '',
+                    userIdentifier:
+                        '${e.countryCode ?? ''} ${e.contactNo ?? ''}',
+                    userId: e.userId ?? '',
+                    online: false,
+                    lastSeen: DateTime.now().microsecondsSinceEpoch),
+                isBlocked: false,
+              ),
+            );
+          }
+        }
+        forwardedList.addAll(forwardedListLocalList);
       }
       handleList(forwardedList);
       update();
