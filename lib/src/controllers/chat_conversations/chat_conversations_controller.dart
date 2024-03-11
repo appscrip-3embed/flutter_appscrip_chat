@@ -704,7 +704,7 @@ class IsmChatConversationsController extends GetxController {
     callApiOrNot = true;
     if (response == null && searchTag.isEmpty && isGroupConversation == false) {
       unawaited(getContacts(isLoading: isLoading, searchTag: searchTag));
-      return;
+      return forwardedList;
     }
     return forwardedList;
   }
