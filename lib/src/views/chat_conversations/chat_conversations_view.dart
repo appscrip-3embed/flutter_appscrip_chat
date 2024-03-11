@@ -166,20 +166,21 @@ class _IsmChatConversationsState extends State<IsmChatConversations>
                     icon:
                         IsmChatProperties.conversationProperties.createChatIcon,
                     onTap: () {
-                      if (IsmChatProperties
-                          .conversationProperties.enableGroupChat) {
-                        Get.bottomSheet(
-                          const _CreateChatBottomSheet(),
-                          backgroundColor: Colors.transparent,
-                          elevation: 0,
-                        );
-                      } else {
-                        IsmChatProperties.conversationProperties.onCreateTap
-                            ?.call();
-                        IsmChatRouteManagement.goToCreateChat(
-                          isGroupConversation: false,
-                        );
-                      }
+                      controller.goToContactSync();
+                      // if (IsmChatProperties
+                      //     .conversationProperties.enableGroupChat) {
+                      //   Get.bottomSheet(
+                      //     const _CreateChatBottomSheet(),
+                      //     backgroundColor: Colors.transparent,
+                      //     elevation: 0,
+                      //   );
+                      // } else {
+                      //   IsmChatProperties.conversationProperties.onCreateTap
+                      //       ?.call();
+                      //   IsmChatRouteManagement.goToCreateChat(
+                      //     isGroupConversation: false,
+                      //   );
+                      // }
                     },
                   )
                 : null,

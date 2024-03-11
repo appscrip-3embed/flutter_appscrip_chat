@@ -663,25 +663,39 @@ class IsmChatConversationsController extends GetxController {
           !RegExp('[A-Z]').hasMatch(element.userName[0].toUpperCase()));
     }
 
-    forwardedList.addAll(List.from(users)
-        .map((e) => SelectedForwardUser(
+    if (searchTag.isEmpty) {
+      forwardedList.addAll(List.from(users)
+          .map((e) => SelectedForwardUser(
+                isUserSelected: selectedUserList.isEmpty
+                    ? false
+                    : selectedUserList
+                        .any((d) => d.userId == (e as UserDetails).userId),
+                userDetails: e as UserDetails,
+                isBlocked: false,
+              ))
+          .toList());
+
+      forwardedListDuplicat = List<SelectedForwardUser>.from(forwardedList);
+    } else {
+      forwardedList = List.from(users)
+          .map(
+            (e) => SelectedForwardUser(
               isUserSelected: selectedUserList.isEmpty
                   ? false
                   : selectedUserList
                       .any((d) => d.userId == (e as UserDetails).userId),
               userDetails: e as UserDetails,
               isBlocked: false,
-            ))
-        .toList());
-
-    if (searchTag.isNotEmpty) {
-      forwardedListDuplicat = List<SelectedForwardUser>.from(forwardedList);
+            ),
+          )
+          .toList();
     }
+
     if (response != null) {
       handleList(forwardedList);
     }
     callApiOrNot = true;
-    if (response == null || searchTag.isNotEmpty) {
+    if (response == null && searchTag.isEmpty) {
       unawaited(getContacts(isLoading: true, searchTag: searchTag));
       return;
     }
@@ -1331,6 +1345,7 @@ class IsmChatConversationsController extends GetxController {
     }
     sendContactSync.clear();
     sendContactSync = List.from(localList);
+    IsmChatLog.error(hashMapSendContactSync.length);
     await addContact(isLoading: false);
   }
 
@@ -1380,8 +1395,45 @@ class IsmChatConversationsController extends GetxController {
     }
   }
 
+  final _forwardedListSkip = <SelectedForwardUser>[].obs;
+  List<SelectedForwardUser> get forwardedListSkip => _forwardedListSkip;
+  set forwardedListSkip(List<SelectedForwardUser> value) {
+    _forwardedList.value = value;
+  }
+
+  /// get search based user for local contacts..
+  void searchOnLocalContacts(String search) async {
+    final filterContacts = sendContactSync
+        .where((element) => (element.fullName ?? '').contains(search))
+        .toList();
+    for (var i in forwardedListSkip) {
+      filterContacts.removeWhere((element) => i.userDetails.userIdentifier
+          .trim()
+          .contains(element.contactNo ?? '*~.'));
+    }
+    forwardedList.addAll(
+      List.from(
+        filterContacts.map(
+          (e) => SelectedForwardUser(
+            localContacts: true,
+            isUserSelected: false,
+            userDetails: UserDetails(
+                userProfileImageUrl: '',
+                userName: hashMapSendContactSync[e.contactNo] ?? '',
+                userIdentifier: '${e.countryCode ?? ''} ${e.contactNo}',
+                userId: e.userId ?? '',
+                online: false,
+                lastSeen: DateTime.now().microsecondsSinceEpoch),
+            isBlocked: false,
+          ),
+        ),
+      ),
+    );
+    handleList(forwardedList);
+  }
+
   void goToContactSync() async {
-    await askPermissions();
+    // await askPermissions();
     await Future.delayed(Durations.extralong1);
     IsmChatRouteManagement.goToCreateChat(
       isGroupConversation: false,
