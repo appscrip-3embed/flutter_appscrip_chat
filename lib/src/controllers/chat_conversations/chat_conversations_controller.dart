@@ -1372,42 +1372,49 @@ class IsmChatConversationsController extends GetxController {
     int limit = 20,
     String searchTag = '',
   }) async {
-    if (IsmChatConfig.communicationConfig.userConfig.accessToken != null) {
-      final res = await _viewModel.getContacts(
-          searchTag: searchTag,
-          isLoading: isLoading,
-          isRegisteredUser: isRegisteredUser,
-          skip: getContactSyncUser.isNotEmpty
-              ? getContactSyncUser.length.pagination()
-              : 10,
-          limit: limit);
-      if (res != null && (res.data ?? []).isNotEmpty) {
-        getContactSyncUser.addAll(res.data ?? []);
-        await removeDBUser();
-        forwardedList.addAll(List.from(
-          getContactSyncUser.map(
-            (e) {
-              if (hashMapSendContactSync[e.contactNo] != null) {
-                return SelectedForwardUser(
-                  localContacts: true,
-                  isUserSelected: false,
-                  userDetails: UserDetails(
-                      userProfileImageUrl: '',
-                      userName: hashMapSendContactSync[e.contactNo] ?? '',
-                      userIdentifier:
-                          '${e.countryCode ?? ''} ${e.contactNo ?? ''}',
-                      userId: e.userId ?? '',
-                      online: false,
-                      lastSeen: DateTime.now().microsecondsSinceEpoch),
-                  isBlocked: false,
-                );
-              }
-            },
-          ),
-        ));
+    try {
+      if (IsmChatConfig.communicationConfig.userConfig.accessToken != null) {
+        final res = await _viewModel.getContacts(
+            searchTag: searchTag,
+            isLoading: isLoading,
+            isRegisteredUser: isRegisteredUser,
+            skip: getContactSyncUser.isNotEmpty
+                ? getContactSyncUser.length.pagination()
+                : 10,
+            limit: limit);
+        IsmChatLog.error('before ${res?.data}');
+        if (res != null && (res.data ?? []).isNotEmpty) {
+          IsmChatLog.error('after ${res.data}  ');
+          getContactSyncUser.addAll(res.data ?? []);
+          await removeDBUser();
+          forwardedList.addAll(List.from(
+            getContactSyncUser.map(
+              (e) {
+                if (hashMapSendContactSync[e.contactNo ?? ''] != null) {
+                  return SelectedForwardUser(
+                    localContacts: true,
+                    isUserSelected: false,
+                    userDetails: UserDetails(
+                        userProfileImageUrl: '',
+                        userName:
+                            hashMapSendContactSync[e.contactNo ?? ''] ?? '',
+                        userIdentifier:
+                            '${e.countryCode ?? ''} ${e.contactNo ?? ''}',
+                        userId: e.userId ?? '',
+                        online: false,
+                        lastSeen: DateTime.now().microsecondsSinceEpoch),
+                    isBlocked: false,
+                  );
+                }
+              },
+            ),
+          ));
+        }
+        handleList(forwardedList);
+        update();
       }
-      handleList(forwardedList);
-      update();
+    } catch (e, st) {
+      IsmChatLog.error('checkEror ${e} == Stack ${st}');
     }
   }
 
