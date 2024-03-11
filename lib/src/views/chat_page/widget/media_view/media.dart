@@ -123,6 +123,7 @@ class _TabBarView extends StatelessWidget {
         labelStyle: IsmChatStyles.w600Black16,
         splashBorderRadius: BorderRadius.zero,
         isScrollable: true,
+        tabAlignment: TabAlignment.start,
         tabs: [
           Row(
             children: [

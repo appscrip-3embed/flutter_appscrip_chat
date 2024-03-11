@@ -32,34 +32,41 @@ class IsmChatContactMessage extends StatelessWidget {
                         ? IsmChatDimens.fifty
                         : IsmChatDimens.seventy,
                     child: Stack(
+                      clipBehavior: Clip.hardEdge,
                       children: List.generate(
-                          message.contacts.length <= 3
-                              ? message.contacts.length
-                              : 3, (index) {
-                        var data = message.contacts[index];
-                        if (index == 0) {
-                          return data.contactImageUrl != null
-                              ? IsmChatImage.profile(
-                                  data.contactImageUrl ?? '',
-                                  name: data.contactName ?? '',
-                                  isNetworkImage: false,
-                                  isBytes: true,
-                                )
-                              : const _NoImageWidget();
-                        }
+                        message.contacts.length <= 3
+                            ? message.contacts.length
+                            : 3,
+                        (index) {
+                          var data = message.contacts[index];
+                          if (index == 0) {
+                            return data.contactImageUrl != null
+                                ? IsmChatImage.profile(
+                                    backgroundColor: IsmChatColors.blueColor,
+                                    data.contactImageUrl ?? '',
+                                    name: data.contactName ?? '',
+                                    isNetworkImage: false,
+                                    isBytes: true,
+                                    dimensions: IsmChatDimens.fortyFive,
+                                  )
+                                : const _NoImageWidget();
+                          }
 
-                        return Positioned(
-                          left: index * IsmChatDimens.fifteen,
-                          child: data.contactImageUrl != null
-                              ? IsmChatImage.profile(
-                                  data.contactImageUrl ?? '',
-                                  name: data.contactName ?? '',
-                                  isNetworkImage: false,
-                                  isBytes: true,
-                                )
-                              : const _NoImageWidget(),
-                        );
-                      }),
+                          return Positioned(
+                            left: index * IsmChatDimens.ten,
+                            child: data.contactImageUrl != null
+                                ? IsmChatImage.profile(
+                                    backgroundColor: IsmChatColors.blueColor,
+                                    data.contactImageUrl ?? '',
+                                    name: data.contactName ?? '',
+                                    isNetworkImage: false,
+                                    isBytes: true,
+                                    dimensions: IsmChatDimens.fortyFive,
+                                  )
+                                : const _NoImageWidget(),
+                          );
+                        },
+                      ).toList().reversed.toList(),
                     ),
                   ),
                   Flexible(

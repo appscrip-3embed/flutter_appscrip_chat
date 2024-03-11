@@ -98,9 +98,9 @@ class IsmChatMessageWrapperWithMetaData extends StatelessWidget {
   IsmChatMessageWrapperWithMetaData(
     this.message, {
     super.key,
-  }) : replayMessageCustomType = message.metaData?.replayMessageCustomType ??
-            message.metaData?.replyMessage?.parentMessageMessageType ??
-            IsmChatCustomMessageType.text;
+  }) : replayMessageCustomType =
+            message.metaData?.replyMessage?.forMessageType ??
+                IsmChatCustomMessageType.text;
 
   final IsmChatMessageModel message;
   final IsmChatCustomMessageType replayMessageCustomType;

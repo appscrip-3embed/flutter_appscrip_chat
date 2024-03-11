@@ -34,8 +34,7 @@ class _ReplyMessage extends StatelessWidget {
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
         builder: (controller) {
           var replyingMyMessage = message.sentByMe ==
-              (message.metaData?.parentMessageInitiator ??
-                  message.metaData?.replyMessage?.parentMessageMessageType ??
+              (message.metaData?.replyMessage?.parentMessageMessageType ??
                   false);
           return Material(
             color: Colors.transparent,
@@ -117,14 +116,13 @@ class _ReplyMessage extends StatelessWidget {
                             ),
                             ConstrainedBox(
                               constraints: BoxConstraints(
-                                maxWidth: IsmChatDimens.percentWidth(.2),
+                                maxWidth: IsmChatDimens.percentWidth(.5),
                               ),
                               child: Text(
-                                message.metaData?.parentMessageBody ??
-                                    message.metaData?.replyMessage
+                                message.metaData?.replyMessage
                                         ?.parentMessageBody ??
                                     '',
-                                maxLines: 1,
+                                maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: message.style,
                               ),

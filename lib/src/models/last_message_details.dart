@@ -78,15 +78,10 @@ class LastMessageDetails {
       memberId: map['memberId'] as String? ?? '',
     );
     details = details.copyWith(
-      body: details.metaData?.replayMessageCustomType == null
-          ? details.metaData?.replyMessage?.parentMessageMessageType ==
-                  IsmChatCustomMessageType.contact
-              ? IsmChatStrings.contact
-              : details.body
-          : details.metaData?.replayMessageCustomType ==
-                  IsmChatCustomMessageType.contact
-              ? IsmChatStrings.contact
-              : details.body,
+      body: details.metaData?.replyMessage?.parentMessageMessageType ==
+              IsmChatCustomMessageType.contact
+          ? IsmChatStrings.contact
+          : details.body,
       sentByMe: details.senderId.isNotEmpty
           ? details.senderId ==
               IsmChatConfig.communicationConfig.userConfig.userId

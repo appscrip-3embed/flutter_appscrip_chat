@@ -181,10 +181,8 @@ class _MediaPreviewState extends State<IsmMediaPreview> {
               var customType = (widget._messageData?[index].messageType ==
                       IsmChatMessageType.normal)
                   ? widget._messageData![index].customType
-                  : widget._messageData?[index].metaData
-                          ?.replayMessageCustomType ??
-                      widget._messageData?[index].metaData?.replyMessage
-                          ?.parentMessageMessageType;
+                  : widget._messageData?[index].metaData?.replyMessage
+                      ?.parentMessageMessageType;
               return customType == IsmChatCustomMessageType.image
                   ? PhotoView(
                       imageProvider: url.isValidUrl

@@ -14,7 +14,7 @@
 //   static const int port = 2052;
 // }
 
-// Native Chat App
+/// Native Chat App
 class Constants {
   const Constants._();
   static const String licenseKey = 'lic-IMKPioj9hM3hMCh5eoeRC+d+l2TuxWOyPK3';
@@ -42,8 +42,7 @@ class Constants {
 //   static const String accountId = '651bffb6eab59439549a2617';
 //   static const String keysetId = '8ac56645-3fa5-435f-a640-1f2f7ba7644e';
 //   static const String projectId = 'edc7d8e0-f9c2-493c-8e90-b0e7000b97b8';
-
-//   static const String hostname = 'connections.isometrik.io';x
+//   static const String hostname = 'connections.isometrik.io';
 //   static const int port = 2052;
 // }
 

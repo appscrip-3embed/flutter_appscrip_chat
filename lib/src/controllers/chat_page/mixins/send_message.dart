@@ -219,11 +219,12 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           );
         } else {
           await sendVideo(
-              webMediaModel: media,
-              isThumbnail: true,
-              conversationId: _controller.conversation?.conversationId ?? '',
-              userId: _controller.conversation?.opponentDetails?.userId ?? '',
-              caption: '');
+            webMediaModel: media,
+            isThumbnail: true,
+            conversationId: _controller.conversation?.conversationId ?? '',
+            userId: _controller.conversation?.opponentDetails?.userId ?? '',
+            caption: '',
+          );
         }
       }
       IsmChatUtility.closeLoader();
@@ -339,6 +340,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       metaData: IsmChatMetaData(
         replyMessage: _controller.isreplying
             ? IsmChatReplyMessageModel(
+                forMessageType: IsmChatCustomMessageType.audio,
                 parentMessageMessageType: _controller.replayMessage?.customType,
                 parentMessageInitiator: _controller.replayMessage?.sentByMe,
                 parentMessageBody:
@@ -481,6 +483,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             metaData: IsmChatMetaData(
               replyMessage: _controller.isreplying
                   ? IsmChatReplyMessageModel(
+                      forMessageType: IsmChatCustomMessageType.file,
                       parentMessageMessageType:
                           _controller.replayMessage?.customType,
                       parentMessageInitiator:
@@ -654,6 +657,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           captionMessage: caption,
           replyMessage: _controller.isreplying
               ? IsmChatReplyMessageModel(
+                  forMessageType: IsmChatCustomMessageType.video,
                   parentMessageMessageType:
                       _controller.replayMessage?.customType,
                   parentMessageInitiator: _controller.replayMessage?.sentByMe,
@@ -734,9 +738,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
 
     if (webMediaModel == null) {
       compressedFile = await FlutterNativeImage.compressImage(
-          imagePath?.path ?? '',
-          quality: 60,
-          percentage: 70);
+        imagePath?.path ?? '',
+        quality: 60,
+        percentage: 70,
+      );
       bytes = compressedFile.readAsBytesSync();
       nameWithExtension = compressedFile.path.split('/').last;
       mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
@@ -786,6 +791,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         captionMessage: caption,
         replyMessage: _controller.isreplying
             ? IsmChatReplyMessageModel(
+                forMessageType: IsmChatCustomMessageType.image,
                 parentMessageMessageType: _controller.replayMessage?.customType,
                 parentMessageInitiator: _controller.replayMessage?.sentByMe,
                 parentMessageBody:
@@ -887,6 +893,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       metaData: IsmChatMetaData(
         replyMessage: _controller.isreplying
             ? IsmChatReplyMessageModel(
+                forMessageType: IsmChatCustomMessageType.location,
                 parentMessageMessageType: _controller.replayMessage?.customType,
                 parentMessageInitiator: _controller.replayMessage?.sentByMe,
                 parentMessageBody:
@@ -954,7 +961,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         ],
       );
     }
-    IsmChatLog.error(contacts.first.toJson());
+
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var contactMessage = IsmChatMessageModel(
       body: IsmChatStrings.contact,
@@ -990,6 +997,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             .toList(),
         replyMessage: _controller.isreplying
             ? IsmChatReplyMessageModel(
+                forMessageType: IsmChatCustomMessageType.contact,
                 parentMessageMessageType: _controller.replayMessage?.customType,
                 parentMessageInitiator: _controller.replayMessage?.sentByMe,
                 parentMessageBody:
@@ -1073,6 +1081,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       metaData: IsmChatMetaData(
         replyMessage: _controller.isreplying
             ? IsmChatReplyMessageModel(
+                forMessageType: IsmChatCustomMessageType.text,
                 parentMessageMessageType: _controller.replayMessage?.customType,
                 parentMessageInitiator: _controller.replayMessage?.sentByMe,
                 parentMessageBody:

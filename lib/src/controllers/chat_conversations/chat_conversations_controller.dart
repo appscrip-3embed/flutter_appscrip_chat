@@ -633,7 +633,7 @@ class IsmChatConversationsController extends GetxController {
   /// This will be used to fetch all the users associated with the current user
   ///
   /// Will be used for Create chat and/or Forward message
-  Future<void> getNonBlockUserList({
+  Future<List<SelectedForwardUser>?> getNonBlockUserList({
     int sort = 1,
     int skip = 0,
     int limit = 20,
@@ -642,7 +642,7 @@ class IsmChatConversationsController extends GetxController {
     bool isLoading = false,
     bool isGroupConversation = false,
   }) async {
-    if (!callApiOrNot) return;
+    if (!callApiOrNot) return null;
     callApiOrNot = false;
     var response = await _viewModel.getNonBlockUserList(
       sort: sort,
@@ -665,10 +665,10 @@ class IsmChatConversationsController extends GetxController {
     if (opponentId != null) {
       users.removeWhere((e) => e.userId == opponentId);
     }
-    if (IsmChatConfig.communicationConfig.userConfig.accessToken != null) {
-      users.removeWhere((element) =>
-          !RegExp('[A-Z]').hasMatch(element.userName[0].toUpperCase()));
-    }
+    // if (IsmChatConfig.communicationConfig.userConfig.accessToken != null) {
+    //   users.removeWhere((element) =>
+    //       !RegExp('[A-Z]').hasMatch(element.userName[0].toUpperCase()));
+    // }
 
     if (searchTag.isEmpty) {
       forwardedList.addAll(List.from(users)
@@ -704,8 +704,9 @@ class IsmChatConversationsController extends GetxController {
     callApiOrNot = true;
     if (response == null && searchTag.isEmpty && isGroupConversation == false) {
       unawaited(getContacts(isLoading: isLoading, searchTag: searchTag));
-      return;
+      return forwardedList;
     }
+    return forwardedList;
   }
 
   void handleList(List<SelectedForwardUser> list) {

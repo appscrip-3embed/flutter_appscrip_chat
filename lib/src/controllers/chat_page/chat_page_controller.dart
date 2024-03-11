@@ -1430,12 +1430,12 @@ class IsmChatPageController extends GetxController
 
   void tapForMediaPreviewWithMetaData(IsmChatMessageModel message) async {
     if ([IsmChatCustomMessageType.image, IsmChatCustomMessageType.video]
-        .contains(message.metaData?.replayMessageCustomType)) {
+        .contains(message.metaData?.replyMessage?.parentMessageMessageType)) {
       var mediaList = messages
           .where((item) => [
                 IsmChatCustomMessageType.image,
                 IsmChatCustomMessageType.video
-              ].contains(item.metaData?.replayMessageCustomType))
+              ].contains(item.metaData?.replyMessage?.parentMessageMessageType))
           .toList();
       var selectedMediaIndex = mediaList.indexOf(message);
 
@@ -1458,8 +1458,7 @@ class IsmChatPageController extends GetxController
           mediaTime: message.sentAt,
         );
       }
-    } else if ((message.metaData?.replayMessageCustomType ??
-            message.metaData?.replyMessage?.parentMessageMessageType) ==
+    } else if (message.metaData?.replyMessage?.parentMessageMessageType ==
         IsmChatCustomMessageType.file) {
       var localPath = message.attachments?.first.mediaUrl;
       if (localPath == null) {
@@ -1497,8 +1496,7 @@ class IsmChatPageController extends GetxController
           message: message,
         ),
       );
-    } else if ((message.metaData?.replayMessageCustomType ??
-            message.metaData?.replyMessage?.parentMessageMessageType) ==
+    } else if (message.metaData?.replyMessage?.parentMessageMessageType ==
         IsmChatCustomMessageType.contact) {
       IsmChatRouteManagement.goToContactInfoView(contacts: message.contacts);
     }

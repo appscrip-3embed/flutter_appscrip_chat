@@ -76,15 +76,16 @@ enum IsmChatCustomMessageType {
       'AttachmentMessage:File': IsmChatCustomMessageType.file,
       'replyText': IsmChatCustomMessageType.reply,
       'reply': IsmChatCustomMessageType.reply,
+      'AttachmentMessage:Reply': IsmChatCustomMessageType.reply,
       'image': IsmChatCustomMessageType.image,
+      'video': IsmChatCustomMessageType.video,
+      'AttachmentMessage:Video': IsmChatCustomMessageType.video,
       'AttachmentMessage:Image': IsmChatCustomMessageType.image,
       'AttachmentMessage:Sticker': IsmChatCustomMessageType.image,
       'AttachmentMessage:Gif': IsmChatCustomMessageType.image,
       'voice': IsmChatCustomMessageType.audio,
       'audio': IsmChatCustomMessageType.audio,
       'AttachmentMessage:Audio': IsmChatCustomMessageType.audio,
-      'video': IsmChatCustomMessageType.video,
-      'AttachmentMessage:Video': IsmChatCustomMessageType.video,
       'location': IsmChatCustomMessageType.location,
       'AttachmentMessage:Location': IsmChatCustomMessageType.location,
       'contact': IsmChatCustomMessageType.contact,
@@ -109,6 +110,7 @@ enum IsmChatCustomMessageType {
       'date': IsmChatCustomMessageType.date,
     };
     var type = value.split('.').last;
+
     return map[type] ?? IsmChatCustomMessageType.text;
   }
 
@@ -220,16 +222,16 @@ enum IsmChatCustomMessageType {
 
   String get value {
     switch (this) {
-      case IsmChatCustomMessageType.reply:
-        return 'reply';
       case IsmChatCustomMessageType.forward:
         return 'forward';
+      case IsmChatCustomMessageType.reply:
+        return 'AttachmentMessage:Reply';
       case IsmChatCustomMessageType.text:
         return 'AttachmentMessage:Text';
       case IsmChatCustomMessageType.image:
         return 'AttachmentMessage:Image';
       case IsmChatCustomMessageType.video:
-        return 'AttachmentMessage:Audio';
+        return 'AttachmentMessage:Video';
       case IsmChatCustomMessageType.audio:
         return 'AttachmentMessage:Audio';
       case IsmChatCustomMessageType.file:

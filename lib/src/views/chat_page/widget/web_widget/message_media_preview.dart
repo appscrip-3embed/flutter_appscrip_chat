@@ -192,12 +192,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                                     IsmChatMessageType.normal)
                                 ? widget._messageData![index].customType
                                 : widget._messageData?[index].metaData
-                                        ?.replayMessageCustomType ??
-                                    widget
-                                        ._messageData?[index]
-                                        .metaData
-                                        ?.replyMessage
-                                        ?.parentMessageMessageType;
+                                    ?.replyMessage?.parentMessageMessageType;
                         return customType == IsmChatCustomMessageType.image
                             ? PhotoView(
                                 backgroundDecoration: const BoxDecoration(

@@ -33,8 +33,21 @@ Path: `ios` > `Runner` > `info.plist`
 <string>This app requires contacts access to function properly.</string>
 <key>LSSupportsOpeningDocumentsInPlace</key>
 <true/>
- <key>UIFileSharingEnabled</key>
+<key>UIFileSharingEnabled</key>
 <true/>
+<key>UIApplicationSupportsIndirectInputEvents</key>
+  <true/>
+  <key>UIBackgroundModes</key>
+  <array>
+   <string>fetch</string>
+   <string>processing</string>
+   <string>remote-notification</string>
+  </array>
+<key>LSApplicationQueriesSchemes</key>
+  <array>
+   <string>sms</string>
+   <string>tel</string>
+  </array>  
 <key>NSAppTransportSecurity</key>
 <dict>
     <key>NSAllowsArbitraryLoads</key>
