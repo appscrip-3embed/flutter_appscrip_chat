@@ -1390,17 +1390,35 @@ class IsmChatConversationsController extends GetxController {
           forwardedList.addAll(List.from(
             getContactSyncUser.map(
               (e) {
-                if (hashMapSendContactSync[e.contactNo ?? ''] != null) {
+                IsmChatLog.error(
+                    'check Name ${hashMapSendContactSync[e.contactNo ?? ''] != null}');
+                try {
+                  if (hashMapSendContactSync[e.contactNo ?? ''] != null) {
+                    return SelectedForwardUser(
+                      localContacts: true,
+                      isUserSelected: false,
+                      userDetails: UserDetails(
+                          userProfileImageUrl: '',
+                          userName:
+                              hashMapSendContactSync[e.contactNo ?? ''] ?? '',
+                          userIdentifier:
+                              '${e.countryCode ?? ''} ${e.contactNo ?? ''}',
+                          userId: e.userId ?? '',
+                          online: false,
+                          lastSeen: DateTime.now().microsecondsSinceEpoch),
+                      isBlocked: false,
+                    );
+                  }
+                } catch (e) {
+                  IsmChatLog.error('getnameErro ${e}');
                   return SelectedForwardUser(
                     localContacts: true,
                     isUserSelected: false,
                     userDetails: UserDetails(
                         userProfileImageUrl: '',
-                        userName:
-                            hashMapSendContactSync[e.contactNo ?? ''] ?? '',
-                        userIdentifier:
-                            '${e.countryCode ?? ''} ${e.contactNo ?? ''}',
-                        userId: e.userId ?? '',
+                        userName: '',
+                        userIdentifier: '',
+                        userId: '',
                         online: false,
                         lastSeen: DateTime.now().microsecondsSinceEpoch),
                     isBlocked: false,
