@@ -116,13 +116,13 @@ class _ReplyMessage extends StatelessWidget {
                             ),
                             ConstrainedBox(
                               constraints: BoxConstraints(
-                                maxWidth: IsmChatDimens.percentWidth(.2),
+                                maxWidth: IsmChatDimens.percentWidth(.5),
                               ),
                               child: Text(
                                 message.metaData?.replyMessage
                                         ?.parentMessageBody ??
                                     '',
-                                maxLines: 1,
+                                maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: message.style,
                               ),

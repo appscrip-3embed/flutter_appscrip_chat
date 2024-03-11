@@ -26,8 +26,7 @@ class IsmChatReplyMessageModel {
         parentMessageAttachmentUrl:
             map['parentMessageAttachmentUrl'] as String? ?? '',
         forMessageType: map['forMessageType'] != null
-            ? IsmChatCustomMessageType.fromMap(
-                map['forMessageType'] as Map<String, dynamic>)
+            ? IsmChatCustomMessageType.fromMap(map['forMessageType'] as String)
             : null,
       );
 

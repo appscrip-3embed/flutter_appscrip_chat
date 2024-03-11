@@ -16,22 +16,26 @@ class IsmChatImage extends StatelessWidget {
     this.isBytes = false,
     super.key,
     this.radius,
+    this.backgroundColor,
   })  : _name = name ?? 'U',
         _isProfileImage = false;
 
-  const IsmChatImage.profile(this.imageUrl,
-      {this.name,
-      this.dimensions = 48,
-      this.isNetworkImage = true,
-      this.isBytes = false,
-      super.key,
-      this.radius})
-      : _name = name ?? 'U',
+  const IsmChatImage.profile(
+    this.imageUrl, {
+    this.name,
+    this.dimensions = 48,
+    this.isNetworkImage = true,
+    this.isBytes = false,
+    super.key,
+    this.radius,
+    this.backgroundColor,
+  })  : _name = name ?? 'U',
         _isProfileImage = true,
         assert(dimensions != null, 'Dimensions cannot be null');
 
   final String imageUrl;
   final String? name;
+  final Color? backgroundColor;
   final double? dimensions;
   final bool isNetworkImage;
   final double? radius;
@@ -48,15 +52,18 @@ class IsmChatImage extends StatelessWidget {
               : BorderRadius.circular(radius ?? IsmChatDimens.eight),
           child: isNetworkImage
               ? _NetworkImage(
+                  backgroundColor: backgroundColor,
                   imageUrl: imageUrl,
                   isProfileImage: _isProfileImage,
                   name: _name)
               : isBytes
                   ? _MemeroyImage(
+                      backgroundColor: backgroundColor,
                       imageUrl: imageUrl,
                       name: _name,
                     )
                   : _AssetImage(
+                      backgroundColor: backgroundColor,
                       imageUrl: imageUrl,
                       name: _name,
                     ),
@@ -65,9 +72,11 @@ class IsmChatImage extends StatelessWidget {
 }
 
 class _AssetImage extends StatelessWidget {
-  const _AssetImage({required this.imageUrl, required this.name});
+  const _AssetImage(
+      {required this.imageUrl, required this.name, this.backgroundColor});
   final String imageUrl;
   final String name;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +89,9 @@ class _AssetImage extends StatelessWidget {
       return Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: IsmChatConfig.chatTheme.primaryColor!.withOpacity(0.2),
+          border: Border.all(color: IsmChatColors.whiteColor),
+          color: backgroundColor ??
+              IsmChatConfig.chatTheme.primaryColor!.withOpacity(0.2),
           shape: BoxShape.circle,
         ),
         child: Text(
@@ -95,9 +106,11 @@ class _AssetImage extends StatelessWidget {
 }
 
 class _MemeroyImage extends StatelessWidget {
-  const _MemeroyImage({required this.imageUrl, required this.name});
+  const _MemeroyImage(
+      {required this.imageUrl, required this.name, this.backgroundColor});
   final String imageUrl;
   final String name;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +122,9 @@ class _MemeroyImage extends StatelessWidget {
         ? Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: IsmChatConfig.chatTheme.primaryColor!.withOpacity(0.2),
+              border: Border.all(color: IsmChatColors.whiteColor),
+              color: backgroundColor ??
+                  IsmChatConfig.chatTheme.primaryColor!.withOpacity(0.2),
               shape: BoxShape.circle,
             ),
             child: Text(
@@ -131,10 +146,12 @@ class _NetworkImage extends StatelessWidget {
     required this.imageUrl,
     required bool isProfileImage,
     required String name,
+    this.backgroundColor,
   })  : _isProfileImage = isProfileImage,
         _name = name;
 
   final String imageUrl;
+  final Color? backgroundColor;
   final bool _isProfileImage;
   final String _name;
 
@@ -148,19 +165,23 @@ class _NetworkImage extends StatelessWidget {
           try {
             if (imageUrl.isEmpty) {
               return _ErrorImage(
+                backgroundColor: backgroundColor,
                 isProfileImage: _isProfileImage,
                 name: _name,
               );
             }
             return Container(
               decoration: BoxDecoration(
+                border: Border.all(color: IsmChatColors.whiteColor),
                 shape: _isProfileImage ? BoxShape.circle : BoxShape.rectangle,
-                color: IsmChatConfig.chatTheme.backgroundColor!,
+                color:
+                    backgroundColor ?? IsmChatConfig.chatTheme.backgroundColor!,
                 image: DecorationImage(image: image, fit: BoxFit.cover),
               ),
             );
           } catch (e) {
             return _ErrorImage(
+              backgroundColor: backgroundColor,
               isProfileImage: _isProfileImage,
               name: _name,
             );
@@ -169,7 +190,9 @@ class _NetworkImage extends StatelessWidget {
         placeholder: (context, url) => Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: IsmChatConfig.chatTheme.primaryColor!.withOpacity(0.2),
+            border: Border.all(color: IsmChatColors.whiteColor),
+            color: backgroundColor ??
+                IsmChatConfig.chatTheme.primaryColor!.withOpacity(0.2),
             shape: _isProfileImage ? BoxShape.circle : BoxShape.rectangle,
           ),
           child: _isProfileImage
@@ -183,8 +206,10 @@ class _NetworkImage extends StatelessWidget {
                   child: CircularProgressIndicator.adaptive(),
                 ),
         ),
-        errorWidget: (context, url, error) =>
-            _ErrorImage(isProfileImage: _isProfileImage, name: _name),
+        errorWidget: (context, url, error) => _ErrorImage(
+            backgroundColor: backgroundColor,
+            isProfileImage: _isProfileImage,
+            name: _name),
       );
 }
 
@@ -192,16 +217,19 @@ class _ErrorImage extends StatelessWidget {
   const _ErrorImage({
     required bool isProfileImage,
     required String name,
+    this.backgroundColor,
   })  : _isProfileImage = isProfileImage,
         _name = name;
 
   final bool _isProfileImage;
+  final Color? backgroundColor;
   final String _name;
 
   @override
   Widget build(BuildContext context) => Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
+          border: Border.all(color: IsmChatColors.whiteColor),
           color: IsmChatConfig.chatTheme.primaryColor!.withOpacity(0.2),
           shape: _isProfileImage ? BoxShape.circle : BoxShape.rectangle,
         ),
