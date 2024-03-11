@@ -164,17 +164,12 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                   scrollNotification.metrics.maxScrollExtent *
                                       0.3) {
                                 /// call the api only on down scroll
-                                if ((scrollNotification.dragDetails?.velocity
-                                            .pixelsPerSecond.dy ??
-                                        0) <
-                                    0) {
-                                  unawaited(controller.getNonBlockUserList(
-                                    isGroupConversation:
-                                        _isGroupConversation ?? false,
-                                    opponentId: IsmChatConfig
-                                        .communicationConfig.userConfig.userId,
-                                  ));
-                                }
+                                unawaited(controller.getNonBlockUserList(
+                                  isGroupConversation:
+                                      _isGroupConversation ?? false,
+                                  opponentId: IsmChatConfig
+                                      .communicationConfig.userConfig.userId,
+                                ));
                               }
                             }
                           }

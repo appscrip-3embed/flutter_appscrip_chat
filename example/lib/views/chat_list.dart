@@ -51,7 +51,8 @@ class ChatList extends StatelessWidget {
             isShowMqttConnectErrorDailog: true,
             communicationConfig: IsmChatCommunicationConfig(
               userConfig: IsmChatUserConfig(
-                accessToken:null,
+                accessToken:
+                    'Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJfQUpybXA5cktvcDliZEl4NUNzaEJOUHNCWWNGMTlsWlMzWnBVa1UxUkRVIn0.eyJleHAiOjE3MTAxNTgyMzcsImlhdCI6MTcxMDE1NDYzNywianRpIjoiMzE3ZmFjY2UtZjhmYy00NWM4LWIyZTAtMGM1OTAxNjgzZTk2IiwiaXNzIjoiaHR0cHM6Ly9rZXljbG9hay5pc29tZXRyaWsuaW8vcmVhbG1zL21hc3RlciIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiI5YWU4YzJjMi00YTFmLTQ4NDQtYTlmOC1iNDkzNzJlZjEyMjIiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJhc2h1dG9zaGFwcHNjcmlwX2FwaS1jbGllbnQiLCJzZXNzaW9uX3N0YXRlIjoiMDI1NzZmMTItM2Y2NS00YzM3LTlkZDYtZDhmZWNhNmNiODE1IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyJodHRwczovL2tleWNsb2FrLmlzb21ldHJpay5pbyJdLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy1tYXN0ZXIiLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYXNodXRvc2hhcHBzY3JpcF9hcGktY2xpZW50Ijp7InJvbGVzIjpbIkNoYXQgQXBwLWFwcGxpY2F0aW9uLXJvbGUiXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInNpZCI6IjAyNTc2ZjEyLTNmNjUtNGMzNy05ZGQ2LWQ4ZmVjYTZjYjgxNSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicHJlZmVycmVkX3VzZXJuYW1lIjoiKzkxLTcyOTE5Njg1NzEifQ.YVxp3ywHHrtGfYPGrdQATf6XIN087-myn5_T4lScMgRSy12rUEkH7a3lbSqRbG9StR11UlLGXAV2rly68tKp-pw7kj9Zyici7_ZUzr1G2ruplbMorjEbHlpCWtAJ6tSGFxmI0BYH6Joo-YF9wUgIqLrXyJrP07MFV_y2QCkwWHAVlRQ4__L18FRnOwnJqPsVp5iWrcKzUHOiYsCEwNPww6q8fVJz8UmeV-JvDRMY341i9Kbbd2ocKMQjWUbgOa3jzzxM8ffC-oFLcQq-G5DhK-CF_-El2wt_CYgPCgFQUr7trDRAfW5Ipp0-9oGL6qIsca9odRRSDOyzHihD0paR0g',
                 userToken: AppConfig.userDetail?.userToken ?? '',
                 userId: AppConfig.userDetail?.userId ?? '',
                 // userName: AppConfig.userDetail?.userName,

@@ -326,6 +326,12 @@ class IsmChatConversationsController extends GetxController {
   bool get isUserEmailType => _isUserEmailType.value;
   set isUserEmailType(bool value) => _isUserEmailType.value = value;
 
+  final _forwardedListSkip = <SelectedForwardUser>[].obs;
+  List<SelectedForwardUser> get forwardedListSkip => _forwardedListSkip;
+  set forwardedListSkip(List<SelectedForwardUser> value) {
+    _forwardedList.value = value;
+  }
+
   @override
   onInit() async {
     super.onInit();
@@ -697,7 +703,7 @@ class IsmChatConversationsController extends GetxController {
     }
     callApiOrNot = true;
     if (response == null && searchTag.isEmpty && isGroupConversation == false) {
-      unawaited(getContacts(isLoading: true, searchTag: searchTag));
+      unawaited(getContacts(isLoading: isLoading, searchTag: searchTag));
       return;
     }
   }
@@ -1316,12 +1322,15 @@ class IsmChatConversationsController extends GetxController {
           if (x.phones.isNotEmpty) {
             if (x.phones.first.number.contains('+')) {
               final code = x.phones.first.number.removeAllWhitespace;
-              localList.add(ContactSyncModel(
+              localList.add(
+                ContactSyncModel(
                   contactNo: code.substring(3, code.length),
                   countryCode: code.substring(0, 3),
                   firstName: x.name.first,
                   fullName: '${x.name.first} ${x.name.last}',
-                  lastName: x.name.last));
+                  lastName: x.name.last,
+                ),
+              );
               hashMapSendContactSync[code.substring(3, code.length)] =
                   '${x.name.first} ${x.name.last}';
               hashMapSendContactSync['${x.name.first} ${x.name.last}'] =
@@ -1348,7 +1357,6 @@ class IsmChatConversationsController extends GetxController {
     }
     sendContactSync.clear();
     sendContactSync = List.from(localList);
-    IsmChatLog.error(hashMapSendContactSync.length);
   }
 
   /// get the contact after filter contacts those registered or not registered basis on (isRegisteredUser)...
@@ -1372,35 +1380,32 @@ class IsmChatConversationsController extends GetxController {
               : 10,
           limit: limit);
       if (res != null) {
-        // getContactSyncUser.clear();
         getContactSyncUser.addAll(res.data ?? []);
         await removeDBUser();
         forwardedList.addAll(List.from(
           getContactSyncUser.map(
-            (e) => SelectedForwardUser(
-              localContacts: true,
-              isUserSelected: false,
-              userDetails: UserDetails(
-                  userProfileImageUrl: '',
-                  userName: hashMapSendContactSync[e.contactNo] ?? '',
-                  userIdentifier: '${e.countryCode ?? ''} ${e.contactNo}',
-                  userId: e.userId ?? '',
-                  online: false,
-                  lastSeen: DateTime.now().microsecondsSinceEpoch),
-              isBlocked: false,
-            ),
+            (e) {
+              if (hashMapSendContactSync[e.contactNo] != null) {
+                return SelectedForwardUser(
+                  localContacts: true,
+                  isUserSelected: false,
+                  userDetails: UserDetails(
+                      userProfileImageUrl: '',
+                      userName: hashMapSendContactSync[e.contactNo] ?? '',
+                      userIdentifier: '${e.countryCode ?? ''} ${e.contactNo}',
+                      userId: e.userId ?? '',
+                      online: false,
+                      lastSeen: DateTime.now().microsecondsSinceEpoch),
+                  isBlocked: false,
+                );
+              }
+            },
           ),
         ));
       }
       handleList(forwardedList);
       update();
     }
-  }
-
-  final _forwardedListSkip = <SelectedForwardUser>[].obs;
-  List<SelectedForwardUser> get forwardedListSkip => _forwardedListSkip;
-  set forwardedListSkip(List<SelectedForwardUser> value) {
-    _forwardedList.value = value;
   }
 
   /// get search based user for local contacts..
