@@ -634,6 +634,7 @@ class IsmChatConversationsController extends GetxController {
     String searchTag = '',
     String? opponentId,
     bool isLoading = false,
+    bool isGroupConversation = false,
   }) async {
     if (!callApiOrNot) return;
     callApiOrNot = false;
@@ -695,7 +696,7 @@ class IsmChatConversationsController extends GetxController {
       handleList(forwardedList);
     }
     callApiOrNot = true;
-    if (response == null && searchTag.isEmpty) {
+    if (response == null && searchTag.isEmpty && isGroupConversation == false) {
       unawaited(getContacts(isLoading: true, searchTag: searchTag));
       return;
     }
@@ -1256,7 +1257,7 @@ class IsmChatConversationsController extends GetxController {
     }
   }
 
-  void initCreateConversation() async {
+  void initCreateConversation([bool isGroupConversation = false]) async {
     callApiOrNot = true;
     profileImage = '';
     forwardedList.clear();
@@ -1269,7 +1270,9 @@ class IsmChatConversationsController extends GetxController {
     await getNonBlockUserList(
       opponentId: IsmChatConfig.communicationConfig.userConfig.userId,
     );
-    await getContacts();
+    if (!isGroupConversation) {
+      await getContacts();
+    }
   }
 
   void updateUserDetails(ImageSource source) async {
