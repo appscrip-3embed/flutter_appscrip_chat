@@ -385,9 +385,9 @@ class IsmChatUtility {
     }
   }
 
-  static void toSMS(String phoneNumber) async {
+  static void toSMS(String phoneNumber, [String? body]) async {
     var sms = Uri(
-      scheme: 'sms',
+      scheme: body != null ? 'sms:$phoneNumber?body=$body' : 'sms',
       path: phoneNumber,
     );
     if (await canLaunchUrl(sms)) {

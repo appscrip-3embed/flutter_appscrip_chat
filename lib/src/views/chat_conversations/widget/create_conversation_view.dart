@@ -250,10 +250,10 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                         if (controller.forwardedList[index]
                                                 .localContacts ==
                                             true) {
-                                          IsmChatUtility.toSMS(controller
-                                              .forwardedList[index]
-                                              .userDetails
-                                              .userIdentifier);
+                                          IsmChatUtility.toSMS(
+                                              controller.forwardedList[index]
+                                                  .userDetails.userIdentifier,
+                                              "Let's chat on ${IsmChatConfig.communicationConfig.projectConfig.appName}! It's a fast, simple");
                                           return;
                                         }
                                         var ismChatConversation =
