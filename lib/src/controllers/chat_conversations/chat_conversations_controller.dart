@@ -1349,7 +1349,6 @@ class IsmChatConversationsController extends GetxController {
     sendContactSync.clear();
     sendContactSync = List.from(localList);
     IsmChatLog.error(hashMapSendContactSync.length);
-    await addContact(isLoading: false);
   }
 
   /// get the contact after filter contacts those registered or not registered basis on (isRegisteredUser)...
@@ -1436,7 +1435,7 @@ class IsmChatConversationsController extends GetxController {
   }
 
   void goToContactSync() async {
-    // await askPermissions();
+    await askPermissions();
     await Future.delayed(Durations.extralong1);
     IsmChatRouteManagement.goToCreateChat(
       isGroupConversation: false,
