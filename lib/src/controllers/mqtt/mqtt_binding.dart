@@ -10,6 +10,7 @@ class IsmChatMqttBinding extends Bindings {
           IsmChatMqttRepository(),
         ),
       ),
+      permanent: true,
     );
   }
 }
