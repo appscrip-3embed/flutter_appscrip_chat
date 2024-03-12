@@ -19,10 +19,10 @@ class _IsmChatConversationsState extends State<IsmChatConversations>
     with TickerProviderStateMixin {
   @override
   void initState() {
-    super.initState();
     if (!Get.isRegistered<IsmChatMqttController>()) {
       IsmChatMqttBinding().dependencies();
     }
+    super.initState();
     startInit();
   }
 

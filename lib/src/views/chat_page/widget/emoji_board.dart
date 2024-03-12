@@ -14,7 +14,8 @@ class EmojiBoard extends StatelessWidget {
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
         builder: (controller) => SizedBox(
           height: IsmChatDimens.twoHundredFifty,
-          child: EmojiPicker(
+          child:
+           EmojiPicker(
             textEditingController: controller.chatInputController,
             config: Config(
               bottomActionBarConfig: BottomActionBarConfig(

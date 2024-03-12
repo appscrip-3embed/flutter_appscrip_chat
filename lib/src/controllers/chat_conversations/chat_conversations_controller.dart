@@ -346,7 +346,10 @@ class IsmChatConversationsController extends GetxController {
     }
     await getConversationsFromDB();
     await getChatConversations();
-    await Get.find<IsmChatMqttController>().getChatConversationsUnreadCount();
+    if (Get.isRegistered<IsmChatMqttController>()) {
+      await Get.find<IsmChatMqttController>().getChatConversationsUnreadCount();
+    }
+
     await getBackGroundAssets();
     await getUserMessges(
       senderIds: [
