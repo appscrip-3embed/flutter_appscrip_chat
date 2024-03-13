@@ -47,6 +47,12 @@ typedef MessageWidgetBuilder = Widget? Function(
   bool,
 );
 
+typedef ConversationWidgetBuilder = Widget? Function(
+  BuildContext,
+  IsmChatConversationModel,
+  bool,
+);
+
 typedef ConversationPredicate = bool Function(IsmChatConversationModel);
 
 typedef MeessageFieldFocusNode = void Function(

@@ -109,7 +109,7 @@ class IsmChatUtility {
     await Get.dialog(
       IsmChatAlertDialogBox(
         title: message,
-        cancelLabel: IsmChatStrings.ok,
+        cancelLabel: IsmChatStrings.okay,
       ),
     );
   }

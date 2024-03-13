@@ -34,7 +34,7 @@ class IsmChatStrings {
   static const String yestarday = 'Yesterday';
   static const String at = 'at';
   static const String on = 'on';
-  static const String ok = 'Okay';
+  static const String okay = 'Okay';
   static const String change = 'Change';
   static const String blockUser = 'Block Users';
   static const String unBlockUser = 'Unblock User';
@@ -45,6 +45,8 @@ class IsmChatStrings {
 
   static const String clearChat = 'Clear chat';
   static const String wallpaper = 'Wallpaper';
+  static const String hintText = 'Type your message';
+
   static const String search = 'Search';
   static const String newGroup = 'New Group';
   static const String publicConversation = 'Public Conversation';
@@ -76,6 +78,7 @@ class IsmChatStrings {
   static const String micePermissionBlock =
       'The browser has disabled microphone access; please allow it to send audio.';
   static const String block = 'Block';
+
   static const String unblock = 'Unblock';
   static const String blocked = 'Blocked';
   static const String unBlockedSuccessfully = 'User Unblocked Successfully.';

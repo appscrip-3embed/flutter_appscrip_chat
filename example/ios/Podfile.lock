@@ -1,4 +1,6 @@
 PODS:
+  - alice (0.0.1):
+    - Flutter
   - app_settings (5.1.1):
     - Flutter
   - appscrip_chat_component (0.0.1):
@@ -99,9 +101,6 @@ PODS:
   - fluttertoast (0.0.2):
     - Flutter
     - Toast
-  - FMDB (2.7.5):
-    - FMDB/standard (= 2.7.5)
-  - FMDB/standard (2.7.5)
   - gal (1.0.0):
     - Flutter
     - FlutterMacOS
@@ -166,16 +165,15 @@ PODS:
     - Flutter
   - open_filex (0.0.2):
     - Flutter
+  - package_info_plus (0.4.5):
+    - Flutter
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
   - pdfx (1.0.0):
     - Flutter
-  - permission_handler_apple (9.1.1):
+  - permission_handler_apple (9.3.0):
     - Flutter
-  - photo_manager (2.0.0):
-    - Flutter
-    - FlutterMacOS
   - PromisesObjC (2.3.1)
   - ReachabilitySwift (5.0.0)
   - record_darwin (1.0.0):
@@ -184,6 +182,8 @@ PODS:
   - SDWebImage (5.18.7):
     - SDWebImage/Core (= 5.18.7)
   - SDWebImage/Core (5.18.7)
+  - sensors_plus (0.0.1):
+    - Flutter
   - share_plus (0.0.1):
     - Flutter
   - shared_preferences_foundation (0.0.1):
@@ -191,7 +191,7 @@ PODS:
     - FlutterMacOS
   - sqflite (0.0.3):
     - Flutter
-    - FMDB (>= 2.7.5)
+    - FlutterMacOS
   - SwiftyGif (5.4.4)
   - Toast (4.0.0)
   - TOCropViewController (2.6.1)
@@ -207,6 +207,7 @@ PODS:
     - libwebp
 
 DEPENDENCIES:
+  - alice (from `.symlinks/plugins/alice/ios`)
   - app_settings (from `.symlinks/plugins/app_settings/ios`)
   - appscrip_chat_component (from `.symlinks/plugins/appscrip_chat_component/ios`)
   - audio_session (from `.symlinks/plugins/audio_session/ios`)
@@ -233,14 +234,15 @@ DEPENDENCIES:
   - just_audio (from `.symlinks/plugins/just_audio/ios`)
   - notification_permissions (from `.symlinks/plugins/notification_permissions/ios`)
   - open_filex (from `.symlinks/plugins/open_filex/ios`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - pdfx (from `.symlinks/plugins/pdfx/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
-  - photo_manager (from `.symlinks/plugins/photo_manager/ios`)
   - record_darwin (from `.symlinks/plugins/record_darwin/ios`)
+  - sensors_plus (from `.symlinks/plugins/sensors_plus/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
-  - sqflite (from `.symlinks/plugins/sqflite/ios`)
+  - sqflite (from `.symlinks/plugins/sqflite/darwin`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - video_compress (from `.symlinks/plugins/video_compress/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/darwin`)
@@ -256,7 +258,6 @@ SPEC REPOS:
     - FirebaseCoreInternal
     - FirebaseInstallations
     - FirebaseMessaging
-    - FMDB
     - GoogleDataTransport
     - GoogleMaps
     - GoogleUtilities
@@ -270,6 +271,8 @@ SPEC REPOS:
     - TOCropViewController
 
 EXTERNAL SOURCES:
+  alice:
+    :path: ".symlinks/plugins/alice/ios"
   app_settings:
     :path: ".symlinks/plugins/app_settings/ios"
   appscrip_chat_component:
@@ -322,22 +325,24 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/notification_permissions/ios"
   open_filex:
     :path: ".symlinks/plugins/open_filex/ios"
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   pdfx:
     :path: ".symlinks/plugins/pdfx/ios"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
-  photo_manager:
-    :path: ".symlinks/plugins/photo_manager/ios"
   record_darwin:
     :path: ".symlinks/plugins/record_darwin/ios"
+  sensors_plus:
+    :path: ".symlinks/plugins/sensors_plus/ios"
   share_plus:
     :path: ".symlinks/plugins/share_plus/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   sqflite:
-    :path: ".symlinks/plugins/sqflite/ios"
+    :path: ".symlinks/plugins/sqflite/darwin"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   video_compress:
@@ -348,11 +353,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/video_thumbnail/ios"
 
 SPEC CHECKSUMS:
+  alice: 16ca3b89f5e8395fd585e3a2920b8f4e250e3bf4
   app_settings: 017320c6a680cdc94c799949d95b84cb69389ebc
   appscrip_chat_component: acd7eac10950d82a75badfe2af68da3872cf75ca
   audio_session: 4f3e461722055d21515cf3261b64c973c062f345
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
-  camera_avfoundation: 8b8d780bcfb6a4a02b0fbe2b4bd17b5b71946e68
+  camera_avfoundation: 759172d1a77ae7be0de08fc104cfb79738b8a59e
   connectivity_plus: bf0076dd84a130856aa636df1c71ccaff908fa1d
   device_info_plus: c6fb39579d0f423935b0c9ce7ee2f44b71b9fce6
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
@@ -370,10 +376,9 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 9bc34a98d2e0237e1b121915120d4d48ddcf301e
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_contacts: edb1c5ce76aa433e20e6cb14c615f4c0b66e0983
-  flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
+  flutter_local_notifications: 4cde75091f6327eb8517fa068a0a5950212d2086
   flutter_native_image: 9c0b7451838484458e5b0fae007b86a4c2d4bdfe
   fluttertoast: 31b00dabfa7fb7bacd9e7dbee580d7a2ff4bf265
-  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   gal: 61e868295d28fe67ffa297fae6dacebf56fd53e1
   geocoding_ios: a389ea40f6f548de6e63006a2e31bf66ff80769a
   geolocator_apple: 9157311f654584b9bb72686c55fc02a97b73f461
@@ -388,25 +393,26 @@ SPEC CHECKSUMS:
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
   notification_permissions: 825ea1bf2a52ab585c53fd7b5e8e96876d735d4b
   open_filex: 6e26e659846ec990262224a12ef1c528bb4edbe4
+  package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
   path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
   pdfx: 7b876b09de8b7a0bf444a4f82b439ffcff4ee1ec
-  permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
-  photo_manager: 4f6810b7dfc4feb03b461ac1a70dacf91fba7604
+  permission_handler_apple: 036b856153a2b1f61f21030ff725f3e6fece2b78
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   record_darwin: 1f6619f2abac4d1ca91d3eeab038c980d76f1517
   SDWebImage: f9258c58221ed854cfa0e2b80ee4033710b1c6d3
+  sensors_plus: 4ee32bc7d61a055f27f88d3215ad6b6fb96a2b8e
   share_plus: c3fef564749587fc939ef86ffb283ceac0baf9f5
   shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
-  sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
+  sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
-  url_launcher_ios: bbd758c6e7f9fd7b5b1d4cde34d2b95fcce5e812
+  url_launcher_ios: 6116280ddcfe98ab8820085d8d76ae7449447586
   video_compress: fce97e4fb1dfd88175aa07d2ffc8a2f297f87fbe
   video_player_avfoundation: 02011213dab73ae3687df27ce441fbbcc82b5579
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
 
 PODFILE CHECKSUM: 12e4b8a2daa1dd660e7e51f5cf433a58d377bddf
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.15.2

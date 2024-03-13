@@ -149,8 +149,10 @@ mixin IsmChatMqttEventMixin on GetxController {
           await chatController.getMessagesFromDB(actionModel.conversationId!);
         }
       }
-      unawaited(
-          Get.find<IsmChatConversationsController>().getConversationsFromDB());
+      if (Get.isRegistered<IsmChatConversationsController>()) {
+        unawaited(Get.find<IsmChatConversationsController>()
+            .getConversationsFromDB());
+      }
     }
   }
 
@@ -160,7 +162,7 @@ mixin IsmChatMqttEventMixin on GetxController {
         _controller.communicationConfig.userConfig.userId) {
       return;
     }
-    var conversationController = Get.find<IsmChatConversationsController>();
+
     var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: actionModel.conversationId);
 
@@ -213,11 +215,14 @@ mixin IsmChatMqttEventMixin on GetxController {
         ));
     conversation.messages?.add(message);
     await IsmChatConfig.dbWrapper!.saveConversation(conversation: conversation);
-    unawaited(conversationController.getConversationsFromDB());
-    await conversationController.pingMessageDelivered(
-      conversationId: actionModel.conversationId ?? '',
-      messageId: actionModel.messageId ?? '',
-    );
+    if (Get.isRegistered<IsmChatConversationsController>()) {
+      var conversationController = Get.find<IsmChatConversationsController>();
+      unawaited(conversationController.getConversationsFromDB());
+      await conversationController.pingMessageDelivered(
+        conversationId: actionModel.conversationId ?? '',
+        messageId: actionModel.messageId ?? '',
+      );
+    }
     _handleUnreadMessages(message.senderInfo?.userId ?? '');
 
     // To handle messages in chatList
@@ -244,9 +249,7 @@ mixin IsmChatMqttEventMixin on GetxController {
         _controller.communicationConfig.userConfig.userId) {
       return;
     }
-    if (!Get.isRegistered<IsmChatConversationsController>()) {
-      return;
-    }
+    if (!Get.isRegistered<IsmChatConversationsController>()) return;
     var conversationController = Get.find<IsmChatConversationsController>();
     var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: message.conversationId);
@@ -314,9 +317,7 @@ mixin IsmChatMqttEventMixin on GetxController {
       messageId: message.messageId ?? '',
     );
 
-    if (!Get.isRegistered<IsmChatPageController>()) {
-      return;
-    }
+    if (!Get.isRegistered<IsmChatPageController>()) return;
     var chatController = Get.find<IsmChatPageController>();
     if (chatController.conversation?.conversationId != message.conversationId) {
       return;
@@ -526,8 +527,10 @@ mixin IsmChatMqttEventMixin on GetxController {
             await Get.find<IsmChatPageController>()
                 .getMessagesFromDB(actionModel.conversationId!);
           }
-          unawaited(Get.find<IsmChatConversationsController>()
-              .getConversationsFromDB());
+          if (Get.isRegistered<IsmChatConversationsController>()) {
+            unawaited(Get.find<IsmChatConversationsController>()
+                .getConversationsFromDB());
+          }
         }
       }
     }
@@ -574,8 +577,10 @@ mixin IsmChatMqttEventMixin on GetxController {
           await Get.find<IsmChatPageController>()
               .getMessagesFromDB(actionModel.conversationId!);
         }
-        unawaited(Get.find<IsmChatConversationsController>()
-            .getConversationsFromDB());
+        if (Get.isRegistered<IsmChatConversationsController>()) {
+          unawaited(Get.find<IsmChatConversationsController>()
+              .getConversationsFromDB());
+        }
       }
     }
   }
@@ -729,10 +734,11 @@ mixin IsmChatMqttEventMixin on GetxController {
         messageId = actionModel.sentAt.toString();
       }
     }
-
-    var conversationController = Get.find<IsmChatConversationsController>();
-    await conversationController.getBlockUser();
-    await conversationController.getChatConversations();
+    if (Get.isRegistered<IsmChatConversationsController>()) {
+      var conversationController = Get.find<IsmChatConversationsController>();
+      await conversationController.getBlockUser();
+      await conversationController.getChatConversations();
+    }
   }
 
   void _handleGroupRemoveAndAddUser(IsmChatMqttActionModel actionModel) async {
@@ -745,6 +751,7 @@ mixin IsmChatMqttEventMixin on GetxController {
       return;
     }
 
+    if (!Get.isRegistered<IsmChatConversationsController>()) return;
     var conversationController = Get.find<IsmChatConversationsController>();
     if (actionModel.action == IsmChatActionEvents.addMember) {
       await conversationController.getChatConversations();
@@ -853,7 +860,9 @@ mixin IsmChatMqttEventMixin on GetxController {
         messageId = actionModel.sentAt.toString();
       }
     }
-    await Get.find<IsmChatConversationsController>().getChatConversations();
+    if (Get.isRegistered<IsmChatConversationsController>()) {
+      await Get.find<IsmChatConversationsController>().getChatConversations();
+    }
   }
 
   void _handleAdminRemoveAndAdd(IsmChatMqttActionModel actionModel) async {
@@ -880,7 +889,8 @@ mixin IsmChatMqttEventMixin on GetxController {
       }
     }
     if (actionModel.memberId ==
-        IsmChatConfig.communicationConfig.userConfig.userId) {
+            IsmChatConfig.communicationConfig.userConfig.userId &&
+        Get.isRegistered<IsmChatConversationsController>()) {
       await Get.find<IsmChatConversationsController>().getChatConversations();
     }
   }
@@ -892,6 +902,7 @@ mixin IsmChatMqttEventMixin on GetxController {
       return;
     }
 
+    if (!Get.isRegistered<IsmChatConversationsController>()) return;
     var ismChatConversationController =
         Get.find<IsmChatConversationsController>();
     await ismChatConversationController.getChatConversations();
@@ -964,7 +975,9 @@ mixin IsmChatMqttEventMixin on GetxController {
         }
       }
     }
-    await Get.find<IsmChatConversationsController>().getChatConversations();
+    if (Get.isRegistered<IsmChatConversationsController>()) {
+      await Get.find<IsmChatConversationsController>().getChatConversations();
+    }
   }
 
   void _handleUnreadMessages(String userId) async {
@@ -979,8 +992,8 @@ mixin IsmChatMqttEventMixin on GetxController {
     if (IsmChatProperties.chatPageProperties.isAllowedDeleteChatFromLocal) {
       final deleteChat = await deleteChatFormDB('',
           conversationId: actionModel.conversationId ?? '');
-      IsmChatLog.error('isDeleted $deleteChat ');
-      if (deleteChat) {
+
+      if (deleteChat && Get.isRegistered<IsmChatConversationsController>()) {
         await Get.find<IsmChatConversationsController>().getChatConversations();
       }
     }
@@ -1013,8 +1026,9 @@ mixin IsmChatMqttEventMixin on GetxController {
         }
       }
     }
-
-    await Get.find<IsmChatConversationsController>().getChatConversations();
+    if (Get.isRegistered<IsmChatConversationsController>()) {
+      await Get.find<IsmChatConversationsController>().getChatConversations();
+    }
   }
 
   Future<void> getChatConversationsUnreadCount({

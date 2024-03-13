@@ -28,7 +28,7 @@ class IsmChatPageProperties {
 
   /// It is an optional parameter you can provide any widget
   /// You can pass tap handler on this widget for any uses
-  final Widget? messageFieldSuffix;
+  final ConversationWidgetBuilder? messageFieldSuffix;
 
   final MessageWidgetBuilder? messageBuilder;
 

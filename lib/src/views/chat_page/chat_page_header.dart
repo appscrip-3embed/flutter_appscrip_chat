@@ -157,7 +157,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  (!controller.conversation!.isChattingAllowed)
+                                  (!(controller.conversation?.isChattingAllowed == true))
                                       ? const SizedBox.shrink()
                                       : Obx(
                                           () => controller.conversation

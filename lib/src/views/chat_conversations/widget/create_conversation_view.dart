@@ -423,7 +423,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                         .addGrouNameController.text.isEmpty) {
                                   await Get.dialog(
                                     const IsmChatAlertDialogBox(
-                                      cancelLabel: IsmChatStrings.ok,
+                                      cancelLabel: IsmChatStrings.okay,
                                       title: IsmChatStrings.createGroupAlert,
                                     ),
                                   );

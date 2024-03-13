@@ -1755,7 +1755,7 @@ class IsmChatPageController extends GetxController
       content: TextFormField(
         controller: groupTitleController,
       ),
-      actionLabels: const [IsmChatStrings.ok],
+      actionLabels: const [IsmChatStrings.okay],
       callbackActions: [
         () => changeGroupTitle(
             conversationTitle: groupTitleController.text,
@@ -1833,7 +1833,7 @@ class IsmChatPageController extends GetxController
       await Get.dialog(
         const IsmChatAlertDialogBox(
           title: IsmChatStrings.cannotBlock,
-          cancelLabel: 'Okay',
+          cancelLabel: IsmChatStrings.okay,
         ),
       );
     }
