@@ -66,7 +66,8 @@ class _ImsChatShowUserReactionState extends State<ImsChatShowUserReaction>
     return Container(
       color: IsmChatColors.whiteColor,
       height: IsmChatDimens.percentHeight(.38),
-      child: Column(
+      child: ListView(
+        shrinkWrap: true,
         children: [
           Container(
             alignment: Alignment.topLeft,
