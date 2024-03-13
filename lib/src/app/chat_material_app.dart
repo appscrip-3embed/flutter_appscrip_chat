@@ -134,6 +134,16 @@ class IsmChatApp extends StatelessWidget {
     }
   }
 
+  /// Call this funcation for showing Block un Block Dialog
+  static void showBlockUnBlockDialog() {
+    if (Get.isRegistered<IsmChatPageController>()) {
+      final controller = Get.find<IsmChatPageController>();
+      if (!(controller.conversation?.isChattingAllowed == true)) {
+        controller.showDialogCheckBlockUnBlock();
+      }
+    }
+  }
+
   /// Call this function for assign null on current conversation
   static void changeCurrentConversation() {
     if (Get.isRegistered<IsmChatConversationsController>()) {
