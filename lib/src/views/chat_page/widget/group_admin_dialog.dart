@@ -53,7 +53,7 @@ class IsmChatGroupAdminDialog extends StatelessWidget {
                         IsmChatAlertDialogBox(
                           title:
                               'Remove "${user.userName.capitalizeFirst}" from $groupName?',
-                          actionLabels: const [IsmChatStrings.ok],
+                          actionLabels: const [IsmChatStrings.okay],
                           callbackActions: [
                             () => controller.removeMember(user.userId),
                           ],

@@ -104,7 +104,8 @@ class IsmChatMessageField extends StatelessWidget {
                         SendMessageIntent: CallbackAction<SendMessageIntent>(
                             onInvoke: (SendMessageIntent intent) async {
                           if (controller.showSendButton) {
-                            if (!controller.conversation!.isChattingAllowed) {
+                            if (!(controller.conversation?.isChattingAllowed ==
+                                true)) {
                               controller.showDialogCheckBlockUnBlock();
                             } else {
                               await controller.getMentionedUserList(
@@ -173,7 +174,7 @@ class IsmChatMessageField extends StatelessWidget {
                                       textCapitalization:
                                           TextCapitalization.sentences,
                                       decoration: InputDecoration(
-                                        hintText: 'Type your message',
+                                        hintText: IsmChatStrings.hintText,
                                         hintStyle: IsmChatConfig
                                                 .chatTheme
                                                 .chatPageTheme
@@ -341,7 +342,7 @@ class _EmojiButton extends StatelessWidget {
                     ),
           ),
           onPressed: () {
-            if (!controller.conversation!.isChattingAllowed) {
+            if (!(controller.conversation?.isChattingAllowed == true)) {
               controller.showDialogCheckBlockUnBlock();
             } else {
               controller.toggleEmojiBoard();
@@ -363,7 +364,7 @@ class _MicOrSendButton extends StatelessWidget {
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
                 onTap: () async {
-                  if (!controller.conversation!.isChattingAllowed) {
+                  if (!(controller.conversation?.isChattingAllowed == true)) {
                     controller.showDialogCheckBlockUnBlock();
                     return;
                   }
@@ -464,7 +465,7 @@ class _MicOrSendButton extends StatelessWidget {
                         unawaited(Get.dialog(
                           const IsmChatAlertDialogBox(
                             title: IsmChatStrings.micePermission,
-                            cancelLabel: IsmChatStrings.ok,
+                            cancelLabel: IsmChatStrings.okay,
                           ),
                         ));
                         await controller.recordAudio.hasPermission();
@@ -473,7 +474,7 @@ class _MicOrSendButton extends StatelessWidget {
                         await Get.dialog(
                           const IsmChatAlertDialogBox(
                             title: IsmChatStrings.micePermissionBlock,
-                            cancelLabel: IsmChatStrings.ok,
+                            cancelLabel: IsmChatStrings.okay,
                           ),
                         );
                       } else {
@@ -577,14 +578,6 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
     ).animate(curve);
     super.initState();
   }
-
-  // @override
-  // void dispose() {
-  //   controller.fabAnimationController?.dispose();
-  //   controller.attchmentOverlayEntry?.dispose();
-  //   controller.attchmentOverlayEntry = null;
-  //   super.dispose();
-  // }
 
   void _toggle(BuildContext context) async {
     if (controller.showAttachment) {
@@ -723,7 +716,7 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
                     ),
             ),
             onPressed: () {
-              if (!controller.conversation!.isChattingAllowed) {
+              if (!(controller.conversation?.isChattingAllowed == true)) {
                 controller.showDialogCheckBlockUnBlock();
               } else {
                 controller.showAttachment = !controller.showAttachment;
@@ -744,11 +737,15 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
         children: [
           if (IsmChatProperties.chatPageProperties.messageFieldSuffix !=
               null) ...[
-            IsmChatProperties.chatPageProperties.messageFieldSuffix!
+            IsmChatProperties.chatPageProperties.messageFieldSuffix?.call(
+                    context,
+                    controller.conversation!,
+                    controller.conversation?.isChattingAllowed == true) ??
+                IsmChatDimens.box0
           ],
           IconButton(
             onPressed: () async {
-              if (!controller.conversation!.isChattingAllowed) {
+              if (!(controller.conversation?.isChattingAllowed == true)) {
                 controller.showDialogCheckBlockUnBlock();
               } else {
                 await Get.bottomSheet(
