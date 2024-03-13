@@ -331,7 +331,11 @@ class IsmChatApp extends StatelessWidget {
     IsmChatConfig.communicationConfig = communicationConfig;
     IsmChatConfig.configInitilized = true;
     if (!Get.isRegistered<IsmChatMqttController>()) {
+      IsmChatLog.info(
+          'IsmMQttController initiliazing fron {initializeMqtt} function');
       IsmChatMqttBinding().dependencies();
+      IsmChatLog.info(
+          'IsmMQttController initiliazing success fron {initializeMqtt} function ');
     }
     IsmChatConfig.showNotification = showNotification;
     IsmChatConfig.notificationIconPath = notificationIconPath;

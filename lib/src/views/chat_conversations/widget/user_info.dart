@@ -57,6 +57,7 @@ class IsmChatUserView extends StatelessWidget {
           ),
           resizeToAvoidBottomInset: false,
           body: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -240,6 +241,7 @@ class IsmChatUserView extends StatelessWidget {
                   SizedBox(
                     height: Get.height,
                     child: ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: controller.blockUsers.length,
                       itemBuilder: (_, index) {
                         var user = controller.blockUsers[index];

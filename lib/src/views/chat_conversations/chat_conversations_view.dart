@@ -20,13 +20,13 @@ class _IsmChatConversationsState extends State<IsmChatConversations>
   @override
   void initState() {
     super.initState();
-    print('check Step1');
     if (!Get.isRegistered<IsmChatMqttController>()) {
-      print('check Step2');
+      IsmChatLog.info(
+          'IsmMQttController initiliazing from {IsmChatConversations view}');
       IsmChatMqttBinding().dependencies();
-      print('check Step3');
+      IsmChatLog.info(
+          'IsmMQttController initiliazing success from {IsmChatConversations view}');
     }
-
     startInit();
   }
 
