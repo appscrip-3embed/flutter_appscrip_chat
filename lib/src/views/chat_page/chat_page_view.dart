@@ -1,7 +1,5 @@
 // ignore_for_file: deprecated_member_use
-
 import 'dart:io';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
@@ -48,14 +46,14 @@ class _IsmChatPageViewState extends State<IsmChatPageView>
             ? DateTime.now().millisecondsSinceEpoch
             : controller.conversation?.lastMessageSentAt ?? 0,
       );
-      IsmChatLog.error('app in resumed');
+      IsmChatLog.info('app in resumed');
     }
     if (AppLifecycleState.paused == state) {
       mqttController.isAppInBackground = true;
-      IsmChatLog.error('app in backgorund');
+      IsmChatLog.info('app in backgorund');
     }
     if (AppLifecycleState.detached == state) {
-      IsmChatLog.error('app in killed');
+      IsmChatLog.info('app in killed');
     }
   }
 
