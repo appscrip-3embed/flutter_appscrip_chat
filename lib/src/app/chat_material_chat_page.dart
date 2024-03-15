@@ -182,7 +182,7 @@ class IsmMaterialChatPage extends StatefulWidget {
 
   /// Call this function on deleteChat to delete the data stored locally in the Local Database
   static Future<void> deleteChatFromLocal() async {
-    await IsmChatConfig.dbWrapper?.deleteChatLocalDb();
+    await clearChatLocalDb();
     await Future.wait([
       Get.delete<IsmChatConversationsController>(force: true),
       Get.delete<IsmChatCommonController>(force: true),
