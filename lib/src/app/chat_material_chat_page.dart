@@ -20,6 +20,7 @@ class IsmMaterialChatPage extends StatefulWidget {
     this.useAlice,
     this.fontFamily,
     this.conversationParser,
+    required this.conversation,
   }) {
     assert(IsmChatConfig.isInitialized,
         'ChatHiveBox is not initialized\nYou are getting this error because the Database class is not initialized, to initialize ChatHiveBox class call AppscripChatComponent.initialize() before your runApp()');
@@ -71,6 +72,8 @@ class IsmMaterialChatPage extends StatefulWidget {
   final bool isShowMqttConnectErrorDailog;
 
   final Alice? useAlice;
+
+  final IsmChatConversationModel conversation;
 
   /// Opitonal field
   ///
@@ -277,14 +280,13 @@ class IsmMaterialChatPage extends StatefulWidget {
 }
 
 class _IsmMaterialChatPageState extends State<IsmMaterialChatPage> {
-  
   @override
   void initState() {
-    super.initState();
     startInit();
+    super.initState();
   }
 
-  startInit() {
+  startInit() async {
     if (!Get.isRegistered<IsmChatMqttController>()) {
       IsmChatMqttBinding().dependencies();
     }
@@ -292,6 +294,11 @@ class _IsmMaterialChatPageState extends State<IsmMaterialChatPage> {
       IsmChatCommonBinding().dependencies();
       IsmChatConversationsBinding().dependencies();
     }
+    while (!Get.isRegistered<IsmChatConversationsController>()) {
+      await Future.delayed(const Duration(milliseconds: 500));
+    }
+    final conversationController = Get.find<IsmChatConversationsController>();
+    conversationController.navigateToMessages(widget.conversation);
   }
 
   @override
