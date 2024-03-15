@@ -1540,7 +1540,7 @@ class IsmChatPageController extends GetxController
     cameraController.setFlashMode(flashMode);
   }
 
-  Future<void> updateLastMessage() async {
+  Future<bool> updateLastMessage() async {
     if (!didReactedLast) {
       var chatConversation = await IsmChatConfig.dbWrapper!
           .getConversation(conversationId: conversation?.conversationId ?? '');
@@ -1622,6 +1622,8 @@ class IsmChatPageController extends GetxController
     }
     unawaited(
         Get.find<IsmChatMqttController>().getChatConversationsUnreadCount());
+
+    return true;
   }
 
   Future<void> updateUnreadMessgaeCount() async {

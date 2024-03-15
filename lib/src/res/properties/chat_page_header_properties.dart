@@ -27,7 +27,7 @@ class IsmChatPageHeaderProperties {
   /// Provides this methode with exclude hight of widget
   final WidgetCallback? bottom;
   final PopupItemListCallback? popupItems;
-  final VoidCallback? onBackTap;
+  final Function(bool)? onBackTap;
 
   /// This funcation provides for tap on profile pic of chat page header,
   /// This is optional parameter

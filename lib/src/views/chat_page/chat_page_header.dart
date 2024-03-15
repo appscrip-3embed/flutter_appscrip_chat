@@ -62,15 +62,17 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                             IconButton(
                               onPressed: () async {
                                 Get.back<void>();
+
+                                controller.closeOveray();
+                                final updateLastMessage =
+                                    await controller.updateLastMessage();
                                 if (IsmChatProperties
                                         .chatPageProperties.header?.onBackTap !=
                                     null) {
                                   IsmChatProperties
                                       .chatPageProperties.header?.onBackTap!
-                                      .call();
+                                      .call(updateLastMessage);
                                 }
-                                controller.closeOveray();
-                                await controller.updateLastMessage();
                               },
                               icon: Icon(
                                 Icons.arrow_back_rounded,
@@ -157,7 +159,9 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                                  (!(controller.conversation?.isChattingAllowed == true))
+                                  (!(controller.conversation
+                                              ?.isChattingAllowed ==
+                                          true))
                                       ? const SizedBox.shrink()
                                       : Obx(
                                           () => controller.conversation

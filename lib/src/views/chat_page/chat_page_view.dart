@@ -66,11 +66,13 @@ class _IsmChatPageViewState extends State<IsmChatPageView>
       return false;
     } else {
       Get.back<void>();
-      if (IsmChatProperties.chatPageProperties.header?.onBackTap != null) {
-        IsmChatProperties.chatPageProperties.header?.onBackTap!.call();
-      }
+
       controller.closeOveray();
-      await controller.updateLastMessage();
+      final updateMessage = await controller.updateLastMessage();
+      if (IsmChatProperties.chatPageProperties.header?.onBackTap != null) {
+        IsmChatProperties.chatPageProperties.header?.onBackTap!
+            .call(updateMessage);
+      }
       return true;
     }
   }
