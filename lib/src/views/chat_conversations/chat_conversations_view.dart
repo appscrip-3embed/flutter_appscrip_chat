@@ -31,6 +31,9 @@ class _IsmChatConversationsState extends State<IsmChatConversations>
   }
 
   startInit() {
+    if (!Get.isRegistered<IsmChatMqttController>()) {
+      IsmChatMqttBinding().dependencies();
+    }
     if (!Get.isRegistered<IsmChatConversationsController>()) {
       IsmChatCommonBinding().dependencies();
       IsmChatConversationsBinding().dependencies();

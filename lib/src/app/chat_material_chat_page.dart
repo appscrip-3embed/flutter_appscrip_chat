@@ -1,12 +1,11 @@
 import 'dart:async';
-
 import 'package:alice/alice.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 
-class IsmMaterialChatPage extends StatelessWidget {
+class IsmMaterialChatPage extends StatefulWidget {
   IsmMaterialChatPage({
     super.key,
     this.communicationConfig,
@@ -96,8 +95,6 @@ class IsmMaterialChatPage extends StatelessWidget {
     }
   }
 
-
-
   /// Call this function for update conversation Details in meta data
   static Future<void> updateConversation(
           {required String conversationId,
@@ -119,7 +116,6 @@ class IsmMaterialChatPage extends StatelessWidget {
         events: events,
         isLoading: isLoading,
       );
-
 
   /// Call this function for Get  conversations count
   /// You can call this funcation after MQTT controller intilized
@@ -275,6 +271,28 @@ class IsmMaterialChatPage extends StatelessWidget {
   static final RxBool _isMqttConnected = false.obs;
   static bool get isMqttConnected => _isMqttConnected.value;
   static set isMqttConnected(bool value) => _isMqttConnected.value = value;
+
+  @override
+  State<IsmMaterialChatPage> createState() => _IsmMaterialChatPageState();
+}
+
+class _IsmMaterialChatPageState extends State<IsmMaterialChatPage> {
+  
+  @override
+  void initState() {
+    super.initState();
+    startInit();
+  }
+
+  startInit() {
+    if (!Get.isRegistered<IsmChatMqttController>()) {
+      IsmChatMqttBinding().dependencies();
+    }
+    if (!Get.isRegistered<IsmChatConversationsController>()) {
+      IsmChatCommonBinding().dependencies();
+      IsmChatConversationsBinding().dependencies();
+    }
+  }
 
   @override
   Widget build(BuildContext context) => const IsmChatPageView();
