@@ -61,17 +61,15 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    alice = Alice(
-      showNotification: false,
-      showInspectorOnShake: true,
-      showShareButton: true,
-    );
-
     if (!kIsWeb) {
+      alice = Alice(
+        showNotification: false,
+        showInspectorOnShake: true,
+        showShareButton: true,
+      );
       final PushNotificationService notificationService =
           PushNotificationService();
       notificationService.requestNotificationService();
-
       notificationService.initialize();
     }
     super.initState();

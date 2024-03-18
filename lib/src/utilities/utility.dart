@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'dart:io';
 import 'dart:math';
 
@@ -192,7 +193,8 @@ class IsmChatUtility {
   /// this is for change encoded string to decode string
   static String decodeString(String value) {
     try {
-      return utf8.fuse(base64).decode(value);
+      // return utf8.fuse(base64).decode(value);
+      return utf8.decode(value.runes.toList());
     } catch (e) {
       return value;
     }

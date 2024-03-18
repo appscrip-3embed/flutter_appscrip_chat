@@ -1,8 +1,6 @@
 PODS:
   - alice (0.0.1):
     - Flutter
-  - alice (0.0.1):
-    - Flutter
   - app_settings (5.1.1):
     - Flutter
   - appscrip_chat_component (0.0.1):
@@ -66,10 +64,10 @@ PODS:
   - Firebase/Messaging (10.22.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 10.22.0)
-  - firebase_core (2.27.0):
+  - firebase_core (2.27.1):
     - Firebase/CoreOnly (= 10.22.0)
     - Flutter
-  - firebase_messaging (14.7.19):
+  - firebase_messaging (14.7.20):
     - Firebase/Messaging (= 10.22.0)
     - firebase_core
     - Flutter
@@ -184,14 +182,14 @@ PODS:
     - Flutter
   - permission_handler_apple (9.3.0):
     - Flutter
-  - PromisesObjC (2.3.1)
+  - PromisesObjC (2.4.0)
   - ReachabilitySwift (5.0.0)
   - record_darwin (1.0.0):
     - Flutter
     - FlutterMacOS
-  - SDWebImage (5.18.7):
-    - SDWebImage/Core (= 5.18.7)
-  - SDWebImage/Core (5.18.7)
+  - SDWebImage (5.19.0):
+    - SDWebImage/Core (= 5.19.0)
+  - SDWebImage/Core (5.19.0)
   - sensors_plus (0.0.1):
     - Flutter
   - share_plus (0.0.1):
@@ -378,8 +376,8 @@ SPEC CHECKSUMS:
   ffmpeg_kit_flutter: b4ca70cac3fc1d8ac14cdc660754b60870358732
   file_picker: 15fd9539e4eb735dc54bae8c0534a7a9511a03de
   Firebase: 797fd7297b7e1be954432743a0b3f90038e45a71
-  firebase_core: 100945864b4aedce3cfef0c62ab864858bf013cf
-  firebase_messaging: e65050bf9b187511d80ea3a4de7cf5573d2c7543
+  firebase_core: d6dfb4cb86a9ebd92464bb8736075fe967211c97
+  firebase_messaging: f97062a3a7644703ba4892859183c0a59e08d25f
   FirebaseCore: 0326ec9b05fbed8f8716cddbf0e36894a13837f7
   FirebaseCoreInternal: bca337352024b18424a61e478460547d46c4c753
   FirebaseInstallations: 763814908793c0da14c18b3dcffdec71e29ed55e
@@ -392,12 +390,12 @@ SPEC CHECKSUMS:
   gal: 61e868295d28fe67ffa297fae6dacebf56fd53e1
   geocoding_ios: a389ea40f6f548de6e63006a2e31bf66ff80769a
   geolocator_apple: 9157311f654584b9bb72686c55fc02a97b73f461
-  google_maps_flutter_ios: d1318b4ff711612cab16862d7a87e31a7403d458
+  google_maps_flutter_ios: f135b968a67c05679e0a53538e900b5c174b0d99
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleMaps: 8939898920281c649150e0af74aa291c60f2e77d
   GoogleUtilities: d053d902a8edaa9904e1bd00c37535385b8ed152
   image_cropper: a3291c624a953049bc6a02e1f8c8ceb162a24b25
-  image_picker_ios: 99dfe1854b4fa34d0364e74a78448a0151025425
+  image_picker_ios: b545a5f16c0fa88e3ecbbce3ed4de45567a8ec18
   just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
@@ -407,10 +405,10 @@ SPEC CHECKSUMS:
   path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
   pdfx: 7b876b09de8b7a0bf444a4f82b439ffcff4ee1ec
   permission_handler_apple: 036b856153a2b1f61f21030ff725f3e6fece2b78
-  PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
+  PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   record_darwin: 1f6619f2abac4d1ca91d3eeab038c980d76f1517
-  SDWebImage: f9258c58221ed854cfa0e2b80ee4033710b1c6d3
+  SDWebImage: 981fd7e860af070920f249fd092420006014c3eb
   sensors_plus: 4ee32bc7d61a055f27f88d3215ad6b6fb96a2b8e
   share_plus: c3fef564749587fc939ef86ffb283ceac0baf9f5
   shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695

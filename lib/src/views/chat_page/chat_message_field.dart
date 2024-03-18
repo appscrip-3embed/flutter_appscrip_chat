@@ -43,7 +43,7 @@ class IsmChatMessageField extends StatelessWidget {
                           onTap: () async {
                             controller.isEnableRecordingAudio = false;
                             controller.showSendButton = false;
-                            await controller.recordAudio.dispose();
+                            // await controller.recordAudio.dispose();s
                             controller.forVideoRecordTimer?.cancel();
                             controller.seconds = 0;
                           },
