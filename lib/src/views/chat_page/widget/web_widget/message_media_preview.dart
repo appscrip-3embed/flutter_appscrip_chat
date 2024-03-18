@@ -88,8 +88,8 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
   }
 
   @override
-  Widget build(BuildContext context) => WillPopScope(
-        onWillPop: () async => false,
+  Widget build(BuildContext context) => PopScope(
+        canPop: false,
         child: Scaffold(
           appBar: AppBar(
             shadowColor: Colors.grey,

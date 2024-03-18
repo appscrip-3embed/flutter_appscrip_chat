@@ -1,5 +1,5 @@
+// ignore_for_file: deprecated_member_use
 import 'dart:io';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
@@ -46,14 +46,14 @@ class _IsmChatPageViewState extends State<IsmChatPageView>
             ? DateTime.now().millisecondsSinceEpoch
             : controller.conversation?.lastMessageSentAt ?? 0,
       );
-      IsmChatLog.error('app in resumed');
+      IsmChatLog.info('app in resumed');
     }
     if (AppLifecycleState.paused == state) {
       mqttController.isAppInBackground = true;
-      IsmChatLog.error('app in backgorund');
+      IsmChatLog.info('app in backgorund');
     }
     if (AppLifecycleState.detached == state) {
-      IsmChatLog.error('app in killed');
+      IsmChatLog.info('app in killed');
     }
   }
 
@@ -66,11 +66,13 @@ class _IsmChatPageViewState extends State<IsmChatPageView>
       return false;
     } else {
       Get.back<void>();
-      if (IsmChatProperties.chatPageProperties.header?.onBackTap != null) {
-        IsmChatProperties.chatPageProperties.header?.onBackTap!.call();
-      }
+
       controller.closeOveray();
-      await controller.updateLastMessage();
+      final updateMessage = await controller.updateLastMessage();
+      if (IsmChatProperties.chatPageProperties.header?.onBackTap != null) {
+        IsmChatProperties.chatPageProperties.header?.onBackTap!
+            .call(updateMessage);
+      }
       return true;
     }
   }
@@ -259,52 +261,50 @@ class _IsmChatPageView extends StatelessWidget {
                                             child: Stack(
                                               alignment: Alignment.bottomLeft,
                                               children: [
-                                                Visibility(
-                                                  visible: controller
-                                                      .messages.isNotEmpty,
-                                                  replacement: IsmChatProperties
-                                                          .chatPageProperties
-                                                          .placeholder ??
-                                                      const IsmChatEmptyView(
-                                                        icon: Icon(
-                                                          Icons.chat_outlined,
+                                                controller.messages.isNotEmpty
+                                                    ? Align(
+                                                        alignment:
+                                                            Alignment.topCenter,
+                                                        child: ListView.builder(
+                                                          controller: controller
+                                                              .messagesScrollController,
+                                                          scrollDirection:
+                                                              Axis.vertical,
+                                                          shrinkWrap: true,
+                                                          keyboardDismissBehavior:
+                                                              ScrollViewKeyboardDismissBehavior
+                                                                  .onDrag,
+                                                          padding: IsmChatDimens
+                                                              .edgeInsets4_8,
+                                                          reverse: true,
+                                                          addAutomaticKeepAlives:
+                                                              true,
+                                                          itemCount: controller
+                                                              .messages.length,
+                                                          itemBuilder: (_,
+                                                                  index) =>
+                                                              controller
+                                                                      .controllerIsRegister
+                                                                  ? IsmChatMessage(
+                                                                      index,
+                                                                      controller
+                                                                              .messages[
+                                                                          index],
+                                                                    )
+                                                                  : IsmChatDimens
+                                                                      .box0,
                                                         ),
-                                                        text: IsmChatStrings
-                                                            .noMessages,
-                                                      ),
-                                                  child: Align(
-                                                    alignment:
-                                                        Alignment.topCenter,
-                                                    child: ListView.builder(
-                                                      controller: controller
-                                                          .messagesScrollController,
-                                                      scrollDirection:
-                                                          Axis.vertical,
-                                                      shrinkWrap: true,
-                                                      keyboardDismissBehavior:
-                                                          ScrollViewKeyboardDismissBehavior
-                                                              .onDrag,
-                                                      padding: IsmChatDimens
-                                                          .edgeInsets4_8,
-                                                      reverse: true,
-                                                      addAutomaticKeepAlives:
-                                                          true,
-                                                      itemCount: controller
-                                                          .messages.length,
-                                                      itemBuilder: (_, index) =>
-                                                          controller
-                                                                  .controllerIsRegister
-                                                              ? IsmChatMessage(
-                                                                  index,
-                                                                  controller
-                                                                          .messages[
-                                                                      index],
-                                                                )
-                                                              : IsmChatDimens
-                                                                  .box0,
-                                                    ),
-                                                  ),
-                                                ),
+                                                      )
+                                                    : IsmChatProperties
+                                                            .chatPageProperties
+                                                            .placeholder ??
+                                                        const IsmChatEmptyView(
+                                                          icon: Icon(
+                                                            Icons.chat_outlined,
+                                                          ),
+                                                          text: IsmChatStrings
+                                                              .noMessages,
+                                                        ),
                                                 Obx(() => Align(
                                                       alignment: Responsive
                                                               .isWebAndTablet(

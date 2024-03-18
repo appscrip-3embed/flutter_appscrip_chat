@@ -34,10 +34,10 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
-        builder: (controller) => WillPopScope(
-          onWillPop: () async {
+        builder: (controller) => PopScope(
+          canPop: true,
+          onPopInvoked: (didPop) {
             _back(context, controller);
-            return true;
           },
           child: Scaffold(
             backgroundColor:

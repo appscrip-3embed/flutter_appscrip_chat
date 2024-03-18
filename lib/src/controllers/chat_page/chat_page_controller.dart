@@ -1540,7 +1540,7 @@ class IsmChatPageController extends GetxController
     cameraController.setFlashMode(flashMode);
   }
 
-  Future<void> updateLastMessage() async {
+  Future<bool> updateLastMessage() async {
     if (!didReactedLast) {
       var chatConversation = await IsmChatConfig.dbWrapper!
           .getConversation(conversationId: conversation?.conversationId ?? '');
@@ -1622,6 +1622,8 @@ class IsmChatPageController extends GetxController
     }
     unawaited(
         Get.find<IsmChatMqttController>().getChatConversationsUnreadCount());
+
+    return true;
   }
 
   Future<void> updateUnreadMessgaeCount() async {
@@ -1754,7 +1756,7 @@ class IsmChatPageController extends GetxController
       content: TextFormField(
         controller: groupTitleController,
       ),
-      actionLabels: const [IsmChatStrings.ok],
+      actionLabels: const [IsmChatStrings.okay],
       callbackActions: [
         () => changeGroupTitle(
             conversationTitle: groupTitleController.text,
@@ -1832,7 +1834,7 @@ class IsmChatPageController extends GetxController
       await Get.dialog(
         const IsmChatAlertDialogBox(
           title: IsmChatStrings.cannotBlock,
-          cancelLabel: 'Okay',
+          cancelLabel: IsmChatStrings.okay,
         ),
       );
     }

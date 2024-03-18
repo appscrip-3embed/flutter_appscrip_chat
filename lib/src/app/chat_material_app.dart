@@ -134,6 +134,16 @@ class IsmChatApp extends StatelessWidget {
     }
   }
 
+  /// Call this funcation for showing Block un Block Dialog
+  static void showBlockUnBlockDialog() {
+    if (Get.isRegistered<IsmChatPageController>()) {
+      final controller = Get.find<IsmChatPageController>();
+      if (!(controller.conversation?.isChattingAllowed == true)) {
+        controller.showDialogCheckBlockUnBlock();
+      }
+    }
+  }
+
   /// Call this function for assign null on current conversation
   static void changeCurrentConversation() {
     if (Get.isRegistered<IsmChatConversationsController>()) {
@@ -261,8 +271,6 @@ class IsmChatApp extends StatelessWidget {
 
   /// Call this function on SignOut to delete the data stored locally in the Local Database
   static Future<void> logout() async {
-    await Get.find<IsmChatMqttController>().unSubscribe();
-    await Get.find<IsmChatMqttController>().disconnect();
     await IsmChatConfig.dbWrapper?.deleteChatLocalDb();
     await Future.wait([
       Get.delete<IsmChatConversationsController>(force: true),
