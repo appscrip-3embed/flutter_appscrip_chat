@@ -1058,7 +1058,7 @@ class IsmChatConversationsController extends GetxController {
   }
 
   Future<void> goToChatPage() async {
-    if (Responsive.isWebAndTablet(Get.context!)) {
+    if (Responsive.isWeb(Get.context!)) {
       if (!Get.isRegistered<IsmChatPageController>()) {
         IsmChatPageBinding().dependencies();
         return;

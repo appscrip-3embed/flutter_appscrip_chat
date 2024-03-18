@@ -163,11 +163,14 @@ class VoiceMessageState extends State<VoiceMessage>
       );
 
   void _startPlaying() async {
-    if (widget.audioFile != null) {
-      var path = (await widget.audioFile!).path;
+    IsmChatLog.error(await widget.audioFile);
+    IsmChatLog.error(widget.audioSrc);
+
+    if (await widget.audioFile != null) {
+      var path = (await widget.audioFile ?? File('')).path;
       await _player.play(DeviceFileSource(path));
     } else if (widget.audioSrc != null) {
-      await _player.play(UrlSource(widget.audioSrc!));
+      await _player.play(UrlSource(widget.audioSrc ?? ''));
     }
     await _animationController!.forward();
   }

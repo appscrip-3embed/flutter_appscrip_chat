@@ -84,7 +84,7 @@ class IsmChatContactMessage extends StatelessWidget {
               const Divider(
                 thickness: 1,
               ),
-              if (!Responsive.isWebAndTablet(context))
+              if (!Responsive.isWeb(context))
                 Center(
                   child: Text(
                     'View ${message.contacts.length != 1 ? 'All' : ''}',

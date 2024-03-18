@@ -82,8 +82,7 @@ class IsmChatTextMessage extends StatelessWidget {
                                         conversationcontroller
                                                 .userConversationId =
                                             conversationId;
-                                        if (Responsive.isWebAndTablet(
-                                            context)) {
+                                        if (Responsive.isWeb(context)) {
                                           conversationcontroller
                                                   .isRenderChatPageaScreen =
                                               IsRenderChatPageScreen

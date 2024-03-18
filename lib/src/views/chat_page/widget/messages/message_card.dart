@@ -113,7 +113,7 @@ class _MessageCardState extends State<MessageCard>
                       IsmChatCustomMessageType.image,
                       IsmChatCustomMessageType.video,
                       IsmChatCustomMessageType.file,
-                      if (!Responsive.isWebAndTablet(context))
+                      if (!Responsive.isWeb(context))
                         IsmChatCustomMessageType.contact,
                     ].contains(
                       widget.message.metaData?.replyMessage
@@ -125,7 +125,7 @@ class _MessageCardState extends State<MessageCard>
                     IsmChatCustomMessageType.image,
                     IsmChatCustomMessageType.video,
                     IsmChatCustomMessageType.file,
-                    if (!Responsive.isWebAndTablet(context))
+                    if (!Responsive.isWeb(context))
                       IsmChatCustomMessageType.contact,
                   ].contains(widget.message.customType)) {
                     controller.tapForMediaPreview(widget.message);

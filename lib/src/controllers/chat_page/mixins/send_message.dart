@@ -110,7 +110,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       if (isMessageSent && !isTemporaryChat) {
         _controller.didReactedLast = false;
         await _controller.getMessagesFromDB(conversationId);
-        if (kIsWeb && Responsive.isWebAndTablet(Get.context!)) {
+        if (kIsWeb && Responsive.isWeb(Get.context!)) {
           await conversationController.getConversationsFromDB();
         }
       }
@@ -361,7 +361,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await IsmChatConfig.dbWrapper!
           .saveMessage(audioMessage, IsmChatDbBox.pending);
 
-      if (kIsWeb && Responsive.isWebAndTablet(Get.context!)) {
+      if (kIsWeb && Responsive.isWeb(Get.context!)) {
         _controller.updateLastMessagOnCurrentTime(audioMessage);
       }
     }
@@ -422,7 +422,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       final resultFiles = result?.files ?? [];
 
       for (var x in resultFiles) {
-        var sizeMedia = kIsWeb && Responsive.isWebAndTablet(Get.context!)
+        var sizeMedia = kIsWeb && Responsive.isWeb(Get.context!)
             ? IsmChatUtility.formatBytes(
                 int.parse((x.bytes?.length ?? 0).toString()),
               )
@@ -430,7 +430,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
 
         bytes = Uint8List.fromList(x.bytes as List<int>);
         if (sizeMedia.size()) {
-          final document = kIsWeb && Responsive.isWebAndTablet(Get.context!)
+          final document = kIsWeb && Responsive.isWeb(Get.context!)
               ? await PdfDocument.openData(x.bytes ?? Uint8List(0))
               : await PdfDocument.openFile(x.path ?? '');
           final page = await document.getPage(1);
@@ -459,7 +459,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
                 size: bytes.length,
                 name: nameWithExtension,
                 mimeType: x.extension,
-                mediaUrl: kIsWeb && Responsive.isWebAndTablet(Get.context!)
+                mediaUrl: kIsWeb && Responsive.isWeb(Get.context!)
                     ? (bytes).toString()
                     : x.path,
                 mediaId: sentAt.toString(),
@@ -516,7 +516,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       if (!_controller.isTemporaryChat) {
         await IsmChatConfig.dbWrapper!
             .saveMessage(documentMessage, IsmChatDbBox.pending);
-        if (kIsWeb && Responsive.isWebAndTablet(Get.context!)) {
+        if (kIsWeb && Responsive.isWeb(Get.context!)) {
           _controller.updateLastMessagOnCurrentTime(documentMessage);
         }
       }
@@ -678,7 +678,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await IsmChatConfig.dbWrapper!
           .saveMessage(videoMessage, IsmChatDbBox.pending);
 
-      if (kIsWeb && Responsive.isWebAndTablet(Get.context!)) {
+      if (kIsWeb && Responsive.isWeb(Get.context!)) {
         _controller.updateLastMessagOnCurrentTime(videoMessage);
       }
     }
@@ -812,7 +812,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await IsmChatConfig.dbWrapper!
           .saveMessage(imageMessage, IsmChatDbBox.pending);
 
-      if (kIsWeb && Responsive.isWebAndTablet(Get.context!)) {
+      if (kIsWeb && Responsive.isWeb(Get.context!)) {
         _controller.updateLastMessagOnCurrentTime(imageMessage);
       }
     }
@@ -915,7 +915,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await IsmChatConfig.dbWrapper!
           .saveMessage(locationMessage, IsmChatDbBox.pending);
 
-      if (kIsWeb && Responsive.isWebAndTablet(Get.context!)) {
+      if (kIsWeb && Responsive.isWeb(Get.context!)) {
         _controller.updateLastMessagOnCurrentTime(locationMessage);
       }
     }
@@ -1116,7 +1116,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await IsmChatConfig.dbWrapper!
           .saveMessage(textMessage, IsmChatDbBox.pending);
 
-      if (kIsWeb && Responsive.isWebAndTablet(Get.context!)) {
+      if (kIsWeb && Responsive.isWeb(Get.context!)) {
         _controller.updateLastMessagOnCurrentTime(textMessage);
       }
     }

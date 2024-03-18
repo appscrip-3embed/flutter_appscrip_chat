@@ -21,7 +21,7 @@ class IsmChatSearchMessgae extends StatelessWidget {
               IsmChatConfig.chatTheme.chatPageTheme?.backgroundColor ??
                   IsmChatColors.whiteColor,
           appBar: IsmChatAppBar(
-            onBack: !Responsive.isWebAndTablet(context)
+            onBack: !Responsive.isWeb(context)
                 ? null
                 : () {
                     Get.find<IsmChatConversationsController>()

@@ -27,7 +27,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
         builder: (controller) => Scaffold(
           backgroundColor: IsmChatColors.blueGreyColor,
           appBar: IsmChatAppBar(
-            onBack: !Responsive.isWebAndTablet(context)
+            onBack: !Responsive.isWeb(context)
                 ? null
                 : () {
                     Get.find<IsmChatConversationsController>()
@@ -177,7 +177,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                           ),
                           child: IsmChatTapHandler(
                             onTap: () {
-                              if (Responsive.isWebAndTablet(context)) {
+                              if (Responsive.isWeb(context)) {
                                 Get.find<IsmChatConversationsController>()
                                         .isRenderChatPageaScreen =
                                     IsRenderChatPageScreen.coversationMediaView;
@@ -242,7 +242,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                               onPressed: () {
                                 controller.participnatsEditingController
                                     .clear();
-                                if (Responsive.isWebAndTablet(context)) {
+                                if (Responsive.isWeb(context)) {
                                   Get.find<IsmChatConversationsController>()
                                           .isRenderChatPageaScreen =
                                       IsRenderChatPageScreen.groupEligibleView;

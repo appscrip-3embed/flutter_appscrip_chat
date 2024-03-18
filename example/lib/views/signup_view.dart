@@ -36,7 +36,7 @@ class SignupView extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
                   child: Center(
                     child: SizedBox(
-                      width: ResponsiveExample.isWebAndTablet(context)
+                      width: ResponsiveExample.isWeb(context)
                           ? Dimens.percentWidth(.3)
                           : null,
                       child: Column(
@@ -45,7 +45,7 @@ class SignupView extends StatelessWidget {
                           Center(
                             child: GestureDetector(
                               onTap: () {
-                                if (Responsive.isWebAndTablet(context)) {
+                                if (Responsive.isWeb(context)) {
                                   controller.ismUploadImage(
                                     ImageSource.gallery,
                                   );

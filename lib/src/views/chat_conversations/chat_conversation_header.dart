@@ -42,7 +42,7 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
           automaticallyImplyLeading: false,
           elevation: IsmChatDimens.appBarElevation,
           title: IsmChatTapHandler(
-            onTap: Responsive.isWebAndTablet(context)
+            onTap: Responsive.isWeb(context)
                 ? () {
                     controller.isRenderScreen =
                         IsRenderConversationScreen.userView;
@@ -99,7 +99,7 @@ class IsmChatListHeader extends StatelessWidget implements PreferredSizeWidget {
           ),
           actions: [
             if (showSearch) _SearchAction(onTap: onSearchTap),
-            if (Responsive.isWebAndTablet(context)) _StartMessage(),
+            if (Responsive.isWeb(context)) _StartMessage(),
             _MoreIcon(onSignOut),
           ],
         ),
@@ -141,7 +141,7 @@ class _MoreIcon extends StatelessWidget {
     controller.isDrawerContext = context;
     return PopupMenuButton(
       color: IsmChatColors.whiteColor,
-      offset: Offset((Responsive.isWebAndTablet(context)) ? -180 : 0, 0),
+      offset: Offset((Responsive.isWeb(context)) ? -180 : 0, 0),
       padding: EdgeInsets.zero,
       icon: Icon(
         Icons.more_vert_rounded,
@@ -149,7 +149,7 @@ class _MoreIcon extends StatelessWidget {
       ),
       onSelected: (index) async {
         if (index == 1) {
-          if (Responsive.isWebAndTablet(context)) {
+          if (Responsive.isWeb(context)) {
             controller.isRenderScreen =
                 IsRenderConversationScreen.broadcastView;
             Scaffold.of(context).openDrawer();
@@ -157,7 +157,7 @@ class _MoreIcon extends StatelessWidget {
             IsmChatRouteManagement.goToBroadcastView();
           }
         } else if (index == 2) {
-          if (Responsive.isWebAndTablet(context)) {
+          if (Responsive.isWeb(context)) {
             controller.isRenderScreen = IsRenderConversationScreen.blockView;
             Scaffold.of(context).openDrawer();
           } else {
@@ -187,7 +187,7 @@ class _MoreIcon extends StatelessWidget {
         }
       },
       itemBuilder: (_) => [
-        if (Responsive.isWebAndTablet(context)) ...[
+        if (Responsive.isWeb(context)) ...[
           PopupMenuItem(
             value: 1,
             child: Row(
@@ -215,7 +215,7 @@ class _MoreIcon extends StatelessWidget {
             ],
           ),
         ),
-        if (Responsive.isWebAndTablet(context)) ...[
+        if (Responsive.isWeb(context)) ...[
           PopupMenuItem(
             value: 3,
             child: Row(
@@ -249,7 +249,7 @@ class _MoreIcon extends StatelessWidget {
             ),
           )
         ],
-        if (Responsive.isWebAndTablet(context)) ...[
+        if (Responsive.isWeb(context)) ...[
           PopupMenuItem(
             value: 4,
             child: Row(

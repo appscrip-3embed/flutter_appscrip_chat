@@ -77,7 +77,7 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
       builder: (controller) => Scaffold(
             backgroundColor: IsmChatColors.whiteColor,
             appBar: IsmChatAppBar(
-              onBack: Responsive.isWebAndTablet(context)
+              onBack: Responsive.isWeb(context)
                   ? () {
                       conversationController.isRenderChatPageaScreen =
                           IsRenderChatPageScreen.none;
@@ -115,7 +115,7 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
                       IsmChatDimens.boxHeight16,
                       ListTile(
                         onTap: () {
-                          if (Responsive.isWebAndTablet(context)) {
+                          if (Responsive.isWeb(context)) {
                             conversationController.mediaList = mediaList;
                             conversationController.mediaListDocs =
                                 mediaListDocs;

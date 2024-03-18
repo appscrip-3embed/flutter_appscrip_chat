@@ -361,7 +361,7 @@ class IsmChatBroadCastView extends StatelessWidget {
                   customType: 'Broadcasting',
                 );
                 controller.navigateToMessages(conversation);
-                if (Responsive.isWebAndTablet(context)) {
+                if (Responsive.isWeb(context)) {
                   Get.back();
                   if (!Get.isRegistered<IsmChatPageController>()) {
                     IsmChatPageBinding().dependencies();
@@ -418,7 +418,7 @@ class _GetSuspensionTag extends StatelessWidget {
             ),
             SizedBox(
                 width: IsmChatDimens.percentWidth(
-                  Responsive.isWebAndTablet(Get.context!) ? .23 : .7,
+                  Responsive.isWeb(Get.context!) ? .23 : .7,
                 ),
                 child: Divider(
                   height: .0,

@@ -16,7 +16,7 @@ class IsmChatVideoMessage extends StatelessWidget {
             Column(
               children: [
                 SizedBox(
-                  height: Responsive.isWebAndTablet(context)
+                  height: Responsive.isWeb(context)
                       ? IsmChatDimens.percentHeight(.3)
                       : kIsWeb
                           ? IsmChatDimens.percentHeight(.3)

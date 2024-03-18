@@ -92,7 +92,7 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                         alignment: Alignment.topLeft,
                         child: Container(
                             width: IsmChatDimens.percentWidth(
-                                Responsive.isWebAndTablet(context) ? .08 : .3),
+                                Responsive.isWeb(context) ? .08 : .3),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.only(
                                 topRight: Radius.circular(IsmChatDimens.ten),
@@ -136,7 +136,7 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                         alignment: Alignment.topRight,
                         child: Container(
                             width: IsmChatDimens.percentWidth(
-                                Responsive.isWebAndTablet(context) ? .07 : .3),
+                                Responsive.isWeb(context) ? .07 : .3),
                             padding: IsmChatDimens.edgeInsets4,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(

@@ -40,7 +40,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                     textScaler: const TextScaler.linear(1.5),
                     style: IsmChatStyles.w600Black14,
                   ),
-                  if (!Responsive.isWebAndTablet(Get.context!))
+                  if (!Responsive.isWeb(Get.context!))
                     SizedBox(
                         width: IsmChatDimens.percentWidth(.8),
                         child: Divider(
@@ -576,7 +576,7 @@ class _GroupChatImageAndName extends StatelessWidget {
                   right: IsmChatDimens.four,
                   child: IsmChatTapHandler(
                     onTap: () {
-                      if (Responsive.isWebAndTablet(context)) {
+                      if (Responsive.isWeb(context)) {
                         controller.ismUploadImage(ImageSource.gallery);
                       } else {
                         Get.bottomSheet<void>(

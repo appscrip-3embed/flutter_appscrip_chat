@@ -41,7 +41,7 @@ class IsmChatUserView extends StatelessWidget {
               IsmChatStrings.userInfo,
               style: IsmChatStyles.w600White18,
             ),
-            action: !Responsive.isWebAndTablet(context)
+            action: !Responsive.isWeb(context)
                 ? [
                     TextButton(
                       onPressed: () {
@@ -76,7 +76,7 @@ class IsmChatUserView extends StatelessWidget {
                       right: IsmChatDimens.ten,
                       child: IsmChatTapHandler(
                         onTap: () {
-                          if (Responsive.isWebAndTablet(context)) {
+                          if (Responsive.isWeb(context)) {
                             controller.ismUploadImage(ImageSource.gallery);
                           } else {
                             Get.bottomSheet<void>(
@@ -255,7 +255,7 @@ class IsmChatUserView extends StatelessWidget {
                           ),
                           trailing: ElevatedButton(
                             onPressed: () {
-                              if (!Responsive.isWebAndTablet(context)) {
+                              if (!Responsive.isWeb(context)) {
                                 controller.unblockUser(
                                   opponentId: user.userId,
                                   isLoading: true,

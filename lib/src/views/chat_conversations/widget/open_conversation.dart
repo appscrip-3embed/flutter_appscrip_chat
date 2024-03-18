@@ -114,7 +114,7 @@ class _IsmChatOpenConversationViewState
                                     .onChatTap!(Get.context!, data);
                                 controller.navigateToMessages(data);
 
-                                if (Responsive.isWebAndTablet(Get.context!)) {
+                                if (Responsive.isWeb(Get.context!)) {
                                   Get.back();
 
                                   if (!Get.isRegistered<

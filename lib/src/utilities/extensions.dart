@@ -1003,7 +1003,7 @@ extension Conversation on IsmChatConversationType {
       case IsmChatConversationType.private:
         break;
       case IsmChatConversationType.public:
-        if (Responsive.isWebAndTablet(Get.context!)) {
+        if (Responsive.isWeb(Get.context!)) {
           controller.isRenderScreen =
               IsRenderConversationScreen.publicConverationView;
           Scaffold.of(controller.isDrawerContext!).openDrawer();
@@ -1013,7 +1013,7 @@ extension Conversation on IsmChatConversationType {
 
         break;
       case IsmChatConversationType.open:
-        if (Responsive.isWebAndTablet(Get.context!)) {
+        if (Responsive.isWeb(Get.context!)) {
           controller.isRenderScreen =
               IsRenderConversationScreen.openConverationView;
           Scaffold.of(controller.isDrawerContext!).openDrawer();

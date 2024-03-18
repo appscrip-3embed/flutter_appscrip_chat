@@ -146,7 +146,7 @@ class _IsmChatPageView extends StatelessWidget {
                         controller.selectedMessage.clear();
                       },
                       child: Icon(
-                        Responsive.isWebAndTablet(context)
+                        Responsive.isWeb(context)
                             ? Icons.close_rounded
                             : Icons.arrow_back_rounded,
                       ),
@@ -209,8 +209,7 @@ class _IsmChatPageView extends StatelessWidget {
                                                   ?.userId ==
                                               IsmChatConfig.communicationConfig
                                                   .userConfig.userId)) {
-                                        if (Responsive.isWebAndTablet(
-                                            context)) {
+                                        if (Responsive.isWeb(context)) {
                                           Get.find<IsmChatConversationsController>()
                                                   .isRenderChatPageaScreen =
                                               IsRenderChatPageScreen
@@ -224,10 +223,9 @@ class _IsmChatPageView extends StatelessWidget {
                                   }
                                 : null,
                   ),
-            body: Responsive.isWebAndTablet(context) &&
-                    controller.webMedia.isNotEmpty
+            body: Responsive.isWeb(context) && controller.webMedia.isNotEmpty
                 ? const WebMediaPreview()
-                : Responsive.isWebAndTablet(context) && controller.isCameraView
+                : Responsive.isWeb(context) && controller.isCameraView
                     ? const IsmChatCameraView()
                     : Stack(
                         alignment: Alignment.bottomRight,
@@ -306,13 +304,13 @@ class _IsmChatPageView extends StatelessWidget {
                                                               .noMessages,
                                                         ),
                                                 Obx(() => Align(
-                                                      alignment: Responsive
-                                                              .isWebAndTablet(
+                                                      alignment:
+                                                          Responsive.isWeb(
                                                                   context)
-                                                          ? Alignment
-                                                              .bottomCenter
-                                                          : Alignment
-                                                              .bottomLeft,
+                                                              ? Alignment
+                                                                  .bottomCenter
+                                                              : Alignment
+                                                                  .bottomLeft,
                                                       child: controller
                                                               .showMentionUserList
                                                           ? const MentionUserList()

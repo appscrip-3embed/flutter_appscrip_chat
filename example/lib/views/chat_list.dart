@@ -149,14 +149,14 @@ class ChatList extends StatelessWidget {
               allowDelete: true,
               onCreateTap: () {},
               onChatTap: (_, conversation) {},
-              isHeaderAppBar: Responsive.isWebAndTablet(context) ? false : true,
+              isHeaderAppBar: Responsive.isWeb(context) ? false : true,
               header: IsmChatListHeader(
                 onSignOut: () {
                   controller.onSignOut();
                 },
                 onSearchTap: (p0, p1, p2) {},
                 showSearch: false,
-                width: Responsive.isWebAndTablet(context)
+                width: Responsive.isWeb(context)
                     ? IsmChatDimens.percentWidth(.3)
                     : null,
               ),

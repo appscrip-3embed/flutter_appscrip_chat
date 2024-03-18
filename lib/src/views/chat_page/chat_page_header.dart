@@ -58,7 +58,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          if (!Responsive.isWebAndTablet(context)) ...[
+                          if (!Responsive.isWeb(context)) ...[
                             IconButton(
                               onPressed: () async {
                                 Get.back<void>();
@@ -183,9 +183,8 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                                           ?.isGroup ==
                                                       true
                                                   ? SizedBox(
-                                                      width: Responsive
-                                                              .isWebAndTablet(
-                                                                  context)
+                                                      width: Responsive.isWeb(
+                                                              context)
                                                           ? null
                                                           : IsmChatDimens
                                                               .percentWidth(
@@ -418,7 +417,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                               } else if (value == 2) {
                                 controller.addWallpaper();
                               } else if (value == 1) {
-                                if (Responsive.isWebAndTablet(context)) {
+                                if (Responsive.isWeb(context)) {
                                   Get.find<IsmChatConversationsController>()
                                           .isRenderChatPageaScreen =
                                       IsRenderChatPageScreen.messageSearchView;

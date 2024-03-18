@@ -46,7 +46,7 @@ class _IsmChatConversationCardState extends State<IsmChatConversationCard>
     return IsmChatTapHandler(
       onTap: widget.onTap,
       child: Container(
-        color: kIsWeb && Responsive.isWebAndTablet(context)
+        color: kIsWeb && Responsive.isWeb(context)
             ? Get.find<IsmChatConversationsController>()
                         .currentConversationId ==
                     widget.conversation.conversationId

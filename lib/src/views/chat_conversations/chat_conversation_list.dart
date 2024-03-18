@@ -189,7 +189,7 @@ class _ConversationList extends StatelessWidget {
                     () => IsmChatConversationCard(
                       onProfileTap: IsmChatProperties.conversationProperties
                           .cardElementBuilders?.onProfileTap,
-                      isShowBackgroundColor: Responsive.isWebAndTablet(context)
+                      isShowBackgroundColor: Responsive.isWeb(context)
                           ? controller.currentConversationId ==
                               conversation.conversationId
                           : false,

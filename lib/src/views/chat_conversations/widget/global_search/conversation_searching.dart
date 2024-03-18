@@ -47,11 +47,10 @@ class IsmChatConversationSearchView extends StatelessWidget {
                         return Column(
                           children: [
                             IsmChatConversationCard(
-                              isShowBackgroundColor:
-                                  Responsive.isWebAndTablet(context)
-                                      ? controller.currentConversationId ==
-                                          conversation.conversationId
-                                      : false,
+                              isShowBackgroundColor: Responsive.isWeb(context)
+                                  ? controller.currentConversationId ==
+                                      conversation.conversationId
+                                  : false,
                               name: IsmChatProperties.conversationProperties
                                   .cardElementBuilders?.name,
                               nameBuilder: IsmChatProperties

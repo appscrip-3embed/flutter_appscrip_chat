@@ -174,7 +174,7 @@ mixin IsmChatMqttEventMixin on GetxController {
 
     // To handle and show last message & unread count in conversation list
     conversation = conversation.copyWith(
-      unreadMessagesCount: Responsive.isWebAndTablet(Get.context!) &&
+      unreadMessagesCount: Responsive.isWeb(Get.context!) &&
               (Get.isRegistered<IsmChatPageController>() &&
                   Get.find<IsmChatPageController>()
                           .conversation
@@ -276,7 +276,7 @@ mixin IsmChatMqttEventMixin on GetxController {
 
     // To handle and show last message & unread count in conversation list
     conversation = conversation.copyWith(
-      unreadMessagesCount: Responsive.isWebAndTablet(Get.context!) &&
+      unreadMessagesCount: Responsive.isWeb(Get.context!) &&
               (Get.isRegistered<IsmChatPageController>() &&
                   Get.find<IsmChatPageController>()
                           .conversation
@@ -378,7 +378,7 @@ mixin IsmChatMqttEventMixin on GetxController {
       return;
     }
 
-    if (!Responsive.isWebAndTablet(Get.context!)) {
+    if (!Responsive.isWeb(Get.context!)) {
       if (isAppInBackground) {
         showPushNotification(
             title: message.notificationTitle ?? '',

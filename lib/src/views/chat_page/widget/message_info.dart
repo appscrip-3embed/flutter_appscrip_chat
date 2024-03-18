@@ -33,7 +33,7 @@ class IsmChatMessageInfo extends StatelessWidget {
                 ),
             elevation: 0,
             leading: IconButton(
-              onPressed: Responsive.isWebAndTablet(context)
+              onPressed: Responsive.isWeb(context)
                   ? () {
                       Get.find<IsmChatConversationsController>()
                               .isRenderChatPageaScreen =
@@ -41,7 +41,7 @@ class IsmChatMessageInfo extends StatelessWidget {
                     }
                   : Get.back,
               icon: Icon(
-                Responsive.isWebAndTablet(context)
+                Responsive.isWeb(context)
                     ? Icons.close_rounded
                     : Icons.arrow_back_rounded,
                 color: IsmChatConfig.chatTheme.chatPageHeaderTheme?.iconColor ??
@@ -95,10 +95,10 @@ class IsmChatMessageInfo extends StatelessWidget {
                         Container(
                           padding: IsmChatDimens.edgeInsets4,
                           constraints: BoxConstraints(
-                            maxWidth: (Responsive.isWebAndTablet(context))
+                            maxWidth: (Responsive.isWeb(context))
                                 ? context.width * .25
                                 : context.width * .8,
-                            minWidth: Responsive.isWebAndTablet(context)
+                            minWidth: Responsive.isWeb(context)
                                 ? context.width * .06
                                 : context.width * .1,
                           ),

@@ -15,7 +15,7 @@ class MessageBubble extends GetView<IsmChatPageController> {
               customType: IsmChatCustomMessageType.text,
               sentByMe: true,
             ),
-        _globalKey = Responsive.isWebAndTablet(Get.context!)
+        _globalKey = Responsive.isWeb(Get.context!)
             ? GlobalKey()
             : Get.find<IsmChatPageController>()
                 .getGlobalKey(message?.sentAt ?? 0);
@@ -27,7 +27,7 @@ class MessageBubble extends GetView<IsmChatPageController> {
 
   @override
   Widget build(BuildContext context) => Container(
-        key: Responsive.isWebAndTablet(context) ? _globalKey : null,
+        key: Responsive.isWeb(context) ? _globalKey : null,
         margin: _message.reactions?.isNotEmpty == true && !showMessageInCenter
             ? IsmChatDimens.edgeInsetsB25
             : null,
@@ -39,10 +39,10 @@ class MessageBubble extends GetView<IsmChatPageController> {
               )
             : IsmChatConfig.chatTheme.chatPageTheme?.constraints ??
                 BoxConstraints(
-                  maxWidth: (Responsive.isWebAndTablet(context))
+                  maxWidth: (Responsive.isWeb(context))
                       ? context.width * .2
                       : context.width * .7,
-                  minWidth: Responsive.isWebAndTablet(context)
+                  minWidth: Responsive.isWeb(context)
                       ? IsmChatDimens.ninty
                       : context.width * .25,
                 ),
@@ -194,7 +194,7 @@ class MessageBubble extends GetView<IsmChatPageController> {
               ),
               Obx(
                 () => (controller.onMessageHoverIndex == index &&
-                        Responsive.isWebAndTablet(context))
+                        Responsive.isWeb(context))
                     ? Positioned(
                         top: IsmChatDimens.four,
                         right: IsmChatDimens.five,

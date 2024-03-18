@@ -16,7 +16,7 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
   void _back(BuildContext context, IsmChatPageController controller) async {
     var controller = Get.find<IsmChatPageController>();
     final conversationController = Get.find<IsmChatConversationsController>();
-    if (Responsive.isWebAndTablet(context)) {
+    if (Responsive.isWeb(context)) {
       controller.isTemporaryChat = false;
       conversationController.currentConversation = null;
       conversationController.currentConversationId = '';
@@ -47,7 +47,7 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
               leading: IsmChatTapHandler(
                 onTap: () => _back(context, controller),
                 child: Icon(
-                  Responsive.isWebAndTablet(context)
+                  Responsive.isWeb(context)
                       ? Icons.close_rounded
                       : Icons.arrow_back_rounded,
                 ),
@@ -87,7 +87,7 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
               actions: [
                 IconButton(
                   onPressed: () async {
-                    if (Responsive.isWebAndTablet(context)) {
+                    if (Responsive.isWeb(context)) {
                       await Get.dialog(IsmChatPageDailog(
                         child: IsmChatObserverUsersView(
                           conversationId:

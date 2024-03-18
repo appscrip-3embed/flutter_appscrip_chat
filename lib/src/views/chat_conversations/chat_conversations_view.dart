@@ -73,14 +73,14 @@ class _IsmChatConversationsState extends State<IsmChatConversations>
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      border: Responsive.isWebAndTablet(context)
+                      border: Responsive.isWeb(context)
                           ? Border(
                               right: BorderSide(
                                   color: IsmChatConfig.chatTheme.dividerColor!),
                             )
                           : null,
                     ),
-                    width: Responsive.isWebAndTablet(context)
+                    width: Responsive.isWeb(context)
                         ? IsmChatProperties.sideWidgetWidth ??
                             IsmChatDimens.percentWidth(.3)
                         : IsmChatDimens.percentWidth(1),
@@ -107,7 +107,7 @@ class _IsmChatConversationsState extends State<IsmChatConversations>
                       ],
                     ),
                   ),
-                  if (Responsive.isWebAndTablet(context)) ...[
+                  if (Responsive.isWeb(context)) ...[
                     Expanded(
                       child: Stack(
                         children: [
@@ -168,7 +168,7 @@ class _IsmChatConversationsState extends State<IsmChatConversations>
             ),
             floatingActionButton: IsmChatProperties
                         .conversationProperties.showCreateChatIcon &&
-                    !Responsive.isWebAndTablet(context)
+                    !Responsive.isWeb(context)
                 ? IsmChatStartChatFAB(
                     icon:
                         IsmChatProperties.conversationProperties.createChatIcon,
@@ -190,7 +190,7 @@ class _IsmChatConversationsState extends State<IsmChatConversations>
                     },
                   )
                 : null,
-            drawer: Responsive.isWebAndTablet(context)
+            drawer: Responsive.isWeb(context)
                 ? Obx(
                     () => SizedBox(
                       width: IsmChatDimens.percentWidth(.299),

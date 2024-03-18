@@ -39,7 +39,7 @@ class IsmChatForwardView extends StatelessWidget {
             ),
             SizedBox(
                 width: IsmChatDimens.percentWidth(
-                  Responsive.isWebAndTablet(Get.context!) ? .23 : .7,
+                  Responsive.isWeb(Get.context!) ? .23 : .7,
                 ),
                 child: Divider(
                   height: .0,

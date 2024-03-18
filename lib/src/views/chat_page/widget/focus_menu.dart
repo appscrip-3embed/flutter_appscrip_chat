@@ -24,7 +24,7 @@ class IsmChatFocusMenu extends StatelessWidget {
   final controller = Get.find<IsmChatPageController>();
 
   @override
-  Widget build(BuildContext context) => Responsive.isWebAndTablet(context)
+  Widget build(BuildContext context) => Responsive.isWeb(context)
       ? IsmChatTapHandler(
           onTap: controller.closeOveray,
           child: Padding(
@@ -110,7 +110,7 @@ class IsmChatFocusMenu extends StatelessWidget {
         )
       : IsmChatTapHandler(
           onTap: () {
-            if (Responsive.isWebAndTablet(context)) {
+            if (Responsive.isWeb(context)) {
               var controller = Get.find<IsmChatPageController>();
               controller.closeOveray();
             } else {

@@ -21,7 +21,7 @@ class IsmChatCameraView extends StatefulWidget {
 class _CameraScreenViewState extends State<IsmChatCameraView> {
   @override
   void dispose() {
-    if (Responsive.isWebAndTablet(Get.context!)) {
+    if (Responsive.isWeb(Get.context!)) {
       Get.find<IsmChatPageController>().cameraController.dispose();
     }
     super.dispose();
@@ -83,7 +83,7 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                       padding: IsmChatDimens.edgeInsetsTop20.copyWith(top: 40),
                       child: IconButton(
                         onPressed: () {
-                          if (Responsive.isWebAndTablet(context)) {
+                          if (Responsive.isWeb(context)) {
                             controller.isCameraView = false;
                           } else {
                             Get.back();
@@ -106,11 +106,11 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                     child: Column(
                       children: [
                         Row(
-                          mainAxisAlignment: Responsive.isWebAndTablet(context)
+                          mainAxisAlignment: Responsive.isWeb(context)
                               ? MainAxisAlignment.center
                               : MainAxisAlignment.spaceBetween,
                           children: [
-                            if (!Responsive.isWebAndTablet(context))
+                            if (!Responsive.isWeb(context))
                               IconButton(
                                 icon: Icon(
                                   controller.flashMode.icon,
@@ -192,7 +192,7 @@ class _CameraScreenViewState extends State<IsmChatCameraView> {
                                 width: IsmChatDimens.sixty,
                               ),
                             ),
-                            if (!Responsive.isWebAndTablet(context))
+                            if (!Responsive.isWeb(context))
                               IconButton(
                                 icon: const Icon(
                                   Icons.flip_camera_ios,

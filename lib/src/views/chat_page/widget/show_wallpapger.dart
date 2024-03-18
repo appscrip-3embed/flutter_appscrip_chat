@@ -127,8 +127,7 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                     ImageSource.gallery,
                                   );
                                   if (file.isNotEmpty) {
-                                    if (Responsive.isWebAndTablet(
-                                        Get.context!)) {
+                                    if (Responsive.isWeb(Get.context!)) {
                                       await Get.dialog(IsmChatPageDailog(
                                           child: IsmChatWallpaperPreview(
                                         assetSrNo: 100,
@@ -173,7 +172,7 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                 .backgroundImage[index - 1];
                             return IsmChatTapHandler(
                               onTap: () async {
-                                if (Responsive.isWebAndTablet(Get.context!)) {
+                                if (Responsive.isWeb(Get.context!)) {
                                   await Get.dialog(
                                     IsmChatPageDailog(
                                       child: IsmChatWallpaperPreview(
@@ -214,7 +213,7 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                                 conversationController.backgroundColor[index];
                             return IsmChatTapHandler(
                               onTap: () async {
-                                if (Responsive.isWebAndTablet(context)) {
+                                if (Responsive.isWeb(context)) {
                                   await Get.dialog(
                                     IsmChatPageDailog(
                                       child: IsmChatWallpaperPreview(

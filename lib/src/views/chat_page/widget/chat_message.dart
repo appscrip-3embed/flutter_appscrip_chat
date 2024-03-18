@@ -86,7 +86,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
               : () async {
                   if (widget._message?.customType !=
                       IsmChatCustomMessageType.deletedForEveryone) {
-                    if (!Responsive.isWebAndTablet(context)) {
+                    if (!Responsive.isWeb(context)) {
                       if (!controller.conversation!.isChattingAllowed) {
                         controller.showDialogCheckBlockUnBlock();
                         return;

@@ -37,7 +37,7 @@ class IsmChatBlockedUsersView extends StatelessWidget {
                       ),
                       trailing: ElevatedButton(
                         onPressed: () {
-                          if (!Responsive.isWebAndTablet(context)) {
+                          if (!Responsive.isWeb(context)) {
                             controller.unblockUser(
                                 opponentId: user.userId, isLoading: true);
                           } else {

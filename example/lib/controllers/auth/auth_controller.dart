@@ -120,7 +120,7 @@ class AuthController extends GetxController {
     Uint8List? bytes;
     String? extension;
     if (result != null) {
-      if (!Responsive.isWebAndTablet(Get.context!)) {
+      if (!Responsive.isWeb(Get.context!)) {
         var croppedFile = await ImageCropper().cropImage(
           sourcePath: result.path,
           cropStyle: CropStyle.circle,

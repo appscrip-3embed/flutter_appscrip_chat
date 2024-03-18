@@ -32,11 +32,11 @@ class LoginView extends StatelessWidget {
             child: Center(
               child: SizedBox(
                 // alignment: Alignment.center,
-                width: ResponsiveExample.isWebAndTablet(context)
+                width: ResponsiveExample.isWeb(context)
                     ? Dimens.percentWidth(.3)
                     : null,
                 child: Column(
-                  mainAxisAlignment: ResponsiveExample.isWebAndTablet(context)
+                  mainAxisAlignment: ResponsiveExample.isWeb(context)
                       ? MainAxisAlignment.center
                       : MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,

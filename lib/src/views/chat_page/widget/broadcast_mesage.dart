@@ -17,7 +17,7 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
     var controller = Get.find<IsmChatPageController>();
     var conversationController = Get.find<IsmChatConversationsController>();
 
-    if (Responsive.isWebAndTablet(context)) {
+    if (Responsive.isWeb(context)) {
       var controller = Get.find<IsmChatPageController>();
       controller.isTemporaryChat = false;
       conversationController.currentConversation = null;
@@ -51,7 +51,7 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
                 leading: IsmChatTapHandler(
                   onTap: () => _back(context),
                   child: Icon(
-                    Responsive.isWebAndTablet(context)
+                    Responsive.isWeb(context)
                         ? Icons.close_rounded
                         : Icons.arrow_back_rounded,
                   ),
@@ -141,8 +141,7 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
                             },
                           ),
                   ),
-                  if (controller.messages.isEmpty &&
-                      !Responsive.isWebAndTablet(context))
+                  if (controller.messages.isEmpty && !Responsive.isWeb(context))
                     Container(
                       height: IsmChatDimens.forty,
                       width: IsmChatDimens.hundred,

@@ -43,7 +43,7 @@ class IsmChatMessageField extends StatelessWidget {
                           onTap: () async {
                             controller.isEnableRecordingAudio = false;
                             controller.showSendButton = false;
-                            // await controller.recordAudio.dispose();s
+                            await controller.recordAudio.dispose();
                             controller.forVideoRecordTimer?.cancel();
                             controller.seconds = 0;
                           },
@@ -67,7 +67,7 @@ class IsmChatMessageField extends StatelessWidget {
                   ),
                 ),
               ] else ...[
-                if (Responsive.isWebAndTablet(context)) ...[
+                if (Responsive.isWeb(context)) ...[
                   IsmChatDimens.boxWidth8,
                   Container(
                     margin: IsmChatDimens.edgeInsetsBottom4,
@@ -96,7 +96,7 @@ class IsmChatMessageField extends StatelessWidget {
                     shortcuts: {
                       LogicalKeySet(
                         LogicalKeyboardKey.enter,
-                        LogicalKeyboardKey.newKey,
+                        // LogicalKeyboardKey.newKey,
                       ): const SendMessageIntent(),
                     },
                     child: Actions(
@@ -191,17 +191,16 @@ class IsmChatMessageField extends StatelessWidget {
                                             IsmChatConfig
                                                 .chatTheme.backgroundColor,
                                         contentPadding:
-                                            Responsive.isWebAndTablet(context)
+                                            Responsive.isWeb(context)
                                                 ? IsmChatDimens.edgeInsets12
                                                 : IsmChatDimens.edgeInsets8,
-                                        prefixIcon:
-                                            Responsive.isWebAndTablet(context)
-                                                ? null
-                                                : _EmojiButton(IsmChatConfig
-                                                    .chatTheme
-                                                    .chatPageTheme
-                                                    ?.textFiledThemData
-                                                    ?.emojiColor),
+                                        prefixIcon: Responsive.isWeb(context)
+                                            ? null
+                                            : _EmojiButton(IsmChatConfig
+                                                .chatTheme
+                                                .chatPageTheme
+                                                ?.textFiledThemData
+                                                ?.emojiColor),
                                         enabledBorder: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(
                                               IsmChatDimens.twenty),
@@ -230,7 +229,7 @@ class IsmChatMessageField extends StatelessWidget {
                                   ),
                                   if (IsmChatProperties.chatPageProperties
                                           .attachments.isNotEmpty &&
-                                      !Responsive.isWebAndTablet(context)) ...[
+                                      !Responsive.isWeb(context)) ...[
                                     const _AttachmentIcon()
                                   ]
                                 ],
@@ -374,7 +373,6 @@ class _MicOrSendButton extends StatelessWidget {
                       var audioPath = await controller.recordAudio.stop() ?? '';
                       controller.forVideoRecordTimer?.cancel();
                       controller.showSendButton = false;
-
                       controller.isEnableRecordingAudio = false;
                       String? sizeMedia;
                       WebMediaModel? webMediaModel;
@@ -386,6 +384,7 @@ class _MicOrSendButton extends StatelessWidget {
                                       .conversation!) ??
                           true) {
                         if (kIsWeb) {
+                          IsmChatLog.error(audioPath);
                           var bytes =
                               await IsmChatUtility.fetchBytesFromBlobUrl(
                                   audioPath);
@@ -498,13 +497,29 @@ class _MicOrSendButton extends StatelessWidget {
                             Timer.periodic(const Duration(seconds: 1), (_) {
                           controller.seconds++;
                         });
-                        final dir = await getApplicationDocumentsDirectory();
-                        final audioPath = p.join(
-                          dir.path,
-                          'audio_${DateTime.now().millisecondsSinceEpoch}.m4a',
-                        );
-                        await controller.recordAudio
-                            .start(const RecordConfig(), path: audioPath);
+                        String? audioPath;
+                        if (!kIsWeb) {
+                          final dir = await getApplicationDocumentsDirectory();
+                          audioPath = p.join(
+                            dir.path,
+                            'audio_${DateTime.now().millisecondsSinceEpoch}.m4a',
+                          );
+                        } else {
+                          audioPath =
+                              'audio_${DateTime.now().millisecondsSinceEpoch}.m4a';
+                        }
+
+                        if (!kIsWeb) {
+                          await controller.recordAudio.start(
+                            const RecordConfig(),
+                            path: audioPath,
+                          );
+                        } else {
+                          await controller.recordAudio.start(
+                            const RecordConfig(encoder: AudioEncoder.wav),
+                            path: audioPath,
+                          );
+                        }
                       }
                     }
                   }

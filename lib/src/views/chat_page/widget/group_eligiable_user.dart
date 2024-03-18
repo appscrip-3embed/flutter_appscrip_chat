@@ -24,7 +24,7 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
             ),
             SizedBox(
                 width: IsmChatDimens.percentWidth(
-                    Responsive.isWebAndTablet(Get.context!) ? .24 : .7),
+                    Responsive.isWeb(Get.context!) ? .24 : .7),
                 child: Divider(
                   height: .0,
                   indent: IsmChatDimens.ten,
@@ -47,7 +47,7 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
         builder: (controller) => Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: IsmChatAppBar(
-            onBack: !Responsive.isWebAndTablet(context)
+            onBack: !Responsive.isWeb(context)
                 ? null
                 : () => Get.find<IsmChatConversationsController>()
                         .isRenderChatPageaScreen =

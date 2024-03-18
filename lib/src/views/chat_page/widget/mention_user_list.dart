@@ -24,7 +24,7 @@ class MentionUserList extends StatelessWidget {
               // ? IsmChatDimens.percentHeight(0.08)
               : controller.mentionSuggestions.take(4).length *
                   IsmChatDimens.percentHeight(0.07),
-          width: Responsive.isWebAndTablet(context)
+          width: Responsive.isWeb(context)
               ? IsmChatDimens.percentWidth(.4)
               : IsmChatDimens.percentWidth(.8),
           child: controller.mentionSuggestions.isEmpty
