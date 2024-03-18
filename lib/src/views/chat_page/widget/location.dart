@@ -239,7 +239,6 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                   final addresses = await GeocodingPlatform
                                       .instance
                                       ?.placemarkFromCoordinates(
-                                      ?.placemarkFromCoordinates(
                                     latLng?.latitude ?? 0,
                                     latLng?.longitude ?? 0,
                                   );
