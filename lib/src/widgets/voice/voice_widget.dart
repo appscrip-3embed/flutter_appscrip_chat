@@ -13,7 +13,6 @@ class VoiceMessage extends StatefulWidget {
     required this.me,
     required this.noise,
     this.audioSrc,
-    this.audioFile,
     this.duration,
     this.noiseCount = 27,
     this.meBgColor = Colors.green,
@@ -24,12 +23,13 @@ class VoiceMessage extends StatefulWidget {
     this.contactPlayIconColor = Colors.black26,
     this.contactPlayIconBgColor = Colors.grey,
     this.meFgColor = const Color(0xffffffff),
+    this.decoration,
   });
 
   final String? audioSrc;
-  final Future<File>? audioFile;
-  final Duration? duration;
 
+  final Duration? duration;
+  final BoxDecoration? decoration;
   final int noiseCount;
   final Color meBgColor,
       meFgColor,
@@ -83,7 +83,7 @@ class VoiceMessageState extends State<VoiceMessage>
           isPlaying = false;
           break;
         case PlayerState.completed:
-          remainingTime = _audioDuration!.formatDuration();
+          remainingTime = _audioDuration?.formatDuration() ?? '';
           isPlaying = false;
           break;
         default:
@@ -104,7 +104,12 @@ class VoiceMessageState extends State<VoiceMessage>
         alignment: Alignment.center,
         width: IsmChatDimens.twoHundred,
         height: IsmChatDimens.seventy,
-        color: widget.me ? widget.meBgColor : widget.contactBgColor,
+        decoration: widget.decoration,
+        color: widget.decoration == null
+            ? widget.me
+                ? widget.meBgColor
+                : widget.contactBgColor
+            : null,
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -163,28 +168,32 @@ class VoiceMessageState extends State<VoiceMessage>
       );
 
   void _startPlaying() async {
-    IsmChatLog.error(await widget.audioFile);
-    IsmChatLog.error(widget.audioSrc);
-
-    if (await widget.audioFile != null) {
-      var path = (await widget.audioFile ?? File('')).path;
-      await _player.play(DeviceFileSource(path));
-    } else if (widget.audioSrc != null) {
-      await _player.play(UrlSource(widget.audioSrc ?? ''));
+    IsmChatLog.info(widget.audioSrc);
+    try {
+      if (!(widget.audioSrc ?? '').isValidUrl) {
+        await _player.play(DeviceFileSource(widget.audioSrc ?? ''));
+      } else {
+        await _player.play(UrlSource(widget.audioSrc ?? ''));
+      }
+      await _animationController?.forward();
+    } catch (e) {
+      isPlaying = false;
+      setState(() {});
+      IsmChatLog.error('Audio paly error $e');
     }
-    await _animationController!.forward();
   }
 
   _stopPlaying() async {
     await _player.pause();
-    _animationController!.stop();
+    _animationController?.stop();
   }
 
   void _setDuration() async {
     if (widget.duration != null) {
       _audioDuration = widget.duration;
     } else {
-      _audioDuration = await jsaudio.AudioPlayer().setUrl(widget.audioSrc!);
+      _audioDuration =
+          await jsaudio.AudioPlayer().setUrl(widget.audioSrc ?? '');
     }
     _animationController = AnimationController(
       vsync: this,
@@ -195,7 +204,7 @@ class VoiceMessageState extends State<VoiceMessage>
 
     _animationController?.addListener(() {
       if (_animationController!.isCompleted) {
-        _animationController!.reset();
+        _animationController?.reset();
         isPlaying = false;
         setState(() {});
       }

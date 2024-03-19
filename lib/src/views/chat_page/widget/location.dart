@@ -269,7 +269,8 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                                   .conversation!) ??
                                       true) {}
                                 },
-                                child: Column(
+                                child:
+                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text(

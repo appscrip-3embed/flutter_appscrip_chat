@@ -2261,4 +2261,22 @@ class IsmChatPageController extends GetxController
       return replayMessage?.body ?? '';
     }
   }
+
+  Future<bool> isEncoderSupported(AudioEncoder encoder) async {
+    final isSupported = await recordAudio.isEncoderSupported(
+      encoder,
+    );
+
+    if (!isSupported) {
+      IsmChatLog.success('${encoder.name} is not supported on this platform.');
+      IsmChatLog.success('Supported encoders are:');
+      for (final e in AudioEncoder.values) {
+        if (await recordAudio.isEncoderSupported(e)) {
+          debugPrint('- ${encoder.name}');
+        }
+      }
+    }
+
+    return isSupported;
+  }
 }

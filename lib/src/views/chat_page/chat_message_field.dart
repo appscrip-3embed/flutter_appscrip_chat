@@ -384,7 +384,6 @@ class _MicOrSendButton extends StatelessWidget {
                                       .conversation!) ??
                           true) {
                         if (kIsWeb) {
-                          IsmChatLog.error(audioPath);
                           var bytes =
                               await IsmChatUtility.fetchBytesFromBlobUrl(
                                   audioPath);
@@ -393,11 +392,11 @@ class _MicOrSendButton extends StatelessWidget {
                           webMediaModel = WebMediaModel(
                             platformFile: IsmchPlatformFile(
                               name:
-                                  '${DateTime.now().millisecondsSinceEpoch}.mp3',
+                                  '${DateTime.now().millisecondsSinceEpoch}.m4a',
                               size: bytes.length,
                               bytes: bytes,
                               path: audioPath,
-                              extension: 'mp3',
+                              extension: 'm4a',
                             ),
                             isVideo: false,
                             thumbnailBytes: Uint8List(0),
@@ -510,8 +509,17 @@ class _MicOrSendButton extends StatelessWidget {
                         }
 
                         if (!kIsWeb) {
+                          const encoder = AudioEncoder.aacLc;
+                          if (!await controller.isEncoderSupported(encoder)) {
+                            return;
+                          }
+                          final devs =
+                              await controller.recordAudio.listInputDevices();
+                          IsmChatLog.info(devs.toString());
+                          const config =
+                              RecordConfig(encoder: encoder, numChannels: 1);
                           await controller.recordAudio.start(
-                            const RecordConfig(),
+                            config,
                             path: audioPath,
                           );
                         } else {

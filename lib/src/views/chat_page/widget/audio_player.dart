@@ -18,7 +18,10 @@ class IsmChatAudioPlayer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              IsmChatAudioMessage(message),
+              IsmChatAudioMessage(
+                message,
+                decoration: const BoxDecoration(),
+              ),
               IconButton(
                   onPressed: Get.back,
                   icon: Icon(

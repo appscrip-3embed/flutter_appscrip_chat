@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatAudioMessage extends StatelessWidget {
-  IsmChatAudioMessage(this.message, {super.key})
-      : url = message.attachments!.first.mediaUrl!,
+  IsmChatAudioMessage(
+    this.message, {
+    super.key,
+    this.decoration,
+  })  : url = message.attachments?.first.mediaUrl ?? '',
         duration = message.metaData?.duration,
         noise = Get.find<IsmChatPageController>()
             .getNoise(message.sentAt, message.sentByMe);
@@ -13,6 +16,7 @@ class IsmChatAudioMessage extends StatelessWidget {
   final String url;
   final Duration? duration;
   final Widget noise;
+  final BoxDecoration? decoration;
 
   @override
   Widget build(BuildContext context) => Material(
@@ -23,6 +27,7 @@ class IsmChatAudioMessage extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             VoiceMessage(
+              decoration: decoration,
               audioSrc: url,
               noise: noise,
               me: message.sentByMe,
