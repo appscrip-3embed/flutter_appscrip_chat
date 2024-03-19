@@ -15,6 +15,7 @@ mixin IsmChatPageGetMessageMixin on GetxController {
       _controller.messages.clear();
       return;
     }
+ 
     var pendingmessages = await IsmChatConfig.dbWrapper!
         .getMessage(conversationId, IsmChatDbBox.pending);
     if (pendingmessages?.isNotEmpty ?? false || pendingmessages != null) {

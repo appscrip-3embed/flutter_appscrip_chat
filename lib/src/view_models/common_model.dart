@@ -73,7 +73,6 @@ class IsmChatCommonViewModel {
       if (messageId == null || messageId.isEmpty) {
         return false;
       }
-
       if (isTemporaryChat) {
         final chatPageController = Get.find<IsmChatPageController>();
         for (var x = 0; x < chatPageController.messages.length; x++) {
@@ -96,13 +95,12 @@ class IsmChatCommonViewModel {
           return false;
         }
 
-        for (var x = 0; x < chatPendingMessages.messages!.length; x++) {
+        for (var x = 0; x < (chatPendingMessages.messages?.length ?? 0); x++) {
           var pendingMessage = chatPendingMessages.messages![x];
-          if (pendingMessage.messageId!.isNotEmpty ||
+          if (pendingMessage.messageId?.isNotEmpty == true ||
               pendingMessage.sentAt != createdAt) {
             continue;
           }
-
           pendingMessage.messageId = messageId;
           pendingMessage.deliveredToAll = false;
           pendingMessage.readByAll = false;
@@ -110,7 +108,7 @@ class IsmChatCommonViewModel {
           chatPendingMessages.messages?.removeAt(x);
           await dbBox.saveConversation(
               conversation: chatPendingMessages, dbBox: IsmChatDbBox.pending);
-          if (chatPendingMessages.messages!.isEmpty) {
+          if (chatPendingMessages.messages?.isEmpty == true) {
             await dbBox.pendingMessageBox
                 .delete(chatPendingMessages.conversationId!);
           }
@@ -130,7 +128,6 @@ class IsmChatCommonViewModel {
         }
         return true;
       }
-
       return false;
     } catch (e, st) {
       IsmChatLog.error(e, st);

@@ -293,6 +293,7 @@ class IsmChatPageViewModel {
             IsmChatCustomMessageType.deletedForEveryone;
         allMessages[messageIndex].reactions = [];
       }
+
       // allMessages.removeWhere((e) => e.messageId == x.messageId);
     }
 

@@ -104,6 +104,7 @@ enum IsmChatCustomMessageType {
           IsmChatCustomMessageType.conversationTitleUpdated,
       'conversationImageUpdated':
           IsmChatCustomMessageType.conversationImageUpdated,
+      'messagesDeleteForAll': IsmChatCustomMessageType.deletedForEveryone,
       'memberJoin': IsmChatCustomMessageType.memberJoin,
       'observerJoin': IsmChatCustomMessageType.observerJoin,
       'observerLeave': IsmChatCustomMessageType.observerLeave,
@@ -249,7 +250,7 @@ enum IsmChatCustomMessageType {
       case IsmChatCustomMessageType.deletedForMe:
         return 'deletedForMe';
       case IsmChatCustomMessageType.deletedForEveryone:
-        return 'deletedForEveryone';
+        return 'messagesDeleteForAll';
       case IsmChatCustomMessageType.conversationCreated:
         return 'conversationCreated';
       case IsmChatCustomMessageType.removeMember:
