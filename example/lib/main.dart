@@ -62,9 +62,9 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     alice = Alice(
-      showNotification: false,
-      showInspectorOnShake: true,
-      showShareButton: true,
+      showNotification: kDebugMode,
+      showInspectorOnShake: kDebugMode,
+      showShareButton: kDebugMode,
     );
 
     if (!kIsWeb) {
