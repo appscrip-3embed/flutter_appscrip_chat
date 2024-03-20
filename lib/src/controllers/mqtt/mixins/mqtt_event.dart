@@ -433,7 +433,6 @@ mixin IsmChatMqttEventMixin on GetxController {
     required String body,
     required String conversationId,
   }) {
-    LocalNoticeService().cancelAllNotification();
     LocalNoticeService().addNotification(
       title, // Add the  sender user name here
       body, // MessageName
