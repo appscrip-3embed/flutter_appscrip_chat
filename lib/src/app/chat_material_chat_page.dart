@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:alice/alice.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
@@ -17,7 +16,6 @@ class IsmMaterialChatPage extends StatefulWidget {
     this.enableGroupChat = false,
     this.useDataBase = true,
     this.isShowMqttConnectErrorDailog = false,
-    this.useAlice,
     this.fontFamily,
     this.conversationParser,
     required this.conversation,
@@ -31,7 +29,7 @@ class IsmMaterialChatPage extends StatefulWidget {
     ''');
 
     IsmChatConfig.dbName = databaseName ?? IsmChatStrings.dbname;
-    IsmChatConfig.useAlice = useAlice;
+
     IsmChatConfig.fontFamily = fontFamily;
     IsmChatConfig.conversationParser = conversationParser;
     IsmChatProperties.loadingDialog = loadingDialog;
@@ -70,8 +68,6 @@ class IsmMaterialChatPage extends StatefulWidget {
   final String? fontFamily;
 
   final bool isShowMqttConnectErrorDailog;
-
-  final Alice? useAlice;
 
   final IsmChatConversationModel conversation;
 
@@ -241,9 +237,7 @@ class IsmMaterialChatPage extends StatefulWidget {
       String,
     )? showNotification,
     bool isShowMqttConnectErrorDailog = false,
-    Alice? useAlice,
   }) {
-    IsmChatConfig.useAlice = useAlice;
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();

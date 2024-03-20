@@ -19,7 +19,6 @@ class ChatList extends StatelessWidget {
       builder: (controller) {
         return Scaffold(
           body: IsmChatApp(
-            useAlice: alice,
             // conversationParser: (conversation, data) {
             //   AppLog(conversation);
             //   AppLog.info('checkData $data');

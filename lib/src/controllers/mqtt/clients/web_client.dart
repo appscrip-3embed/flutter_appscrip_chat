@@ -13,5 +13,6 @@ class IsmChatMqttClient {
 
     client?.port = 2053;
     client?.websocketProtocols = MqttClientConstants.protocolsSingleDefault;
+   
   }
 }

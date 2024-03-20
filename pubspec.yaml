@@ -9,7 +9,6 @@ environment:
   flutter: ">=3.16.0"
 
 dependencies:
-  alice: ^0.4.1
   any_link_preview: ^3.0.0
   audioplayers: ^5.2.1
   azlistview: ^2.0.0
