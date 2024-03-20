@@ -26,7 +26,7 @@ class IsmChatFocusMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Responsive.isWeb(context)
       ? IsmChatTapHandler(
-          onTap: controller.closeOveray,
+          onTap: controller.closeOverlay,
           child: Padding(
             padding: IsmChatDimens.edgeInsets8,
             child: Column(
@@ -60,7 +60,7 @@ class IsmChatFocusMenu extends StatelessWidget {
                                 return IsmChatTapHandler(
                                   onTap: () {
                                     Get.back();
-                                    controller.closeOveray();
+                                    controller.closeOverlay();
                                     controller.onMenuItemSelected(
                                       item,
                                       message,
@@ -112,7 +112,7 @@ class IsmChatFocusMenu extends StatelessWidget {
           onTap: () {
             if (Responsive.isWeb(context)) {
               var controller = Get.find<IsmChatPageController>();
-              controller.closeOveray();
+              controller.closeOverlay();
             } else {
               Navigator.pop(context);
             }
@@ -184,7 +184,7 @@ class IsmChatFocusMenu extends StatelessWidget {
                                           return IsmChatTapHandler(
                                             onTap: () {
                                               Get.back();
-                                              controller.closeOveray();
+                                              controller.closeOverlay();
                                               controller.onMenuItemSelected(
                                                 item,
                                                 message,

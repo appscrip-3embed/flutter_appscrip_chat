@@ -63,7 +63,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                               onPressed: () async {
                                 Get.back<void>();
 
-                                controller.closeOveray();
+                                controller.closeOverlay();
                                 final updateLastMessage =
                                     await controller.updateLastMessage();
                                 if (IsmChatProperties

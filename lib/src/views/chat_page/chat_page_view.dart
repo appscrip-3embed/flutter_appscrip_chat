@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
@@ -67,7 +66,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView>
     } else {
       Get.back<void>();
 
-      controller.closeOveray();
+      controller.closeOverlay();
       final updateMessage = await controller.updateLastMessage();
       if (IsmChatProperties.chatPageProperties.header?.onBackTap != null) {
         IsmChatProperties.chatPageProperties.header?.onBackTap!
@@ -247,7 +246,7 @@ class _IsmChatPageView extends StatelessWidget {
                                                       .messageHoldOverlayEntry !=
                                                   null
                                               ? () {
-                                                  controller.closeOveray();
+                                                  controller.closeOverlay();
                                                 }
                                               : null,
                                           child: AbsorbPointer(

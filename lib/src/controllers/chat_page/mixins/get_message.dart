@@ -5,9 +5,7 @@ mixin IsmChatPageGetMessageMixin on GetxController {
 
   Future<void> getMessagesFromDB(String conversationId,
       [IsmChatDbBox dbBox = IsmChatDbBox.main]) async {
-    if (_controller.messageHoldOverlayEntry != null) {
-      _controller.closeOveray();
-    }
+    _controller.closeOverlay();
 
     var messages =
         await IsmChatConfig.dbWrapper!.getMessage(conversationId, dbBox);
@@ -15,7 +13,7 @@ mixin IsmChatPageGetMessageMixin on GetxController {
       _controller.messages.clear();
       return;
     }
- 
+
     var pendingmessages = await IsmChatConfig.dbWrapper!
         .getMessage(conversationId, IsmChatDbBox.pending);
     if (pendingmessages?.isNotEmpty ?? false || pendingmessages != null) {

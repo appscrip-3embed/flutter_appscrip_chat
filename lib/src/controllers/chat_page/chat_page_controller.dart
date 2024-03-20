@@ -1126,7 +1126,7 @@ class IsmChatPageController extends GetxController
       () {
         if (holdController?.isCompleted == true &&
             messageHoldOverlayEntry != null) {
-          closeOveray();
+          closeOverlay();
         }
 
         if (showAttachment) {
@@ -1188,11 +1188,24 @@ class IsmChatPageController extends GetxController
     );
   }
 
-  void closeOveray() {
+  void closeOverlay() {
     if (holdController != null && messageHoldOverlayEntry != null) {
       holdController?.reverse();
-      messageHoldOverlayEntry?.remove();
-      messageHoldOverlayEntry = null;
+      if (holdController?.isDismissed == true) {
+        messageHoldOverlayEntry?.remove();
+        messageHoldOverlayEntry = null;
+      }
+    }
+    closeAttachmentOverlayForWeb();
+  }
+
+  void closeAttachmentOverlayForWeb() async {
+    if (fabAnimationController != null && attchmentOverlayEntry != null) {
+      await fabAnimationController?.reverse();
+      if (fabAnimationController?.isDismissed == true) {
+        attchmentOverlayEntry?.remove();
+        attchmentOverlayEntry = null;
+      }
     }
   }
 

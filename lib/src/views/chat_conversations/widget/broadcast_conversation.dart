@@ -370,7 +370,7 @@ class IsmChatBroadCastView extends StatelessWidget {
                       IsRenderChatPageScreen.boradcastChatMessagePage;
                   final chatPagecontroller = Get.find<IsmChatPageController>();
                   chatPagecontroller.startInit(isTemporaryChats: true);
-                  chatPagecontroller.closeOveray();
+                  chatPagecontroller.closeOverlay();
                 } else {
                   IsmChatRouteManagement.goToBroadcastMessagePage(
                     isTemporaryChat: true,

@@ -131,7 +131,7 @@ class _IsmChatOpenConversationViewState
                                     isTemporaryChats: true,
                                   );
 
-                                  chatPagecontroller.closeOveray();
+                                  chatPagecontroller.closeOverlay();
                                   chatPagecontroller.messages.add(
                                     IsmChatMessageModel(
                                       body: '',

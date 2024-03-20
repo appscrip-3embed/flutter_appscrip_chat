@@ -203,7 +203,7 @@ class MessageBubble extends GetView<IsmChatPageController> {
                             if (controller.holdController?.isCompleted ==
                                     true &&
                                 controller.messageHoldOverlayEntry != null) {
-                              controller.closeOveray();
+                              controller.closeOverlay();
                             } else {
                               if (!controller.conversation!.isChattingAllowed) {
                                 controller.showDialogCheckBlockUnBlock();

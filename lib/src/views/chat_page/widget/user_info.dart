@@ -191,7 +191,7 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
 
                           IsmChatUtility.closeLoader();
                           controller.startInit();
-                          controller.closeOveray();
+                          controller.closeOverlay();
                         },
                         title: Text(
                           IsmChatStrings.message,

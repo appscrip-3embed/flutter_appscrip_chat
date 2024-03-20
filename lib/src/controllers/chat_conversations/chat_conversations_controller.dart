@@ -1066,9 +1066,7 @@ class IsmChatConversationsController extends GetxController {
       isRenderChatPageaScreen = IsRenderChatPageScreen.none;
       final chatPagecontroller = Get.find<IsmChatPageController>();
       chatPagecontroller.startInit();
-      if (chatPagecontroller.messageHoldOverlayEntry != null) {
-        chatPagecontroller.closeOveray();
-      }
+      chatPagecontroller.closeOverlay();
     } else {
       IsmChatRouteManagement.goToChatPage();
     }

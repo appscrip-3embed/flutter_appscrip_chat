@@ -106,7 +106,7 @@ class _MessageCardState extends State<MessageCard>
                 focusColor: IsmChatColors.transparent,
                 highlightColor: IsmChatColors.transparent,
                 onTap: () {
-                  controller.closeOveray();
+                  controller.closeOverlay();
 
                   if (widget.message.messageType == IsmChatMessageType.reply) {
                     if ([
