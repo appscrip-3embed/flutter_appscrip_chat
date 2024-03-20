@@ -15,7 +15,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     required List<String> userId,
     IsmChatMetaData? metaData,
     bool isGroup = false,
-    bool isLoading = true,
+    bool isLoading = false,
     List<String> searchableTags = const [' '],
     IsmChatConversationType conversationType = IsmChatConversationType.private,
     bool pushNotifications = true,
