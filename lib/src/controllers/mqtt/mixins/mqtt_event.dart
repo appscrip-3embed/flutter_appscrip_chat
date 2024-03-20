@@ -447,7 +447,7 @@ mixin IsmChatMqttEventMixin on GetxController {
         'conversationId': conversationId,
       },
     );
-    if (Platform.isAndroid) {
+    if (GetPlatform.isAndroid) {
       if (IsmChatConfig.showNotification != null) {
         IsmChatConfig.showNotification?.call(
           title,
