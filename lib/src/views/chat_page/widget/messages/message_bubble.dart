@@ -220,6 +220,7 @@ class MessageBubble extends GetView<IsmChatPageController> {
                           child: Container(
                             width: IsmChatDimens.thirty,
                             height: IsmChatDimens.thirty,
+                            alignment: Alignment.center,
                             decoration: BoxDecoration(
                               borderRadius:
                                   BorderRadius.circular(IsmChatDimens.fifty),
