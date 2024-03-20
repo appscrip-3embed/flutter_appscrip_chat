@@ -61,13 +61,12 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    alice = Alice(
-      showNotification: kDebugMode,
-      showInspectorOnShake: kDebugMode,
-      showShareButton: kDebugMode,
-    );
-
     if (!kIsWeb) {
+      alice = Alice(
+        showNotification: kDebugMode,
+        showInspectorOnShake: kDebugMode,
+        showShareButton: kDebugMode,
+      );
       final PushNotificationService notificationService =
           PushNotificationService();
       notificationService.requestNotificationService();

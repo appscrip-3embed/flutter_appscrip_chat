@@ -9,11 +9,13 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class IsmChatApiWrapper {
-  final alice = Alice(
-    showNotification: kDebugMode,
-    showInspectorOnShake: kDebugMode,
-    showShareButton: kDebugMode,
-  );
+  final alice = kIsWeb
+      ? Alice()
+      : Alice(
+          showNotification: kDebugMode,
+          showInspectorOnShake: kDebugMode,
+          showShareButton: kDebugMode,
+        );
   Future<IsmChatResponseModel> _handleNoInternet(bool showDailog) async {
     IsmChatLog.error('----- Internet not working -----');
     if (showDailog && Get.isDialogOpen == false) {
