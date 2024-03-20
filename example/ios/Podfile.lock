@@ -1,6 +1,4 @@
 PODS:
-  - alice (0.0.1):
-    - Flutter
   - app_settings (5.1.1):
     - Flutter
   - appscrip_chat_component (0.0.1):
@@ -173,8 +171,6 @@ PODS:
     - Flutter
   - open_filex (0.0.2):
     - Flutter
-  - package_info_plus (0.4.5):
-    - Flutter
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -190,8 +186,6 @@ PODS:
   - SDWebImage (5.19.0):
     - SDWebImage/Core (= 5.19.0)
   - SDWebImage/Core (5.19.0)
-  - sensors_plus (0.0.1):
-    - Flutter
   - share_plus (0.0.1):
     - Flutter
   - shared_preferences_foundation (0.0.1):
@@ -215,7 +209,6 @@ PODS:
     - libwebp
 
 DEPENDENCIES:
-  - alice (from `.symlinks/plugins/alice/ios`)
   - app_settings (from `.symlinks/plugins/app_settings/ios`)
   - appscrip_chat_component (from `.symlinks/plugins/appscrip_chat_component/ios`)
   - audio_session (from `.symlinks/plugins/audio_session/ios`)
@@ -242,12 +235,10 @@ DEPENDENCIES:
   - just_audio (from `.symlinks/plugins/just_audio/ios`)
   - notification_permissions (from `.symlinks/plugins/notification_permissions/ios`)
   - open_filex (from `.symlinks/plugins/open_filex/ios`)
-  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - pdfx (from `.symlinks/plugins/pdfx/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - record_darwin (from `.symlinks/plugins/record_darwin/ios`)
-  - sensors_plus (from `.symlinks/plugins/sensors_plus/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqflite (from `.symlinks/plugins/sqflite/darwin`)
@@ -279,8 +270,6 @@ SPEC REPOS:
     - TOCropViewController
 
 EXTERNAL SOURCES:
-  alice:
-    :path: ".symlinks/plugins/alice/ios"
   app_settings:
     :path: ".symlinks/plugins/app_settings/ios"
   appscrip_chat_component:
@@ -333,8 +322,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/notification_permissions/ios"
   open_filex:
     :path: ".symlinks/plugins/open_filex/ios"
-  package_info_plus:
-    :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   pdfx:
@@ -343,8 +330,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   record_darwin:
     :path: ".symlinks/plugins/record_darwin/ios"
-  sensors_plus:
-    :path: ".symlinks/plugins/sensors_plus/ios"
   share_plus:
     :path: ".symlinks/plugins/share_plus/ios"
   shared_preferences_foundation:
@@ -361,7 +346,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/video_thumbnail/ios"
 
 SPEC CHECKSUMS:
-  alice: 16ca3b89f5e8395fd585e3a2920b8f4e250e3bf4
   app_settings: 017320c6a680cdc94c799949d95b84cb69389ebc
   appscrip_chat_component: acd7eac10950d82a75badfe2af68da3872cf75ca
   audio_session: 4f3e461722055d21515cf3261b64c973c062f345
@@ -401,7 +385,6 @@ SPEC CHECKSUMS:
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   notification_permissions: 825ea1bf2a52ab585c53fd7b5e8e96876d735d4b
   open_filex: 6e26e659846ec990262224a12ef1c528bb4edbe4
-  package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
   path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
   pdfx: 7b876b09de8b7a0bf444a4f82b439ffcff4ee1ec
   permission_handler_apple: 036b856153a2b1f61f21030ff725f3e6fece2b78
@@ -409,7 +392,6 @@ SPEC CHECKSUMS:
   ReachabilitySwift: 5ae15e16814b5f9ef568963fb2c87aeb49158c66
   record_darwin: 1f6619f2abac4d1ca91d3eeab038c980d76f1517
   SDWebImage: 981fd7e860af070920f249fd092420006014c3eb
-  sensors_plus: 4ee32bc7d61a055f27f88d3215ad6b6fb96a2b8e
   share_plus: c3fef564749587fc939ef86ffb283ceac0baf9f5
   shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
   sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
