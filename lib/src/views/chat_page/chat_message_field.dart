@@ -617,14 +617,13 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
   showOverLay(BuildContext context) async {
     final renderBox = context.findRenderObject() as RenderBox?;
     final size = renderBox!.size;
-
     OverlayState? overlayState = Overlay.of(context);
     controller.attchmentOverlayEntry = OverlayEntry(
       builder: (context) => Positioned(
         bottom: size.height + IsmChatDimens.twenty,
         child: CompositedTransformFollower(
-          offset: Offset(-IsmChatDimens.two,
-              -(IsmChatDimens.oneHundredFifty + IsmChatDimens.ten)),
+          offset: Offset(-IsmChatDimens.one,
+              -(IsmChatDimens.oneHundredFifty + IsmChatDimens.thirty)),
           showWhenUnlinked: false,
           link: layerLink,
           child: Material(
