@@ -81,14 +81,15 @@ class IsmChatMessageField extends StatelessWidget {
                   if (IsmChatProperties
                       .chatPageProperties.attachments.isNotEmpty)
                     Container(
-                        margin: IsmChatDimens.edgeInsetsBottom4,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: IsmChatConfig.chatTheme.primaryColor,
-                        ),
-                        child: _AttachmentIconForWeb(
-                          IsmChatConfig.chatTheme.primaryColor,
-                        )),
+                      margin: IsmChatDimens.edgeInsetsBottom4,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: IsmChatConfig.chatTheme.primaryColor,
+                      ),
+                      child: _AttachmentIconForWeb(
+                        IsmChatConfig.chatTheme.primaryColor,
+                      ),
+                    ),
                   IsmChatDimens.boxWidth2,
                 ],
                 Expanded(
@@ -667,15 +668,26 @@ class _AttachmentIconForWebState extends State<_AttachmentIconForWeb>
                           mainAxisAlignment: MainAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            CircleAvatar(
-                              radius: IsmChatDimens.twenty + IsmChatDimens.two,
-                              backgroundColor:
-                                  IsmChatConfig.chatTheme.primaryColor,
+                            Container(
+                              padding: IsmChatDimens.edgeInsets10,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: IsmChatConfig.chatTheme.primaryColor,
+                              ),
                               child: Icon(
                                 data.iconData,
                                 color: IsmChatColors.whiteColor,
                               ),
                             ),
+                            // CircleAvatar(
+                            //   radius: IsmChatDimens.twenty + IsmChatDimens.two,
+                            //   backgroundColor:
+                            //       IsmChatConfig.chatTheme.primaryColor,
+                            //   child: Icon(
+                            //     data.iconData,
+                            //     color: IsmChatColors.whiteColor,
+                            //   ),
+                            // ),
                             if (toolTipIndex == index) ...[
                               IsmChatDimens.boxWidth4,
                               Container(
