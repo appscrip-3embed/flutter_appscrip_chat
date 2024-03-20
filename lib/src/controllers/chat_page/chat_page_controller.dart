@@ -1188,9 +1188,9 @@ class IsmChatPageController extends GetxController
     );
   }
 
-  void closeOverlay() {
+  void closeOverlay() async {
     if (holdController != null && messageHoldOverlayEntry != null) {
-      holdController?.reverse();
+      await holdController?.reverse();
       if (holdController?.isDismissed == true) {
         messageHoldOverlayEntry?.remove();
         messageHoldOverlayEntry = null;
@@ -1205,6 +1205,7 @@ class IsmChatPageController extends GetxController
       if (fabAnimationController?.isDismissed == true) {
         attchmentOverlayEntry?.remove();
         attchmentOverlayEntry = null;
+        showAttachment = !showAttachment;
       }
     }
   }
