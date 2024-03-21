@@ -146,32 +146,36 @@ class IsmChatCommonViewModel {
     var result = <List<IsmChatMessageModel>>[];
     var list1 = <IsmChatMessageModel>[];
     var allMessages = <IsmChatMessageModel>[];
+    var dummyList = <int>[];
 
     for (var x = 0; x < messages.length; x++) {
-      if (x == 0) {
-        list1.add(messages[x]);
-      } else if (DateTime.fromMillisecondsSinceEpoch(messages[x - 1].sentAt)
-          .isSameDay(DateTime.fromMillisecondsSinceEpoch(messages[x].sentAt))) {
-        list1.add(messages[x]);
-      } else {
-        result.add([...list1]);
-        list1.clear();
-        list1.add(messages[x]);
-      }
-      if (x == messages.length - 1 && list1.isNotEmpty) {
-        result.add([...list1]);
+      if (!dummyList.contains(messages[x].sentAt)) {
+        dummyList.add(messages[x].sentAt);
+        if (x == 0) {
+          list1.add(messages[x]);
+        } else if (DateTime.fromMillisecondsSinceEpoch(messages[x - 1].sentAt)
+            .isSameDay(
+                DateTime.fromMillisecondsSinceEpoch(messages[x].sentAt))) {
+          list1.add(messages[x]);
+        } else {
+          result.add([...list1]);
+          list1.clear();
+          list1.add(messages[x]);
+        }
+        if (x == messages.length - 1 && list1.isNotEmpty) {
+          result.add([...list1]);
+        }
       }
     }
 
-    for (var messages in result) {
+    for (var message in result) {
       allMessages.add(
         IsmChatMessageModel.fromDate(
-          messages.first.sentAt,
+          message.first.sentAt,
         ),
       );
-      allMessages.addAll(messages);
+      allMessages.addAll(message);
     }
-
     return allMessages;
   }
 

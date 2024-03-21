@@ -1121,29 +1121,27 @@ class IsmChatPageController extends GetxController
     overlayState.insert(messageHoldOverlayEntry!);
   }
 
-  void _scrollListener() {
+  void _scrollListener() async {
     messagesScrollController.addListener(
-      () {
+      () async {
         if (holdController?.isCompleted == true &&
             messageHoldOverlayEntry != null) {
           closeOverlay();
         }
-
         if (showAttachment) {
-          fabAnimationController!.reverse();
-          if (fabAnimationController!.isDismissed) {
+          await fabAnimationController?.reverse();
+          if (fabAnimationController?.isDismissed == true) {
             attchmentOverlayEntry?.remove();
           }
           showAttachment = false;
         }
-
-        if (messagesScrollController.offset.toInt() ==
+        if (messagesScrollController.position.pixels.toInt() ==
             messagesScrollController.position.maxScrollExtent.toInt()) {
-          _controller.canCallCurrentApi = false;
-          getMessagesFromAPI(forPagination: true, lastMessageTimestamp: 0);
+          canCallCurrentApi = false;
+          await getMessagesFromAPI(
+              forPagination: true, lastMessageTimestamp: 0);
         }
         toggleEmojiBoard(false, false);
-
         if (Get.height * 0.3 < (messagesScrollController.offset)) {
           showDownSideButton = true;
         } else {
@@ -1154,7 +1152,7 @@ class IsmChatPageController extends GetxController
 
     searchMessageScrollController.addListener(
       () {
-        if (searchMessageScrollController.offset.toInt() ==
+        if (searchMessageScrollController.position.pixels.toInt() ==
             searchMessageScrollController.position.maxScrollExtent.toInt()) {
           searchedMessages(textEditingController.text, fromScrolling: true);
         }

@@ -673,7 +673,6 @@ class IsmChatConversationsController extends GetxController {
       users.removeWhere((element) =>
           !RegExp('[A-Z]').hasMatch(element.userName[0].toUpperCase()));
     }
-
     if (searchTag.isEmpty) {
       forwardedList.addAll(List.from(users)
           .map((e) => SelectedForwardUser(
@@ -685,7 +684,6 @@ class IsmChatConversationsController extends GetxController {
                 isBlocked: false,
               ))
           .toList());
-
       forwardedListDuplicat = List<SelectedForwardUser>.from(forwardedList);
     } else {
       forwardedList = List.from(users)

@@ -263,6 +263,8 @@ class _IsmChatPageView extends StatelessWidget {
                                                         alignment:
                                                             Alignment.topCenter,
                                                         child: ListView.builder(
+                                                          physics:
+                                                              const ClampingScrollPhysics(),
                                                           controller: controller
                                                               .messagesScrollController,
                                                           scrollDirection:

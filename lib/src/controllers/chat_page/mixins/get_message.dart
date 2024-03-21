@@ -19,6 +19,7 @@ mixin IsmChatPageGetMessageMixin on GetxController {
     if (pendingmessages?.isNotEmpty ?? false || pendingmessages != null) {
       messages?.addAll(pendingmessages ?? []);
     }
+    
     _controller.messages = _controller.commonController.sortMessages(messages!);
     if (_controller.messages.isEmpty) {
       return;
@@ -40,13 +41,12 @@ mixin IsmChatPageGetMessageMixin on GetxController {
       if (_controller.messages.isEmpty) {
         _controller.isMessagesLoading = true;
       }
-
       var timeStamp = lastMessageTimestamp ??
           (_controller.messages.isEmpty
               ? 0
               : _controller.messages.last.sentAt + 2000);
 
-      var messagesList = List.from(_controller.messages);
+      var messagesList = List<IsmChatMessageModel>.from(_controller.messages);
       messagesList.removeWhere(
           (element) => element.customType == IsmChatCustomMessageType.date);
       var conversationID = conversationId.isNotEmpty
