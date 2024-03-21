@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 import 'dart:math';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
@@ -1435,6 +1436,7 @@ class IsmChatPageController extends GetxController
     } else if (message.customType == IsmChatCustomMessageType.contact) {
       IsmChatRouteManagement.goToContactInfoView(contacts: message.contacts);
     }
+   
   }
 
   void tapForMediaPreviewWithMetaData(IsmChatMessageModel message) async {

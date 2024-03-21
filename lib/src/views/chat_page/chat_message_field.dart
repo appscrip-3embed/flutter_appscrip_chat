@@ -392,11 +392,11 @@ class _MicOrSendButton extends StatelessWidget {
                       sizeMedia = await IsmChatUtility.bytesToSize(bytes);
                       webMediaModel = WebMediaModel(
                         platformFile: IsmchPlatformFile(
-                          name: '${DateTime.now().millisecondsSinceEpoch}.m4a',
+                          name: '${DateTime.now().millisecondsSinceEpoch}.mp3',
                           size: bytes.length,
                           bytes: bytes,
                           path: audioPath,
-                          extension: 'm4a',
+                          extension: 'mp3',
                         ),
                         isVideo: false,
                         thumbnailBytes: Uint8List(0),
@@ -425,8 +425,8 @@ class _MicOrSendButton extends StatelessWidget {
                     } else {
                       await Get.dialog(
                         const IsmChatAlertDialogBox(
-                         title:  IsmChatStrings.youCanNotSend,
-          cancelLabel:  IsmChatStrings.okay,
+                          title: IsmChatStrings.youCanNotSend,
+                          cancelLabel: IsmChatStrings.okay,
                         ),
                       );
                     }

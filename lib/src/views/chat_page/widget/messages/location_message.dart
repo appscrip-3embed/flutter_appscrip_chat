@@ -21,12 +21,16 @@ class IsmChatLocationMessage extends StatelessWidget {
 
     return IsmChatTapHandler(
       onTap: () async {
+        var url = '';
         if (message.body.isValidUrl) {
-          await launchUrl(
-            Uri.parse(message.body),
-            mode: LaunchMode.externalApplication,
-          );
-        } else {}
+          url = message.body;
+        } else {
+          url = message.attachments?.first.mediaUrl ?? '';
+        }
+        await launchUrl(
+          Uri.parse(url),
+          mode: LaunchMode.externalApplication,
+        );
       },
       child: Stack(
         alignment: Alignment.center,

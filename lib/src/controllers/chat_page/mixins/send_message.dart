@@ -863,7 +863,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var locationMessage = IsmChatMessageModel(
       body: IsmChatStrings.location,
-      //  'https://www.google.com/maps/search/?api=1&map_action=map&query=$latitude%2C$longitude&query_place_id=$placeId',
       conversationId: conversationId,
       senderInfo: _controller.currentUser,
       customType: _controller.isreplying
@@ -884,6 +883,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       isUploading: true,
       attachments: [
         AttachmentModel(
+          mediaUrl:
+              'https://www.google.com/maps/search/?api=1&map_action=map&query=$latitude%2C$longitude&query_place_id=$placeId',
           address: locationSubName,
           attachmentType: IsmChatMediaType.location,
           latitude: latitude,
