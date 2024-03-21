@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:camera/camera.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:photo_view/photo_view.dart';
 
 class IsmChatGalleryAssetsView extends StatelessWidget {
@@ -25,7 +25,8 @@ class IsmChatGalleryAssetsView extends StatelessWidget {
         },
         builder: (controller) {
           if (controller.listOfAssetsPath.isNotEmpty) {
-            return Scaffold(
+            return 
+            Scaffold(
               resizeToAvoidBottomInset: true,
               appBar: AppBar(
                 title: Text(

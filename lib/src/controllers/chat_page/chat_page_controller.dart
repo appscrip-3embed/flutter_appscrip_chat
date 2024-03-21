@@ -819,7 +819,7 @@ class IsmChatPageController extends GetxController
         break;
       case IsmChatAttachmentType.gallery:
         listOfAssetsPath.clear();
-        Responsive.isWeb(Get.context!) ? getMediaWithWeb() : getMedia();
+        kIsWeb ? getMediaWithWeb() : getMedia();
         break;
       case IsmChatAttachmentType.document:
         sendDocument(
@@ -1513,7 +1513,7 @@ class IsmChatPageController extends GetxController
 
   void toggleCamera() async {
     areCamerasInitialized = false;
-    if (!Responsive.isWeb(Get.context!)) {
+    if (Responsive.isMobile(Get.context!) && !kIsWeb) {
       isFrontCameraSelected = !isFrontCameraSelected;
     }
     if (isFrontCameraSelected) {

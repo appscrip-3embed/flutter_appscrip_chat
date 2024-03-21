@@ -425,8 +425,8 @@ class _MicOrSendButton extends StatelessWidget {
                     } else {
                       await Get.dialog(
                         const IsmChatAlertDialogBox(
-                          title: 'You can not send audio more than 20 MB.',
-                          cancelLabel: 'Okay',
+                         title:  IsmChatStrings.youCanNotSend,
+          cancelLabel:  IsmChatStrings.okay,
                         ),
                       );
                     }

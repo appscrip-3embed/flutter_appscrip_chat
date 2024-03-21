@@ -123,7 +123,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
               .toList(),
           showInConversation: true,
           encrypted: true,
-          events: {'updateUnreadCount': true, 'sendPushNotification': true},
+          events: {
+            'updateUnreadCount': true,
+            'sendPushNotification': sendPushNotification
+          },
           messageType: messageType,
           deviceId: deviceId,
           body: body,
@@ -174,8 +177,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     } else {
       await Get.dialog(
         const IsmChatAlertDialogBox(
-          title: 'You can not send image and video more than 20 MB.',
-          cancelLabel: 'Okay',
+          title: IsmChatStrings.youCanNotSend,
+          cancelLabel: IsmChatStrings.okay,
         ),
       );
     }
@@ -198,8 +201,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       IsmChatUtility.closeLoader();
       await Get.dialog(
         const IsmChatAlertDialogBox(
-          title: 'You can not send image and video more than 20 MB.',
-          cancelLabel: 'Okay',
+          title: IsmChatStrings.youCanNotSend,
+          cancelLabel: IsmChatStrings.okay,
         ),
       );
     }
@@ -422,7 +425,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       final resultFiles = result?.files ?? [];
 
       for (var x in resultFiles) {
-        var sizeMedia = kIsWeb && Responsive.isWeb(Get.context!)
+        var sizeMedia = kIsWeb
             ? IsmChatUtility.formatBytes(
                 int.parse((x.bytes?.length ?? 0).toString()),
               )
@@ -430,7 +433,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
 
         bytes = Uint8List.fromList(x.bytes as List<int>);
         if (sizeMedia.size()) {
-          final document = kIsWeb && Responsive.isWeb(Get.context!)
+          final document = kIsWeb
               ? await PdfDocument.openData(x.bytes ?? Uint8List(0))
               : await PdfDocument.openFile(x.path ?? '');
           final page = await document.getPage(1);
@@ -459,9 +462,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
                 size: bytes.length,
                 name: nameWithExtension,
                 mimeType: x.extension,
-                mediaUrl: kIsWeb && Responsive.isWeb(Get.context!)
-                    ? (bytes).toString()
-                    : x.path,
+                mediaUrl: kIsWeb ? (bytes).toString() : x.path,
                 mediaId: sentAt.toString(),
                 extension: x.extension,
               )
@@ -501,8 +502,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         } else {
           await Get.dialog(
             const IsmChatAlertDialogBox(
-              title: 'You can not send documnets more than 20 MB.',
-              cancelLabel: 'Okay',
+              title: IsmChatStrings.youCanNotSend,
+              cancelLabel: IsmChatStrings.okay,
             ),
           );
         }

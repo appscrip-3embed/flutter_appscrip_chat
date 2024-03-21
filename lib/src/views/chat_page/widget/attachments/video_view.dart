@@ -124,8 +124,8 @@ class _IsmChatVideoViewState extends State<IsmChatVideoView> {
                   } else {
                     await Get.dialog(
                       const IsmChatAlertDialogBox(
-                        title: 'You can not send video more than 20 MB.',
-                        cancelLabel: 'Okay',
+                        title: IsmChatStrings.youCanNotSend,
+                        cancelLabel: IsmChatStrings.okay,
                       ),
                     );
                   }

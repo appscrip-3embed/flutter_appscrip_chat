@@ -115,8 +115,8 @@ class IsmChatImageEditView extends StatelessWidget {
                     } else {
                       await Get.dialog(
                         const IsmChatAlertDialogBox(
-                          title: 'You can not send image more than 20 MB.',
-                          cancelLabel: 'Okay',
+                          title: IsmChatStrings.youCanNotSend,
+                          cancelLabel: IsmChatStrings.okay,
                         ),
                       );
                     }
