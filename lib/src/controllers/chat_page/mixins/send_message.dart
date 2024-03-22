@@ -63,6 +63,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
 
       await IsmChatConfig.dbWrapper!
           .createAndUpdateConversation(dbConversationModel);
+      unawaited(conversationController.getChatConversations());
       return conversationId.toString();
     }
     return '';
@@ -1117,7 +1118,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     if (!_controller.isTemporaryChat) {
       await IsmChatConfig.dbWrapper!
           .saveMessage(textMessage, IsmChatDbBox.pending);
-
       if (kIsWeb && Responsive.isWeb(Get.context!)) {
         _controller.updateLastMessagOnCurrentTime(textMessage);
       }
