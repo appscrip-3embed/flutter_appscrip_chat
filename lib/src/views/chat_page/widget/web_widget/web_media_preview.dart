@@ -172,7 +172,7 @@ class WebMediaPreview extends StatelessWidget {
                               fillColor:
                                   IsmChatColors.greyColor.withOpacity(.5),
                               autofocus: false,
-                              padding: IsmChatDimens.edgeInsets0,
+                              padding: IsmChatDimens.edgeInsets10,
                               hint: IsmChatStrings.addCaption,
                               hintStyle: IsmChatStyles.w400White16,
                               cursorColor: IsmChatColors.whiteColor,
@@ -197,7 +197,8 @@ class WebMediaPreview extends StatelessWidget {
                           ),
                         ],
                       ),
-                    )
+                    ),
+                    IsmChatDimens.boxHeight20
                   ]),
             ),
           );
