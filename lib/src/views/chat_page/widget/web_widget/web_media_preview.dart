@@ -86,7 +86,6 @@ class WebMediaPreview extends StatelessWidget {
                       ),
                     ],
                     IsmChatDimens.boxHeight20,
-                    IsmChatDimens.boxHeight20,
                     Stack(
                       children: [
                         Container(
@@ -162,29 +161,43 @@ class WebMediaPreview extends StatelessWidget {
                             },
                           ),
                         ),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: Padding(
-                            padding: IsmChatDimens.edgeInsetsTop20.copyWith(
-                                right: IsmChatDimens.forty,
-                                top: IsmChatDimens.ten),
-                            child: IsmChatTapHandler(
-                                onTap: () {
-                                  controller.sendMediaWeb();
-                                },
-                                child: CircleAvatar(
-                                  backgroundColor:
-                                      IsmChatConfig.chatTheme.primaryColor,
-                                  radius: IsmChatDimens.thirty,
-                                  child: const Icon(
-                                    Icons.send,
-                                    color: IsmChatColors.whiteColor,
-                                  ),
-                                )),
-                          ),
-                        )
                       ],
                     ),
+                    Padding(
+                      padding: IsmChatDimens.edgeInsets20_0,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: IsmChatInputField(
+                              fillColor:
+                                  IsmChatColors.greyColor.withOpacity(.5),
+                              autofocus: false,
+                              padding: IsmChatDimens.edgeInsets0,
+                              hint: IsmChatStrings.addCaption,
+                              hintStyle: IsmChatStyles.w400White16,
+                              cursorColor: IsmChatColors.whiteColor,
+                              style: IsmChatStyles.w400White16,
+                              controller: controller.textEditingController,
+                              onChanged: (value) {
+                                controller.webMedia[controller.assetsIndex] =
+                                    controller.webMedia[controller.assetsIndex]
+                                        .copyWith(caption: value);
+                              },
+                            ),
+                          ),
+                          IsmChatDimens.boxWidth20,
+                          IsmChatStartChatFAB(
+                            onTap: () async {
+                              controller.sendMediaWeb();
+                            },
+                            icon: const Icon(
+                              Icons.send,
+                              color: IsmChatColors.whiteColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                   ]),
             ),
           );

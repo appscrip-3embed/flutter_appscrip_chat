@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/controllers/mqtt/clients/mobile_client.dart'
     if (dart.library.html) 'clients/web_client.dart';
@@ -38,7 +39,7 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
   }
 
   Future<void> initializeMqttClient() async {
-    await IsmChatMqttClient.initializeMqttClient(_deviceConfig.deviceId!);
+    await IsmChatMqttClient.initializeMqttClient(_deviceConfig.deviceId ?? '');
     client = IsmChatMqttClient.client;
     client?.keepAlivePeriod = IsmChatConstants.keepAlivePeriod;
     client?.onDisconnected = _onDisconnected;
@@ -53,7 +54,10 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
     client?.onConnected = _onConnected;
     client?.onSubscribed = _onSubscribed;
 
-    client?.connectionMessage = MqttConnectMessage().startClean();
+    client?.connectionMessage = MqttConnectMessage()
+        .withClientIdentifier(
+            '${IsmChatConfig.communicationConfig.userConfig.userId}${_deviceConfig.deviceId ?? ''}')
+        .startClean();
   }
 
   Future<void> connectClient() async {
@@ -62,6 +66,7 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
         communicationConfig.username,
         communicationConfig.password,
       );
+      IsmChatLog.error('step2');
       IsmChatLog.info('MQTT Response ${res?.state}');
       if (res?.state == MqttConnectionState.connected) {
         connectionState = IsmChatConnectionState.connected;

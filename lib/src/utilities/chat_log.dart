@@ -20,12 +20,16 @@ class IsmChatLog {
   ///- `ChatLog.success()` - for success log
   IsmChatLog.error(this.message, [this.stackTrace]) {
     if (kDebugMode) {
-      log(
-        '\x1B[31m[${IsmChatStrings.name}] - $message\x1B[0m',
-        stackTrace: stackTrace,
-        name: 'Error',
-        level: 1200,
-      );
+      if (kIsWeb) {
+        print('\x1B[31m[${IsmChatStrings.name}] - $message\x1B[0m');
+      } else {
+        log(
+          '\x1B[31m[${IsmChatStrings.name}] - $message\x1B[0m',
+          stackTrace: stackTrace,
+          name: 'Error',
+          level: 1200,
+        );
+      }
     }
   }
 
@@ -45,12 +49,16 @@ class IsmChatLog {
   ///- `ChatLog.error()` - for error log
   IsmChatLog.success(this.message, [this.stackTrace]) {
     if (kDebugMode) {
-      log(
-        '\x1B[32m[${IsmChatStrings.name}] - $message\x1B[0m',
-        stackTrace: stackTrace,
-        name: 'Success',
-        level: 800,
-      );
+      if (kIsWeb) {
+        print('\x1B[32m[${IsmChatStrings.name}] - $message\x1B[0m');
+      } else {
+        log(
+          '\x1B[32m[${IsmChatStrings.name}] - $message\x1B[0m',
+          stackTrace: stackTrace,
+          name: 'Success',
+          level: 800,
+        );
+      }
     }
   }
 
@@ -70,12 +78,16 @@ class IsmChatLog {
   ///- `ChatLog.error()` - for error log
   IsmChatLog.info(this.message, [this.stackTrace]) {
     if (kDebugMode) {
-      log(
-        '\x1B[33m[${IsmChatStrings.name}] - $message\x1B[0m',
-        stackTrace: stackTrace,
-        name: 'Info',
-        level: 900,
-      );
+      if (kIsWeb) {
+        print('\x1B[33m[${IsmChatStrings.name}] - $message\x1B[0m');
+      } else {
+        log(
+          '\x1B[33m[${IsmChatStrings.name}] - $message\x1B[0m',
+          stackTrace: stackTrace,
+          name: 'Info',
+          level: 900,
+        );
+      }
     }
   }
 
@@ -95,12 +107,16 @@ class IsmChatLog {
   ///- `ChatLog.error()` - for error log
   IsmChatLog(this.message, [this.stackTrace]) {
     if (kDebugMode) {
-      log(
-        '\x1B[37m[${IsmChatStrings.name}] - $message\x1B[0m',
-        // '[${ChatStrings.name}] - $message',
-        stackTrace: stackTrace,
-        level: 700,
-      );
+      if (kIsWeb) {
+        print('\x1B[37m[${IsmChatStrings.name}] - $message\x1B[0m');
+      } else {
+        log(
+          '\x1B[37m[${IsmChatStrings.name}] - $message\x1B[0m',
+          // '[${ChatStrings.name}] - $message',
+          stackTrace: stackTrace,
+          level: 700,
+        );
+      }
     }
   }
   final dynamic message;

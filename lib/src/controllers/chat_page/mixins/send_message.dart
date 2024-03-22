@@ -218,7 +218,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             conversationId: _controller.conversation?.conversationId ?? '',
             userId: _controller.conversation?.opponentDetails?.userId ?? '',
             webMediaModel: media,
-            caption: '',
+            caption: media.caption ?? '',
           );
         } else {
           await sendVideo(
@@ -226,7 +226,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             isThumbnail: true,
             conversationId: _controller.conversation?.conversationId ?? '',
             userId: _controller.conversation?.opponentDetails?.userId ?? '',
-            caption: '',
+            caption: media.caption ?? '',
           );
         }
       }
