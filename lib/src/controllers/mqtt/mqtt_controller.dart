@@ -66,7 +66,7 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
         communicationConfig.username,
         communicationConfig.password,
       );
-      IsmChatLog.error('step2');
+
       IsmChatLog.info('MQTT Response ${res?.state}');
       if (res?.state == MqttConnectionState.connected) {
         connectionState = IsmChatConnectionState.connected;
