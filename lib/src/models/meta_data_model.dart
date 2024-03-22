@@ -29,7 +29,8 @@ class IsmChatMetaData {
                 map['replayMessageCustomType'])
             : null,
         country: map['country'] as String? ?? '',
-        parentMessageBody: map['parentMessageBody'] as String? ?? '',
+        parentMessageBody: IsmChatUtility.decodeString(
+            map['parentMessageBody'] as String? ?? ''),
         locationAddress: map['locationAddress'] as String? ?? '',
         locationSubAddress: map['locationSubAddress'] as String? ?? '',
         profilePic: map['profilePic'] as String? ?? '',
@@ -114,7 +115,8 @@ class IsmChatMetaData {
           'captionMessage': IsmChatUtility.encodeString(captionMessage ?? ''),
         if (country != null && country?.isNotEmpty == true) 'country': country,
         if (parentMessageBody != null && parentMessageBody?.isNotEmpty == true)
-          'parentMessageBody': parentMessageBody,
+          'parentMessageBody':
+              IsmChatUtility.encodeString(parentMessageBody ?? ''),
         if (locationAddress != null && locationAddress?.isNotEmpty == true)
           'locationAddress': locationAddress,
         if (locationSubAddress != null &&

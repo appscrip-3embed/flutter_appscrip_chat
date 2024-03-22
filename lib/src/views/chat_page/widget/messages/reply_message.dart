@@ -118,7 +118,8 @@ class _ReplyMessage extends StatelessWidget {
                                 maxWidth: IsmChatDimens.percentWidth(.2),
                               ),
                               child: Text(
-                                message.metaData?.parentMessageBody ?? '',
+                                IsmChatUtility.decodeString(
+                                    message.metaData?.parentMessageBody ?? ''),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: message.style,
