@@ -8,7 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 mixin IsmChatMqttEventMixin on GetxController {
-  IsmChatMqttController get _controller => Get.find<IsmChatMqttController>();
+  IsmChatMqttController get _controller {
+    if (!Get.isRegistered<IsmChatMqttController>()) {
+      IsmChatMqttBinding().dependencies();
+    }
+    return Get.find<IsmChatMqttController>();
+  }
 
   String messageId = '';
 
@@ -1032,8 +1037,6 @@ mixin IsmChatMqttEventMixin on GetxController {
       await Get.find<IsmChatConversationsController>().getChatConversations();
     }
   }
-
-  
 
   Future<void> getChatConversationsUnreadCount({
     bool isLoading = false,
