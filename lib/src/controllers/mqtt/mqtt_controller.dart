@@ -37,7 +37,8 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
       await initializeMqttClient();
       await connectClient();
     }
-    unawaited(getChatConversationsUnreadCount());
+    await getChatConversationsUnreadCount();
+    // unawaited();
   }
 
   Future<void> initializeMqttClient() async {
