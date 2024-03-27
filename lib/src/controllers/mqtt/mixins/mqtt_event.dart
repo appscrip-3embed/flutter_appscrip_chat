@@ -986,8 +986,7 @@ mixin IsmChatMqttEventMixin {
     if (userId == _controller.communicationConfig.userConfig.userId) {
       return;
     }
-
-    await getChatConversationsUnreadCount();
+    await _controller.getChatConversationsUnreadCount();
   }
 
   void _handleDeletChatFromLocal(IsmChatMqttActionModel actionModel) async {
@@ -1031,15 +1030,6 @@ mixin IsmChatMqttEventMixin {
     if (Get.isRegistered<IsmChatConversationsController>()) {
       await Get.find<IsmChatConversationsController>().getChatConversations();
     }
-  }
-
-  Future<void> getChatConversationsUnreadCount({
-    bool isLoading = false,
-  }) async {
-    var response = await _controller.viewModel.getChatConversationsUnreadCount(
-      isLoading: isLoading,
-    );
-    IsmChatApp.unReadConversationMessages = response;
   }
 
   Future<String> getChatConversationsCount({
