@@ -36,9 +36,8 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
           '/${communicationConfig.projectConfig.accountId}/${communicationConfig.projectConfig.projectId}/Status/${communicationConfig.userConfig.userId}';
       await initializeMqttClient();
       await connectClient();
+      unawaited(getChatConversationsUnreadCount());
     }
-    await getChatConversationsUnreadCount();
-    // unawaited();
   }
 
   Future<void> initializeMqttClient() async {

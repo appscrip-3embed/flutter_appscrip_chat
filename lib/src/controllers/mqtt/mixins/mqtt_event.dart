@@ -7,13 +7,8 @@ import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-mixin IsmChatMqttEventMixin on GetxController {
-  IsmChatMqttController get _controller {
-    if (!Get.isRegistered<IsmChatMqttController>()) {
-      IsmChatMqttBinding().dependencies();
-    }
-    return Get.find<IsmChatMqttController>();
-  }
+mixin IsmChatMqttEventMixin {
+  IsmChatMqttController get _controller => Get.find<IsmChatMqttController>();
 
   String messageId = '';
 
@@ -1044,7 +1039,6 @@ mixin IsmChatMqttEventMixin on GetxController {
     var response = await _controller.viewModel.getChatConversationsUnreadCount(
       isLoading: isLoading,
     );
-
     IsmChatApp.unReadConversationMessages = response;
   }
 
