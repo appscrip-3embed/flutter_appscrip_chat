@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
@@ -324,12 +325,14 @@ class IsmChatApp extends StatelessWidget {
       String,
     )? showNotification,
     bool isShowMqttConnectErrorDailog = false,
+    bool isMqttInitializedFromOutSide = false,
   }) {
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
     IsmChatConfig.communicationConfig = communicationConfig;
     IsmChatConfig.configInitilized = true;
+    IsmChatConfig.isMqttInitializedFromOutSide = isMqttInitializedFromOutSide;
     if (!Get.isRegistered<IsmChatMqttController>()) {
       IsmChatLog.info(
           'IsmMQttController initiliazing fron {initializeMqtt} function');

@@ -29,12 +29,14 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
   void onInit() async {
     super.onInit();
     communicationConfig = IsmChatConfig.communicationConfig;
-    messageTopic =
-        '/${communicationConfig.projectConfig.accountId}/${communicationConfig.projectConfig.projectId}/Message/${communicationConfig.userConfig.userId}';
-    statusTopic =
-        '/${communicationConfig.projectConfig.accountId}/${communicationConfig.projectConfig.projectId}/Status/${communicationConfig.userConfig.userId}';
-    await initializeMqttClient();
-    await connectClient();
+    if (!IsmChatConfig.isMqttInitializedFromOutSide) {
+      messageTopic =
+          '/${communicationConfig.projectConfig.accountId}/${communicationConfig.projectConfig.projectId}/Message/${communicationConfig.userConfig.userId}';
+      statusTopic =
+          '/${communicationConfig.projectConfig.accountId}/${communicationConfig.projectConfig.projectId}/Status/${communicationConfig.userConfig.userId}';
+      await initializeMqttClient();
+      await connectClient();
+    }
     unawaited(getChatConversationsUnreadCount());
   }
 
@@ -137,7 +139,7 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
   void _onDisconnected() {
     IsmChatApp.isMqttConnected = false;
     connectionState = IsmChatConnectionState.disconnected;
-    if (client?.connectionStatus!.returnCode ==
+    if (client?.connectionStatus?.returnCode ==
         MqttConnectReturnCode.noneSpecified) {
       IsmChatLog.success('MQTT Disconnected');
     } else {

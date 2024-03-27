@@ -1,8 +1,9 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class IsmMaterialChatPage extends StatefulWidget {
   IsmMaterialChatPage({
@@ -237,14 +238,20 @@ class IsmMaterialChatPage extends StatefulWidget {
       String,
     )? showNotification,
     bool isShowMqttConnectErrorDailog = false,
+    bool isMqttInitializedFromOutSide = false,
   }) {
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
     IsmChatConfig.communicationConfig = communicationConfig;
     IsmChatConfig.configInitilized = true;
+    IsmChatConfig.isMqttInitializedFromOutSide = isMqttInitializedFromOutSide;
     if (!Get.isRegistered<IsmChatMqttController>()) {
+      IsmChatLog.info(
+          'IsmMQttController initiliazing fron {initializeMqtt} function');
       IsmChatMqttBinding().dependencies();
+      IsmChatLog.info(
+          'IsmMQttController initiliazing success fron {initializeMqtt} function ');
     }
     IsmChatConfig.showNotification = showNotification;
     IsmChatConfig.notificationIconPath = notificationIconPath;

@@ -9,7 +9,7 @@ class IsmChatConfig {
   static IsmChatThemeData? _chatDarkTheme;
   static IsmChatDBWrapper? dbWrapper;
   static bool useDatabase = false;
-
+  static bool isMqttInitializedFromOutSide = false;
   static String dbName = IsmChatStrings.dbname;
   static bool isInitialized = false;
   static Duration animationDuration = const Duration(milliseconds: 300);
