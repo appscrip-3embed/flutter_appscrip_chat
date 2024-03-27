@@ -50,6 +50,7 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
     client?.logging(on: true);
     client?.autoReconnect = true;
     client?.pongCallback = _pong;
+    client?.websocketProtocols = <String>['mqtt'];
     client?.setProtocolV311();
 
     /// Add the successful connection callback

@@ -129,6 +129,22 @@ class IsmMaterialChatPage extends StatefulWidget {
     return '';
   }
 
+  /// Call this function for Listen MQTT Evnet from OutSide
+  /// [IsmChatConfig.configInitilized] this variable must be true
+  /// You can call this funcation after MQTT controller intilized
+  static Future<void> listenMqttEventFromOutSide({
+    required Map<String, dynamic> payload,
+  }) async {
+    assert(IsmChatConfig.configInitilized,
+        '''MQTT Controller must be initialized before adding listener.
+    Either call IsmChatApp.initializeMqtt() or add listener after IsmChatApp is called''');
+    if (Get.isRegistered<IsmChatMqttController>()) {
+      await Get.find<IsmChatMqttController>().onMqttEvent(
+        payload: payload,
+      );
+    }
+  }
+
   /// Call this function for unblock user form out side
   static Future<void> unblockUser({
     required String opponentId,
@@ -167,8 +183,10 @@ class IsmMaterialChatPage extends StatefulWidget {
 
   /// Call this function on SignOut to delete the data stored locally in the Local Database
   static Future<void> logout() async {
-    await Get.find<IsmChatMqttController>().unSubscribe();
-    await Get.find<IsmChatMqttController>().disconnect();
+    if (!IsmChatConfig.isMqttInitializedFromOutSide) {
+      await Get.find<IsmChatMqttController>().unSubscribe();
+      await Get.find<IsmChatMqttController>().disconnect();
+    }
     await IsmChatConfig.dbWrapper?.deleteChatLocalDb();
     await Future.wait([
       Get.delete<IsmChatConversationsController>(force: true),
