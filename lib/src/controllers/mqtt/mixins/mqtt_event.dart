@@ -425,7 +425,8 @@ mixin IsmChatMqttEventMixin {
           description: Text(mqttMessage ?? ''),
           progressIndicatorColor:
               IsmChatConfig.chatTheme.primaryColor ?? Colors.blue,
-        ).show(IsmChatConfig.context);
+        ).show(IsmChatConfig.context ??
+            Get.find<IsmChatConversationsController>().context!);
       }
     }
   }

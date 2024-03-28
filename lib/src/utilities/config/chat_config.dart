@@ -9,7 +9,7 @@ class IsmChatConfig {
   static IsmChatThemeData? _chatLightTheme;
   static IsmChatThemeData? _chatDarkTheme;
   static IsmChatDBWrapper? dbWrapper;
-  static BuildContext context = Get.context!;
+  
   static bool useDatabase = false;
   static bool isMqttInitializedFromOutSide = false;
   static String dbName = IsmChatStrings.dbname;
@@ -34,4 +34,5 @@ class IsmChatConfig {
   static set chatDarkTheme(IsmChatThemeData data) => _chatDarkTheme = data;
   static String? fontFamily;
   static String? notificationIconPath;
+  static BuildContext? context;
 }

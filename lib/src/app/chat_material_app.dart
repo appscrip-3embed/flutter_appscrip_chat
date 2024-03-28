@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 class IsmChatApp extends StatelessWidget {
   IsmChatApp({
     super.key,
+    this.context,
     this.communicationConfig,
     this.chatPageProperties,
     this.conversationProperties,
@@ -48,6 +49,7 @@ class IsmChatApp extends StatelessWidget {
       IsmChatConfig.configInitilized = true;
     }
     IsmChatConfig.useDatabase = useDataBase;
+    IsmChatConfig.context = context;
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
     IsmChatConfig.isShowMqttConnectErrorDailog = isShowMqttConnectErrorDailog;
     IsmChatConfig.chatDarkTheme =
@@ -60,6 +62,8 @@ class IsmChatApp extends StatelessWidget {
       IsmChatProperties.conversationProperties = conversationProperties!;
     }
   }
+
+  final BuildContext? context;
 
   final bool isShowMqttConnectErrorDailog;
 
@@ -319,6 +323,7 @@ class IsmChatApp extends StatelessWidget {
     IsmChatThemeData? chatTheme,
     IsmChatThemeData? chatDarkTheme,
     String? notificationIconPath,
+    BuildContext? context,
     void Function(
       String,
       String,
@@ -342,6 +347,7 @@ class IsmChatApp extends StatelessWidget {
     }
     IsmChatConfig.showNotification = showNotification;
     IsmChatConfig.notificationIconPath = notificationIconPath;
+    IsmChatConfig.context = context;
     IsmChatConfig.isShowMqttConnectErrorDailog = isShowMqttConnectErrorDailog;
   }
 
@@ -486,7 +492,6 @@ class IsmChatApp extends StatelessWidget {
       _unReadConversationMessages.value;
   static set unReadConversationMessages(String value) =>
       _unReadConversationMessages.value = value;
-      
 
   /// This variable use for mqtt connected or not
   /// This variable update when mqtt connection on app initlized
