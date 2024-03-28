@@ -386,6 +386,7 @@ class IsmChatApp extends StatelessWidget {
     void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
     Duration duration = const Duration(milliseconds: 500),
     String? messageFromOutSide,
+    String? mediaPath,
     bool? pushNotifications,
   }) async {
     assert(
@@ -422,17 +423,19 @@ class IsmChatApp extends StatelessWidget {
         ),
       );
       conversation = IsmChatConversationModel(
-          messagingDisabled: false,
-          conversationImageUrl: profileImageUrl,
-          isGroup: false,
-          opponentDetails: userDetails,
-          unreadMessagesCount: 0,
-          lastMessageDetails: null,
-          lastMessageSentAt: 0,
-          membersCount: 1,
-          metaData: metaData,
-          messageFromOutSide: messageFromOutSide,
-          pushNotifications: pushNotifications);
+        messagingDisabled: false,
+        conversationImageUrl: profileImageUrl,
+        isGroup: false,
+        opponentDetails: userDetails,
+        unreadMessagesCount: 0,
+        lastMessageDetails: null,
+        lastMessageSentAt: 0,
+        membersCount: 1,
+        metaData: metaData,
+        messageFromOutSide: messageFromOutSide,
+        mediaPath: mediaPath,
+        pushNotifications: pushNotifications,
+      );
     } else {
       conversation = controller.conversations
           .firstWhere((e) => e.conversationId == conversationId);

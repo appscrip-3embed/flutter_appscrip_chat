@@ -76,6 +76,7 @@ class IsmChatConversationModel {
                 .toList()
             : [],
         messageFromOutSide: map['messageFromOutSide'] as String? ?? '',
+        mediaPath: map['mediaPath'] as String? ?? '',
         customType: map['customType'] as String? ?? '',
         pushNotifications: map['pushNotifications'] as bool? ?? false);
     if (model.lastMessageDetails?.action ==
@@ -111,6 +112,7 @@ class IsmChatConversationModel {
     this.createdByUserName,
     this.messages,
     this.messageFromOutSide,
+    this.mediaPath,
     this.customType,
     this.pushNotifications,
   });
@@ -139,6 +141,7 @@ class IsmChatConversationModel {
   final String? createdByUserName;
   final List<IsmChatMessageModel>? messages;
   final String? messageFromOutSide;
+  final String? mediaPath;
   final String? customType;
   final bool? pushNotifications;
 
@@ -186,35 +189,37 @@ class IsmChatConversationModel {
     IsmChatUserOwnDetails? usersOwnDetails,
     List<IsmChatMessageModel>? messages,
     String? messageFromOutSide,
+    String? mediaPath,
     bool? pushNotifications,
   }) =>
       IsmChatConversationModel(
-        updatedAt: updatedAt ?? this.updatedAt,
-        unreadMessagesCount: unreadMessagesCount ?? this.unreadMessagesCount,
-        privateOneToOne: privateOneToOne ?? this.privateOneToOne,
-        opponentDetails: opponentDetails ?? this.opponentDetails,
-        metaData: metaData ?? this.metaData,
-        messagingDisabled: messagingDisabled ?? this.messagingDisabled,
-        membersCount: membersCount ?? this.membersCount,
-        lastReadAt: lastReadAt ?? this.lastReadAt,
-        lastMessageSentAt: lastMessageSentAt ?? this.lastMessageSentAt,
-        lastMessageDetails: lastMessageDetails ?? this.lastMessageDetails,
-        isGroup: isGroup ?? this.isGroup,
-        conversationType: conversationType ?? this.conversationType,
-        conversationTitle: conversationTitle ?? this.conversationTitle,
-        conversationImageUrl: conversationImageUrl ?? this.conversationImageUrl,
-        conversationId: conversationId ?? this.conversationId,
-        createdAt: createdAt ?? this.createdAt,
-        createdBy: createdBy ?? this.createdBy,
-        createdByUserName: createdByUserName ?? this.createdByUserName,
-        config: config ?? this.config,
-        members: members ?? this.members,
-        usersOwnDetails: usersOwnDetails ?? this.usersOwnDetails,
-        messages: messages ?? this.messages,
-        messageFromOutSide: messageFromOutSide ?? this.messageFromOutSide,
-        customType: customType ?? this.customType,
-        pushNotifications: pushNotifications ?? this.pushNotifications,
-      );
+          updatedAt: updatedAt ?? this.updatedAt,
+          unreadMessagesCount: unreadMessagesCount ?? this.unreadMessagesCount,
+          privateOneToOne: privateOneToOne ?? this.privateOneToOne,
+          opponentDetails: opponentDetails ?? this.opponentDetails,
+          metaData: metaData ?? this.metaData,
+          messagingDisabled: messagingDisabled ?? this.messagingDisabled,
+          membersCount: membersCount ?? this.membersCount,
+          lastReadAt: lastReadAt ?? this.lastReadAt,
+          lastMessageSentAt: lastMessageSentAt ?? this.lastMessageSentAt,
+          lastMessageDetails: lastMessageDetails ?? this.lastMessageDetails,
+          isGroup: isGroup ?? this.isGroup,
+          conversationType: conversationType ?? this.conversationType,
+          conversationTitle: conversationTitle ?? this.conversationTitle,
+          conversationImageUrl:
+              conversationImageUrl ?? this.conversationImageUrl,
+          conversationId: conversationId ?? this.conversationId,
+          createdAt: createdAt ?? this.createdAt,
+          createdBy: createdBy ?? this.createdBy,
+          createdByUserName: createdByUserName ?? this.createdByUserName,
+          config: config ?? this.config,
+          members: members ?? this.members,
+          usersOwnDetails: usersOwnDetails ?? this.usersOwnDetails,
+          messages: messages ?? this.messages,
+          messageFromOutSide: messageFromOutSide ?? this.messageFromOutSide,
+          customType: customType ?? this.customType,
+          pushNotifications: pushNotifications ?? this.pushNotifications,
+          mediaPath: mediaPath ?? this.mediaPath);
 
   Map<String, dynamic> toMap() => {
         'isGroup': isGroup,
@@ -241,6 +246,7 @@ class IsmChatConversationModel {
         'lastMessageSentAt': lastMessageSentAt,
         'lastMessageDetails': lastMessageDetails?.toMap(),
         'messageFromOutSide': messageFromOutSide,
+        'mediaPath': mediaPath,
         'customType': customType,
         'pushNotifications': pushNotifications,
       };
@@ -249,7 +255,7 @@ class IsmChatConversationModel {
 
   @override
   String toString() =>
-      'IsmChatConversationModel(updatedAt: $updatedAt, unreadMessagesCount: $unreadMessagesCount, userIds: $userIds, privateOneToOne: $privateOneToOne, opponentDetails: $opponentDetails, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, lastMessageSentAt: $lastMessageSentAt, lastMessageDetails: $lastMessageDetails, isGroup: $isGroup, conversationType: $conversationType, createdAt: $createdAt, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, config: $config, members: $members, usersOwnDetails: $usersOwnDetails, createdBy: $createdBy, createdByUserName: $createdByUserName, messages: $messages, messageFromOutSide : $messageFromOutSide, customType: $customType, pushNotifications : $pushNotifications)';
+      'IsmChatConversationModel(updatedAt: $updatedAt, unreadMessagesCount: $unreadMessagesCount, userIds: $userIds, privateOneToOne: $privateOneToOne, opponentDetails: $opponentDetails, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, lastMessageSentAt: $lastMessageSentAt, lastMessageDetails: $lastMessageDetails, isGroup: $isGroup, conversationType: $conversationType, createdAt: $createdAt, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, config: $config, members: $members, usersOwnDetails: $usersOwnDetails, createdBy: $createdBy, createdByUserName: $createdByUserName, messages: $messages, messageFromOutSide : $messageFromOutSide, mediaPath : $mediaPath ,customType: $customType, pushNotifications : $pushNotifications)';
 
   @override
   bool operator ==(covariant IsmChatConversationModel other) {
@@ -277,6 +283,7 @@ class IsmChatConversationModel {
         other.usersOwnDetails == usersOwnDetails &&
         other.createdBy == createdBy &&
         other.messageFromOutSide == messageFromOutSide &&
+        other.mediaPath == mediaPath &&
         other.createdByUserName == createdByUserName &&
         other.customType == customType &&
         other.pushNotifications == pushNotifications &&
@@ -308,6 +315,7 @@ class IsmChatConversationModel {
       createdBy.hashCode ^
       createdByUserName.hashCode ^
       messageFromOutSide.hashCode ^
+      mediaPath.hashCode ^
       customType.hashCode ^
       pushNotifications.hashCode ^
       messages.hashCode;

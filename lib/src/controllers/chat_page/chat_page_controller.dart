@@ -539,12 +539,26 @@ class IsmChatPageController extends GetxController
       if (newMeessageFromOutside != null &&
           newMeessageFromOutside.isNotEmpty == true) {
         await Future.delayed(const Duration(milliseconds: 100));
-        chatInputController.text = newMeessageFromOutside;
-        sendTextMessage(
-          conversationId: conversation?.conversationId ?? '',
-          userId: conversation?.opponentDetails?.userId ?? '',
-          pushNotifications: conversation?.pushNotifications ?? true,
-        );
+        if (conversation?.mediaPath == null ||
+            conversation?.mediaPath?.isEmpty == true) {
+          chatInputController.text = newMeessageFromOutside;
+          sendTextMessage(
+            conversationId: conversation?.conversationId ?? '',
+            userId: conversation?.opponentDetails?.userId ?? '',
+            pushNotifications: conversation?.pushNotifications ?? true,
+          );
+        } else {
+          unawaited(
+            sendImage(
+              conversationId: conversation?.conversationId ?? '',
+              userId: conversation?.opponentDetails?.userId ?? '',
+              caption: newMeessageFromOutside,
+              imagePath: File(
+                conversation?.mediaPath ?? '',
+              ),
+            ),
+          );
+        }
       }
       unawaited(updateUnreadMessgaeCount());
     }
@@ -1436,7 +1450,6 @@ class IsmChatPageController extends GetxController
     } else if (message.customType == IsmChatCustomMessageType.contact) {
       IsmChatRouteManagement.goToContactInfoView(contacts: message.contacts);
     }
-   
   }
 
   void tapForMediaPreviewWithMetaData(IsmChatMessageModel message) async {
