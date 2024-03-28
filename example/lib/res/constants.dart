@@ -28,6 +28,10 @@ class Constants {
 
   static const String hostname = 'connections.isometrik.io';
   static const int port = 2052;
+
+
+  static const String hostnameForWeb =  'wss://connections.isometrik.io:2053/mqtt';
+  static const int portForWeb = 2053;
 }
 
 // Kanika Ma'am Chat app

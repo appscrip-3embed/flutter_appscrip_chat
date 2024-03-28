@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatConfig {
@@ -8,6 +9,7 @@ class IsmChatConfig {
   static IsmChatThemeData? _chatLightTheme;
   static IsmChatThemeData? _chatDarkTheme;
   static IsmChatDBWrapper? dbWrapper;
+  static BuildContext context = Get.context!;
   static bool useDatabase = false;
   static bool isMqttInitializedFromOutSide = false;
   static String dbName = IsmChatStrings.dbname;

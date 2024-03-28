@@ -1,6 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/controllers/controllers.dart';
-import 'package:chat_component_example/main.dart';
 import 'package:chat_component_example/res/res.dart';
 import 'package:chat_component_example/utilities/utilities.dart';
 import 'package:flutter/foundation.dart';
@@ -59,8 +58,11 @@ class ChatList extends StatelessWidget {
                 userProfile: '',
               ),
               mqttConfig: const IsmChatMqttConfig(
-                hostName: Constants.hostname,
-                port: Constants.port,
+                hostName:
+                    kIsWeb ? Constants.hostnameForWeb : Constants.hostname,
+                port: kIsWeb ? Constants.portForWeb : Constants.port,
+                useWebSocket: kIsWeb ? true : false,
+                websocketProtocols: kIsWeb ? <String>['mqtt'] : [],
               ),
               projectConfig: const IsmChatProjectConfig(
                 accountId: Constants.accountId,

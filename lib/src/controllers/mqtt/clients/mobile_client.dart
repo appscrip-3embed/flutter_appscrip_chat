@@ -9,8 +9,11 @@ class IsmChatMqttClient {
       IsmChatConfig.communicationConfig.mqttConfig.hostName,
       '${IsmChatConfig.communicationConfig.userConfig.userId}$deviceId',
     );
-
     client?.port = IsmChatConfig.communicationConfig.mqttConfig.port;
     client?.secure = false;
+    client?.useWebSocket =
+        IsmChatConfig.communicationConfig.mqttConfig.useWebSocket;
+    client?.websocketProtocols =
+        IsmChatConfig.communicationConfig.mqttConfig.websocketProtocols;
   }
 }
