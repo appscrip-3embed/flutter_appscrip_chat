@@ -1481,7 +1481,7 @@ class IsmChatConversationsController extends GetxController {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null) {
-      await _commonController.createConversation(
+      final conversation = await _commonController.createConversation(
         conversation: currentConversation!,
         userId: [userDetails.userId],
         metaData: currentConversation?.metaData,
@@ -1491,6 +1491,7 @@ class IsmChatConversationsController extends GetxController {
           userDetails.userName
         ],
       );
+      conversationId = conversation?.conversationId ?? '';
     }
     IsmChatMessageModel? imageMessage;
     var sentAt = DateTime.now().millisecondsSinceEpoch;
@@ -1510,7 +1511,7 @@ class IsmChatConversationsController extends GetxController {
           userId: IsmChatConfig.communicationConfig.userConfig.userId,
           online: false,
           lastSeen: 0),
-      customType: IsmChatCustomMessageType.reply,
+      customType: IsmChatCustomMessageType.image,
       attachments: [
         AttachmentModel(
           attachmentType: IsmChatMediaType.image,
@@ -1526,7 +1527,7 @@ class IsmChatConversationsController extends GetxController {
       deliveredToAll: false,
       messageId: '',
       deviceId: _deviceConfig.deviceId ?? '',
-      messageType: IsmChatMessageType.reply,
+      messageType: IsmChatMessageType.normal,
       messagingDisabled: false,
       parentMessageId: '',
       readByAll: false,
@@ -1535,20 +1536,10 @@ class IsmChatConversationsController extends GetxController {
       isUploading: true,
       metaData: IsmChatMetaData(
         captionMessage: caption,
-        replyMessage: IsmChatReplyMessageModel(
-          forMessageType: IsmChatCustomMessageType.image,
-          parentMessageMessageType: IsmChatCustomMessageType.image,
-          parentMessageInitiator: false,
-          parentMessageBody: IsmChatStrings.image,
-          parentMessageUserId: userDetails.userId,
-          parentMessageUserName:
-              currentConversation?.opponentDetails?.userName ?? '',
-        ),
       ),
     );
 
-    await IsmChatConfig.dbWrapper!
-        .saveMessage(imageMessage, IsmChatDbBox.pending);
+    await IsmChatConfig.dbWrapper!.saveMessage(imageMessage, IsmChatDbBox.main);
 
     var notificationTitle =
         IsmChatConfig.communicationConfig.userConfig.userName ??
