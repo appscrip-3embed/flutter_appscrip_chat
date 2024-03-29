@@ -52,6 +52,7 @@ class IsmChatCommonViewModel {
     List<Map<String, dynamic>>? attachments,
     List<String>? searchableTags,
     bool isTemporaryChat = false,
+    bool isUpdateMesage = true,
   }) async {
     try {
       var messageId = await _repository.sendMessage(
@@ -70,9 +71,8 @@ class IsmChatCommonViewModel {
         notificationTitle: notificationTitle,
         body: body,
       );
-      if (messageId == null || messageId.isEmpty) {
-        return false;
-      }
+      if (messageId == null || messageId.isEmpty) return false;
+      if (!isUpdateMesage) return false;
       if (isTemporaryChat) {
         final chatPageController = Get.find<IsmChatPageController>();
         for (var x = 0; x < chatPageController.messages.length; x++) {

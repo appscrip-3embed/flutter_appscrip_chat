@@ -1539,9 +1539,6 @@ class IsmChatConversationsController extends GetxController {
       ),
     );
 
-    await IsmChatConfig.dbWrapper!
-        .saveMessage(imageMessage, IsmChatDbBox.pending);
-
     var notificationTitle =
         IsmChatConfig.communicationConfig.userConfig.userName ??
             userDetails.userName;
@@ -1562,8 +1559,8 @@ class IsmChatConversationsController extends GetxController {
       attachments: [imageMessage.attachments?.first.toMap() ?? {}],
       customType: imageMessage.customType?.value,
       metaData: imageMessage.metaData,
-      isTemporaryChat: false,
       parentMessageId: imageMessage.parentMessageId,
+      isUpdateMesage: false,
     );
   }
 }

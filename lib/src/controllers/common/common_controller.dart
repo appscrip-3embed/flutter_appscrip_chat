@@ -52,6 +52,7 @@ class IsmChatCommonController extends GetxController {
     List<Map<String, dynamic>>? attachments,
     List<String>? searchableTags,
     bool isTemporaryChat = false,
+     bool isUpdateMesage = true,
   }) async =>
       await viewModel.sendMessage(
         showInConversation: showInConversation,
@@ -71,6 +72,7 @@ class IsmChatCommonController extends GetxController {
         metaData: metaData,
         parentMessageId: parentMessageId,
         searchableTags: searchableTags,
+        isUpdateMesage: isUpdateMesage
       );
 
   Future<PresignedUrlModel?> postMediaUrl({
