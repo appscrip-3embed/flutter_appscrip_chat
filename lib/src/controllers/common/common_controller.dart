@@ -135,7 +135,6 @@ class IsmChatCommonController extends GetxController {
           config: conversation.config,
           metaData: conversation.metaData,
           conversationType: conversation.conversationType);
-
       await IsmChatConfig.dbWrapper!
           .createAndUpdateConversation(dbConversationModel);
       unawaited(

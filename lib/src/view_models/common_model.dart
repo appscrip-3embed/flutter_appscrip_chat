@@ -110,7 +110,7 @@ class IsmChatCommonViewModel {
               conversation: chatPendingMessages, dbBox: IsmChatDbBox.pending);
           if (chatPendingMessages.messages?.isEmpty == true) {
             await dbBox.pendingMessageBox
-                .delete(chatPendingMessages.conversationId!);
+                .delete(chatPendingMessages.conversationId ?? '');
           }
           var conversationModel =
               await dbBox.getConversation(conversationId: conversationId);

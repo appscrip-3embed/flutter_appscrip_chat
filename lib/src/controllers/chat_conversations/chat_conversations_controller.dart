@@ -1539,7 +1539,8 @@ class IsmChatConversationsController extends GetxController {
       ),
     );
 
-    await IsmChatConfig.dbWrapper!.saveMessage(imageMessage, IsmChatDbBox.main);
+    await IsmChatConfig.dbWrapper!
+        .saveMessage(imageMessage, IsmChatDbBox.pending);
 
     var notificationTitle =
         IsmChatConfig.communicationConfig.userConfig.userName ??
