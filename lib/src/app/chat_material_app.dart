@@ -386,8 +386,8 @@ class IsmChatApp extends StatelessWidget {
     void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
     Duration duration = const Duration(milliseconds: 500),
     String? messageFromOutSide,
-    String? mediaPath,
-    bool? pushNotifications,
+    String? storyMediaUrl,
+    bool pushNotifications = true,
   }) async {
     assert(
       [name, userId].every((e) => e.isNotEmpty),
@@ -433,7 +433,6 @@ class IsmChatApp extends StatelessWidget {
         membersCount: 1,
         metaData: metaData,
         messageFromOutSide: messageFromOutSide,
-        mediaPath: mediaPath,
         pushNotifications: pushNotifications,
       );
     } else {
@@ -449,7 +448,17 @@ class IsmChatApp extends StatelessWidget {
     (onNavigateToChat ?? IsmChatProperties.conversationProperties.onChatTap)
         ?.call(Get.context!, conversation);
     controller.navigateToMessages(conversation);
-    await controller.goToChatPage();
+    if (storyMediaUrl == null) {
+      await controller.goToChatPage();
+    } else {
+      await controller.replayOnStories(
+        conversationId: conversationId,
+        userDetails: conversation.opponentDetails!,
+        caption: messageFromOutSide,
+        sendPushNotification: pushNotifications,
+        storyMediaUrl: storyMediaUrl,
+      );
+    }
   }
 
   /// This function can be used to directly go to chatting page and start chatting from anywhere in the app
