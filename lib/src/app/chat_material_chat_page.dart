@@ -134,11 +134,17 @@ class IsmMaterialChatPage extends StatefulWidget {
   /// You can call this funcation after MQTT controller intilized
   static Future<void> listenMqttEventFromOutSide({
     required Map<String, dynamic> payload,
+    void Function(
+      String,
+      String,
+      String,
+    )? showNotification,
   }) async {
     assert(IsmChatConfig.configInitilized,
         '''MQTT Controller must be initialized before adding listener.
     Either call IsmChatApp.initializeMqtt() or add listener after IsmChatApp is called''');
     if (Get.isRegistered<IsmChatMqttController>()) {
+      IsmChatConfig.showNotification = showNotification;
       await Get.find<IsmChatMqttController>().onMqttEvent(
         payload: payload,
       );
