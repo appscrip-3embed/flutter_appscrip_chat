@@ -215,7 +215,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null && !_controller.isTemporaryChat) {
-      conversationId = await _controller.commonController.createConversation(
+      _controller.conversation =
+          await _controller.commonController.createConversation(
         conversation: _controller.conversation!,
         userId: [userId],
         metaData: _controller.conversation?.metaData,
@@ -226,6 +227,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           _controller.conversation?.chatName ?? ''
         ],
       );
+      conversationId = _controller.conversation?.conversationId ?? '';
     }
     IsmChatMessageModel? audioMessage;
     String? nameWithExtension;
@@ -356,16 +358,18 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       final chatConversationResponse = await IsmChatConfig.dbWrapper!
           .getConversation(conversationId: conversationId);
       if (chatConversationResponse == null && !_controller.isTemporaryChat) {
-        conversationId = await _controller.commonController.createConversation(
-            conversation: _controller.conversation!,
-            userId: [userId],
-            metaData: _controller.conversation?.metaData,
-            searchableTags: [
-              IsmChatConfig.communicationConfig.userConfig.userName ??
-                  conversationController.userDetails?.userName ??
-                  '',
-              _controller.conversation?.chatName ?? ''
-            ]);
+        _controller.conversation =
+            await _controller.commonController.createConversation(
+                conversation: _controller.conversation!,
+                userId: [userId],
+                metaData: _controller.conversation?.metaData,
+                searchableTags: [
+                  IsmChatConfig.communicationConfig.userConfig.userName ??
+                      conversationController.userDetails?.userName ??
+                      '',
+                  _controller.conversation?.chatName ?? ''
+                ]);
+        conversationId = _controller.conversation?.conversationId ?? '';
       }
       final resultFiles = result?.files ?? [];
 
@@ -508,16 +512,18 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null && !_controller.isTemporaryChat) {
-      conversationId = await _controller.commonController.createConversation(
-          conversation: _controller.conversation!,
-          userId: [userId],
-          metaData: _controller.conversation?.metaData,
-          searchableTags: [
-            IsmChatConfig.communicationConfig.userConfig.userName ??
-                conversationController.userDetails?.userName ??
-                '',
-            _controller.conversation?.chatName ?? ''
-          ]);
+      _controller.conversation =
+          await _controller.commonController.createConversation(
+              conversation: _controller.conversation!,
+              userId: [userId],
+              metaData: _controller.conversation?.metaData,
+              searchableTags: [
+                IsmChatConfig.communicationConfig.userConfig.userName ??
+                    conversationController.userDetails?.userName ??
+                    '',
+                _controller.conversation?.chatName ?? ''
+              ]);
+      conversationId = _controller.conversation?.conversationId ?? '';
     }
     IsmChatMessageModel? videoMessage;
     String? nameWithExtension;
@@ -661,7 +667,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null && !_controller.isTemporaryChat) {
-      conversationId = await _controller.commonController.createConversation(
+      _controller.conversation =
+          await _controller.commonController.createConversation(
         conversation: _controller.conversation!,
         userId: [userId],
         metaData: _controller.conversation?.metaData,
@@ -672,6 +679,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           _controller.conversation?.chatName ?? ''
         ],
       );
+      conversationId = _controller.conversation?.conversationId ?? '';
     }
     IsmChatMessageModel? imageMessage;
     String? nameWithExtension;
@@ -794,16 +802,18 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null && !_controller.isTemporaryChat) {
-      conversationId = await _controller.commonController.createConversation(
-          conversation: _controller.conversation!,
-          userId: [userId],
-          metaData: _controller.conversation?.metaData,
-          searchableTags: [
-            IsmChatConfig.communicationConfig.userConfig.userName ??
-                conversationController.userDetails?.userName ??
-                '',
-            _controller.conversation?.chatName ?? ''
-          ]);
+      _controller.conversation =
+          await _controller.commonController.createConversation(
+              conversation: _controller.conversation!,
+              userId: [userId],
+              metaData: _controller.conversation?.metaData,
+              searchableTags: [
+                IsmChatConfig.communicationConfig.userConfig.userName ??
+                    conversationController.userDetails?.userName ??
+                    '',
+                _controller.conversation?.chatName ?? ''
+              ]);
+      conversationId = _controller.conversation?.conversationId ?? '';
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var locationMessage = IsmChatMessageModel(
@@ -897,7 +907,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null && !_controller.isTemporaryChat) {
-      conversationId = await _controller.commonController.createConversation(
+      _controller.conversation =
+          await _controller.commonController.createConversation(
         conversation: _controller.conversation!,
         userId: [userId],
         metaData: _controller.conversation?.metaData,
@@ -908,6 +919,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           _controller.conversation?.chatName ?? ''
         ],
       );
+
+      conversationId = _controller.conversation?.conversationId ?? '';
     }
 
     var sentAt = DateTime.now().millisecondsSinceEpoch;
@@ -995,7 +1008,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         .getConversation(conversationId: conversationId);
 
     if (chatConversationResponse == null && !_controller.isTemporaryChat) {
-      conversationId = await _controller.commonController.createConversation(
+      _controller.conversation =
+          await _controller.commonController.createConversation(
         conversation: _controller.conversation!,
         userId: [userId],
         metaData: _controller.conversation?.metaData,
@@ -1006,6 +1020,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           _controller.conversation?.chatName ?? ''
         ],
       );
+      conversationId = _controller.conversation?.conversationId ?? '';
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatMessageModel(

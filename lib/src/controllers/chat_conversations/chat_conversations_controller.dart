@@ -1481,7 +1481,7 @@ class IsmChatConversationsController extends GetxController {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null) {
-      conversationId = await _commonController.createConversation(
+      await _commonController.createConversation(
         conversation: currentConversation!,
         userId: [userDetails.userId],
         metaData: currentConversation?.metaData,
@@ -1493,9 +1493,7 @@ class IsmChatConversationsController extends GetxController {
       );
     }
     IsmChatMessageModel? imageMessage;
-
     var sentAt = DateTime.now().millisecondsSinceEpoch;
-
     final bytes = await IsmChatUtility.getUint8ListFromUrl(storyMediaUrl ?? '');
     final nameWithExtension = storyMediaUrl?.split('/').last ?? '';
     final mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');

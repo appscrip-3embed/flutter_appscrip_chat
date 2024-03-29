@@ -86,7 +86,7 @@ class IsmChatCommonController extends GetxController {
         mediaId: mediaId,
       );
 
-  Future<String> createConversation({
+  Future<IsmChatConversationModel?> createConversation({
     required List<String> userId,
     IsmChatMetaData? metaData,
     bool isGroup = false,
@@ -140,8 +140,8 @@ class IsmChatCommonController extends GetxController {
           .createAndUpdateConversation(dbConversationModel);
       unawaited(
           Get.find<IsmChatConversationsController>().getChatConversations());
-      return conversationId;
+      return conversation;
     }
-    return '';
+    return null;
   }
 }
