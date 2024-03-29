@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 import 'dart:math';
@@ -519,7 +518,8 @@ class IsmChatPageController extends GetxController
           messages.clear();
         }
         if (conversation!.isGroup ?? false) {
-          await createConversation(
+          await commonController.createConversation(
+            conversation: conversation!,
             conversationType: conversation?.conversationType ??
                 IsmChatConversationType.private,
             userId: [],
@@ -539,26 +539,12 @@ class IsmChatPageController extends GetxController
       if (newMeessageFromOutside != null &&
           newMeessageFromOutside.isNotEmpty == true) {
         await Future.delayed(const Duration(milliseconds: 100));
-        if (conversation?.mediaPath == null ||
-            conversation?.mediaPath?.isEmpty == true) {
-          chatInputController.text = newMeessageFromOutside;
-          sendTextMessage(
-            conversationId: conversation?.conversationId ?? '',
-            userId: conversation?.opponentDetails?.userId ?? '',
-            pushNotifications: conversation?.pushNotifications ?? true,
-          );
-        } else {
-          unawaited(
-            sendImage(
-              conversationId: conversation?.conversationId ?? '',
-              userId: conversation?.opponentDetails?.userId ?? '',
-              caption: newMeessageFromOutside,
-              imagePath: File(
-                conversation?.mediaPath ?? '',
-              ),
-            ),
-          );
-        }
+        chatInputController.text = newMeessageFromOutside;
+        sendTextMessage(
+          conversationId: conversation?.conversationId ?? '',
+          userId: conversation?.opponentDetails?.userId ?? '',
+          pushNotifications: conversation?.pushNotifications ?? true,
+        );
       }
       unawaited(updateUnreadMessgaeCount());
     }

@@ -1470,4 +1470,110 @@ class IsmChatConversationsController extends GetxController {
     );
     if (res != null) {}
   }
+
+  Future<void> replayOnStories({
+    required String conversationId,
+    required UserDetails userDetails,
+    String? storyMediaUrl,
+    String? caption,
+    bool sendPushNotification = false,
+  }) async {
+    final chatConversationResponse = await IsmChatConfig.dbWrapper!
+        .getConversation(conversationId: conversationId);
+    if (chatConversationResponse == null) {
+      conversationId = await _commonController.createConversation(
+        conversation: currentConversation!,
+        userId: [userDetails.userId],
+        metaData: currentConversation?.metaData,
+        searchableTags: [
+          IsmChatConfig.communicationConfig.userConfig.userName ??
+              userDetails.userName,
+          userDetails.userName
+        ],
+      );
+    }
+    IsmChatMessageModel? imageMessage;
+
+    var sentAt = DateTime.now().millisecondsSinceEpoch;
+
+    final bytes = await IsmChatUtility.getUint8ListFromUrl(storyMediaUrl ?? '');
+    final nameWithExtension = storyMediaUrl?.split('/').last ?? '';
+    final mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
+    final extension = nameWithExtension.split('.').last;
+    imageMessage = IsmChatMessageModel(
+      body: IsmChatStrings.image,
+      conversationId: conversationId,
+      senderInfo: UserDetails(
+          userProfileImageUrl:
+              IsmChatConfig.communicationConfig.userConfig.userProfile ?? '',
+          userName: IsmChatConfig.communicationConfig.userConfig.userName ?? '',
+          userIdentifier:
+              IsmChatConfig.communicationConfig.userConfig.userEmail ?? '',
+          userId: IsmChatConfig.communicationConfig.userConfig.userId,
+          online: false,
+          lastSeen: 0),
+      customType: IsmChatCustomMessageType.reply,
+      attachments: [
+        AttachmentModel(
+          attachmentType: IsmChatMediaType.image,
+          thumbnailUrl: storyMediaUrl,
+          size: bytes.length,
+          name: nameWithExtension,
+          mimeType: 'image/jpeg',
+          mediaUrl: storyMediaUrl,
+          mediaId: mediaId,
+          extension: extension,
+        )
+      ],
+      deliveredToAll: false,
+      messageId: '',
+      deviceId: _deviceConfig.deviceId ?? '',
+      messageType: IsmChatMessageType.reply,
+      messagingDisabled: false,
+      parentMessageId: '',
+      readByAll: false,
+      sentAt: sentAt,
+      sentByMe: true,
+      isUploading: true,
+      metaData: IsmChatMetaData(
+        captionMessage: caption,
+        replyMessage: IsmChatReplyMessageModel(
+          forMessageType: IsmChatCustomMessageType.image,
+          parentMessageMessageType: IsmChatCustomMessageType.image,
+          parentMessageInitiator: false,
+          parentMessageBody: IsmChatStrings.image,
+          parentMessageUserId: userDetails.userId,
+          parentMessageUserName:
+              currentConversation?.opponentDetails?.userName ?? '',
+        ),
+      ),
+    );
+
+    await IsmChatConfig.dbWrapper!
+        .saveMessage(imageMessage, IsmChatDbBox.pending);
+
+    var notificationTitle =
+        IsmChatConfig.communicationConfig.userConfig.userName ??
+            userDetails.userName;
+    await _commonController.sendMessage(
+      showInConversation: true,
+      encrypted: true,
+      events: {
+        'updateUnreadCount': true,
+        'sendPushNotification': sendPushNotification
+      },
+      body: imageMessage.body,
+      conversationId: imageMessage.conversationId ?? '',
+      createdAt: sentAt,
+      deviceId: imageMessage.deviceId ?? '',
+      messageType: imageMessage.messageType?.value ?? 0,
+      notificationBody: imageMessage.body,
+      notificationTitle: notificationTitle,
+      attachments: [imageMessage.attachments?.first.toMap() ?? {}],
+      customType: imageMessage.customType?.value,
+      metaData: imageMessage.metaData,
+      isTemporaryChat: false,
+      parentMessageId: imageMessage.parentMessageId,
+    );
+  }
 }

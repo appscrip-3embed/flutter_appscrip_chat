@@ -334,10 +334,11 @@ class IsmChatConversationsViewModel {
     required String searchTag,
   }) async =>
       await _repository.getContacts(
-        isLoading: isLoading,
-        isRegisteredUser: isRegisteredUser,
-        skip: skip,
-        limit: limit,
-        searchTag: searchTag
-      );
+          isLoading: isLoading,
+          isRegisteredUser: isRegisteredUser,
+          skip: skip,
+          limit: limit,
+          searchTag: searchTag);
+
+  
 }
