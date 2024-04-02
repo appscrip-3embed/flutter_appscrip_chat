@@ -799,10 +799,24 @@ class IsmChatConversationsController extends GetxController {
       isConversationsLoading = true;
     }
 
-    await _viewModel.getChatConversations(
+    var chats = await _viewModel.getChatConversations(
       skip,
       chatLimit: chatLimit,
     );
+
+    if (IsmChatProperties.conversationModifier != null) {
+      chats = await Future.wait(
+        chats.map(
+          (e) async => await IsmChatProperties.conversationModifier!(e),
+        ),
+      );
+      await Future.wait(
+        chats.map(
+          (e) async =>
+              await IsmChatConfig.dbWrapper!.createAndUpdateConversation(e),
+        ),
+      );
+    }
 
     if (origin == ApiCallOrigin.referesh) {
       refreshController.refreshCompleted(

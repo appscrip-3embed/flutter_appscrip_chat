@@ -23,6 +23,7 @@ class IsmChatApp extends StatelessWidget {
     this.isShowMqttConnectErrorDailog = false,
     this.fontFamily,
     this.conversationParser,
+    this.conversationModifier,
   }) {
     assert(IsmChatConfig.isInitialized,
         'ChatHiveBox is not initialized\nYou are getting this error because the Database class is not initialized, to initialize ChatHiveBox class call AppscripChatComponent.initialize() before your runApp()');
@@ -61,6 +62,7 @@ class IsmChatApp extends StatelessWidget {
     if (conversationProperties != null) {
       IsmChatProperties.conversationProperties = conversationProperties!;
     }
+    IsmChatProperties.conversationModifier = conversationModifier;
   }
 
   final BuildContext? context;
@@ -101,6 +103,8 @@ class IsmChatApp extends StatelessWidget {
   final double? sideWidgetWidth;
 
   final String? fontFamily;
+
+  final IsmChatConversationModifier? conversationModifier;
 
   /// This callback is to be used if you want to make certain changes while conversation data is being parsed from the API
   final ConversationParser? conversationParser;
@@ -362,7 +366,26 @@ class IsmChatApp extends StatelessWidget {
         '''MQTT Controller must be initialized before adding listener.
     Either call IsmChatApp.initializeMqtt() or add listener after IsmChatApp is called''');
     var mqttController = Get.find<IsmChatMqttController>();
+    mqttController.actionListeners.add(listener);
     return mqttController.actionStreamController.stream.listen(listener);
+  }
+
+  /// Call this funcation on to remove listener for mqtt events
+  ///
+  /// [IsmChatConfig.configInitilized] this variable must be true
+  ///
+  /// You can call this funcation after initialize mqtt [initializeMqtt] funcation
+  static Future<void> removeListener(
+      Function(Map<String, dynamic>) listener) async {
+    assert(IsmChatConfig.configInitilized,
+        '''MQTT Controller must be initialized before adding listener.
+    Either call IsmChatApp.initializeMqtt() or add listener after IsmChatApp is called''');
+    var mqttController = Get.find<IsmChatMqttController>();
+    mqttController.actionListeners.remove(listener);
+    await mqttController.actionStreamController.stream.drain();
+    for (var listener in mqttController.actionListeners) {
+      mqttController.actionStreamController.stream.listen(listener);
+    }
   }
 
   /// This function can be used to directly go to chatting page and start chatting from anywhere in the app

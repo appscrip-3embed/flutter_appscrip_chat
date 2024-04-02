@@ -339,6 +339,4 @@ class IsmChatConversationsViewModel {
           skip: skip,
           limit: limit,
           searchTag: searchTag);
-
-  
 }

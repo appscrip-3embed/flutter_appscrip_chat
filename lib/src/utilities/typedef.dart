@@ -68,3 +68,5 @@ typedef InternetFileProgress = void Function(
   int receivedLength,
   int contentLength,
 );
+
+typedef IsmChatConversationModifier = Future<IsmChatConversationModel> Function(IsmChatConversationModel);

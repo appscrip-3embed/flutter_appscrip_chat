@@ -9,7 +9,7 @@ class IsmChatConfig {
   static IsmChatThemeData? _chatLightTheme;
   static IsmChatThemeData? _chatDarkTheme;
   static IsmChatDBWrapper? dbWrapper;
-  
+
   static bool useDatabase = false;
   static bool isMqttInitializedFromOutSide = false;
   static String dbName = IsmChatStrings.dbname;

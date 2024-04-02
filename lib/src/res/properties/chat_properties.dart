@@ -11,4 +11,5 @@ class IsmChatProperties {
   static Widget? loadingDialog;
   static Widget? noChatSelectedPlaceholder;
   static double? sideWidgetWidth;
+  static IsmChatConversationModifier?  conversationModifier;
 }

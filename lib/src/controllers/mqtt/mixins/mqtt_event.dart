@@ -15,6 +15,8 @@ mixin IsmChatMqttEventMixin {
   var actionStreamController =
       StreamController<Map<String, dynamic>>.broadcast();
 
+  var actionListeners = <Function(Map<String, dynamic>)>[];
+
   final RxList<IsmChatTypingModel> _typingUsers = <IsmChatTypingModel>[].obs;
   List<IsmChatTypingModel> get typingUsers => _typingUsers;
   set typingUsers(List<IsmChatTypingModel> value) => _typingUsers.value = value;
