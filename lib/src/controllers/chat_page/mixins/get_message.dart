@@ -19,7 +19,7 @@ mixin IsmChatPageGetMessageMixin on GetxController {
     if (pendingmessages?.isNotEmpty ?? false || pendingmessages != null) {
       messages?.addAll(pendingmessages ?? []);
     }
-    
+
     _controller.messages = _controller.commonController.sortMessages(messages!);
     if (_controller.messages.isEmpty) {
       return;
@@ -156,8 +156,10 @@ mixin IsmChatPageGetMessageMixin on GetxController {
 
       if (data.data != null &&
           (_controller.conversation?.conversationId == conversationId)) {
-        _controller.conversation =
-            data.data.copyWith(conversationId: conversationId);
+        _controller.conversation = data.data.copyWith(
+          conversationId: conversationId,
+          metaData: _controller.conversation?.metaData,
+        );
         IsmChatProperties.chatPageProperties.onCoverstaionStatus
             ?.call(Get.context!, _controller.conversation!);
 
