@@ -568,51 +568,7 @@ class IsmChatPageRepository {
     }
   }
 
-  Future<IsmChatResponseModel?> createConversation({
-    required bool typingEvents,
-    required bool readEvents,
-    required bool pushNotifications,
-    required List<String> members,
-    required bool isGroup,
-    required int conversationType,
-    List<String>? searchableTags,
-    Map<String, dynamic>? metaData,
-    String? conversationTitle,
-    String? conversationImageUrl,
-    bool isLoading = false,
-  }) async {
-    try {
-      var payload = {
-        'typingEvents': typingEvents,
-        'readEvents': readEvents,
-        'pushNotifications': pushNotifications,
-        'members': members,
-        'isGroup': isGroup,
-        'conversationType': conversationType,
-        'searchableTags': searchableTags,
-        'metaData': metaData,
-        'customType': null,
-        'conversationTitle': conversationTitle,
-        'conversationImageUrl': conversationImageUrl,
-      };
-      var response = await _apiWrapper.post(IsmChatAPI.chatConversation,
-          payload: payload,
-          headers: IsmChatUtility.tokenCommonHeader(),
-          showLoader: isLoading);
-      if (response.hasError) {
-        if (response.errorCode.toString().startsWith('4')) {
-          var error = (jsonDecode(response.data) as Map)['error'] as String? ??
-              'Error in creating conversation';
-          await IsmChatUtility.showErrorDialog(error);
-        }
-        return null;
-      }
-      return response;
-    } catch (e, st) {
-      IsmChatLog.error('Create converstaion $e', st);
-      return null;
-    }
-  }
+  
 
   Future<IsmChatResponseModel?> sendBroadcastMessage(
       {required List<String> userIds,

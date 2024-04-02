@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -26,9 +26,9 @@ class IsmChatApiWrapper {
     required Map<String, String> headers,
   }) async {
     IsmChatLog('Request - GET $api');
-    if (!(await IsmChatUtility.isNetworkAvailable)) {
-      return await _handleNoInternet(showDailog);
-    }
+    // if (!(await IsmChatUtility.isNetworkAvailable)) {
+    //   return await _handleNoInternet(showDailog);
+    // }
     var uri = Uri.parse(api);
     if (showLoader) {
       IsmChatUtility.showLoader();
@@ -63,9 +63,9 @@ class IsmChatApiWrapper {
     bool showDailog = true,
   }) async {
     IsmChatLog('Request - POST $api $payload');
-    if (!(await IsmChatUtility.isNetworkAvailable)) {
-      return await _handleNoInternet(showDailog);
-    }
+    // if (!(await IsmChatUtility.isNetworkAvailable)) {
+    //   return await _handleNoInternet(showDailog);
+    // }
     var uri = Uri.parse(api);
     if (showLoader) {
       IsmChatUtility.showLoader();
@@ -105,9 +105,9 @@ class IsmChatApiWrapper {
     bool showDailog = true,
   }) async {
     IsmChatLog('Request - PUT $api $payload');
-    if (!(await IsmChatUtility.isNetworkAvailable)) {
-      return await _handleNoInternet(showDailog);
-    }
+    // if (!(await IsmChatUtility.isNetworkAvailable)) {
+    //   return await _handleNoInternet(showDailog);
+    // }
     var uri = Uri.parse(api);
     if (showLoader) {
       IsmChatUtility.showLoader();
@@ -148,9 +148,9 @@ class IsmChatApiWrapper {
     bool showDailog = true,
   }) async {
     IsmChatLog('Request - PATCH $api $payload');
-    if (!(await IsmChatUtility.isNetworkAvailable)) {
-      return await _handleNoInternet(showDailog);
-    }
+    // if (!(await IsmChatUtility.isNetworkAvailable)) {
+    //   return await _handleNoInternet(showDailog);
+    // }
     var uri = Uri.parse(api);
     if (showLoader) {
       IsmChatUtility.showLoader();
@@ -189,9 +189,9 @@ class IsmChatApiWrapper {
     bool showDailog = true,
   }) async {
     IsmChatLog('Request - DELETE $api $payload');
-    if (!(await IsmChatUtility.isNetworkAvailable)) {
-      return await _handleNoInternet(showDailog);
-    }
+    // if (!(await IsmChatUtility.isNetworkAvailable)) {
+    //   return await _handleNoInternet(showDailog);
+    // }
     var uri = Uri.parse(api);
     if (showLoader) {
       IsmChatUtility.showLoader();

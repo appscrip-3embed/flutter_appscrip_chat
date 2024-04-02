@@ -52,6 +52,7 @@ class IsmChatCommonViewModel {
     List<Map<String, dynamic>>? attachments,
     List<String>? searchableTags,
     bool isTemporaryChat = false,
+    bool isUpdateMesage = true,
   }) async {
     try {
       var messageId = await _repository.sendMessage(
@@ -70,9 +71,8 @@ class IsmChatCommonViewModel {
         notificationTitle: notificationTitle,
         body: body,
       );
-      if (messageId == null || messageId.isEmpty) {
-        return false;
-      }
+      if (messageId == null || messageId.isEmpty) return false;
+      if (!isUpdateMesage) return false;
       if (isTemporaryChat) {
         final chatPageController = Get.find<IsmChatPageController>();
         for (var x = 0; x < chatPageController.messages.length; x++) {
@@ -110,7 +110,7 @@ class IsmChatCommonViewModel {
               conversation: chatPendingMessages, dbBox: IsmChatDbBox.pending);
           if (chatPendingMessages.messages?.isEmpty == true) {
             await dbBox.pendingMessageBox
-                .delete(chatPendingMessages.conversationId!);
+                .delete(chatPendingMessages.conversationId ?? '');
           }
           var conversationModel =
               await dbBox.getConversation(conversationId: conversationId);
@@ -191,4 +191,30 @@ class IsmChatCommonViewModel {
         mediaType: mediaType,
         mediaId: mediaId,
       );
+
+  Future<IsmChatResponseModel?> createConversation({
+    required bool typingEvents,
+    required bool readEvents,
+    required bool pushNotifications,
+    required List<String> members,
+    required bool isGroup,
+    required int conversationType,
+    List<String>? searchableTags,
+    Map<String, dynamic>? metaData,
+    String? conversationTitle,
+    String? conversationImageUrl,
+    bool isLoading = false,
+  }) async =>
+      await _repository.createConversation(
+          typingEvents: typingEvents,
+          readEvents: readEvents,
+          pushNotifications: pushNotifications,
+          members: members,
+          isGroup: isGroup,
+          metaData: metaData,
+          conversationType: conversationType,
+          conversationImageUrl: conversationImageUrl,
+          conversationTitle: conversationTitle,
+          isLoading: isLoading,
+          searchableTags: searchableTags);
 }

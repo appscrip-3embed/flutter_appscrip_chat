@@ -341,31 +341,7 @@ class IsmChatPageViewModel {
         query: searchKeyword,
       );
 
-  Future<IsmChatResponseModel?> createConversation({
-    required bool typingEvents,
-    required bool readEvents,
-    required bool pushNotifications,
-    required List<String> members,
-    required bool isGroup,
-    required int conversationType,
-    List<String>? searchableTags,
-    Map<String, dynamic>? metaData,
-    String? conversationTitle,
-    String? conversationImageUrl,
-    bool isLoading = false,
-  }) async =>
-      await _repository.createConversation(
-          typingEvents: typingEvents,
-          readEvents: readEvents,
-          pushNotifications: pushNotifications,
-          members: members,
-          isGroup: isGroup,
-          metaData: metaData,
-          conversationType: conversationType,
-          conversationImageUrl: conversationImageUrl,
-          conversationTitle: conversationTitle,
-          isLoading: isLoading,
-          searchableTags: searchableTags);
+  
 
   Map<String, int> generateIndexedMessageList(
       List<IsmChatMessageModel> messages) {

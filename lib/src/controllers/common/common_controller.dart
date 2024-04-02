@@ -1,17 +1,20 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class IsmChatCommonController extends GetxController {
-  IsmChatCommonController(this._viewModel);
-  final IsmChatCommonViewModel _viewModel;
+  IsmChatCommonController(this.viewModel);
+  final IsmChatCommonViewModel viewModel;
 
   Future<int?> updatePresignedUrl({
     String? presignedUrl,
     Uint8List? bytes,
     bool isLoading = false,
   }) async =>
-      _viewModel.updatePresignedUrl(
+      viewModel.updatePresignedUrl(
         bytes: bytes,
         presignedUrl: presignedUrl,
         isLoading: isLoading,
@@ -22,14 +25,14 @@ class IsmChatCommonController extends GetxController {
     required String userIdentifier,
     required String mediaExtension,
   }) async =>
-      await _viewModel.getPresignedUrl(
+      await viewModel.getPresignedUrl(
         isLoading: isLoading,
         userIdentifier: userIdentifier,
         mediaExtension: mediaExtension,
       );
 
   List<IsmChatMessageModel> sortMessages(List<IsmChatMessageModel> messages) =>
-      _viewModel.sortMessages(messages);
+      viewModel.sortMessages(messages);
 
   Future<bool> sendMessage({
     required bool showInConversation,
@@ -49,8 +52,9 @@ class IsmChatCommonController extends GetxController {
     List<Map<String, dynamic>>? attachments,
     List<String>? searchableTags,
     bool isTemporaryChat = false,
+     bool isUpdateMesage = true,
   }) async =>
-      await _viewModel.sendMessage(
+      await viewModel.sendMessage(
         showInConversation: showInConversation,
         messageType: messageType,
         encrypted: encrypted,
@@ -68,6 +72,7 @@ class IsmChatCommonController extends GetxController {
         metaData: metaData,
         parentMessageId: parentMessageId,
         searchableTags: searchableTags,
+        isUpdateMesage: isUpdateMesage
       );
 
   Future<PresignedUrlModel?> postMediaUrl({
@@ -76,10 +81,68 @@ class IsmChatCommonController extends GetxController {
     required int mediaType,
     required String mediaId,
   }) async =>
-      await _viewModel.postMediaUrl(
+      await viewModel.postMediaUrl(
         conversationId: conversationId,
         nameWithExtension: nameWithExtension,
         mediaType: mediaType,
         mediaId: mediaId,
       );
+
+  Future<IsmChatConversationModel?> createConversation({
+    required List<String> userId,
+    IsmChatMetaData? metaData,
+    bool isGroup = false,
+    bool isLoading = false,
+    List<String> searchableTags = const [' '],
+    IsmChatConversationType conversationType = IsmChatConversationType.private,
+    required IsmChatConversationModel conversation,
+    bool pushNotifications = true,
+  }) async {
+    if (isGroup) {
+      userId = conversation.userIds ?? [];
+    }
+    var response = await viewModel.createConversation(
+      isLoading: isLoading,
+      typingEvents: true,
+      readEvents: true,
+      pushNotifications: pushNotifications,
+      members: userId,
+      isGroup: isGroup,
+      conversationType: conversationType.value,
+      searchableTags: searchableTags,
+      metaData: metaData != null ? metaData.toMap() : {},
+      conversationImageUrl:
+          isGroup ? conversation.conversationImageUrl ?? '' : '',
+      conversationTitle: isGroup ? conversation.conversationTitle ?? '' : '',
+    );
+
+    if (response != null) {
+      var data = jsonDecode(response.data);
+      var conversationId = data['conversationId'];
+      conversation =
+          conversation.copyWith(conversationId: conversationId ?? '');
+      var dbConversationModel = IsmChatConversationModel(
+          conversationId: conversationId.toString(),
+          conversationImageUrl: conversation.conversationImageUrl,
+          conversationTitle: conversation.conversationTitle,
+          isGroup: false,
+          lastMessageSentAt: conversation.lastMessageSentAt ?? 0,
+          messagingDisabled: conversation.messagingDisabled,
+          membersCount: conversation.membersCount,
+          unreadMessagesCount: conversation.unreadMessagesCount,
+          messages: [],
+          opponentDetails: conversation.opponentDetails,
+          lastMessageDetails:
+              conversation.lastMessageDetails?.copyWith(deliverCount: 0),
+          config: conversation.config,
+          metaData: conversation.metaData,
+          conversationType: conversation.conversationType);
+      await IsmChatConfig.dbWrapper!
+          .createAndUpdateConversation(dbConversationModel);
+      unawaited(
+          Get.find<IsmChatConversationsController>().getChatConversations());
+      return conversation;
+    }
+    return null;
+  }
 }
