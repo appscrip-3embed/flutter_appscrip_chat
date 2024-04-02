@@ -14,16 +14,21 @@ class IsmChatBlob {
 
   /// call function for create video thumbanil with bytes
   static Future<Uint8List?> getVideoThumbnailBytes(Uint8List videoBytes) async {
-    final blob = html.Blob([videoBytes]);
+    final blob = html.Blob([videoBytes], );
     final url = html.Url.createObjectUrlFromBlob(blob);
 
     final videoElement = html.VideoElement()
       ..src = url
       ..autoplay = false
       ..controls = false
-      ..muted = true;
+      ..muted = true
+      ..style.display = 'none';
 
-    await videoElement.onLoadedMetadata.first;
+    // await videoElement.onLoadedMetadata.first;
+
+    await videoElement.play();
+    await Future.delayed(const Duration(seconds: 1));
+    videoElement.pause();
 
     final canvas = html.CanvasElement(
         width: videoElement.videoWidth, height: videoElement.videoHeight);
@@ -44,6 +49,45 @@ class IsmChatBlob {
     await reader.onLoadEnd.first;
 
     return Uint8List.fromList(reader.result as List<int>);
+  }
+
+  ///generate video thumbnail in web...
+  Future<Uint8List> generateThumbnail({
+    required List<int> videoBytes,
+    num? quality,
+  }) async {
+    var thumbnailBytes = Uint8List(0);
+    try {
+      final blob = html.Blob([videoBytes]);
+      final url = html.Url.createObjectUrlFromBlob(blob);
+      final videoElement = html.VideoElement()
+        ..src = url
+        ..style.display = 'none';
+
+      await videoElement.play();
+      return Future.delayed(
+        const Duration(seconds: 1),
+        () async {
+          videoElement.pause();
+          final canvas = html.CanvasElement(
+            width: videoElement.videoWidth,
+            height: videoElement.videoHeight,
+          );
+          final context = canvas.context2D;
+          context.drawImage(videoElement, 0, 0);
+          final thumbnailUrl = canvas.toDataUrl('image/jpeg', quality);
+          html.Url.revokeObjectUrl(url);
+
+          // Convert data URL to bytes
+          final byteString = thumbnailUrl.split(',').last;
+          final bytes = base64.decode(byteString);
+          thumbnailBytes = Uint8List.fromList(bytes);
+          return thumbnailBytes;
+        },
+      );
+    } catch (e) {
+      throw Exception('Please Provide Valid Video Bytes as Uint8List: $e');
+    }
   }
 
   static void fileDownloadWithBytes(
