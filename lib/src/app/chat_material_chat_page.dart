@@ -190,8 +190,10 @@ class IsmMaterialChatPage extends StatefulWidget {
   /// Call this function on SignOut to delete the data stored locally in the Local Database
   static Future<void> logout() async {
     if (!IsmChatConfig.isMqttInitializedFromOutSide) {
-      await Get.find<IsmChatMqttController>().unSubscribe();
-      await Get.find<IsmChatMqttController>().disconnect();
+      final mqttController = Get.find<IsmChatMqttController>();
+      mqttController.mqttHelper.unsubscribeTopics(
+          [mqttController.messageTopic, mqttController.statusTopic]);
+      mqttController.mqttHelper.disconnect();
     }
     await IsmChatConfig.dbWrapper?.deleteChatLocalDb();
     await Future.wait([

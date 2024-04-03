@@ -1,41 +1,38 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/controllers/mqtt/clients/mobile_client.dart'
-    if (dart.library.html) 'clients/web_client.dart';
 import 'package:appscrip_chat_component/src/controllers/mqtt/mixins/mqtt_event.dart';
 import 'package:get/get.dart';
-import 'package:mqtt_client/mqtt_client.dart';
+import 'package:mqtt_helper/mqtt_helper.dart';
 
 class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
   IsmChatMqttController(this.viewModel);
   final IsmChatMqttViewModel viewModel;
 
-  final _deviceConfig = Get.find<IsmChatDeviceConfig>();
+  final mqttHelper = MqttHelper();
 
-  var client = IsmChatMqttClient.client;
+  final _deviceConfig = Get.find<IsmChatDeviceConfig>();
 
   late String messageTopic;
 
   late String statusTopic;
 
-  late IsmChatCommunicationConfig communicationConfig;
+  late IsmChatProjectConfig projectConfig;
 
   late IsmChatConnectionState connectionState;
+
+  late IsmChatMqttConfig mqttConfig;
+
+  late IsmChatUserConfig userConfig;
 
   @override
   void onInit() async {
     super.onInit();
-    communicationConfig = IsmChatConfig.communicationConfig;
+    projectConfig = IsmChatConfig.communicationConfig.projectConfig;
+    mqttConfig = IsmChatConfig.communicationConfig.mqttConfig;
+    userConfig = IsmChatConfig.communicationConfig.userConfig;
     if (!IsmChatConfig.isMqttInitializedFromOutSide) {
-      messageTopic =
-          '/${communicationConfig.projectConfig.accountId}/${communicationConfig.projectConfig.projectId}/Message/${communicationConfig.userConfig.userId}';
-      statusTopic =
-          '/${communicationConfig.projectConfig.accountId}/${communicationConfig.projectConfig.projectId}/Status/${communicationConfig.userConfig.userId}';
-      await initializeMqttClient();
-      await connectClient();
+      await setupIsmMqttConnection();
     }
     unawaited(getChatConversationsUnreadCount());
   }
@@ -49,118 +46,70 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
     IsmChatApp.unReadConversationMessages = response;
   }
 
-  Future<void> initializeMqttClient() async {
-    await IsmChatMqttClient.initializeMqttClient(_deviceConfig.deviceId ?? '');
-    client = IsmChatMqttClient.client;
-    client?.keepAlivePeriod = IsmChatConstants.keepAlivePeriod;
-    client?.onDisconnected = _onDisconnected;
-    client?.onUnsubscribed = _onUnSubscribed;
-    client?.onSubscribeFail = _onSubscribeFailed;
-    client?.logging(on: true);
-    client?.autoReconnect = true;
-    client?.pongCallback = _pong;
-    client?.setProtocolV311();
-
-    /// Add the successful connection callback
-    client?.onConnected = _onConnected;
-    client?.onSubscribed = _onSubscribed;
-
-    client?.connectionMessage = MqttConnectMessage()
-        .withClientIdentifier(
-            '${IsmChatConfig.communicationConfig.userConfig.userId}${_deviceConfig.deviceId ?? ''}')
-        .startClean();
-  }
-
-  Future<void> connectClient() async {
-    try {
-      var res = await client?.connect(
-        communicationConfig.username,
-        communicationConfig.password,
-      );
-
-      IsmChatLog.info('MQTT Response ${res?.state}');
-      if (res?.state == MqttConnectionState.connected) {
-        connectionState = IsmChatConnectionState.connected;
-        await subscribeTo();
-      }
-    } on NoConnectionException catch (e) {
-      IsmChatLog.error('NoConnectionException - $e');
-      if (IsmChatConfig.isShowMqttConnectErrorDailog) {
-        await IsmChatUtility.showInfoDialog(
-            IsmChatResponseModel.message(e.toString()));
-      }
-    } on SocketException catch (e) {
-      IsmChatLog.error('SocketException - $e');
-      if (IsmChatConfig.isShowMqttConnectErrorDailog) {
-        await IsmChatUtility.showInfoDialog(
-            IsmChatResponseModel.message(e.toString()));
-      }
-    }
-  }
-
-  /// function call for subscribe Topic
-  Future<void> subscribeTo() async {
-    try {
-      if (client?.getSubscriptionsStatus(messageTopic) ==
-          MqttSubscriptionStatus.doesNotExist) {
-        client?.subscribe(messageTopic, MqttQos.atMostOnce);
-      }
-      if (client?.getSubscriptionsStatus(statusTopic) ==
-          MqttSubscriptionStatus.doesNotExist) {
-        client?.subscribe(statusTopic, MqttQos.atMostOnce);
-      }
-    } catch (e) {
-      IsmChatLog.error('Subscribe Error - $e');
-    }
-  }
-
-  /// function call for unsubscribe topic
-  Future<void> unSubscribe() async {
-    try {
-      if (client?.getSubscriptionsStatus(messageTopic) ==
-          MqttSubscriptionStatus.active) {
-        client?.unsubscribe(messageTopic);
-      }
-      if (client?.getSubscriptionsStatus(statusTopic) ==
-          MqttSubscriptionStatus.active) {
-        client?.unsubscribe(statusTopic);
-      }
-    } catch (e) {
-      IsmChatLog.error('Unsubscribe Error - $e');
-    }
+  Future<void> setupIsmMqttConnection() async {
+    messageTopic =
+        '/${projectConfig.accountId}/${projectConfig.projectId}/Message/${userConfig.userId}';
+    statusTopic =
+        '/${projectConfig.accountId}/${projectConfig.projectId}/Status/${userConfig.userId}';
+    await mqttHelper.initialize(
+      MqttConfig(
+        projectConfig: ProjectConfig(
+          accountId: projectConfig.accountId,
+          appSecret: projectConfig.appSecret,
+          userSecret: projectConfig.userSecret,
+          keySetId: projectConfig.keySetId,
+          licenseKey: projectConfig.licenseKey,
+          projectId: projectConfig.projectId,
+          deviceId: _deviceConfig.deviceId ?? '',
+        ),
+        serverConfig: ServerConfig(
+          hostName: mqttConfig.hostName,
+          port: mqttConfig.port,
+        ),
+        userId: userConfig.userId,
+        username: IsmChatConfig.communicationConfig.username,
+        password: IsmChatConfig.communicationConfig.password,
+        enableLogging: true,
+        secure: false,
+        webSocketConfig: WebSocketConfig(
+          useWebsocket: mqttConfig.useWebSocket,
+          websocketProtocols: mqttConfig.websocketProtocols,
+        ),
+      ),
+      callbacks: MqttCallbacks(
+        onConnected: _onConnected,
+        onDisconnected: _onDisconnected,
+        onSubscribed: _onSubscribed,
+        onSubscribeFail: _onSubscribeFailed,
+        onUnsubscribed: _onUnSubscribed,
+        pongCallback: _pong,
+      ),
+      autoSubscribe: true,
+      topics: [messageTopic, statusTopic],
+    );
+    mqttHelper.onConnectionChange((value) {
+      IsmChatApp.isMqttConnected = value;
+    });
+    mqttHelper.onEvent(
+      (data) async {
+        IsmChatLog.info('Mqtt event $data');
+        await onMqttEvent(payload: data);
+      },
+    );
   }
 
   /// onConnected callback, it will be called when connection is established
   void _onConnected() {
     IsmChatApp.isMqttConnected = true;
-    client?.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) async {
-      final recMess = c!.first.payload as MqttPublishMessage;
-
-      var payload = jsonDecode(
-              MqttPublishPayload.bytesToStringAsString(recMess.payload.message))
-          as Map<String, dynamic>;
-      IsmChatLog.info('Mqtt event $payload');
-      await onMqttEvent(payload: payload);
-    });
+    connectionState = IsmChatConnectionState.connected;
+    IsmChatLog.success('Mqtt event');
   }
 
   /// onDisconnected callback, it will be called when connection is breaked
   void _onDisconnected() {
     IsmChatApp.isMqttConnected = false;
     connectionState = IsmChatConnectionState.disconnected;
-    if (client?.connectionStatus?.returnCode ==
-        MqttConnectReturnCode.noneSpecified) {
-      IsmChatLog.success('MQTT Disconnected');
-    } else {
-      IsmChatLog.error('MQTT Disconnected');
-    }
-  }
-
-  /// function call for disconnect host
-  Future<void> disconnect() async {
-    IsmChatLog.success('Disconnected');
-    client?.autoReconnect = false;
-    client?.disconnect();
+    IsmChatLog.error('MQTT Disconnected');
   }
 
   /// onSubscribed callback, it will be called when connection successfully subscribes to certain topic

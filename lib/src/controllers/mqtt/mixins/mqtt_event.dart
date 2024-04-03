@@ -119,8 +119,7 @@ mixin IsmChatMqttEventMixin {
   }
 
   void _handleObserverJoinAndLeave(IsmChatMqttActionModel actionModel) async {
-    if (actionModel.senderId ==
-        _controller.communicationConfig.userConfig.userId) {
+    if (actionModel.senderId == _controller.userConfig.userId) {
       return;
     }
     var conversation = await IsmChatConfig.dbWrapper!
@@ -160,8 +159,7 @@ mixin IsmChatMqttEventMixin {
 
   void _handleBroadcast(IsmChatMqttActionModel actionModel) async {
     await Future.delayed(const Duration(milliseconds: 100));
-    if (actionModel.senderId ==
-        _controller.communicationConfig.userConfig.userId) {
+    if (actionModel.senderId == _controller.userConfig.userId) {
       return;
     }
 
@@ -247,8 +245,7 @@ mixin IsmChatMqttEventMixin {
   Future<void> _handleMessage(IsmChatMessageModel message) async {
     _handleUnreadMessages(message.senderInfo?.userId ?? '');
     await Future.delayed(const Duration(milliseconds: 100));
-    if (message.senderInfo?.userId ==
-        _controller.communicationConfig.userConfig.userId) {
+    if (message.senderInfo?.userId == _controller.userConfig.userId) {
       return;
     }
     if (!Get.isRegistered<IsmChatConversationsController>()) return;
@@ -335,8 +332,7 @@ mixin IsmChatMqttEventMixin {
   }
 
   void _handleLocalNotification(IsmChatMessageModel message) {
-    if (message.senderInfo?.userId ==
-        _controller.communicationConfig.userConfig.userId) {
+    if (message.senderInfo?.userId == _controller.userConfig.userId) {
       return;
     }
 
@@ -467,8 +463,7 @@ mixin IsmChatMqttEventMixin {
   }
 
   void _handleTypingEvent(IsmChatMqttActionModel actionModel) {
-    if (actionModel.userDetails?.userId ==
-        _controller.communicationConfig.userConfig.userId) {
+    if (actionModel.userDetails?.userId == _controller.userConfig.userId) {
       return;
     }
     var user = IsmChatTypingModel(
@@ -485,8 +480,7 @@ mixin IsmChatMqttEventMixin {
   }
 
   void _handleMessageDelivered(IsmChatMqttActionModel actionModel) async {
-    if (actionModel.userDetails!.userId ==
-        _controller.communicationConfig.userConfig.userId) {
+    if (actionModel.userDetails!.userId == _controller.userConfig.userId) {
       return;
     }
 
@@ -542,8 +536,7 @@ mixin IsmChatMqttEventMixin {
   }
 
   void _handleMessageRead(IsmChatMqttActionModel actionModel) async {
-    if (actionModel.userDetails?.userId ==
-        _controller.communicationConfig.userConfig.userId) {
+    if (actionModel.userDetails?.userId == _controller.userConfig.userId) {
       return;
     }
     var conversation = await IsmChatConfig.dbWrapper!
@@ -591,8 +584,7 @@ mixin IsmChatMqttEventMixin {
   }
 
   void _handleMultipleMessageRead(IsmChatMqttActionModel actionModel) async {
-    if (actionModel.userDetails?.userId ==
-        _controller.communicationConfig.userConfig.userId) {
+    if (actionModel.userDetails?.userId == _controller.userConfig.userId) {
       return;
     }
     if (IsmChatConfig.dbWrapper == null) {
@@ -681,8 +673,7 @@ mixin IsmChatMqttEventMixin {
 
   void _handleMessageDelelteForEveryOne(
       IsmChatMqttActionModel actionModel) async {
-    if (actionModel.userDetails?.userId ==
-        _controller.communicationConfig.userConfig.userId) {
+    if (actionModel.userDetails?.userId == _controller.userConfig.userId) {
       return;
     }
     var allMessages =
@@ -718,8 +709,7 @@ mixin IsmChatMqttEventMixin {
   }
 
   void _handleBlockUserOrUnBlock(IsmChatMqttActionModel actionModel) async {
-    if (actionModel.initiatorDetails!.userId ==
-        _controller.communicationConfig.userConfig.userId) {
+    if (actionModel.initiatorDetails!.userId == _controller.userConfig.userId) {
       return;
     }
 
@@ -747,8 +737,7 @@ mixin IsmChatMqttEventMixin {
   }
 
   void _handleGroupRemoveAndAddUser(IsmChatMqttActionModel actionModel) async {
-    if (actionModel.userDetails?.userId ==
-        _controller.communicationConfig.userConfig.userId) {
+    if (actionModel.userDetails?.userId == _controller.userConfig.userId) {
       return;
     }
 
@@ -848,7 +837,7 @@ mixin IsmChatMqttEventMixin {
 
   void _handleMemberJoinAndLeave(IsmChatMqttActionModel actionModel) async {
     if (actionModel.userDetails?.userId ==
-        _controller.communicationConfig.userConfig.userId) {
+        _controller.userConfig.userId) {
       return;
     }
     if (messageId == actionModel.sentAt.toString()) {
@@ -872,7 +861,7 @@ mixin IsmChatMqttEventMixin {
 
   void _handleAdminRemoveAndAdd(IsmChatMqttActionModel actionModel) async {
     if (actionModel.userDetails?.userId ==
-        _controller.communicationConfig.userConfig.userId) {
+        _controller.userConfig.userId) {
       return;
     }
 
@@ -903,7 +892,7 @@ mixin IsmChatMqttEventMixin {
   Future<void> _handleCreateConversation(
       IsmChatMqttActionModel actionModel) async {
     if (actionModel.opponentDetails?.userId ==
-        _controller.communicationConfig.userConfig.userId) {
+        _controller.userConfig.userId) {
       return;
     }
 
@@ -915,7 +904,7 @@ mixin IsmChatMqttEventMixin {
 
   void _handleAddAndRemoveReaction(IsmChatMqttActionModel actionModel) async {
     if (actionModel.userDetails?.userId ==
-        _controller.communicationConfig.userConfig.userId) {
+        _controller.userConfig.userId) {
       return;
     }
 
@@ -986,7 +975,7 @@ mixin IsmChatMqttEventMixin {
   }
 
   void _handleUnreadMessages(String userId) async {
-    if (userId == _controller.communicationConfig.userConfig.userId) {
+    if (userId == _controller.userConfig.userId) {
       return;
     }
     await _controller.getChatConversationsUnreadCount();
@@ -1005,7 +994,7 @@ mixin IsmChatMqttEventMixin {
 
   void _handleConversationUpdate(IsmChatMqttActionModel actionModel) async {
     if (actionModel.userDetails?.userId ==
-        _controller.communicationConfig.userConfig.userId) {
+        _controller.userConfig.userId) {
       return;
     }
 
