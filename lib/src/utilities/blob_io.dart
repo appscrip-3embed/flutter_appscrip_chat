@@ -9,6 +9,13 @@ class IsmChatBlob {
           Uint8List videoBytes) async =>
       null;
 
+  ///generate video thumbnail in web...
+ static Future<Uint8List> generateThumbnail({
+    required Uint8List videoBytes,
+    num? quality,
+  }) async =>
+      Uint8List(0);
+
   static void fileDownloadWithBytes(
     List<int> bytes, {
     String? downloadName,

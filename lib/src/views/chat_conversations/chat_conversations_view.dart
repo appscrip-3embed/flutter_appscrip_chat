@@ -293,7 +293,8 @@ class _CreateChatBottomSheet extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => CupertinoActionSheet(
+  Widget build(BuildContext context) => 
+  CupertinoActionSheet(
         actions: [
           CupertinoActionSheetAction(
             onPressed: _startConversation,

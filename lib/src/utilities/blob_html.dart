@@ -14,7 +14,7 @@ class IsmChatBlob {
 
   /// call function for create video thumbanil with bytes
   static Future<Uint8List?> getVideoThumbnailBytes(Uint8List videoBytes) async {
-    final blob = html.Blob([videoBytes], );
+    final blob = html.Blob([videoBytes], 'video/mp4');
     final url = html.Url.createObjectUrlFromBlob(blob);
 
     final videoElement = html.VideoElement()
@@ -24,7 +24,7 @@ class IsmChatBlob {
       ..muted = true
       ..style.display = 'none';
 
-    // await videoElement.onLoadedMetadata.first;
+    await videoElement.onLoadedMetadata.first;
 
     await videoElement.play();
     await Future.delayed(const Duration(seconds: 1));
@@ -52,13 +52,13 @@ class IsmChatBlob {
   }
 
   ///generate video thumbnail in web...
-  Future<Uint8List> generateThumbnail({
-    required List<int> videoBytes,
+  static Future<Uint8List> generateThumbnail({
+    required Uint8List videoBytes,
     num? quality,
   }) async {
     var thumbnailBytes = Uint8List(0);
     try {
-      final blob = html.Blob([videoBytes]);
+      final blob = html.Blob([videoBytes], 'video/mp4');
       final url = html.Url.createObjectUrlFromBlob(blob);
       final videoElement = html.VideoElement()
         ..src = url
