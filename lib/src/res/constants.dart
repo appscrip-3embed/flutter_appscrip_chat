@@ -30,9 +30,7 @@ class IsmChatConstants {
 
   static const int attachmentShowLine = 3;
 
-  static const int attachmentHight = 130;
 
-  static const int attachmentShowLine = 3;
 
   static const String mapAPIKey = 'AIzaSyC2YXqs5H8QSfN1NVsZKsP11XLZhfGVGPI';
 

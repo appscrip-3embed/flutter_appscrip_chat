@@ -7,7 +7,6 @@ class MessageAllowedConfig {
   Future<bool?>? Function(BuildContext, IsmChatConversationModel)?
       isMessgeAllowed;
   IsShowTextfiledConfig? isShowTextfiledConfig;
-  MessageAllowedConfig({this.isShowTextfiledConfig, this.isMessgeAllowed});
 }
 
 class IsShowTextfiledConfig {

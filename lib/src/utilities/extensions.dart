@@ -898,11 +898,6 @@ extension MentionMessage on IsmChatMessageModel {
     return theme?.opponentMessageTheme?.borderColor ??
         IsmChatConfig.chatTheme.backgroundColor;
   }
-
-  Color? get centerMessageColor {
-    var theme = IsmChatConfig.chatTheme.chatPageTheme;
-    return theme?.centerMessageColor ?? IsmChatConfig.chatTheme.primaryColor;
-  }
 }
 
 extension SizeOfMedia on String {
