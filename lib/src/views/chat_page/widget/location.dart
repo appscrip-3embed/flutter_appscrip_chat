@@ -240,13 +240,14 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                               IsmChatTapHandler(
                                 onTap: () async {
                                   IsmChatUtility.showLoader();
-                                  var addresses = await GeocodingPlatform
+                                  final addresses = await GeocodingPlatform
                                       .instance
-                                      .placemarkFromCoordinates(
+                                      ?.placemarkFromCoordinates(
                                     latLng!.latitude,
                                     latLng!.longitude,
                                   );
-                                  if (addresses.isNotEmpty) {
+                                  if (addresses == null) return;
+                                  if (addresses.isEmpty) return;
                                     IsmChatLog.error(addresses.first);
                                     controller.sendLocation(
                                       conversationId: controller
@@ -267,7 +268,7 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                     );
                                     IsmChatUtility.closeLoader();
                                     Get.back<void>();
-                                  }
+                                  
                                 },
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
