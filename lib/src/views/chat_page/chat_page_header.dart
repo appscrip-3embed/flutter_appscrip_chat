@@ -207,8 +207,11 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                                             : controller
                                                                     .conversation
                                                                     ?.members!
-                                                                    .map((e) => e
-                                                                        .userName)
+                                                                    .map((e) =>
+                                                                        e.metaData
+                                                                            ?.firstName ??
+                                                                        e
+                                                                            .userName)
                                                                     .join(
                                                                         ', ') ??
                                                                 IsmChatStrings
