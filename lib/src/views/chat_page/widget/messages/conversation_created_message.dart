@@ -7,26 +7,30 @@ class IsmChatConversationCreatedMessage extends StatelessWidget {
   final IsmChatMessageModel message;
 
   @override
-  Widget build(BuildContext context) => Center(
-        child: Container(
-          decoration: BoxDecoration(
-            color: IsmChatConfig.chatTheme.chatPageTheme?.centerMessageThemData
-                    ?.backgroundColor ??
-                IsmChatConfig.chatTheme.backgroundColor,
-            borderRadius: BorderRadius.circular(IsmChatDimens.eight),
-          ),
-          padding: IsmChatDimens.edgeInsets8_4,
-          child: Text(
-            message.isGroup == true
-                ? '${message.userName} created a group'
-                : 'Messages are end to end encrypted. No one outside of this chat can read to them.',
-            style: IsmChatConfig.chatTheme.chatPageTheme?.centerMessageThemData
-                    ?.textStyle ??
-                IsmChatStyles.w500Black12.copyWith(
-                  color: IsmChatConfig.chatTheme.primaryColor,
-                ),
-            textAlign: TextAlign.center,
-          ),
+  Widget build(BuildContext context) {
+    final name =
+        '${message.senderInfo?.metaData?.firstName ?? ''} ${message.senderInfo?.metaData?.lastName ?? ''}';
+    return Center(
+      child: Container(
+        decoration: BoxDecoration(
+          color: IsmChatConfig.chatTheme.chatPageTheme?.centerMessageThemData
+                  ?.backgroundColor ??
+              IsmChatConfig.chatTheme.backgroundColor,
+          borderRadius: BorderRadius.circular(IsmChatDimens.eight),
         ),
-      );
+        padding: IsmChatDimens.edgeInsets8_4,
+        child: Text(
+          message.isGroup == true
+              ? '${name.trim().isNotEmpty ? name : message.userName} created a group'
+              : 'Messages are end to end encrypted. No one outside of this chat can read to them.',
+          style: IsmChatConfig
+                  .chatTheme.chatPageTheme?.centerMessageThemData?.textStyle ??
+              IsmChatStyles.w500Black12.copyWith(
+                color: IsmChatConfig.chatTheme.primaryColor,
+              ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
 }

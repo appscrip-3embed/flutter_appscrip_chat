@@ -52,28 +52,27 @@ class IsmChatCommonController extends GetxController {
     List<Map<String, dynamic>>? attachments,
     List<String>? searchableTags,
     bool isTemporaryChat = false,
-     bool isUpdateMesage = true,
+    bool isUpdateMesage = true,
   }) async =>
       await viewModel.sendMessage(
-        showInConversation: showInConversation,
-        messageType: messageType,
-        encrypted: encrypted,
-        deviceId: deviceId,
-        conversationId: conversationId,
-        body: body,
-        createdAt: createdAt,
-        notificationBody: notificationBody,
-        notificationTitle: notificationTitle,
-        attachments: attachments,
-        customType: customType,
-        events: events,
-        isTemporaryChat: isTemporaryChat,
-        mentionedUsers: mentionedUsers,
-        metaData: metaData,
-        parentMessageId: parentMessageId,
-        searchableTags: searchableTags,
-        isUpdateMesage: isUpdateMesage
-      );
+          showInConversation: showInConversation,
+          messageType: messageType,
+          encrypted: encrypted,
+          deviceId: deviceId,
+          conversationId: conversationId,
+          body: body,
+          createdAt: createdAt,
+          notificationBody: notificationBody,
+          notificationTitle: notificationTitle,
+          attachments: attachments,
+          customType: customType,
+          events: events,
+          isTemporaryChat: isTemporaryChat,
+          mentionedUsers: mentionedUsers,
+          metaData: metaData,
+          parentMessageId: parentMessageId,
+          searchableTags: searchableTags,
+          isUpdateMesage: isUpdateMesage);
 
   Future<PresignedUrlModel?> postMediaUrl({
     required String conversationId,
@@ -122,10 +121,10 @@ class IsmChatCommonController extends GetxController {
       conversation =
           conversation.copyWith(conversationId: conversationId ?? '');
       var dbConversationModel = IsmChatConversationModel(
-          conversationId: conversationId.toString(),
+          conversationId: conversationId ?? '',
           conversationImageUrl: conversation.conversationImageUrl,
           conversationTitle: conversation.conversationTitle,
-          isGroup: false,
+          isGroup: isGroup,
           lastMessageSentAt: conversation.lastMessageSentAt ?? 0,
           messagingDisabled: conversation.messagingDisabled,
           membersCount: conversation.membersCount,
