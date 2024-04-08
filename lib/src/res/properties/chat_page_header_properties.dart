@@ -15,6 +15,7 @@ class IsmChatPageHeaderProperties {
     this.height,
     this.shape,
     this.onProfileTap,
+    this.isSubTitleShow = true
   });
 
   final ConversationWidgetCallback? profileImageBuilder;
@@ -38,4 +39,7 @@ class IsmChatPageHeaderProperties {
     IsmChatConversationModel,
   )? height;
   final ShapeBorder? shape;
+
+  final bool isSubTitleShow;
+
 }

@@ -517,8 +517,8 @@ class IsmChatPageController extends GetxController
         if (Responsive.isWeb(Get.context!)) {
           messages.clear();
         }
-        if (conversation!.isGroup ?? false) {
-          await commonController.createConversation(
+        if (conversation?.isGroup ?? false) {
+          conversation = await commonController.createConversation(
             conversation: conversation!,
             conversationType: conversation?.conversationType ??
                 IsmChatConversationType.private,
@@ -531,7 +531,10 @@ class IsmChatPageController extends GetxController
               conversation?.chatName ?? ''
             ],
           );
-          await getMessagesFromAPI();
+          await getMessagesFromAPI(
+            conversationId: conversation?.conversationId ?? '',
+          );
+          checkUserStatus();
         }
         isMessagesLoading = false;
       }
@@ -575,7 +578,6 @@ class IsmChatPageController extends GetxController
     attchmentOverlayEntry?.dispose();
     fabAnimationController?.dispose();
     holdController?.dispose();
-
     ifTimerMounted();
   }
 

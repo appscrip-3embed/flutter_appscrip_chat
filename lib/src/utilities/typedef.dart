@@ -47,6 +47,11 @@ typedef MessageWidgetBuilder = Widget? Function(
   bool,
 );
 
+typedef MessageProfileBuilder = Widget? Function(
+  BuildContext,
+  IsmChatMessageModel,
+);
+
 typedef ConversationWidgetBuilder = Widget? Function(
   BuildContext,
   IsmChatConversationModel,
@@ -69,4 +74,5 @@ typedef InternetFileProgress = void Function(
   int contentLength,
 );
 
-typedef IsmChatConversationModifier = Future<IsmChatConversationModel> Function(IsmChatConversationModel);
+typedef IsmChatConversationModifier = Future<IsmChatConversationModel> Function(
+    IsmChatConversationModel);

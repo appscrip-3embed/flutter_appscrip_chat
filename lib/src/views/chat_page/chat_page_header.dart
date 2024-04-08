@@ -189,43 +189,55 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                                           : IsmChatDimens
                                                               .percentWidth(
                                                                   .55),
-                                                      child: Text(
-                                                        controller
-                                                                        .conversation
-                                                                        ?.members
-                                                                        ?.isEmpty ==
-                                                                    true ||
-                                                                controller
-                                                                        .conversation
-                                                                        ?.members ==
-                                                                    null
-                                                            ? controller
-                                                                    .isTemporaryChat
-                                                                ? '${controller.conversation?.membersCount} ${IsmChatStrings.participants.toUpperCase()}'
-                                                                : IsmChatStrings
-                                                                    .tapInfo
-                                                            : controller
-                                                                    .conversation
-                                                                    ?.members!
-                                                                    .map((e) =>
-                                                                        e.metaData
-                                                                            ?.firstName ??
-                                                                        e
-                                                                            .userName)
-                                                                    .join(
-                                                                        ', ') ??
-                                                                IsmChatStrings
-                                                                    .tapInfo,
-                                                        style: IsmChatConfig
-                                                                .chatTheme
-                                                                .chatPageHeaderTheme
-                                                                ?.subtileStyle ??
-                                                            IsmChatStyles
-                                                                .w400White12,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        maxLines: 1,
-                                                      ),
+                                                      child: IsmChatProperties
+                                                                  .chatPageProperties
+                                                                  .header
+                                                                  ?.isSubTitleShow ==
+                                                              true
+                                                          ? Text(
+                                                              controller.conversation?.members
+                                                                              ?.isEmpty ==
+                                                                          true ||
+                                                                      controller
+                                                                              .conversation
+                                                                              ?.members ==
+                                                                          null
+                                                                  ? controller
+                                                                          .isTemporaryChat
+                                                                      ? '${controller.conversation?.membersCount} ${IsmChatStrings.participants.toUpperCase()}'
+                                                                      : IsmChatStrings
+                                                                          .tapInfo
+                                                                  : (controller
+                                                                              .conversation
+                                                                              ?.members ??
+                                                                          [])
+                                                                      .map(
+                                                                      (e) {
+                                                                        final name =
+                                                                            '${e.metaData?.firstName ?? ''} ${e.metaData?.lastName ?? ''} ';
+                                                                        if (name
+                                                                            .trim()
+                                                                            .isNotEmpty) {
+                                                                          return name;
+                                                                        } else {
+                                                                          return e
+                                                                              .userName;
+                                                                        }
+                                                                      },
+                                                                    ).join(
+                                                                          ', '),
+                                                              style: IsmChatConfig
+                                                                      .chatTheme
+                                                                      .chatPageHeaderTheme
+                                                                      ?.subtileStyle ??
+                                                                  IsmChatStyles
+                                                                      .w400White12,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              maxLines: 1,
+                                                            )
+                                                          : IsmChatDimens.box0,
                                                     )
                                                   : controller
                                                               .conversation
