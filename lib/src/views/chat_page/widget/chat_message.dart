@@ -141,20 +141,24 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                       if (isGroup &&
                           !showMessageInCenter &&
                           !(widget._message?.sentByMe == true)) ...[
-                        IsmChatTapHandler(
-                          onTap: () async {
-                            await controller.showUserDetails(
-                              widget._message!.senderInfo!,
-                            );
-                          },
-                          child: IsmChatImage.profile(
-                            widget._message?.senderInfo?.profileUrl ?? '',
-                            name: widget._message?.senderInfo?.userName ?? '',
-                            dimensions: IsmChatConfig.chatTheme.chatPageTheme
-                                    ?.profileImageSize ??
-                                30,
-                          ),
-                        )
+                        IsmChatProperties
+                                .chatPageProperties.messageProfileBuilder
+                                ?.call(context, widget._message!) ??
+                            IsmChatTapHandler(
+                              onTap: () async {
+                                await controller.showUserDetails(
+                                  widget._message!.senderInfo!,
+                                );
+                              },
+                              child: IsmChatImage.profile(
+                                widget._message?.senderInfo?.profileUrl ?? '',
+                                name:
+                                    widget._message?.senderInfo?.userName ?? '',
+                                dimensions: IsmChatConfig.chatTheme
+                                        .chatPageTheme?.profileImageSize ??
+                                    30,
+                              ),
+                            )
                       ],
                       if (theme?.opponentMessageTheme?.showProfile != null) ...[
                         if (theme?.opponentMessageTheme?.showProfile
