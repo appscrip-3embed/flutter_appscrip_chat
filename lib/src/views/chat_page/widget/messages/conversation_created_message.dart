@@ -1,5 +1,7 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class IsmChatConversationCreatedMessage extends StatelessWidget {
   const IsmChatConversationCreatedMessage(this.message, {super.key});
@@ -8,8 +10,23 @@ class IsmChatConversationCreatedMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final name =
-        '${message.senderInfo?.metaData?.firstName ?? ''} ${message.senderInfo?.metaData?.lastName ?? ''}';
+    var name = '';
+    if (IsmChatProperties.chatPageProperties.messageSenderName?.call(
+          context,
+          message,
+          Get.find<IsmChatPageController>().conversation!,
+        ) !=
+        null) {
+      name = IsmChatProperties.chatPageProperties.messageSenderName?.call(
+            context,
+            message,
+            Get.find<IsmChatPageController>().conversation!,
+          ) ??
+          '';
+    } else {
+      name =
+          '${message.senderInfo?.metaData?.firstName ?? ''} ${message.senderInfo?.metaData?.lastName ?? ''}';
+    }
     return Center(
       child: Container(
         decoration: BoxDecoration(
