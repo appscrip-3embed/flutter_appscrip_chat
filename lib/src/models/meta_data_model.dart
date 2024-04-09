@@ -16,48 +16,51 @@ class IsmChatMetaData {
     this.duration,
     this.captionMessage,
     this.replyMessage,
+    this.senderInfo,
   });
 
   factory IsmChatMetaData.fromMap(Map<String, dynamic> map) => IsmChatMetaData(
-        captionMessage: map['captionMessage'] != null
-            ? IsmChatUtility.decodeString(map['captionMessage'] as String)
-            : '',
-        locationAddress: map['locationAddress'] as String? ?? '',
-        locationSubAddress: map['locationSubAddress'] as String? ?? '',
-        profilePic: map['profilePic'] as String? ?? '',
-        firstName: map['firstName'] as String? ?? '',
-        lastName: map['lastName'] as String? ?? '',
-        customType: map['customType'].runtimeType == String
-            ? {'${map['customType']}': map['customType']}
-            : map['customType'] as Map<String, dynamic>? ?? {},
-        assetList: map['assetList'] == null
-            ? []
-            : List<Map<String, IsmChatBackgroundModel>>.from(
-                map['assetList'].map(
-                  (x) => Map.from(x).map(
-                    (k, v) => MapEntry<String, IsmChatBackgroundModel>(
-                      k,
-                      v.runtimeType == String
-                          ? IsmChatBackgroundModel.fromJson(v)
-                          : IsmChatBackgroundModel.fromMap(v),
-                    ),
+      captionMessage: map['captionMessage'] != null
+          ? IsmChatUtility.decodeString(map['captionMessage'] as String)
+          : '',
+      locationAddress: map['locationAddress'] as String? ?? '',
+      locationSubAddress: map['locationSubAddress'] as String? ?? '',
+      profilePic: map['profilePic'] as String? ?? '',
+      firstName: map['firstName'] as String? ?? '',
+      lastName: map['lastName'] as String? ?? '',
+      customType: map['customType'].runtimeType == String
+          ? {'${map['customType']}': map['customType']}
+          : map['customType'] as Map<String, dynamic>? ?? {},
+      assetList: map['assetList'] == null
+          ? []
+          : List<Map<String, IsmChatBackgroundModel>>.from(
+              map['assetList'].map(
+                (x) => Map.from(x).map(
+                  (k, v) => MapEntry<String, IsmChatBackgroundModel>(
+                    k,
+                    v.runtimeType == String
+                        ? IsmChatBackgroundModel.fromJson(v)
+                        : IsmChatBackgroundModel.fromMap(v),
                   ),
                 ),
-              ).toList(),
-        duration: Duration(seconds: map['duration'] as int? ?? 0),
-        replyMessage: map['replyMessage'] != null
-            ? IsmChatReplyMessageModel.fromMap(
-                map['replyMessage'] as Map<String, dynamic>)
-            : null,
-        contacts: map['contacts'] != null
-            ? List<IsmChatContactMetaDatModel>.from(
-                (map['contacts'] as List).map<IsmChatContactMetaDatModel?>(
-                  (x) => IsmChatContactMetaDatModel.fromMap(
-                      x as Map<String, dynamic>),
-                ),
-              )
-            : null,
-      );
+              ),
+            ).toList(),
+      duration: Duration(seconds: map['duration'] as int? ?? 0),
+      replyMessage: map['replyMessage'] != null
+          ? IsmChatReplyMessageModel.fromMap(
+              map['replyMessage'] as Map<String, dynamic>)
+          : null,
+      contacts: map['contacts'] != null
+          ? List<IsmChatContactMetaDatModel>.from(
+              (map['contacts'] as List).map<IsmChatContactMetaDatModel?>(
+                (x) => IsmChatContactMetaDatModel.fromMap(
+                    x as Map<String, dynamic>),
+              ),
+            )
+          : null,
+      senderInfo: map['senderInfo'] != null
+          ? UserDetails.fromMap(map['senderInfo'] as Map<String, dynamic>)
+          : null);
 
   factory IsmChatMetaData.fromJson(String? source) {
     if (source?.isEmpty == true || source == null) {
@@ -77,6 +80,7 @@ class IsmChatMetaData {
   final Duration? duration;
   final String? captionMessage;
   final IsmChatReplyMessageModel? replyMessage;
+  final UserDetails? senderInfo;
 
   IsmChatMetaData copyWith({
     String? parentMessageBody,
@@ -93,6 +97,7 @@ class IsmChatMetaData {
     String? captionMessage,
     IsmChatCustomMessageType? replayMessageCustomType,
     IsmChatReplyMessageModel? replyMessage,
+    UserDetails? senderInfo,
   }) =>
       IsmChatMetaData(
         locationAddress: locationAddress ?? this.locationAddress,
@@ -106,6 +111,7 @@ class IsmChatMetaData {
         duration: duration ?? this.duration,
         captionMessage: captionMessage ?? this.captionMessage,
         replyMessage: replyMessage ?? this.replyMessage,
+        senderInfo: senderInfo ?? this.senderInfo,
       );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
@@ -120,13 +126,14 @@ class IsmChatMetaData {
         'duration': duration?.inSeconds,
         'captionMessage': captionMessage,
         'replyMessage': replyMessage?.toMap(),
+        'senderInfo': senderInfo?.toMap()
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'IsmChatMetaData(locationAddress: $locationAddress, locationSubAddress: $locationSubAddress, profilePic: $profilePic, lastName: $lastName, firstName: $firstName, contacts: $contacts,customType: $customType, assetList: $assetList, duration: $duration, captionMessage: $captionMessage,replyMessage: $replyMessage)';
+      'IsmChatMetaData(locationAddress: $locationAddress, locationSubAddress: $locationSubAddress, profilePic: $profilePic, lastName: $lastName, firstName: $firstName, contacts: $contacts,customType: $customType, assetList: $assetList, duration: $duration, captionMessage: $captionMessage,replyMessage: $replyMessage, senderInfo : $senderInfo)';
 
   @override
   bool operator ==(covariant IsmChatMetaData other) {
@@ -142,7 +149,8 @@ class IsmChatMetaData {
         listEquals(other.assetList, assetList) &&
         other.duration == duration &&
         other.captionMessage == captionMessage &&
-        other.replyMessage == replyMessage;
+        other.replyMessage == replyMessage &&
+        other.senderInfo == senderInfo;
   }
 
   @override
@@ -157,5 +165,6 @@ class IsmChatMetaData {
       assetList.hashCode ^
       duration.hashCode ^
       captionMessage.hashCode ^
-      replyMessage.hashCode;
+      replyMessage.hashCode ^
+      senderInfo.hashCode;
 }

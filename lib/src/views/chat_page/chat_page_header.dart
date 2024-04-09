@@ -258,12 +258,21 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                                         )
                                                       : Flexible(
                                                           child: Text(
-                                                            controller
-                                                                    .conversation
-                                                                    ?.opponentDetails
-                                                                    ?.lastSeen
-                                                                    .toCurrentTimeStirng() ??
-                                                                IsmChatStrings
+                                                            controller.conversation?.opponentDetails
+                                                                            ?.lastSeen !=
+                                                                        null &&
+                                                                    controller
+                                                                            .conversation
+                                                                            ?.opponentDetails
+                                                                            ?.lastSeen !=
+                                                                        0
+                                                                ? controller
+                                                                        .conversation
+                                                                        ?.opponentDetails
+                                                                        ?.lastSeen!
+                                                                        .toCurrentTimeStirng() ??
+                                                                    ''
+                                                                : IsmChatStrings
                                                                     .tapInfo,
                                                             maxLines: 1,
                                                             overflow:
