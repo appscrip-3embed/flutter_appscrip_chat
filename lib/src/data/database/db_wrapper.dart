@@ -88,10 +88,12 @@ class IsmChatDBWrapper {
 
   /// delete chat object box
   Future<void> deleteChatLocalDb() async {
-    final mqttController = Get.find<IsmChatMqttController>();
-    mqttController.mqttHelper.unsubscribeTopics(
-        [mqttController.messageTopic, mqttController.statusTopic]);
-    mqttController.mqttHelper.disconnect();
+    if (!IsmChatConfig.isMqttInitializedFromOutSide) {
+      final mqttController = Get.find<IsmChatMqttController>();
+      mqttController.mqttHelper.unsubscribeTopics(
+          [mqttController.messageTopic, mqttController.statusTopic]);
+      mqttController.mqttHelper.disconnect();
+    }
     await clearChatLocalDb();
     IsmChatLog.success('[DELETED] - All entries are removed from database');
   }
