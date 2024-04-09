@@ -270,4 +270,23 @@ mixin IsmChatPageGetMessageMixin on GetxController {
       await conversationController.getChatConversations();
     }
   }
+
+  UserDetails getUser() => UserDetails(
+        userProfileImageUrl:
+            IsmChatProperties.chatPageProperties.header?.profileImageUrl?.call(
+                    Get.context!,
+                    _controller.conversation!,
+                    _controller.conversation?.profileUrl ?? '') ??
+                _controller.conversation?.profileUrl ??
+                '',
+        userName: IsmChatProperties.chatPageProperties.header?.title?.call(
+                Get.context!,
+                _controller.conversation!,
+                _controller.conversation?.chatName ?? '') ??
+            _controller.conversation?.chatName ??
+            '',
+        userIdentifier:
+            _controller.conversation?.opponentDetails?.userIdentifier ?? '',
+        userId: _controller.conversation?.opponentDetails?.userId ?? '',
+      );
 }

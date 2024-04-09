@@ -33,9 +33,9 @@ class UserDetails {
     required this.userName,
     required this.userIdentifier,
     required this.userId,
-    required this.online,
+    this.online,
     this.metaData,
-    required this.lastSeen,
+    this.lastSeen,
     this.visibility,
     this.notification,
     this.language,
@@ -51,9 +51,9 @@ class UserDetails {
   final String userName;
   final String userIdentifier;
   final String userId;
-  final bool online;
+  final bool? online;
   final IsmChatMetaData? metaData;
-  final int lastSeen;
+  final int? lastSeen;
   final bool? visibility;
   final bool? notification;
   final String? language;

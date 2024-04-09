@@ -152,22 +152,24 @@ class IsmChatMessageModel {
     if (IsmChatConfig.configInitilized) {
       try {
         model = model.copyWith(
-            customType: model.customType != null &&
-                    model.customType != IsmChatCustomMessageType.text
-                ? model.customType
-                : IsmChatCustomMessageType.withBody(model.body),
-            sentByMe: model.senderInfo != null
-                ? model.senderInfo!.userId ==
-                    IsmChatConfig.communicationConfig.userConfig.userId
-                : model.memberId != null
-                    ? IsmChatConfig.communicationConfig.userConfig.userId ==
-                            model.memberId
-                        ? false
-                        : true
-                    : true,
-            isGroup: model.conversationDetails?.isNotEmpty == true
-                ? model.conversationDetails!['isGroup']
-                : false);
+          customType: model.customType != null &&
+                  model.customType != IsmChatCustomMessageType.text
+              ? model.customType
+              : IsmChatCustomMessageType.withBody(model.body),
+          sentByMe: model.senderInfo != null
+              ? model.senderInfo?.userId ==
+                  IsmChatConfig.communicationConfig.userConfig.userId
+              : model.memberId != null
+                  ? IsmChatConfig.communicationConfig.userConfig.userId ==
+                          model.memberId
+                      ? false
+                      : true
+                  : true,
+          isGroup: model.conversationDetails?.isNotEmpty == true
+              ? model.conversationDetails!['isGroup']
+              : false,
+          senderInfo: model.metaData?.senderInfo,
+        );
       } catch (eroor, st) {
         IsmChatLog.error(eroor, st);
       }
