@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -91,18 +92,25 @@ class MessageBubble extends GetView<IsmChatPageController> {
                               child: Builder(builder: (context) {
                                 final name =
                                     '${_message.senderInfo?.metaData?.firstName ?? ''} ${_message.senderInfo?.metaData?.lastName ?? ''}';
-                                return Text(
-                                  name.trim().isNotEmpty
-                                      ? name
-                                      : _message.senderInfo?.userName ?? '',
-                                  style: IsmChatStyles.w400Black10,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: _message.sentByMe
-                                      ? TextAlign.end
-                                      : TextAlign.start,
-                                  maxLines: 1,
-                                );
+                                return IsmChatProperties.chatPageProperties
+                                        .messageProfileBuilder
+                                        ?.call(
+                                      context,
+                                      _message,
+                                      controller.conversation!,
+                                    ) ??
+                                    Text(
+                                      name.trim().isNotEmpty
+                                          ? name
+                                          : _message.senderInfo?.userName ?? '',
+                                      style: IsmChatStyles.w400Black10,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: _message.sentByMe
+                                          ? TextAlign.end
+                                          : TextAlign.start,
+                                      maxLines: 1,
+                                    );
                               }),
                             ),
                           ),

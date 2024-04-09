@@ -50,6 +50,7 @@ typedef MessageWidgetBuilder = Widget? Function(
 typedef MessageProfileBuilder = Widget? Function(
   BuildContext,
   IsmChatMessageModel,
+  IsmChatConversationModel,
 );
 
 typedef ConversationWidgetBuilder = Widget? Function(

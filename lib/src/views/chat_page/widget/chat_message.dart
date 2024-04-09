@@ -87,7 +87,8 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                   if (widget._message?.customType !=
                       IsmChatCustomMessageType.deletedForEveryone) {
                     if (!Responsive.isWeb(context)) {
-                      if (!controller.conversation!.isChattingAllowed) {
+                      if (!(controller.conversation?.isChattingAllowed ??
+                          false)) {
                         controller.showDialogCheckBlockUnBlock();
                         return;
                       } else {
@@ -143,7 +144,11 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                           !(widget._message?.sentByMe == true)) ...[
                         IsmChatProperties
                                 .chatPageProperties.messageProfileBuilder
-                                ?.call(context, widget._message!) ??
+                                ?.call(
+                              context,
+                              widget._message!,
+                              controller.conversation!,
+                            ) ??
                             IsmChatTapHandler(
                               onTap: () async {
                                 await controller.showUserDetails(

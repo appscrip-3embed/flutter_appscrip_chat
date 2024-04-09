@@ -18,6 +18,7 @@ class IsmChatPageProperties {
     this.onCallBlockUnblock,
     this.onCoverstaionStatus,
     this.messageProfileBuilder,
+    this.messageNameBuilder,
   });
 
   final Widget? placeholder;
@@ -35,6 +36,9 @@ class IsmChatPageProperties {
 
 
   final MessageProfileBuilder? messageProfileBuilder;
+
+  final MessageProfileBuilder? messageNameBuilder;
+
 
 
   /// It is an optional parameter which take List of `IsmChatAttachmentType` which is an enum.
