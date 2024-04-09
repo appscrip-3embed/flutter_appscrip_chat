@@ -143,7 +143,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                           !showMessageInCenter &&
                           !(widget._message?.sentByMe == true)) ...[
                         IsmChatProperties
-                                .chatPageProperties.messageProfileBuilder
+                                .chatPageProperties.messageSenderProfileBuilder
                                 ?.call(
                               context,
                               widget._message!,
@@ -156,7 +156,15 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                                 );
                               },
                               child: IsmChatImage.profile(
-                                widget._message?.senderInfo?.profileUrl ?? '',
+                                IsmChatProperties.chatPageProperties
+                                        .messageSenderProfileUrl
+                                        ?.call(
+                                      context,
+                                      widget._message!,
+                                      controller.conversation!,
+                                    ) ??
+                                    widget._message?.senderInfo?.profileUrl ??
+                                    '',
                                 name:
                                     widget._message?.senderInfo?.userName ?? '',
                                 dimensions: IsmChatConfig.chatTheme

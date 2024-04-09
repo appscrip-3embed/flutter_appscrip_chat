@@ -90,10 +90,29 @@ class MessageBubble extends GetView<IsmChatPageController> {
                             padding: IsmChatDimens.edgeInsetsL2,
                             child: FittedBox(
                               child: Builder(builder: (context) {
-                                final name =
-                                    '${_message.senderInfo?.metaData?.firstName ?? ''} ${_message.senderInfo?.metaData?.lastName ?? ''}';
+                                var name = '';
+                                if (IsmChatProperties
+                                        .chatPageProperties.messageSenderName
+                                        ?.call(
+                                      context,
+                                      _message,
+                                      controller.conversation!,
+                                    ) !=
+                                    null) {
+                                  name = IsmChatProperties
+                                          .chatPageProperties.messageSenderName
+                                          ?.call(
+                                        context,
+                                        _message,
+                                        controller.conversation!,
+                                      ) ??
+                                      '';
+                                } else {
+                                  name =
+                                      '${_message.senderInfo?.metaData?.firstName ?? ''} ${_message.senderInfo?.metaData?.lastName ?? ''}';
+                                }
                                 return IsmChatProperties.chatPageProperties
-                                        .messageProfileBuilder
+                                        .messageSenderNameBuilder
                                         ?.call(
                                       context,
                                       _message,

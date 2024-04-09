@@ -47,7 +47,13 @@ typedef MessageWidgetBuilder = Widget? Function(
   bool,
 );
 
-typedef MessageProfileBuilder = Widget? Function(
+typedef MessageSenderInfoBuilder = Widget? Function(
+  BuildContext,
+  IsmChatMessageModel,
+  IsmChatConversationModel,
+);
+
+typedef MessageSenderInfoCallback = String? Function(
   BuildContext,
   IsmChatMessageModel,
   IsmChatConversationModel,

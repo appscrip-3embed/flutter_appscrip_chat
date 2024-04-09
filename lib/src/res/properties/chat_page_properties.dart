@@ -17,8 +17,10 @@ class IsmChatPageProperties {
     this.messageFieldSuffix,
     this.onCallBlockUnblock,
     this.onCoverstaionStatus,
-    this.messageProfileBuilder,
-    this.messageNameBuilder,
+    this.messageSenderProfileBuilder,
+    this.messageSenderNameBuilder,
+    this.messageSenderName,
+    this.messageSenderProfileUrl,
   });
 
   final Widget? placeholder;
@@ -34,12 +36,13 @@ class IsmChatPageProperties {
 
   final MessageWidgetBuilder? messageBuilder;
 
+  final MessageSenderInfoBuilder? messageSenderProfileBuilder;
 
-  final MessageProfileBuilder? messageProfileBuilder;
+  final MessageSenderInfoBuilder? messageSenderNameBuilder;
 
-  final MessageProfileBuilder? messageNameBuilder;
+  final MessageSenderInfoCallback? messageSenderName;
 
-
+  final MessageSenderInfoCallback? messageSenderProfileUrl;
 
   /// It is an optional parameter which take List of `IsmChatAttachmentType` which is an enum.
   /// Pass in the types of attachments that you want to allow.
