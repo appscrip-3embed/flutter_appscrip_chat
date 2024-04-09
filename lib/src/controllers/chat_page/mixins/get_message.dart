@@ -41,10 +41,11 @@ mixin IsmChatPageGetMessageMixin on GetxController {
       if (_controller.messages.isEmpty) {
         _controller.isMessagesLoading = true;
       }
+
       var timeStamp = lastMessageTimestamp ??
           (_controller.messages.isEmpty
               ? 0
-              : _controller.messages.last.sentAt + 2000);
+              : _controller.messages.last.sentAt + 7000);
 
       var messagesList = List<IsmChatMessageModel>.from(_controller.messages);
       messagesList.removeWhere(
