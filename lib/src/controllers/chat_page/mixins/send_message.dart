@@ -288,7 +288,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       sentByMe: true,
       isUploading: true,
       metaData: IsmChatMetaData(
-        senderInfo: _controller.getUser(),
+        // senderInfo: _controller.getUser(),
         replyMessage: _controller.isreplying
             ? IsmChatReplyMessageModel(
                 forMessageType: IsmChatCustomMessageType.audio,
@@ -432,7 +432,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             sentByMe: true,
             isUploading: true,
             metaData: IsmChatMetaData(
-              senderInfo: _controller.getUser(),
+              // senderInfo: _controller.getUser(),
               replyMessage: _controller.isreplying
                   ? IsmChatReplyMessageModel(
                       forMessageType: IsmChatCustomMessageType.file,
@@ -608,7 +608,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         sentByMe: true,
         isUploading: true,
         metaData: IsmChatMetaData(
-          senderInfo: _controller.getUser(),
+          // senderInfo: _controller.getUser(),
           captionMessage: caption,
           replyMessage: _controller.isreplying
               ? IsmChatReplyMessageModel(
@@ -745,7 +745,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       sentByMe: true,
       isUploading: true,
       metaData: IsmChatMetaData(
-        senderInfo: _controller.getUser(),
+        // senderInfo: _controller.getUser(),
         captionMessage: caption,
         replyMessage: _controller.isreplying
             ? IsmChatReplyMessageModel(
@@ -852,7 +852,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         ),
       ],
       metaData: IsmChatMetaData(
-        senderInfo: _controller.getUser(),
+        // senderInfo: _controller.getUser(),
         replyMessage: _controller.isreplying
             ? IsmChatReplyMessageModel(
                 forMessageType: IsmChatCustomMessageType.location,
@@ -949,7 +949,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       sentByMe: true,
       deviceId: _controller._deviceConfig.deviceId ?? '',
       metaData: IsmChatMetaData(
-        senderInfo: _controller.getUser(),
+        // senderInfo: _controller.getUser(),
         contacts: contacts
             .map(
               (e) => IsmChatContactMetaDatModel(
@@ -1049,7 +1049,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       sentAt: sentAt,
       sentByMe: true,
       metaData: IsmChatMetaData(
-        senderInfo: _controller.getUser(),
+        // senderInfo: _controller.getUser(),
         replyMessage: _controller.isreplying
             ? IsmChatReplyMessageModel(
                 forMessageType: IsmChatCustomMessageType.text,
