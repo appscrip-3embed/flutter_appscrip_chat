@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -92,60 +93,10 @@ class IsmChatMessageInfo extends StatelessWidget {
                           ? CrossAxisAlignment.end
                           : CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          padding: IsmChatDimens.edgeInsets4,
-                          constraints: BoxConstraints(
-                            maxWidth: (Responsive.isWeb(context))
-                                ? context.width * .25
-                                : context.width * .8,
-                            minWidth: Responsive.isWeb(context)
-                                ? context.width * .06
-                                : context.width * .1,
-                          ),
-                          decoration: BoxDecoration(
-                            color: _message?.sentByMe ?? false
-                                ? IsmChatConfig.chatTheme.primaryColor
-                                : IsmChatConfig.chatTheme.backgroundColor,
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(IsmChatDimens.twelve),
-                              topLeft: _message?.sentByMe ?? false
-                                  ? Radius.circular(IsmChatDimens.twelve)
-                                  : Radius.circular(IsmChatDimens.four),
-                              bottomLeft: Radius.circular(IsmChatDimens.twelve),
-                              bottomRight: _message?.sentByMe ?? false
-                                  ? Radius.circular(IsmChatDimens.four)
-                                  : Radius.circular(IsmChatDimens.twelve),
-                            ),
-                          ),
-                          child: IsmChatMessageWrapper(_message!),
-                        ),
-                        Padding(
-                          padding: IsmChatDimens.edgeInsets0_4,
-                          child: Row(
-                            children: [
-                              Text(
-                                _message.sentAt.toTimeString(),
-                                style: IsmChatStyles.w400Grey10,
-                              ),
-                              if (_message.sentByMe) ...[
-                                IsmChatDimens.boxWidth2,
-                                Icon(
-                                  _message.messageId!.isEmpty == true
-                                      ? Icons.watch_later_rounded
-                                      : _message.deliveredToAll ?? false
-                                          ? Icons.done_all_rounded
-                                          : Icons.done_rounded,
-                                  color: _message.messageId!.isEmpty == true
-                                      ? Colors.grey
-                                      : _message.readByAll ?? false
-                                          ? Colors.blue
-                                          : Colors.grey,
-                                  size: IsmChatDimens.forteen,
-                                ),
-                              ]
-                            ],
-                          ),
-                        ),
+                        MessageBubble(
+                          message: _message,
+                          showMessageInCenter: false,
+                        )
                       ],
                     ),
                   ),
@@ -334,28 +285,54 @@ class _UserInfo extends StatelessWidget {
                   Icon(
                     Icons.done_all_rounded,
                     size: IsmChatDimens.fifteen,
-                    color: isRead ? Colors.blue : Colors.grey,
-                  )
+                    color: isRead
+                        ? IsmChatConfig
+                                .chatTheme.chatPageTheme?.readCheckColor ??
+                            Colors.blue
+                        : IsmChatConfig
+                                .chatTheme.chatPageTheme?.unreadCheckColor ??
+                            Colors.grey,
+                  ),
                 ],
               ),
               ListView.separated(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (_, inex) {
-                    var user = userList[inex];
-                    return ListTile(
-                      contentPadding: IsmChatDimens.edgeInsets0,
-                      leading: IsmChatImage.profile(
-                        user.profileUrl,
-                        name: user.userName,
-                        dimensions: 40,
-                      ),
-                      title: Text(user.userName),
-                      trailing: Text(user.timestamp!.deliverTime),
-                    );
-                  },
-                  separatorBuilder: (_, index) => const Divider(),
-                  itemCount: userList.length)
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (_, inex) {
+                  var user = userList[inex];
+
+                  return ListTile(
+                    contentPadding: IsmChatDimens.edgeInsets0,
+                    leading: IsmChatProperties.chatPageProperties
+                            .messageInfoAcknowldge?.profileImageBuilder
+                            ?.call(_, user) ??
+                        IsmChatImage.profile(
+                          IsmChatProperties.chatPageProperties
+                                  .messageInfoAcknowldge?.profileImageUrl
+                                  ?.call(_, user) ??
+                              user.profileUrl,
+                          name: user.userName,
+                          dimensions: IsmChatDimens.forty,
+                        ),
+                    title: IsmChatProperties.chatPageProperties
+                            .messageInfoAcknowldge?.titleBuilder
+                            ?.call(_, user) ??
+                        Text(IsmChatProperties
+                                .chatPageProperties.messageInfoAcknowldge?.title
+                                ?.call(_, user) ??
+                            user.userName),
+                    trailing: IsmChatProperties.chatPageProperties
+                            .messageInfoAcknowldge?.trailingBuilder
+                            ?.call(_, user) ??
+                        Text(IsmChatProperties.chatPageProperties
+                                .messageInfoAcknowldge?.trailing
+                                ?.call(_, user) ??
+                            (user.timestamp ?? 0).deliverTime),
+                  );
+                },
+                separatorBuilder: (_, index) => const Divider(),
+                itemCount: userList.length,
+              )
             ],
           ),
         ),

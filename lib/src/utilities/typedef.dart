@@ -13,6 +13,11 @@ typedef ConversationWidgetCallback = Widget? Function(
   String,
 );
 
+typedef UserDetailsWidgetCallback = Widget? Function(
+  BuildContext,
+  UserDetails,
+);
+
 typedef WidgetCallback = Widget? Function(
   BuildContext,
   IsmChatConversationModel,
@@ -38,6 +43,11 @@ typedef ConversationStringCallback = String? Function(
   BuildContext,
   IsmChatConversationModel,
   String,
+);
+
+typedef UserDetailsStringCallback = String? Function(
+  BuildContext,
+  UserDetails,
 );
 
 typedef MessageWidgetBuilder = Widget? Function(

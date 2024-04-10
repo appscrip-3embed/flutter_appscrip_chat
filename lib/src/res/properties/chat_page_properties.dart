@@ -21,6 +21,7 @@ class IsmChatPageProperties {
     this.messageSenderNameBuilder,
     this.messageSenderName,
     this.messageSenderProfileUrl,
+    this.messageInfoAcknowldge,
   });
 
   final Widget? placeholder;
@@ -101,4 +102,10 @@ class IsmChatPageProperties {
   ///
   /// `IsmChatConversationModel` gives data of current chat, it could be used for local storage or state variables
   final ConversationVoidCallback? onCoverstaionStatus;
+
+  /// Optional parameter
+  ///
+  /// Primarily designed for check messgae info
+  ///
+  final IsmChatPageMessageAcknowldgeProperties? messageInfoAcknowldge;
 }
