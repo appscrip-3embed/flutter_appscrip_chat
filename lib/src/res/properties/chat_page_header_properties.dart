@@ -23,9 +23,8 @@ class IsmChatPageHeaderProperties {
   final ConversationStringCallback? profileImageUrl;
   final ConversationWidgetCallback? titleBuilder;
   final ConversationStringCallback? title;
-  final ConversationWidgetCallback? subtitleBuilder;
-
-  final ConversationStringCallback? subtitle;
+  final WidgetCallback? subtitleBuilder;
+  final WidgetCallback? subtitle;
   final WidgetCallback? actionBuilder;
 
   /// Provides this methode with exclude hight of widget
