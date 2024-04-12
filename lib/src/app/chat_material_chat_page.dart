@@ -258,14 +258,13 @@ class IsmMaterialChatPage extends StatefulWidget {
       String,
     )? showNotification,
     bool isShowMqttConnectErrorDailog = false,
-    bool isMqttInitializedFromOutSide = false,
   }) {
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
     IsmChatConfig.communicationConfig = communicationConfig;
     IsmChatConfig.configInitilized = true;
-    IsmChatConfig.isMqttInitializedFromOutSide = isMqttInitializedFromOutSide;
+
     if (!Get.isRegistered<IsmChatMqttController>()) {
       IsmChatLog.info(
           'IsmMQttController initiliazing fron {initializeMqtt} function');
