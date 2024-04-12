@@ -189,7 +189,6 @@ class IsmMaterialChatPage extends StatefulWidget {
 
   /// Call this function on SignOut to delete the data stored locally in the Local Database
   static Future<void> logout() async {
-   
     await IsmChatConfig.dbWrapper?.deleteChatLocalDb();
     await Future.wait([
       Get.delete<IsmChatConversationsController>(force: true),
@@ -277,6 +276,30 @@ class IsmMaterialChatPage extends StatefulWidget {
     IsmChatConfig.showNotification = showNotification;
     IsmChatConfig.notificationIconPath = notificationIconPath;
     IsmChatConfig.isShowMqttConnectErrorDailog = isShowMqttConnectErrorDailog;
+  }
+
+  /// Call this funcation for the initialize mqtt
+  static void initializeMqttFromOutSide(
+    IsmChatCommunicationConfig communicationConfig, {
+    String? notificationIconPath,
+    void Function(
+      String,
+      String,
+      String,
+    )? showNotification,
+  }) {
+    IsmChatConfig.communicationConfig = communicationConfig;
+    IsmChatConfig.configInitilized = true;
+    IsmChatConfig.isMqttInitializedFromOutSide = true;
+    if (!Get.isRegistered<IsmChatMqttController>()) {
+      IsmChatLog.info(
+          'IsmMQttController initiliazing fron {initializeMqtt} function');
+      IsmChatMqttBinding().dependencies();
+      IsmChatLog.info(
+          'IsmMQttController initiliazing success fron {initializeMqtt} function ');
+    }
+    IsmChatConfig.showNotification = showNotification;
+    IsmChatConfig.notificationIconPath = notificationIconPath;
   }
 
   /// Call this funcation on to listener for mqtt events
