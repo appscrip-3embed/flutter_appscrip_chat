@@ -5,7 +5,7 @@ class IsmChatCommunicationConfig {
   IsmChatCommunicationConfig({
     required this.userConfig,
     required this.projectConfig,
-    required this.mqttConfig,
+    this.mqttConfig,
     String? username,
     String? password,
   })  : username =
@@ -15,7 +15,7 @@ class IsmChatCommunicationConfig {
 
   final IsmChatUserConfig userConfig;
   final IsmChatProjectConfig projectConfig;
-  final IsmChatMqttConfig mqttConfig;
+  final IsmChatMqttConfig? mqttConfig;
   final String? username;
   final String? password;
 }

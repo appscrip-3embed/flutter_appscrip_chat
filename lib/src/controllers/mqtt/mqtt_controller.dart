@@ -19,11 +19,11 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
 
   late IsmChatProjectConfig projectConfig;
 
+  late IsmChatUserConfig userConfig;
+
   late IsmChatConnectionState connectionState;
 
-  late IsmChatMqttConfig mqttConfig;
-
-  late IsmChatUserConfig userConfig;
+  IsmChatMqttConfig? mqttConfig;
 
   @override
   void onInit() async {
@@ -63,8 +63,8 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
           deviceId: _deviceConfig.deviceId ?? '',
         ),
         serverConfig: ServerConfig(
-          hostName: mqttConfig.hostName,
-          port: mqttConfig.port,
+          hostName: mqttConfig?.hostName ?? '',
+          port: mqttConfig?.port ?? 0,
         ),
         userId: userConfig.userId,
         username: IsmChatConfig.communicationConfig.username,
@@ -72,8 +72,8 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
         enableLogging: true,
         secure: false,
         webSocketConfig: WebSocketConfig(
-          useWebsocket: mqttConfig.useWebSocket,
-          websocketProtocols: mqttConfig.websocketProtocols,
+          useWebsocket: mqttConfig?.useWebSocket ?? false,
+          websocketProtocols: mqttConfig?.websocketProtocols ?? [],
         ),
       ),
       callbacks: MqttCallbacks(
