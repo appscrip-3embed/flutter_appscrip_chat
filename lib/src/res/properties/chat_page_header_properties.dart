@@ -15,7 +15,7 @@ class IsmChatPageHeaderProperties {
     this.height,
     this.shape,
     this.onProfileTap,
-    this.isSubTitleShow = true,
+
     this.actionBuilder
   });
 
@@ -42,5 +42,5 @@ class IsmChatPageHeaderProperties {
   )? height;
   final ShapeBorder? shape;
 
-  final bool isSubTitleShow;
+
 }
