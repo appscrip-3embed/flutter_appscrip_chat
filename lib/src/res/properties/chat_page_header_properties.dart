@@ -15,7 +15,8 @@ class IsmChatPageHeaderProperties {
     this.height,
     this.shape,
     this.onProfileTap,
-    this.isSubTitleShow = true
+    this.isSubTitleShow = true,
+    this.actionBuilder
   });
 
   final ConversationWidgetCallback? profileImageBuilder;
@@ -23,7 +24,9 @@ class IsmChatPageHeaderProperties {
   final ConversationWidgetCallback? titleBuilder;
   final ConversationStringCallback? title;
   final ConversationWidgetCallback? subtitleBuilder;
+
   final ConversationStringCallback? subtitle;
+  final WidgetCallback? actionBuilder;
 
   /// Provides this methode with exclude hight of widget
   final WidgetCallback? bottom;
@@ -41,5 +44,4 @@ class IsmChatPageHeaderProperties {
   final ShapeBorder? shape;
 
   final bool isSubTitleShow;
-
 }

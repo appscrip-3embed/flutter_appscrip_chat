@@ -83,6 +83,7 @@ class ChatList extends StatelessWidget {
               //   return true;
               // },
               header: IsmChatPageHeaderProperties(
+
                   // height: (p0, p1) => 200,
                   // bottom: (p0, p1) {
                   //   return Container(

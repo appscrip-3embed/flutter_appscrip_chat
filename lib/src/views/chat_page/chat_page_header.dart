@@ -291,6 +291,14 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                               ),
                             ),
                           ),
+                          if (IsmChatProperties
+                                  .chatPageProperties.header?.actionBuilder !=
+                              null) ...[
+                            IsmChatProperties
+                                    .chatPageProperties.header?.actionBuilder
+                                    ?.call(context, controller.conversation!) ??
+                                const SizedBox.square()
+                          ],
                           PopupMenuButton<int>(
                             color: IsmChatConfig.chatTheme.chatPageHeaderTheme
                                 ?.popupBackgroundColor,
