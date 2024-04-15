@@ -342,8 +342,24 @@ class IsmChatApp extends StatelessWidget {
     assert(IsmChatConfig.configInitilized,
         '''MQTT Controller must be initialized before adding listener.
     Either call IsmChatApp.initializeMqtt() or add listener after IsmChatApp is called''');
-    var mqttController = Get.find<IsmChatMqttController>();
+    final mqttController = Get.find<IsmChatMqttController>();
+    mqttController.actionListeners.add(listener);
     return mqttController.actionStreamController.stream.listen(listener);
+  }
+
+  /// Call this funcation on to remove listener for mqtt events
+  ///
+  /// [IsmChatConfig.configInitilized] this variable must be true
+  ///
+  /// You can call this funcation after initialize mqtt [initializeMqtt] funcation
+  static Future<void> removeListener(
+      Function(Map<String, dynamic>) listener) async {
+    final mqttController = Get.find<IsmChatMqttController>();
+    mqttController.actionListeners.remove(listener);
+    await mqttController.actionStreamController.stream.drain();
+    for (final listener in mqttController.actionListeners) {
+      mqttController.actionStreamController.stream.listen(listener);
+    }
   }
 
   /// This function can be used to directly go to chatting page and start chatting from anywhere in the app

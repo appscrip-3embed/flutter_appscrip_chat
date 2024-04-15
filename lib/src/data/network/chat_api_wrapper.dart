@@ -118,9 +118,7 @@ class IsmChatApiWrapper {
             body: forAwsUpload ? payload : jsonEncode(payload),
             headers: headers,
           )
-          .timeout(
-            const Duration(seconds: 60)
-          );
+          .timeout(const Duration(seconds: 60));
 
       if (showLoader) {
         IsmChatUtility.closeLoader();
@@ -161,7 +159,6 @@ class IsmChatApiWrapper {
             body: jsonEncode(payload),
             headers: headers,
           )
-          
           .timeout(const Duration(seconds: 60));
 
       if (showLoader) {
@@ -203,7 +200,6 @@ class IsmChatApiWrapper {
             body: jsonEncode(payload),
             headers: headers,
           )
-          
           .timeout(const Duration(seconds: 60));
 
       if (showLoader) {
