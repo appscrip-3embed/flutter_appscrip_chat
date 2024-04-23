@@ -1458,7 +1458,7 @@ class IsmChatConversationsController extends GetxController {
   }
 
   void goToContactSync() async {
-    await askPermissions();
+    // await askPermissions();
     await Future.delayed(Durations.extralong1);
     IsmChatRouteManagement.goToCreateChat(
       isGroupConversation: false,
