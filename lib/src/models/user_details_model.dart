@@ -60,7 +60,6 @@ class UserDetails {
   final int? timestamp;
   final String? memberName;
   final String? memberId;
-
   final bool isAdmin;
   final int? wordCount;
   final int? order;

@@ -197,4 +197,6 @@ class IsmChatStrings {
   static const String messageInfo = 'Message Info';
   static const String inviteToChat = 'Invite to';
   static const String youCanNotSend = 'You can not send media more than 20 MB.';
+  static const String aboutMe = 'About';
+
 }

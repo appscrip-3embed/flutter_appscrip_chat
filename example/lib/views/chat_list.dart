@@ -83,16 +83,15 @@ class ChatList extends StatelessWidget {
               //   return true;
               // },
               header: IsmChatPageHeaderProperties(
-                subtitleBuilder: (p0, p1) => const Text('Rahul'),
 
-                // height: (p0, p1) => 200,
-                // bottom: (p0, p1) {
-                //   return Container(
-                //       alignment: Alignment.center,
-                //       width: double.infinity,
-                //       child: const Text('Rahul Saryam'));
-                // },
-              ),
+                  // height: (p0, p1) => 200,
+                  // bottom: (p0, p1) {
+                  //   return Container(
+                  //       alignment: Alignment.center,
+                  //       width: double.infinity,
+                  //       child: const Text('Rahul Saryam'));
+                  // },
+                  ),
               // meessageFieldFocusNode: (_, coverstaion, value) {
               //   IsmChatLog.info(value);
               //   controller.isBottomVisibile = !controller.isBottomVisibile;
@@ -184,6 +183,11 @@ class ChatList extends StatelessWidget {
               // startActionSlidableEnable: (p0, p1) => true,
               // conversationPredicate: (e) =>
               //     e.chatName.toLowerCase().startsWith('t'),
+              opponentSubTitle: (_, opponent) {
+                return opponent.metaData?.about.isNullOrEmpty == true
+                    ? 'Hey there! I am using IsoChat'
+                    : opponent.metaData?.about;
+              },
             ),
           ),
         );

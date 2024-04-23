@@ -309,7 +309,11 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                       style: IsmChatStyles.w600Black14,
                                     ),
                                     subtitle: Text(
-                                      user.userDetails.userIdentifier,
+                                      IsmChatProperties.conversationProperties
+                                              .opponentSubTitle
+                                              ?.call(
+                                                  context, user.userDetails) ??
+                                          user.userDetails.userIdentifier,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: IsmChatStyles.w400Black12,

@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -144,7 +145,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                         )),
                     if (!(controller.conversation?.isGroup ?? false)) ...[
                       Text(
-                        controller.conversation!.opponentDetails
+                        controller.conversation?.opponentDetails
                                 ?.userIdentifier ??
                             '',
                         style: IsmChatStyles.w500GreyLight17,
@@ -167,6 +168,41 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                             child: Text(
                                 '${IsmChatStrings.createdOn} ${controller.conversation?.createdAt?.toLastMessageTimeString()} ${IsmChatStrings.by} ${controller.conversation?.createdByUserName}'),
                           ),
+                        ],
+                        if ((!(controller.conversation?.isGroup ?? false)) &&
+                            IsmChatProperties
+                                    .conversationProperties.opponentSubTitle !=
+                                null) ...[
+                          Container(
+                            width: IsmChatDimens.percentWidth(1),
+                            padding: IsmChatDimens.edgeInsets16_8_16_8,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.circular(IsmChatDimens.sixteen),
+                              color: IsmChatColors.whiteColor,
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  IsmChatStrings.aboutMe,
+                                  style: IsmChatStyles.w400Black16,
+                                ),
+                                IsmChatDimens.boxHeight5,
+                                Text(
+                                  IsmChatProperties.conversationProperties
+                                          .opponentSubTitle
+                                          ?.call(
+                                              context,
+                                              controller.conversation!
+                                                  .opponentDetails!) ??
+                                      '',
+                                ),
+                              ],
+                            ),
+                          ),
+                          IsmChatDimens.boxHeight10,
                         ],
                         Container(
                           padding: IsmChatDimens.edgeInsets16_8_16_8,

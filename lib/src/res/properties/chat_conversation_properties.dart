@@ -26,6 +26,7 @@ class IsmChatConversationProperties {
     this.conversationPredicate,
     this.allowedConversations = const [IsmChatConversationType.private],
     this.conversationPosition = IsmChatConversationPosition.tabBar,
+    this.opponentSubTitle,
   }) {
     assert(
       (showCreateChatIcon && onCreateTap != null) || !showCreateChatIcon,
@@ -125,4 +126,6 @@ class IsmChatConversationProperties {
   final WidgetCallback? thirdColumnWidget;
 
   final ConversationPredicate? conversationPredicate;
+
+  final UserDetailsStringCallback? opponentSubTitle; 
 }

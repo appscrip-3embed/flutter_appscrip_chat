@@ -17,6 +17,10 @@ class IsmChatMetaData {
     this.captionMessage,
     this.replyMessage,
     this.senderInfo,
+    this.about,
+    this.countryCode,
+    this.phone,
+    this.phoneIsoCode,
   });
 
   factory IsmChatMetaData.fromMap(Map<String, dynamic> map) => IsmChatMetaData(
@@ -28,6 +32,10 @@ class IsmChatMetaData {
       profilePic: map['profilePic'] as String? ?? '',
       firstName: map['firstName'] as String? ?? '',
       lastName: map['lastName'] as String? ?? '',
+      about: map['about'] as String? ?? '',
+      countryCode: map['countryCode'] as String? ?? '',
+      phone: map['phone'] as String? ?? '',
+      phoneIsoCode: map['phoneIsoCode'] as String? ?? '',
       customType: map['customType'].runtimeType == String
           ? {'${map['customType']}': map['customType']}
           : map['customType'] as Map<String, dynamic>? ?? {},
@@ -81,6 +89,10 @@ class IsmChatMetaData {
   final String? captionMessage;
   final IsmChatReplyMessageModel? replyMessage;
   final UserDetails? senderInfo;
+  final String? phoneIsoCode;
+  final String? phone;
+  final String? countryCode;
+  final String? about;
 
   IsmChatMetaData copyWith({
     String? parentMessageBody,
@@ -98,6 +110,10 @@ class IsmChatMetaData {
     IsmChatCustomMessageType? replayMessageCustomType,
     IsmChatReplyMessageModel? replyMessage,
     UserDetails? senderInfo,
+    String? phoneIsoCode,
+    String? phone,
+    String? countryCode,
+    String? about,
   }) =>
       IsmChatMetaData(
         locationAddress: locationAddress ?? this.locationAddress,
@@ -112,6 +128,10 @@ class IsmChatMetaData {
         captionMessage: captionMessage ?? this.captionMessage,
         replyMessage: replyMessage ?? this.replyMessage,
         senderInfo: senderInfo ?? this.senderInfo,
+        phoneIsoCode: phoneIsoCode ?? this.phoneIsoCode,
+        phone: phone ?? this.phone,
+        countryCode: countryCode ?? this.countryCode,
+        about: about ?? this.about,
       );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
@@ -126,14 +146,18 @@ class IsmChatMetaData {
         'duration': duration?.inSeconds,
         'captionMessage': captionMessage,
         'replyMessage': replyMessage?.toMap(),
-        'senderInfo': senderInfo?.toMap()
+        'senderInfo': senderInfo?.toMap(),
+        'phoneIsoCode': phoneIsoCode,
+        'phone': phone,
+        'countryCode': countryCode,
+        'about': about,
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'IsmChatMetaData(locationAddress: $locationAddress, locationSubAddress: $locationSubAddress, profilePic: $profilePic, lastName: $lastName, firstName: $firstName, contacts: $contacts,customType: $customType, assetList: $assetList, duration: $duration, captionMessage: $captionMessage,replyMessage: $replyMessage, senderInfo : $senderInfo)';
+      'IsmChatMetaData(locationAddress: $locationAddress, locationSubAddress: $locationSubAddress, profilePic: $profilePic, lastName: $lastName, firstName: $firstName, contacts: $contacts,customType: $customType, assetList: $assetList, duration: $duration, captionMessage: $captionMessage,replyMessage: $replyMessage, senderInfo : $senderInfo  phoneIsoCode : $phoneIsoCode, phone : $phone, countryCode : $countryCode,about : $about)';
 
   @override
   bool operator ==(covariant IsmChatMetaData other) {
@@ -150,7 +174,11 @@ class IsmChatMetaData {
         other.duration == duration &&
         other.captionMessage == captionMessage &&
         other.replyMessage == replyMessage &&
-        other.senderInfo == senderInfo;
+        other.senderInfo == senderInfo &&
+        other.about == about &&
+        other.phoneIsoCode == phoneIsoCode &&
+        other.phone == phone &&
+        other.countryCode == countryCode;
   }
 
   @override
@@ -166,5 +194,9 @@ class IsmChatMetaData {
       duration.hashCode ^
       captionMessage.hashCode ^
       replyMessage.hashCode ^
-      senderInfo.hashCode;
+      senderInfo.hashCode ^
+      about.hashCode ^
+      phone.hashCode ^
+      phoneIsoCode.hashCode ^
+      countryCode.hashCode;
 }
