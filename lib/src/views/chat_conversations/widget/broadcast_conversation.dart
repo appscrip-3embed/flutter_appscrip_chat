@@ -1,4 +1,5 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -336,7 +337,12 @@ class IsmChatBroadCastView extends StatelessWidget {
                                             style: IsmChatStyles.w600Black14,
                                           ),
                                           subtitle: Text(
-                                            user.userDetails.userIdentifier,
+                                            IsmChatProperties
+                                                    .conversationProperties
+                                                    .opponentSubTitle
+                                                    ?.call(context,
+                                                        user.userDetails) ??
+                                                user.userDetails.userIdentifier,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: IsmChatStyles.w400Black12,
