@@ -272,9 +272,6 @@ class IsmChatApp extends StatelessWidget {
     }
   }
 
-
-
-
   /// Call this function on SignOut to delete the data stored locally in the Local Database
   static Future<void> logout() async {
     await IsmChatConfig.dbWrapper?.deleteChatLocalDb();
@@ -356,6 +353,52 @@ class IsmChatApp extends StatelessWidget {
     IsmChatConfig.notificationIconPath = notificationIconPath;
     IsmChatConfig.context = context;
     IsmChatConfig.isShowMqttConnectErrorDailog = isShowMqttConnectErrorDailog;
+  }
+
+  /// Call this funcation for the initialize mqtt
+  static void initializeMqttFromOutSide(
+    IsmChatCommunicationConfig communicationConfig, {
+    String? notificationIconPath,
+    void Function(
+      String,
+      String,
+      String,
+    )? showNotification,
+  }) {
+    IsmChatConfig.communicationConfig = communicationConfig;
+    IsmChatConfig.configInitilized = true;
+    IsmChatConfig.isMqttInitializedFromOutSide = true;
+    if (!Get.isRegistered<IsmChatMqttController>()) {
+      IsmChatLog.info(
+          'IsmMQttController initiliazing fron {initializeMqtt} function');
+      IsmChatMqttBinding().dependencies();
+      IsmChatLog.info(
+          'IsmMQttController initiliazing success fron {initializeMqtt} function ');
+    }
+    IsmChatConfig.showNotification = showNotification;
+    IsmChatConfig.notificationIconPath = notificationIconPath;
+  }
+
+  /// Call this function for Listen MQTT Evnet from OutSide
+  /// [IsmChatConfig.configInitilized] this variable must be true
+  /// You can call this funcation after MQTT controller intilized
+  static Future<void> listenMqttEventFromOutSide({
+    required Map<String, dynamic> payload,
+    void Function(
+      String,
+      String,
+      String,
+    )? showNotification,
+  }) async {
+    assert(IsmChatConfig.configInitilized,
+        '''MQTT Controller must be initialized before adding listener.
+    Either call IsmChatApp.initializeMqtt() or add listener after IsmChatApp is called''');
+    if (Get.isRegistered<IsmChatMqttController>()) {
+      IsmChatConfig.showNotification = showNotification;
+      await Get.find<IsmChatMqttController>().onMqttEvent(
+        payload: payload,
+      );
+    }
   }
 
   /// Call this funcation on to listener for mqtt events

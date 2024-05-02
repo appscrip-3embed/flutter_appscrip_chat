@@ -254,11 +254,12 @@ class IsmChatConversationsRepository {
   }
 
   Future<IsmChatUserListModel?> getBlockUser(
-      {required int? skip, required int limit}) async {
+      {required int? skip, required int limit, required bool isLoading}) async {
     try {
       var response = await _apiWrapper.get(
         '${IsmChatAPI.blockUser}?skip=$skip&limit=$limit',
         headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading,
       );
 
       if (response.hasError) {
@@ -591,6 +592,4 @@ class IsmChatConversationsRepository {
       return null;
     }
   }
-
-  
 }

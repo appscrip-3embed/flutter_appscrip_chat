@@ -830,7 +830,6 @@ class IsmChatConversationsController extends GetxController {
       refreshControllerOnEmptyList.loadComplete();
     }
 
-    unawaited(getBlockUser());
     await getConversationsFromDB();
     if (conversations.isEmpty) {
       isConversationsLoading = false;
@@ -863,8 +862,12 @@ class IsmChatConversationsController extends GetxController {
     isConversationsLoading = false;
   }
 
-  Future<void> getBlockUser() async {
-    var users = await _viewModel.getBlockUser(skip: 0, limit: 20);
+  Future<void> getBlockUser({bool isLoading = false}) async {
+    var users = await _viewModel.getBlockUser(
+      skip: 0,
+      limit: 20,
+      isLoading: isLoading,
+    );
     if (users != null) {
       blockUsers = users.users;
     } else {

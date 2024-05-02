@@ -7,6 +7,8 @@ class IsmChatProperties {
       IsmChatConversationProperties();
   static IsmChatPageProperties chatPageProperties = IsmChatPageProperties();
   static bool isGroupChatEnabled = false;
+  static bool isUserApiCall = false;
+
 
   static Widget? loadingDialog;
   static Widget? noChatSelectedPlaceholder;
