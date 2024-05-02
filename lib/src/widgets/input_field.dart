@@ -20,6 +20,7 @@ class IsmChatInputField extends StatelessWidget {
     this.textCapitalization,
     this.readOnly = false,
     this.focusNode,
+    this.contentPadding,
     super.key,
   });
   final FocusNode? focusNode;
@@ -39,6 +40,7 @@ class IsmChatInputField extends StatelessWidget {
   final int? minLines;
   final TextCapitalization? textCapitalization;
   final bool readOnly;
+  final EdgeInsets? contentPadding;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -59,7 +61,7 @@ class IsmChatInputField extends StatelessWidget {
             border: InputBorder.none,
             hintText: hint,
             hintStyle: hintStyle ?? IsmChatStyles.w400Grey12,
-            contentPadding: IsmChatDimens.edgeInsets10,
+            contentPadding: contentPadding ?? IsmChatDimens.edgeInsets10,
             isDense: true,
             isCollapsed: true,
             filled: true,

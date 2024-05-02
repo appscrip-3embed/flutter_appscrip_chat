@@ -11,6 +11,7 @@ class WebMediaPreview extends StatelessWidget {
   Widget build(BuildContext context) =>
       GetX<IsmChatPageController>(builder: (controller) {
         if (controller.webMedia.isNotEmpty) {
+         
           return Scaffold(
             appBar: PreferredSize(
               preferredSize: const Size.fromHeight(50),
@@ -172,7 +173,8 @@ class WebMediaPreview extends StatelessWidget {
                               fillColor:
                                   IsmChatColors.greyColor.withOpacity(.5),
                               autofocus: false,
-                              padding: IsmChatDimens.edgeInsets10,
+                              // padding: IsmChatDimens.edgeInsets40,
+                              contentPadding: IsmChatDimens.edgeInsets20,
                               hint: IsmChatStrings.addCaption,
                               hintStyle: IsmChatStyles.w400White16,
                               cursorColor: IsmChatColors.whiteColor,
