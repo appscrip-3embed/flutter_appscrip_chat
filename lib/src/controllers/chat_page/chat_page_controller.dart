@@ -543,11 +543,13 @@ class IsmChatPageController extends GetxController
           newMeessageFromOutside.isNotEmpty == true) {
         await Future.delayed(const Duration(milliseconds: 100));
         chatInputController.text = newMeessageFromOutside;
-        sendTextMessage(
-          conversationId: conversation?.conversationId ?? '',
-          userId: conversation?.opponentDetails?.userId ?? '',
-          pushNotifications: conversation?.pushNotifications ?? true,
-        );
+        if (chatInputController.text.isNotEmpty) {
+          sendTextMessage(
+            conversationId: conversation?.conversationId ?? '',
+            userId: conversation?.opponentDetails?.userId ?? '',
+            pushNotifications: conversation?.pushNotifications ?? true,
+          );
+        }
       }
       unawaited(updateUnreadMessgaeCount());
     }

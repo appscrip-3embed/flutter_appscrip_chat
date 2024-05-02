@@ -43,7 +43,7 @@ class IsmChatMessageField extends StatelessWidget {
                           onTap: () async {
                             controller.isEnableRecordingAudio = false;
                             controller.showSendButton = false;
-                            await controller.recordAudio.dispose();
+                            // await controller.recordAudio.dispose();
                             controller.forVideoRecordTimer?.cancel();
                             controller.seconds = 0;
                           },
@@ -111,14 +111,18 @@ class IsmChatMessageField extends StatelessWidget {
                             } else {
                               await controller.getMentionedUserList(
                                   controller.chatInputController.text.trim());
-                              controller.sendTextMessage(
-                                conversationId:
-                                    controller.conversation?.conversationId ??
-                                        '',
-                                userId: controller.conversation?.opponentDetails
-                                        ?.userId ??
-                                    '',
-                              );
+                              if (controller.chatInputController.text
+                                  .trim()
+                                  .isNotEmpty) {
+                                controller.sendTextMessage(
+                                  conversationId:
+                                      controller.conversation?.conversationId ??
+                                          '',
+                                  userId: controller.conversation
+                                          ?.opponentDetails?.userId ??
+                                      '',
+                                );
+                              }
                             }
                           }
                           return null;
@@ -441,13 +445,15 @@ class _MicOrSendButton extends StatelessWidget {
                       true) {
                     await controller.getMentionedUserList(
                         controller.chatInputController.text.trim());
-                    controller.sendTextMessage(
-                      conversationId:
-                          controller.conversation?.conversationId ?? '',
-                      userId:
-                          controller.conversation?.opponentDetails?.userId ??
-                              '',
-                    );
+                    if (controller.chatInputController.text.trim().isNotEmpty) {
+                      controller.sendTextMessage(
+                        conversationId:
+                            controller.conversation?.conversationId ?? '',
+                        userId:
+                            controller.conversation?.opponentDetails?.userId ??
+                                '',
+                      );
+                    }
                   }
                 }
               } else {
