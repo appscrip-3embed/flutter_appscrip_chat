@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
@@ -10,13 +11,13 @@ class IsmChatWallpaperPreview extends StatelessWidget {
   IsmChatWallpaperPreview(
       {super.key, String? backgroundColor, XFile? imagePath, int? assetSrNo})
       : _backgroundColor = backgroundColor ??
-            (Get.arguments as Map<String, dynamic>?)?['backgroundColor'] ??
+            (Get.arguments as Map<String, dynamic>? ?? {})['backgroundColor'] ??
             '',
         _imagePath = imagePath ??
-            (Get.arguments as Map<String, dynamic>?)?['imagePath'] ??
-            XFile,
+            (Get.arguments as Map<String, dynamic>? ?? {})['imagePath'] ??
+            XFile(''),
         _assetSrNo = assetSrNo ??
-            (Get.arguments as Map<String, dynamic>?)?['assetSrNo'] ??
+            (Get.arguments as Map<String, dynamic>? ?? {})['assetSrNo'] ??
             0;
 
   final String? _backgroundColor;
@@ -204,16 +205,16 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                     final pageController = Get.find<IsmChatPageController>();
                     final conversationController =
                         Get.find<IsmChatConversationsController>();
-                    if (_imagePath != null) {
+                    if (_imagePath?.path.isNotEmpty == true) {
                       IsmChatUtility.showLoader();
-                      pageController.backgroundImage = _imagePath.path;
+                      pageController.backgroundImage = _imagePath?.path ?? '';
                       pageController.backgroundColor = '';
                       if (_assetSrNo == 100) {
                         var file = _imagePath;
-                        var bytes = await file.readAsBytes();
-                        var fileExtension = file.path.split('.').last;
+                        var bytes = await file?.readAsBytes() ?? Uint8List(0);
+                        var fileExtension = file?.path.split('.').last;
                         await conversationController.getPresignedUrl(
-                            fileExtension, bytes);
+                            fileExtension ?? '', bytes);
                       }
                       var assetList = conversationController
                               .userDetails?.metaData?.assetList ??
@@ -228,7 +229,7 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                             isImage: true,
                             imageUrl: _assetSrNo == 100
                                 ? conversationController.profileImage
-                                : _imagePath.path,
+                                : _imagePath?.path ?? '',
                             srNoBackgroundAssset:
                                 _assetSrNo == 100 ? 100 : _assetSrNo,
                           )
@@ -240,7 +241,7 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                             isImage: true,
                             imageUrl: _assetSrNo == 100
                                 ? conversationController.profileImage
-                                : _imagePath.path,
+                                : _imagePath?.path ?? '',
                             srNoBackgroundAssset:
                                 _assetSrNo == 100 ? 100 : _assetSrNo,
                           )
@@ -253,7 +254,8 @@ class IsmChatWallpaperPreview extends StatelessWidget {
                       IsmChatUtility.closeLoader();
                     } else {
                       IsmChatUtility.showLoader();
-                      pageController.backgroundColor = _backgroundColor!;
+                      pageController.backgroundColor = _backgroundColor ?? '';
+
                       pageController.backgroundImage = '';
                       var assetList = conversationController
                               .userDetails?.metaData?.assetList ??
