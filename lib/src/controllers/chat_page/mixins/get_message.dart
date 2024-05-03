@@ -8,7 +8,7 @@ mixin IsmChatPageGetMessageMixin on GetxController {
     _controller.closeOverlay();
 
     var messages =
-        await IsmChatConfig.dbWrapper!.getMessage(conversationId, dbBox);
+        await IsmChatConfig.dbWrapper?.getMessage(conversationId, dbBox);
     if (messages?.isEmpty ?? false || messages == null) {
       _controller.messages.clear();
       return;

@@ -203,7 +203,8 @@ class IsmChatDBWrapper {
               conversation.conversationId ?? '',
               conversation.messages?.isEmpty == true
                   ? []
-                  : conversation.messages!.map((e) => e.toJson()).toList());
+                  : conversation.messages?.map((e) => e.toJson()).toList() ??
+                      []);
           break;
       }
       return true;

@@ -61,7 +61,7 @@ class IsmChatMessageModel {
       isGroup: map['isGroup'] as bool? ?? false,
       deliveredToAll: map['deliveredToAll'] as bool? ?? false,
       customType: map['customType'] != null
-          ? IsmChatCustomMessageType.fromMap(map['customType'])
+          ? IsmChatCustomMessageType.fromMap(map['customType'] as String)
           : map['action'] != null
               ? IsmChatCustomMessageType.fromAction(map['action'] as String)
               : null,

@@ -1,5 +1,4 @@
 import 'package:any_link_preview/any_link_preview.dart';
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 
 enum IsmChatMessageType {
@@ -77,9 +76,9 @@ enum IsmChatCustomMessageType {
       'replyText': IsmChatCustomMessageType.reply,
       'reply': IsmChatCustomMessageType.reply,
       'AttachmentMessage:Reply': IsmChatCustomMessageType.reply,
-      'image': IsmChatCustomMessageType.image,
       'video': IsmChatCustomMessageType.video,
       'AttachmentMessage:Video': IsmChatCustomMessageType.video,
+      'image': IsmChatCustomMessageType.image,
       'AttachmentMessage:Image': IsmChatCustomMessageType.image,
       'AttachmentMessage:Sticker': IsmChatCustomMessageType.image,
       'AttachmentMessage:Gif': IsmChatCustomMessageType.image,
@@ -111,7 +110,6 @@ enum IsmChatCustomMessageType {
       'date': IsmChatCustomMessageType.date,
     };
     var type = value.split('.').last;
-
     return map[type] ?? IsmChatCustomMessageType.text;
   }
 
@@ -133,22 +131,24 @@ enum IsmChatCustomMessageType {
     if (body.toLowerCase().contains('map')) {
       return IsmChatCustomMessageType.location;
     }
-    if (IsmChatConstants.imageExtensions
-        .any((e) => body.toLowerCase().endsWith(e.toLowerCase()))) {
-      return IsmChatCustomMessageType.image;
-    }
-    if (IsmChatConstants.videoExtensions
-        .any((e) => body.toLowerCase().endsWith(e.toLowerCase()))) {
-      return IsmChatCustomMessageType.video;
-    }
-    if (IsmChatConstants.audioExtensions
-        .any((e) => body.toLowerCase().endsWith(e.toLowerCase()))) {
-      return IsmChatCustomMessageType.audio;
-    }
-    if (IsmChatConstants.fileExtensions
-        .any((e) => body.toLowerCase().endsWith(e.toLowerCase()))) {
-      return IsmChatCustomMessageType.file;
-    }
+
+    /// This code run for react web messages
+    // if (IsmChatConstants.imageExtensions
+    //     .any((e) => body.split('.').last.toLowerCase() == e.toLowerCase())) {
+    //   return IsmChatCustomMessageType.image;
+    // }
+    // if (IsmChatConstants.videoExtensions
+    //     .any((e) => body.split('.').last.toLowerCase() == e.toLowerCase())) {
+    //   return IsmChatCustomMessageType.video;
+    // }
+    // if (IsmChatConstants.audioExtensions
+    //     .any((e) => body.split('.').last.toLowerCase() == e.toLowerCase())) {
+    //   return IsmChatCustomMessageType.audio;
+    // }
+    // if (IsmChatConstants.fileExtensions
+    //     .any((e) => body.split('.').last.toLowerCase() == e.toLowerCase())) {
+    //   return IsmChatCustomMessageType.file;
+    // }
     if (AnyLinkPreview.isValidLink(body) ||
         body.toLowerCase().contains('.com')) {
       return IsmChatCustomMessageType.link;

@@ -114,6 +114,7 @@ class IsmChatCommonViewModel {
           }
           var conversationModel =
               await dbBox.getConversation(conversationId: conversationId);
+
           if (conversationModel != null) {
             conversationModel.messages?.add(pendingMessage);
             conversationModel = conversationModel.copyWith(
