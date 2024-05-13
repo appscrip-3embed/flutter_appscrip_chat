@@ -460,6 +460,7 @@ class IsmChatApp extends StatelessWidget {
     String? messageFromOutSide,
     String? storyMediaUrl,
     bool pushNotifications = true,
+    bool isCreateGroupFromOutSide = false,
   }) async {
     assert(
       [name, userId].every((e) => e.isNotEmpty),
@@ -495,6 +496,9 @@ class IsmChatApp extends StatelessWidget {
         ),
       );
       conversation = IsmChatConversationModel(
+        userIds: isCreateGroupFromOutSide
+            ? [userId, IsmChatConfig.communicationConfig.userConfig.userId]
+            : null,
         messagingDisabled: false,
         conversationImageUrl: profileImageUrl,
         isGroup: false,
@@ -505,6 +509,7 @@ class IsmChatApp extends StatelessWidget {
         membersCount: 1,
         metaData: metaData,
         messageFromOutSide: messageFromOutSide,
+        isCreateGroupFromOutSide: isCreateGroupFromOutSide,
         pushNotifications: pushNotifications,
       );
     } else {
@@ -513,6 +518,7 @@ class IsmChatApp extends StatelessWidget {
       conversation = conversation.copyWith(
         metaData: metaData,
         messageFromOutSide: messageFromOutSide,
+        isCreateGroupFromOutSide: isCreateGroupFromOutSide,
         pushNotifications: pushNotifications,
       );
     }
