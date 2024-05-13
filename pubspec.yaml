@@ -16,7 +16,7 @@ dependencies:
   camera: ^0.10.3+2
   carousel_slider: ^4.2.1
   connectivity_plus: ^5.0.2
-  device_info_plus: ^9.0.0
+  device_info_plus: ^9.0.3
   dio: ^5.2.1+1
   elegant_notification: ^1.11.0
   emoji_picker_flutter: ^2.0.0
@@ -44,13 +44,13 @@ dependencies:
   image_cropper: ^5.0.1
   image_painter: ^0.6.1
   image_picker: ^1.0.4
-  intl: ^0.18.0
+  intl: ^0.18.0 
   just_audio: ^0.9.34
   mqtt_helper: ^0.0.7
   open_filex: ^4.3.2
   path: ^1.8.3
   path_provider: ^2.0.13
-  pdfx: ^2.5.0
+  pdfx: ^2.6.0
   permission_handler: ^11.0.1
   photo_view: ^0.14.0
   plugin_platform_interface: ^2.1.8
