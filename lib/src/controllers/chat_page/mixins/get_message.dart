@@ -137,16 +137,17 @@ mixin IsmChatPageGetMessageMixin on GetxController {
     _controller.readMessageMembers = response;
   }
 
-  Future<void> getConverstaionDetails(
-      {required String conversationId,
-      String? ids,
-      bool? includeMembers,
-      int? membersSkip,
-      int? membersLimit,
-      bool? isLoading}) async {
+  Future<IsmChatConversationModel?> getConverstaionDetails({
+    required String conversationId,
+    bool? includeMembers,
+    // String? ids,
+    // int? membersSkip,
+    // int? membersLimit,
+    bool? isLoading,
+  }) async {
     if (Get.isRegistered<IsmChatPageController>()) {
       if (!_controller.isCoverationApiDetails) {
-        return;
+        return null;
       }
       _controller.isCoverationApiDetails = false;
       var data = await _controller.viewModel.getConverstaionDetails(
@@ -170,7 +171,6 @@ mixin IsmChatPageGetMessageMixin on GetxController {
                   IsmChatCustomMessageType.image,
                   IsmChatCustomMessageType.video,
                   IsmChatCustomMessageType.audio,
-                  // IsmChatCustomMessageType.file,
                 ].contains(e.customType))
             .toList();
 
@@ -199,9 +199,10 @@ mixin IsmChatPageGetMessageMixin on GetxController {
       if (data.statusCode == 400 && conversationId.isNotEmpty) {
         _controller.isActionAllowed = true;
       }
-
       _controller.isCoverationApiDetails = true;
+      return _controller.conversation;
     }
+    return null;
   }
 
   Future<void> getReacton({required Reaction reaction}) async {

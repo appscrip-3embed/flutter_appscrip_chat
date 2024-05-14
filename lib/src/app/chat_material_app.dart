@@ -16,7 +16,6 @@ class IsmChatApp extends StatelessWidget {
     this.chatDarkTheme,
     this.loadingDialog,
     this.databaseName,
-    this.enableGroupChat = false,
     this.useDataBase = true,
     this.noChatSelectedPlaceholder,
     this.sideWidgetWidth,
@@ -55,7 +54,7 @@ class IsmChatApp extends StatelessWidget {
     IsmChatConfig.isShowMqttConnectErrorDailog = isShowMqttConnectErrorDailog;
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
-    IsmChatProperties.isGroupChatEnabled = enableGroupChat;
+
     if (chatPageProperties != null) {
       IsmChatProperties.chatPageProperties = chatPageProperties!;
     }
@@ -79,8 +78,6 @@ class IsmChatApp extends StatelessWidget {
   final IsmChatThemeData? chatTheme;
 
   final IsmChatThemeData? chatDarkTheme;
-
-  final bool enableGroupChat;
 
   /// Opitonal field
   ///
@@ -230,10 +227,27 @@ class IsmChatApp extends StatelessWidget {
     bool isLoading = false,
   }) async {
     if (Get.isRegistered<IsmChatMqttController>()) {
-      return Get.find<IsmChatMqttController>()
+      return await Get.find<IsmChatMqttController>()
           .getChatConversationsCount(isLoading: isLoading);
     }
     return '';
+  }
+
+  static Future<IsmChatConversationModel?> getConverstaionDetails({
+    required String conversationId,
+    bool? includeMembers,
+    // String? ids,
+    // int? membersSkip,
+    // int? membersLimit,
+    bool? isLoading,
+  }) async {
+    if (Get.isRegistered<IsmChatPageController>()) {
+      return await Get.find<IsmChatPageController>().getConverstaionDetails(
+        conversationId: conversationId,
+        includeMembers: includeMembers,
+      );
+    }
+    return null;
   }
 
   /// Call this function for unblock user form out side

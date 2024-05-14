@@ -14,7 +14,7 @@ class IsmMaterialChatPage extends StatefulWidget {
     this.chatDarkTheme,
     this.loadingDialog,
     this.databaseName,
-    this.enableGroupChat = false,
+
     this.useDataBase = true,
     this.isShowMqttConnectErrorDailog = false,
     this.fontFamily,
@@ -39,7 +39,7 @@ class IsmMaterialChatPage extends StatefulWidget {
     IsmChatConfig.isShowMqttConnectErrorDailog = isShowMqttConnectErrorDailog;
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
-    IsmChatProperties.isGroupChatEnabled = enableGroupChat;
+
     if (communicationConfig != null) {
       IsmChatConfig.communicationConfig = communicationConfig!;
       IsmChatConfig.configInitilized = true;
@@ -60,7 +60,7 @@ class IsmMaterialChatPage extends StatefulWidget {
 
   final IsmChatThemeData? chatDarkTheme;
 
-  final bool enableGroupChat;
+
 
   final bool useDataBase;
 
