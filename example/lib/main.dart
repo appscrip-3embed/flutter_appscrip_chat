@@ -8,7 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -84,7 +84,7 @@ class _MyAppState extends State<MyApp> {
 
         title: 'Flutter chat',
         locale: const Locale('en', 'US'),
-        // localizationsDelegates: const [
+        // localizationsDelegates:  [
         //   ...GlobalMaterialLocalizations.delegates,
         //   GlobalWidgetsLocalizations.delegate,
         // ],

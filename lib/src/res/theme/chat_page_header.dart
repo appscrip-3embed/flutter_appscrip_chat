@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class IsmChatHeaderThemeData {
-  IsmChatHeaderThemeData({
-    this.backgroundColor,
-    this.iconColor,
-    this.elevation,
-    this.shadowColor,
-    this.subtileStyle,
-    this.titleStyle,
-    this.popupBackgroundColor,
-    this.popupShape,
-    this.popupshadowColor,
-    this.systemUiOverlayStyle,
-  });
+  IsmChatHeaderThemeData(
+      {this.backgroundColor,
+      this.iconColor,
+      this.elevation,
+      this.shadowColor,
+      this.subtileStyle,
+      this.titleStyle,
+      this.popupBackgroundColor,
+      this.popupShape,
+      this.popupshadowColor,
+      this.systemUiOverlayStyle,
+      this.popupLableStyle});
 
   IsmChatHeaderThemeData.light()
       : backgroundColor = IsmChatColors.backgroundColorLight,
@@ -26,7 +26,8 @@ class IsmChatHeaderThemeData {
         popupBackgroundColor = IsmChatColors.whiteColor,
         popupShape = null,
         popupshadowColor = IsmChatColors.whiteColor,
-        systemUiOverlayStyle = null;
+        systemUiOverlayStyle = null,
+        popupLableStyle = null;
 
   IsmChatHeaderThemeData.dark()
       : backgroundColor = IsmChatColors.backgroundColorDark,
@@ -37,6 +38,7 @@ class IsmChatHeaderThemeData {
         subtileStyle = IsmChatStyles.w400White12,
         popupBackgroundColor = IsmChatColors.whiteColor,
         popupShape = null,
+        popupLableStyle = null,
         systemUiOverlayStyle = null,
         popupshadowColor = IsmChatColors.whiteColor;
   final Color? backgroundColor;
@@ -48,6 +50,8 @@ class IsmChatHeaderThemeData {
   final TextStyle? titleStyle;
   final TextStyle? subtileStyle;
   final ShapeBorder? popupShape;
+  final TextStyle? popupLableStyle;
+
   final Color? popupshadowColor;
   static const double _kelevation = 1;
   final SystemUiOverlayStyle? systemUiOverlayStyle;
