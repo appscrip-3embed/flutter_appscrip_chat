@@ -148,7 +148,7 @@ class ChatList extends StatelessWidget {
                 IsmChatConversationType.open,
               ],
               showCreateChatIcon: true,
-              enableGroupChat: false,
+              enableGroupChat: true,
               allowDelete: true,
               onCreateTap: () {},
               onChatTap: (_, conversation) {},

@@ -17,7 +17,7 @@ class IsmChatImagePainterWidget extends StatefulWidget {
 
 class _ImagePainterWidgetState extends State<IsmChatImagePainterWidget> {
   final ImagePainterController _controller = ImagePainterController(
-    color: Colors.green,
+    color: IsmChatColors.primaryColorLight,
     strokeWidth: 4,
     mode: PaintMode.line,
   );
