@@ -73,6 +73,7 @@ class ChatList extends StatelessWidget {
                 projectId: Constants.projectId,
               ),
             ),
+
             chatPageProperties: IsmChatPageProperties(
               // isAllowedDeleteChatFromLocal: true,
               // onCoverstaionStatus: (p0, conversation) {
@@ -147,7 +148,7 @@ class ChatList extends StatelessWidget {
                 IsmChatConversationType.open,
               ],
               showCreateChatIcon: true,
-              enableGroupChat: true,
+              enableGroupChat: false,
               allowDelete: true,
               onCreateTap: () {},
               onChatTap: (_, conversation) {},
