@@ -84,7 +84,7 @@ class _MyAppState extends State<MyApp> {
 
         title: 'Flutter chat',
         locale: const Locale('en', 'US'),
-        // localizationsDelegates: const [
+        // localizationsDelegates:  [
         //   ...GlobalMaterialLocalizations.delegates,
         //   GlobalWidgetsLocalizations.delegate,
         // ],

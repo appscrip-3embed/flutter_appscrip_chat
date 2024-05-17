@@ -216,8 +216,12 @@ class _ConversationList extends StatelessWidget {
                                 style: IsmChatStyles.typing,
                               ),
                       onTap: () async {
-                        IsmChatProperties.conversationProperties.onChatTap!(
-                            _, conversation);
+                        if (IsmChatProperties
+                                .conversationProperties.onChatTap !=
+                            null) {
+                          IsmChatProperties.conversationProperties.onChatTap!(
+                              _, conversation);
+                        }
                         controller.navigateToMessages(conversation);
                         await controller.goToChatPage();
                       },

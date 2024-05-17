@@ -503,7 +503,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                   membersCount:
                                       controller.selectedUserList.length + 1,
                                 );
-                                IsmChatLog.error(conversation.toMap());
+
                                 Get.back<void>();
                                 IsmChatProperties
                                     .conversationProperties.onChatTap!

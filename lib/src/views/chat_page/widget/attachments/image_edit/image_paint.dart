@@ -16,7 +16,11 @@ class IsmChatImagePainterWidget extends StatefulWidget {
 }
 
 class _ImagePainterWidgetState extends State<IsmChatImagePainterWidget> {
-  final _imageKey = GlobalKey<ImagePainterState>();
+  final ImagePainterController _controller = ImagePainterController(
+    color: IsmChatColors.primaryColorLight,
+    strokeWidth: 4,
+    mode: PaintMode.line,
+  );
   final _key = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -36,7 +40,7 @@ class _ImagePainterWidgetState extends State<IsmChatImagePainterWidget> {
             TextButton(
               onPressed: () async {
                 IsmChatUtility.showLoader();
-                final image = await _imageKey.currentState?.exportImage();
+                final image = await _controller.exportImage();
 
                 final pathSplite = widget.file.path.split('/').last;
                 final extensionSplite = pathSplite.split('.');
@@ -56,14 +60,14 @@ class _ImagePainterWidgetState extends State<IsmChatImagePainterWidget> {
                 IsmChatLog.success('Image edit file $imgFile');
               },
               style: ButtonStyle(
-                  side: const MaterialStatePropertyAll(
+                  side: const WidgetStatePropertyAll(
                     BorderSide(
                       color: IsmChatColors.whiteColor,
                     ),
                   ),
-                  padding: MaterialStatePropertyAll(IsmChatDimens.edgeInsets10),
+                  padding: WidgetStatePropertyAll(IsmChatDimens.edgeInsets10),
                   textStyle:
-                      MaterialStateProperty.all(IsmChatStyles.w400White16)),
+                      WidgetStateProperty.all(IsmChatStyles.w400White16)),
               child: Text(
                 'Done',
                 style: IsmChatStyles.w600White16,
@@ -75,13 +79,15 @@ class _ImagePainterWidgetState extends State<IsmChatImagePainterWidget> {
         backgroundColor: IsmChatColors.blackColor,
         body: ImagePainter.file(
           File(widget.file.path),
-          key: _imageKey,
+          // key: _imageKey,
+          controller: _controller,
           scalable: true,
-          initialStrokeWidth: 2,
+          // initialStrokeWidth: 2,
           // textDelegate: DutchTextDelegate(),
-          initialColor: Colors.red,
-          initialPaintMode: PaintMode.line,
+          // initialColor: Colors.red,
+          // initialPaintMode: PaintMode.line,
           controlsAtTop: false,
+          // width: ,
 
           // clearAllIcon: ,
         ),

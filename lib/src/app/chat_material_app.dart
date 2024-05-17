@@ -16,7 +16,6 @@ class IsmChatApp extends StatelessWidget {
     this.chatDarkTheme,
     this.loadingDialog,
     this.databaseName,
-    this.enableGroupChat = false,
     this.useDataBase = true,
     this.noChatSelectedPlaceholder,
     this.sideWidgetWidth,
@@ -55,7 +54,7 @@ class IsmChatApp extends StatelessWidget {
     IsmChatConfig.isShowMqttConnectErrorDailog = isShowMqttConnectErrorDailog;
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
-    IsmChatProperties.isGroupChatEnabled = enableGroupChat;
+
     if (chatPageProperties != null) {
       IsmChatProperties.chatPageProperties = chatPageProperties!;
     }
@@ -79,8 +78,6 @@ class IsmChatApp extends StatelessWidget {
   final IsmChatThemeData? chatTheme;
 
   final IsmChatThemeData? chatDarkTheme;
-
-  final bool enableGroupChat;
 
   /// Opitonal field
   ///
@@ -230,10 +227,27 @@ class IsmChatApp extends StatelessWidget {
     bool isLoading = false,
   }) async {
     if (Get.isRegistered<IsmChatMqttController>()) {
-      return Get.find<IsmChatMqttController>()
+      return await Get.find<IsmChatMqttController>()
           .getChatConversationsCount(isLoading: isLoading);
     }
     return '';
+  }
+
+  static Future<IsmChatConversationModel?> getConverstaionDetails({
+    required String conversationId,
+    bool? includeMembers,
+    // String? ids,
+    // int? membersSkip,
+    // int? membersLimit,
+    bool? isLoading,
+  }) async {
+    if (Get.isRegistered<IsmChatPageController>()) {
+      return await Get.find<IsmChatPageController>().getConverstaionDetails(
+        conversationId: conversationId,
+        includeMembers: includeMembers,
+      );
+    }
+    return null;
   }
 
   /// Call this function for unblock user form out side
@@ -445,7 +459,7 @@ class IsmChatApp extends StatelessWidget {
   ///
   /// * `userId` - UserID of the user coming from backend APIs (`Required`)
   /// * `name` - The name to be displayed (`Required`)
-  /// * `email` - Email of the user (`Required`)
+  /// * `userIdentifier` - UserIdentifier of the user (`Required`)
   /// * `profileImageUrl` - The image url of the user (`Optional`)
   /// * `duration` - The duration for which the loading dialog will be displayed, this is to make sure all the controllers and variables are initialized before executing any statement and/or calling the APIs for data. (default `Duration(milliseconds: 500)`)
   /// * `onNavigateToChat` - This function will be executed to navigate to the specific chat screen of the selected user. If not provided, the `onChatTap` callback will be used which is passed to `IsmChatApp`.
@@ -460,6 +474,7 @@ class IsmChatApp extends StatelessWidget {
     String? messageFromOutSide,
     String? storyMediaUrl,
     bool pushNotifications = true,
+    bool isCreateGroupFromOutSide = false,
   }) async {
     assert(
       [name, userId].every((e) => e.isNotEmpty),
@@ -495,6 +510,9 @@ class IsmChatApp extends StatelessWidget {
         ),
       );
       conversation = IsmChatConversationModel(
+        userIds: isCreateGroupFromOutSide
+            ? [userId, IsmChatConfig.communicationConfig.userConfig.userId]
+            : null,
         messagingDisabled: false,
         conversationImageUrl: profileImageUrl,
         isGroup: false,
@@ -505,6 +523,7 @@ class IsmChatApp extends StatelessWidget {
         membersCount: 1,
         metaData: metaData,
         messageFromOutSide: messageFromOutSide,
+        isCreateGroupFromOutSide: isCreateGroupFromOutSide,
         pushNotifications: pushNotifications,
       );
     } else {
@@ -513,6 +532,7 @@ class IsmChatApp extends StatelessWidget {
       conversation = conversation.copyWith(
         metaData: metaData,
         messageFromOutSide: messageFromOutSide,
+        isCreateGroupFromOutSide: isCreateGroupFromOutSide,
         pushNotifications: pushNotifications,
       );
     }
@@ -566,6 +586,80 @@ class IsmChatApp extends StatelessWidget {
     (onNavigateToChat ?? IsmChatProperties.conversationProperties.onChatTap)
         ?.call(Get.context!, ismChatConversation);
     controller.navigateToMessages(ismChatConversation);
+    await controller.goToChatPage();
+  }
+
+  /// This function can be used to directly go to chatting page and start group chat from anywhere in the app
+  ///
+  /// Follow the following steps :-
+  /// 1. Navigate to the Screen/View where `IsmChatApp` is used as the root widget for `Chat` module
+  /// 2. Call this function by providing all the required data (must add `await` keyword as this is a Future)
+  ///
+  /// * `userIds` - UserIDs of the user coming from backend APIs (`Required`)
+  /// * `conversationTitle` - The conversationTitle to be displayed (`Required`)
+  /// * `email` - Email of the user (`Required`)
+  /// * `profileImageUrl` - The image url of the user (`Optional`)
+  /// * `duration` - The duration for which the loading dialog will be displayed, this is to make sure all the controllers and variables are initialized before executing any statement and/or calling the APIs for data. (default `Duration(milliseconds: 500)`)
+  /// * `onNavigateToChat` - This function will be executed to navigate to the specific chat screen of the selected user. If not provided, the `onChatTap` callback will be used which is passed to `IsmChatApp`.
+  static Future<void> createGroupFromOutside({
+    required String conversationImageUrl,
+    required String conversationTitle,
+    required List<String> userIds,
+    IsmChatConversationType conversationType = IsmChatConversationType.private,
+    IsmChatMetaData? metaData,
+    void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
+    Duration duration = const Duration(milliseconds: 500),
+    bool pushNotifications = true,
+  }) async {
+    assert(
+      conversationTitle.isNotEmpty && userIds.isNotEmpty,
+      '''Input Error: Please make sure that all required fields are filled out.
+      conversationTitle, and userIds cannot be empty.''',
+    );
+
+    IsmChatUtility.showLoader();
+
+    await Future.delayed(duration);
+
+    IsmChatUtility.closeLoader();
+
+    if (!Get.isRegistered<IsmChatConversationsController>()) {
+      IsmChatCommonBinding().dependencies();
+      IsmChatConversationsBinding().dependencies();
+    }
+    var controller = Get.find<IsmChatConversationsController>();
+
+    var conversation = IsmChatConversationModel(
+        messagingDisabled: false,
+        userIds: userIds,
+        conversationTitle: conversationTitle,
+        conversationImageUrl: conversationImageUrl,
+        isGroup: true,
+        opponentDetails: controller.userDetails,
+        unreadMessagesCount: 0,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        createdByUserName:
+            IsmChatConfig.communicationConfig.userConfig.userName ??
+                controller.userDetails?.userName ??
+                '',
+        lastMessageDetails: LastMessageDetails(
+          sentByMe: true,
+          showInConversation: true,
+          sentAt: DateTime.now().millisecondsSinceEpoch,
+          senderName: '',
+          messageType: 0,
+          messageId: '',
+          conversationId: '',
+          body: '',
+        ),
+        lastMessageSentAt: 0,
+        conversationType: conversationType,
+        membersCount: userIds.length,
+        pushNotifications: pushNotifications);
+
+    (onNavigateToChat ?? IsmChatProperties.conversationProperties.onChatTap)
+        ?.call(Get.context!, conversation);
+    controller.navigateToMessages(conversation);
     await controller.goToChatPage();
   }
 

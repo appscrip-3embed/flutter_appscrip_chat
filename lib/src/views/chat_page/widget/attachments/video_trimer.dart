@@ -113,7 +113,7 @@ class _VideoTrimmerViewState extends State<IsmVideoTrimmerView> {
                 children: [
                   AspectRatio(
                     aspectRatio:
-                        trimmer.videoPlayerController!.value.aspectRatio,
+                        trimmer.videoPlayerController?.value.aspectRatio ?? 0,
                     child: VideoViewer(
                       trimmer: trimmer,
                     ),

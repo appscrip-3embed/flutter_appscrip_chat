@@ -336,10 +336,20 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                       Icon(
                                         Icons.search_rounded,
                                         color: IsmChatConfig
-                                            .chatTheme.primaryColor,
+                                                .chatTheme
+                                                .chatPageHeaderTheme
+                                                ?.iconColor ??
+                                            IsmChatConfig
+                                                .chatTheme.primaryColor,
                                       ),
                                       IsmChatDimens.boxWidth8,
-                                      const Text(IsmChatStrings.search)
+                                      Text(
+                                        IsmChatStrings.search,
+                                        style: IsmChatConfig
+                                            .chatTheme
+                                            .chatPageHeaderTheme
+                                            ?.popupLableStyle,
+                                      )
                                     ],
                                   ),
                                 ),
@@ -352,30 +362,46 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                       Icon(
                                         Icons.wallpaper_rounded,
                                         color: IsmChatConfig
-                                            .chatTheme.primaryColor,
+                                                .chatTheme
+                                                .chatPageHeaderTheme
+                                                ?.iconColor ??
+                                            IsmChatConfig
+                                                .chatTheme.primaryColor,
                                       ),
                                       IsmChatDimens.boxWidth8,
-                                      const Text(IsmChatStrings.wallpaper)
+                                      Text(
+                                        IsmChatStrings.wallpaper,
+                                        style: IsmChatConfig
+                                            .chatTheme
+                                            .chatPageHeaderTheme
+                                            ?.popupLableStyle,
+                                      )
                                     ],
                                   ),
                                 ),
-                              if (!controller.conversation!.isGroup!)
+                              if (!(controller.conversation?.isGroup ?? false))
                                 PopupMenuItem(
                                   value: 3,
                                   child: Row(
                                     children: [
-                                      const Icon(
+                                      Icon(
                                         Icons.block,
-                                        color: IsmChatColors.redColor,
+                                        color: IsmChatConfig
+                                                .chatTheme
+                                                .chatPageHeaderTheme
+                                                ?.iconColor ??
+                                            IsmChatColors.redColor,
                                       ),
                                       IsmChatDimens.boxWidth8,
-                                      controller.conversation!.isBlockedByMe
-                                          ? const Text(
-                                              IsmChatStrings.unBlockUser,
-                                            )
-                                          : const Text(
-                                              IsmChatStrings.blockUser,
-                                            )
+                                      Text(
+                                        controller.conversation!.isBlockedByMe
+                                            ? IsmChatStrings.unBlockUser
+                                            : IsmChatStrings.blockUser,
+                                        style: IsmChatConfig
+                                            .chatTheme
+                                            .chatPageHeaderTheme
+                                            ?.popupLableStyle,
+                                      )
                                     ],
                                   ),
                                 ),
@@ -383,12 +409,18 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                 value: 4,
                                 child: Row(
                                   children: [
-                                    const Icon(
+                                    Icon(
                                       Icons.delete,
-                                      color: IsmChatColors.blackColor,
+                                      color: IsmChatConfig.chatTheme
+                                              .chatPageHeaderTheme?.iconColor ??
+                                          IsmChatColors.blackColor,
                                     ),
                                     IsmChatDimens.boxWidth8,
-                                    const Text(IsmChatStrings.clearChat)
+                                    Text(
+                                      IsmChatStrings.clearChat,
+                                      style: IsmChatConfig.chatTheme
+                                          .chatPageHeaderTheme?.popupLableStyle,
+                                    )
                                   ],
                                 ),
                               ),
@@ -405,15 +437,22 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                   value: 5,
                                   child: Row(
                                     children: [
-                                      const Icon(
+                                      Icon(
                                         Icons.group_off_rounded,
-                                        color: IsmChatColors.redColor,
+                                        color: IsmChatConfig
+                                                .chatTheme
+                                                .chatPageHeaderTheme
+                                                ?.iconColor ??
+                                            IsmChatColors.redColor,
                                       ),
                                       IsmChatDimens.boxWidth8,
                                       Text(
                                         IsmChatStrings.deleteGroup,
-                                        style: IsmChatStyles.w500Black12
-                                            .copyWith(
+                                        style: IsmChatConfig
+                                                .chatTheme
+                                                .chatPageHeaderTheme
+                                                ?.popupLableStyle ??
+                                            IsmChatStyles.w500Black12.copyWith(
                                                 color: IsmChatColors.redColor),
                                       )
                                     ],
@@ -446,7 +485,13 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                           color: e.color,
                                         ),
                                         IsmChatDimens.boxWidth8,
-                                        Text(e.label)
+                                        Text(
+                                          e.label,
+                                          style: IsmChatConfig
+                                              .chatTheme
+                                              .chatPageHeaderTheme
+                                              ?.popupLableStyle,
+                                        )
                                       ],
                                     ),
                                   ),
