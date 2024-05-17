@@ -168,8 +168,10 @@ class IsmChatCommonRepository {
         'searchableTags': searchableTags,
         'metaData': metaData,
         'customType': null,
-        'conversationTitle': conversationTitle,
-        'conversationImageUrl': conversationImageUrl,
+        if (conversationTitle != null && conversationTitle.isNotEmpty)
+          'conversationTitle': conversationTitle,
+        if (conversationImageUrl != null && conversationImageUrl.isNotEmpty)
+          'conversationImageUrl': conversationImageUrl,
       };
       var response = await _apiWrapper.post(IsmChatAPI.chatConversation,
           payload: payload,
