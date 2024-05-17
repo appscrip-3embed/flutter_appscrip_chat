@@ -602,7 +602,7 @@ class IsmChatApp extends StatelessWidget {
   /// * `duration` - The duration for which the loading dialog will be displayed, this is to make sure all the controllers and variables are initialized before executing any statement and/or calling the APIs for data. (default `Duration(milliseconds: 500)`)
   /// * `onNavigateToChat` - This function will be executed to navigate to the specific chat screen of the selected user. If not provided, the `onChatTap` callback will be used which is passed to `IsmChatApp`.
   static Future<void> createGroupFromOutside({
-    String conversationImageUrl = '',
+    required String conversationImageUrl,
     required String conversationTitle,
     required List<String> userIds,
     IsmChatConversationType conversationType = IsmChatConversationType.private,
