@@ -28,18 +28,11 @@ class IsmChatWallpaperPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          backgroundColor: IsmChatConfig.chatTheme.primaryColor,
-          leading: IconButton(
-            onPressed: Get.back,
-            icon: const Icon(
-              Icons.arrow_back_rounded,
-              color: IsmChatColors.whiteColor,
-            ),
-          ),
+        appBar: IsmChatAppBar(
           title: Text(
             'Preview',
-            style: IsmChatStyles.w400White18,
+            style: IsmChatConfig.chatTheme.chatPageHeaderTheme?.titleStyle ??
+                IsmChatStyles.w400White18,
           ),
           centerTitle: false,
         ),

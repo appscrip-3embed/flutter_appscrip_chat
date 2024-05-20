@@ -25,20 +25,22 @@ class IsmChatGalleryAssetsView extends StatelessWidget {
         },
         builder: (controller) {
           if (controller.listOfAssetsPath.isNotEmpty) {
-            return 
-            Scaffold(
+            return Scaffold(
               resizeToAvoidBottomInset: true,
-              appBar: AppBar(
+              appBar: IsmChatAppBar(
                 title: Text(
                   controller.dataSize,
-                  style: IsmChatStyles.w600White14,
+                  style:
+                      IsmChatConfig.chatTheme.chatPageHeaderTheme?.titleStyle ??
+                          IsmChatStyles.w600White14,
                 ),
                 centerTitle: true,
-                backgroundColor: IsmChatConfig.chatTheme.primaryColor,
                 leading: InkWell(
-                  child: const Icon(
+                  child: Icon(
                     Icons.clear,
-                    color: IsmChatColors.whiteColor,
+                    color: IsmChatConfig
+                            .chatTheme.chatPageHeaderTheme?.iconColor ??
+                        IsmChatColors.whiteColor,
                   ),
                   onTap: () {
                     Get.back<void>();
@@ -46,7 +48,7 @@ class IsmChatGalleryAssetsView extends StatelessWidget {
                     controller.isVideoVisible = false;
                   },
                 ),
-                actions: [
+                action: [
                   IsmChatConstants.imageExtensions.contains(controller
                           .listOfAssetsPath[controller.assetsIndex]
                           .attachmentModel
@@ -85,9 +87,11 @@ class IsmChatGalleryAssetsView extends StatelessWidget {
                                       ''),
                                 );
                               },
-                              child: const Icon(
+                              child: Icon(
                                 Icons.crop,
-                                color: IsmChatColors.whiteColor,
+                                color: IsmChatConfig.chatTheme
+                                        .chatPageHeaderTheme?.iconColor ??
+                                    IsmChatColors.whiteColor,
                               ),
                             ),
                             IsmChatDimens.boxWidth16,
@@ -125,9 +129,11 @@ class IsmChatGalleryAssetsView extends StatelessWidget {
                                       ''),
                                 );
                               },
-                              child: const Icon(
+                              child: Icon(
                                 Icons.edit,
-                                color: IsmChatColors.whiteColor,
+                                color: IsmChatConfig.chatTheme
+                                        .chatPageHeaderTheme?.iconColor ??
+                                    IsmChatColors.whiteColor,
                               ),
                             ),
                             IsmChatDimens.boxWidth16,
@@ -139,9 +145,11 @@ class IsmChatGalleryAssetsView extends StatelessWidget {
                                   Get.back<void>();
                                 }
                               },
-                              child: const Icon(
+                              child: Icon(
                                 Icons.delete_forever,
-                                color: IsmChatColors.whiteColor,
+                                color: IsmChatConfig.chatTheme
+                                        .chatPageHeaderTheme?.iconColor ??
+                                    IsmChatColors.whiteColor,
                               ),
                             ),
                           ],
@@ -186,9 +194,11 @@ class IsmChatGalleryAssetsView extends StatelessWidget {
                                       ''),
                                 );
                               },
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.content_cut_rounded,
-                                color: IsmChatColors.whiteColor,
+                                color: IsmChatConfig.chatTheme
+                                        .chatPageHeaderTheme?.iconColor ??
+                                    IsmChatColors.whiteColor,
                               ),
                             ),
                             IconButton(
@@ -202,9 +212,11 @@ class IsmChatGalleryAssetsView extends StatelessWidget {
                                   Get.back<void>();
                                 }
                               },
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.delete_forever_rounded,
-                                color: IsmChatColors.whiteColor,
+                                color: IsmChatConfig.chatTheme
+                                        .chatPageHeaderTheme?.iconColor ??
+                                    IsmChatColors.whiteColor,
                               ),
                             ),
                           ],
