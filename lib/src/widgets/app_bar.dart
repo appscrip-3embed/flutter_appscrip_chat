@@ -74,7 +74,8 @@ class IsmChatAppBar extends StatelessWidget implements PreferredSizeWidget {
                 Responsive.isWeb(context)
                     ? Icons.close_rounded
                     : backIcon ?? Icons.arrow_back_rounded,
-                color: IsmChatColors.whiteColor,
+                color: IsmChatConfig.chatTheme.chatPageHeaderTheme?.iconColor ??
+                    IsmChatColors.whiteColor,
               ),
             ),
         title: title,
