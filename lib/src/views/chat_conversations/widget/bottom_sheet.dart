@@ -74,28 +74,26 @@ class IsmChatClearConversationBottomSheet extends StatelessWidget {
               CupertinoActionSheetAction(
                 onPressed: () async {
                   Get.back();
-                  // Todo
-                  // if (conversation.isGroup!) {
-                  //   await Get.dialog(
-                  //     IsmChatAlertDialogBox(
-                  //       title: 'Exit ${conversation.chatName}?',
-                  //       content: const Text(
-                  //         'Only group admins will be notified that you left the group',
-                  //       ),
-                  //       contentTextStyle: IsmChatStyles.w400Grey14,
-                  //       actionLabels: const ['Exit'],
-                  //       callbackActions: [
-                  //         () {}
-                  //         //  => _leaveGroup(
-                  //         //       adminCount: adminCount,
-                  //         //       isUserAdmin: isUserAdmin,
-                  //         //     )
-                  //       ],
-                  //     ),
-                  //   );
-                  //   return;
-                  // }
-                  if (conversation.isGroup! == false) {
+                  if (conversation.isGroup == true) {
+                    // await Get.dialog(
+                    //   IsmChatAlertDialogBox(
+                    //     title: 'Exit ${conversation.chatName}?',
+                    //     content: const Text(
+                    //       'Only group admins will be notified that you left the group',
+                    //     ),
+                    //     contentTextStyle: IsmChatStyles.w400Grey14,
+                    //     actionLabels: const ['Exit'],
+                    //     callbackActions: [
+                    //       () {
+                    //         //  _leaveGroup(
+                    //         //     adminCount: adminCount,
+                    //         //     isUserAdmin: isUserAdmin,
+                    //         //   )
+                    //       }
+                    //     ],
+                    //   ),
+                    // );
+                  } else {
                     await Get.dialog(
                       IsmChatAlertDialogBox(
                         title: '${IsmChatStrings.deleteChat}?',
@@ -110,7 +108,7 @@ class IsmChatClearConversationBottomSheet extends StatelessWidget {
                 },
                 isDestructiveAction: true,
                 child: Text(
-                  conversation.isGroup!
+                  conversation.isGroup == true
                       ? IsmChatStrings.exitGroup
                       : IsmChatStrings.deleteChat,
                   overflow: TextOverflow.ellipsis,

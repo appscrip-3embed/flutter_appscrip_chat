@@ -1316,14 +1316,14 @@ class IsmChatPageController extends GetxController
     } else {
       await Get.dialog(
         IsmChatAlertDialogBox(
-          title: 'Exit ${conversation!.chatName}?',
+          title: 'Exit ${conversation?.chatName ?? ''}?',
           content: const Text(
             'Only group admins will be notified that you left the group',
           ),
           contentTextStyle: IsmChatStyles.w400Grey14,
           actionLabels: const ['Exit'],
           callbackActions: [
-            () => _leaveGroup(
+            ()async => await leaveGroup(
                   adminCount: adminCount,
                   isUserAdmin: isUserAdmin,
                 )
@@ -1333,7 +1333,7 @@ class IsmChatPageController extends GetxController
     }
   }
 
-  void _leaveGroup({
+  Future<void> leaveGroup({
     required int adminCount,
     required bool isUserAdmin,
   }) async {

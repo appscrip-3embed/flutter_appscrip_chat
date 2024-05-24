@@ -335,6 +335,39 @@ class IsmChatApp extends StatelessWidget {
     );
   }
 
+  /// Call this function on to Exit Group the data stored locally in the Local Database and server
+  ///
+  /// The chat will be deleted locally in all cases
+  static Future<void> exitGroup(
+      {required int adminCount, required bool isUserAdmin}) async {
+    if (Get.isRegistered<IsmChatPageController>()) {
+      await Get.find<IsmChatPageController>().leaveGroup(
+        adminCount: adminCount,
+        isUserAdmin: isUserAdmin,
+      );
+    }
+  }
+
+  /// Call this function on to clearMessages the data stored locally in the Local Database and server
+  ///
+  /// The chat will be deleted locally in all cases
+  static Future<void> clearAllMessages(
+    String conversationId, {
+    bool fromServer = true,
+  }) async {
+    assert(
+      conversationId.isNotEmpty,
+      '''Input Error: Please make sure that required fields are filled out.
+      conversationId cannot be empty.''',
+    );
+    if (Get.isRegistered<IsmChatPageController>()) {
+      await Get.find<IsmChatPageController>().clearAllMessages(
+        conversationId,
+        fromServer: fromServer,
+      );
+    }
+  }
+
   /// Call this funcation for the initialize mqtt
   static void initializeMqtt(
     IsmChatCommunicationConfig communicationConfig, {
