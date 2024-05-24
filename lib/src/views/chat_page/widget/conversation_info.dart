@@ -459,8 +459,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                       IsmChatDimens.boxHeight32,
                     ] else ...[
                       IsmChatDimens.boxHeight32,
-                      Container(
-                        padding: IsmChatDimens.edgeInsets16,
+                      DecoratedBox(
                         decoration: BoxDecoration(
                           borderRadius:
                               BorderRadius.circular(IsmChatDimens.sixteen),
@@ -469,8 +468,8 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            InkWell(
-                              onTap: () async {
+                            TextButton.icon(
+                              onPressed: () async {
                                 await Get.dialog(
                                   IsmChatAlertDialogBox(
                                     title: IsmChatStrings.deleteAllMessage,
@@ -485,22 +484,23 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                 );
                                 Get.back();
                               },
-                              child: SizedBox(
-                                  height: IsmChatDimens.twenty,
-                                  child: Text(
-                                    IsmChatStrings.clearChat,
-                                    style: IsmChatStyles.w600red16,
-                                  )),
+                              icon: const Icon(
+                                Icons.clear_all_outlined,
+                                color: IsmChatColors.redColor,
+                              ),
+                              label: Text(
+                                IsmChatStrings.clearChat,
+                                style: IsmChatStyles.w600red16,
+                              ),
                             ),
-                            IsmChatDimens.boxHeight10,
                             Divider(
+                              height: 0,
                               thickness: 1,
                               color:
                                   IsmChatColors.greyColorLight.withOpacity(.3),
                             ),
-                            IsmChatDimens.boxHeight5,
-                            InkWell(
-                              onTap: () async {
+                            TextButton.icon(
+                              onPressed: () async {
                                 await Get.dialog(
                                   IsmChatAlertDialogBox(
                                     title: '${IsmChatStrings.deleteChat}?',
@@ -518,32 +518,34 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                 Get.back();
                                 Get.back();
                               },
-                              child: SizedBox(
-                                  height: IsmChatDimens.twenty,
-                                  child: Text(
-                                    IsmChatStrings.deleteChat,
-                                    style: IsmChatStyles.w600red16,
-                                  )),
+                              icon: const Icon(
+                                Icons.delete_forever_outlined,
+                                color: IsmChatColors.redColor,
+                              ),
+                              label: Text(
+                                IsmChatStrings.deleteChat,
+                                style: IsmChatStyles.w600red16,
+                              ),
                             ),
-                            IsmChatDimens.boxHeight10,
                             Divider(
+                              height: 0,
                               thickness: 1,
                               color:
                                   IsmChatColors.greyColorLight.withOpacity(.3),
                             ),
-                            IsmChatDimens.boxHeight5,
-                            InkWell(
-                              onTap: () {
-                                controller.handleBlockUnblock(true);
+                            TextButton.icon(
+                              onPressed: () async {
+                                await controller.handleBlockUnblock(true);
                               },
-                              child: SizedBox(
-                                  height: IsmChatDimens.twenty,
-                                  child: Text(
-                                    '${controller.conversation!.isBlockedByMe ? IsmChatStrings.unblock : IsmChatStrings.block} ${controller.conversation!.chatName}',
-                                    style: IsmChatStyles.w600red16,
-                                  )),
-                            ),
-                            IsmChatDimens.boxHeight5,
+                              icon: const Icon(
+                                Icons.block_outlined,
+                                color: IsmChatColors.redColor,
+                              ),
+                              label: Text(
+                                '${controller.conversation?.isBlockedByMe == true ? IsmChatStrings.unblock : IsmChatStrings.block} ${controller.conversation?.chatName ?? ''}',
+                                style: IsmChatStyles.w600red16,
+                              ),
+                            )
                           ],
                         ),
                       ),
