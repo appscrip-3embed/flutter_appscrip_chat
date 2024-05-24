@@ -11,7 +11,6 @@ class IsmChatPageViewModel {
   Future<List<IsmChatMessageModel>> getChatMessages({
     required String conversationId,
     required int lastMessageTimestamp,
-    int? pagination,
     int limit = 20,
     int skip = 0,
     String? searchText,
@@ -22,7 +21,7 @@ class IsmChatPageViewModel {
       conversationId: conversationId,
       lastMessageTimestamp: lastMessageTimestamp,
       limit: limit,
-      skip: pagination ?? 0,
+      skip: skip,
       searchText: searchText,
       isLoading: isLoading,
     );
@@ -30,18 +29,12 @@ class IsmChatPageViewModel {
     if (messages == null) {
       return [];
     }
-
     messages.removeWhere((e) => [
           IsmChatActionEvents.clearConversation.name,
           IsmChatActionEvents.deleteConversationLocally.name,
           IsmChatActionEvents.reactionAdd.name,
           IsmChatActionEvents.reactionRemove.name,
           IsmChatActionEvents.conversationDetailsUpdated.name,
-          // if (e.memberId !=
-          //     IsmChatConfig.communicationConfig.userConfig.userId) ...[
-          //   IsmChatActionEvents.removeAdmin.name,
-          //   IsmChatActionEvents.addAdmin.name,
-          // ]
         ].contains(e.action));
     if (searchText == null || searchText.isEmpty) {
       if (Get.find<IsmChatPageController>().messages.isNotEmpty) {
@@ -49,7 +42,6 @@ class IsmChatPageViewModel {
             e.messageId ==
             Get.find<IsmChatPageController>().messages.last.messageId);
       }
-
       if (!isTemporaryChat) {
         var conversation = await IsmChatConfig.dbWrapper!
             .getConversation(conversationId: conversationId);
@@ -321,7 +313,6 @@ class IsmChatPageViewModel {
     }
   }
 
-
   Future<void> readAllMessages({
     required String conversationId,
     required int timestamp,
@@ -341,8 +332,6 @@ class IsmChatPageViewModel {
         longitude: longitude,
         query: searchKeyword,
       );
-
-  
 
   Map<String, int> generateIndexedMessageList(
       List<IsmChatMessageModel> messages) {

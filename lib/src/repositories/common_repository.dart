@@ -189,4 +189,36 @@ class IsmChatCommonRepository {
       return null;
     }
   }
+
+  Future<List<IsmChatMessageModel>?> getChatMessages({
+    required String conversationId,
+    int lastMessageTimestamp = 0,
+    int limit = 20,
+    int skip = 0,
+    String? searchText,
+    bool isLoading = false,
+  }) async {
+    try {
+      String? url;
+      if (searchText != null || searchText?.isNotEmpty == true) {
+        url =
+            '${IsmChatAPI.chatMessages}?conversationId=$conversationId&searchTag=$searchText&sort=-1&limit=$limit&skip=$skip';
+      } else {
+        url =
+            '${IsmChatAPI.chatMessages}?conversationId=$conversationId&limit=$limit&skip=$skip&lastMessageTimestamp=$lastMessageTimestamp';
+      }
+      var response = await _apiWrapper.get(url,
+          headers: IsmChatUtility.tokenCommonHeader(), showLoader: isLoading);
+      if (response.hasError) {
+        return null;
+      }
+      var data = jsonDecode(response.data);
+      return (data['messages'] as List)
+          .map((e) => IsmChatMessageModel.fromMap(e as Map<String, dynamic>))
+          .toList();
+    } catch (e, st) {
+      IsmChatLog.error('GetChatMessages $e, $st');
+      return null;
+    }
+  }
 }

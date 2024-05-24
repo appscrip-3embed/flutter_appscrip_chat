@@ -41,12 +41,10 @@ mixin IsmChatPageGetMessageMixin on GetxController {
       if (_controller.messages.isEmpty) {
         _controller.isMessagesLoading = true;
       }
-
       var timeStamp = lastMessageTimestamp ??
           (_controller.messages.isEmpty
               ? 0
               : _controller.messages.last.sentAt + 7000);
-
       var messagesList = List<IsmChatMessageModel>.from(_controller.messages);
       messagesList.removeWhere(
           (element) => element.customType == IsmChatCustomMessageType.date);
@@ -55,7 +53,7 @@ mixin IsmChatPageGetMessageMixin on GetxController {
           : _controller.conversation?.conversationId ?? '';
 
       var data = await _controller.viewModel.getChatMessages(
-        pagination: forPagination ? messagesList.length.pagination() : 0,
+        skip: forPagination ? messagesList.length.pagination() : 0,
         conversationId: conversationID,
         lastMessageTimestamp: timeStamp,
         isTemporaryChat: isTemporaryChat,
@@ -82,8 +80,7 @@ mixin IsmChatPageGetMessageMixin on GetxController {
     _controller.canCallCurrentApi = true;
 
     var messages = await _controller.viewModel.getChatMessages(
-      pagination:
-          !fromScrolling ? 0 : _controller.searchMessages.length.pagination(),
+      skip: !fromScrolling ? 0 : _controller.searchMessages.length.pagination(),
       conversationId: _controller.conversation?.conversationId ?? '',
       lastMessageTimestamp: 0,
       searchText: query,

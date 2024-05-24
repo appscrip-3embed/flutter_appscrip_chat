@@ -14,7 +14,6 @@ class IsmMaterialChatPage extends StatefulWidget {
     this.chatDarkTheme,
     this.loadingDialog,
     this.databaseName,
-
     this.useDataBase = true,
     this.isShowMqttConnectErrorDailog = false,
     this.fontFamily,
@@ -60,8 +59,6 @@ class IsmMaterialChatPage extends StatefulWidget {
 
   final IsmChatThemeData? chatDarkTheme;
 
-
-
   final bool useDataBase;
 
   final IsmChatPageProperties? chatPageProperties;
@@ -84,6 +81,28 @@ class IsmMaterialChatPage extends StatefulWidget {
 
   /// This callback is to be used if you want to make certain changes while conversation data is being parsed from the API
   final ConversationParser? conversationParser;
+
+  /// Call this funcation for get messages for perticular conversation with api
+  static Future<List<IsmChatMessageModel>?> getMessagesFromApi({
+    required String conversationId,
+    required int lastMessageTimestamp,
+    int limit = 20,
+    int skip = 0,
+    String? searchText,
+    bool isLoading = false,
+  }) async {
+    if (Get.isRegistered<IsmChatCommonController>()) {
+      return await Get.find<IsmChatCommonController>().getChatMessages(
+        conversationId: conversationId,
+        lastMessageTimestamp: lastMessageTimestamp,
+        limit: limit,
+        skip: skip,
+        searchText: searchText,
+        isLoading: isLoading,
+      );
+    }
+    return null;
+  }
 
   /// Call this funcation for showing Block un Block Dialog
   static void showBlockUnBlockDialog() {

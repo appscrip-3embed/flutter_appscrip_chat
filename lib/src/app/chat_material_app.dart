@@ -286,6 +286,28 @@ class IsmChatApp extends StatelessWidget {
     }
   }
 
+  /// Call this funcation for get messages for perticular conversation with api
+  static Future<List<IsmChatMessageModel>?> getMessagesFromApi({
+    required String conversationId,
+    required int lastMessageTimestamp,
+    int limit = 20,
+    int skip = 0,
+    String? searchText,
+    bool isLoading = false,
+  }) async {
+    if (Get.isRegistered<IsmChatCommonController>()) {
+      return await Get.find<IsmChatCommonController>().getChatMessages(
+        conversationId: conversationId,
+        lastMessageTimestamp: lastMessageTimestamp,
+        limit: limit,
+        skip: skip,
+        searchText: searchText,
+        isLoading: isLoading,
+      );
+    }
+    return null;
+  }
+
   /// Call this function on SignOut to delete the data stored locally in the Local Database
   static Future<void> logout() async {
     await IsmChatConfig.dbWrapper?.deleteChatLocalDb();

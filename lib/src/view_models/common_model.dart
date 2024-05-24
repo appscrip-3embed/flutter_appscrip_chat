@@ -218,4 +218,35 @@ class IsmChatCommonViewModel {
           conversationTitle: conversationTitle,
           isLoading: isLoading,
           searchableTags: searchableTags);
+
+  Future<List<IsmChatMessageModel>> getChatMessages({
+    required String conversationId,
+    required int lastMessageTimestamp,
+    int limit = 20,
+    int skip = 0,
+    String? searchText,
+    bool isLoading = false,
+  }) async {
+    var messages = await _repository.getChatMessages(
+      conversationId: conversationId,
+      lastMessageTimestamp: lastMessageTimestamp,
+      limit: limit,
+      skip: skip,
+      searchText: searchText,
+      isLoading: isLoading,
+    );
+
+    if (messages == null) {
+      return [];
+    }
+    messages.removeWhere((e) => [
+          IsmChatActionEvents.clearConversation.name,
+          IsmChatActionEvents.deleteConversationLocally.name,
+          IsmChatActionEvents.reactionAdd.name,
+          IsmChatActionEvents.reactionRemove.name,
+          IsmChatActionEvents.conversationDetailsUpdated.name,
+        ].contains(e.action));
+    messages = sortMessages(messages);
+    return messages;
+  }
 }

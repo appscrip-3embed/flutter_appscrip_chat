@@ -144,4 +144,21 @@ class IsmChatCommonController extends GetxController {
     }
     return null;
   }
+
+  Future<List<IsmChatMessageModel>> getChatMessages({
+    required String conversationId,
+    required int lastMessageTimestamp,
+    int limit = 20,
+    int skip = 0,
+    String? searchText,
+    bool isLoading = false,
+  }) async =>
+      await viewModel.getChatMessages(
+        conversationId: conversationId,
+        lastMessageTimestamp: lastMessageTimestamp,
+        limit: limit,
+        skip: skip,
+        searchText: searchText,
+        isLoading: isLoading,
+      );
 }
