@@ -112,8 +112,10 @@ class IsmChatMessageField extends StatelessWidget {
                               await controller.getMentionedUserList(
                                   controller.chatInputController.text.trim());
                               if (controller.chatInputController.text
-                                  .trim()
-                                  .isNotEmpty) {
+                                      .trim()
+                                      .isNotEmpty &&
+                                  controller.isMessageSent == false) {
+                                controller.isMessageSent = true;
                                 controller.sendTextMessage(
                                   conversationId:
                                       controller.conversation?.conversationId ??
@@ -445,7 +447,9 @@ class _MicOrSendButton extends StatelessWidget {
                       true) {
                     await controller.getMentionedUserList(
                         controller.chatInputController.text.trim());
-                    if (controller.chatInputController.text.trim().isNotEmpty) {
+                    if (controller.chatInputController.text.trim().isNotEmpty &&
+                        controller.isMessageSent == false) {
+                      controller.isMessageSent = true;
                       controller.sendTextMessage(
                         conversationId:
                             controller.conversation?.conversationId ?? '',

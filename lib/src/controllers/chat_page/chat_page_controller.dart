@@ -96,6 +96,12 @@ class IsmChatPageController extends GetxController
   set conversation(IsmChatConversationModel? value) =>
       _conversation.value = value;
 
+  final RxBool _isMessageSent = false.obs;
+  bool get isMessageSent => _isMessageSent.value;
+  set isMessageSent(bool value) {
+    _isMessageSent.value = value;
+  }
+
   final RxBool _showEmojiBoard = false.obs;
   bool get showEmojiBoard => _showEmojiBoard.value;
   set showEmojiBoard(bool value) => _showEmojiBoard.value = value;

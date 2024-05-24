@@ -1083,6 +1083,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     _controller.messages.add(textMessage);
     _controller.isreplying = false;
     _controller.chatInputController.clear();
+    _controller.isMessageSent = false;
     if (!_controller.isTemporaryChat) {
       await IsmChatConfig.dbWrapper!
           .saveMessage(textMessage, IsmChatDbBox.pending);
