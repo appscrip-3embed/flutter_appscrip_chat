@@ -303,7 +303,7 @@ class IsmChatConversationsController extends GetxController {
   /// This variable use for store streamSubscription
   ///
   /// This StreamSubscription listen internet `on` or `off` when app in running
-  StreamSubscription<List<ConnectivityResult>>? connectivitySubscription;
+  StreamSubscription<ConnectivityResult>? connectivitySubscription;
 
   /// This variable use for store user messages which is get from local db
 
@@ -384,6 +384,7 @@ class IsmChatConversationsController extends GetxController {
     connectivity = Connectivity();
     connectivitySubscription =
         connectivity?.onConnectivityChanged.listen((event) async {
+        
       _sendPendingMessage();
     });
   }
