@@ -534,6 +534,10 @@ class IsmChatPageController extends GetxController
           await getMessagesFromAPI(
             conversationId: conversation?.conversationId ?? '',
           );
+          await getConverstaionDetails(
+            conversationId: conversation?.conversationId ?? '',
+            includeMembers: conversation?.isGroup == true ? true : false,
+          );
           checkUserStatus();
         }
         isMessagesLoading = false;
@@ -1323,7 +1327,7 @@ class IsmChatPageController extends GetxController
           contentTextStyle: IsmChatStyles.w400Grey14,
           actionLabels: const ['Exit'],
           callbackActions: [
-            ()async => await leaveGroup(
+            () async => await leaveGroup(
                   adminCount: adminCount,
                   isUserAdmin: isUserAdmin,
                 )
