@@ -228,6 +228,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         ],
       );
       conversationId = _controller.conversation?.conversationId ?? '';
+      unawaited(
+          _controller.getConverstaionDetails(conversationId: conversationId));
     }
     IsmChatMessageModel? audioMessage;
     String? nameWithExtension;
@@ -371,6 +373,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
                   _controller.conversation?.chatName ?? ''
                 ]);
         conversationId = _controller.conversation?.conversationId ?? '';
+        unawaited(
+            _controller.getConverstaionDetails(conversationId: conversationId));
       }
       final resultFiles = result?.files ?? [];
 
@@ -526,6 +530,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
                 _controller.conversation?.chatName ?? ''
               ]);
       conversationId = _controller.conversation?.conversationId ?? '';
+      unawaited(
+          _controller.getConverstaionDetails(conversationId: conversationId));
     }
     IsmChatMessageModel? videoMessage;
     String? nameWithExtension;
@@ -683,6 +689,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         ],
       );
       conversationId = _controller.conversation?.conversationId ?? '';
+      unawaited(
+          _controller.getConverstaionDetails(conversationId: conversationId));
     }
     IsmChatMessageModel? imageMessage;
     String? nameWithExtension;
@@ -818,6 +826,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
                 _controller.conversation?.chatName ?? ''
               ]);
       conversationId = _controller.conversation?.conversationId ?? '';
+      unawaited(
+          _controller.getConverstaionDetails(conversationId: conversationId));
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var locationMessage = IsmChatMessageModel(
@@ -926,6 +936,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       );
 
       conversationId = _controller.conversation?.conversationId ?? '';
+      unawaited(
+          _controller.getConverstaionDetails(conversationId: conversationId));
     }
 
     var sentAt = DateTime.now().millisecondsSinceEpoch;
@@ -1012,7 +1024,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
-
     if (chatConversationResponse == null && !_controller.isTemporaryChat) {
       _controller.conversation =
           await _controller.commonController.createConversation(
@@ -1028,6 +1039,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         ],
       );
       conversationId = _controller.conversation?.conversationId ?? '';
+      unawaited(_controller.getConverstaionDetails(conversationId: conversationId));
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatMessageModel(
