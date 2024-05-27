@@ -28,7 +28,7 @@ class IsmChatImageEditView extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () async {
-                  await controller.cropImage(controller.imagePath!);
+                  await controller.cropImage(controller.imagePath  ?? File(''));
                 },
                 icon: Icon(
                   Icons.crop,
@@ -43,7 +43,7 @@ class IsmChatImageEditView extends StatelessWidget {
                     file: controller.imagePath!,
                   ));
                   controller.fileSize =
-                      await IsmChatUtility.fileToSize(controller.imagePath!);
+                      await IsmChatUtility.fileToSize(controller.imagePath ?? File(''));
                 },
                 icon: Icon(
                   Icons.edit,
@@ -65,7 +65,7 @@ class IsmChatImageEditView extends StatelessWidget {
             ),
           ),
           body: Image.file(
-            controller.imagePath!,
+            controller.imagePath  ?? File(''),
             fit: BoxFit.contain,
             height: IsmChatDimens.percentHeight(1),
             width: IsmChatDimens.percentWidth(1),
@@ -99,18 +99,19 @@ class IsmChatImageEditView extends StatelessWidget {
                       if (await IsmChatProperties.chatPageProperties
                               .messageAllowedConfig?.isMessgeAllowed
                               ?.call(
-                                  Get.context!,
+                                  context,
                                   Get.find<IsmChatPageController>()
                                       .conversation!) ??
                           true) {
                         await controller.sendImage(
-                            caption: controller.textEditingController.text,
-                            conversationId:
-                                controller.conversation?.conversationId ?? '',
-                            userId: controller
-                                    .conversation?.opponentDetails?.userId ??
-                                '',
-                            imagePath: controller.imagePath!);
+                          caption: controller.textEditingController.text,
+                          conversationId:
+                              controller.conversation?.conversationId ?? '',
+                          userId: controller
+                                  .conversation?.opponentDetails?.userId ??
+                              '',
+                          imagePath: controller.imagePath,
+                        );
                       }
                     } else {
                       await Get.dialog(

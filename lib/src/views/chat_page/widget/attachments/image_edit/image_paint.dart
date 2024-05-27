@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +55,7 @@ class _ImagePainterWidgetState extends State<IsmChatImagePainterWidget> {
                     '$directory/sample/${DateTime.now().millisecondsSinceEpoch}.$extension';
 
                 final imgFile = File(fullPath);
-                imgFile.writeAsBytesSync(image!);
+                imgFile.writeAsBytesSync(image ?? Uint8List(0));
                 IsmChatUtility.closeLoader();
                 Get.back<File>(result: imgFile);
                 IsmChatLog.success('Image edit file $imgFile');

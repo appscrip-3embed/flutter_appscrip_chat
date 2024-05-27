@@ -306,7 +306,6 @@ class IsmChatConversationsController extends GetxController {
   StreamSubscription<ConnectivityResult>? connectivitySubscription;
 
   /// This variable use for store user messages which is get from local db
-
   final _userMeessages = <IsmChatMessageModel>[].obs;
   List<IsmChatMessageModel> get userMeessages => _userMeessages;
   set userMeessages(List<IsmChatMessageModel> value) =>
@@ -384,7 +383,6 @@ class IsmChatConversationsController extends GetxController {
     connectivity = Connectivity();
     connectivitySubscription =
         connectivity?.onConnectivityChanged.listen((event) async {
-        
       _sendPendingMessage();
     });
   }

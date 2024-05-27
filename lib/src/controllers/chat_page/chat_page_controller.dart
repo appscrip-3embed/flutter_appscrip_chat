@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:io';
 import 'dart:math';
-
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
@@ -34,12 +33,14 @@ import 'package:video_compress/video_compress.dart';
 part './mixins/get_message.dart';
 part './mixins/group_admin.dart';
 part './mixins/send_message.dart';
+part './mixins/show_dialog.dart';
 
 class IsmChatPageController extends GetxController
     with
         IsmChatPageSendMessageMixin,
         IsmChatPageGetMessageMixin,
         IsmChatGroupAdminMixin,
+        IsmChatShowDialogMixin,
         GetTickerProviderStateMixin {
   IsmChatPageController(this.viewModel);
   final IsmChatPageViewModel viewModel;
@@ -1035,7 +1036,7 @@ class IsmChatPageController extends GetxController
         IsmChatUtility.showToast('Message copied');
         break;
       case IsmChatFocusMenuType.delete:
-        await showDialogForMessageDelete(message);
+        await  showDialogForMessageDelete(message);
         break;
       case IsmChatFocusMenuType.selectMessage:
         selectedMessage.clear();
@@ -1284,64 +1285,9 @@ class IsmChatPageController extends GetxController
     }
   }
 
-  Future<void> handleBlockUnblock([bool includeMembers = false]) async {
-    if (conversation!.isBlockedByMe) {
-      // This means chatting is not allowed and user has blocked the opponent
-      showDialogForBlockUnBlockUser(true, includeMembers);
-      return;
-    }
-    if (conversation!.isChattingAllowed) {
-      // This means chatting is allowed i.e. no one is blocked
-      showDialogForBlockUnBlockUser(false, includeMembers);
-      return;
-    }
+ 
 
-    // This means chatting is not allowed and opponent has blocked the user
-    await Get.dialog(
-      const IsmChatAlertDialogBox(
-        title: IsmChatStrings.cannotBlock,
-        cancelLabel: 'Okay',
-      ),
-    );
-  }
-
-  Future<void> showDialogExitButton([bool askToLeave = false]) async {
-    var adminCount = groupMembers.where((e) => e.isAdmin).length;
-    var isUserAdmin = groupMembers.any((e) =>
-        e.userId == IsmChatConfig.communicationConfig.userConfig.userId &&
-        e.isAdmin);
-    if (adminCount == 1 && !askToLeave && isUserAdmin) {
-      await Get.dialog(
-        IsmChatAlertDialogBox(
-          title: IsmChatStrings.areYouSure,
-          content: const Text(IsmChatStrings.youAreOnlyAdmin),
-          contentTextStyle: IsmChatStyles.w400Grey14,
-          actionLabels: const [IsmChatStrings.exit],
-          callbackActions: [
-            () => showDialogExitButton(true),
-          ],
-          cancelLabel: IsmChatStrings.assignAdmin,
-        ),
-      );
-    } else {
-      await Get.dialog(
-        IsmChatAlertDialogBox(
-          title: 'Exit ${conversation?.chatName ?? ''}?',
-          content: const Text(
-            'Only group admins will be notified that you left the group',
-          ),
-          contentTextStyle: IsmChatStyles.w400Grey14,
-          actionLabels: const ['Exit'],
-          callbackActions: [
-            () async => await leaveGroup(
-                  adminCount: adminCount,
-                  isUserAdmin: isUserAdmin,
-                )
-          ],
-        ),
-      );
-    }
-  }
+  
 
   Future<void> leaveGroup({
     required int adminCount,
@@ -1690,7 +1636,7 @@ class IsmChatPageController extends GetxController
 
   void takePhoto() async {
     var file = await cameraController.takePicture();
-    // await file.saveTo(file.path);
+
     if (kIsWeb) {
       Get.back();
       var bytes = await file.readAsBytes();
@@ -1731,213 +1677,13 @@ class IsmChatPageController extends GetxController
         imagePath = File(file.path);
       }
 
-      fileSize = await IsmChatUtility.fileToSize(imagePath!);
+      fileSize = await IsmChatUtility.fileToSize(imagePath ?? File(''));
       IsmChatRouteManagement.goToMediaEditView();
     }
   }
 
-  void showDialogForClearChatAndDeleteGroup({isGroupDelete = false}) async {
-    if (!isGroupDelete) {
-      await Get.dialog(
-        IsmChatAlertDialogBox(
-          title: IsmChatStrings.deleteAllMessage,
-          actionLabels: const [IsmChatStrings.clearChat],
-          callbackActions: [
-            () => clearAllMessages(
-                  conversation?.conversationId ?? '',
-                  fromServer: conversation?.lastMessageDetails?.customType ==
-                              IsmChatCustomMessageType.removeMember &&
-                          conversation?.lastMessageDetails?.userId ==
-                              IsmChatConfig
-                                  .communicationConfig.userConfig.userId
-                      ? false
-                      : true,
-                ),
-          ],
-        ),
-      );
-    } else {
-      await Get.dialog(
-        IsmChatAlertDialogBox(
-          title: IsmChatStrings.deleteThiGroup,
-          actionLabels: const [IsmChatStrings.deleteGroup],
-          callbackActions: [
-            () => conversationController.deleteChat(
-                  conversation?.conversationId ?? '',
-                  deleteFromServer: false,
-                ),
-          ],
-        ),
-      );
-      Get.back();
-    }
-  }
 
-  /// function to show dialog for changing the group title
-  void showDialogForChangeGroupTitle() async {
-    groupTitleController.text = conversation!.chatName;
-    await Get.dialog(IsmChatAlertDialogBox(
-      title: IsmChatStrings.enterNewGroupTitle,
-      content: TextFormField(
-        controller: groupTitleController,
-      ),
-      actionLabels: const [IsmChatStrings.okay],
-      callbackActions: [
-        () => changeGroupTitle(
-            conversationTitle: groupTitleController.text,
-            conversationId: conversation?.conversationId ?? '',
-            isLoading: true),
-      ],
-    ));
-  }
 
-  /// function to show dialog for changing the group profile
-  Future<void> showDialogForChangeGroupProfile() async {
-    if (kIsWeb) {
-      await conversationController.ismChangeImage(ImageSource.gallery);
-      await changeGroupProfile(
-          conversationImageUrl: conversationController.profileImage,
-          conversationId: conversation?.conversationId ?? '',
-          isLoading: true);
-    } else {
-      await Get.bottomSheet(
-        const ProfileChange(),
-        isDismissible: false,
-        elevation: 0,
-      );
-    }
-  }
-
-  void showDialogForBlockUnBlockUser(
-    bool userBlockOrNot, [
-    bool includeMembers = false,
-  ]) async {
-    await Get.dialog(
-      IsmChatAlertDialogBox(
-        title: userBlockOrNot
-            ? IsmChatStrings.doWantUnBlckUser
-            : IsmChatStrings.doWantBlckUser,
-        actionLabels: [
-          userBlockOrNot ? IsmChatStrings.unblock : IsmChatStrings.block,
-        ],
-        callbackActions: [
-          () {
-            userBlockOrNot
-                ? unblockUser(
-                    opponentId: conversation?.opponentDetails?.userId ?? '',
-                    includeMembers: includeMembers,
-                    isLoading: true,
-                    userBlockOrNot: userBlockOrNot,
-                  )
-                : blockUser(
-                    opponentId: conversation?.opponentDetails?.userId ?? '',
-                    includeMembers: includeMembers,
-                    isLoading: true,
-                    userBlockOrNot: userBlockOrNot,
-                  );
-          },
-        ],
-      ),
-    );
-  }
-
-  void showDialogCheckBlockUnBlock() async {
-    if (conversation?.isBlockedByMe ?? false) {
-      await Get.dialog(
-        IsmChatAlertDialogBox(
-          title: IsmChatStrings.youBlockUser,
-          actionLabels: const [IsmChatStrings.unblock],
-          callbackActions: [
-            () => unblockUser(
-                opponentId: conversation?.opponentDetails?.userId ?? '',
-                isLoading: true,
-                userBlockOrNot: true),
-          ],
-        ),
-      );
-    } else {
-      await Get.dialog(
-        const IsmChatAlertDialogBox(
-          title: IsmChatStrings.cannotBlock,
-          cancelLabel: IsmChatStrings.okay,
-        ),
-      );
-    }
-  }
-
-  Future<void> showDialogForMessageDelete(IsmChatMessageModel message,
-      {bool fromMediaPrivew = false}) async {
-    if (message.sentByMe) {
-      await Get.dialog(
-        IsmChatAlertDialogBox(
-          title: IsmChatStrings.deleteMessage,
-          actionLabels: const [
-            IsmChatStrings.deleteForEvery,
-            IsmChatStrings.deleteForMe,
-          ],
-          callbackActions: [
-            () => deleteMessageForEveryone([message]),
-            () => deleteMessageForMe([message]),
-          ],
-        ),
-      );
-      if (fromMediaPrivew) Get.back();
-    } else {
-      await Get.dialog(
-        IsmChatAlertDialogBox(
-          title:
-              '${IsmChatStrings.deleteFromUser} ${conversation?.opponentDetails?.userName}',
-          actionLabels: const [IsmChatStrings.deleteForMe],
-          callbackActions: [
-            () => deleteMessageForMe([message]),
-          ],
-        ),
-      );
-      if (fromMediaPrivew) Get.back();
-    }
-  }
-
-  void showDialogForDeleteMultipleMessage(
-      bool sentByMe, List<IsmChatMessageModel> messages) async {
-    if (sentByMe) {
-      await Get.dialog(
-        IsmChatAlertDialogBox(
-          title: IsmChatStrings.deleteMessage,
-          actionLabels: const [
-            IsmChatStrings.deleteForEvery,
-            IsmChatStrings.deleteForMe,
-          ],
-          callbackActions: [
-            () => deleteMessageForEveryone(messages),
-            () => deleteMessageForMe(messages),
-          ],
-          onCancel: () {
-            Get.back<void>();
-            selectedMessage.clear();
-            isMessageSeleted = false;
-          },
-        ),
-      );
-    } else {
-      await Get.dialog(
-        IsmChatAlertDialogBox(
-          title:
-              '${IsmChatStrings.deleteFromUser} ${conversation?.opponentDetails?.userName}',
-          actionLabels: const [IsmChatStrings.deleteForMe],
-          callbackActions: [
-            () => deleteMessageForMe(messages),
-          ],
-          onCancel: () {
-            Get.back<void>();
-            selectedMessage.clear();
-            isMessageSeleted = false;
-          },
-        ),
-      );
-    }
-  }
-
-  void showDialogForAdmin(UserDetails user, {bool isAdmin = true}) async {}
 
   Future<void> readMessage({
     required String conversationId,
@@ -2303,7 +2049,6 @@ class IsmChatPageController extends GetxController
         }
       }
     }
-
     return isSupported;
   }
 }
