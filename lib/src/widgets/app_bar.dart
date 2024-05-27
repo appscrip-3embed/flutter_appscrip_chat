@@ -2,7 +2,6 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-// TODO: remove material AppBar from other screens
 @protected
 class IsmChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   const IsmChatAppBar({

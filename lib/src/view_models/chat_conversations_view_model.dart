@@ -145,16 +145,12 @@ class IsmChatConversationsViewModel {
         messageId: messageId,
       );
 
-  Future<IsmChatUserListModel?> getBlockUser({
-    required int? skip,
-    required int limit,
-     required bool isLoading
-  }) async =>
+  Future<IsmChatUserListModel?> getBlockUser(
+          {required int? skip,
+          required int limit,
+          required bool isLoading}) async =>
       await _repository.getBlockUser(
-        skip: skip,
-        limit: limit,
-        isLoading: isLoading
-      );
+          skip: skip, limit: limit, isLoading: isLoading);
 
   Future<IsmChatResponseModel?> updateConversation({
     required String conversationId,
@@ -310,11 +306,13 @@ class IsmChatConversationsViewModel {
         IsmChatActionEvents.userBlock.name,
         IsmChatActionEvents.userBlockConversation.name,
         IsmChatActionEvents.userBlockConversation.name,
-        if (e.memberId !=
-            IsmChatConfig.communicationConfig.userConfig.userId) ...[
-          IsmChatActionEvents.removeAdmin.name,
-          IsmChatActionEvents.addAdmin.name,
-        ]
+        IsmChatActionEvents.observerJoin.name,
+        IsmChatActionEvents.observerLeave.name,
+        // if (e.memberId !=
+        //     IsmChatConfig.communicationConfig.userConfig.userId) ...[
+        IsmChatActionEvents.removeAdmin.name,
+        IsmChatActionEvents.addAdmin.name,
+        // ]
       ].contains(e.action),
     );
     return messages;

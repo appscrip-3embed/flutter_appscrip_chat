@@ -2,22 +2,21 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class IsmChatApiWrapper {
-  Future<IsmChatResponseModel> _handleNoInternet(bool showDailog) async {
-    IsmChatLog.error('----- Internet not working -----');
-    if (showDailog && Get.isDialogOpen == false) {
-      await IsmChatUtility.showErrorDialog(IsmChatStrings.noInternet);
-    }
+  // Future<IsmChatResponseModel> _handleNoInternet(bool showDailog) async {
+  //   IsmChatLog.error('----- Internet not working -----');
+  //   if (showDailog && Get.isDialogOpen == false) {
+  //     await IsmChatUtility.showErrorDialog(IsmChatStrings.noInternet);
+  //   }
 
-    return const IsmChatResponseModel(
-      data: IsmChatStrings.noInternet,
-      errorCode: 1000,
-      hasError: true,
-    );
-  }
+  //   return const IsmChatResponseModel(
+  //     data: IsmChatStrings.noInternet,
+  //     errorCode: 1000,
+  //     hasError: true,
+  //   );
+  // }
 
   Future<IsmChatResponseModel> get(
     String api, {

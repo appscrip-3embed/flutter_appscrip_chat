@@ -66,7 +66,6 @@ class _IsmChatPageViewState extends State<IsmChatPageView>
       return false;
     } else {
       Get.back<void>();
-
       controller.closeOverlay();
       final updateMessage = await controller.updateLastMessage();
       if (IsmChatProperties.chatPageProperties.header?.onBackTap != null) {

@@ -34,8 +34,7 @@ class _ReplyMessage extends StatelessWidget {
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
         builder: (controller) {
           var replyingMyMessage = message.sentByMe ==
-              (message.metaData?.replyMessage?.parentMessageMessageType ??
-                  false);
+              (message.metaData?.replyMessage?.parentMessageInitiator ?? false);
           return Material(
             color: Colors.transparent,
             child: IsmChatTapHandler(
@@ -88,32 +87,59 @@ class _ReplyMessage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(
-                              replyingMyMessage
-                                  ? IsmChatStrings.you
-                                  : controller.conversation?.replyName
-                                          .capitalizeFirst ??
-                                      '',
-                              style: IsmChatStyles.w500Black14.copyWith(
-                                color: IsmChatConfig.chatTheme.chatPageTheme
-                                            ?.replyMessageThem !=
-                                        null
-                                    ? replyingMyMessage
-                                        ? IsmChatConfig
-                                            .chatTheme
-                                            .chatPageTheme
-                                            ?.replyMessageThem
-                                            ?.selfReplayMessage
-                                        : IsmChatConfig
-                                            .chatTheme
-                                            .chatPageTheme
-                                            ?.replyMessageThem
-                                            ?.opponentReplayMessage
-                                    : replyingMyMessage
-                                        ? IsmChatColors.yellowColor
-                                        : IsmChatColors.blueColor,
-                              ),
-                            ),
+                            Builder(builder: (context) {
+                              var name = '';
+
+                              if (controller.conversation?.isGroup ?? false) {
+                                if (replyingMyMessage) {
+                                  name = IsmChatStrings.you;
+                                } else {
+                                  name =
+                                      ((controller.conversation?.members ?? [])
+                                                      .firstWhereOrNull(
+                                                        (e) =>
+                                                            message
+                                                                .metaData
+                                                                ?.replyMessage
+                                                                ?.parentMessageUserId ==
+                                                            e.userId,
+                                                      )
+                                                      ?.userName ??
+                                                  '')
+                                              .capitalizeFirst ??
+                                          '';
+                                }
+                              } else {
+                                name = replyingMyMessage
+                                    ? IsmChatStrings.you
+                                    : controller.conversation?.replyName
+                                            .capitalizeFirst ??
+                                        '';
+                              }
+
+                              return Text(
+                                name,
+                                style: IsmChatStyles.w500Black14.copyWith(
+                                  color: IsmChatConfig.chatTheme.chatPageTheme
+                                              ?.replyMessageThem !=
+                                          null
+                                      ? replyingMyMessage
+                                          ? IsmChatConfig
+                                              .chatTheme
+                                              .chatPageTheme
+                                              ?.replyMessageThem
+                                              ?.selfReplayMessage
+                                          : IsmChatConfig
+                                              .chatTheme
+                                              .chatPageTheme
+                                              ?.replyMessageThem
+                                              ?.opponentReplayMessage
+                                      : replyingMyMessage
+                                          ? IsmChatColors.yellowColor
+                                          : IsmChatColors.blueColor,
+                                ),
+                              );
+                            }),
                             ConstrainedBox(
                               constraints: BoxConstraints(
                                 maxWidth: IsmChatDimens.percentWidth(.5),
