@@ -43,18 +43,23 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
             backgroundColor:
                 IsmChatConfig.chatTheme.chatPageTheme?.backgroundColor ??
                     IsmChatColors.whiteColor,
-            appBar: AppBar(
+            appBar: IsmChatAppBar(
+              leadingWidth: IsmChatDimens.thirty,
               leading: IsmChatTapHandler(
                 onTap: () => _back(context, controller),
                 child: Icon(
                   Responsive.isWeb(context)
                       ? Icons.close_rounded
                       : Icons.arrow_back_rounded,
+                  color:
+                      IsmChatConfig.chatTheme.chatPageHeaderTheme?.iconColor ??
+                          IsmChatColors.whiteColor,
                 ),
               ),
               centerTitle: false,
               title: Row(
                 mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   IsmChatImage.profile(
                     controller.conversation?.profileUrl ?? '',
@@ -82,9 +87,10 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
                   ),
                 ],
               ),
-              backgroundColor: IsmChatConfig.chatTheme.primaryColor,
-              iconTheme: const IconThemeData(color: IsmChatColors.whiteColor),
-              actions: [
+              backgroundColor: IsmChatConfig
+                      .chatTheme.chatPageHeaderTheme?.backgroundColor ??
+                  IsmChatConfig.chatTheme.primaryColor,
+              action: [
                 IconButton(
                   onPressed: () async {
                     if (Responsive.isWeb(context)) {
@@ -102,6 +108,9 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
                   icon: Icon(
                     Icons.person_search_outlined,
                     size: IsmChatDimens.thirty,
+                    color: IsmChatConfig
+                            .chatTheme.chatPageHeaderTheme?.iconColor ??
+                        IsmChatColors.whiteColor,
                   ),
                 )
               ],

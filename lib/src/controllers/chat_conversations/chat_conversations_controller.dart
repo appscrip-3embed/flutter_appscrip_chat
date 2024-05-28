@@ -1037,7 +1037,8 @@ class IsmChatConversationsController extends GetxController {
       limit: limit,
       conversationType: conversationType,
     );
-    if (response?.isEmpty == true) {
+
+    if (response == null || response.isEmpty) {
       isLoadResponse = true;
       publicAndOpenConversation = [];
       return;
