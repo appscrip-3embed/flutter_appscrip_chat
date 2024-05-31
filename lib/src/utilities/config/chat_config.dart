@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_setters_without_getters
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
