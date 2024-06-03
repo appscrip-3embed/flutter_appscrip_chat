@@ -22,6 +22,8 @@ class IsmChatMqttController extends GetxController {
 
   late IsmChatCommunicationConfig _communicationConfig;
 
+  var actionListeners = <Function(Map<String, dynamic>)>[];
+
   late IsmChatConnectionState connectionState;
 
   String messageId = '';
