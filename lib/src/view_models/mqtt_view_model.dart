@@ -28,4 +28,24 @@ class IsmChatMqttViewModel {
     }
     return response;
   }
+
+  Future<String> getChatConversationsMessageCount({
+    required isLoading,
+    required String conversationId,
+    required List<String> senderIds,
+    required senderIdsExclusive,
+    required lastMessageTimestamp,
+  }) async {
+    var response = await _repository.getChatConversationsMessageCount(
+      isLoading: isLoading,
+      conversationId: conversationId,
+      senderIds: senderIds,
+      lastMessageTimestamp: lastMessageTimestamp,
+      senderIdsExclusive: senderIdsExclusive,
+    );
+    if (response == null) {
+      return '';
+    }
+    return response;
+  }
 }

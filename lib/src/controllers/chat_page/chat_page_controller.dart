@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:core';
 import 'dart:io';
 import 'dart:math';
+
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
@@ -563,6 +564,7 @@ class IsmChatPageController extends GetxController
         }
       }
       unawaited(updateUnreadMessgaeCount());
+     
     }
   }
 
@@ -1036,7 +1038,7 @@ class IsmChatPageController extends GetxController
         IsmChatUtility.showToast('Message copied');
         break;
       case IsmChatFocusMenuType.delete:
-        await  showDialogForMessageDelete(message);
+        await showDialogForMessageDelete(message);
         break;
       case IsmChatFocusMenuType.selectMessage:
         selectedMessage.clear();
@@ -1284,10 +1286,6 @@ class IsmChatPageController extends GetxController
       toggleCamera();
     }
   }
-
- 
-
-  
 
   Future<void> leaveGroup({
     required int adminCount,
@@ -1681,9 +1679,6 @@ class IsmChatPageController extends GetxController
       IsmChatRouteManagement.goToMediaEditView();
     }
   }
-
-
-
 
   Future<void> readMessage({
     required String conversationId,

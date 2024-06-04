@@ -233,6 +233,28 @@ class IsmChatApp extends StatelessWidget {
     return '';
   }
 
+  /// Call this function for Get  conversations message count
+  /// You can call this funcation after MQTT controller intilized
+  Future<String> getChatConversationsMessageCount({
+    bool isLoading = false,
+    required String converationId,
+    required List<String> senderIds,
+    bool senderIdsExclusive = false,
+    int lastMessageTimestamp = 0,
+  }) async {
+    if (Get.isRegistered<IsmChatMqttController>()) {
+      return await Get.find<IsmChatMqttController>()
+          .getChatConversationsMessageCount(
+        isLoading: isLoading,
+        converationId: converationId,
+        senderIds: senderIds,
+        lastMessageTimestamp: lastMessageTimestamp,
+        senderIdsExclusive: senderIdsExclusive,
+      );
+    }
+    return '';
+  }
+
   static Future<IsmChatConversationModel?> getConverstaionDetails({
     required String conversationId,
     bool? includeMembers,

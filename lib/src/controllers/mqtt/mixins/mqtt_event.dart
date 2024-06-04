@@ -836,8 +836,7 @@ mixin IsmChatMqttEventMixin {
   }
 
   void _handleMemberJoinAndLeave(IsmChatMqttActionModel actionModel) async {
-    if (actionModel.userDetails?.userId ==
-        _controller.userConfig.userId) {
+    if (actionModel.userDetails?.userId == _controller.userConfig.userId) {
       return;
     }
     if (messageId == actionModel.sentAt.toString()) {
@@ -860,8 +859,7 @@ mixin IsmChatMqttEventMixin {
   }
 
   void _handleAdminRemoveAndAdd(IsmChatMqttActionModel actionModel) async {
-    if (actionModel.userDetails?.userId ==
-        _controller.userConfig.userId) {
+    if (actionModel.userDetails?.userId == _controller.userConfig.userId) {
       return;
     }
 
@@ -891,8 +889,7 @@ mixin IsmChatMqttEventMixin {
 
   Future<void> _handleCreateConversation(
       IsmChatMqttActionModel actionModel) async {
-    if (actionModel.opponentDetails?.userId ==
-        _controller.userConfig.userId) {
+    if (actionModel.opponentDetails?.userId == _controller.userConfig.userId) {
       return;
     }
 
@@ -903,8 +900,7 @@ mixin IsmChatMqttEventMixin {
   }
 
   void _handleAddAndRemoveReaction(IsmChatMqttActionModel actionModel) async {
-    if (actionModel.userDetails?.userId ==
-        _controller.userConfig.userId) {
+    if (actionModel.userDetails?.userId == _controller.userConfig.userId) {
       return;
     }
 
@@ -993,8 +989,7 @@ mixin IsmChatMqttEventMixin {
   }
 
   void _handleConversationUpdate(IsmChatMqttActionModel actionModel) async {
-    if (actionModel.userDetails?.userId ==
-        _controller.userConfig.userId) {
+    if (actionModel.userDetails?.userId == _controller.userConfig.userId) {
       return;
     }
 
@@ -1029,6 +1024,21 @@ mixin IsmChatMqttEventMixin {
   }) async =>
       await _controller.viewModel.getChatConversationsCount(
         isLoading: isLoading,
+      );
+
+  Future<String> getChatConversationsMessageCount({
+    bool isLoading = false,
+    required String converationId,
+    required List<String> senderIds,
+    bool senderIdsExclusive = false,
+    int lastMessageTimestamp = 0,
+  }) async =>
+      await _controller.viewModel.getChatConversationsMessageCount(
+        conversationId: converationId,
+        senderIds: senderIds,
+        isLoading: isLoading,
+        lastMessageTimestamp: lastMessageTimestamp,
+        senderIdsExclusive: senderIdsExclusive,
       );
 
   Future<bool> deleteChatFormDB(String isometrickChatId,
