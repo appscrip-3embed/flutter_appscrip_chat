@@ -1044,7 +1044,7 @@ class IsmChatConversationsController extends GetxController {
       return;
     }
 
-    publicAndOpenConversation.addAll(response ?? []);
+    publicAndOpenConversation.addAll(response);
     callApiOrNot = true;
   }
 
