@@ -450,6 +450,10 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                 color: IsmChatColors.whiteColor,
                               ),
                               onPressed: () async {
+                                if (controller.profileImage.isEmpty) {
+                                  controller.profileImage =
+                                      'https://admin-media1.isometrik.io/profile/def_group_profile.png';
+                                }
                                 if ((controller.forwardedList.selectedUsers
                                             .isEmpty &&
                                         controller.selectedUserList.isEmpty) ||
