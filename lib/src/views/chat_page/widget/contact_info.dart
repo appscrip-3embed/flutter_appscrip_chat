@@ -23,9 +23,10 @@ class IsmChatContactsInfoView extends StatelessWidget {
           elevation: 0,
           leading: IconButton(
             onPressed: Get.back,
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back_rounded,
-              color: IsmChatColors.whiteColor,
+              color: IsmChatConfig.chatTheme.chatPageHeaderTheme?.iconColor ??
+                  IsmChatColors.whiteColor,
             ),
           ),
           backgroundColor: IsmChatConfig.chatTheme.primaryColor,

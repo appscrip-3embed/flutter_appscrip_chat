@@ -46,9 +46,11 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                   padding: EdgeInsets.only(
                       right: IsmChatDimens.five, top: IsmChatDimens.two),
                   child: PopupMenuButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.more_vert,
-                      color: IsmChatColors.whiteColor,
+                      color: IsmChatConfig
+                              .chatTheme.chatPageHeaderTheme?.iconColor ??
+                          IsmChatColors.whiteColor,
                     ),
                     itemBuilder: (context) => [
                       PopupMenuItem(
@@ -403,7 +405,11 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                       member.userId
                                   ? IsmChatStrings.you
                                   : member.userName),
-                              subtitle: Text(member.userIdentifier),
+                              subtitle: Text(IsmChatProperties
+                                      .conversationProperties.opponentSubTitle
+                                      ?.call(context, member) ??
+                                  member.metaData?.about ??
+                                  ''),
                               leading: IsmChatImage.profile(member.profileUrl),
                             );
                           },
