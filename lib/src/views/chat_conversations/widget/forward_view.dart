@@ -99,7 +99,9 @@ class IsmChatForwardView extends StatelessWidget {
                   )
                 : Text(
                     'Forward to...  ${controller.selectedUserList.isEmpty ? '' : controller.selectedUserList.length}',
-                    style: IsmChatStyles.w600White18,
+                    style: IsmChatConfig
+                            .chatTheme.chatPageHeaderTheme?.titleStyle ??
+                        IsmChatStyles.w600White18,
                   ),
             action: [
               IconButton(

@@ -63,7 +63,9 @@ class IsmChatBroadCastView extends StatelessWidget {
                   )
                 : Text(
                     'Broadcast message to...  ${controller.selectedUserList.isEmpty ? '' : controller.selectedUserList.length}',
-                    style: IsmChatStyles.w600White18,
+                    style: IsmChatConfig
+                            .chatTheme.chatPageHeaderTheme?.titleStyle ??
+                        IsmChatStyles.w600White18,
                   ),
             action: [
               IconButton(

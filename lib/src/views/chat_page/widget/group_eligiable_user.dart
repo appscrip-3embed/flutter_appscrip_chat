@@ -67,7 +67,8 @@ class IsmChatGroupEligibleUser extends StatelessWidget {
                   )
                 : Text(
                     'Add participants...  ${controller.groupEligibleUser.selectedUsers.isEmpty ? '' : controller.groupEligibleUser.selectedUsers.length}',
-                    style: IsmChatStyles.w600White18,
+                    style: IsmChatConfig
+                            .chatTheme.chatPageHeaderTheme?.titleStyle ?? IsmChatStyles.w600White18,
                   ),
             action: [
               IconButton(

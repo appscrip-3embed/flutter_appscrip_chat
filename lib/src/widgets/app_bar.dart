@@ -64,8 +64,9 @@ class IsmChatAppBar extends StatelessWidget implements PreferredSizeWidget {
         surfaceTintColor: surfaceTintColor,
         shadowColor: shadowColor,
         leadingWidth: leadingWidth,
-        backgroundColor:
-            backgroundColor ?? IsmChatConfig.chatTheme.primaryColor,
+        backgroundColor: backgroundColor ??
+            IsmChatConfig.chatTheme.chatPageHeaderTheme?.backgroundColor ??
+            IsmChatConfig.chatTheme.primaryColor,
         leading: leading ??
             IconButton(
               onPressed: onBack ?? Get.back,
@@ -73,7 +74,8 @@ class IsmChatAppBar extends StatelessWidget implements PreferredSizeWidget {
                 Responsive.isWeb(context)
                     ? Icons.close_rounded
                     : backIcon ?? Icons.arrow_back_rounded,
-                color: IsmChatColors.whiteColor,
+                color: IsmChatConfig.chatTheme.chatPageHeaderTheme?.iconColor ??
+                    IsmChatColors.whiteColor,
               ),
             ),
         title: title,

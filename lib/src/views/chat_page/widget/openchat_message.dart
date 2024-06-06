@@ -81,7 +81,9 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
                       if (controller.messages.isNotEmpty)
                         Text(
                           '${controller.conversation?.membersCount} ${IsmChatStrings.participants.toUpperCase()}',
-                          style: IsmChatStyles.w400White12,
+                          style: IsmChatConfig.chatTheme.chatPageHeaderTheme
+                                  ?.subtileStyle ??
+                              IsmChatStyles.w400White12,
                         )
                     ],
                   ),

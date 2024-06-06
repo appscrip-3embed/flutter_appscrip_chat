@@ -104,7 +104,9 @@ class IsmChatCreateConversationView extends StatelessWidget {
                     _isGroupConversation ?? false
                         ? '${IsmChatStrings.newString}  ${_conversationType == IsmChatConversationType.public ? 'Public' : _conversationType == IsmChatConversationType.open ? 'Open' : 'Group'} Conversation'
                         : IsmChatStrings.newConversation,
-                    style: IsmChatStyles.w600White18,
+                    style: IsmChatConfig
+                            .chatTheme.chatPageHeaderTheme?.titleStyle ??
+                        IsmChatStyles.w600White18,
                   ),
             action: [
               IconButton(
@@ -663,42 +665,42 @@ class ChatModes extends StatelessWidget {
                 child: const Icon(Icons.group),
               ),
             ),
-          ListTile(
-            contentPadding: IsmChatDimens.edgeInsets10,
-            horizontalTitleGap: IsmChatDimens.ten,
-            title: Text(
-              IsmChatStrings.newContact,
-              style: IsmChatStyles.w600Black14,
-            ),
-            dense: true,
-            mouseCursor: SystemMouseCursors.click,
-            leading: Container(
-              alignment: Alignment.center,
-              height: 60,
-              width: 60,
-              decoration: const BoxDecoration(
-                  shape: BoxShape.circle, color: Color(0xFFF3F3F9)),
-              child: const Icon(Icons.person_add),
-            ),
-          ),
-          ListTile(
-            contentPadding: IsmChatDimens.edgeInsets10,
-            horizontalTitleGap: IsmChatDimens.ten,
-            title: Text(
-              IsmChatStrings.newCommunity,
-              style: IsmChatStyles.w600Black14,
-            ),
-            dense: true,
-            mouseCursor: SystemMouseCursors.click,
-            leading: Container(
-              alignment: Alignment.center,
-              height: 60,
-              width: 60,
-              decoration: const BoxDecoration(
-                  shape: BoxShape.circle, color: Color(0xFFF3F3F9)),
-              child: const Icon(Icons.groups_2),
-            ),
-          ),
+          // ListTile(
+          //   contentPadding: IsmChatDimens.edgeInsets10,
+          //   horizontalTitleGap: IsmChatDimens.ten,
+          //   title: Text(
+          //     IsmChatStrings.newContact,
+          //     style: IsmChatStyles.w600Black14,
+          //   ),
+          //   dense: true,
+          //   mouseCursor: SystemMouseCursors.click,
+          //   leading: Container(
+          //     alignment: Alignment.center,
+          //     height: 60,
+          //     width: 60,
+          //     decoration: const BoxDecoration(
+          //         shape: BoxShape.circle, color: Color(0xFFF3F3F9)),
+          //     child: const Icon(Icons.person_add),
+          //   ),
+          // ),
+          // ListTile(
+          //   contentPadding: IsmChatDimens.edgeInsets10,
+          //   horizontalTitleGap: IsmChatDimens.ten,
+          //   title: Text(
+          //     IsmChatStrings.newCommunity,
+          //     style: IsmChatStyles.w600Black14,
+          //   ),
+          //   dense: true,
+          //   mouseCursor: SystemMouseCursors.click,
+          //   leading: Container(
+          //     alignment: Alignment.center,
+          //     height: 60,
+          //     width: 60,
+          //     decoration: const BoxDecoration(
+          //         shape: BoxShape.circle, color: Color(0xFFF3F3F9)),
+          //     child: const Icon(Icons.groups_2),
+          //   ),
+          // ),
           ListTile(
             onTap: () async {
               Get.back();
