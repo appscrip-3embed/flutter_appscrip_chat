@@ -29,7 +29,8 @@ class _IsmChatGlobalSearchViewState extends State<IsmChatGlobalSearchView>
                 appBar: IsmChatAppBar(
                   title: Text(
                     IsmChatStrings.search,
-                    style: IsmChatStyles.w600White18,
+                    style: IsmChatConfig
+                            .chatTheme.chatPageHeaderTheme?.titleStyle ?? IsmChatStyles.w600White18,
                   ),
                 ),
                 body: Column(

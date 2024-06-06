@@ -38,7 +38,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
               controller.conversation?.isGroup ?? false
                   ? IsmChatStrings.groupInfo
                   : IsmChatStrings.contactInfo,
-              style: IsmChatStyles.w600White18,
+              style: IsmChatConfig.chatTheme.chatPageHeaderTheme?.titleStyle ?? IsmChatStyles.w600White18,
             ),
             action: [
               if (controller.conversation?.isGroup ?? false)

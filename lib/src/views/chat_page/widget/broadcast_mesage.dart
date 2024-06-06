@@ -75,7 +75,9 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
                       )
                   ],
                 ),
-                backgroundColor: IsmChatConfig.chatTheme.primaryColor,
+                backgroundColor: IsmChatConfig
+                        .chatTheme.chatPageHeaderTheme?.backgroundColor ??
+                    IsmChatConfig.chatTheme.primaryColor,
                 iconTheme: const IconThemeData(color: IsmChatColors.whiteColor),
               ),
               body: Column(

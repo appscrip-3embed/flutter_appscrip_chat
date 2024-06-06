@@ -64,8 +64,9 @@ class IsmChatAppBar extends StatelessWidget implements PreferredSizeWidget {
         surfaceTintColor: surfaceTintColor,
         shadowColor: shadowColor,
         leadingWidth: leadingWidth,
-        backgroundColor:
-            backgroundColor ?? IsmChatConfig.chatTheme.primaryColor,
+        backgroundColor: backgroundColor ??
+            IsmChatConfig.chatTheme.chatPageHeaderTheme?.backgroundColor ??
+            IsmChatConfig.chatTheme.primaryColor,
         leading: leading ??
             IconButton(
               onPressed: onBack ?? Get.back,

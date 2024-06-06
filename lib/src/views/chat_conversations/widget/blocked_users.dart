@@ -21,7 +21,7 @@ class IsmChatBlockedUsersView extends StatelessWidget {
             appBar: IsmChatAppBar(
               title: Text(
                 IsmChatStrings.blockedUsers,
-                style: IsmChatStyles.w600White18,
+                style:IsmChatConfig.chatTheme.chatPageHeaderTheme?.titleStyle ??   IsmChatStyles.w600White18,
               ),
             ),
             body: controller.blockUsers.isEmpty

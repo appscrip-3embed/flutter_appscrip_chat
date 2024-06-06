@@ -34,7 +34,7 @@ class _IsmChatObserverUsersViewState extends State<IsmChatObserverUsersView> {
           title: !isSearch
               ? Text(
                   IsmChatStrings.observer,
-                  style: IsmChatStyles.w600White18,
+                  style:  IsmChatConfig.chatTheme.chatPageHeaderTheme?.titleStyle ?? IsmChatStyles.w600White18,
                 )
               : IsmChatInputField(
                   fillColor: IsmChatConfig.chatTheme.primaryColor,

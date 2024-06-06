@@ -384,7 +384,7 @@ class IsmChatConversationsController extends GetxController {
     connectivitySubscription =
         connectivity?.onConnectivityChanged.listen((event) async {
       _sendPendingMessage();
-    });
+    }) as StreamSubscription<ConnectivityResult>?;
   }
 
   void _sendPendingMessage() async {

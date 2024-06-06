@@ -52,7 +52,8 @@ class IsmChatContactView extends StatelessWidget {
                   )
                 : Text(
                     'Contacts to send ...  ${controller.contactSelectedList.selectedContact.isEmpty ? '' : controller.contactList.selectedContact.length}',
-                    style: IsmChatStyles.w600White18,
+                    style: IsmChatConfig
+                            .chatTheme.chatPageHeaderTheme?.titleStyle ?? IsmChatStyles.w600White18,
                   ),
             action: [
               IconButton(
