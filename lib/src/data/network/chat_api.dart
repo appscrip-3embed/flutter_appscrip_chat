@@ -73,6 +73,7 @@ class IsmChatAPI {
   static String deliveredIndicator = '$chatIndicator/delivered';
   static String readIndicator = '$chatIndicator/read';
   static String reacton = '$baseUrl/chat/reaction';
-  static String contactSyncPost = 'https://admin-apis.isometrik.io/v1/contacts/sync';
+  static String contactSyncPost =
+      'https://admin-apis.isometrik.io/v1/contacts/sync';
   static String contactGet = 'https://admin-apis.isometrik.io/v1/contacts';
 }

@@ -564,7 +564,6 @@ class IsmChatPageController extends GetxController
         }
       }
       unawaited(updateUnreadMessgaeCount());
-     
     }
   }
 

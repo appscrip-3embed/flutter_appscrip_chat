@@ -108,10 +108,9 @@ class _TabBarView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => TabBar(
         overlayColor: WidgetStateProperty.resolveWith<Color?>(
-            (Set<WidgetState> states) =>
-                states.contains(WidgetState.focused)
-                    ? null
-                    : Colors.transparent),
+            (Set<WidgetState> states) => states.contains(WidgetState.focused)
+                ? null
+                : Colors.transparent),
         dividerColor: Colors.transparent,
         controller: _tabController,
         labelColor: IsmChatColors.blackColor,

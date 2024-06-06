@@ -223,36 +223,34 @@ class IsmChatApp extends StatelessWidget {
 
   /// Call this function for Get  conversations count
   /// You can call this funcation after MQTT controller intilized
-  static Future<String> getChatConversationsCount({
+  static Future<int> getChatConversationsCount({
     bool isLoading = false,
   }) async {
-    if (Get.isRegistered<IsmChatMqttController>()) {
-      return await Get.find<IsmChatMqttController>()
-          .getChatConversationsCount(isLoading: isLoading);
-    }
-    return '';
+    if (!Get.isRegistered<IsmChatMqttController>()) return 0;
+    final count = await Get.find<IsmChatMqttController>()
+        .getChatConversationsCount(isLoading: isLoading);
+    return int.tryParse(count) ?? 0;
   }
 
   /// Call this function for Get  conversations message count
   /// You can call this funcation after MQTT controller intilized
-  Future<String> getChatConversationsMessageCount({
+  Future<int> getChatConversationsMessageCount({
     bool isLoading = false,
     required String converationId,
     required List<String> senderIds,
     bool senderIdsExclusive = false,
     int lastMessageTimestamp = 0,
   }) async {
-    if (Get.isRegistered<IsmChatMqttController>()) {
-      return await Get.find<IsmChatMqttController>()
-          .getChatConversationsMessageCount(
-        isLoading: isLoading,
-        converationId: converationId,
-        senderIds: senderIds,
-        lastMessageTimestamp: lastMessageTimestamp,
-        senderIdsExclusive: senderIdsExclusive,
-      );
-    }
-    return '';
+    if (!Get.isRegistered<IsmChatMqttController>()) return 0;
+    final count = await Get.find<IsmChatMqttController>()
+        .getChatConversationsMessageCount(
+      isLoading: isLoading,
+      converationId: converationId,
+      senderIds: senderIds,
+      lastMessageTimestamp: lastMessageTimestamp,
+      senderIdsExclusive: senderIdsExclusive,
+    );
+    return int.tryParse(count) ?? 0;
   }
 
   static Future<IsmChatConversationModel?> getConverstaionDetails({

@@ -1039,7 +1039,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         ],
       );
       conversationId = _controller.conversation?.conversationId ?? '';
-      unawaited(_controller.getConverstaionDetails(conversationId: conversationId));
+      unawaited(
+          _controller.getConverstaionDetails(conversationId: conversationId));
     }
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     var textMessage = IsmChatMessageModel(

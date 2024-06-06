@@ -85,7 +85,9 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
                   : null,
               title: Text(
                 IsmChatStrings.contactInfo,
-                style: IsmChatConfig.chatTheme.chatPageHeaderTheme?.titleStyle ?? IsmChatStyles.w600White18,
+                style:
+                    IsmChatConfig.chatTheme.chatPageHeaderTheme?.titleStyle ??
+                        IsmChatStyles.w600White18,
               ),
             ),
             resizeToAvoidBottomInset: false,

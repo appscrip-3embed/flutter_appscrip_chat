@@ -54,7 +54,10 @@ extension MatchString on String {
 }
 
 extension MessagePagination on int {
-  int pagination({int endValue = 20, bool notEqualPagination = false, int increaseValue = 20}) {
+  int pagination(
+      {int endValue = 20,
+      bool notEqualPagination = false,
+      int increaseValue = 20}) {
     if (this == 0) {
       return this;
     }

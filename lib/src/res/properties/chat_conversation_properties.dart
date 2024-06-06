@@ -127,5 +127,5 @@ class IsmChatConversationProperties {
 
   final ConversationPredicate? conversationPredicate;
 
-  final UserDetailsStringCallback? opponentSubTitle; 
+  final UserDetailsStringCallback? opponentSubTitle;
 }

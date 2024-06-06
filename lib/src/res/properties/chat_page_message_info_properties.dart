@@ -14,7 +14,6 @@ class IsmChatPageMessageAcknowldgeProperties {
   final UserDetailsStringCallback? profileImageUrl;
   final UserDetailsWidgetCallback? titleBuilder;
   final UserDetailsStringCallback? title;
-   final UserDetailsWidgetCallback? trailingBuilder;
+  final UserDetailsWidgetCallback? trailingBuilder;
   final UserDetailsStringCallback? trailing;
-
 }

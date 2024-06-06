@@ -28,7 +28,7 @@ class IsmChatImageEditView extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () async {
-                  await controller.cropImage(controller.imagePath  ?? File(''));
+                  await controller.cropImage(controller.imagePath ?? File(''));
                 },
                 icon: Icon(
                   Icons.crop,
@@ -42,8 +42,8 @@ class IsmChatImageEditView extends StatelessWidget {
                       await Get.to<File>(IsmChatImagePainterWidget(
                     file: controller.imagePath!,
                   ));
-                  controller.fileSize =
-                      await IsmChatUtility.fileToSize(controller.imagePath ?? File(''));
+                  controller.fileSize = await IsmChatUtility.fileToSize(
+                      controller.imagePath ?? File(''));
                 },
                 icon: Icon(
                   Icons.edit,
@@ -65,7 +65,7 @@ class IsmChatImageEditView extends StatelessWidget {
             ),
           ),
           body: Image.file(
-            controller.imagePath  ?? File(''),
+            controller.imagePath ?? File(''),
             fit: BoxFit.contain,
             height: IsmChatDimens.percentHeight(1),
             width: IsmChatDimens.percentWidth(1),

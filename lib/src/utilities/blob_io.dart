@@ -10,7 +10,7 @@ class IsmChatBlob {
       null;
 
   ///generate video thumbnail in web...
- static Future<Uint8List> generateThumbnail({
+  static Future<Uint8List> generateThumbnail({
     required Uint8List videoBytes,
     num? quality,
   }) async =>

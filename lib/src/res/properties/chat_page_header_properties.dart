@@ -2,22 +2,20 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 
 class IsmChatPageHeaderProperties {
-  IsmChatPageHeaderProperties({
-    this.profileImageBuilder,
-    this.profileImageUrl,
-    this.titleBuilder,
-    this.title,
-    this.subtitleBuilder,
-    this.subtitle,
-    this.popupItems,
-    this.bottom,
-    this.onBackTap,
-    this.height,
-    this.shape,
-    this.onProfileTap,
-
-    this.actionBuilder
-  });
+  IsmChatPageHeaderProperties(
+      {this.profileImageBuilder,
+      this.profileImageUrl,
+      this.titleBuilder,
+      this.title,
+      this.subtitleBuilder,
+      this.subtitle,
+      this.popupItems,
+      this.bottom,
+      this.onBackTap,
+      this.height,
+      this.shape,
+      this.onProfileTap,
+      this.actionBuilder});
 
   final ConversationWidgetCallback? profileImageBuilder;
   final ConversationStringCallback? profileImageUrl;
@@ -41,6 +39,4 @@ class IsmChatPageHeaderProperties {
     IsmChatConversationModel,
   )? height;
   final ShapeBorder? shape;
-
-
 }

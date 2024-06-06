@@ -39,7 +39,8 @@ class IsmChatUserView extends StatelessWidget {
             onBack: Get.back,
             title: Text(
               IsmChatStrings.userInfo,
-              style: IsmChatConfig.chatTheme.chatPageHeaderTheme?.titleStyle ?? IsmChatStyles.w600White18,
+              style: IsmChatConfig.chatTheme.chatPageHeaderTheme?.titleStyle ??
+                  IsmChatStyles.w600White18,
             ),
             action: !Responsive.isWeb(context)
                 ? [

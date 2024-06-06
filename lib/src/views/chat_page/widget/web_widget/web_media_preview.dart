@@ -11,7 +11,6 @@ class WebMediaPreview extends StatelessWidget {
   Widget build(BuildContext context) =>
       GetX<IsmChatPageController>(builder: (controller) {
         if (controller.webMedia.isNotEmpty) {
-         
           return Scaffold(
             appBar: PreferredSize(
               preferredSize: const Size.fromHeight(50),

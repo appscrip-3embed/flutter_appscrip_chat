@@ -30,8 +30,6 @@ class IsmChatConstants {
 
   static const int attachmentShowLine = 3;
 
-
-
   static const String mapAPIKey = 'AIzaSyC2YXqs5H8QSfN1NVsZKsP11XLZhfGVGPI';
 
   /// Video Type List For Every Platform
