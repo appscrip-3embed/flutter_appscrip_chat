@@ -47,13 +47,16 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
               backgroundColor:
                   IsmChatConfig.chatTheme.chatPageTheme?.backgroundColor ??
                       IsmChatColors.whiteColor,
-              appBar: AppBar(
+              appBar: IsmChatAppBar(
                 leading: IsmChatTapHandler(
                   onTap: () => _back(context),
                   child: Icon(
                     Responsive.isWeb(context)
                         ? Icons.close_rounded
                         : Icons.arrow_back_rounded,
+                    color: IsmChatConfig
+                            .chatTheme.chatPageHeaderTheme?.iconColor ??
+                        IsmChatColors.whiteColor,
                   ),
                 ),
                 centerTitle: controller.messages.isNotEmpty ? false : true,
@@ -71,14 +74,15 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
                         controller.conversation!.members!
                             .map((e) => e.userName)
                             .join(','),
-                        style: IsmChatStyles.w400White12,
+                        style: IsmChatConfig
+                                .chatTheme.chatPageHeaderTheme?.subtileStyle ??
+                            IsmChatStyles.w400White12,
                       )
                   ],
                 ),
                 backgroundColor: IsmChatConfig
                         .chatTheme.chatPageHeaderTheme?.backgroundColor ??
                     IsmChatConfig.chatTheme.primaryColor,
-                iconTheme: const IconThemeData(color: IsmChatColors.whiteColor),
               ),
               body: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
