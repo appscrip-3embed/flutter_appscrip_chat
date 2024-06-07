@@ -38,6 +38,14 @@ class IsmChatMessageModel {
                   userId: map['senderId'] as String,
                   online: false,
                   lastSeen: 0,
+                  metaData: IsmChatMetaData(
+                    firstName:
+                        map['senderMetaData']['firstName'] as String? ?? '',
+                    lastName:
+                        map['senderMetaData']['lastName'] as String? ?? '',
+                    profilePic:
+                        map['senderMetaData']['profilePic'] as String? ?? '',
+                  ),
                 )
               : null,
       metaData: map['metaData'] != null
