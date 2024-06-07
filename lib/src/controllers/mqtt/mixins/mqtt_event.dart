@@ -341,6 +341,8 @@ mixin IsmChatMqttEventMixin {
     }
 
     String? mqttMessage;
+    // String mqttMessageTitle = message.s;
+
     switch (message.customType) {
       case IsmChatCustomMessageType.image:
         mqttMessage = message.notificationBody;
@@ -375,10 +377,16 @@ mixin IsmChatMqttEventMixin {
       return;
     }
 
+    final notificationTitle =
+        '${message.senderInfo?.metaData?.firstName ?? ''} ${message.senderInfo?.metaData?.lastName ?? ''}'
+            .trim();
+
     if (!Responsive.isWeb(Get.context!)) {
       if (isAppInBackground) {
         showPushNotification(
-            title: message.notificationTitle ?? '',
+            title: notificationTitle.isNotEmpty
+                ? notificationTitle
+                : message.notificationTitle ?? '',
             body: mqttMessage ?? '',
             conversationId: message.conversationId ?? '');
         messageId = message.messageId ?? '';
@@ -389,14 +397,18 @@ mixin IsmChatMqttEventMixin {
         if (chatController.conversation?.conversationId !=
             message.conversationId) {
           showPushNotification(
-              title: message.notificationTitle ?? '',
+              title: notificationTitle.isNotEmpty
+                  ? notificationTitle
+                  : message.notificationTitle ?? '',
               body: mqttMessage ?? '',
               conversationId: message.conversationId ?? '');
           messageId = message.messageId ?? '';
         }
       } else {
         showPushNotification(
-            title: message.notificationTitle ?? '',
+            title: notificationTitle.isNotEmpty
+                ? notificationTitle
+                : message.notificationTitle ?? '',
             body: mqttMessage ?? '',
             conversationId: message.conversationId ?? '');
 
@@ -419,7 +431,9 @@ mixin IsmChatMqttEventMixin {
           width: IsmChatDimens.twoHundredFifty,
           // notificationPosition: NotificationPosition.topRight,
           animation: AnimationType.fromRight,
-          title: Text(message.notificationTitle ?? ''),
+          title: Text(notificationTitle.isNotEmpty
+              ? notificationTitle
+              : message.notificationTitle ?? ''),
           description: Text(mqttMessage ?? ''),
           progressIndicatorColor:
               IsmChatConfig.chatTheme.primaryColor ?? Colors.blue,
