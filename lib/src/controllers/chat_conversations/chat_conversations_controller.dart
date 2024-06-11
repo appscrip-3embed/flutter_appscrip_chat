@@ -331,9 +331,16 @@ class IsmChatConversationsController extends GetxController {
     _forwardedList.value = value;
   }
 
+  final RxBool _intilizedContrller = false.obs;
+  bool get intilizedContrller => _intilizedContrller.value;
+  set intilizedContrller(bool value) {
+    _intilizedContrller.value = value;
+  }
+
   @override
   onInit() async {
     super.onInit();
+    intilizedContrller = false;
     _isInterNetConnect();
     await _generateReactionList();
     var users = await IsmChatConfig.dbWrapper?.userDetailsBox
@@ -348,7 +355,6 @@ class IsmChatConversationsController extends GetxController {
     if (Get.isRegistered<IsmChatMqttController>()) {
       await Get.find<IsmChatMqttController>().getChatConversationsUnreadCount();
     }
-
     await getBackGroundAssets();
     await getUserMessges(
       senderIds: [
@@ -357,6 +363,7 @@ class IsmChatConversationsController extends GetxController {
             : userDetails?.userId ?? ''
       ],
     );
+    intilizedContrller = true;
     scrollListener();
     sendPendingMessgae();
   }
