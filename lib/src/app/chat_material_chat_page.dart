@@ -376,9 +376,6 @@ class _IsmMaterialChatPageState extends State<IsmMaterialChatPage> {
       await Future.delayed(const Duration(milliseconds: 500));
     }
     final conversationController = Get.find<IsmChatConversationsController>();
-    while (!conversationController.intilizedContrller) {
-      await Future.delayed(const Duration(milliseconds: 500));
-    }
     conversationController.navigateToMessages(widget.conversation);
   }
 
