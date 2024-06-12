@@ -11,29 +11,26 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
 
   final mqttHelper = MqttHelper();
 
-  final _deviceConfig = Get.find<IsmChatDeviceConfig>();
-
   late String messageTopic;
 
   late String statusTopic;
 
-  late IsmChatProjectConfig projectConfig;
+  IsmChatProjectConfig? projectConfig;
 
-  late IsmChatUserConfig userConfig;
+  IsmChatUserConfig? userConfig;
 
   late IsmChatConnectionState connectionState;
 
   IsmChatMqttConfig? mqttConfig;
 
-  @override
-  void onInit() async {
-    super.onInit();
-    projectConfig = IsmChatConfig.communicationConfig.projectConfig;
-    mqttConfig = IsmChatConfig.communicationConfig.mqttConfig;
-    userConfig = IsmChatConfig.communicationConfig.userConfig;
-    if (!IsmChatConfig.isMqttInitializedFromOutSide) {
-      await setupIsmMqttConnection();
-    }
+  IsmChatCommunicationConfig? _config;
+
+  Future<void> setup({IsmChatCommunicationConfig? config}) async {
+    _config = config ?? IsmChat.i.config;
+    projectConfig = _config?.projectConfig;
+    mqttConfig = _config?.mqttConfig;
+    userConfig = _config?.userConfig;
+    await setupIsmMqttConnection();
     unawaited(getChatConversationsUnreadCount());
   }
 
@@ -48,27 +45,19 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
 
   Future<void> setupIsmMqttConnection() async {
     messageTopic =
-        '/${projectConfig.accountId}/${projectConfig.projectId}/Message/${userConfig.userId}';
+        '/${projectConfig?.accountId}/${projectConfig?.projectId}/Message/${userConfig?.userId}';
     statusTopic =
-        '/${projectConfig.accountId}/${projectConfig.projectId}/Status/${userConfig.userId}';
+        '/${projectConfig?.accountId}/${projectConfig?.projectId}/Status/${userConfig?.userId}';
     await mqttHelper.initialize(
       MqttConfig(
-        projectConfig: ProjectConfig(
-          accountId: projectConfig.accountId,
-          appSecret: projectConfig.appSecret,
-          userSecret: projectConfig.userSecret,
-          keySetId: projectConfig.keySetId,
-          licenseKey: projectConfig.licenseKey,
-          projectId: projectConfig.projectId,
-          deviceId: _deviceConfig.deviceId ?? '',
-        ),
+        projectConfig: ProjectConfig.fromMap(projectConfig?.toMap() ?? {}),
         serverConfig: ServerConfig(
           hostName: mqttConfig?.hostName ?? '',
           port: mqttConfig?.port ?? 0,
         ),
-        userId: userConfig.userId,
-        username: IsmChatConfig.communicationConfig.username,
-        password: IsmChatConfig.communicationConfig.password,
+        userId: userConfig?.userId ?? '',
+        username: _config?.username,
+        password: _config?.password,
         enableLogging: true,
         secure: false,
         webSocketConfig: WebSocketConfig(

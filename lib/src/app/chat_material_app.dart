@@ -9,14 +9,11 @@ class IsmChatApp extends StatelessWidget {
   IsmChatApp({
     super.key,
     this.context,
-    this.communicationConfig,
     this.chatPageProperties,
     this.conversationProperties,
     this.chatTheme,
     this.chatDarkTheme,
     this.loadingDialog,
-    this.databaseName,
-    this.useDataBase = true,
     this.noChatSelectedPlaceholder,
     this.sideWidgetWidth,
     this.isShowMqttConnectErrorDailog = false,
@@ -24,9 +21,7 @@ class IsmChatApp extends StatelessWidget {
     this.conversationParser,
     this.conversationModifier,
   }) {
-    assert(IsmChatConfig.isInitialized,
-        'ChatHiveBox is not initialized\nYou are getting this error because the Database class is not initialized, to initialize ChatHiveBox class call AppscripChatComponent.initialize() before your runApp()');
-    assert(IsmChatConfig.configInitilized || communicationConfig != null,
+    assert(IsmChatConfig.configInitilized,
         '''communicationConfig of type IsmChatCommunicationConfig must be initialized
     1. Either initialize using IsmChatApp.initializeMqtt() by passing  communicationConfig.
     2. Or Pass  communicationConfig in IsmChatApp
@@ -37,24 +32,17 @@ class IsmChatApp extends StatelessWidget {
     //   'If showAppBar is set to true then a non-null callback must be passed to onSignOut parameter',
     // );
 
-    IsmChatConfig.dbName = databaseName ?? IsmChatStrings.dbname;
     IsmChatConfig.fontFamily = fontFamily;
     IsmChatConfig.conversationParser = conversationParser;
     IsmChatProperties.loadingDialog = loadingDialog;
-
     IsmChatProperties.sideWidgetWidth = sideWidgetWidth;
     IsmChatProperties.noChatSelectedPlaceholder = noChatSelectedPlaceholder;
-    if (communicationConfig != null) {
-      IsmChatConfig.communicationConfig = communicationConfig!;
-      IsmChatConfig.configInitilized = true;
-    }
-    IsmChatConfig.useDatabase = useDataBase;
+
     IsmChatConfig.context = context;
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
     IsmChatConfig.isShowMqttConnectErrorDailog = isShowMqttConnectErrorDailog;
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
-
     if (chatPageProperties != null) {
       IsmChatProperties.chatPageProperties = chatPageProperties!;
     }
@@ -73,7 +61,7 @@ class IsmChatApp extends StatelessWidget {
   /// This class takes sevaral parameters which are necessary to establish connection between `host` & `application`
   ///
   /// For details see:- [IsmChatCommunicationConfig]
-  final IsmChatCommunicationConfig? communicationConfig;
+  // final IsmChatCommunicationConfig? communicationConfig;
 
   final IsmChatThemeData? chatTheme;
 
@@ -84,12 +72,10 @@ class IsmChatApp extends StatelessWidget {
   /// loadingDialog takes a widget which override the classic [CircularProgressIndicator], and will be shown incase of api call or loading something
   final Widget? loadingDialog;
 
-  /// databaseName is to be provided if you want to specify some name for the local database file.
-  ///
-  /// If not provided `appscrip_chat_component` will be used by default
-  final String? databaseName;
-
-  final bool useDataBase;
+  // /// databaseName is to be provided if you want to specify some name for the local database file.
+  // ///
+  // /// If not provided `appscrip_chat_component` will be used by default
+  // final String? databaseName;
 
   final IsmChatConversationProperties? conversationProperties;
   final IsmChatPageProperties? chatPageProperties;
@@ -448,11 +434,7 @@ class IsmChatApp extends StatelessWidget {
   static void initializeMqttFromOutSide(
     IsmChatCommunicationConfig communicationConfig, {
     String? notificationIconPath,
-    void Function(
-      String,
-      String,
-      String,
-    )? showNotification,
+    NotificaitonCallback? showNotification,
   }) {
     IsmChatConfig.communicationConfig = communicationConfig;
     IsmChatConfig.configInitilized = true;
@@ -473,11 +455,7 @@ class IsmChatApp extends StatelessWidget {
   /// You can call this funcation after MQTT controller intilized
   static Future<void> listenMqttEventFromOutSide({
     required Map<String, dynamic> payload,
-    void Function(
-      String,
-      String,
-      String,
-    )? showNotification,
+    NotificaitonCallback? showNotification,
   }) async {
     assert(IsmChatConfig.configInitilized,
         '''MQTT Controller must be initialized before adding listener.
@@ -487,42 +465,6 @@ class IsmChatApp extends StatelessWidget {
       await Get.find<IsmChatMqttController>().onMqttEvent(
         payload: payload,
       );
-    }
-  }
-
-  /// Call this funcation on to listener for mqtt events
-  ///
-  /// [IsmChatConfig.configInitilized] this variable must be true
-  ///
-  /// You can call this funcation after initialize mqtt [initializeMqtt] funcation
-  static StreamSubscription<Map<String, dynamic>> addListener(
-      Function(Map<String, dynamic>) listener) {
-    assert(IsmChatConfig.configInitilized,
-        '''MQTT Controller must be initialized before adding listener.
-    Either call IsmChatApp.initializeMqtt() or add listener after IsmChatApp is called''');
-    if (!Get.isRegistered<IsmChatMqttController>()) {
-      IsmChatMqttBinding().dependencies();
-    }
-    var mqttController = Get.find<IsmChatMqttController>();
-    mqttController.actionListeners.add(listener);
-    return mqttController.actionStreamController.stream.listen(listener);
-  }
-
-  /// Call this funcation on to remove listener for mqtt events
-  ///
-  /// [IsmChatConfig.configInitilized] this variable must be true
-  ///
-  /// You can call this funcation after initialize mqtt [initializeMqtt] funcation
-  static Future<void> removeListener(
-      Function(Map<String, dynamic>) listener) async {
-    assert(IsmChatConfig.configInitilized,
-        '''MQTT Controller must be initialized before adding listener.
-    Either call IsmChatApp.initializeMqtt() or add listener after IsmChatApp is called''');
-    var mqttController = Get.find<IsmChatMqttController>();
-    mqttController.actionListeners.remove(listener);
-    await mqttController.actionStreamController.stream.drain();
-    for (var listener in mqttController.actionListeners) {
-      mqttController.actionStreamController.stream.listen(listener);
     }
   }
 

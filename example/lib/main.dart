@@ -33,10 +33,10 @@ Future<void> initialize() async {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgorundHandler);
   }
   dbWrapper = await DBWrapper.create();
+  Get.put(DeviceConfig()).init();
   await AppConfig.getUserData();
   await Future.wait(
     [
-      AppscripChatComponent.initialize(),
       LocalNoticeService().setup(),
     ],
   );

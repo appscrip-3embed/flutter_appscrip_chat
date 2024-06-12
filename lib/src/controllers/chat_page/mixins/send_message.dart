@@ -9,8 +9,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
   IsmChatCommonController get commonController =>
       Get.find<IsmChatCommonController>();
 
-  final _deviceConfig = Get.find<IsmChatDeviceConfig>();
-
   void sendMessage({
     required int messageType,
     required String deviceId,
@@ -278,7 +276,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       ],
       deliveredToAll: false,
       messageId: '',
-      deviceId: _controller._deviceConfig.deviceId ?? '',
+      deviceId: IsmChatConfig.communicationConfig.projectConfig.deviceId,
       messageType: _controller.isreplying
           ? IsmChatMessageType.reply
           : IsmChatMessageType.normal,
@@ -423,7 +421,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             ],
             deliveredToAll: false,
             messageId: '',
-            deviceId: _controller._deviceConfig.deviceId ?? '',
+            deviceId: IsmChatConfig.communicationConfig.projectConfig.deviceId,
             messageType: _controller.isreplying
                 ? IsmChatMessageType.reply
                 : IsmChatMessageType.normal,
@@ -602,7 +600,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         ],
         deliveredToAll: false,
         messageId: '',
-        deviceId: _controller._deviceConfig.deviceId ?? '',
+        deviceId: IsmChatConfig.communicationConfig.projectConfig.deviceId,
         messageType: _controller.isreplying
             ? IsmChatMessageType.reply
             : IsmChatMessageType.normal,
@@ -741,7 +739,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       ],
       deliveredToAll: false,
       messageId: '',
-      deviceId: _controller._deviceConfig.deviceId ?? '',
+      deviceId: IsmChatConfig.communicationConfig.projectConfig.deviceId,
       messageType: _controller.isreplying
           ? IsmChatMessageType.reply
           : IsmChatMessageType.normal,
@@ -842,7 +840,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       messageType: _controller.isreplying
           ? IsmChatMessageType.reply
           : IsmChatMessageType.normal,
-      deviceId: _controller._deviceConfig.deviceId ?? '',
+      deviceId: IsmChatConfig.communicationConfig.projectConfig.deviceId,
       messagingDisabled: false,
       parentMessageId:
           _controller.isreplying ? _controller.replayMessage?.messageId : '',
@@ -959,7 +957,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       readByAll: false,
       sentAt: sentAt,
       sentByMe: true,
-      deviceId: _controller._deviceConfig.deviceId ?? '',
+      deviceId: IsmChatConfig.communicationConfig.projectConfig.deviceId,
       metaData: IsmChatMetaData(
         // senderInfo: _controller.getUser(),
         contacts: contacts
@@ -1051,7 +1049,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           ? IsmChatCustomMessageType.reply
           : IsmChatCustomMessageType.text,
       deliveredToAll: false,
-      deviceId: _controller._deviceConfig.deviceId ?? '',
+      deviceId: IsmChatConfig.communicationConfig.projectConfig.deviceId,
       messageId: '',
       messageType: _controller.isreplying
           ? IsmChatMessageType.reply

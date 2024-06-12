@@ -39,8 +39,8 @@ class IsmChatConversationsController extends GetxController {
   IsmChatCommonController get _commonController =>
       Get.find<IsmChatCommonController>();
 
-  /// This variable use for get all method and varibles from IsmChatDeviceConfig
-  final _deviceConfig = Get.find<IsmChatDeviceConfig>();
+  // /// This variable use for get all method and varibles from IsmChatDeviceConfig
+  // final _deviceConfig = Get.find<IsmChatDeviceConfig>();
 
   /// This variable use for store conversation details
   final _conversations = <IsmChatConversationModel>[].obs;
@@ -997,7 +997,7 @@ class IsmChatConversationsController extends GetxController {
       showInConversation: true,
       messageType: IsmChatMessageType.forward.value,
       encrypted: true,
-      deviceId: _deviceConfig.deviceId ?? '',
+      deviceId: IsmChatConfig.communicationConfig.projectConfig.deviceId,
       body: body,
       notificationBody: body,
       notificationTitle:
@@ -1550,7 +1550,7 @@ class IsmChatConversationsController extends GetxController {
       ],
       deliveredToAll: false,
       messageId: '',
-      deviceId: _deviceConfig.deviceId ?? '',
+      deviceId: IsmChatConfig.communicationConfig.projectConfig.deviceId,
       messageType: IsmChatMessageType.normal,
       messagingDisabled: false,
       parentMessageId: '',

@@ -15,7 +15,6 @@ class IsmChatConfig {
   static bool useDatabase = false;
   static bool isMqttInitializedFromOutSide = false;
   static String dbName = IsmChatStrings.dbname;
-  static bool isInitialized = false;
   static Duration animationDuration = const Duration(milliseconds: 300);
   static void Function(
     String title,
