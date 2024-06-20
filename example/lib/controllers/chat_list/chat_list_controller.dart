@@ -27,7 +27,6 @@ class ChatListController extends GetxController {
   }
 
   void initialize() async {
-    
     await IsmChat.i.initialize(
       IsmChatCommunicationConfig(
         userConfig: IsmChatUserConfig(
@@ -65,7 +64,7 @@ class ChatListController extends GetxController {
 
   void onSignOut() async {
     dbWrapper?.deleteChatLocalDb();
-    IsmChatApp.logout();
+    IsmChat.i.logout();
     Get.offAllNamed(AppRoutes.login);
     await FirebaseMessaging.instance
         .unsubscribeFromTopic('chat-${userDetails.userId}');

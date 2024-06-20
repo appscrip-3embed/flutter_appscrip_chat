@@ -93,6 +93,9 @@ class _MyAppState extends State<MyApp> {
         ],
         theme: ThemeData.light(useMaterial3: true).copyWith(
           primaryColor: AppColors.primaryColorLight,
+          extensions: [
+            
+          ]
         ),
         // darkTheme: ThemeData.dark(useMaterial3: true)
         //     .copyWith(primaryColor: AppColors.primaryColorDark),

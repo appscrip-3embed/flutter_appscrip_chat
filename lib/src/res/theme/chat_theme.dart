@@ -84,4 +84,6 @@ class IsmChatThemeData with Diagnosticable {
   final IsmChatHeaderThemeData? chatPageHeaderTheme;
 
   final IsmChatListCardThemData? chatListCardThemData;
+
+  lerp(IsmChatThemeData? theme, double t) {}
 }

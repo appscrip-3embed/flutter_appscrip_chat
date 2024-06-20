@@ -66,7 +66,6 @@ class IsmChatAPI {
   static String deleteMessages = '$chatMessages/everyone';
   static String createPresignedurl = '$user/presignedurl/create';
   static String presignedUrls = '$chatMessages/presignedurls';
-  static String chatMedia = '$baseUrl/chat/messages/presignedurls';
 
   static String chatIndicator = '$baseUrl/chat/indicator';
   static String typingIndicator = '$chatIndicator/typing';

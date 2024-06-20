@@ -623,6 +623,7 @@ class IsmChatConversationsController extends GetxController {
       isLoading: true,
       userIdentifier: userDetails?.userIdentifier ?? '',
       mediaExtension: mediaExtension,
+      bytes: bytes
     );
 
     if (response == null) {
@@ -1141,17 +1142,19 @@ class IsmChatConversationsController extends GetxController {
         IsmChatCustomMessageType.file
       ].contains(x.customType)) {
         var attachment = x.attachments?.first;
+        var bytes = File(attachment?.mediaUrl ?? '').readAsBytesSync();
         PresignedUrlModel? presignedUrlModel;
         presignedUrlModel = await _commonController.postMediaUrl(
           conversationId: x.conversationId ?? '',
           nameWithExtension: attachment?.name ?? '',
           mediaType: attachment?.attachmentType?.value ?? 0,
           mediaId: attachment?.mediaId ?? '',
+          isLoading: false,
+          bytes: bytes,
         );
 
         var mediaUrlPath = '';
         if (presignedUrlModel != null) {
-          var bytes = File(attachment?.mediaUrl ?? '').readAsBytesSync();
           var response = await _commonController.updatePresignedUrl(
             presignedUrl: presignedUrlModel.mediaPresignedUrl,
             bytes: bytes,
@@ -1165,14 +1168,16 @@ class IsmChatConversationsController extends GetxController {
         if (IsmChatCustomMessageType.video == x.customType) {
           PresignedUrlModel? presignedUrlModel;
           var nameWithExtension = attachment?.thumbnailUrl?.split('/').last;
+          var bytes = File(attachment?.thumbnailUrl ?? '').readAsBytesSync();
           presignedUrlModel = await _commonController.postMediaUrl(
             conversationId: x.conversationId ?? '',
             nameWithExtension: nameWithExtension ?? '',
             mediaType: 0,
             mediaId: DateTime.now().millisecondsSinceEpoch.toString(),
+            isLoading: false,
+            bytes: bytes,
           );
           if (presignedUrlModel != null) {
-            var bytes = File(attachment?.thumbnailUrl ?? '').readAsBytesSync();
             var response = await _commonController.updatePresignedUrl(
               presignedUrl: presignedUrlModel.thumbnailPresignedUrl,
               bytes: bytes,

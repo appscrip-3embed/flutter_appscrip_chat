@@ -331,7 +331,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       nameWithExtension: nameWithExtension ?? '',
       notificationBody: IsmChatStrings.sentAudio,
       notificationTitle: notificationTitle,
-      isTemporaryChat: _controller.isTemporaryChat,
     );
   }
 
@@ -434,7 +433,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             sentByMe: true,
             isUploading: true,
             metaData: IsmChatMetaData(
-              // senderInfo: _controller.getUser(),
               replyMessage: _controller.isreplying
                   ? IsmChatReplyMessageModel(
                       forMessageType: IsmChatCustomMessageType.file,
@@ -486,7 +484,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           true) {
         await ismPostMediaUrl(
           imageAndFile: false,
-          bytes: bytes,
+          bytes: bytes ?? Uint8List(0),
           createdAt: sentAt,
           ismChatChatMessageModel: documentMessage,
           mediaId: sentAt.toString(),
@@ -494,7 +492,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           nameWithExtension: nameWithExtension ?? '',
           notificationBody: IsmChatStrings.sentDoc,
           notificationTitle: notificationTitle,
-          isTemporaryChat: _controller.isTemporaryChat,
           thumbnailNameWithExtension: thumbnailNameWithExtension,
           thumbnailMediaId: thumbnailMediaId,
           thumbnailBytes: thumbnailBytes,
@@ -648,7 +645,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             '';
     await ismPostMediaUrl(
       imageAndFile: false,
-      bytes: bytes,
+      bytes: bytes ?? Uint8List(0),
       createdAt: sentAt,
       ismChatChatMessageModel: videoMessage,
       mediaId: mediaId ?? '',
@@ -660,7 +657,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       thumbnailBytes: thumbnailBytes,
       thumbanilMediaType: IsmChatMediaType.image.value,
       notificationTitle: notificationTitle,
-      isTemporaryChat: _controller.isTemporaryChat,
     );
   }
 
@@ -730,7 +726,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
               kIsWeb ? webMediaModel?.platformFile.path : compressedFile?.path,
           size: kIsWeb ? webMediaModel?.platformFile.size : bytes!.length,
           name: nameWithExtension,
-          mimeType: 'image/jpeg',
+          mimeType: extension,
           mediaUrl:
               kIsWeb ? webMediaModel?.platformFile.path : compressedFile?.path,
           mediaId: mediaId,
@@ -751,7 +747,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       sentByMe: true,
       isUploading: true,
       metaData: IsmChatMetaData(
-        // senderInfo: _controller.getUser(),
         captionMessage: caption,
         replyMessage: _controller.isreplying
             ? IsmChatReplyMessageModel(
@@ -787,7 +782,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             '';
 
     await ismPostMediaUrl(
-      bytes: bytes,
+      bytes: bytes ?? Uint8List(0),
       createdAt: sentAt,
       ismChatChatMessageModel: imageMessage,
       mediaId: mediaId,
@@ -796,7 +791,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       notificationBody: IsmChatStrings.sentImage,
       imageAndFile: true,
       notificationTitle: notificationTitle,
-      isTemporaryChat: _controller.isTemporaryChat,
     );
   }
 
@@ -1133,24 +1127,25 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     required String nameWithExtension,
     required int createdAt,
     required int mediaType,
-    required Uint8List? bytes,
+    required Uint8List bytes,
     required bool? imageAndFile,
     required String mediaId,
     String? thumbnailNameWithExtension,
     String? thumbnailMediaId,
     int? thumbanilMediaType,
     Uint8List? thumbnailBytes,
-    bool isTemporaryChat = false,
+    bool isLoading = false,
   }) async {
     try {
       PresignedUrlModel? presignedUrlModel;
       if (_controller.isTemporaryChat) {
         presignedUrlModel = await _controller.commonController.getPresignedUrl(
-          isLoading: false,
+          isLoading: isLoading,
           mediaExtension:
               ismChatChatMessageModel.attachments?.first.extension ?? '',
           userIdentifier:
               IsmChatConfig.communicationConfig.userConfig.userEmail ?? '',
+          bytes: bytes,
         );
       } else {
         presignedUrlModel = await commonController.postMediaUrl(
@@ -1158,35 +1153,28 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           nameWithExtension: nameWithExtension,
           mediaType: mediaType,
           mediaId: mediaId,
+          bytes: bytes,
+          isLoading: isLoading,
         );
       }
-
       var mediaUrlPath = '';
       var thumbnailUrlPath = '';
       if (presignedUrlModel != null) {
-        var mediaUrl = await commonController.updatePresignedUrl(
-          presignedUrl: _controller.isTemporaryChat
-              ? presignedUrlModel.presignedUrl
-              : presignedUrlModel.mediaPresignedUrl,
-          bytes: bytes,
-          isLoading: false,
-        );
-        if (mediaUrl == 200) {
-          mediaUrlPath = presignedUrlModel.mediaUrl ?? '';
-          mediaId = _controller.isTemporaryChat
-              ? mediaId
-              : presignedUrlModel.mediaId ?? '';
-        }
+        mediaUrlPath = presignedUrlModel.mediaUrl ?? '';
+        mediaId = _controller.isTemporaryChat
+            ? mediaId
+            : presignedUrlModel.mediaId ?? '';
       }
-      if (!imageAndFile!) {
+      if (!(imageAndFile ?? false)) {
         PresignedUrlModel? presignedUrlModel;
         if (_controller.isTemporaryChat) {
           presignedUrlModel =
               await _controller.commonController.getPresignedUrl(
-            isLoading: false,
+            isLoading: isLoading,
             mediaExtension: thumbnailNameWithExtension?.split('.').last ?? '',
             userIdentifier:
                 IsmChatConfig.communicationConfig.userConfig.userEmail ?? '',
+            bytes: bytes,
           );
         } else {
           presignedUrlModel = await commonController.postMediaUrl(
@@ -1194,28 +1182,22 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             nameWithExtension: thumbnailNameWithExtension ?? '',
             mediaType: thumbanilMediaType ?? 0,
             mediaId: thumbnailMediaId ?? '',
+            isLoading: isLoading,
+            bytes: bytes,
           );
         }
 
         if (presignedUrlModel != null) {
-          var mediaUrl = await commonController.updatePresignedUrl(
-            presignedUrl: _controller.isTemporaryChat
-                ? presignedUrlModel.presignedUrl
-                : presignedUrlModel.thumbnailPresignedUrl,
-            bytes: thumbnailBytes,
-            isLoading: false,
-          );
-          if (mediaUrl == 200) {
-            thumbnailUrlPath = _controller.isTemporaryChat
-                ? presignedUrlModel.mediaUrl ?? ''
-                : presignedUrlModel.thumbnailUrl ?? '';
-          }
+          thumbnailUrlPath = _controller.isTemporaryChat
+              ? presignedUrlModel.mediaUrl ?? ''
+              : presignedUrlModel.thumbnailUrl ?? '';
         }
       }
       if (mediaUrlPath.isNotEmpty) {
         var attachment = [
           AttachmentModel(
-            thumbnailUrl: !imageAndFile ? thumbnailUrlPath : mediaUrlPath,
+            thumbnailUrl:
+                !(imageAndFile ?? false) ? thumbnailUrlPath : mediaUrlPath,
             size: ismChatChatMessageModel.attachments?.first.size ?? 0,
             name: ismChatChatMessageModel.attachments?.first.name,
             mimeType: ismChatChatMessageModel.attachments?.first.mimeType,
@@ -1238,7 +1220,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           attachments: attachment,
           customType: ismChatChatMessageModel.customType?.value,
           metaData: ismChatChatMessageModel.metaData,
-          isTemporaryChat: isTemporaryChat,
+          isTemporaryChat: _controller.isTemporaryChat,
           parentMessageId: ismChatChatMessageModel.parentMessageId,
         );
       }

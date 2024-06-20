@@ -27,12 +27,53 @@ class IsmChatCommonViewModel {
     required bool isLoading,
     required String userIdentifier,
     required String mediaExtension,
-  }) async =>
-      await _repository.getPresignedUrl(
+    required Uint8List bytes,
+  }) async {
+    final responseGetPresig = await _repository.getPresignedUrl(
+      isLoading: isLoading,
+      userIdentifier: userIdentifier,
+      mediaExtension: mediaExtension,
+    );
+    if (responseGetPresig != null) {
+      final response = await updatePresignedUrl(
+        bytes: bytes,
         isLoading: isLoading,
-        userIdentifier: userIdentifier,
-        mediaExtension: mediaExtension,
+        presignedUrl: responseGetPresig.presignedUrl,
       );
+      if (response == 200) {
+        return responseGetPresig;
+      }
+    }
+    return null;
+  }
+
+  Future<PresignedUrlModel?> postMediaUrl({
+    required String conversationId,
+    required String nameWithExtension,
+    required int mediaType,
+    required String mediaId,
+    required bool isLoading,
+    required Uint8List bytes,
+  }) async {
+    final responseMedia = await _repository.postMediaUrl(
+      conversationId: conversationId,
+      nameWithExtension: nameWithExtension,
+      mediaType: mediaType,
+      mediaId: mediaId,
+      isLoading: isLoading,
+    );
+    if (responseMedia != null) {
+      final response = await updatePresignedUrl(
+        bytes: bytes,
+        isLoading: isLoading,
+        presignedUrl: responseMedia.mediaPresignedUrl,
+      );
+      if (response == 200) {
+        return responseMedia;
+      }
+    }
+    return null;
+  }
 
   Future<bool> sendMessage({
     required bool showInConversation,
@@ -179,19 +220,6 @@ class IsmChatCommonViewModel {
     }
     return allMessages;
   }
-
-  Future<PresignedUrlModel?> postMediaUrl({
-    required String conversationId,
-    required String nameWithExtension,
-    required int mediaType,
-    required String mediaId,
-  }) async =>
-      await _repository.postMediaUrl(
-        conversationId: conversationId,
-        nameWithExtension: nameWithExtension,
-        mediaType: mediaType,
-        mediaId: mediaId,
-      );
 
   Future<IsmChatResponseModel?> createConversation({
     required bool typingEvents,

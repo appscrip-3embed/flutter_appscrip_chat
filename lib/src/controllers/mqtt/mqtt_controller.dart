@@ -25,6 +25,8 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
 
   IsmChatCommunicationConfig? _config;
 
+  final chatDelegate = const IsmChatDelegate();
+
   Future<void> setup({IsmChatCommunicationConfig? config}) async {
     _config = config ?? IsmChat.i.config;
     projectConfig = _config?.projectConfig;
@@ -40,7 +42,7 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
     var response = await viewModel.getChatConversationsUnreadCount(
       isLoading: isLoading,
     );
-    IsmChatApp.unReadConversationMessages = response;
+    chatDelegate.unReadConversationMessages = response;
   }
 
   Future<void> setupIsmMqttConnection() async {
@@ -77,7 +79,7 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
       topics: [messageTopic, statusTopic],
     );
     mqttHelper.onConnectionChange((value) {
-      IsmChatApp.isMqttConnected = value;
+      chatDelegate.isMqttConnected = value;
     });
     mqttHelper.onEvent(
       (data) async {
@@ -89,14 +91,14 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
 
   /// onConnected callback, it will be called when connection is established
   void _onConnected() {
-    IsmChatApp.isMqttConnected = true;
+    chatDelegate.isMqttConnected = true;
     connectionState = IsmChatConnectionState.connected;
     IsmChatLog.success('Mqtt event');
   }
 
   /// onDisconnected callback, it will be called when connection is breaked
   void _onDisconnected() {
-    IsmChatApp.isMqttConnected = false;
+    chatDelegate.isMqttConnected = false;
     connectionState = IsmChatConnectionState.disconnected;
     IsmChatLog.error('MQTT Disconnected');
   }

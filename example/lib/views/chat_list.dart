@@ -45,7 +45,6 @@ class ChatList extends StatelessWidget {
                 ),
               ),
             ),
-            isShowMqttConnectErrorDailog: true,
 
             chatPageProperties: IsmChatPageProperties(
               // isAllowedDeleteChatFromLocal: true,
