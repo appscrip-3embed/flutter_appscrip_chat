@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'dart:io';
 import 'dart:math';
 
@@ -136,14 +135,9 @@ class IsmChatUtility {
   /// Returns true if the internet connection is available.
   static Future<bool> get isNetworkAvailable async {
     final connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.mobile) {
-      return true;
-    } else if (connectivityResult == ConnectivityResult.wifi) {
-      return true;
-    } else if (connectivityResult == ConnectivityResult.ethernet) {
-      return true;
-    }
-    return false;
+    return connectivityResult.contains(ConnectivityResult.mobile) ||
+        connectivityResult.contains(ConnectivityResult.wifi) ||
+        connectivityResult.contains(ConnectivityResult.ethernet);
   }
 
   /// common header for All api
@@ -237,7 +231,6 @@ class IsmChatUtility {
     }
     var croppedFile = await ImageCropper().cropImage(
       sourcePath: result.first?.path ?? '',
-      cropStyle: CropStyle.circle,
       compressQuality: 100,
       uiSettings: [
         AndroidUiSettings(
@@ -246,9 +239,11 @@ class IsmChatUtility {
           toolbarWidgetColor: IsmChatColors.whiteColor,
           initAspectRatio: CropAspectRatioPreset.original,
           lockAspectRatio: false,
+          cropStyle: CropStyle.circle,
         ),
         IOSUiSettings(
           title: 'Cropper',
+          cropStyle: CropStyle.circle,
         )
       ],
     );
