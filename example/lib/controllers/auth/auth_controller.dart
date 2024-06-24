@@ -133,10 +133,19 @@ class AuthController extends GetxController {
               lockAspectRatio: false,
               cropStyle: CropStyle.circle,
             ),
-            IOSUiSettings(title: 'Cropper', cropStyle: CropStyle.circle),
+            IOSUiSettings(
+              title: 'Cropper',
+              cropStyle: CropStyle.circle,
+            ),
             WebUiSettings(
               context: Get.context!,
-              customDialogBuilder: (_, __, ___, ____, _____) {
+              customDialogBuilder: (
+                _,
+                __,
+                ___,
+                ____,
+                _____,
+              ) {
                 return Dialog(
                   child: Builder(
                     builder: (context) {
