@@ -22,6 +22,7 @@ DBWrapper? dbWrapper;
 
 void main() async {
   await initialize();
+
   runApp(const MyApp());
 }
 
