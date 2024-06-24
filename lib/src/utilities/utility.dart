@@ -237,11 +237,12 @@ class IsmChatUtility {
           toolbarWidgetColor: IsmChatColors.whiteColor,
           initAspectRatio: CropAspectRatioPreset.original,
           lockAspectRatio: false,
-          cropStyle: CropStyle.circle,
+          // cropStyle: CropStyle.circle,
         ),
         IOSUiSettings(
           title: 'Cropper',
-          cropStyle: CropStyle.circle,
+
+          // cropStyle: CropStyle.circle,
         )
       ],
     );
