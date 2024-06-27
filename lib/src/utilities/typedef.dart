@@ -93,3 +93,9 @@ typedef InternetFileProgress = void Function(
 
 typedef IsmChatConversationModifier = Future<IsmChatConversationModel> Function(
     IsmChatConversationModel);
+
+typedef NotificaitonCallback = void Function(
+  String,
+  String,
+  String,
+);

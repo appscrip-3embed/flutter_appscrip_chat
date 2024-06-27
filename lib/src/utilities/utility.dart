@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'dart:io';
 import 'dart:math';
 
@@ -135,15 +134,12 @@ class IsmChatUtility {
 
   /// Returns true if the internet connection is available.
   static Future<bool> get isNetworkAvailable async {
-    final connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.mobile) {
-      return true;
-    } else if (connectivityResult == ConnectivityResult.wifi) {
-      return true;
-    } else if (connectivityResult == ConnectivityResult.ethernet) {
-      return true;
-    }
-    return false;
+    final result = await Connectivity().checkConnectivity();
+    return result.any((e) => [
+          ConnectivityResult.mobile,
+          ConnectivityResult.wifi,
+          ConnectivityResult.ethernet,
+        ].contains(e));
   }
 
   /// common header for All api
@@ -178,8 +174,7 @@ class IsmChatUtility {
       'licenseKey': IsmChatConfig.communicationConfig.projectConfig.licenseKey,
       'appSecret': IsmChatConfig.communicationConfig.projectConfig.appSecret,
       'userToken': IsmChatConfig.communicationConfig.userConfig.userToken,
-      'Authorization':
-          IsmChatConfig.communicationConfig.userConfig.accessToken ?? ''
+      'Authorization': IsmChatConfig.communicationConfig.userConfig.accessToken ?? ''
     };
     if (isDefaultContentType == true) {
       header.addAll({
@@ -215,8 +210,7 @@ class IsmChatUtility {
     );
   }
 
-  static Future<List<XFile?>> pickMedia(ImageSource source,
-      {bool isVideoAndImage = false}) async {
+  static Future<List<XFile?>> pickMedia(ImageSource source, {bool isVideoAndImage = false}) async {
     List<XFile?> result;
     if (isVideoAndImage) {
       result = await ImagePicker().pickMultipleMedia(
@@ -224,9 +218,7 @@ class IsmChatUtility {
         requestFullMetadata: true,
       );
     } else {
-      result = [
-        await ImagePicker().pickImage(imageQuality: 25, source: source)
-      ];
+      result = [await ImagePicker().pickImage(imageQuality: 25, source: source)];
     }
 
     if (result.isEmpty) {
@@ -237,7 +229,6 @@ class IsmChatUtility {
     }
     var croppedFile = await ImageCropper().cropImage(
       sourcePath: result.first?.path ?? '',
-      cropStyle: CropStyle.circle,
       compressQuality: 100,
       uiSettings: [
         AndroidUiSettings(
@@ -259,17 +250,7 @@ class IsmChatUtility {
   static String formatBytes(int size, [int fractionDigits = 2]) {
     if (size <= 0) return '0 B';
     final multiple = (log(size) / log(1024)).floor();
-    return '${(size / pow(1024, multiple)).toStringAsFixed(fractionDigits)} ${[
-      'B',
-      'KB',
-      'MB',
-      'GB',
-      'TB',
-      'PB',
-      'EB',
-      'ZB',
-      'YB'
-    ][multiple]}';
+    return '${(size / pow(1024, multiple)).toStringAsFixed(fractionDigits)} ${['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][multiple]}';
   }
 
   /// Returns data size representation of a provided file
@@ -278,8 +259,7 @@ class IsmChatUtility {
     try {
       bytes = file.readAsBytesSync();
     } catch (_) {
-      bytes = Uint8List.fromList(
-          await File.fromUri(Uri.parse(file.path)).readAsBytes());
+      bytes = Uint8List.fromList(await File.fromUri(Uri.parse(file.path)).readAsBytes());
     }
     var dataSize = IsmChatUtility.formatBytes(
       int.parse(bytes.length.toString()),
@@ -305,8 +285,7 @@ class IsmChatUtility {
     }
   }
 
-  static Future<File> makeDirectoryWithUrl(
-      {required String urlPath, required String fileName}) async {
+  static Future<File> makeDirectoryWithUrl({required String urlPath, required String fileName}) async {
     File? file;
     String? path;
 
@@ -314,16 +293,14 @@ class IsmChatUtility {
       final url = Uri.parse(urlPath);
       final response = await http.get(url);
       final bytes = response.bodyBytes;
-      final documentsDir =
-          (await path_provider.getApplicationDocumentsDirectory()).path;
+      final documentsDir = (await path_provider.getApplicationDocumentsDirectory()).path;
       path = '$documentsDir/$fileName';
       if (!File(path).existsSync()) {
         file = File(path);
         await file.writeAsBytes(bytes);
       }
     } else {
-      final documentsDir =
-          (await path_provider.getApplicationDocumentsDirectory()).path;
+      final documentsDir = (await path_provider.getApplicationDocumentsDirectory()).path;
       path = '$documentsDir/$fileName';
       if (!File(path).existsSync()) {
         file = File(path);
@@ -355,9 +332,7 @@ class IsmChatUtility {
     return false;
   }
 
-  static Widget circularProgressBar(
-          [Color? backgroundColor, Color? animatedColor, double? value]) =>
-      DecoratedBox(
+  static Widget circularProgressBar([Color? backgroundColor, Color? animatedColor, double? value]) => DecoratedBox(
         decoration: BoxDecoration(
           color: backgroundColor?.withOpacity(.5),
           borderRadius: BorderRadius.circular(15),

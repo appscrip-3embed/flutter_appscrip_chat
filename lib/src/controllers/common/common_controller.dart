@@ -24,11 +24,30 @@ class IsmChatCommonController extends GetxController {
     required bool isLoading,
     required String userIdentifier,
     required String mediaExtension,
+    required Uint8List bytes,
   }) async =>
       await viewModel.getPresignedUrl(
         isLoading: isLoading,
         userIdentifier: userIdentifier,
         mediaExtension: mediaExtension,
+        bytes: bytes,
+      );
+
+  Future<PresignedUrlModel?> postMediaUrl({
+    required String conversationId,
+    required String nameWithExtension,
+    required int mediaType,
+    required String mediaId,
+    required Uint8List bytes,
+    required bool isLoading,
+  }) async =>
+      await viewModel.postMediaUrl(
+        conversationId: conversationId,
+        nameWithExtension: nameWithExtension,
+        mediaType: mediaType,
+        mediaId: mediaId,
+        isLoading: isLoading,
+        bytes: bytes,
       );
 
   List<IsmChatMessageModel> sortMessages(List<IsmChatMessageModel> messages) =>
@@ -73,19 +92,6 @@ class IsmChatCommonController extends GetxController {
           parentMessageId: parentMessageId,
           searchableTags: searchableTags,
           isUpdateMesage: isUpdateMesage);
-
-  Future<PresignedUrlModel?> postMediaUrl({
-    required String conversationId,
-    required String nameWithExtension,
-    required int mediaType,
-    required String mediaId,
-  }) async =>
-      await viewModel.postMediaUrl(
-        conversationId: conversationId,
-        nameWithExtension: nameWithExtension,
-        mediaType: mediaType,
-        mediaId: mediaId,
-      );
 
   Future<IsmChatConversationModel?> createConversation({
     required List<String> userId,

@@ -111,6 +111,7 @@ class IsmChatCommonRepository {
     required String nameWithExtension,
     required int mediaType,
     required String mediaId,
+    required bool isLoading,
   }) async {
     try {
       final payload = {
@@ -127,6 +128,7 @@ class IsmChatCommonRepository {
         IsmChatAPI.presignedUrls,
         payload: payload,
         headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isLoading,
       );
       if (response.hasError) {
         return null;
