@@ -109,8 +109,7 @@ class AuthController extends GetxController {
   void ismUploadImage(ImageSource imageSource) async {
     XFile? result;
     if (imageSource == ImageSource.gallery) {
-      result =
-          await ImagePicker().pickImage(imageQuality: 25, source: imageSource);
+      result = await ImagePicker().pickImage(imageQuality: 25, source: imageSource);
     } else {
       result = await ImagePicker().pickImage(
         imageQuality: 25,
@@ -123,7 +122,6 @@ class AuthController extends GetxController {
       if (!Responsive.isWeb(Get.context!)) {
         var croppedFile = await ImageCropper().cropImage(
           sourcePath: result.path,
-          cropStyle: CropStyle.circle,
           compressQuality: 100,
           uiSettings: [
             AndroidUiSettings(
@@ -138,7 +136,7 @@ class AuthController extends GetxController {
             ),
             WebUiSettings(
               context: Get.context!,
-              customDialogBuilder: (cropper, crop, rotate) {
+              customDialogBuilder: (cropper, _, __, ___, ____) {
                 return Dialog(
                   child: Builder(
                     builder: (context) {
@@ -151,7 +149,7 @@ class AuthController extends GetxController {
                   ),
                 );
               },
-            )
+            ),
           ],
         );
         bytes = File(croppedFile!.path).readAsBytesSync();
@@ -175,8 +173,7 @@ class AuthController extends GetxController {
       'password': confirmPasswordController.text.trim(),
       'metaData': {'country': 'India'}
     };
-    var response =
-        await _viewModel.postCreateUser(isLoading: true, createUser: creatUser);
+    var response = await _viewModel.postCreateUser(isLoading: true, createUser: creatUser);
     if (response.data != null) {
       await AppConfig.getUserData();
       Get.offAllNamed(AppRoutes.chatList);
@@ -201,16 +198,11 @@ class AuthController extends GetxController {
   }
 
   // / get Api for presigned Url.....
-  Future<void> ismGetPresignedUrl(
-      String mediaExtension, Uint8List bytes) async {
-    var response = await _viewModel.ismGetPresignedUrl(
-        isLoading: true,
-        userIdentifier: emailController.text,
-        mediaExtension: mediaExtension);
+  Future<void> ismGetPresignedUrl(String mediaExtension, Uint8List bytes) async {
+    var response = await _viewModel.ismGetPresignedUrl(isLoading: true, userIdentifier: emailController.text, mediaExtension: mediaExtension);
     if (response != null) {
       Get.back();
-      var urlResponse =
-          await updatePresignedUrl(response.presignedUrl ?? '', bytes);
+      var urlResponse = await updatePresignedUrl(response.presignedUrl ?? '', bytes);
       if (urlResponse == 200) {
         profileImage = response.mediaUrl!;
         Get.back();
@@ -220,8 +212,7 @@ class AuthController extends GetxController {
 
   /// put Api for updatePresignedUrl...
   Future<int?> updatePresignedUrl(String presignedUrl, Uint8List bytes) async {
-    var response = await _viewModel.updatePresignedUrl(
-        isLoading: true, presignedUrl: presignedUrl, file: bytes);
+    var response = await _viewModel.updatePresignedUrl(isLoading: true, presignedUrl: presignedUrl, file: bytes);
     if (response!.errorCode == 200) {
       return response.errorCode;
     } else {
