@@ -495,7 +495,9 @@ class IsmChatPageController extends GetxController
     if (conversationController.currentConversation != null) {
       _currentUser();
       conversation = conversationController.currentConversation;
-      final newMeessageFromOutside = conversation?.messageFromOutSide;
+      final newMeessageFromOutside =
+          conversation?.outSideMessage?.messageFromOutSide ?? '';
+
       await Future.delayed(Duration.zero);
       isTemporaryChat =
           arguments['isTemporaryChat'] as bool? ?? isTemporaryChats;
@@ -551,8 +553,7 @@ class IsmChatPageController extends GetxController
         isMessagesLoading = false;
       }
 
-      if (newMeessageFromOutside != null &&
-          newMeessageFromOutside.isNotEmpty == true) {
+      if (newMeessageFromOutside.isNotEmpty == true) {
         await Future.delayed(const Duration(milliseconds: 100));
         chatInputController.text = newMeessageFromOutside;
         if (chatInputController.text.isNotEmpty) {
@@ -562,6 +563,13 @@ class IsmChatPageController extends GetxController
             pushNotifications: conversation?.pushNotifications ?? true,
           );
         }
+      } else if (conversation?.outSideMessage?.imagePath != null) {
+        await sendImage(
+          conversationId: conversation?.conversationId ?? '',
+          userId: conversation?.opponentDetails?.userId ?? '',
+          caption: conversation?.outSideMessage?.caption,
+          imagePath: conversation?.outSideMessage?.imagePath,
+        );
       }
       unawaited(updateUnreadMessgaeCount());
     }

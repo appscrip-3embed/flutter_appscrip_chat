@@ -374,6 +374,11 @@ class _MicOrSendButton extends StatelessWidget {
               if (!(controller.conversation?.isChattingAllowed == true)) {
                 controller.showDialogCheckBlockUnBlock();
                 return;
+              } else if (!(await IsmChatProperties
+                      .chatPageProperties.isSendMediaAllowed
+                      ?.call(context, controller.conversation!) ??
+                  true)) {
+                return;
               }
 
               if (controller.showSendButton) {
@@ -781,13 +786,19 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
               if (!(controller.conversation?.isChattingAllowed == true)) {
                 controller.showDialogCheckBlockUnBlock();
               } else {
-                await Get.bottomSheet(
-                  const IsmChatAttachmentCard(),
-                  enterBottomSheetDuration:
-                      IsmChatConstants.bottomSheetDuration,
-                  exitBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
-                  elevation: 0,
-                );
+                if (await IsmChatProperties
+                        .chatPageProperties.isSendMediaAllowed
+                        ?.call(context, controller.conversation!) ??
+                    true) {
+                  await Get.bottomSheet(
+                    const IsmChatAttachmentCard(),
+                    enterBottomSheetDuration:
+                        IsmChatConstants.bottomSheetDuration,
+                    exitBottomSheetDuration:
+                        IsmChatConstants.bottomSheetDuration,
+                    elevation: 0,
+                  );
+                }
               }
             },
             color: IsmChatConfig.chatTheme.chatPageTheme?.textFiledThemData

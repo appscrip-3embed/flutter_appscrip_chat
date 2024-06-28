@@ -86,6 +86,7 @@ class ChatList extends StatelessWidget {
                 if (!kIsWeb) IsmChatAttachmentType.location,
                 if (!kIsWeb) IsmChatAttachmentType.contact,
               ],
+
               // features: [
               //   IsmChatFeature.reply,
               // ]
