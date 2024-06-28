@@ -696,11 +696,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     String? nameWithExtension;
     Uint8List? bytes;
     String? mediaId;
-
     String? extension;
     File? compressedFile;
     var sentAt = DateTime.now().millisecondsSinceEpoch;
-
     if (webMediaModel == null) {
       compressedFile = await FlutterNativeImage.compressImage(
         imagePath?.path ?? '',

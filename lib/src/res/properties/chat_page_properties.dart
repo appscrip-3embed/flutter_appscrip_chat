@@ -22,6 +22,7 @@ class IsmChatPageProperties {
     this.messageSenderName,
     this.messageSenderProfileUrl,
     this.messageInfoAcknowldge,
+    this.isSendMediaAllowed,
   });
 
   final Widget? placeholder;
@@ -108,4 +109,8 @@ class IsmChatPageProperties {
   /// Primarily designed for check messgae info
   ///
   final IsmChatPageMessageAcknowldgeProperties? messageInfoAcknowldge;
+
+
+  final Future<bool?>? Function(BuildContext, IsmChatConversationModel)?
+      isSendMediaAllowed;
 }
