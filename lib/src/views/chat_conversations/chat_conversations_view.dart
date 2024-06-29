@@ -296,7 +296,10 @@ class _CreateChatBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) => CupertinoActionSheet(
         actions: [
           CupertinoActionSheetAction(
-            onPressed: _startConversation,
+            onPressed: () {
+              Get.back();
+              _startConversation();
+            },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -319,7 +322,10 @@ class _CreateChatBottomSheet extends StatelessWidget {
             ),
           ),
           CupertinoActionSheetAction(
-            onPressed: () => _startConversation(true),
+            onPressed: () {
+              Get.back();
+              _startConversation(true);
+            },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -342,10 +348,13 @@ class _CreateChatBottomSheet extends StatelessWidget {
             ),
           ),
           CupertinoActionSheetAction(
-            onPressed: () => _startConversation(
-              true,
-              IsmChatConversationType.public,
-            ),
+            onPressed: () {
+              Get.back();
+              _startConversation(
+                true,
+                IsmChatConversationType.public,
+              );
+            },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -368,10 +377,13 @@ class _CreateChatBottomSheet extends StatelessWidget {
             ),
           ),
           CupertinoActionSheetAction(
-            onPressed: () => _startConversation(
-              true,
-              IsmChatConversationType.open,
-            ),
+            onPressed: () {
+              Get.back();
+              _startConversation(
+                true,
+                IsmChatConversationType.open,
+              );
+            },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -394,7 +406,10 @@ class _CreateChatBottomSheet extends StatelessWidget {
             ),
           ),
           CupertinoActionSheetAction(
-            onPressed: IsmChatRouteManagement.goToBroadcastView,
+            onPressed: () {
+              Get.back();
+              IsmChatRouteManagement.goToBroadcastView();
+            },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
