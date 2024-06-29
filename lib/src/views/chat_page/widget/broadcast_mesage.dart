@@ -67,7 +67,7 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
 }
 
 class _BroadCastMessage extends StatelessWidget {
-  const _BroadCastMessage({super.key, required this.onBackTap});
+  const _BroadCastMessage({required this.onBackTap});
 
   final VoidCallback onBackTap;
 
