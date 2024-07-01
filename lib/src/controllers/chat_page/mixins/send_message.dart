@@ -288,7 +288,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       sentByMe: true,
       isUploading: true,
       metaData: IsmChatMetaData(
-        // senderInfo: _controller.getUser(),
         replyMessage: _controller.isreplying
             ? IsmChatReplyMessageModel(
                 forMessageType: IsmChatCustomMessageType.audio,
@@ -609,7 +608,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         sentByMe: true,
         isUploading: true,
         metaData: IsmChatMetaData(
-          // senderInfo: _controller.getUser(),
           captionMessage: caption,
           replyMessage: _controller.isreplying
               ? IsmChatReplyMessageModel(
@@ -778,7 +776,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         IsmChatConfig.communicationConfig.userConfig.userName ??
             conversationController.userDetails?.userName ??
             '';
-
     await ismPostMediaUrl(
       bytes: bytes ?? Uint8List(0),
       createdAt: sentAt,
@@ -789,6 +786,103 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       notificationBody: IsmChatStrings.sentImage,
       imageAndFile: true,
       notificationTitle: notificationTitle,
+    );
+  }
+
+  Future<void> sendMessageWithImageUrl({
+    required String conversationId,
+    required String userId,
+    required String imageUrl,
+    String? caption,
+    bool sendPushNotification = false,
+  }) async {
+    final chatConversationResponse = await IsmChatConfig.dbWrapper!
+        .getConversation(conversationId: conversationId);
+    if (chatConversationResponse == null && !_controller.isTemporaryChat) {
+      _controller.conversation =
+          await _controller.commonController.createConversation(
+        conversation: _controller.conversation!,
+        userId: [userId],
+        metaData: _controller.conversation?.metaData,
+        searchableTags: [
+          IsmChatConfig.communicationConfig.userConfig.userName ??
+              conversationController.userDetails?.userName ??
+              '',
+          _controller.conversation?.chatName ?? ''
+        ],
+      );
+      conversationId = _controller.conversation?.conversationId ?? '';
+      unawaited(
+          _controller.getConverstaionDetails(conversationId: conversationId));
+    }
+    IsmChatMessageModel? imageMessage;
+    var sentAt = DateTime.now().millisecondsSinceEpoch;
+    final bytes = await IsmChatUtility.getUint8ListFromUrl(imageUrl);
+    final nameWithExtension = imageUrl.split('/').last;
+    final mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
+    final extension = nameWithExtension.split('.').last;
+    imageMessage = IsmChatMessageModel(
+      body: IsmChatStrings.image,
+      conversationId: conversationId,
+      senderInfo: _controller.currentUser,
+      customType: IsmChatCustomMessageType.image,
+      attachments: [
+        AttachmentModel(
+          attachmentType: IsmChatMediaType.image,
+          thumbnailUrl: imageUrl,
+          size: bytes.length,
+          name: nameWithExtension,
+          mimeType: 'image/jpeg',
+          mediaUrl: imageUrl,
+          mediaId: mediaId,
+          extension: extension,
+        )
+      ],
+      deliveredToAll: false,
+      messageId: '',
+      deviceId: _deviceConfig.deviceId ?? '',
+      messageType: IsmChatMessageType.normal,
+      messagingDisabled: false,
+      parentMessageId: '',
+      readByAll: false,
+      sentAt: sentAt,
+      sentByMe: true,
+      isUploading: true,
+      metaData: IsmChatMetaData(
+        captionMessage: caption,
+      ),
+    );
+
+    _controller.messages.add(imageMessage);
+    _controller.isreplying = false;
+    if (!_controller.isTemporaryChat) {
+      await IsmChatConfig.dbWrapper!
+          .saveMessage(imageMessage, IsmChatDbBox.pending);
+
+      if (kIsWeb && Responsive.isWeb(Get.context!)) {
+        _controller.updateLastMessagOnCurrentTime(imageMessage);
+      }
+    }
+    var notificationTitle =
+        IsmChatConfig.communicationConfig.userConfig.userName ??
+            conversationController.userDetails?.userName ??
+            '';
+    sendMessage(
+      metaData: imageMessage.metaData,
+      deviceId: imageMessage.deviceId ?? '',
+      body: imageMessage.body,
+      customType: imageMessage.customType?.value,
+      createdAt: imageMessage.sentAt,
+      conversationId: imageMessage.conversationId ?? '',
+      messageType: imageMessage.messageType?.value ?? 0,
+      notificationBody: IsmChatStrings.sentImage,
+      notificationTitle: notificationTitle,
+      attachments: imageMessage.attachments != null
+          ? [imageMessage.attachments!.first.toMap().removeNullValues()]
+          : null,
+      isTemporaryChat: _controller.isTemporaryChat,
+      parentMessageId: imageMessage.parentMessageId,
+      sendPushNotification: sendPushNotification,
     );
   }
 
@@ -852,7 +946,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         ),
       ],
       metaData: IsmChatMetaData(
-        // senderInfo: _controller.getUser(),
         replyMessage: _controller.isreplying
             ? IsmChatReplyMessageModel(
                 forMessageType: IsmChatCustomMessageType.location,
@@ -951,7 +1044,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       sentByMe: true,
       deviceId: IsmChatConfig.communicationConfig.projectConfig.deviceId,
       metaData: IsmChatMetaData(
-        // senderInfo: _controller.getUser(),
         contacts: contacts
             .map(
               (e) => IsmChatContactMetaDatModel(
@@ -1053,7 +1145,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       sentAt: sentAt,
       sentByMe: true,
       metaData: IsmChatMetaData(
-        // senderInfo: _controller.getUser(),
         replyMessage: _controller.isreplying
             ? IsmChatReplyMessageModel(
                 forMessageType: IsmChatCustomMessageType.text,
