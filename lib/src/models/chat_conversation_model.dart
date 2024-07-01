@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/foundation.dart';
@@ -329,34 +328,34 @@ class IsmChatConversationModel {
 }
 
 class OutSideMessage {
-  final File? imagePath;
+  final String? imageUrl;
   final String? messageFromOutSide;
   final String? caption;
   OutSideMessage({
-    this.imagePath,
+    this.imageUrl,
     this.messageFromOutSide,
     this.caption,
   });
 
   OutSideMessage copyWith({
-    File? imagePath,
+    String? imagePath,
     String? messageFromOutSide,
     String? caption,
   }) =>
       OutSideMessage(
-        imagePath: imagePath ?? this.imagePath,
+        imageUrl: imagePath ?? imageUrl,
         messageFromOutSide: messageFromOutSide ?? this.messageFromOutSide,
         caption: caption ?? this.caption,
       );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
-        'imagePath': imagePath,
+        'imagePath': imageUrl,
         'messageFromOutSide': messageFromOutSide,
         'caption': caption,
       };
 
   factory OutSideMessage.fromMap(Map<String, dynamic> map) => OutSideMessage(
-        imagePath: map['imagePath'] != null ? map['imagePath'] as File : null,
+        imageUrl: map['imagePath'] as String? ?? '',
         messageFromOutSide: map['messageFromOutSide'] as String? ?? '',
         caption: map['caption'] != null ? map['caption'] as String : null,
       );
@@ -368,18 +367,18 @@ class OutSideMessage {
 
   @override
   String toString() =>
-      'OutSideMessage(imagePath: $imagePath, messageFromOutSide: $messageFromOutSide, caption: $caption)';
+      'OutSideMessage(imagePath: $imageUrl, messageFromOutSide: $messageFromOutSide, caption: $caption)';
 
   @override
   bool operator ==(covariant OutSideMessage other) {
     if (identical(this, other)) return true;
 
-    return other.imagePath == imagePath &&
+    return other.imageUrl == imageUrl &&
         other.messageFromOutSide == messageFromOutSide &&
         other.caption == caption;
   }
 
   @override
   int get hashCode =>
-      imagePath.hashCode ^ messageFromOutSide.hashCode ^ caption.hashCode;
+      imageUrl.hashCode ^ messageFromOutSide.hashCode ^ caption.hashCode;
 }

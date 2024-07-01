@@ -1527,14 +1527,15 @@ class IsmChatConversationsController extends GetxController {
       body: IsmChatStrings.image,
       conversationId: conversationId,
       senderInfo: UserDetails(
-          userProfileImageUrl:
-              IsmChatConfig.communicationConfig.userConfig.userProfile ?? '',
-          userName: IsmChatConfig.communicationConfig.userConfig.userName ?? '',
-          userIdentifier:
-              IsmChatConfig.communicationConfig.userConfig.userEmail ?? '',
-          userId: IsmChatConfig.communicationConfig.userConfig.userId,
-          online: false,
-          lastSeen: 0),
+        userProfileImageUrl:
+            IsmChatConfig.communicationConfig.userConfig.userProfile ?? '',
+        userName: IsmChatConfig.communicationConfig.userConfig.userName ?? '',
+        userIdentifier:
+            IsmChatConfig.communicationConfig.userConfig.userEmail ?? '',
+        userId: IsmChatConfig.communicationConfig.userConfig.userId,
+        online: false,
+        lastSeen: 0,
+      ),
       customType: IsmChatCustomMessageType.image,
       attachments: [
         AttachmentModel(

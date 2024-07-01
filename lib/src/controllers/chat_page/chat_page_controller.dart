@@ -563,12 +563,12 @@ class IsmChatPageController extends GetxController
             pushNotifications: conversation?.pushNotifications ?? true,
           );
         }
-      } else if (conversation?.outSideMessage?.imagePath != null) {
-        await sendImage(
+      } else if (conversation?.outSideMessage?.imageUrl != null) {
+        await sendMessageWithImageUrl(
           conversationId: conversation?.conversationId ?? '',
           userId: conversation?.opponentDetails?.userId ?? '',
           caption: conversation?.outSideMessage?.caption,
-          imagePath: conversation?.outSideMessage?.imagePath,
+          imageUrl: conversation?.outSideMessage?.imageUrl ?? '',
         );
       }
       unawaited(updateUnreadMessgaeCount());
