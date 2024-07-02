@@ -73,7 +73,7 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
   @override
   void didUpdateWidget(VideoViewPage oldWidget) {
     if (widget.path != oldWidget.path) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      IsmChatUtility.doLater(() {
         chatPageController.isVideoVisible = true;
         _controller.pause();
         _controller = kIsWeb

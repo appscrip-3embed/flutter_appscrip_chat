@@ -27,6 +27,14 @@ class IsmChatUtility {
     FocusScope.of(Get.context!).unfocus();
   }
 
+
+  /// Method for Do Work After Frame Call Back
+  static void doLater(VoidCallback? work) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      work?.call();
+    });
+  }
+
   /// Show loader
   static void showLoader() async {
     closeLoader();

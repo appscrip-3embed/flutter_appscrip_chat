@@ -38,7 +38,7 @@ class IsmChatRouteManagement {
   }
 
   static void goToBroadCastListView() {
-    Get.toNamed(IsmChatBroadCastListView.route);
+    Get.toNamed(IsmChatBroadCastView.route);
   }
 
   static void goToObserverView(String conversationId) {
@@ -54,7 +54,7 @@ class IsmChatRouteManagement {
   }
 
   static void goToBroadcastView() {
-    Get.toNamed(IsmChatBroadCastView.route);
+    Get.toNamed(IsmChatCreateBroadCastView.route);
   }
 
   static void goToPublicView() {

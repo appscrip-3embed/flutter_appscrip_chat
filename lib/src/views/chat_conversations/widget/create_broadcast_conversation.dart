@@ -4,12 +4,12 @@ import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class IsmChatBroadCastView extends StatelessWidget {
-  const IsmChatBroadCastView({
+class IsmChatCreateBroadCastView extends StatelessWidget {
+  const IsmChatCreateBroadCastView({
     super.key,
   });
 
-  static const String route = IsmPageRoutes.broadcastView;
+  static const String route = IsmPageRoutes.createBroadcastView;
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(

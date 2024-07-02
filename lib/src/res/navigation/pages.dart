@@ -34,20 +34,14 @@ class IsmChatPages {
       page: IsmChatBlockedUsersView.new,
       binding: IsmChatConversationsBinding(),
     ),
-     GetPage(
-      name: IsmChatBroadCastListView.route,
-      page: IsmChatBroadCastListView.new,
-      binding: IsmChatConversationsBinding(),
-    ),
-
     GetPage(
       name: IsmChatObserverUsersView.route,
       page: IsmChatObserverUsersView.new,
       binding: IsmChatConversationsBinding(),
     ),
     GetPage(
-      name: IsmChatBroadCastView.route,
-      page: IsmChatBroadCastView.new,
+      name: IsmChatCreateBroadCastView.route,
+      page: IsmChatCreateBroadCastView.new,
       binding: IsmChatConversationsBinding(),
     ),
     GetPage(
@@ -64,6 +58,11 @@ class IsmChatPages {
       name: IsmChatGlobalSearchView.route,
       page: IsmChatGlobalSearchView.new,
       binding: IsmChatConversationsBinding(),
+    ),
+    GetPage(
+      name: IsmChatBroadCastView.route,
+      page: IsmChatBroadCastView.new,
+      binding: IsmChatBroadcastBinding(),
     ),
     GetPage(
       name: IsmChatUserSearchView.route,

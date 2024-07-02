@@ -374,11 +374,6 @@ class _MicOrSendButton extends StatelessWidget {
               if (!(controller.conversation?.isChattingAllowed == true)) {
                 controller.showDialogCheckBlockUnBlock();
                 return;
-              } else if (!(await IsmChatProperties
-                      .chatPageProperties.isSendMediaAllowed
-                      ?.call(context, controller.conversation!) ??
-                  true)) {
-                return;
               }
 
               if (controller.showSendButton) {
@@ -455,7 +450,6 @@ class _MicOrSendButton extends StatelessWidget {
                     if (controller.chatInputController.text.trim().isNotEmpty &&
                         controller.isMessageSent == false) {
                       controller.isMessageSent = true;
-
                       controller.sendTextMessage(
                         conversationId:
                             controller.conversation?.conversationId ?? '',
@@ -470,7 +464,12 @@ class _MicOrSendButton extends StatelessWidget {
                 if (controller.showEmojiBoard) {
                   controller.toggleEmojiBoard();
                 }
-
+                if (!(await IsmChatProperties
+                        .chatPageProperties.isSendMediaAllowed
+                        ?.call(context, controller.conversation!) ??
+                    true)) {
+                  return;
+                }
                 var allowPermission = false;
                 if (kIsWeb) {
                   final state = await IsmChatBlob.checkPermission('microphone');

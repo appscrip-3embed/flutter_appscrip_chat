@@ -34,7 +34,10 @@ class IsmChatApiWrapper {
     }
     try {
       final response = await http
-          .get(uri, headers: headers)
+          .get(
+            uri,
+            headers: headers,
+          )
           .timeout(const Duration(seconds: 60));
 
       if (showLoader) {

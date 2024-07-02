@@ -20,7 +20,7 @@ class _IsmChatOpenConversationViewState
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    IsmChatUtility.doLater(() {
       converstaionController
           .intiPublicAndOpenConversation(IsmChatConversationType.open);
       scrollController.addListener(() {

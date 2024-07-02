@@ -17,6 +17,7 @@ class IsmChatAPI {
   static String authenticate = '$allUsers/authenticate';
 
   static String chatConversation = '$baseUrl/chat/conversation';
+  static String chatGroupCast = '$baseUrl/chat/groupcasts';
   static String chatConversationClear = '$chatConversation/clear';
   static String chatConversationDelete = '$chatConversation/local';
   static String getChatConversations = '$baseUrl/chat/conversations';

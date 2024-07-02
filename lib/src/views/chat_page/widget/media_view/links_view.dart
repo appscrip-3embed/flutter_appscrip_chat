@@ -23,8 +23,7 @@ class _IsmLinksViewState extends State<IsmLinksView>
   @override
   void initState() {
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    IsmChatUtility.doLater(() {
       var storeSortLinks =
           chatPageController.sortMessages(widget.mediaListLinks);
       storeWidgetLinksList =

@@ -22,11 +22,14 @@ class _IsmDocsViewState extends State<IsmDocsView>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      var storeSortDocs = chatPageController.sortMessages(widget.mediaListDocs);
-      storeWidgetDocsList =
-          chatPageController.sortMediaList(storeSortDocs).reversed.toList();
-    });
+    IsmChatUtility.doLater(
+      () {
+        var storeSortDocs =
+            chatPageController.sortMessages(widget.mediaListDocs);
+        storeWidgetDocsList =
+            chatPageController.sortMediaList(storeSortDocs).reversed.toList();
+      },
+    );
   }
 
   @override

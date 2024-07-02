@@ -10,12 +10,10 @@ class IsmChatBlockedUsersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
       initState: (state) {
-        WidgetsBinding.instance.addPostFrameCallback(
-          (timeStamp) {
-            Get.find<IsmChatConversationsController>()
-                .getBlockUser(isLoading: true);
-          },
-        );
+        IsmChatUtility.doLater(()  async{
+         await Get.find<IsmChatConversationsController>()
+              .getBlockUser(isLoading: true);
+        });
       },
       builder: (controller) => Scaffold(
             appBar: IsmChatAppBar(
