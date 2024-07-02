@@ -1,3 +1,4 @@
+export 'about_text_message.dart';
 export 'add_remove_member.dart';
 export 'add_revoke_admin.dart';
 export 'audio_message.dart';

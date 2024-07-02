@@ -455,6 +455,7 @@ class _MicOrSendButton extends StatelessWidget {
                     if (controller.chatInputController.text.trim().isNotEmpty &&
                         controller.isMessageSent == false) {
                       controller.isMessageSent = true;
+
                       controller.sendTextMessage(
                         conversationId:
                             controller.conversation?.conversationId ?? '',

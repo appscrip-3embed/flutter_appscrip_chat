@@ -49,12 +49,12 @@ class IsmChatImageMessage extends StatelessWidget {
                                   : false,
                         ),
                 ),
-                if (message.metaData?.captionMessage?.isNotEmpty == true) ...[
+                if (message.metaData?.caption?.isNotEmpty == true) ...[
                   Container(
                     padding: IsmChatDimens.edgeInsetsTop5,
                     width: IsmChatDimens.percentWidth(.6),
                     child: Text(
-                      message.metaData?.captionMessage ?? '',
+                      message.metaData?.caption ?? '',
                       style: message.style.copyWith(
                         fontSize: IsmChatDimens.tharteen,
                       ),

@@ -57,6 +57,9 @@ class IsmChatMessageWrapper extends StatelessWidget {
       case IsmChatCustomMessageType.date:
         return IsmChatDateMessage(message);
 
+      case IsmChatCustomMessageType.aboutText:
+        return IsmChatAboutTextMessage(message);
+
       case IsmChatCustomMessageType.conversationCreated:
         return IsmChatConversationCreatedMessage(message);
 
@@ -149,6 +152,9 @@ class IsmChatMessageWrapperWithMetaData extends StatelessWidget {
 
       case IsmChatCustomMessageType.date:
         return IsmChatDateMessage(message);
+
+      case IsmChatCustomMessageType.aboutText:
+        return IsmChatAboutTextMessage(message);
 
       case IsmChatCustomMessageType.conversationCreated:
         return IsmChatConversationCreatedMessage(message);

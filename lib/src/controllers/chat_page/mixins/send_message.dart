@@ -608,7 +608,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         sentByMe: true,
         isUploading: true,
         metaData: IsmChatMetaData(
-          captionMessage: caption,
+          caption: caption,
           replyMessage: _controller.isreplying
               ? IsmChatReplyMessageModel(
                   forMessageType: IsmChatCustomMessageType.video,
@@ -743,7 +743,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       sentByMe: true,
       isUploading: true,
       metaData: IsmChatMetaData(
-        captionMessage: caption,
+        caption: caption,
         replyMessage: _controller.isreplying
             ? IsmChatReplyMessageModel(
                 forMessageType: IsmChatCustomMessageType.image,
@@ -849,7 +849,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       sentByMe: true,
       isUploading: true,
       metaData: IsmChatMetaData(
-        captionMessage: caption,
+        caption: caption,
       ),
     );
 
@@ -1378,5 +1378,98 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         _controller.messages[x] = messages;
       }
     }
+  }
+
+  void sendAboutTextMessage({
+    required String conversationId,
+    required String userId,
+    required OutSideMessage? outSideMessage,
+    bool pushNotifications = true,
+  }) async {
+    final chatConversationResponse = await IsmChatConfig.dbWrapper!
+        .getConversation(conversationId: conversationId);
+    if (chatConversationResponse == null && !_controller.isTemporaryChat) {
+      _controller.conversation =
+          await _controller.commonController.createConversation(
+        conversation: _controller.conversation!,
+        isGroup: _controller.conversation?.isCreateGroupFromOutSide ?? false,
+        userId: [userId],
+        metaData: _controller.conversation?.metaData,
+        searchableTags: [
+          IsmChatConfig.communicationConfig.userConfig.userName ??
+              conversationController.userDetails?.userName ??
+              '',
+          _controller.conversation?.chatName ?? ''
+        ],
+      );
+      conversationId = _controller.conversation?.conversationId ?? '';
+      unawaited(
+          _controller.getConverstaionDetails(conversationId: conversationId));
+    }
+    var sentAt = DateTime.now().millisecondsSinceEpoch;
+    var aboutTextMessage = IsmChatMessageModel(
+      body: outSideMessage?.messageFromOutSide ?? '',
+      conversationId: conversationId,
+      senderInfo: _controller.currentUser,
+      customType: _controller.isreplying
+          ? IsmChatCustomMessageType.reply
+          : IsmChatCustomMessageType.aboutText,
+      deliveredToAll: false,
+      deviceId: _controller._deviceConfig.deviceId ?? '',
+      messageId: '',
+      messageType: _controller.isreplying
+          ? IsmChatMessageType.reply
+          : IsmChatMessageType.normal,
+      messagingDisabled: false,
+      parentMessageId:
+          _controller.isreplying ? _controller.replayMessage?.messageId : '',
+      readByAll: false,
+      sentAt: sentAt,
+      sentByMe: true,
+      metaData: IsmChatMetaData(
+        aboutText: outSideMessage?.aboutText,
+        caption: outSideMessage?.caption,
+        replyMessage: _controller.isreplying
+            ? IsmChatReplyMessageModel(
+                forMessageType: IsmChatCustomMessageType.aboutText,
+                parentMessageMessageType: _controller.replayMessage?.customType,
+                parentMessageInitiator: _controller.replayMessage?.sentByMe,
+                parentMessageBody:
+                    _controller.getMessageBody(_controller.replayMessage),
+                parentMessageUserId:
+                    _controller.replayMessage?.senderInfo?.userId,
+                parentMessageUserName:
+                    _controller.replayMessage?.senderInfo?.userName ?? '',
+              )
+            : null,
+      ),
+    );
+    _controller.messages.add(aboutTextMessage);
+    _controller.isreplying = false;
+    if (!_controller.isTemporaryChat) {
+      await IsmChatConfig.dbWrapper!
+          .saveMessage(aboutTextMessage, IsmChatDbBox.pending);
+      if (kIsWeb && Responsive.isWeb(Get.context!)) {
+        _controller.updateLastMessagOnCurrentTime(aboutTextMessage);
+      }
+    }
+    var notificationTitle =
+        IsmChatConfig.communicationConfig.userConfig.userName ??
+            conversationController.userDetails?.userName ??
+            '';
+    sendMessage(
+      isTemporaryChat: _controller.isTemporaryChat,
+      metaData: aboutTextMessage.metaData,
+      deviceId: aboutTextMessage.deviceId ?? '',
+      body: aboutTextMessage.body,
+      customType: aboutTextMessage.customType?.value,
+      createdAt: sentAt,
+      parentMessageId: aboutTextMessage.parentMessageId,
+      conversationId: aboutTextMessage.conversationId ?? '',
+      messageType: aboutTextMessage.messageType?.value ?? 0,
+      notificationBody: aboutTextMessage.body,
+      notificationTitle: notificationTitle,
+      sendPushNotification: pushNotifications,
+    );
   }
 }

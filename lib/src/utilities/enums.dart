@@ -57,6 +57,7 @@ enum IsmChatCustomMessageType {
   memberJoin(23),
   observerJoin(24),
   observerLeave(25),
+  aboutText(26),
   date(100);
 
   const IsmChatCustomMessageType(this.number);
@@ -108,6 +109,7 @@ enum IsmChatCustomMessageType {
       'observerJoin': IsmChatCustomMessageType.observerJoin,
       'observerLeave': IsmChatCustomMessageType.observerLeave,
       'date': IsmChatCustomMessageType.date,
+      'aboutText' : IsmChatCustomMessageType.aboutText,
     };
     var type = value.split('.').last;
     return map[type] ?? IsmChatCustomMessageType.text;
@@ -158,7 +160,6 @@ enum IsmChatCustomMessageType {
 
   static IsmChatCustomMessageType? fromAction(String value) {
     var action = IsmChatActionEvents.fromName(value);
-
     switch (action) {
       case IsmChatActionEvents.typingEvent:
         return null;
@@ -202,7 +203,7 @@ enum IsmChatCustomMessageType {
         return IsmChatCustomMessageType.conversationTitleUpdated;
       case IsmChatActionEvents.conversationImageUpdated:
         return IsmChatCustomMessageType.conversationImageUpdated;
-
+        
       case IsmChatActionEvents.memberJoin:
         return IsmChatCustomMessageType.memberJoin;
       case IsmChatActionEvents.observerJoin:
@@ -275,6 +276,8 @@ enum IsmChatCustomMessageType {
         return 'observerLeave';
       case IsmChatCustomMessageType.date:
         return 'date';
+       case IsmChatCustomMessageType.aboutText:
+        return 'aboutText';  
     }
   }
 }

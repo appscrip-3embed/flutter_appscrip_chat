@@ -495,82 +495,16 @@ class IsmChatPageController extends GetxController
     if (conversationController.currentConversation != null) {
       _currentUser();
       conversation = conversationController.currentConversation;
-      final newMeessageFromOutside =
-          conversation?.outSideMessage?.messageFromOutSide ?? '';
-
       await Future.delayed(Duration.zero);
       isTemporaryChat =
           arguments['isTemporaryChat'] as bool? ?? isTemporaryChats;
-      if (conversation?.conversationId?.isNotEmpty ?? false) {
-        _getBackGroundAsset();
-        if (!isTemporaryChat) {
-          await getMessagesFromDB(conversation?.conversationId ?? '');
-          await Future.wait([
-            getMessagesFromAPI(),
-            getConverstaionDetails(
-              conversationId: conversation?.conversationId ?? '',
-              includeMembers: conversation?.isGroup == true ? true : false,
-            ),
-          ]);
-          await readAllMessages(
-            conversationId: conversation?.conversationId ?? '',
-            timestamp: messages.isNotEmpty
-                ? DateTime.now().millisecondsSinceEpoch
-                : conversation?.lastMessageSentAt ?? 0,
-          );
-          checkUserStatus();
-        } else {
-          await getMessagesFromAPI(isTemporaryChat: isTemporaryChat);
-          isMessagesLoading = false;
-        }
+      if (conversation?.conversationId?.isNotEmpty == true) {
+        await callFunctionsWithConversationId(
+            conversation?.conversationId ?? '');
       } else {
-        if (Responsive.isWeb(Get.context!)) {
-          messages.clear();
-        }
-        if (conversation?.isGroup ?? false) {
-          conversation = await commonController.createConversation(
-            conversation: conversation!,
-            conversationType: conversation?.conversationType ??
-                IsmChatConversationType.private,
-            userId: [],
-            isGroup: true,
-            searchableTags: [
-              IsmChatConfig.communicationConfig.userConfig.userName ??
-                  conversationController.userDetails?.userName ??
-                  '',
-              conversation?.chatName ?? ''
-            ],
-          );
-          await getMessagesFromAPI(
-            conversationId: conversation?.conversationId ?? '',
-          );
-          await getConverstaionDetails(
-            conversationId: conversation?.conversationId ?? '',
-            includeMembers: conversation?.isGroup == true ? true : false,
-          );
-          checkUserStatus();
-        }
-        isMessagesLoading = false;
+        await callFunctions();
       }
-
-      if (newMeessageFromOutside.isNotEmpty == true) {
-        await Future.delayed(const Duration(milliseconds: 100));
-        chatInputController.text = newMeessageFromOutside;
-        if (chatInputController.text.isNotEmpty) {
-          sendTextMessage(
-            conversationId: conversation?.conversationId ?? '',
-            userId: conversation?.opponentDetails?.userId ?? '',
-            pushNotifications: conversation?.pushNotifications ?? true,
-          );
-        }
-      } else if (conversation?.outSideMessage?.imageUrl != null) {
-        await sendMessageWithImageUrl(
-          conversationId: conversation?.conversationId ?? '',
-          userId: conversation?.opponentDetails?.userId ?? '',
-          caption: conversation?.outSideMessage?.caption,
-          imageUrl: conversation?.outSideMessage?.imageUrl ?? '',
-        );
-      }
+      await sendWithOutSideMessage();
       unawaited(updateUnreadMessgaeCount());
     }
   }
@@ -656,6 +590,94 @@ class IsmChatPageController extends GetxController
 
     // show sus tag.
     SuspensionUtil.setShowSuspensionStatus(contactList);
+  }
+
+  Future<void> callFunctionsWithConversationId(String conversationId) async {
+    _getBackGroundAsset();
+    if (!isTemporaryChat) {
+      await getMessagesFromDB(conversationId);
+      await Future.wait([
+        getMessagesFromAPI(),
+        getConverstaionDetails(
+          conversationId: conversationId,
+          includeMembers: conversation?.isGroup == true ? true : false,
+        ),
+      ]);
+      await readAllMessages(
+        conversationId: conversationId,
+        timestamp: messages.isNotEmpty
+            ? DateTime.now().millisecondsSinceEpoch
+            : conversation?.lastMessageSentAt ?? 0,
+      );
+      checkUserStatus();
+    } else {
+      await getMessagesFromAPI(isTemporaryChat: isTemporaryChat);
+      isMessagesLoading = false;
+    }
+  }
+
+  Future<void> callFunctions() async {
+    if (Responsive.isWeb(Get.context!)) {
+      messages.clear();
+    }
+    if (conversation?.isGroup ?? false) {
+      conversation = await commonController.createConversation(
+        conversation: conversation!,
+        conversationType:
+            conversation?.conversationType ?? IsmChatConversationType.private,
+        userId: [],
+        isGroup: true,
+        searchableTags: [
+          IsmChatConfig.communicationConfig.userConfig.userName ??
+              conversationController.userDetails?.userName ??
+              '',
+          conversation?.chatName ?? ''
+        ],
+      );
+      await getMessagesFromAPI(
+        conversationId: conversation?.conversationId ?? '',
+      );
+      await getConverstaionDetails(
+        conversationId: conversation?.conversationId ?? '',
+        includeMembers: conversation?.isGroup == true ? true : false,
+      );
+      checkUserStatus();
+    }
+    isMessagesLoading = false;
+  }
+
+  Future<void> sendWithOutSideMessage() async {
+    if (conversation?.outSideMessage != null) {
+      await Future.delayed(const Duration(milliseconds: 100));
+      if (conversation?.outSideMessage?.aboutText != null) {
+        sendAboutTextMessage(
+          conversationId: conversation?.conversationId ?? '',
+          userId: conversation?.opponentDetails?.userId ?? '',
+          outSideMessage: conversation?.outSideMessage,
+          pushNotifications: conversation?.pushNotifications ?? true,
+        );
+      } else if (!(conversation?.outSideMessage?.imageUrl.isNullOrEmpty ==
+          true)) {
+        await sendMessageWithImageUrl(
+          conversationId: conversation?.conversationId ?? '',
+          userId: conversation?.opponentDetails?.userId ?? '',
+          caption: conversation?.outSideMessage?.caption,
+          imageUrl: conversation?.outSideMessage?.imageUrl ?? '',
+        );
+      } else if (!(conversation
+              ?.outSideMessage?.messageFromOutSide.isNullOrEmpty ==
+          true)) {
+        chatInputController.text =
+            conversation?.outSideMessage?.messageFromOutSide ?? '';
+        if (chatInputController.text.isNotEmpty) {
+          sendTextMessage(
+            conversationId: conversation?.conversationId ?? '',
+            userId: conversation?.opponentDetails?.userId ?? '',
+            pushNotifications: conversation?.pushNotifications ?? true,
+          );
+        }
+      }
+    }
   }
 
   void onContactSearch(String query) {

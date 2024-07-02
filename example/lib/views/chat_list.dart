@@ -158,9 +158,9 @@ class ChatList extends StatelessWidget {
               // conversationPredicate: (e) =>
               //     e.chatName.toLowerCase().startsWith('t'),
               opponentSubTitle: (_, opponent) {
-                return opponent.metaData?.about.isNullOrEmpty == true
+                return opponent.metaData?.aboutText?.title.isNullOrEmpty == true
                     ? 'Hey there! I am using IsoChat'
-                    : opponent.metaData?.about;
+                    : opponent.metaData?.aboutText?.title ?? '';
               },
             ),
           ),

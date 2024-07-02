@@ -1463,7 +1463,7 @@ class IsmChatConversationsController extends GetxController {
       sentByMe: true,
       isUploading: true,
       metaData: IsmChatMetaData(
-        captionMessage: caption,
+        caption: caption,
       ),
     );
 
