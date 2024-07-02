@@ -232,7 +232,7 @@ class _MoreIcon extends StatelessWidget {
                 color: IsmChatConfig.chatTheme.primaryColor,
               ),
               IsmChatDimens.boxWidth8,
-              const Text(IsmChatStrings.broadCastList),
+              const Text(IsmChatStrings.broadcastList),
             ],
           ),
         ),

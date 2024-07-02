@@ -1486,4 +1486,29 @@ class IsmChatConversationsController extends GetxController {
       isUpdateMesage: false,
     );
   }
+
+  void goToBroadcastMessage(List<UserDetails> members, String conversationId) {
+    var conversation = IsmChatConversationModel(
+      members: members,
+      conversationImageUrl: IsmChatAssets.noImage,
+      customType: 'Broadcasting',
+      conversationId: conversationId,
+    );
+
+    navigateToMessages(conversation);
+    if (Responsive.isWeb(Get.context!)) {
+      Get.back();
+      if (!Get.isRegistered<IsmChatPageController>()) {
+        IsmChatPageBinding().dependencies();
+      }
+      isRenderChatPageaScreen = IsRenderChatPageScreen.boradcastChatMessagePage;
+      final chatPagecontroller = Get.find<IsmChatPageController>();
+      chatPagecontroller.startInit(isTemporaryChats: true);
+      chatPagecontroller.closeOverlay();
+    } else {
+      IsmChatRouteManagement.goToBroadcastMessagePage(
+        isTemporaryChat: true,
+      );
+    }
+  }
 }

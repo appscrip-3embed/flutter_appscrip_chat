@@ -39,7 +39,7 @@ class IsmChatStrings {
   static const String blockUser = 'Block Users';
   static const String unBlockUser = 'Unblock User';
   static const String blockedUsers = 'Blocked Users';
-  static const String broadCastList = 'Broadcast List';
+  static const String broadcastList = 'Broadcast List';
 
   static const String observer = 'Observers';
 
@@ -88,6 +88,8 @@ class IsmChatStrings {
   static const String unBlockedSuccessfully = 'User Unblocked Successfully.';
   static const String blockedSuccessfully = 'User Blocked Successfully.';
   static const String noBlockedUsers = 'No blocked users.';
+  static const String boradcastNotFound = 'Broadcast not found !!';
+
   static const String deleteMessage = 'Delete message?';
   static const String deleteForEvery = 'Delete for everyone';
   static const String deleteForMe = 'Delete for me';
@@ -120,6 +122,8 @@ class IsmChatStrings {
   static const String addParticioants = 'Add participants';
   static const String addDescription = 'Add group description';
   static const String groupInfo = 'Group Info';
+  static const String edit = 'Edit';
+
 
   static const String areYouSure = 'Are you sure?';
   static const String assignAdmin = 'Assign group admin';

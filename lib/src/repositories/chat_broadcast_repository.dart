@@ -5,7 +5,7 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 class IsmChatBroadcastRepository {
   final _apiWrapper = IsmChatApiWrapper();
 
-  Future<IsmChatResponseModel?> getBroadCast({
+  Future<List<BroadcastModel>?> getBroadCast({
     required List<String> ids,
     required String customType,
     required String searchTag,
@@ -26,13 +26,11 @@ class IsmChatBroadcastRepository {
         return null;
       }
       var data = jsonDecode(response.data) as Map<String, dynamic>;
-
-      return response;
-
-      // return user;
+      return (data['groupcasts'] as List)
+          .map((e) => BroadcastModel.fromMap(e as Map<String, dynamic>))
+          .toList();
     } catch (e, st) {
       IsmChatLog.error('updateUserDataError $e', st);
-      return null;
     }
     return null;
   }

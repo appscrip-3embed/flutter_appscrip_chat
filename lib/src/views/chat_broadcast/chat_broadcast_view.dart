@@ -8,58 +8,70 @@ class IsmChatBroadCastView extends StatelessWidget {
   static const String route = IsmPageRoutes.broadCastView;
 
   @override
-  Widget build(BuildContext context) => GetBuilder<IsmChatBroadcastController>(
+  Widget build(BuildContext context) => GetX<IsmChatBroadcastController>(
       initState: (state) {
         IsmChatUtility.doLater(() async {
           await Get.find<IsmChatBroadcastController>().getBroadCast();
         });
       },
       builder: (controller) => Scaffold(
-          appBar: IsmChatAppBar(
-            title: Text(
-              IsmChatStrings.blockedUsers,
-              style: IsmChatConfig.chatTheme.chatPageHeaderTheme?.titleStyle ??
-                  IsmChatStyles.w600White18,
+            appBar: IsmChatAppBar(
+              title: Text(
+                IsmChatStrings.broadcastList,
+                style:
+                    IsmChatConfig.chatTheme.chatPageHeaderTheme?.titleStyle ??
+                        IsmChatStyles.w600White18,
+              ),
+              action: [
+                TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      IsmChatStrings.edit,
+                      style: IsmChatStyles.w600White16,
+                    ))
+              ],
             ),
-          ),
-          body: const Center(
-            child: Text('BroadCast View'),
-          )
-          //  controller.blockUsers.isEmpty
-          //     ? const Center(
-          //         child: IsmIconAndText(
-          //           icon: Icons.supervised_user_circle_rounded,
-          //           text: IsmChatStrings.noBlockedUsers,
-          //         ),
-          //       )
-          //     : ListView.builder(
-          //         itemCount: controller.blockUsers.length,
-          //         itemBuilder: (_, index) {
-          //           var user = controller.blockUsers[index];
-          //           return ListTile(
-          //             leading: IsmChatImage.profile(user.profileUrl),
-          //             title: Text(
-          //               user.userName,
-          //             ),
-          //             subtitle: Text(
-          //               user.userIdentifier,
-          //             ),
-          //             trailing: ElevatedButton(
-          //               onPressed: () {
-          //                 if (!Responsive.isWeb(context)) {
-          //                   controller.unblockUser(
-          //                       opponentId: user.userId, isLoading: true);
-          //                 } else {
-          //                   controller.unblockUserForWeb(user.userId);
-          //                   Get.back();
-          //                 }
-          //               },
-          //               child: const Text(
-          //                 IsmChatStrings.unblock,
-          //               ),
-          //             ),
-          //           );
-          //         },
-          //       ),
+            body: controller.isApiCall
+                ? const IsmChatLoadingDialog()
+                : controller.broadcastList.isEmpty
+                    ? const Center(
+                        child: IsmIconAndText(
+                          icon: Icons.supervised_user_circle_rounded,
+                          text: IsmChatStrings.boradcastNotFound,
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: controller.broadcastList.length,
+                        itemBuilder: (_, index) {
+                          var broadcast = controller.broadcastList[index];
+                          var members = broadcast.metaData?.membersDetail
+                                  ?.map((e) => e.memberName)
+                                  .toList() ??
+                              [];
+                          return ListTile(
+                            onTap: () async {
+                              final members = broadcast.metaData?.membersDetail
+                                      ?.map((e) => UserDetails(
+                                          userId: e.memberId ?? '',
+                                          userName: e.memberName ?? '',
+                                          userIdentifier: '',
+                                          userProfileImageUrl: ''))
+                                      .toList() ??
+                                  [];
+                              Get.find<IsmChatConversationsController>()
+                                  .goToBroadcastMessage(
+                                      members, broadcast.groupcastId ?? '');
+                            },
+                            leading: IsmChatImage.profile(
+                                broadcast.groupcastImageUrl ?? ''),
+                            title: Text(
+                              broadcast.groupcastTitle ?? '',
+                            ),
+                            subtitle: Text(
+                              members.join(','),
+                            ),
+                          );
+                        },
+                      ),
           ));
 }

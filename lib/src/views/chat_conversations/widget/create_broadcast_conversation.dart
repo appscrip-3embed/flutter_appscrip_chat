@@ -363,27 +363,8 @@ class IsmChatCreateBroadCastView extends StatelessWidget {
             onTap: () async {
               if (controller.selectedUserList.isNotEmpty &&
                   controller.selectedUserList.length >= 2) {
-                var conversation = IsmChatConversationModel(
-                  members: controller.selectedUserList,
-                  conversationImageUrl: IsmChatAssets.noImage,
-                  customType: 'Broadcasting',
-                );
-                controller.navigateToMessages(conversation);
-                if (Responsive.isWeb(context)) {
-                  Get.back();
-                  if (!Get.isRegistered<IsmChatPageController>()) {
-                    IsmChatPageBinding().dependencies();
-                  }
-                  controller.isRenderChatPageaScreen =
-                      IsRenderChatPageScreen.boradcastChatMessagePage;
-                  final chatPagecontroller = Get.find<IsmChatPageController>();
-                  chatPagecontroller.startInit(isTemporaryChats: true);
-                  chatPagecontroller.closeOverlay();
-                } else {
-                  IsmChatRouteManagement.goToBroadcastMessagePage(
-                    isTemporaryChat: true,
-                  );
-                }
+                controller.goToBroadcastMessage(
+                    controller.selectedUserList, '');
               } else {
                 await Get.dialog(
                   const IsmChatAlertDialogBox(

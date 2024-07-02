@@ -31,3 +31,4 @@ export 'user_list_model.dart';
 export 'user_own_details.dart';
 export 'web_media_model.dart';
 export 'contact_sync_model.dart';
+export 'broadcast_model.dart';

@@ -5,7 +5,7 @@ class IsmChatBroadcastViewModel {
 
   final IsmChatBroadcastRepository _repository;
 
-  Future<IsmChatResponseModel?> getBroadCast({
+  Future<List<BroadcastModel>?> getBroadCast({
     List<String>? ids,
     String customType = '',
     String searchTag = '',

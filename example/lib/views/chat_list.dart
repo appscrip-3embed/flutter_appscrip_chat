@@ -161,7 +161,7 @@ class ChatList extends StatelessWidget {
               //     e.chatName.toLowerCase().startsWith('t'),
 
               opponentSubTitle: (_, opponent) {
-                return opponent.metaData?.aboutText?.title.isNullOrEmpty == true
+                return opponent.metaData?.aboutText?.title == null
                     ? 'Hey there! I am using IsoChat'
                     : opponent.metaData?.aboutText?.title ?? '';
               },
