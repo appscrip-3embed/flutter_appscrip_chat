@@ -39,6 +39,8 @@ class IsmChatStrings {
   static const String blockUser = 'Block Users';
   static const String unBlockUser = 'Unblock User';
   static const String blockedUsers = 'Blocked Users';
+  static const String broadCastList = 'Broadcast List';
+
   static const String observer = 'Observers';
 
   static const String boradcastMessge = 'Broadcast Messgaes';

@@ -34,6 +34,12 @@ class IsmChatPages {
       page: IsmChatBlockedUsersView.new,
       binding: IsmChatConversationsBinding(),
     ),
+     GetPage(
+      name: IsmChatBroadCastListView.route,
+      page: IsmChatBroadCastListView.new,
+      binding: IsmChatConversationsBinding(),
+    ),
+
     GetPage(
       name: IsmChatObserverUsersView.route,
       page: IsmChatObserverUsersView.new,

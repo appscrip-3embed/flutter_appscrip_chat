@@ -654,6 +654,7 @@ enum IsmChatDbBox { main, pending }
 enum IsRenderConversationScreen {
   none,
   blockView,
+  broadCastListView,
   groupUserView,
   createConverstaionView,
   userView,

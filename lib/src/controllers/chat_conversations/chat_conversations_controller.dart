@@ -406,6 +406,8 @@ class IsmChatConversationsController extends GetxController {
         return const SizedBox.shrink();
       case IsRenderConversationScreen.blockView:
         return const IsmChatBlockedUsersView();
+      case IsRenderConversationScreen.broadCastListView:
+        return const IsmChatBroadCastListView();
       case IsRenderConversationScreen.groupUserView:
         return IsmChatCreateConversationView(
           isGroupConversation: true,
