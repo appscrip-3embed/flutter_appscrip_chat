@@ -41,6 +41,7 @@ class IsmChatStrings {
   static const String blockedUsers = 'Blocked Users';
   static const String broadcastList = 'Broadcast List';
   static const String broadcastinfo = 'Broadcast info';
+  static const String eligibleMembers = 'Eligible members';
 
 
   static const String observer = 'Observers';
@@ -126,7 +127,6 @@ class IsmChatStrings {
   static const String groupInfo = 'Group Info';
   static const String edit = 'Edit';
 
-
   static const String areYouSure = 'Are you sure?';
   static const String assignAdmin = 'Assign group admin';
   static const String exit = 'Exit anyway';
@@ -172,7 +172,7 @@ class IsmChatStrings {
 
   static const String people = 'People';
   static const String newString = 'New';
-    static const String broadcast = 'broadcast';
+  static const String broadcast = 'broadcast';
   static const String newConversation = 'New Conversation';
   static const String newContact = 'New Contact';
   static const String photos = 'Photos';
@@ -207,8 +207,8 @@ class IsmChatStrings {
   static const String inviteToChat = 'Invite to';
   static const String youCanNotSend = 'You can not send media more than 20 MB.';
   static const String aboutMe = 'About';
-
-
-
+  static const String defaultString = 'Default';
+  static const String recipients = 'Recipients :';
+  static const String addrecipient = 'Add recipient';
 
 }

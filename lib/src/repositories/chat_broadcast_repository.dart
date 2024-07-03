@@ -67,7 +67,8 @@ class IsmChatBroadcastRepository {
   }) async {
     try {
       final payload = {
-        'groupcastTitle': groupcastTitle,
+        if (!groupcastTitle.isNullOrEmpty) 'groupcastTitle': groupcastTitle,
+        if (metaData != null) 'metaData': metaData,
         'groupcastId': groupcastId,
       };
       var response = await _apiWrapper.patch(
@@ -138,6 +139,41 @@ class IsmChatBroadcastRepository {
       return response;
     } catch (e, st) {
       IsmChatLog.error('delete broadcast member  $e', st);
+    }
+    return null;
+  }
+
+  Future<List<UserDetails>?> getEligibleMembers({
+    required String groupcastId,
+    bool isloading = false,
+    int skip = 0,
+    int limit = 20,
+    String? searchTag,
+    int sort = -1,
+  }) async {
+    try {
+      String? url;
+      if (searchTag.isNullOrEmpty) {
+        url =
+            '${IsmChatAPI.chatGroupCastEligibleMember}?groupcastId=$groupcastId&sort=$sort&skip=$skip&limit=$limit';
+      } else {
+        url =
+            '${IsmChatAPI.chatGroupCastEligibleMember}?groupcastId=$groupcastId&searchTag=$searchTag&sort=$sort&skip=$skip&limit=$limit';
+      }
+      var response = await _apiWrapper.get(
+        url,
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isloading,
+      );
+      if (response.hasError) {
+        return null;
+      }
+      final data = jsonDecode(response.data) as Map<String, dynamic>;
+      return (data['groupcastEligibleMembers'] as List)
+          .map((e) => UserDetails.fromMap(e as Map<String, dynamic>))
+          .toList();
+    } catch (e, st) {
+      IsmChatLog.error('broadcast members  $e', st);
     }
     return null;
   }

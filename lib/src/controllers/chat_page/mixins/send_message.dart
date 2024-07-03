@@ -1385,8 +1385,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     } else if (_controller.isTemporaryChat && _controller.messages.isEmpty) {
       conversationId = await _controller.createBroadcastConversation(
             groupcastImageUrl:
-                'https://res.cloudinary.com/dxkoc9aao/image/upload/v1616075844/kesvhgzyiwchzge7qlsz_yfrh9x.jpg',
-            groupcastTitle: 'Default',
+                'https://png.pngtree.com/element_our/20190528/ourmid/pngtree-speaker-broadcast-icon-image_1144351.jpg',
+            groupcastTitle: IsmChatStrings.defaultString,
             customType: 'broadcast',
             membersId: _controller.conversation?.members
                     ?.map((e) => e.userId)

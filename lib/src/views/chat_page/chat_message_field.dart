@@ -225,9 +225,14 @@ class IsmChatMessageField extends StatelessWidget {
                                         ),
                                       ),
                                       onChanged: (_) {
-                                        if (controller.conversation
-                                                ?.conversationId?.isNotEmpty ??
-                                            false) {
+                                        if ((controller
+                                                    .conversation
+                                                    ?.conversationId
+                                                    ?.isNotEmpty ??
+                                                false) &&
+                                            controller
+                                                    .conversation?.customType !=
+                                                IsmChatStrings.broadcast) {
                                           controller.notifyTyping();
                                           controller.showMentionsUserList(_);
                                         }

@@ -17,6 +17,8 @@ class IsmPageRoutes {
   static const String blockView = '/blockView';
   static const String broadCastView = '/broadCastView';
   static const String editBroadcastView = '/editBroadcastView';
+  static const String eligibleMemberstView = '/eligibleMemberstView';
+
 
 
   static const String observerView = '/observerView';

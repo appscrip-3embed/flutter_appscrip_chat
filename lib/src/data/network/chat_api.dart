@@ -80,12 +80,10 @@ class IsmChatAPI {
   /// Broadcast url
   static String chatGroupCasts = '$baseUrl/chat/groupcasts';
   static String chatGroupCast = '$baseUrl/chat/groupcast';
-  static String chatGroupCastMember = '$baseUrl/chat/groupcast/members';
-
-  static String chatGroupCastMessage = '$baseUrl/chat/groupcast/message';
-  static String chatGroupCastMessages = '$baseUrl/chat/groupcast/messages';
-  static String chatGroupCastDeleteEveryone =
-      '$baseUrl/chat/groupcast/message/everyone';
-  static String chatGroupCastDeleteSelf =
-      '$baseUrl/chat/groupcast/message/self';
+  static String chatGroupCastMember = '$chatGroupCast/members';
+  static String chatGroupCastEligibleMember = '$chatGroupCast/eligible/members';
+  static String chatGroupCastMessage = '$chatGroupCast/message';
+  static String chatGroupCastMessages = '$chatGroupCast/messages';
+  static String chatGroupCastDeleteEveryone = '$chatGroupCast/message/everyone';
+  static String chatGroupCastDeleteSelf = '$chatGroupCast/message/self';
 }

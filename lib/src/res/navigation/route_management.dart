@@ -48,6 +48,13 @@ class IsmChatRouteManagement {
     );
   }
 
+  static void goToEligibleMembersView(String groupcastId) {
+    Get.toNamed(
+      IsmChatEligibleMembersView.route,
+      arguments: groupcastId,
+    );
+  }
+
   static void goToObserverView(String conversationId) {
     Get.toNamed(IsmChatObserverUsersView.route,
         arguments: {'conversationId': conversationId});

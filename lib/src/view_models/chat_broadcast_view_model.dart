@@ -93,4 +93,21 @@ class IsmChatBroadcastViewModel {
         members: members,
         isloading: isloading,
       );
+
+  Future<List<UserDetails>?> getEligibleMembers({
+    required String groupcastId,
+    bool isloading = false,
+    int skip = 0,
+    int limit = 20,
+    String? searchTag,
+    int sort = -1,
+  }) async =>
+      await _repository.getEligibleMembers(
+        groupcastId: groupcastId,
+        isloading: isloading,
+        limit: limit,
+        searchTag: searchTag,
+        skip: skip,
+        sort: sort,
+      );
 }
