@@ -64,6 +64,11 @@ class IsmChatPages {
       page: IsmChatBroadCastView.new,
       binding: IsmChatBroadcastBinding(),
     ),
+     GetPage(
+      name: IsmChatEditBroadcastView.route,
+      page: IsmChatEditBroadcastView.new,
+      binding: IsmChatBroadcastBinding(),
+    ),
     GetPage(
       name: IsmChatUserSearchView.route,
       page: IsmChatUserSearchView.new,

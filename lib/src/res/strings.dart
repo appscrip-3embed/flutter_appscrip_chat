@@ -40,6 +40,8 @@ class IsmChatStrings {
   static const String unBlockUser = 'Unblock User';
   static const String blockedUsers = 'Blocked Users';
   static const String broadcastList = 'Broadcast List';
+  static const String broadcastinfo = 'Broadcast info';
+
 
   static const String observer = 'Observers';
 
@@ -170,6 +172,7 @@ class IsmChatStrings {
 
   static const String people = 'People';
   static const String newString = 'New';
+    static const String broadcast = 'broadcast';
   static const String newConversation = 'New Conversation';
   static const String newContact = 'New Contact';
   static const String photos = 'Photos';
@@ -204,4 +207,8 @@ class IsmChatStrings {
   static const String inviteToChat = 'Invite to';
   static const String youCanNotSend = 'You can not send media more than 20 MB.';
   static const String aboutMe = 'About';
+
+
+
+
 }

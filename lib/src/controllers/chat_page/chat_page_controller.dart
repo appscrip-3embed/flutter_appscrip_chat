@@ -611,7 +611,7 @@ class IsmChatPageController extends GetxController
       );
       checkUserStatus();
     } else {
-      await getMessagesFromAPI(isTemporaryChat: isTemporaryChat);
+      await getBroadcastMessages(isTemporaryChat: isTemporaryChat);
       isMessagesLoading = false;
     }
   }

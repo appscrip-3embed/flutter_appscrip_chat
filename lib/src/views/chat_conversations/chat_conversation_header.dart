@@ -154,7 +154,7 @@ class _MoreIcon extends StatelessWidget {
                 IsRenderConversationScreen.broadcastView;
             Scaffold.of(context).openDrawer();
           } else {
-            IsmChatRouteManagement.goToBroadcastView();
+            IsmChatRouteManagement.goToCreteBroadcastView();
           }
         } else if (index == 2) {
           if (Responsive.isWeb(context)) {
@@ -169,7 +169,7 @@ class _MoreIcon extends StatelessWidget {
                 IsRenderConversationScreen.broadCastListView;
             Scaffold.of(context).openDrawer();
           } else {
-            IsmChatRouteManagement.goToBroadCastListView();
+            IsmChatRouteManagement.goToBroadcastListView();
           }
         } else if (index == 4) {
           controller.isRenderScreen = IsRenderConversationScreen.groupUserView;
@@ -191,7 +191,7 @@ class _MoreIcon extends StatelessWidget {
                     .conversationProperties.conversationPosition ==
                 IsmChatConversationPosition.menu &&
             conversationTypeList.length != 1) {
-          conversationTypeList[index - 5].goToRoute();
+          conversationTypeList[index - 6].goToRoute();
         }
       },
       itemBuilder: (_) => [

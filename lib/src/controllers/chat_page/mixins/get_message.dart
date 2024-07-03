@@ -71,6 +71,44 @@ mixin IsmChatPageGetMessageMixin on GetxController {
     }
   }
 
+  Future<void> getBroadcastMessages({
+     String groupcastId = '',
+    int? lastMessageTimestamp,
+    bool isLoading = false,
+    String? searchText,
+    bool isTemporaryChat = false,
+    bool forPagination = false,
+  }) async {
+    if (Get.isRegistered<IsmChatPageController>()) {
+      if (_controller.canCallCurrentApi) return;
+      _controller.canCallCurrentApi = true;
+      if (_controller.messages.isEmpty) {
+        _controller.isMessagesLoading = true;
+      }
+      var timeStamp = lastMessageTimestamp ??
+          (_controller.messages.isEmpty
+              ? 0
+              : _controller.messages.last.sentAt + 7000);
+      var messagesList = List<IsmChatMessageModel>.from(_controller.messages);
+      messagesList.removeWhere(
+          (element) => element.customType == IsmChatCustomMessageType.date);
+      var groupcastID = groupcastId.isNotEmpty
+          ? groupcastId
+          : _controller.conversation?.conversationId ?? '';
+      var data = await _controller.viewModel.getBroadcastMessages(
+        skip: forPagination ? messagesList.length.pagination() : 0,
+        groupcastId: groupcastID,
+        lastMessageTimestamp: timeStamp,
+        isTemporaryChat: isTemporaryChat,
+      );
+      if (_controller.messages.isEmpty) {
+        _controller.isMessagesLoading = false;
+      }
+      _controller.messages.addAll(data);
+      _controller.canCallCurrentApi = false;
+    }
+  }
+
   void searchedMessages(String query, {bool fromScrolling = false}) async {
     if (query.trim().isEmpty) {
       _controller.searchMessages.clear();

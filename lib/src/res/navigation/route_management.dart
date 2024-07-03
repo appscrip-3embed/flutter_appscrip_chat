@@ -37,8 +37,15 @@ class IsmChatRouteManagement {
     Get.toNamed(IsmChatBlockedUsersView.route);
   }
 
-  static void goToBroadCastListView() {
+  static void goToBroadcastListView() {
     Get.toNamed(IsmChatBroadCastView.route);
+  }
+
+  static void goToEditBroadcastView(BroadcastModel broadcast) {
+    Get.toNamed(
+      IsmChatEditBroadcastView.route,
+      arguments: broadcast,
+    );
   }
 
   static void goToObserverView(String conversationId) {
@@ -53,7 +60,7 @@ class IsmChatRouteManagement {
         arguments: {'message': message, 'conversation': conversation});
   }
 
-  static void goToBroadcastView() {
+  static void goToCreteBroadcastView() {
     Get.toNamed(IsmChatCreateBroadCastView.route);
   }
 

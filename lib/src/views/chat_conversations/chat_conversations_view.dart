@@ -408,7 +408,7 @@ class _CreateChatBottomSheet extends StatelessWidget {
           CupertinoActionSheetAction(
             onPressed: () {
               Get.back();
-              IsmChatRouteManagement.goToBroadcastView();
+              IsmChatRouteManagement.goToCreteBroadcastView();
             },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,

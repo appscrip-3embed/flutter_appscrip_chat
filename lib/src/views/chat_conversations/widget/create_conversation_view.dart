@@ -705,7 +705,7 @@ class ChatModes extends StatelessWidget {
             onTap: () async {
               Get.back();
               await Future.delayed(Durations.extralong1);
-              IsmChatRouteManagement.goToBroadcastView();
+              IsmChatRouteManagement.goToCreteBroadcastView();
             },
             contentPadding: IsmChatDimens.edgeInsets10,
             horizontalTitleGap: IsmChatDimens.ten,

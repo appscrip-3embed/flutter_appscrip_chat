@@ -17,7 +17,7 @@ class IsmChatAPI {
   static String authenticate = '$allUsers/authenticate';
 
   static String chatConversation = '$baseUrl/chat/conversation';
-  static String chatGroupCast = '$baseUrl/chat/groupcasts';
+
   static String chatConversationClear = '$chatConversation/clear';
   static String chatConversationDelete = '$chatConversation/local';
   static String getChatConversations = '$baseUrl/chat/conversations';
@@ -52,7 +52,7 @@ class IsmChatAPI {
   static String createProfilePic = '$_profilePic/create';
 
   static String sendMessage = '$baseUrl/chat/message';
-  static String sendBroadcastMessage = '$baseUrl/chat/message/broadcast';
+  // static String sendBroadcastMessage = '$baseUrl/chat/message/broadcast';
   static String sendForwardMessage = '$baseUrl/chat/message/forward';
 
   static String chatStatus = '$sendMessage/status';
@@ -76,4 +76,16 @@ class IsmChatAPI {
   static String contactSyncPost =
       'https://admin-apis.isometrik.io/v1/contacts/sync';
   static String contactGet = 'https://admin-apis.isometrik.io/v1/contacts';
+
+  /// Broadcast url
+  static String chatGroupCasts = '$baseUrl/chat/groupcasts';
+  static String chatGroupCast = '$baseUrl/chat/groupcast';
+  static String chatGroupCastMember = '$baseUrl/chat/groupcast/members';
+
+  static String chatGroupCastMessage = '$baseUrl/chat/groupcast/message';
+  static String chatGroupCastMessages = '$baseUrl/chat/groupcast/messages';
+  static String chatGroupCastDeleteEveryone =
+      '$baseUrl/chat/groupcast/message/everyone';
+  static String chatGroupCastDeleteSelf =
+      '$baseUrl/chat/groupcast/message/self';
 }

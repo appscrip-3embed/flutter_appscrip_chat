@@ -89,7 +89,7 @@ class _BroadCastMessage extends StatelessWidget {
                     IsmChatColors.whiteColor,
               ),
             ),
-            centerTitle: controller.messages.isNotEmpty ? false : true,
+            centerTitle: false,
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -99,15 +99,14 @@ class _BroadCastMessage extends StatelessWidget {
                       IsmChatConfig.chatTheme.chatPageHeaderTheme?.titleStyle ??
                           IsmChatStyles.w600White16,
                 ),
-                if (controller.messages.isNotEmpty)
-                  Text(
-                    controller.conversation!.members!
-                        .map((e) => e.userName)
-                        .join(','),
-                    style: IsmChatConfig
-                            .chatTheme.chatPageHeaderTheme?.subtileStyle ??
-                        IsmChatStyles.w400White12,
-                  )
+                Text(
+                  controller.conversation!.members!
+                      .map((e) => e.userName)
+                      .join(','),
+                  style: IsmChatConfig
+                          .chatTheme.chatPageHeaderTheme?.subtileStyle ??
+                      IsmChatStyles.w400White12,
+                )
               ],
             ),
             backgroundColor:

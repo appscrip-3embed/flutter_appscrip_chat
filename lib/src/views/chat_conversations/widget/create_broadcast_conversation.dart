@@ -19,7 +19,6 @@ class IsmChatCreateBroadCastView extends StatelessWidget {
           converstaionController.callApiOrNot = true;
           converstaionController.forwardedList.clear();
           converstaionController.selectedUserList.clear();
-
           converstaionController.showSearchField = false;
           converstaionController.isLoadResponse = false;
           converstaionController.getNonBlockUserList(
@@ -71,7 +70,6 @@ class IsmChatCreateBroadCastView extends StatelessWidget {
               IconButton(
                 onPressed: () {
                   controller.showSearchField = !controller.showSearchField;
-
                   if (!controller.showSearchField &&
                       controller.forwardedListDuplicat.isNotEmpty) {
                     controller.forwardedList = controller.forwardedListDuplicat

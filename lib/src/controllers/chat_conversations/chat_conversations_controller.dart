@@ -1491,7 +1491,7 @@ class IsmChatConversationsController extends GetxController {
     var conversation = IsmChatConversationModel(
       members: members,
       conversationImageUrl: IsmChatAssets.noImage,
-      customType: 'Broadcasting',
+      customType: IsmChatStrings.broadcast,
       conversationId: conversationId,
     );
 
