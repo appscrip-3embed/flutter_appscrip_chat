@@ -15,6 +15,7 @@ class IsmChatEditBroadcastView extends StatelessWidget {
         initState: (state) {
           IsmChatUtility.doLater(() async {
             final controller = Get.find<IsmChatBroadcastController>();
+            controller.broadcast = broadcast;
             if (IsmChatStrings.defaultString != broadcast.groupcastTitle) {
               controller.broadcastName.text = broadcast.groupcastTitle ?? '';
             } else {
@@ -106,6 +107,7 @@ class IsmChatEditBroadcastView extends StatelessWidget {
                 Expanded(
                   child: SlidableAutoCloseBehavior(
                     child: ListView.builder(
+                      physics: const ClampingScrollPhysics(),
                       itemCount:
                           controller.broadcastMembers?.members.length ?? 0,
                       itemBuilder: (_, index) {

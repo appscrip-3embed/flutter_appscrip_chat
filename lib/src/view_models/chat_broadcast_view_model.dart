@@ -100,7 +100,7 @@ class IsmChatBroadcastViewModel {
     int skip = 0,
     int limit = 20,
     String? searchTag,
-    int sort = -1,
+    int sort = 1,
   }) async =>
       await _repository.getEligibleMembers(
         groupcastId: groupcastId,
@@ -109,5 +109,16 @@ class IsmChatBroadcastViewModel {
         searchTag: searchTag,
         skip: skip,
         sort: sort,
+      );
+
+  Future<IsmChatResponseModel?> addEligibleMembers({
+    required String groupcastId,
+    bool isloading = false,
+    required List<Map<String,dynamic>> members,
+  }) async =>
+      await _repository.addEligibleMembers(
+        groupcastId: groupcastId,
+        members: members,
+        isloading: isloading,
       );
 }

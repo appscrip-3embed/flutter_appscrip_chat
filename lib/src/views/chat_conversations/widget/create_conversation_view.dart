@@ -26,35 +26,6 @@ class IsmChatCreateConversationView extends StatelessWidget {
 
   static const String route = IsmPageRoutes.createChat;
 
-  Widget _buildSusWidget(String susTag) => Container(
-        padding: IsmChatDimens.edgeInsets10_0,
-        height: IsmChatDimens.forty,
-        width: double.infinity,
-        alignment: Alignment.centerLeft,
-        child: susTag != '#'
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    susTag,
-                    textScaler: const TextScaler.linear(1.5),
-                    style: IsmChatStyles.w600Black14,
-                  ),
-                  if (!Responsive.isWeb(Get.context!))
-                    SizedBox(
-                        width: IsmChatDimens.percentWidth(.8),
-                        child: Divider(
-                          height: .0,
-                          indent: IsmChatDimens.ten,
-                        ))
-                ],
-              )
-            : Text(
-                '${IsmChatStrings.inviteToChat} ${IsmChatConfig.communicationConfig.projectConfig.appName}',
-                style: IsmChatStyles.w600Black14
-                    .copyWith(color: const Color(0xff9E9CAB))),
-      );
-
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
         initState: (_) async {
@@ -75,7 +46,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                       if (value.trim().isEmpty) {
                         controller.forwardedList =
                             controller.forwardedListDuplicat
-                                .map((e) => SelectedForwardUser(
+                                .map((e) => SelectedMembers(
                                       isUserSelected:
                                           controller.selectedUserList.any((d) =>
                                               d.userId == e.userDetails.userId),
@@ -116,7 +87,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                   if (!controller.showSearchField &&
                       controller.forwardedListDuplicat.isNotEmpty) {
                     controller.forwardedList = controller.forwardedListDuplicat
-                        .map((e) => SelectedForwardUser(
+                        .map((e) => SelectedMembers(
                             isUserSelected: controller.selectedUserList
                                 .any((d) => d.userId == e.userDetails.userId),
                             userDetails: e.userDetails,
@@ -235,7 +206,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                   const ChatModes(),
                                 Offstage(
                                   offstage: user.isShowSuspension != true,
-                                  child: _buildSusWidget(susTag),
+                                  child: IsmChatUtility.buildSusWidget(susTag),
                                 ),
                                 ColoredBox(
                                   color: user.isUserSelected

@@ -43,7 +43,6 @@ class IsmChatStrings {
   static const String broadcastinfo = 'Broadcast info';
   static const String eligibleMembers = 'Eligible members';
 
-
   static const String observer = 'Observers';
 
   static const String boradcastMessge = 'Broadcast Messgaes';
@@ -132,6 +131,8 @@ class IsmChatStrings {
   static const String exit = 'Exit anyway';
   static const String tapInfo = 'Tap to more info';
   static const String removeReaction = 'Tap to remove reaction';
+  static const String remove = 'Remove';
+
   static const String youAreOnlyAdmin =
       "You're the only admin of the group, make a group admin or a random person will be assigned as group admin";
   static const String contactInfo = 'Contact Info';
@@ -210,5 +211,4 @@ class IsmChatStrings {
   static const String defaultString = 'Default';
   static const String recipients = 'Recipients :';
   static const String addrecipient = 'Add recipient';
-
 }

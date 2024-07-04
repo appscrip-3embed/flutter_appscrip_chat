@@ -142,9 +142,15 @@ class IsmChatBroadCastView extends StatelessWidget {
                                       ? '${IsmChatStrings.recipients} ${broadcast.membersCount ?? 0}'
                                           .toUpperCase()
                                       : broadcast.groupcastTitle ?? '',
+                                  maxLines: 1,
+                                  style: IsmChatStyles.w600Black14,
                                 ),
                                 subtitle: Text(
-                                  members.join(','),
+                                  members.join(
+                                    ',',
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
                                 ),
                               ),
                             );

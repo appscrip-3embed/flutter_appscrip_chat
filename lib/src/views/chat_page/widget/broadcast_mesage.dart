@@ -81,32 +81,55 @@ class _BroadCastMessage extends StatelessWidget {
           appBar: IsmChatAppBar(
             leading: IsmChatTapHandler(
               onTap: onBackTap,
-              child: Icon(
-                Responsive.isWeb(context)
-                    ? Icons.close_rounded
-                    : Icons.arrow_back_rounded,
-                color: IsmChatConfig.chatTheme.chatPageHeaderTheme?.iconColor ??
-                    IsmChatColors.whiteColor,
+              child: Padding(
+                padding: IsmChatDimens.edgeInsetsLeft10,
+                child: Icon(
+                  Responsive.isWeb(context)
+                      ? Icons.close_rounded
+                      : Icons.arrow_back_rounded,
+                  color:
+                      IsmChatConfig.chatTheme.chatPageHeaderTheme?.iconColor ??
+                          IsmChatColors.whiteColor,
+                ),
               ),
             ),
             centerTitle: false,
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            leadingWidth: IsmChatDimens.forty,
+            title: Row(
               children: [
-                Text(
-                  '${controller.conversation?.members?.length} Recipients Selected',
-                  style:
-                      IsmChatConfig.chatTheme.chatPageHeaderTheme?.titleStyle ??
-                          IsmChatStyles.w600White16,
+                Container(
+                  height: IsmChatDimens.forty,
+                  width: IsmChatDimens.forty,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: IsmChatColors.whiteColor,
+                  ),
+                  child: const Icon(Icons.campaign_rounded),
                 ),
-                Text(
-                  controller.conversation!.members!
-                      .map((e) => e.userName)
-                      .join(','),
-                  style: IsmChatConfig
-                          .chatTheme.chatPageHeaderTheme?.subtileStyle ??
-                      IsmChatStyles.w400White12,
-                )
+                IsmChatDimens.boxWidth12,
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${controller.conversation?.members?.length} Recipients Selected',
+                        style: IsmChatConfig
+                                .chatTheme.chatPageHeaderTheme?.titleStyle ??
+                            IsmChatStyles.w600White16,
+                      ),
+                      Text(
+                        controller.conversation?.members
+                                ?.map((e) => e.userName)
+                                .join(',') ??
+                            '',
+                        style: IsmChatConfig
+                                .chatTheme.chatPageHeaderTheme?.subtileStyle ??
+                            IsmChatStyles.w400White12,
+                        overflow: TextOverflow.ellipsis,
+                      )
+                    ],
+                  ),
+                ),
               ],
             ),
             backgroundColor:

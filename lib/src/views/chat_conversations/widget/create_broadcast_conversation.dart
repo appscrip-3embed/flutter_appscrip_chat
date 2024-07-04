@@ -47,7 +47,7 @@ class IsmChatCreateBroadCastView extends StatelessWidget {
                       if (value.trim().isEmpty) {
                         controller.forwardedList =
                             controller.forwardedListDuplicat
-                                .map((e) => SelectedForwardUser(
+                                .map((e) => SelectedMembers(
                                       isUserSelected:
                                           controller.selectedUserList.any((d) =>
                                               d.userId == e.userDetails.userId),
@@ -74,7 +74,7 @@ class IsmChatCreateBroadCastView extends StatelessWidget {
                       controller.forwardedListDuplicat.isNotEmpty) {
                     controller.forwardedList = controller.forwardedListDuplicat
                         .map(
-                          (e) => SelectedForwardUser(
+                          (e) => SelectedMembers(
                               isUserSelected: controller.selectedUserList
                                   .any((d) => d.userId == e.userDetails.userId),
                               userDetails: e.userDetails,
@@ -246,36 +246,10 @@ class IsmChatCreateBroadCastView extends StatelessWidget {
                                           fontSize: IsmChatDimens.thirty)),
                                 ),
                                 indexBarMargin: IsmChatDimens.edgeInsets10,
-                                indexBarData: SuspensionUtil.getTagIndexList(
-                                    controller.forwardedList)
-                                // [
-                                //     'A',
-                                //     'B',
-                                //     'C',
-                                //     'D',
-                                //     'E',
-                                //     'F',
-                                //     'G',
-                                //     'H',
-                                //     'I',
-                                //     'J',
-                                //     'K',
-                                //     'L',
-                                //     'M',
-                                //     'N',
-                                //     'O',
-                                //     'P',
-                                //     'Q',
-                                //     'R',
-                                //     'S',
-                                //     'T',
-                                //     'U',
-                                //     'V',
-                                //     'W',
-                                //     'X',
-                                //     'Y',
-                                //     'Z'
-                                //   ],
+                                indexBarData: const []
+                                // SuspensionUtil.getTagIndexList(
+                                //     controller.forwardedList)
+
                                 ,
                                 indexBarHeight: IsmChatDimens.percentHeight(5),
                                 indexBarWidth: IsmChatDimens.forty,

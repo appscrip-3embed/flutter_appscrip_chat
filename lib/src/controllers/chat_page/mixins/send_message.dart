@@ -1202,6 +1202,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     bool isLoading = false,
     bool sendPushNotification = true,
   }) async {
+    metaData = metaData?.copyWith(customType: {'broadcastMessage': true});
     var response = await _controller.viewModel.sendBroadcastMessage(
       showInConversation: true,
       notifyOnCompletion: false,

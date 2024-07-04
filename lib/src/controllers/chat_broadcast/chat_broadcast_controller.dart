@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -10,20 +11,20 @@ class IsmChatBroadcastController extends GetxController {
 
   final IsmChatBroadcastViewModel _viewModel;
 
+  final debounce = IsmChatDebounce();
+
+  BroadcastModel? broadcast;
+
   TextEditingController broadcastName = TextEditingController();
+
+  TextEditingController searchMemberController = TextEditingController();
 
   final refreshController = RefreshController(
     initialRefresh: false,
     initialLoadStatus: LoadStatus.idle,
   );
 
-  final refreshControllerEligibleMembers = RefreshController(
-    initialRefresh: false,
-    initialLoadStatus: LoadStatus.idle,
-  );
-
-  final Rx<BroadcastMemberModel?> _broadcastMembers =
-      Rx<BroadcastMemberModel?>(null);
+  final _broadcastMembers = Rx<BroadcastMemberModel?>(null);
   BroadcastMemberModel? get broadcastMembers => _broadcastMembers.value;
   set broadcastMembers(BroadcastMemberModel? value) {
     _broadcastMembers.value = value;
@@ -35,13 +36,25 @@ class IsmChatBroadcastController extends GetxController {
     _broadcastList.value = value;
   }
 
-  final RxList<UserDetails> _eligibleMembers = <UserDetails>[].obs;
-  List<UserDetails> get eligibleMembers => _eligibleMembers;
-  set eligibleMembers(List<UserDetails> value) {
+  final _eligibleMembers = <SelectedMembers>[].obs;
+  List<SelectedMembers> get eligibleMembers => _eligibleMembers;
+  set eligibleMembers(List<SelectedMembers> value) {
     _eligibleMembers.value = value;
   }
 
-  final RxBool _isApiCall = false.obs;
+  List<SelectedMembers> eligibleMembersduplicate = [];
+
+  final _selectedUserList = <UserDetails>[].obs;
+  List<UserDetails> get selectedUserList => _selectedUserList;
+  set selectedUserList(List<UserDetails> value) {
+    _selectedUserList.value = value;
+  }
+
+  final _showSearchField = false.obs;
+  bool get showSearchField => _showSearchField.value;
+  set showSearchField(bool value) => _showSearchField.value = value;
+
+  final _isApiCall = false.obs;
   bool get isApiCall => _isApiCall.value;
   set isApiCall(bool value) {
     _isApiCall.value = value;
@@ -176,13 +189,120 @@ class IsmChatBroadcastController extends GetxController {
       limit: limit,
       searchTag: searchTag,
     );
-    if (skip == 0 && response != null) {
-      eligibleMembers = response;
-    } else if (skip != 0 && response != null) {
-      eligibleMembers.addAll(response);
-    } else if (skip == 0) {
-      eligibleMembers.clear();
+    var users = response ?? [];
+
+    if (searchTag.isNullOrEmpty) {
+      eligibleMembers.addAll(List.from(users)
+          .map((e) => SelectedMembers(
+                isUserSelected: selectedUserList.isEmpty
+                    ? false
+                    : selectedUserList
+                        .any((d) => d.userId == (e as UserDetails).userId),
+                userDetails: e as UserDetails,
+                isBlocked: false,
+              ))
+          .toList());
+      eligibleMembersduplicate = List<SelectedMembers>.from(eligibleMembers);
+    } else {
+      eligibleMembers = List.from(users)
+          .map(
+            (e) => SelectedMembers(
+              isUserSelected: selectedUserList.isEmpty
+                  ? false
+                  : selectedUserList
+                      .any((d) => d.userId == (e as UserDetails).userId),
+              userDetails: e as UserDetails,
+              isBlocked: false,
+            ),
+          )
+          .toList();
+    }
+    if (response != null) {
+      handleList(eligibleMembers);
     }
     if (shouldShowLoader) isApiCall = false;
+  }
+
+  void handleList(List<SelectedMembers> list) {
+    if (list.isEmpty) return;
+    for (var i = 0, length = list.length; i < length; i++) {
+      var tag = list[i].userDetails.userName[0].toUpperCase();
+      var isLocal = list[i].localContacts ?? false;
+      if (RegExp('[A-Z]').hasMatch(tag) && isLocal == false) {
+        list[i].tagIndex = tag;
+      } else {
+        if (isLocal == true) {
+          list[i].tagIndex = '#';
+        }
+      }
+    }
+
+    // A-Z sort.
+    SuspensionUtil.sortListBySuspensionTag(eligibleMembers);
+
+    // show sus tag.
+    SuspensionUtil.setShowSuspensionStatus(eligibleMembers);
+  }
+
+  void onEligibleMemberTap(int index) {
+    eligibleMembers[index].isUserSelected =
+        !eligibleMembers[index].isUserSelected;
+  }
+
+  void isSelectedMembers(UserDetails userDetails) {
+    if (selectedUserList.isEmpty) {
+      selectedUserList.add(userDetails);
+    } else {
+      if (selectedUserList.any((e) => e.userId == userDetails.userId)) {
+        selectedUserList.removeWhere((e) => e.userId == userDetails.userId);
+      } else {
+        selectedUserList.add(userDetails);
+      }
+    }
+  }
+
+  Future<void> addEligibleMembers({
+    required String groupcastId,
+    required List<UserDetails> members,
+  }) async {
+    try {
+      final response = await _viewModel.addEligibleMembers(
+          groupcastId: groupcastId,
+          members: members
+              .map((e) => {
+                    'newConversationTypingEvents': true,
+                    'newConversationReadEvents': true,
+                    'newConversationPushNotificationsEvents': true,
+                    'newConversationCustomType': 'Broadcast',
+                    'newConversationMetadata': {},
+                    'memberId': e.userId
+                  })
+              .toList(),
+          isloading: true);
+      if (response != null) {
+        final memberList = members
+            .map(
+              (e) => MembersDetail(memberId: e.userId, memberName: e.userName),
+            )
+            .toList();
+        broadcast?.metaData?.membersDetail?.addAll(memberList);
+        broadcast?.metaData?.copyWith(
+          membersDetail: broadcast?.metaData?.membersDetail,
+        );
+        await getBroadcastMembers(
+          groupcastId: groupcastId,
+          isloading: true,
+        );
+        unawaited(
+          updateBroadcast(
+            groupcastId: groupcastId,
+            metaData: broadcast?.metaData?.toMap(),
+            shouldCallBack: true,
+          ),
+        );
+      }
+    } catch (_) {
+      Get.back();
+    }
   }
 }

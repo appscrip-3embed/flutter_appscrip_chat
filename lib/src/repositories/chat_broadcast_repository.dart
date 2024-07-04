@@ -149,7 +149,7 @@ class IsmChatBroadcastRepository {
     int skip = 0,
     int limit = 20,
     String? searchTag,
-    int sort = -1,
+    int sort = 1,
   }) async {
     try {
       String? url;
@@ -174,6 +174,33 @@ class IsmChatBroadcastRepository {
           .toList();
     } catch (e, st) {
       IsmChatLog.error('broadcast members  $e', st);
+    }
+    return null;
+  }
+
+  Future<IsmChatResponseModel?> addEligibleMembers({
+    required String groupcastId,
+    bool isloading = false,
+    required List<Map<String,dynamic>> members,
+  }) async {
+    try {
+      final payload = {
+        'members': members,
+        'groupcastId': groupcastId,
+      };
+      var response = await _apiWrapper.put(
+        IsmChatAPI.chatGroupCastMember,
+        headers: IsmChatUtility.tokenCommonHeader(),
+        showLoader: isloading,
+        payload: payload,
+      );
+      if (response.hasError) {
+        return null;
+      }
+
+      return response;
+    } catch (e, st) {
+      IsmChatLog.error('add broadcast members  $e', st);
     }
     return null;
   }

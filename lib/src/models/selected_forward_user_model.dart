@@ -1,14 +1,14 @@
 import 'dart:convert';
+
 import 'package:appscrip_chat_component/src/models/user_details_model.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:get/get.dart';
 
-class SelectedForwardUser extends ISuspensionBean {
-  factory SelectedForwardUser.fromJson(String source) =>
-      SelectedForwardUser.fromMap(json.decode(source) as Map<String, dynamic>);
+class SelectedMembers extends ISuspensionBean {
+  factory SelectedMembers.fromJson(String source) =>
+      SelectedMembers.fromMap(json.decode(source) as Map<String, dynamic>);
 
-  factory SelectedForwardUser.fromMap(Map<String, dynamic> map) =>
-      SelectedForwardUser(
+  factory SelectedMembers.fromMap(Map<String, dynamic> map) => SelectedMembers(
         isUserSelected: map['isUserSelected'] as bool? ?? false,
         userDetails: map['userDetails'] != null
             ? UserDetails.fromMap(map['userDetails'] as Map<String, dynamic>)
@@ -24,7 +24,7 @@ class SelectedForwardUser extends ISuspensionBean {
         tagIndex: map['tagIndex'] as String? ?? '',
       );
 
-  SelectedForwardUser({
+  SelectedMembers({
     required bool isUserSelected,
     required this.userDetails,
     required this.isBlocked,
@@ -41,13 +41,13 @@ class SelectedForwardUser extends ISuspensionBean {
   bool get isUserSelected => _isUserSelected.value;
   set isUserSelected(bool value) => _isUserSelected.value = value;
 
-  SelectedForwardUser copyWith({
+  SelectedMembers copyWith({
     bool? isUserSelected,
     UserDetails? userDetails,
     bool? isBlocked,
     String? tagIndex,
   }) =>
-      SelectedForwardUser(
+      SelectedMembers(
           isUserSelected: isUserSelected ?? this.isUserSelected,
           userDetails: userDetails ?? this.userDetails,
           isBlocked: isBlocked ?? this.isBlocked,
@@ -67,7 +67,7 @@ class SelectedForwardUser extends ISuspensionBean {
       'SelectedForwardUser(isUserSelected: $isUserSelected, userDetails: $userDetails, isBlocked: $isBlocked, tagIndex: $tagIndex)';
 
   @override
-  bool operator ==(covariant SelectedForwardUser other) {
+  bool operator ==(covariant SelectedMembers other) {
     if (identical(this, other)) return true;
 
     return other.isUserSelected == isUserSelected &&

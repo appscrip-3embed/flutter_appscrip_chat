@@ -315,9 +315,9 @@ class IsmChatPageController extends GetxController
   bool get canCallCurrentApi => _canCallCurrentApi.value;
   set canCallCurrentApi(bool value) => _canCallCurrentApi.value = value;
 
-  final _groupEligibleUser = <SelectedForwardUser>[].obs;
-  List<SelectedForwardUser> get groupEligibleUser => _groupEligibleUser;
-  set groupEligibleUser(List<SelectedForwardUser> value) =>
+  final _groupEligibleUser = <SelectedMembers>[].obs;
+  List<SelectedMembers> get groupEligibleUser => _groupEligibleUser;
+  set groupEligibleUser(List<SelectedMembers> value) =>
       _groupEligibleUser.value = value;
 
   final _userReactionList = <UserDetails>[].obs;
@@ -402,7 +402,7 @@ class IsmChatPageController extends GetxController
 
   Timer? forVideoRecordTimer;
 
-  List<SelectedForwardUser> groupEligibleUserDuplicate = [];
+  List<SelectedMembers> groupEligibleUserDuplicate = [];
 
   List<MentionModel> userMentionedList = [];
 
