@@ -38,10 +38,11 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   http: ^1.2.0
-  image_cropper: ^7.0.5
   # flutter_localizations:
   #   sdk: flutter
   image_picker: ^1.0.4
+  email_validator: ^2.1.17
+  image_cropper: ^7.0.5
   notification_permissions: ^0.6.1
   path_provider: ^2.0.13
   url_strategy: ^0.2.0

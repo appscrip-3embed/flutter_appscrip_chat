@@ -21,12 +21,14 @@ class _IsmMediaViewState extends State<IsmMediaView>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      var storeSortMedia = chatPageController.sortMessages(widget.mediaList);
-      storeWidgetMediaList =
-          chatPageController.sortMediaList(storeSortMedia).reversed.toList();
-      setState(() {});
-    });
+    IsmChatUtility.doLater(
+      () {
+        var storeSortMedia = chatPageController.sortMessages(widget.mediaList);
+        storeWidgetMediaList =
+            chatPageController.sortMediaList(storeSortMedia).reversed.toList();
+        setState(() {});
+      },
+    );
   }
 
   @override

@@ -20,18 +20,20 @@ class _IsmChatPublicConversationViewState
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      converstaionController
-          .intiPublicAndOpenConversation(IsmChatConversationType.public);
-      scrollController.addListener(() {
-        if (scrollController.offset.toInt() ==
-            scrollController.position.maxScrollExtent.toInt()) {
-          converstaionController.getPublicAndOpenConversation(
-            conversationType: IsmChatConversationType.public.value,
-          );
-        }
-      });
-    });
+    IsmChatUtility.doLater(
+      () {
+        converstaionController
+            .intiPublicAndOpenConversation(IsmChatConversationType.public);
+        scrollController.addListener(() {
+          if (scrollController.offset.toInt() ==
+              scrollController.position.maxScrollExtent.toInt()) {
+            converstaionController.getPublicAndOpenConversation(
+              conversationType: IsmChatConversationType.public.value,
+            );
+          }
+        });
+      },
+    );
   }
 
   @override

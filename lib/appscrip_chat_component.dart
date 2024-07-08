@@ -146,7 +146,7 @@ class IsmChat {
       await _delegate.getAllConversationFromDB();
 
   /// Call this function for t all user List
-  Future<List<SelectedForwardUser>?> getNonBlockUserList() async =>
+  Future<List<SelectedMembers>?> getNonBlockUserList() async =>
       await _delegate.getNonBlockUserList();
 
   /// Call this funcation for get all conversation list with conversation predicate
@@ -336,7 +336,7 @@ class IsmChat {
     IsmChatMetaData? metaData,
     void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
     Duration duration = const Duration(milliseconds: 500),
-    String? messageFromOutSide,
+    OutSideMessage? outSideMessage,
     String? storyMediaUrl,
     bool pushNotifications = true,
     bool isCreateGroupFromOutSide = false,
@@ -353,7 +353,7 @@ class IsmChat {
       userId: userId,
       duration: duration,
       isCreateGroupFromOutSide: isCreateGroupFromOutSide,
-      messageFromOutSide: messageFromOutSide,
+      outSideMessage: outSideMessage,
       metaData: metaData,
       onNavigateToChat: onNavigateToChat,
       profileImageUrl: profileImageUrl,

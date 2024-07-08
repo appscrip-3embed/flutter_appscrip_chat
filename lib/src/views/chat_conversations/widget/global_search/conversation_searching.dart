@@ -11,11 +11,10 @@ class IsmChatConversationSearchView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatConversationsController>(
-        initState: (state) async {
-          WidgetsBinding.instance.addPostFrameCallback((_) async {
-            final controller = Get.find<IsmChatConversationsController>();
-
-            await controller.getChatSearchConversations();
+        initState: (state) {
+          IsmChatUtility.doLater(() async {
+            await Get.find<IsmChatConversationsController>()
+                .getChatSearchConversations();
           });
         },
         builder: (controller) => Scaffold(

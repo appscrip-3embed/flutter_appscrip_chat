@@ -409,7 +409,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                               subtitle: Text(IsmChatProperties
                                       .conversationProperties.opponentSubTitle
                                       ?.call(context, member) ??
-                                  member.metaData?.about ??
+                                  member.metaData?.aboutText?.title ??
                                   ''),
                               leading: IsmChatImage.profile(member.profileUrl),
                             );

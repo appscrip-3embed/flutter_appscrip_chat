@@ -107,7 +107,7 @@ mixin IsmChatGroupAdminMixin on GetxController {
     }
     var users = response;
     _controller.groupEligibleUser.addAll(List.from(users)
-        .map((e) => SelectedForwardUser(
+        .map((e) => SelectedMembers(
               isUserSelected: false,
               userDetails: e as UserDetails,
               isBlocked: false,
@@ -122,7 +122,7 @@ mixin IsmChatGroupAdminMixin on GetxController {
     _handleList(_controller.groupEligibleUser);
   }
 
-  void _handleList(List<SelectedForwardUser> list) {
+  void _handleList(List<SelectedMembers> list) {
     if (list.isEmpty) return;
     for (var i = 0, length = list.length; i < length; i++) {
       var tag = list[i].userDetails.userName[0].toUpperCase();

@@ -130,9 +130,11 @@ class AuthController extends GetxController {
               toolbarWidgetColor: Colors.white,
               initAspectRatio: CropAspectRatioPreset.original,
               lockAspectRatio: false,
+              cropStyle: CropStyle.circle,
             ),
             IOSUiSettings(
               title: 'Cropper',
+              cropStyle: CropStyle.circle,
             ),
             WebUiSettings(
               context: Get.context!,

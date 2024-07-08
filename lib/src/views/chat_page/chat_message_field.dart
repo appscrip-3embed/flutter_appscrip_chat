@@ -225,9 +225,14 @@ class IsmChatMessageField extends StatelessWidget {
                                         ),
                                       ),
                                       onChanged: (_) {
-                                        if (controller.conversation
-                                                ?.conversationId?.isNotEmpty ??
-                                            false) {
+                                        if ((controller
+                                                    .conversation
+                                                    ?.conversationId
+                                                    ?.isNotEmpty ??
+                                                false) &&
+                                            controller
+                                                    .conversation?.customType !=
+                                                IsmChatStrings.broadcast) {
                                           controller.notifyTyping();
                                           controller.showMentionsUserList(_);
                                         }
@@ -464,7 +469,12 @@ class _MicOrSendButton extends StatelessWidget {
                 if (controller.showEmojiBoard) {
                   controller.toggleEmojiBoard();
                 }
-
+                if (!(await IsmChatProperties
+                        .chatPageProperties.isSendMediaAllowed
+                        ?.call(context, controller.conversation!) ??
+                    true)) {
+                  return;
+                }
                 var allowPermission = false;
                 if (kIsWeb) {
                   final state = await IsmChatBlob.checkPermission('microphone');
@@ -781,13 +791,19 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
               if (!(controller.conversation?.isChattingAllowed == true)) {
                 controller.showDialogCheckBlockUnBlock();
               } else {
-                await Get.bottomSheet(
-                  const IsmChatAttachmentCard(),
-                  enterBottomSheetDuration:
-                      IsmChatConstants.bottomSheetDuration,
-                  exitBottomSheetDuration: IsmChatConstants.bottomSheetDuration,
-                  elevation: 0,
-                );
+                if (await IsmChatProperties
+                        .chatPageProperties.isSendMediaAllowed
+                        ?.call(context, controller.conversation!) ??
+                    true) {
+                  await Get.bottomSheet(
+                    const IsmChatAttachmentCard(),
+                    enterBottomSheetDuration:
+                        IsmChatConstants.bottomSheetDuration,
+                    exitBottomSheetDuration:
+                        IsmChatConstants.bottomSheetDuration,
+                    elevation: 0,
+                  );
+                }
               }
             },
             color: IsmChatConfig.chatTheme.chatPageTheme?.textFiledThemData

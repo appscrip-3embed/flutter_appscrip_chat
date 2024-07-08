@@ -55,6 +55,7 @@ class ChatList extends StatelessWidget {
               //   IsmChatLog.error(p2);
               //   return true;
               // },
+
               header: IsmChatPageHeaderProperties(
 
                   // height: (p0, p1) => 200,
@@ -86,6 +87,7 @@ class ChatList extends StatelessWidget {
                 if (!kIsWeb) IsmChatAttachmentType.location,
                 if (!kIsWeb) IsmChatAttachmentType.contact,
               ],
+
               // features: [
               //   IsmChatFeature.reply,
               // ]
@@ -156,10 +158,11 @@ class ChatList extends StatelessWidget {
               // startActionSlidableEnable: (p0, p1) => true,
               // conversationPredicate: (e) =>
               //     e.chatName.toLowerCase().startsWith('t'),
+
               opponentSubTitle: (_, opponent) {
-                return opponent.metaData?.about.isNullOrEmpty == true
+                return opponent.metaData?.aboutText?.title == null
                     ? 'Hey there! I am using IsoChat'
-                    : opponent.metaData?.about;
+                    : opponent.metaData?.aboutText?.title ?? '';
               },
             ),
           ),

@@ -75,9 +75,11 @@ class IsmChatConversationModel {
                 )
                 .toList()
             : [],
-        messageFromOutSide: map['messageFromOutSide'] as String? ?? '',
-        isCreateGroupFromOutSide:
-            map['isCreateGroupFromOutSide'] as bool? ?? false,
+        outSideMessage: map['outSideMessage'] != null
+            ? OutSideMessage.fromMap(
+                map['messageFromOutSide'] as Map<String, dynamic>)
+            : null,
+        isCreateGroupFromOutSide: map['isCreateGroupFromOutSide'] as bool? ?? false,
         customType: map['customType'] as String? ?? '',
         pushNotifications: map['pushNotifications'] as bool? ?? false);
     if (model.lastMessageDetails?.action ==
@@ -112,7 +114,7 @@ class IsmChatConversationModel {
     this.createdBy,
     this.createdByUserName,
     this.messages,
-    this.messageFromOutSide,
+    this.outSideMessage,
     this.customType,
     this.pushNotifications,
     this.isCreateGroupFromOutSide,
@@ -141,7 +143,7 @@ class IsmChatConversationModel {
   final String? createdBy;
   final String? createdByUserName;
   final List<IsmChatMessageModel>? messages;
-  final String? messageFromOutSide;
+  final OutSideMessage? outSideMessage;
   final bool? isCreateGroupFromOutSide;
   final String? customType;
   final bool? pushNotifications;
@@ -189,7 +191,7 @@ class IsmChatConversationModel {
     List<UserDetails>? members,
     IsmChatUserOwnDetails? usersOwnDetails,
     List<IsmChatMessageModel>? messages,
-    String? messageFromOutSide,
+    OutSideMessage? outSideMessage,
     bool? isCreateGroupFromOutSide,
     bool? pushNotifications,
     List<String>? userIds,
@@ -218,7 +220,7 @@ class IsmChatConversationModel {
           members: members ?? this.members,
           usersOwnDetails: usersOwnDetails ?? this.usersOwnDetails,
           messages: messages ?? this.messages,
-          messageFromOutSide: messageFromOutSide ?? this.messageFromOutSide,
+          outSideMessage: outSideMessage ?? this.outSideMessage,
           customType: customType ?? this.customType,
           pushNotifications: pushNotifications ?? this.pushNotifications,
           isCreateGroupFromOutSide:
@@ -249,7 +251,7 @@ class IsmChatConversationModel {
         'lastReadAt': lastReadAt?.map((x) => x.toMap()).toList(),
         'lastMessageSentAt': lastMessageSentAt,
         'lastMessageDetails': lastMessageDetails?.toMap(),
-        'messageFromOutSide': messageFromOutSide,
+        'outSideMessage': outSideMessage?.toMap(),
         'customType': customType,
         'pushNotifications': pushNotifications,
         'isCreateGroupFromOutSide': isCreateGroupFromOutSide,
@@ -259,7 +261,7 @@ class IsmChatConversationModel {
 
   @override
   String toString() =>
-      'IsmChatConversationModel(updatedAt: $updatedAt, unreadMessagesCount: $unreadMessagesCount, userIds: $userIds, privateOneToOne: $privateOneToOne, opponentDetails: $opponentDetails, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, lastMessageSentAt: $lastMessageSentAt, lastMessageDetails: $lastMessageDetails, isGroup: $isGroup, conversationType: $conversationType, createdAt: $createdAt, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, config: $config, members: $members, usersOwnDetails: $usersOwnDetails, createdBy: $createdBy, createdByUserName: $createdByUserName, messages: $messages, messageFromOutSide : $messageFromOutSide ,customType: $customType, pushNotifications : $pushNotifications, isCreateGroupFromOutSide : $isCreateGroupFromOutSide)';
+      'IsmChatConversationModel(updatedAt: $updatedAt, unreadMessagesCount: $unreadMessagesCount, userIds: $userIds, privateOneToOne: $privateOneToOne, opponentDetails: $opponentDetails, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, lastMessageSentAt: $lastMessageSentAt, lastMessageDetails: $lastMessageDetails, isGroup: $isGroup, conversationType: $conversationType, createdAt: $createdAt, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, config: $config, members: $members, usersOwnDetails: $usersOwnDetails, createdBy: $createdBy, createdByUserName: $createdByUserName, messages: $messages, outSideMessage : $outSideMessage ,customType: $customType, pushNotifications : $pushNotifications, isCreateGroupFromOutSide : $isCreateGroupFromOutSide)';
 
   @override
   bool operator ==(covariant IsmChatConversationModel other) {
@@ -286,7 +288,7 @@ class IsmChatConversationModel {
         listEquals(other.members, members) &&
         other.usersOwnDetails == usersOwnDetails &&
         other.createdBy == createdBy &&
-        other.messageFromOutSide == messageFromOutSide &&
+        other.outSideMessage == outSideMessage &&
         other.isCreateGroupFromOutSide == isCreateGroupFromOutSide &&
         other.createdByUserName == createdByUserName &&
         other.customType == customType &&
@@ -318,9 +320,123 @@ class IsmChatConversationModel {
       usersOwnDetails.hashCode ^
       createdBy.hashCode ^
       createdByUserName.hashCode ^
-      messageFromOutSide.hashCode ^
+      outSideMessage.hashCode ^
       isCreateGroupFromOutSide.hashCode ^
       customType.hashCode ^
       pushNotifications.hashCode ^
       messages.hashCode;
+}
+
+class OutSideMessage {
+  final String? imageUrl;
+  final String? messageFromOutSide;
+  final String? caption;
+  final AboutTextModel? aboutText;
+  OutSideMessage({
+    this.imageUrl,
+    this.messageFromOutSide,
+    this.caption,
+    this.aboutText,
+  });
+
+  OutSideMessage copyWith({
+    String? imageUrl,
+    String? messageFromOutSide,
+    String? caption,
+    AboutTextModel? aboutText,
+  }) =>
+      OutSideMessage(
+        imageUrl: imageUrl ?? this.imageUrl,
+        messageFromOutSide: messageFromOutSide ?? this.messageFromOutSide,
+        caption: caption ?? this.caption,
+        aboutText: aboutText ?? this.aboutText,
+      );
+
+  Map<String, dynamic> toMap() => <String, dynamic>{
+        'imageUrl': imageUrl,
+        'messageFromOutSide': messageFromOutSide,
+        'caption': caption,
+        'aboutText': aboutText?.toMap(),
+      };
+
+  factory OutSideMessage.fromMap(Map<String, dynamic> map) => OutSideMessage(
+        imageUrl: map['imageUrl'] as String? ?? '',
+        messageFromOutSide: map['messageFromOutSide'] as String? ?? '',
+        caption: map['caption'] as String? ?? '',
+        aboutText: map['aboutText'] != null
+            ? AboutTextModel.fromMap(map['aboutText'] as Map<String, dynamic>)
+            : null,
+      );
+
+  String toJson() => json.encode(toMap());
+
+  factory OutSideMessage.fromJson(String source) =>
+      OutSideMessage.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() =>
+      'OutSideMessage(imageUrl: $imageUrl, messageFromOutSide: $messageFromOutSide, caption: $caption, aboutText: $aboutText)';
+
+  @override
+  bool operator ==(covariant OutSideMessage other) {
+    if (identical(this, other)) return true;
+
+    return other.imageUrl == imageUrl &&
+        other.messageFromOutSide == messageFromOutSide &&
+        other.caption == caption &&
+        other.aboutText == aboutText;
+  }
+
+  @override
+  int get hashCode =>
+      imageUrl.hashCode ^
+      messageFromOutSide.hashCode ^
+      caption.hashCode ^
+      aboutText.hashCode;
+}
+
+class AboutTextModel {
+  final String? title;
+  final String? subTitle;
+  AboutTextModel({
+    this.title,
+    this.subTitle,
+  });
+
+  AboutTextModel copyWith({
+    String? title,
+    String? subTitle,
+  }) =>
+      AboutTextModel(
+        title: title ?? this.title,
+        subTitle: subTitle ?? this.subTitle,
+      );
+
+  Map<String, dynamic> toMap() => <String, dynamic>{
+        'title': title,
+        'subTitle': subTitle,
+      };
+
+  factory AboutTextModel.fromMap(Map<String, dynamic> map) => AboutTextModel(
+        title: map['title'] as String? ?? '',
+        subTitle: map['subTitle'] as String? ?? '',
+      );
+
+  String toJson() => json.encode(toMap());
+
+  factory AboutTextModel.fromJson(String source) =>
+      AboutTextModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() => 'AboutTextModel(title: $title, subTitle: $subTitle)';
+
+  @override
+  bool operator ==(covariant AboutTextModel other) {
+    if (identical(this, other)) return true;
+
+    return other.title == title && other.subTitle == subTitle;
+  }
+
+  @override
+  int get hashCode => title.hashCode ^ subTitle.hashCode;
 }

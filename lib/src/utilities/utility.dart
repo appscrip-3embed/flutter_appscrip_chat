@@ -27,6 +27,14 @@ class IsmChatUtility {
     FocusScope.of(Get.context!).unfocus();
   }
 
+
+  /// Method for Do Work After Frame Call Back
+  static void doLater(VoidCallback? work) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      work?.call();
+    });
+  }
+
   /// Show loader
   static void showLoader() async {
     closeLoader();
@@ -237,9 +245,12 @@ class IsmChatUtility {
           toolbarWidgetColor: IsmChatColors.whiteColor,
           initAspectRatio: CropAspectRatioPreset.original,
           lockAspectRatio: false,
+          // cropStyle: CropStyle.circle,
         ),
         IOSUiSettings(
           title: 'Cropper',
+
+          // cropStyle: CropStyle.circle,
         )
       ],
     );
@@ -530,4 +541,33 @@ class IsmChatUtility {
     //   }
     // }
   }
+
+ static  Widget buildSusWidget(String susTag) => Container(
+        padding: IsmChatDimens.edgeInsets10_0,
+        height: IsmChatDimens.forty,
+        width: double.infinity,
+        alignment: Alignment.centerLeft,
+        child: susTag != '#'
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    susTag,
+                    textScaler: const TextScaler.linear(1.5),
+                    style: IsmChatStyles.w600Black14,
+                  ),
+                  if (!Responsive.isWeb(Get.context!))
+                    SizedBox(
+                        width: IsmChatDimens.percentWidth(.8),
+                        child: Divider(
+                          height: .0,
+                          indent: IsmChatDimens.ten,
+                        ))
+                ],
+              )
+            : Text(
+                '${IsmChatStrings.inviteToChat} ${IsmChatConfig.communicationConfig.projectConfig.appName}',
+                style: IsmChatStyles.w600Black14
+                    .copyWith(color: const Color(0xff9E9CAB))),
+      );
 }

@@ -39,6 +39,10 @@ class IsmChatStrings {
   static const String blockUser = 'Block Users';
   static const String unBlockUser = 'Unblock User';
   static const String blockedUsers = 'Blocked Users';
+  static const String broadcastList = 'Broadcast List';
+  static const String broadcastinfo = 'Broadcast info';
+  static const String eligibleMembers = 'Eligible members';
+
   static const String observer = 'Observers';
 
   static const String boradcastMessge = 'Broadcast Messgaes';
@@ -86,6 +90,8 @@ class IsmChatStrings {
   static const String unBlockedSuccessfully = 'User Unblocked Successfully.';
   static const String blockedSuccessfully = 'User Blocked Successfully.';
   static const String noBlockedUsers = 'No blocked users.';
+  static const String boradcastNotFound = 'Broadcast not found !!';
+
   static const String deleteMessage = 'Delete message?';
   static const String deleteForEvery = 'Delete for everyone';
   static const String deleteForMe = 'Delete for me';
@@ -118,12 +124,15 @@ class IsmChatStrings {
   static const String addParticioants = 'Add participants';
   static const String addDescription = 'Add group description';
   static const String groupInfo = 'Group Info';
+  static const String edit = 'Edit';
 
   static const String areYouSure = 'Are you sure?';
   static const String assignAdmin = 'Assign group admin';
   static const String exit = 'Exit anyway';
   static const String tapInfo = 'Tap to more info';
   static const String removeReaction = 'Tap to remove reaction';
+  static const String remove = 'Remove';
+
   static const String youAreOnlyAdmin =
       "You're the only admin of the group, make a group admin or a random person will be assigned as group admin";
   static const String contactInfo = 'Contact Info';
@@ -164,6 +173,7 @@ class IsmChatStrings {
 
   static const String people = 'People';
   static const String newString = 'New';
+  static const String broadcast = 'broadcast';
   static const String newConversation = 'New Conversation';
   static const String newContact = 'New Contact';
   static const String photos = 'Photos';
@@ -198,4 +208,7 @@ class IsmChatStrings {
   static const String inviteToChat = 'Invite to';
   static const String youCanNotSend = 'You can not send media more than 20 MB.';
   static const String aboutMe = 'About';
+  static const String defaultString = 'Default';
+  static const String recipients = 'Recipients :';
+  static const String addrecipient = 'Add recipient';
 }

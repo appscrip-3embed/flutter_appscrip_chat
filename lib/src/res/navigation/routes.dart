@@ -7,7 +7,7 @@ class IsmPageRoutes {
   static const String openView = '/openView';
 
   static const String forwardView = '/forwardView';
-  static const String broadcastView = '/broadcastView';
+  static const String createBroadcastView = '/createBroadcastView';
   static const String boradCastMessagePage = '/boradCastMessagePage';
   static const String openChatMessagePage = '/openChatMessagePage';
 
@@ -15,6 +15,12 @@ class IsmPageRoutes {
   static const String contactInfoView = '/contactInfoView';
 
   static const String blockView = '/blockView';
+  static const String broadCastView = '/broadCastView';
+  static const String editBroadcastView = '/editBroadcastView';
+  static const String eligibleMemberstView = '/eligibleMemberstView';
+
+
+
   static const String observerView = '/observerView';
 
   static const String userView = '/userView';

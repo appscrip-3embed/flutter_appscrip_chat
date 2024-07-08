@@ -455,8 +455,8 @@ extension MenuIcon on IsmChatFocusMenuType {
   }
 }
 
-extension SelectedUsers on List<SelectedForwardUser> {
-  List<SelectedForwardUser> get selectedUsers =>
+extension SelectedUsers on List<SelectedMembers> {
+  List<SelectedMembers> get selectedUsers =>
       where((e) => e.isUserSelected).toList();
 }
 

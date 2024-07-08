@@ -75,7 +75,7 @@ class IsmChatForwardView extends StatelessWidget {
                       if (value.trim().isEmpty) {
                         controller.forwardedList =
                             controller.forwardedListDuplicat
-                                .map((e) => SelectedForwardUser(
+                                .map((e) => SelectedMembers(
                                       isUserSelected:
                                           controller.selectedUserList.any((d) =>
                                               d.userId == e.userDetails.userId),
@@ -112,7 +112,7 @@ class IsmChatForwardView extends StatelessWidget {
                       controller.forwardedListDuplicat.isNotEmpty) {
                     controller.forwardedList = controller.forwardedListDuplicat
                         .map(
-                          (e) => SelectedForwardUser(
+                          (e) => SelectedMembers(
                               isUserSelected: controller.selectedUserList
                                   .any((d) => d.userId == e.userDetails.userId),
                               userDetails: e.userDetails,

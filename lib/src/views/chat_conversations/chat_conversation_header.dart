@@ -154,7 +154,7 @@ class _MoreIcon extends StatelessWidget {
                 IsRenderConversationScreen.broadcastView;
             Scaffold.of(context).openDrawer();
           } else {
-            IsmChatRouteManagement.goToBroadcastView();
+            IsmChatRouteManagement.goToCreteBroadcastView();
           }
         } else if (index == 2) {
           if (Responsive.isWeb(context)) {
@@ -164,9 +164,17 @@ class _MoreIcon extends StatelessWidget {
             IsmChatRouteManagement.goToBlockView();
           }
         } else if (index == 3) {
+          if (Responsive.isWeb(context)) {
+            controller.isRenderScreen =
+                IsRenderConversationScreen.broadCastListView;
+            Scaffold.of(context).openDrawer();
+          } else {
+            IsmChatRouteManagement.goToBroadcastListView();
+          }
+        } else if (index == 4) {
           controller.isRenderScreen = IsRenderConversationScreen.groupUserView;
           Scaffold.of(context).openDrawer();
-        } else if (index == 4) {
+        } else if (index == 5) {
           await Get.dialog(IsmChatAlertDialogBox(
             title: '${IsmChatStrings.logout}?',
             content: const Text(IsmChatStrings.logoutMessage),
@@ -183,7 +191,7 @@ class _MoreIcon extends StatelessWidget {
                     .conversationProperties.conversationPosition ==
                 IsmChatConversationPosition.menu &&
             conversationTypeList.length != 1) {
-          conversationTypeList[index - 5].goToRoute();
+          conversationTypeList[index - 6].goToRoute();
         }
       },
       itemBuilder: (_) => [
@@ -215,9 +223,22 @@ class _MoreIcon extends StatelessWidget {
             ],
           ),
         ),
+        PopupMenuItem(
+          value: 3,
+          child: Row(
+            children: [
+              Icon(
+                Icons.view_list_outlined,
+                color: IsmChatConfig.chatTheme.primaryColor,
+              ),
+              IsmChatDimens.boxWidth8,
+              const Text(IsmChatStrings.broadcastList),
+            ],
+          ),
+        ),
         if (Responsive.isWeb(context)) ...[
           PopupMenuItem(
-            value: 3,
+            value: 4,
             child: Row(
               children: [
                 Icon(
@@ -235,7 +256,7 @@ class _MoreIcon extends StatelessWidget {
             conversationTypeList.length != 1) ...[
           ...conversationTypeList.map(
             (e) => PopupMenuItem(
-              value: conversationTypeList.indexOf(e) + 5,
+              value: conversationTypeList.indexOf(e) + 6,
               child: Row(
                 children: [
                   Icon(
@@ -251,7 +272,7 @@ class _MoreIcon extends StatelessWidget {
         ],
         if (Responsive.isWeb(context)) ...[
           PopupMenuItem(
-            value: 4,
+            value: 5,
             child: Row(
               children: [
                 Icon(

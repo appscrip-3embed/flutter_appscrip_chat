@@ -111,9 +111,9 @@ class IsmChatConversationsController extends GetxController {
   /// This variabel user for store user list data
   ///
   /// This list use for show new user and forward user
-  final _forwardedList = <SelectedForwardUser>[].obs;
-  List<SelectedForwardUser> get forwardedList => _forwardedList;
-  set forwardedList(List<SelectedForwardUser> value) {
+  final _forwardedList = <SelectedMembers>[].obs;
+  List<SelectedMembers> get forwardedList => _forwardedList;
+  set forwardedList(List<SelectedMembers> value) {
     _forwardedList.value = value;
   }
 
@@ -129,9 +129,9 @@ class IsmChatConversationsController extends GetxController {
   /// This variabel use for store user list data with duplicate
   ///
   /// This list use for only searching time any user
-  final _forwardedListDuplicat = <SelectedForwardUser>[].obs;
-  List<SelectedForwardUser> get forwardedListDuplicat => _forwardedListDuplicat;
-  set forwardedListDuplicat(List<SelectedForwardUser> value) {
+  final _forwardedListDuplicat = <SelectedMembers>[].obs;
+  List<SelectedMembers> get forwardedListDuplicat => _forwardedListDuplicat;
+  set forwardedListDuplicat(List<SelectedMembers> value) {
     _forwardedListDuplicat.value = value;
   }
 
@@ -302,9 +302,9 @@ class IsmChatConversationsController extends GetxController {
   bool get isUserEmailType => _isUserEmailType.value;
   set isUserEmailType(bool value) => _isUserEmailType.value = value;
 
-  final _forwardedListSkip = <SelectedForwardUser>[].obs;
-  List<SelectedForwardUser> get forwardedListSkip => _forwardedListSkip;
-  set forwardedListSkip(List<SelectedForwardUser> value) {
+  final _forwardedListSkip = <SelectedMembers>[].obs;
+  List<SelectedMembers> get forwardedListSkip => _forwardedListSkip;
+  set forwardedListSkip(List<SelectedMembers> value) {
     _forwardedList.value = value;
   }
 
@@ -406,6 +406,8 @@ class IsmChatConversationsController extends GetxController {
         return const SizedBox.shrink();
       case IsRenderConversationScreen.blockView:
         return const IsmChatBlockedUsersView();
+      case IsRenderConversationScreen.broadCastListView:
+        return const IsmChatBroadCastView();
       case IsRenderConversationScreen.groupUserView:
         return IsmChatCreateConversationView(
           isGroupConversation: true,
@@ -415,7 +417,7 @@ class IsmChatConversationsController extends GetxController {
       case IsRenderConversationScreen.userView:
         return IsmChatUserView();
       case IsRenderConversationScreen.broadcastView:
-        return const IsmChatBroadCastView();
+        return const IsmChatCreateBroadCastView();
       case IsRenderConversationScreen.openConverationView:
         return const IsmChatOpenConversationView();
       case IsRenderConversationScreen.publicConverationView:
@@ -605,7 +607,7 @@ class IsmChatConversationsController extends GetxController {
   /// This will be used to fetch all the users associated with the current user
   ///
   /// Will be used for Create chat and/or Forward message
-  Future<List<SelectedForwardUser>?> getNonBlockUserList({
+  Future<List<SelectedMembers>?> getNonBlockUserList({
     int sort = 1,
     int skip = 0,
     int limit = 20,
@@ -643,17 +645,17 @@ class IsmChatConversationsController extends GetxController {
     }
     if (searchTag.isEmpty) {
       forwardedList.addAll(List.from(users)
-          .map((e) => SelectedForwardUser(
+          .map((e) => SelectedMembers(
                 isUserSelected: selectedUserList.isEmpty ? false : selectedUserList.any((d) => d.userId == (e as UserDetails).userId),
                 userDetails: e as UserDetails,
                 isBlocked: false,
               ))
           .toList());
-      forwardedListDuplicat = List<SelectedForwardUser>.from(forwardedList);
+      forwardedListDuplicat = List<SelectedMembers>.from(forwardedList);
     } else {
       forwardedList = List.from(users)
           .map(
-            (e) => SelectedForwardUser(
+            (e) => SelectedMembers(
               isUserSelected: selectedUserList.isEmpty ? false : selectedUserList.any((d) => d.userId == (e as UserDetails).userId),
               userDetails: e as UserDetails,
               isBlocked: false,
@@ -673,7 +675,7 @@ class IsmChatConversationsController extends GetxController {
     return forwardedList;
   }
 
-  void handleList(List<SelectedForwardUser> list) {
+  void handleList(List<SelectedMembers> list) {
     if (list.isEmpty) return;
     for (var i = 0, length = list.length; i < length; i++) {
       var tag = list[i].userDetails.userName[0].toUpperCase();
@@ -1324,11 +1326,11 @@ class IsmChatConversationsController extends GetxController {
       if (res != null && (res.data ?? []).isNotEmpty) {
         getContactSyncUser.addAll(res.data ?? []);
         await removeDBUser();
-        var forwardedListLocalList = <SelectedForwardUser>[];
+        var forwardedListLocalList = <SelectedMembers>[];
         for (var e in getContactSyncUser) {
           if (hashMapSendContactSync[e.contactNo ?? ''] != null) {
             forwardedListLocalList.add(
-              SelectedForwardUser(
+              SelectedMembers(
                 localContacts: true,
                 isUserSelected: false,
                 userDetails: UserDetails(
@@ -1359,7 +1361,7 @@ class IsmChatConversationsController extends GetxController {
     forwardedList.addAll(
       List.from(
         filterContacts.map(
-          (e) => SelectedForwardUser(
+          (e) => SelectedMembers(
             localContacts: true,
             isUserSelected: false,
             userDetails: UserDetails(
@@ -1461,7 +1463,7 @@ class IsmChatConversationsController extends GetxController {
       sentByMe: true,
       isUploading: true,
       metaData: IsmChatMetaData(
-        captionMessage: caption,
+        caption: caption,
       ),
     );
 
@@ -1483,5 +1485,30 @@ class IsmChatConversationsController extends GetxController {
       parentMessageId: imageMessage.parentMessageId,
       isUpdateMesage: false,
     );
+  }
+
+  void goToBroadcastMessage(List<UserDetails> members, String conversationId) {
+    var conversation = IsmChatConversationModel(
+      members: members,
+      conversationImageUrl: IsmChatAssets.noImage,
+      customType: IsmChatStrings.broadcast,
+      conversationId: conversationId,
+    );
+
+    navigateToMessages(conversation);
+    if (Responsive.isWeb(Get.context!)) {
+      Get.back();
+      if (!Get.isRegistered<IsmChatPageController>()) {
+        IsmChatPageBinding().dependencies();
+      }
+      isRenderChatPageaScreen = IsRenderChatPageScreen.boradcastChatMessagePage;
+      final chatPagecontroller = Get.find<IsmChatPageController>();
+      chatPagecontroller.startInit(isTemporaryChats: true);
+      chatPagecontroller.closeOverlay();
+    } else {
+      IsmChatRouteManagement.goToBroadcastMessagePage(
+        isTemporaryChat: true,
+      );
+    }
   }
 }
