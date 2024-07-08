@@ -79,7 +79,6 @@ class ChatList extends StatelessWidget {
                 ),
                 text: 'No Messages',
               ),
-              isSendMediaAllowed: (p0, p1) async => false,
 
               attachments: const [
                 IsmChatAttachmentType.camera,
