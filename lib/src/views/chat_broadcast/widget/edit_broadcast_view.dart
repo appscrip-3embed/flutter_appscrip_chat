@@ -46,7 +46,13 @@ class IsmChatEditBroadcastView extends StatelessWidget {
                   },
                   child: Text(
                     IsmChatStrings.save,
-                    style: IsmChatStyles.w400White16,
+                    style: (IsmChatConfig
+                                .chatTheme.chatPageHeaderTheme?.titleStyle ??
+                            IsmChatStyles.w400White16)
+                        .copyWith(
+                      fontSize: IsmChatDimens.sixteen,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ))
             ],
           ),
@@ -77,16 +83,16 @@ class IsmChatEditBroadcastView extends StatelessWidget {
                 padding: IsmChatDimens.edgeInsets10_20_10_0,
                 child: IsmChatInputField(
                   autofocus: false,
-                  fillColor: IsmChatConfig.chatTheme.backgroundColor,
                   controller: controller.broadcastName,
                   padding: IsmChatDimens.edgeInsets0,
-                  style: IsmChatStyles.w600Black16,
+                  style: IsmChatStyles.w400White16,
                   maxLines: 1,
                   hint: 'Add broadcast name here...',
-                  hintStyle: IsmChatStyles.w400Black16,
+                  hintStyle: IsmChatStyles.w400White16,
                   textInputAction: TextInputAction.done,
                   onChanged: (value) {},
                   cursorColor: Colors.transparent,
+                  fillColor: IsmChatConfig.chatTheme.primaryColor,
                 ),
               ),
               IsmChatDimens.boxHeight20,
