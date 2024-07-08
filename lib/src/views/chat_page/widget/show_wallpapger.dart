@@ -76,7 +76,12 @@ class _ImsChatShowWallpaperState extends State<ImsChatShowWallpaper>
                   ],
                   IconButton(
                     onPressed: Get.back,
-                    icon: const Icon(Icons.clear_rounded),
+                    icon: Icon(
+                      Icons.clear_rounded,
+                      color: IsmChatConfig
+                              .chatTheme.chatPageHeaderTheme?.iconColor ??
+                          IsmChatColors.blackColor,
+                    ),
                   )
                 ],
               ),

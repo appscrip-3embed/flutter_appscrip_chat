@@ -105,7 +105,9 @@ class IsmChatCreateConversationView extends StatelessWidget {
                   controller.showSearchField
                       ? Icons.clear_rounded
                       : Icons.search_rounded,
-                  color: IsmChatColors.whiteColor,
+                  color:
+                      IsmChatConfig.chatTheme.chatPageHeaderTheme?.iconColor ??
+                          IsmChatColors.whiteColor,
                 ),
               )
             ],
