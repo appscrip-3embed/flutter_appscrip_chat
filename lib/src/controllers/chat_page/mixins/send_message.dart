@@ -753,7 +753,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       ],
       deliveredToAll: false,
       messageId: '',
-      deviceId: _deviceConfig.deviceId ?? '',
+      deviceId: IsmChatConfig.communicationConfig.projectConfig.deviceId,
       messageType: IsmChatMessageType.normal,
       messagingDisabled: false,
       parentMessageId: '',
@@ -1284,7 +1284,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           ? IsmChatCustomMessageType.reply
           : IsmChatCustomMessageType.aboutText,
       deliveredToAll: false,
-      deviceId: _controller._deviceConfig.deviceId ?? '',
+      deviceId: IsmChatConfig.communicationConfig.projectConfig.deviceId,
       messageId: '',
       messageType: _controller.isreplying
           ? IsmChatMessageType.reply

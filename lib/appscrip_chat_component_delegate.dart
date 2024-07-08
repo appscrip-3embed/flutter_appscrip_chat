@@ -129,7 +129,7 @@ class IsmChatDelegate {
     return null;
   }
 
-  Future<List<SelectedForwardUser>?> getNonBlockUserList() async {
+  Future<List<SelectedMembers>?> getNonBlockUserList() async {
     if (Get.isRegistered<IsmChatConversationsController>()) {
       return await Get.find<IsmChatConversationsController>()
           .getNonBlockUserList();
@@ -328,7 +328,7 @@ class IsmChatDelegate {
     IsmChatMetaData? metaData,
     void Function(BuildContext, IsmChatConversationModel)? onNavigateToChat,
     Duration duration = const Duration(milliseconds: 500),
-    String? messageFromOutSide,
+    OutSideMessage? outSideMessage,
     String? storyMediaUrl,
     bool pushNotifications = true,
     bool isCreateGroupFromOutSide = false,
@@ -379,7 +379,7 @@ class IsmChatDelegate {
         lastMessageSentAt: 0,
         membersCount: 1,
         metaData: metaData,
-        messageFromOutSide: messageFromOutSide,
+        outSideMessage: outSideMessage,
         isCreateGroupFromOutSide: isCreateGroupFromOutSide,
         pushNotifications: pushNotifications,
       );
@@ -388,7 +388,7 @@ class IsmChatDelegate {
           .firstWhere((e) => e.conversationId == conversationId);
       conversation = conversation.copyWith(
         metaData: metaData,
-        messageFromOutSide: messageFromOutSide,
+        outSideMessage: outSideMessage,
         isCreateGroupFromOutSide: isCreateGroupFromOutSide,
         pushNotifications: pushNotifications,
       );
@@ -403,7 +403,7 @@ class IsmChatDelegate {
       await controller.replayOnStories(
         conversationId: conversationId,
         userDetails: conversation.opponentDetails!,
-        caption: messageFromOutSide,
+        caption: outSideMessage?.caption ?? '',
         sendPushNotification: pushNotifications,
         storyMediaUrl: storyMediaUrl,
       );
