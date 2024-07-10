@@ -58,6 +58,7 @@ enum IsmChatCustomMessageType {
   observerJoin(24),
   observerLeave(25),
   aboutText(26),
+  oneToOneCall(27),
   date(100);
 
   const IsmChatCustomMessageType(this.number);
@@ -110,6 +111,7 @@ enum IsmChatCustomMessageType {
       'observerLeave': IsmChatCustomMessageType.observerLeave,
       'date': IsmChatCustomMessageType.date,
       'aboutText': IsmChatCustomMessageType.aboutText,
+      'oneToOneCall': IsmChatCustomMessageType.oneToOneCall
     };
     var type = value.split('.').last;
     return map[type] ?? IsmChatCustomMessageType.text;
@@ -278,6 +280,8 @@ enum IsmChatCustomMessageType {
         return 'date';
       case IsmChatCustomMessageType.aboutText:
         return 'aboutText';
+      case IsmChatCustomMessageType.oneToOneCall:
+        return 'oneToOneCall';
     }
   }
 }
