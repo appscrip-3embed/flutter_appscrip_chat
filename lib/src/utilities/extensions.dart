@@ -116,6 +116,22 @@ extension DurationExtensions on Duration {
     var random = Random();
     return List.generate(number, (i) => (random.nextInt(130) + 30).toDouble());
   }
+
+  String get formatFullDuration {
+    var h = inHours.toString().padLeft(2, '0');
+    var m = (inMinutes % 60).toString().padLeft(2, '0');
+    var s = (inSeconds % 60).toString().padLeft(2, '0');
+    if (h != '00') {
+      h = '$h Hours';
+    }
+    if (m != '00') {
+      m = '$m Mins';
+    }
+    if (s != '00') {
+      s = '$s Secs';
+    }
+    return [h, m, s].where((e) => e != '00').join(' ');
+  }
 }
 
 extension IntToTimeLeft on int {

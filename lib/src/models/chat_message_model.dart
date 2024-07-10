@@ -98,6 +98,13 @@ class IsmChatMessageModel {
               .toList(),
       initiatorId: map['initiatorId'] as String? ?? '',
       initiatorName: map['initiatorName'] as String? ?? '',
+      callDurations: map['callDurations'] == null
+          ? []
+          : List<CallDuration>.from(
+              (map['members'] as List).map(
+                (e) => CallDuration.fromMap(e as Map<String, dynamic>),
+              ),
+            ),
       members: map['members'] == null
           ? []
           : List<UserDetails>.from(
@@ -155,6 +162,7 @@ class IsmChatMessageModel {
               ? IsmChatEvents.fromJson(map['events'])
               : IsmChatEvents.fromMap(map['events'])
           : null,
+      meetingId: map['meetingId'] as String? ?? '',
     );
 
     if (IsmChatConfig.configInitilized) {
@@ -235,6 +243,8 @@ class IsmChatMessageModel {
         isUploading: false,
         conversationDetails: {},
         events: null,
+        callDurations: [],
+        meetingId: '',
       );
 
   factory IsmChatMessageModel.fromMonth(int sentAt) => IsmChatMessageModel(
@@ -282,6 +292,8 @@ class IsmChatMessageModel {
         isUploading: false,
         conversationDetails: {},
         events: null,
+        callDurations: [],
+        meetingId: '',
       );
 
   List<IsmChatContactMetaDatModel> get contacts {
@@ -366,58 +378,61 @@ class IsmChatMessageModel {
         'isUploading': isUploading,
         'conversationDetails': conversationDetails,
         'events': events,
+        'callDurations': callDurations?.map((e) => e.toMap()).toList(),
+        'meetingId': meetingId,
       };
 
-  IsmChatMessageModel({
-    required this.body,
-    this.action,
-    required this.sentAt,
-    this.updatedAt,
-    this.unreadMessagesCount,
-    this.userId,
-    this.userName,
-    this.searchableTags,
-    this.privateOneToOne,
-    this.showInConversation,
-    this.readByAll,
-    this.senderInfo,
-    this.metaData,
-    this.messagingDisabled,
-    this.membersCount,
-    this.lastReadAt,
-    this.attachments,
-    this.lastMessageSentAt,
-    this.isGroup,
-    this.deliveredToAll,
-    required this.customType,
-    this.createdByUserName,
-    this.createdByUserImageUrl,
-    this.createdBy,
-    this.conversationType,
-    this.conversationTitle,
-    this.conversationImageUrl,
-    this.conversationId,
-    this.parentMessageId,
-    this.messageId,
-    this.deviceId,
-    this.adminCount,
-    this.messageType,
-    required this.sentByMe,
-    this.mentionedUsers,
-    this.initiatorId,
-    this.initiatorName,
-    this.members,
-    this.memberId,
-    this.memberName,
-    this.reactions,
-    this.notificationBody,
-    this.notificationTitle,
-    this.readBy,
-    this.deliveredTo,
-    this.isUploading,
-    this.conversationDetails,
-    this.events,
-  });
+  IsmChatMessageModel(
+      {required this.body,
+      this.action,
+      required this.sentAt,
+      this.updatedAt,
+      this.unreadMessagesCount,
+      this.userId,
+      this.userName,
+      this.searchableTags,
+      this.privateOneToOne,
+      this.showInConversation,
+      this.readByAll,
+      this.senderInfo,
+      this.metaData,
+      this.messagingDisabled,
+      this.membersCount,
+      this.lastReadAt,
+      this.attachments,
+      this.lastMessageSentAt,
+      this.isGroup,
+      this.deliveredToAll,
+      required this.customType,
+      this.createdByUserName,
+      this.createdByUserImageUrl,
+      this.createdBy,
+      this.conversationType,
+      this.conversationTitle,
+      this.conversationImageUrl,
+      this.conversationId,
+      this.parentMessageId,
+      this.messageId,
+      this.deviceId,
+      this.adminCount,
+      this.messageType,
+      required this.sentByMe,
+      this.mentionedUsers,
+      this.initiatorId,
+      this.initiatorName,
+      this.members,
+      this.memberId,
+      this.memberName,
+      this.reactions,
+      this.notificationBody,
+      this.notificationTitle,
+      this.readBy,
+      this.deliveredTo,
+      this.isUploading,
+      this.conversationDetails,
+      this.events,
+      this.callDurations,
+      this.meetingId});
 
   String body;
   String? action;
@@ -467,6 +482,8 @@ class IsmChatMessageModel {
   bool? isUploading;
   Map<String, dynamic>? conversationDetails;
   IsmChatEvents? events;
+  List<CallDuration>? callDurations;
+  String? meetingId;
 
   String get chatName => conversationTitle ?? senderInfo?.userName ?? '';
 
@@ -475,58 +492,59 @@ class IsmChatMessageModel {
           ? 'You'
           : userName!;
 
-  IsmChatMessageModel copyWith({
-    String? body,
-    String? action,
-    int? sentAt,
-    int? updatedAt,
-    int? unreadMessagesCount,
-    String? userId,
-    String? userName,
-    List<String>? searchableTags,
-    bool? privateOneToOne,
-    bool? showInConversation,
-    bool? readByAll,
-    UserDetails? senderInfo,
-    IsmChatMetaData? metaData,
-    bool? messagingDisabled,
-    int? membersCount,
-    List<IsmChatLastReadAt>? lastReadAt,
-    List<AttachmentModel>? attachments,
-    LastMessageDetails? lastMessageDetails,
-    int? lastMessageSentAt,
-    bool? isGroup,
-    bool? deliveredToAll,
-    IsmChatCustomMessageType? customType,
-    String? createdByUserName,
-    String? createdByUserImageUrl,
-    String? createdBy,
-    int? conversationType,
-    String? conversationTitle,
-    String? conversationImageUrl,
-    String? conversationId,
-    String? parentMessageId,
-    String? initiatorId,
-    String? messageId,
-    String? initiatorName,
-    String? deviceId,
-    ConversationConfigModel? config,
-    int? adminCount,
-    IsmChatMessageType? messageType,
-    bool? sentByMe,
-    List<UserDetails>? mentionedUsers,
-    List<UserDetails>? members,
-    String? memberId,
-    String? memberName,
-    List<MessageReactionModel>? reactions,
-    String? notificationBody,
-    String? notificationTitle,
-    List<MessageStatus>? readBy,
-    List<MessageStatus>? deliveredTo,
-    bool? isUploading,
-    Map<String, dynamic>? conversationDetails,
-    IsmChatEvents? events,
-  }) =>
+  IsmChatMessageModel copyWith(
+          {String? body,
+          String? action,
+          int? sentAt,
+          int? updatedAt,
+          int? unreadMessagesCount,
+          String? userId,
+          String? userName,
+          List<String>? searchableTags,
+          bool? privateOneToOne,
+          bool? showInConversation,
+          bool? readByAll,
+          UserDetails? senderInfo,
+          IsmChatMetaData? metaData,
+          bool? messagingDisabled,
+          int? membersCount,
+          List<IsmChatLastReadAt>? lastReadAt,
+          List<AttachmentModel>? attachments,
+          LastMessageDetails? lastMessageDetails,
+          int? lastMessageSentAt,
+          bool? isGroup,
+          bool? deliveredToAll,
+          IsmChatCustomMessageType? customType,
+          String? createdByUserName,
+          String? createdByUserImageUrl,
+          String? createdBy,
+          int? conversationType,
+          String? conversationTitle,
+          String? conversationImageUrl,
+          String? conversationId,
+          String? parentMessageId,
+          String? initiatorId,
+          String? messageId,
+          String? initiatorName,
+          String? deviceId,
+          ConversationConfigModel? config,
+          int? adminCount,
+          IsmChatMessageType? messageType,
+          bool? sentByMe,
+          List<UserDetails>? mentionedUsers,
+          List<UserDetails>? members,
+          String? memberId,
+          String? memberName,
+          List<MessageReactionModel>? reactions,
+          String? notificationBody,
+          String? notificationTitle,
+          List<MessageStatus>? readBy,
+          List<MessageStatus>? deliveredTo,
+          bool? isUploading,
+          Map<String, dynamic>? conversationDetails,
+          IsmChatEvents? events,
+          List<CallDuration>? callDurations,
+          String? meetingId}) =>
       IsmChatMessageModel(
         body: body ?? this.body,
         action: action ?? this.action,
@@ -577,13 +595,15 @@ class IsmChatMessageModel {
         isUploading: isUploading ?? this.isUploading,
         conversationDetails: conversationDetails ?? this.conversationDetails,
         events: events ?? this.events,
+        callDurations: callDurations ?? this.callDurations,
+        meetingId: meetingId ?? this.meetingId,
       );
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'IsmChatMessageModel(body: $body, action: $action, updatedAt: $updatedAt, sentAt: $sentAt, unreadMessagesCount: $unreadMessagesCount, userName: $userName, userId: $userId, searchableTags: $searchableTags, privateOneToOne: $privateOneToOne, showInConversation: $showInConversation, readByAll: $readByAll, senderInfo: $senderInfo, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, attachments: $attachments, lastMessageSentAt: $lastMessageSentAt, isGroup: $isGroup, deliveredToAll: $deliveredToAll, customType: $customType, createdByUserName: $createdByUserName, createdByUserImageUrl: $createdByUserImageUrl, createdBy: $createdBy, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, parentMessageId: $parentMessageId, initiatorId : $initiatorId  messageId: $messageId, deviceId: $deviceId, adminCount: $adminCount, messageType: $messageType, sentByMe: $sentByMe, mentionedUsers: $mentionedUsers, initiatorName : $initiatorName, members: $members, memberId: $memberId, memberName: $memberName, reactions : $reactions, readBy : $readBy, deliveredTo : $deliveredTo, isUploading : $isUploading, conversationDetails : $conversationDetails, events : $events)';
+      'IsmChatMessageModel(body: $body, action: $action, updatedAt: $updatedAt, sentAt: $sentAt, unreadMessagesCount: $unreadMessagesCount, userName: $userName, userId: $userId, searchableTags: $searchableTags, privateOneToOne: $privateOneToOne, showInConversation: $showInConversation, readByAll: $readByAll, senderInfo: $senderInfo, metaData: $metaData, messagingDisabled: $messagingDisabled, membersCount: $membersCount, lastReadAt: $lastReadAt, attachments: $attachments, lastMessageSentAt: $lastMessageSentAt, isGroup: $isGroup, deliveredToAll: $deliveredToAll, customType: $customType, createdByUserName: $createdByUserName, createdByUserImageUrl: $createdByUserImageUrl, createdBy: $createdBy, conversationType: $conversationType, conversationTitle: $conversationTitle, conversationImageUrl: $conversationImageUrl, conversationId: $conversationId, parentMessageId: $parentMessageId, initiatorId : $initiatorId  messageId: $messageId, deviceId: $deviceId, adminCount: $adminCount, messageType: $messageType, sentByMe: $sentByMe, mentionedUsers: $mentionedUsers, initiatorName : $initiatorName, members: $members, memberId: $memberId, memberName: $memberName, reactions : $reactions, readBy : $readBy, deliveredTo : $deliveredTo, isUploading : $isUploading, conversationDetails : $conversationDetails, events : $events, callDurations:$callDurations, meetingId :$meetingId)';
 
   @override
   bool operator ==(Object other) {
@@ -635,7 +655,9 @@ class IsmChatMessageModel {
         other.isUploading == isUploading &&
         listEquals(other.readBy, readBy) &&
         listEquals(other.deliveredTo, deliveredTo) &&
-        other.events == events;
+        other.events == events &&
+        other.callDurations == callDurations &&
+        other.meetingId == meetingId;
   }
 
   @override
@@ -685,7 +707,9 @@ class IsmChatMessageModel {
       isUploading.hashCode ^
       conversationDetails.hashCode ^
       readBy.hashCode ^
-      events.hashCode;
+      events.hashCode ^
+      callDurations.hashCode ^
+      meetingId.hashCode;
 }
 
 class MessageStatus {
@@ -732,4 +756,53 @@ class MessageStatus {
 
   @override
   int get hashCode => userId.hashCode ^ timestamp.hashCode;
+}
+
+class CallDuration {
+  final String? memberId;
+  final int? durationInMilliseconds;
+  CallDuration({
+    this.memberId,
+    this.durationInMilliseconds,
+  });
+
+  CallDuration copyWith({
+    String? memberId,
+    int? durationInMilliseconds,
+  }) =>
+      CallDuration(
+        memberId: memberId ?? this.memberId,
+        durationInMilliseconds:
+            durationInMilliseconds ?? this.durationInMilliseconds,
+      );
+
+  Map<String, dynamic> toMap() => <String, dynamic>{
+        'memberId': memberId,
+        'durationInMilliseconds': durationInMilliseconds,
+      };
+
+  factory CallDuration.fromMap(Map<String, dynamic> map) => CallDuration(
+        memberId: map['memberId'] as String? ?? '',
+        durationInMilliseconds: map['durationInMilliseconds'] as int? ?? 0,
+      );
+
+  String toJson() => json.encode(toMap());
+
+  factory CallDuration.fromJson(String source) =>
+      CallDuration.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() =>
+      'CallDuration(memberId: $memberId, durationInMilliseconds: $durationInMilliseconds)';
+
+  @override
+  bool operator ==(covariant CallDuration other) {
+    if (identical(this, other)) return true;
+
+    return other.memberId == memberId &&
+        other.durationInMilliseconds == durationInMilliseconds;
+  }
+
+  @override
+  int get hashCode => memberId.hashCode ^ durationInMilliseconds.hashCode;
 }
