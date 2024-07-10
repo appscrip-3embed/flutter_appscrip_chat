@@ -35,6 +35,7 @@ class IsmChatPageViewModel {
           IsmChatActionEvents.reactionAdd.name,
           IsmChatActionEvents.reactionRemove.name,
           IsmChatActionEvents.conversationDetailsUpdated.name,
+          IsmChatActionEvents.meetingCreated.name,
         ].contains(e.action));
     if (searchText == null || searchText.isEmpty) {
       final controller = Get.find<IsmChatPageController>();

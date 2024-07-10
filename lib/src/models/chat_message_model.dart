@@ -169,10 +169,11 @@ class IsmChatMessageModel {
                   IsmChatConfig.communicationConfig.userConfig.userId
               : model.memberId != null
                   ? IsmChatConfig.communicationConfig.userConfig.userId ==
-                          model.memberId
-                      ? false
-                      : true
-                  : true,
+                      model.memberId
+                  : model.initiatorId != null
+                      ? model.initiatorId ==
+                          IsmChatConfig.communicationConfig.userConfig.userId
+                      : true,
           isGroup: model.conversationDetails?.isNotEmpty == true
               ? model.conversationDetails!['isGroup']
               : false,

@@ -114,6 +114,9 @@ mixin IsmChatMqttEventMixin {
         _handleObserverJoinAndLeave(actionModel);
         break;
       case IsmChatActionEvents.userUpdate:
+      case IsmChatActionEvents.meetingCreated:
+      case IsmChatActionEvents.meetingEndedByHost:
+      case IsmChatActionEvents.meetingEndedDueToRejectionByAll:
         break;
     }
   }
@@ -723,7 +726,8 @@ mixin IsmChatMqttEventMixin {
   }
 
   void _handleBlockUserOrUnBlock(IsmChatMqttActionModel actionModel) async {
-    if (actionModel.initiatorDetails!.userId == _controller.userConfig?.userId) {
+    if (actionModel.initiatorDetails!.userId ==
+        _controller.userConfig?.userId) {
       return;
     }
 
