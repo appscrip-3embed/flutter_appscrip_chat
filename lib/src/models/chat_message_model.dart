@@ -101,7 +101,7 @@ class IsmChatMessageModel {
       callDurations: map['callDurations'] == null
           ? []
           : List<CallDuration>.from(
-              (map['members'] as List).map(
+              (map['callDurations'] as List).map(
                 (e) => CallDuration.fromMap(e as Map<String, dynamic>),
               ),
             ),
