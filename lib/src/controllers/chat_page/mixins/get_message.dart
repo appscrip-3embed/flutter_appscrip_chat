@@ -30,12 +30,11 @@ mixin IsmChatPageGetMessageMixin on GetxController {
     _controller._generateIndexedMessageList();
   }
 
-  List<IsmChatMessageModel> filterMessages(
-      List<IsmChatMessageModel> messagesList) {
+  List<IsmChatMessageModel> filterMessages(List<IsmChatMessageModel> messages) {
     var filterMessage = IsmChatMessageModel(
         body: '', sentAt: 0, customType: null, sentByMe: false);
-    var dummymessages = List<IsmChatMessageModel>.from(messagesList);
-    for (var x in messagesList) {
+    var dummymessages = List<IsmChatMessageModel>.from(messages);
+    for (var x in dummymessages) {
       if (x.customType != IsmChatCustomMessageType.oneToOneCall) {
         continue;
       }
@@ -52,17 +51,16 @@ mixin IsmChatPageGetMessageMixin on GetxController {
           meetingType: filterMessage.meetingType,
         );
       }
-      dummymessages.removeWhere((e) =>
+      messages.removeWhere((e) =>
           e.action == IsmChatActionEvents.meetingCreated.name &&
           e.meetingId == x.meetingId);
 
-      var fliterIndex =
-          dummymessages.indexWhere((e) => e.meetingId == x.meetingId);
+      var fliterIndex = messages.indexWhere((e) => e.meetingId == x.meetingId);
       if (fliterIndex != -1) {
-        dummymessages[fliterIndex] = filterMessage;
+        messages[fliterIndex] = filterMessage;
       }
     }
-    return dummymessages;
+    return messages;
   }
 
   Future<void> getMessagesFromAPI({
