@@ -179,6 +179,7 @@ class IsmChatCommonViewModel {
 
   List<IsmChatMessageModel> sortMessages(List<IsmChatMessageModel> messages) {
     messages.sort((a, b) => a.sentAt.compareTo(b.sentAt));
+
     return _parseMessagesWithDate(messages);
   }
 

@@ -22,6 +22,7 @@ mixin IsmChatPageGetMessageMixin on GetxController {
 
     _controller.messages = _controller.commonController
         .sortMessages(filterMessages(messages ?? []));
+
     if (_controller.messages.isEmpty) {
       return;
     }
@@ -29,16 +30,19 @@ mixin IsmChatPageGetMessageMixin on GetxController {
     _controller._generateIndexedMessageList();
   }
 
-  List<IsmChatMessageModel> filterMessages(List<IsmChatMessageModel> messages) {
+  List<IsmChatMessageModel> filterMessages(
+      List<IsmChatMessageModel> messagesList) {
     var filterMessage = IsmChatMessageModel(
         body: '', sentAt: 0, customType: null, sentByMe: false);
-    var dummymessages = List<IsmChatMessageModel>.from(messages);
-    for (var x in dummymessages) {
+    var dummymessages = List<IsmChatMessageModel>.from(messagesList);
+    for (var x in messagesList) {
+      if (x.customType != IsmChatCustomMessageType.oneToOneCall) {
+        continue;
+      }
       if (x.meetingId != filterMessage.meetingId) {
         filterMessage = x;
         continue;
       }
-
       if (x.action == IsmChatActionEvents.meetingCreated.name) {
         filterMessage = filterMessage.copyWith(
           meetingType: x.meetingType,
@@ -48,17 +52,17 @@ mixin IsmChatPageGetMessageMixin on GetxController {
           meetingType: filterMessage.meetingType,
         );
       }
-
-      messages.removeWhere((e) =>
+      dummymessages.removeWhere((e) =>
           e.action == IsmChatActionEvents.meetingCreated.name &&
           e.meetingId == x.meetingId);
 
-      var fliterIndex = messages.indexWhere((e) => e.meetingId == x.meetingId);
+      var fliterIndex =
+          dummymessages.indexWhere((e) => e.meetingId == x.meetingId);
       if (fliterIndex != -1) {
-        messages[fliterIndex] = filterMessage;
+        dummymessages[fliterIndex] = filterMessage;
       }
     }
-    return messages;
+    return dummymessages;
   }
 
   Future<void> getMessagesFromAPI({
