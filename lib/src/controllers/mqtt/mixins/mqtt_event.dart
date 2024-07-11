@@ -114,9 +114,11 @@ mixin IsmChatMqttEventMixin {
         _handleObserverJoinAndLeave(actionModel);
         break;
       case IsmChatActionEvents.userUpdate:
+        break;
       case IsmChatActionEvents.meetingCreated:
       case IsmChatActionEvents.meetingEndedByHost:
       case IsmChatActionEvents.meetingEndedDueToRejectionByAll:
+        _handleOneToOneCall(actionModel);
         break;
     }
   }
@@ -165,7 +167,6 @@ mixin IsmChatMqttEventMixin {
     if (actionModel.senderId == _controller.userConfig?.userId) {
       return;
     }
-
     var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: actionModel.conversationId);
 
@@ -754,6 +755,25 @@ mixin IsmChatMqttEventMixin {
     }
   }
 
+  void _handleOneToOneCall(IsmChatMqttActionModel actionModel) async {
+    if (actionModel.initiatorId == _controller.userConfig?.userId) {
+      return;
+    }
+    if (messageId == actionModel.sentAt.toString()) {
+      return;
+    }
+    if (Get.isRegistered<IsmChatPageController>()) {
+      var controller = Get.find<IsmChatPageController>();
+      if (controller.conversation?.conversationId ==
+          actionModel.conversationId) {
+        await controller.getMessagesFromAPI(
+            conversationId: actionModel.conversationId ?? '',
+            lastMessageTimestamp: controller.messages.last.sentAt);
+        messageId = actionModel.sentAt.toString();
+      }
+    }
+  }
+
   void _handleGroupRemoveAndAddUser(IsmChatMqttActionModel actionModel) async {
     if (actionModel.userDetails?.userId == _controller.userConfig?.userId) {
       return;
@@ -862,9 +882,9 @@ mixin IsmChatMqttEventMixin {
     }
     if (Get.isRegistered<IsmChatPageController>()) {
       var controller = Get.find<IsmChatPageController>();
-      if (controller.conversation!.conversationId ==
+      if (controller.conversation?.conversationId ==
               actionModel.conversationId &&
-          controller.conversation!.lastMessageSentAt != actionModel.sentAt) {
+          controller.conversation?.lastMessageSentAt != actionModel.sentAt) {
         await controller.getMessagesFromAPI(
             conversationId: actionModel.conversationId ?? '',
             lastMessageTimestamp: controller.messages.last.sentAt);
@@ -887,11 +907,11 @@ mixin IsmChatMqttEventMixin {
 
     if (Get.isRegistered<IsmChatPageController>()) {
       var controller = Get.find<IsmChatPageController>();
-      if (controller.conversation!.conversationId ==
+      if (controller.conversation?.conversationId ==
               actionModel.conversationId &&
           actionModel.memberId ==
               IsmChatConfig.communicationConfig.userConfig.userId &&
-          controller.conversation!.lastMessageSentAt != actionModel.sentAt) {
+          controller.conversation?.lastMessageSentAt != actionModel.sentAt) {
         await controller.getMessagesFromAPI(
             conversationId: actionModel.conversationId ?? '',
             lastMessageTimestamp: controller.messages.last.sentAt);
@@ -1013,7 +1033,7 @@ mixin IsmChatMqttEventMixin {
 
     if (Get.isRegistered<IsmChatPageController>()) {
       var controller = Get.find<IsmChatPageController>();
-      if (controller.conversation!.conversationId ==
+      if (controller.conversation?.conversationId ==
           actionModel.conversationId) {
         await controller.getConverstaionDetails(
           conversationId: actionModel.conversationId ?? '',
