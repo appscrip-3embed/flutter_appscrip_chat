@@ -37,11 +37,11 @@ class IsmOneToOneCallMessage extends StatelessWidget {
             child: Icon(
               message.meetingType == 0
                   ? message.sentByMe
-                      ? Icons.video_call_outlined
-                      : Icons.missed_video_call_outlined
-                  : message.sentByMe
                       ? Icons.call_outlined
-                      : Icons.phone_callback_outlined,
+                      : Icons.phone_callback_outlined
+                  : message.sentByMe
+                      ? Icons.video_call_outlined
+                      : Icons.missed_video_call_outlined,
               color: message.textColor,
             ),
           ),
