@@ -22,7 +22,7 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
 
     if (Responsive.isWeb(context)) {
       var controller = Get.find<IsmChatPageController>();
-      controller.isTemporaryChat = false;
+      controller.isBroadcast = false;
       conversationController.currentConversation = null;
       conversationController.currentConversationId = '';
       conversationController.isRenderChatPageaScreen =

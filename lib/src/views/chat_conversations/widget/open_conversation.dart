@@ -128,7 +128,7 @@ class _IsmChatOpenConversationViewState
                                       Get.find<IsmChatPageController>();
                                   chatPagecontroller.messages.clear();
                                   chatPagecontroller.startInit(
-                                    isTemporaryChats: true,
+                                    isBroadcasts: true,
                                   );
 
                                   chatPagecontroller.closeOverlay();
@@ -156,7 +156,7 @@ class _IsmChatOpenConversationViewState
                                 } else {
                                   IsmChatRouteManagement
                                       .goToOpenChatMessagePage(
-                                    isTemporaryChat: true,
+                                    isBroadcast: true,
                                   );
                                 }
                               }

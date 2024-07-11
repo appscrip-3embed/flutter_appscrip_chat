@@ -17,7 +17,7 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
     var controller = Get.find<IsmChatPageController>();
     final conversationController = Get.find<IsmChatConversationsController>();
     if (Responsive.isWeb(context)) {
-      controller.isTemporaryChat = false;
+      controller.isBroadcast = false;
       conversationController.currentConversation = null;
       conversationController.currentConversationId = '';
       conversationController.isRenderChatPageaScreen =

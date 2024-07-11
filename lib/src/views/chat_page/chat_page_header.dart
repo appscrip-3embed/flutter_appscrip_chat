@@ -219,7 +219,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                                                           ?.members ==
                                                                       null
                                                               ? controller
-                                                                      .isTemporaryChat
+                                                                      .isBroadcast
                                                                   ? '${controller.conversation?.membersCount} ${IsmChatStrings.participants.toUpperCase()}'
                                                                   : IsmChatStrings
                                                                       .tapInfo

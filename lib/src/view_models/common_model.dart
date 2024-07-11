@@ -92,7 +92,7 @@ class IsmChatCommonViewModel {
     String? customType,
     List<Map<String, dynamic>>? attachments,
     List<String>? searchableTags,
-    bool isTemporaryChat = false,
+    bool isBroadcast = false,
     bool isUpdateMesage = true,
   }) async {
     try {
@@ -114,7 +114,7 @@ class IsmChatCommonViewModel {
       );
       if (messageId == null || messageId.isEmpty) return false;
       if (!isUpdateMesage) return false;
-      if (isTemporaryChat) {
+      if (isBroadcast) {
         final chatPageController = Get.find<IsmChatPageController>();
         for (var x = 0; x < chatPageController.messages.length; x++) {
           var messages = chatPageController.messages[x];

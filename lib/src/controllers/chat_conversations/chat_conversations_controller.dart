@@ -36,7 +36,8 @@ class IsmChatConversationsController extends GetxController {
   TextEditingController userEmailController = TextEditingController();
 
   /// This variable use for get all method and varibles from IsmChatCommonController
-  IsmChatCommonController get _commonController => Get.find<IsmChatCommonController>();
+  IsmChatCommonController get _commonController =>
+      Get.find<IsmChatCommonController>();
 
   // /// This variable use for get all method and varibles from IsmChatDeviceConfig
   // final _deviceConfig = Get.find<IsmChatDeviceConfig>();
@@ -44,29 +45,36 @@ class IsmChatConversationsController extends GetxController {
   /// This variable use for store conversation details
   final _conversations = <IsmChatConversationModel>[].obs;
   List<IsmChatConversationModel> get conversations => _conversations;
-  set conversations(List<IsmChatConversationModel> value) => _conversations.value = value;
+  set conversations(List<IsmChatConversationModel> value) =>
+      _conversations.value = value;
 
   /// This variable use for store conversation details
   final _searchConversationList = <IsmChatConversationModel>[].obs;
-  List<IsmChatConversationModel> get searchConversationList => _searchConversationList;
-  set searchConversationList(List<IsmChatConversationModel> value) => _searchConversationList.value = value;
+  List<IsmChatConversationModel> get searchConversationList =>
+      _searchConversationList;
+  set searchConversationList(List<IsmChatConversationModel> value) =>
+      _searchConversationList.value = value;
 
   /// This variable use for store public and open conversation details
   final _publicAndOpenConversation = <IsmChatConversationModel>[].obs;
-  List<IsmChatConversationModel> get publicAndOpenConversation => _publicAndOpenConversation;
-  set publicAndOpenConversation(List<IsmChatConversationModel> value) => _publicAndOpenConversation.value = value;
+  List<IsmChatConversationModel> get publicAndOpenConversation =>
+      _publicAndOpenConversation;
+  set publicAndOpenConversation(List<IsmChatConversationModel> value) =>
+      _publicAndOpenConversation.value = value;
 
   /// This variable use for store suggestions list on chat page view
   final _suggestions = <IsmChatConversationModel>[].obs;
   List<IsmChatConversationModel> get suggestions => _suggestions;
-  set suggestions(List<IsmChatConversationModel> value) => _suggestions.value = value;
+  set suggestions(List<IsmChatConversationModel> value) =>
+      _suggestions.value = value;
 
   /// This variable use for store true or false
   ///
   /// Show loader on chat list view
   final RxBool _isConversationsLoading = true.obs;
   bool get isConversationsLoading => _isConversationsLoading.value;
-  set isConversationsLoading(bool value) => _isConversationsLoading.value = value;
+  set isConversationsLoading(bool value) =>
+      _isConversationsLoading.value = value;
 
   /// This variabel use for store user details which is login or signup
   final Rx<UserDetails?> _userDetails = Rx<UserDetails?>(null);
@@ -84,8 +92,10 @@ class IsmChatConversationsController extends GetxController {
   set userConversationId(String? value) => _userConversationId.value = value;
 
   /// This variabel use for store currentConversation
-  final Rx<IsmChatConversationModel?> _currentConversation = Rx<IsmChatConversationModel?>(null);
-  IsmChatConversationModel? get currentConversation => _currentConversation.value;
+  final Rx<IsmChatConversationModel?> _currentConversation =
+      Rx<IsmChatConversationModel?>(null);
+  IsmChatConversationModel? get currentConversation =>
+      _currentConversation.value;
   set currentConversation(IsmChatConversationModel? value) {
     _currentConversation.value = value;
   }
@@ -168,19 +178,25 @@ class IsmChatConversationsController extends GetxController {
   /// When you tap any convesation on chat list that time store conversationId that chat converstaion
   final RxString _currentConversationId = ''.obs;
   String get currentConversationId => _currentConversationId.value;
-  set currentConversationId(String value) => _currentConversationId.value = value;
+  set currentConversationId(String value) =>
+      _currentConversationId.value = value;
 
   /// This variable use for store render screen two column widget in web and tab view
-  final Rx<IsRenderConversationScreen> _isRenderScreen = IsRenderConversationScreen.none.obs;
+  final Rx<IsRenderConversationScreen> _isRenderScreen =
+      IsRenderConversationScreen.none.obs;
   IsRenderConversationScreen get isRenderScreen => _isRenderScreen.value;
-  set isRenderScreen(IsRenderConversationScreen value) => _isRenderScreen.value = value;
+  set isRenderScreen(IsRenderConversationScreen value) =>
+      _isRenderScreen.value = value;
 
   /// This variable use for store render screen second column widget
   ///
   /// When you have tap on chat list then render that chat page view
-  final Rx<IsRenderChatPageScreen> _isRenderChatPageaScreen = IsRenderChatPageScreen.none.obs;
-  IsRenderChatPageScreen get isRenderChatPageaScreen => _isRenderChatPageaScreen.value;
-  set isRenderChatPageaScreen(IsRenderChatPageScreen value) => _isRenderChatPageaScreen.value = value;
+  final Rx<IsRenderChatPageScreen> _isRenderChatPageaScreen =
+      IsRenderChatPageScreen.none.obs;
+  IsRenderChatPageScreen get isRenderChatPageaScreen =>
+      _isRenderChatPageaScreen.value;
+  set isRenderChatPageaScreen(IsRenderChatPageScreen value) =>
+      _isRenderChatPageaScreen.value = value;
 
   /// This variabel use for store media list
   ///
@@ -192,16 +208,20 @@ class IsmChatConversationsController extends GetxController {
   /// This variabel use for store links list
   ///
   /// In this list you can get any type of links messgae of current convesation chat page
-  final RxList<IsmChatMessageModel> _mediaListLinks = <IsmChatMessageModel>[].obs;
+  final RxList<IsmChatMessageModel> _mediaListLinks =
+      <IsmChatMessageModel>[].obs;
   List<IsmChatMessageModel> get mediaListLinks => _mediaListLinks;
-  set mediaListLinks(List<IsmChatMessageModel> value) => _mediaListLinks.value = value;
+  set mediaListLinks(List<IsmChatMessageModel> value) =>
+      _mediaListLinks.value = value;
 
   /// This variabel use for store documents list
   ///
   /// In this list you can documents messgae of current convesation chat page
-  final RxList<IsmChatMessageModel> _mediaListDocs = <IsmChatMessageModel>[].obs;
+  final RxList<IsmChatMessageModel> _mediaListDocs =
+      <IsmChatMessageModel>[].obs;
   List<IsmChatMessageModel> get mediaListDocs => _mediaListDocs;
-  set mediaListDocs(List<IsmChatMessageModel> value) => _mediaListDocs.value = value;
+  set mediaListDocs(List<IsmChatMessageModel> value) =>
+      _mediaListDocs.value = value;
 
   /// This variabel use for store bool value
   ///
@@ -268,8 +288,10 @@ class IsmChatConversationsController extends GetxController {
   ///
   /// When user add conversaiton `IsmChatProperties.conversationProperties.conversationPredicate` in `IsmChatApp`
   /// get conversaton filter list on conditions `true` or `false`
-  List<IsmChatConversationModel> get userConversations =>
-      conversations.where(IsmChatProperties.conversationProperties.conversationPredicate ?? (_) => true).toList();
+  List<IsmChatConversationModel> get userConversations => conversations
+      .where(IsmChatProperties.conversationProperties.conversationPredicate ??
+          (_) => true)
+      .toList();
 
   /// This variable use for store check connnection
   ///
@@ -286,7 +308,8 @@ class IsmChatConversationsController extends GetxController {
   /// This variable use for store user messages which is get from local db
   final _userMeessages = <IsmChatMessageModel>[].obs;
   List<IsmChatMessageModel> get userMeessages => _userMeessages;
-  set userMeessages(List<IsmChatMessageModel> value) => _userMeessages.value = value;
+  set userMeessages(List<IsmChatMessageModel> value) =>
+      _userMeessages.value = value;
 
   /// This variable use for check type user name type or not
   ///
@@ -320,7 +343,8 @@ class IsmChatConversationsController extends GetxController {
     intilizedContrller = false;
     _isInterNetConnect();
     await _generateReactionList();
-    var users = await IsmChatConfig.dbWrapper?.userDetailsBox.get(IsmChatStrings.userData);
+    var users = await IsmChatConfig.dbWrapper?.userDetailsBox
+        .get(IsmChatStrings.userData);
     if (users != null) {
       userDetails = UserDetails.fromJson(users);
     } else {
@@ -364,7 +388,8 @@ class IsmChatConversationsController extends GetxController {
 
   void _isInterNetConnect() {
     connectivity = Connectivity();
-    connectivitySubscription = connectivity?.onConnectivityChanged.listen((event) {
+    connectivitySubscription =
+        connectivity?.onConnectivityChanged.listen((event) {
       _sendPendingMessage();
     });
   }
@@ -373,7 +398,8 @@ class IsmChatConversationsController extends GetxController {
     if (await IsmChatUtility.isNetworkAvailable) {
       if (currentConversation?.conversationId?.isNotEmpty == true) {
         {
-          sendPendingMessgae(conversationId: currentConversation?.conversationId ?? '');
+          sendPendingMessgae(
+              conversationId: currentConversation?.conversationId ?? '');
         }
       }
     }
@@ -382,7 +408,8 @@ class IsmChatConversationsController extends GetxController {
   void scrollListener() async {
     conversationScrollController.addListener(
       () async {
-        if (conversationScrollController.offset.toInt() == conversationScrollController.position.maxScrollExtent.toInt()) {
+        if (conversationScrollController.offset.toInt() ==
+            conversationScrollController.position.maxScrollExtent.toInt()) {
           await getChatConversations(
             skip: conversations.length.pagination(),
           );
@@ -391,7 +418,9 @@ class IsmChatConversationsController extends GetxController {
     );
     searchConversationScrollController.addListener(
       () async {
-        if (searchConversationScrollController.offset.toInt() == searchConversationScrollController.position.maxScrollExtent.toInt()) {
+        if (searchConversationScrollController.offset.toInt() ==
+            searchConversationScrollController.position.maxScrollExtent
+                .toInt()) {
           await getChatConversations(
             skip: searchConversationList.length.pagination(),
           );
@@ -464,13 +493,16 @@ class IsmChatConversationsController extends GetxController {
           conversationId: currentConversation?.conversationId ?? '',
         );
       case IsRenderChatPageScreen.outSideView:
-        return IsmChatProperties.conversationProperties.thirdColumnWidget?.call(Get.context!, currentConversation!) ?? const SizedBox.shrink();
+        return IsmChatProperties.conversationProperties.thirdColumnWidget
+                ?.call(Get.context!, currentConversation!) ??
+            const SizedBox.shrink();
     }
     return const SizedBox.shrink();
   }
 
   Future<AssetsModel?> getAssetFilesList() async {
-    var jsonString = await rootBundle.loadString('packages/appscrip_chat_component/assets/assets_backgroundAssets.json');
+    var jsonString = await rootBundle.loadString(
+        'packages/appscrip_chat_component/assets/assets_backgroundAssets.json');
     var filesList = jsonDecode(jsonString);
     if (filesList != null) {
       return AssetsModel.fromMap(filesList);
@@ -489,7 +521,9 @@ class IsmChatConversationsController extends GetxController {
   Future<void> _generateReactionList() async {
     reactions = await Future.wait(
       IsmChatEmoji.values.map(
-        (e) async => (await EmojiPickerUtils().searchEmoji(e.emojiKeyword, defaultEmojiSet)).first,
+        (e) async => (await EmojiPickerUtils()
+                .searchEmoji(e.emojiKeyword, defaultEmojiSet))
+            .first,
       ),
     );
   }
@@ -588,7 +622,10 @@ class IsmChatConversationsController extends GetxController {
     bool isLoading = false,
   ]) async {
     var response = await _commonController.getPresignedUrl(
-        isLoading: true, userIdentifier: userDetails?.userIdentifier ?? '', mediaExtension: mediaExtension, bytes: bytes);
+        isLoading: true,
+        userIdentifier: userDetails?.userIdentifier ?? '',
+        mediaExtension: mediaExtension,
+        bytes: bytes);
 
     if (response == null) {
       return '';
@@ -641,12 +678,16 @@ class IsmChatConversationsController extends GetxController {
     }
 
     if (IsmChatConfig.communicationConfig.userConfig.accessToken != null) {
-      users.removeWhere((element) => !RegExp('[A-Z]').hasMatch(element.userName[0].toUpperCase()));
+      users.removeWhere((element) =>
+          !RegExp('[A-Z]').hasMatch(element.userName[0].toUpperCase()));
     }
     if (searchTag.isEmpty) {
       forwardedList.addAll(List.from(users)
           .map((e) => SelectedMembers(
-                isUserSelected: selectedUserList.isEmpty ? false : selectedUserList.any((d) => d.userId == (e as UserDetails).userId),
+                isUserSelected: selectedUserList.isEmpty
+                    ? false
+                    : selectedUserList
+                        .any((d) => d.userId == (e as UserDetails).userId),
                 userDetails: e as UserDetails,
                 isBlocked: false,
               ))
@@ -656,7 +697,10 @@ class IsmChatConversationsController extends GetxController {
       forwardedList = List.from(users)
           .map(
             (e) => SelectedMembers(
-              isUserSelected: selectedUserList.isEmpty ? false : selectedUserList.any((d) => d.userId == (e as UserDetails).userId),
+              isUserSelected: selectedUserList.isEmpty
+                  ? false
+                  : selectedUserList
+                      .any((d) => d.userId == (e as UserDetails).userId),
               userDetails: e as UserDetails,
               isBlocked: false,
             ),
@@ -696,7 +740,8 @@ class IsmChatConversationsController extends GetxController {
     SuspensionUtil.setShowSuspensionStatus(forwardedList);
   }
 
-  Future<void> clearAllMessages(String? conversationId, {bool fromServer = true}) async {
+  Future<void> clearAllMessages(String? conversationId,
+      {bool fromServer = true}) async {
     if (conversationId == null || conversationId.isEmpty) {
       return;
     }
@@ -741,11 +786,14 @@ class IsmChatConversationsController extends GetxController {
     if (conversations.length <= 1) {
       return;
     }
-    conversations.sort((a, b) => (b.lastMessageDetails?.sentAt ?? 0).compareTo(a.lastMessageDetails?.sentAt ?? 0));
+    conversations.sort((a, b) => (b.lastMessageDetails?.sentAt ?? 0)
+        .compareTo(a.lastMessageDetails?.sentAt ?? 0));
   }
 
   String getConversationId(String userId) {
-    var conversation = conversations.firstWhere((element) => element.opponentDetails?.userId == userId, orElse: IsmChatConversationModel.new);
+    var conversation = conversations.firstWhere(
+        (element) => element.opponentDetails?.userId == userId,
+        orElse: IsmChatConversationModel.new);
 
     if (conversation.conversationId == null) {
       return '';
@@ -753,7 +801,8 @@ class IsmChatConversationsController extends GetxController {
     return conversation.conversationId!;
   }
 
-  Future<void> getChatConversations({int skip = 0, ApiCallOrigin? origin, int chatLimit = 20}) async {
+  Future<void> getChatConversations(
+      {int skip = 0, ApiCallOrigin? origin, int chatLimit = 20}) async {
     if (conversations.isEmpty) {
       isConversationsLoading = true;
     }
@@ -771,7 +820,8 @@ class IsmChatConversationsController extends GetxController {
       );
       await Future.wait(
         chats.map(
-          (e) async => await IsmChatConfig.dbWrapper!.createAndUpdateConversation(e),
+          (e) async =>
+              await IsmChatConfig.dbWrapper!.createAndUpdateConversation(e),
         ),
       );
     }
@@ -840,25 +890,31 @@ class IsmChatConversationsController extends GetxController {
       if (!kIsWeb) {
         if (userDetails?.metaData?.assetList?.isNotEmpty == true) {
           final assetList = userDetails?.metaData?.assetList?.toList() ?? [];
-          final indexOfAsset = assetList.indexWhere((e) => e.values.first.srNoBackgroundAssset == 100);
+          final indexOfAsset = assetList
+              .indexWhere((e) => e.values.first.srNoBackgroundAssset == 100);
           if (indexOfAsset != -1) {
-            final pathName = assetList[indexOfAsset].values.first.imageUrl!.split('/').last;
-            var filePath =
-                await IsmChatUtility.makeDirectoryWithUrl(urlPath: assetList[indexOfAsset].values.first.imageUrl ?? '', fileName: pathName);
+            final pathName =
+                assetList[indexOfAsset].values.first.imageUrl!.split('/').last;
+            var filePath = await IsmChatUtility.makeDirectoryWithUrl(
+                urlPath: assetList[indexOfAsset].values.first.imageUrl ?? '',
+                fileName: pathName);
             assetList[indexOfAsset] = {
               '${assetList[indexOfAsset].keys}': IsmChatBackgroundModel(
                 color: assetList[indexOfAsset].values.first.color,
                 isImage: assetList[indexOfAsset].values.first.isImage,
                 imageUrl: filePath.path,
-                srNoBackgroundAssset: assetList[indexOfAsset].values.first.srNoBackgroundAssset,
+                srNoBackgroundAssset:
+                    assetList[indexOfAsset].values.first.srNoBackgroundAssset,
               )
             };
           }
-          userDetails = userDetails?.copyWith(metaData: userDetails?.metaData?.copyWith(assetList: assetList));
+          userDetails = userDetails?.copyWith(
+              metaData: userDetails?.metaData?.copyWith(assetList: assetList));
         }
       }
 
-      await IsmChatConfig.dbWrapper?.userDetailsBox.put(IsmChatStrings.userData, userDetails!.toJson());
+      await IsmChatConfig.dbWrapper?.userDetailsBox
+          .put(IsmChatStrings.userData, userDetails!.toJson());
     }
   }
 
@@ -884,7 +940,9 @@ class IsmChatConversationsController extends GetxController {
     } else {
       suggestions = conversations
           .where(
-            (e) => e.chatName.didMatch(query) || e.lastMessageDetails!.body.didMatch(query),
+            (e) =>
+                e.chatName.didMatch(query) ||
+                e.lastMessageDetails!.body.didMatch(query),
           )
           .toList();
     }
@@ -944,7 +1002,10 @@ class IsmChatConversationsController extends GetxController {
       deviceId: IsmChatConfig.communicationConfig.projectConfig.deviceId,
       body: body,
       notificationBody: body,
-      notificationTitle: IsmChatConfig.communicationConfig.userConfig.userName ?? userDetails?.userName ?? '',
+      notificationTitle:
+          IsmChatConfig.communicationConfig.userConfig.userName ??
+              userDetails?.userName ??
+              '',
       isLoading: isLoading,
       searchableTags: [body],
       customType: customType,
@@ -958,7 +1019,8 @@ class IsmChatConversationsController extends GetxController {
     }
   }
 
-  void intiPublicAndOpenConversation(IsmChatConversationType conversationType) async {
+  void intiPublicAndOpenConversation(
+      IsmChatConversationType conversationType) async {
     publicAndOpenConversation.clear();
     isLoadResponse = false;
     showSearchField = false;
@@ -999,18 +1061,23 @@ class IsmChatConversationsController extends GetxController {
     required String conversationId,
     bool isloading = false,
   }) async {
-    var response = await _viewModel.joinConversation(conversationId: conversationId, isLoading: isloading);
+    var response = await _viewModel.joinConversation(
+        conversationId: conversationId, isLoading: isloading);
     if (response != null) {
       Get.back();
       await getChatConversations();
     }
   }
 
-  Future<IsmChatResponseModel?> joinObserver({required String conversationId, bool isLoading = false}) async =>
-      await _viewModel.joinObserver(conversationId: conversationId, isLoading: isLoading);
+  Future<IsmChatResponseModel?> joinObserver(
+          {required String conversationId, bool isLoading = false}) async =>
+      await _viewModel.joinObserver(
+          conversationId: conversationId, isLoading: isLoading);
 
-  Future<void> leaveObserver({required String conversationId, bool isLoading = false}) async {
-    var response = await _viewModel.leaveObserver(conversationId: conversationId, isLoading: isLoading);
+  Future<void> leaveObserver(
+      {required String conversationId, bool isLoading = false}) async {
+    var response = await _viewModel.leaveObserver(
+        conversationId: conversationId, isLoading: isLoading);
     if (response != null) {}
   }
 
@@ -1052,20 +1119,29 @@ class IsmChatConversationsController extends GetxController {
   void sendPendingMessgae({String conversationId = ''}) async {
     List<IsmChatMessageModel>? messages = [];
     if (conversationId.isEmpty) {
-      var pendingMessages = await IsmChatConfig.dbWrapper!.getAllPendingMessages();
+      var pendingMessages =
+          await IsmChatConfig.dbWrapper!.getAllPendingMessages();
 
       messages.addAll(pendingMessages);
     } else {
-      messages = await IsmChatConfig.dbWrapper!.getMessage(conversationId, IsmChatDbBox.pending);
+      messages = await IsmChatConfig.dbWrapper!
+          .getMessage(conversationId, IsmChatDbBox.pending);
     }
     if (messages?.isEmpty ?? false || messages == null) {
       return;
     }
-    var notificationTitle = IsmChatConfig.communicationConfig.userConfig.userName ?? userDetails?.userName ?? '';
+    var notificationTitle =
+        IsmChatConfig.communicationConfig.userConfig.userName ??
+            userDetails?.userName ??
+            '';
     for (var x in messages!) {
       List<Map<String, dynamic>>? attachments;
-      if ([IsmChatCustomMessageType.image, IsmChatCustomMessageType.audio, IsmChatCustomMessageType.video, IsmChatCustomMessageType.file]
-          .contains(x.customType)) {
+      if ([
+        IsmChatCustomMessageType.image,
+        IsmChatCustomMessageType.audio,
+        IsmChatCustomMessageType.video,
+        IsmChatCustomMessageType.file
+      ].contains(x.customType)) {
         var attachment = x.attachments?.first;
         var bytes = File(attachment?.mediaUrl ?? '').readAsBytesSync();
         PresignedUrlModel? presignedUrlModel;
@@ -1116,7 +1192,9 @@ class IsmChatConversationsController extends GetxController {
         if (mediaUrlPath.isNotEmpty) {
           attachments = [
             {
-              'thumbnailUrl': IsmChatCustomMessageType.video == x.customType ? thumbnailUrlPath : mediaUrlPath,
+              'thumbnailUrl': IsmChatCustomMessageType.video == x.customType
+                  ? thumbnailUrlPath
+                  : mediaUrlPath,
               'size': attachment?.size,
               'name': attachment?.name,
               'mimeType': attachment?.mimeType,
@@ -1144,11 +1222,13 @@ class IsmChatConversationsController extends GetxController {
         notificationTitle: notificationTitle,
         body: x.body,
         createdAt: x.sentAt,
-        isTemporaryChat: Get.isRegistered<IsmChatPageController>() ? Get.find<IsmChatPageController>().isTemporaryChat : false,
+        isBroadcast: Get.isRegistered<IsmChatPageController>()
+            ? Get.find<IsmChatPageController>().isBroadcast
+            : false,
       );
       if (isMessageSent && Get.isRegistered<IsmChatPageController>()) {
         final controller = Get.find<IsmChatPageController>();
-        if (!controller.isTemporaryChat) {
+        if (!controller.isBroadcast) {
           controller.didReactedLast = false;
           await controller.getMessagesFromDB(conversationId);
         }
@@ -1199,7 +1279,8 @@ class IsmChatConversationsController extends GetxController {
     if (response != null) {
       userMeessages = response.reversed.toList();
       for (var message in userMeessages) {
-        var isSender = message.deliveredTo?.any((e) => e.userId == senderIds?.first);
+        var isSender =
+            message.deliveredTo?.any((e) => e.userId == senderIds?.first);
         if (isSender == false) {
           await Future.delayed(
             const Duration(milliseconds: 100),
@@ -1261,12 +1342,14 @@ class IsmChatConversationsController extends GetxController {
   /// get and fill the contact in useable model..
   void fillContact() async {
     final localList = [];
-    var contacts = await FlutterContacts.getContacts(withProperties: true, withPhoto: true);
+    var contacts = await FlutterContacts.getContacts(
+        withProperties: true, withPhoto: true);
     hashMapSendContactSync.clear();
     for (var x in contacts) {
       if (x.phones.isNotEmpty) {
         final phone = x.phones.first.number;
-        if (!((phone.contains('@')) && (phone.contains('.com'))) && x.displayName.isNotEmpty) {
+        if (!((phone.contains('@')) && (phone.contains('.com'))) &&
+            x.displayName.isNotEmpty) {
           if (x.phones.isNotEmpty) {
             if (x.phones.first.number.contains('+')) {
               final code = x.phones.first.number.removeAllWhitespace;
@@ -1279,8 +1362,10 @@ class IsmChatConversationsController extends GetxController {
                   lastName: x.name.last,
                 ),
               );
-              hashMapSendContactSync[code.substring(3, code.length)] = '${x.name.first} ${x.name.last}';
-              hashMapSendContactSync['${x.name.first} ${x.name.last}'] = code.substring(3, code.length);
+              hashMapSendContactSync[code.substring(3, code.length)] =
+                  '${x.name.first} ${x.name.last}';
+              hashMapSendContactSync['${x.name.first} ${x.name.last}'] =
+                  code.substring(3, code.length);
             } else if (x.phones.first.normalizedNumber.contains('+')) {
               final code = x.phones.first.normalizedNumber.removeAllWhitespace;
               localList.add(
@@ -1292,8 +1377,10 @@ class IsmChatConversationsController extends GetxController {
                   lastName: x.name.last,
                 ),
               );
-              hashMapSendContactSync[code.substring(3, code.length)] = '${x.name.first} ${x.name.last}';
-              hashMapSendContactSync['${x.name.first} ${x.name.last}'] = code.substring(3, code.length);
+              hashMapSendContactSync[code.substring(3, code.length)] =
+                  '${x.name.first} ${x.name.last}';
+              hashMapSendContactSync['${x.name.first} ${x.name.last}'] =
+                  code.substring(3, code.length);
             }
           }
         }
@@ -1319,7 +1406,9 @@ class IsmChatConversationsController extends GetxController {
         searchTag: searchTag,
         isLoading: isLoading,
         isRegisteredUser: isRegisteredUser,
-        skip: getContactSyncUser.isNotEmpty ? getContactSyncUser.length.pagination() : 10,
+        skip: getContactSyncUser.isNotEmpty
+            ? getContactSyncUser.length.pagination()
+            : 10,
         limit: limit,
       );
 
@@ -1336,7 +1425,8 @@ class IsmChatConversationsController extends GetxController {
                 userDetails: UserDetails(
                     userProfileImageUrl: '',
                     userName: hashMapSendContactSync[e.contactNo ?? ''] ?? '',
-                    userIdentifier: '${e.countryCode ?? ''} ${e.contactNo ?? ''}',
+                    userIdentifier:
+                        '${e.countryCode ?? ''} ${e.contactNo ?? ''}',
                     userId: e.userId ?? '',
                     online: false,
                     lastSeen: DateTime.now().microsecondsSinceEpoch),
@@ -1354,9 +1444,13 @@ class IsmChatConversationsController extends GetxController {
 
   /// get search based user for local contacts..
   void searchOnLocalContacts(String search) async {
-    final filterContacts = sendContactSync.where((element) => (element.fullName ?? '').contains(search)).toList();
+    final filterContacts = sendContactSync
+        .where((element) => (element.fullName ?? '').contains(search))
+        .toList();
     for (var i in forwardedListSkip) {
-      filterContacts.removeWhere((element) => i.userDetails.userIdentifier.trim().contains(element.contactNo ?? '*~.'));
+      filterContacts.removeWhere((element) => i.userDetails.userIdentifier
+          .trim()
+          .contains(element.contactNo ?? '*~.'));
     }
     forwardedList.addAll(
       List.from(
@@ -1399,7 +1493,8 @@ class IsmChatConversationsController extends GetxController {
     final res = await _viewModel.addContact(
       isLoading: isLoading,
       payload: ContactSync(
-        createdUnderProjectId: IsmChatConfig.communicationConfig.projectConfig.projectId,
+        createdUnderProjectId:
+            IsmChatConfig.communicationConfig.projectConfig.projectId,
         data: sendContactSync,
       ).toJson(),
     );
@@ -1413,13 +1508,18 @@ class IsmChatConversationsController extends GetxController {
     String? caption,
     bool sendPushNotification = false,
   }) async {
-    final chatConversationResponse = await IsmChatConfig.dbWrapper!.getConversation(conversationId: conversationId);
+    final chatConversationResponse = await IsmChatConfig.dbWrapper!
+        .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null) {
       final conversation = await _commonController.createConversation(
         conversation: currentConversation!,
         userId: [userDetails.userId],
         metaData: currentConversation?.metaData,
-        searchableTags: [IsmChatConfig.communicationConfig.userConfig.userName ?? userDetails.userName, userDetails.userName],
+        searchableTags: [
+          IsmChatConfig.communicationConfig.userConfig.userName ??
+              userDetails.userName,
+          userDetails.userName
+        ],
       );
       conversationId = conversation?.conversationId ?? '';
     }
@@ -1433,9 +1533,11 @@ class IsmChatConversationsController extends GetxController {
       body: IsmChatStrings.image,
       conversationId: conversationId,
       senderInfo: UserDetails(
-          userProfileImageUrl: IsmChatConfig.communicationConfig.userConfig.userProfile ?? '',
+          userProfileImageUrl:
+              IsmChatConfig.communicationConfig.userConfig.userProfile ?? '',
           userName: IsmChatConfig.communicationConfig.userConfig.userName ?? '',
-          userIdentifier: IsmChatConfig.communicationConfig.userConfig.userEmail ?? '',
+          userIdentifier:
+              IsmChatConfig.communicationConfig.userConfig.userEmail ?? '',
           userId: IsmChatConfig.communicationConfig.userConfig.userId,
           online: false,
           lastSeen: 0),
@@ -1467,11 +1569,16 @@ class IsmChatConversationsController extends GetxController {
       ),
     );
 
-    var notificationTitle = IsmChatConfig.communicationConfig.userConfig.userName ?? userDetails.userName;
+    var notificationTitle =
+        IsmChatConfig.communicationConfig.userConfig.userName ??
+            userDetails.userName;
     await _commonController.sendMessage(
       showInConversation: true,
       encrypted: true,
-      events: {'updateUnreadCount': true, 'sendPushNotification': sendPushNotification},
+      events: {
+        'updateUnreadCount': true,
+        'sendPushNotification': sendPushNotification
+      },
       body: imageMessage.body,
       conversationId: imageMessage.conversationId ?? '',
       createdAt: sentAt,
@@ -1503,11 +1610,11 @@ class IsmChatConversationsController extends GetxController {
       }
       isRenderChatPageaScreen = IsRenderChatPageScreen.boradcastChatMessagePage;
       final chatPagecontroller = Get.find<IsmChatPageController>();
-      chatPagecontroller.startInit(isTemporaryChats: true);
+      chatPagecontroller.startInit(isBroadcasts: true);
       chatPagecontroller.closeOverlay();
     } else {
       IsmChatRouteManagement.goToBroadcastMessagePage(
-        isTemporaryChat: true,
+        isBroadcast: true,
       );
     }
   }
