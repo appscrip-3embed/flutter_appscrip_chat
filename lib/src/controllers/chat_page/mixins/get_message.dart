@@ -33,7 +33,7 @@ mixin IsmChatPageGetMessageMixin on GetxController {
       List<IsmChatMessageModel> messages) async {
     var filterMessage = IsmChatMessageModel(
         body: '', sentAt: 0, customType: null, sentByMe: false);
-    var dummymessages = messages;
+    var dummymessages = List<IsmChatMessageModel>.from(messages);
     for (var x in dummymessages) {
       if (x.meetingId != filterMessage.meetingId) {
         filterMessage = x;
