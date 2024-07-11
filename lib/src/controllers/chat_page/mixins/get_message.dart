@@ -21,7 +21,7 @@ mixin IsmChatPageGetMessageMixin on GetxController {
     }
 
     _controller.messages = _controller.commonController
-        .sortMessages(await filterMessages(messages ?? []));
+        .sortMessages(filterMessages(messages ?? []));
     if (_controller.messages.isEmpty) {
       return;
     }
@@ -29,8 +29,7 @@ mixin IsmChatPageGetMessageMixin on GetxController {
     _controller._generateIndexedMessageList();
   }
 
-  Future<List<IsmChatMessageModel>> filterMessages(
-      List<IsmChatMessageModel> messages) async {
+  List<IsmChatMessageModel> filterMessages(List<IsmChatMessageModel> messages) {
     var filterMessage = IsmChatMessageModel(
         body: '', sentAt: 0, customType: null, sentByMe: false);
     var dummymessages = List<IsmChatMessageModel>.from(messages);
