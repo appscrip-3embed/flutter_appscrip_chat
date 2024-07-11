@@ -118,6 +118,7 @@ mixin IsmChatMqttEventMixin {
       case IsmChatActionEvents.meetingCreated:
       case IsmChatActionEvents.meetingEndedByHost:
       case IsmChatActionEvents.meetingEndedDueToRejectionByAll:
+      
         _handleOneToOneCall(actionModel);
         break;
     }
