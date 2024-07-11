@@ -47,7 +47,7 @@ mixin IsmChatPageGetMessageMixin on GetxController {
           meetingType: x.meetingType,
         );
       } else {
-        filterMessage = x.copyWith(
+        filterMessage =  x.copyWith(
           meetingType: filterMessage.meetingType,
         );
       }

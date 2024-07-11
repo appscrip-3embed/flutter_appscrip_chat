@@ -47,9 +47,11 @@ class IsmOneToOneCallMessage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                message.sentByMe
+                (message.callDurations?.length != 1 ||
+                        message.action ==
+                            IsmChatActionEvents.meetingCreated.name)
                     ? '${message.meetingType == 0 ? 'Voice' : 'Video'} call'
-                    : 'Missed ${message.meetingType == 0 ? 'Voice' : 'Video'} call',
+                    : 'Missed ${message.meetingType == 0 ? 'voice' : 'video'} call',
                 style: message.style,
               ),
               if (message.callDurations?.length == 1) ...[
