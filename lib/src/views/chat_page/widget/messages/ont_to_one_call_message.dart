@@ -35,9 +35,13 @@ class IsmOneToOneCallMessage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(IsmChatDimens.fifty)),
             padding: IsmChatDimens.edgeInsets10,
             child: Icon(
-              message.sentByMe
-                  ? Icons.call_outlined
-                  : Icons.phone_callback_outlined,
+              message.meetingType == 0
+                  ? message.sentByMe
+                      ? Icons.video_call_outlined
+                      : Icons.missed_video_call_outlined
+                  : message.sentByMe
+                      ? Icons.call_outlined
+                      : Icons.phone_callback_outlined,
               color: message.textColor,
             ),
           ),
