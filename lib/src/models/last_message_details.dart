@@ -96,7 +96,10 @@ class LastMessageDetails {
       sentByMe: details.senderId.isNotEmpty
           ? details.senderId ==
               IsmChatConfig.communicationConfig.userConfig.userId
-          : true,
+          : details.initiatorId?.isNotEmpty == true
+              ? details.senderId ==
+                  IsmChatConfig.communicationConfig.userConfig.userId
+              : true,
     );
 
     return details;

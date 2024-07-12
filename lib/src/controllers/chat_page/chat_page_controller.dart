@@ -1576,6 +1576,7 @@ class IsmChatPageController extends GetxController
               messageId: messages.last.messageId ?? '',
               conversationId: messages.last.conversationId ?? '',
               body: messages.last.body,
+              action: messages.last.action,
               customType: messages.last.customType,
               readCount: messages.last.messageId?.isNotEmpty == true
                   ? chatConversation.isGroup ?? false

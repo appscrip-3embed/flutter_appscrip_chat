@@ -43,11 +43,9 @@ mixin IsmChatPageGetMessageMixin on GetxController {
         continue;
       }
       if (x.action == IsmChatActionEvents.meetingCreated.name) {
-        filterMessage = filterMessage.copyWith(
-          meetingType: x.meetingType,
-        );
+        filterMessage = filterMessage.copyWith(meetingType: x.meetingType);
       } else {
-        filterMessage =  x.copyWith(
+        filterMessage = x.copyWith(
           meetingType: filterMessage.meetingType,
         );
       }
@@ -57,6 +55,7 @@ mixin IsmChatPageGetMessageMixin on GetxController {
 
       var fliterIndex = messages.indexWhere((e) => e.meetingId == x.meetingId);
       if (fliterIndex != -1) {
+        IsmChatLog.success(filterMessage.toJson());
         messages[fliterIndex] = filterMessage;
       }
     }
