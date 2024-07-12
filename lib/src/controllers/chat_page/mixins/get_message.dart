@@ -55,7 +55,6 @@ mixin IsmChatPageGetMessageMixin on GetxController {
 
       var fliterIndex = messages.indexWhere((e) => e.meetingId == x.meetingId);
       if (fliterIndex != -1) {
-        IsmChatLog.success(filterMessage.toJson());
         messages[fliterIndex] = filterMessage;
       }
     }
