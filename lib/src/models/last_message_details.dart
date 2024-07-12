@@ -76,6 +76,17 @@ class LastMessageDetails {
             ),
       memberName: map['memberName'] as String? ?? '',
       memberId: map['memberId'] as String? ?? '',
+      audioOnly: map['audioOnly'] as bool? ?? false,
+      callDurations: map['callDurations'] == null
+          ? []
+          : List<CallDuration>.from(
+              (map['callDurations'] as List).map(
+                (e) => CallDuration.fromMap(e as Map<String, dynamic>),
+              ),
+            ),
+      meetingId: map['meetingId'] as String? ?? '',
+      meetingType:
+          map['meetingType'] != null ? map['meetingType'] as int? ?? 0 : null,
     );
     details = details.copyWith(
       body: details.metaData?.replyMessage?.parentMessageMessageType ==
@@ -114,6 +125,10 @@ class LastMessageDetails {
     this.memberName,
     this.memberId,
     this.metaData,
+    this.audioOnly,
+    this.callDurations,
+    this.meetingId,
+    this.meetingType,
   });
 
   final bool showInConversation;
@@ -138,6 +153,10 @@ class LastMessageDetails {
   final String? memberName;
   final String? memberId;
   final IsmChatMetaData? metaData;
+  final List<CallDuration>? callDurations;
+  final String? meetingId;
+  final int? meetingType;
+  final bool? audioOnly;
 
   String get adminOpponentName =>
       memberId == IsmChatConfig.communicationConfig.userConfig.userId
@@ -167,6 +186,10 @@ class LastMessageDetails {
     String? memberName,
     String? memberId,
     IsmChatMetaData? metaData,
+    List<CallDuration>? callDurations,
+    String? meetingId,
+    int? meetingType,
+    bool? audioOnly,
   }) =>
       LastMessageDetails(
         showInConversation: showInConversation ?? this.showInConversation,
@@ -190,6 +213,10 @@ class LastMessageDetails {
         memberName: memberName ?? this.memberName,
         memberId: memberId ?? this.memberId,
         metaData: metaData ?? this.metaData,
+        callDurations: callDurations ?? this.callDurations,
+        meetingId: meetingId ?? this.meetingId,
+        meetingType: meetingType ?? this.meetingType,
+        audioOnly: audioOnly ?? this.audioOnly,
       );
 
   Map<String, dynamic> toMap() => <String, dynamic>{
@@ -214,13 +241,17 @@ class LastMessageDetails {
         'memberName': memberName,
         'memberId': memberId,
         'metaData': metaData?.toMap(),
+        'callDurations': callDurations?.map((e) => e.toMap()).toList(),
+        'meetingId': meetingId,
+        'meetingType': meetingType,
+        'audioOnly': audioOnly
       };
 
   String toJson() => json.encode(toMap());
 
   @override
   String toString() =>
-      'LastMessageDetails(showInConversation: $showInConversation, sentAt: $sentAt, senderName: $senderName, senderId: $senderId, messageType: $messageType, messageId: $messageId, conversationId: $conversationId, body: $body, customType: $customType, deliverCount: $deliverCount, readCount: $readCount, sentByMe: $sentByMe, members: $members,  reactionType : $reactionType, action : $action, deliveredTo :$deliveredTo, readBy : $readBy, initiatorId : $initiatorId, memberName : $memberName, memberId : $memberId, metaData : $metaData)';
+      'LastMessageDetails(showInConversation: $showInConversation, sentAt: $sentAt, senderName: $senderName, senderId: $senderId, messageType: $messageType, messageId: $messageId, conversationId: $conversationId, body: $body, customType: $customType, deliverCount: $deliverCount, readCount: $readCount, sentByMe: $sentByMe, members: $members,  reactionType : $reactionType, action : $action, deliveredTo :$deliveredTo, readBy : $readBy, initiatorId : $initiatorId, memberName : $memberName, memberId : $memberId, metaData : $metaData, callDurations:$callDurations, meetingId:$meetingId, meetingType:$meetingType, audioOnly:$audioOnly)';
 
   @override
   bool operator ==(covariant LastMessageDetails other) {
@@ -246,7 +277,11 @@ class LastMessageDetails {
         other.initiatorId == initiatorId &&
         other.memberName == memberName &&
         other.memberId == messageId &&
-        other.metaData == metaData;
+        other.metaData == metaData &&
+        other.callDurations == callDurations &&
+        other.meetingId == meetingId &&
+        other.meetingType == meetingType &&
+        other.audioOnly == audioOnly;
   }
 
   @override
@@ -271,5 +306,9 @@ class LastMessageDetails {
       initiatorId.hashCode ^
       memberName.hashCode ^
       memberId.hashCode ^
-      metaData.hashCode;
+      metaData.hashCode ^
+      callDurations.hashCode ^
+      meetingId.hashCode ^
+      meetingType.hashCode ^
+      audioOnly.hashCode;
 }

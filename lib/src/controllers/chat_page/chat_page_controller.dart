@@ -1548,6 +1548,10 @@ class IsmChatPageController extends GetxController
             messages.last.customType != IsmChatCustomMessageType.removeMember) {
           chatConversation = chatConversation.copyWith(
             lastMessageDetails: chatConversation.lastMessageDetails?.copyWith(
+              audioOnly: messages.last.audioOnly,
+              meetingId: messages.last.meetingId,
+              meetingType: messages.last.meetingType,
+              callDurations: messages.last.callDurations,
               sentByMe: messages.last.sentByMe,
               showInConversation: true,
               senderId: messages.last.senderInfo?.userId ?? '',

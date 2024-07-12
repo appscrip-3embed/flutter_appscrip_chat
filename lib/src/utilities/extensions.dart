@@ -650,13 +650,20 @@ extension LastMessageBody on LastMessageDetails {
         return sentByMe
             ? IsmChatStrings.deletedMessage
             : IsmChatStrings.wasDeletedMessage;
+      case IsmChatCustomMessageType.oneToOneCall:
+        if (action == IsmChatActionEvents.meetingCreated.name) {
+          return '${meetingType == 0 ? 'Voice' : 'Video'} call • In call';
+        } else if (callDurations?.length == 2) {
+          return '${meetingType == 0 ? 'Voice' : 'Video'} call';
+        } else {
+          return 'Missed ${meetingType == 0 ? 'voice' : 'video'} call';
+        }
       case IsmChatCustomMessageType.link:
       case IsmChatCustomMessageType.forward:
       case IsmChatCustomMessageType.date:
       case IsmChatCustomMessageType.text:
       default:
         var isReacted = action == IsmChatActionEvents.reactionAdd.name;
-
         return reactionType?.isNotEmpty == true
             ? sentByMe
                 ? 'You ${isReacted ? 'reacted' : 'removed'} ${reactionType?.reactionString} ${isReacted ? 'to' : 'from'} a message'
@@ -713,6 +720,15 @@ extension LastMessageBody on LastMessageDetails {
         break;
       case IsmChatCustomMessageType.deletedForEveryone:
         iconData = Icons.remove_circle_outline_rounded;
+        break;
+      case IsmChatCustomMessageType.oneToOneCall:
+        iconData = meetingType == 0
+            ? sentByMe
+                ? Icons.call_outlined
+                : Icons.phone_callback_outlined
+            : sentByMe
+                ? Icons.video_call_outlined
+                : Icons.missed_video_call_outlined;
         break;
       case IsmChatCustomMessageType.addAdmin:
       case IsmChatCustomMessageType.removeAdmin:
