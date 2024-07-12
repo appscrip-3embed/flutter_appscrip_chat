@@ -270,6 +270,20 @@ class IsmChatDelegate {
     return null;
   }
 
+  Future<void> messageUpdateOnChatPage({
+    required bool isLoading,
+  }) async {
+    if (Get.isRegistered<IsmChatPageController>()) {
+      final controller = Get.find<IsmChatPageController>();
+      await controller.getMessagesFromAPI(
+        conversationId: controller.conversation?.conversationId ?? '',
+        lastMessageTimestamp: controller.messages.isNotEmpty
+            ? controller.messages.last.sentAt
+            : 0,
+      );
+    }
+  }
+
   Future<void> logout() async {
     await IsmChatConfig.dbWrapper?.deleteChatLocalDb();
     await Future.wait([

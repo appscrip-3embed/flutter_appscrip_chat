@@ -423,4 +423,9 @@ class IsmChat {
       pushNotifications: pushNotifications,
     );
   }
+
+  Future<void> messageUpdateOnChatPage({
+    required bool isLoading,
+  }) async =>
+      await _delegate.messageUpdateOnChatPage(isLoading: isLoading);
 }
