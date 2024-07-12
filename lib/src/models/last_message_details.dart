@@ -97,7 +97,7 @@ class LastMessageDetails {
           ? details.senderId ==
               IsmChatConfig.communicationConfig.userConfig.userId
           : details.initiatorId?.isNotEmpty == true
-              ? details.senderId ==
+              ? details.initiatorId ==
                   IsmChatConfig.communicationConfig.userConfig.userId
               : true,
     );
