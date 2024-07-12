@@ -424,8 +424,8 @@ class IsmChat {
     );
   }
 
-  Future<void> messageUpdateOnChatPage({
+  Future<void> getMessageOnChatPage({
     required bool isLoading,
   }) async =>
-      await _delegate.messageUpdateOnChatPage(isLoading: isLoading);
+      await _delegate.getMessageOnChatPage(isLoading: isLoading);
 }

@@ -270,7 +270,7 @@ class IsmChatDelegate {
     return null;
   }
 
-  Future<void> messageUpdateOnChatPage({
+  Future<void> getMessageOnChatPage({
     required bool isLoading,
   }) async {
     if (Get.isRegistered<IsmChatPageController>()) {
