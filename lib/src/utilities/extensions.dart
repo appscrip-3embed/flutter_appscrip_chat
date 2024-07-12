@@ -531,10 +531,7 @@ extension ModelConversion on IsmChatConversationModel {
 
   Widget get readCheck {
     try {
-      IsmChatLog(
-          'sentBy ${lastMessageDetails?.sentByMe ?? false} == ${lastMessageDetails?.action}');
       if (!(lastMessageDetails?.sentByMe ?? false)) {
-        IsmChatLog.info('yes I am call');
         return const SizedBox.shrink();
       }
       if (lastMessageDetails?.messageBody.isEmpty == true) {

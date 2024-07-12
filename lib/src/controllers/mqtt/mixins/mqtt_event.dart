@@ -118,7 +118,6 @@ mixin IsmChatMqttEventMixin {
       case IsmChatActionEvents.meetingCreated:
       case IsmChatActionEvents.meetingEndedByHost:
       case IsmChatActionEvents.meetingEndedDueToRejectionByAll:
-      
         _handleOneToOneCall(actionModel);
         break;
     }
@@ -763,15 +762,18 @@ mixin IsmChatMqttEventMixin {
     if (messageId == actionModel.sentAt.toString()) {
       return;
     }
-    if (Get.isRegistered<IsmChatPageController>()) {
-      var controller = Get.find<IsmChatPageController>();
-      if (controller.conversation?.conversationId ==
-          actionModel.conversationId) {
-        await controller.getMessagesFromAPI(
-            conversationId: actionModel.conversationId ?? '',
-            lastMessageTimestamp: controller.messages.last.sentAt);
-        messageId = actionModel.sentAt.toString();
-      }
+    if (!Get.isRegistered<IsmChatConversationsController>()) return;
+    var conversationController = Get.find<IsmChatConversationsController>();
+    if (actionModel.action == IsmChatActionEvents.addMember) {
+      unawaited(conversationController.getChatConversations());
+    }
+    if (!Get.isRegistered<IsmChatPageController>()) return;
+    var controller = Get.find<IsmChatPageController>();
+    if (controller.conversation?.conversationId == actionModel.conversationId) {
+      await controller.getMessagesFromAPI(
+          conversationId: actionModel.conversationId ?? '',
+          lastMessageTimestamp: controller.messages.last.sentAt);
+      messageId = actionModel.sentAt.toString();
     }
   }
 
