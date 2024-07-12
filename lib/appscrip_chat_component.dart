@@ -425,7 +425,7 @@ class IsmChat {
   }
 
   Future<void> getMessageOnChatPage({
-    required bool isLoading,
+    bool isBroadcast = false,
   }) async =>
-      await _delegate.getMessageOnChatPage(isLoading: isLoading);
+      await _delegate.getMessageOnChatPage(isBroadcast: isBroadcast);
 }
