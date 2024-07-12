@@ -763,10 +763,8 @@ mixin IsmChatMqttEventMixin {
       return;
     }
     if (!Get.isRegistered<IsmChatConversationsController>()) return;
-    var conversationController = Get.find<IsmChatConversationsController>();
-    if (actionModel.action == IsmChatActionEvents.addMember) {
-      unawaited(conversationController.getChatConversations());
-    }
+    unawaited(
+        Get.find<IsmChatConversationsController>().getChatConversations());
     if (!Get.isRegistered<IsmChatPageController>()) return;
     var controller = Get.find<IsmChatPageController>();
     if (controller.conversation?.conversationId == actionModel.conversationId) {
