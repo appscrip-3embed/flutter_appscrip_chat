@@ -711,11 +711,13 @@ class IsmChatConversationsController extends GetxController {
     if (response != null) {
       handleList(forwardedList);
     }
-    callApiOrNot = true;
+
     if (response == null && searchTag.isEmpty && isGroupConversation == false) {
       unawaited(getContacts(isLoading: isLoading, searchTag: searchTag));
+      callApiOrNot = true;
       return forwardedList;
     }
+    callApiOrNot = true;
     return forwardedList;
   }
 
@@ -1395,7 +1397,7 @@ class IsmChatConversationsController extends GetxController {
 
   /// to get the contacts..
   Future<void> getContacts({
-    bool isLoading = true,
+    bool isLoading = false,
     bool isRegisteredUser = false,
     int skip = 400,
     int limit = 20,

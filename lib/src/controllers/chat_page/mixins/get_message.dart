@@ -23,10 +23,6 @@ mixin IsmChatPageGetMessageMixin on GetxController {
     _controller.messages = _controller.commonController
         .sortMessages(filterMessages(messages ?? []));
 
-    for (var x in _controller.messages) {
-      IsmChatLog.error(x.toMap());
-    }
-
     if (_controller.messages.isEmpty) {
       return;
     }
