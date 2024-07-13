@@ -135,7 +135,16 @@ class IsmChatCommonController extends GetxController {
           messagingDisabled: conversation.messagingDisabled,
           membersCount: conversation.membersCount,
           unreadMessagesCount: conversation.unreadMessagesCount,
-          messages: [],
+          messages: [
+            IsmChatMessageModel(
+              body: '',
+              customType: IsmChatCustomMessageType.conversationCreated,
+              sentAt: DateTime.now().millisecondsSinceEpoch,
+              sentByMe: false,
+              conversationId: conversationId,
+              action: 'conversationCreated',
+            )
+          ],
           opponentDetails: conversation.opponentDetails,
           lastMessageDetails:
               conversation.lastMessageDetails?.copyWith(deliverCount: 0),
