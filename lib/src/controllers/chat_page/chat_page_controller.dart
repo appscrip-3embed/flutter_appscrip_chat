@@ -1286,16 +1286,11 @@ class IsmChatPageController extends GetxController
   }
 
   Future<void> initializeCamera() async {
-    IsmChatLog.error(areCamerasInitialized);
     if (areCamerasInitialized && !kIsWeb) {
-      IsmChatLog.error('step4');
-
       return;
     }
-    IsmChatLog.error('step5');
     _cameras = await availableCameras();
     if (_cameras.isNotEmpty) {
-      IsmChatLog.error('step6');
       await toggleCamera();
     }
   }
