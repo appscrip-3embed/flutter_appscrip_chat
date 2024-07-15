@@ -3,6 +3,7 @@ import 'dart:core';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
@@ -1285,12 +1286,17 @@ class IsmChatPageController extends GetxController
   }
 
   Future<void> initializeCamera() async {
+    IsmChatLog.error(areCamerasInitialized);
     if (areCamerasInitialized && !kIsWeb) {
+      IsmChatLog.error('step4');
+
       return;
     }
+    IsmChatLog.error('step5');
     _cameras = await availableCameras();
     if (_cameras.isNotEmpty) {
-      toggleCamera();
+      IsmChatLog.error('step6');
+      await toggleCamera();
     }
   }
 
@@ -1477,7 +1483,7 @@ class IsmChatPageController extends GetxController
     }
   }
 
-  void toggleCamera() async {
+  Future<void> toggleCamera() async {
     areCamerasInitialized = false;
     if (Responsive.isMobile(Get.context!) && !kIsWeb) {
       isFrontCameraSelected = !isFrontCameraSelected;
@@ -1495,8 +1501,27 @@ class IsmChatPageController extends GetxController
         imageFormatGroup: ImageFormatGroup.jpeg,
       );
     }
-    await cameraController.initialize();
-    areCamerasInitialized = true;
+    await cameraController
+        .initialize()
+        .then((e) {})
+        .catchError((Object e) async {
+      if (e is CameraException) {
+        IsmChatLog.error(
+            'camera permission error ${e.code} == ${e.description}');
+        await AppSettings.openAppSettings();
+        await checkCameraPermission();
+      }
+    });
+    await checkCameraPermission();
+  }
+
+  Future<void> checkCameraPermission() async {
+    if (await Permission.camera.isGranted &&
+        await Permission.microphone.isGranted) {
+      areCamerasInitialized = true;
+    } else {
+      areCamerasInitialized = false;
+    }
   }
 
   void toggleFlash([FlashMode? mode]) {

@@ -10,6 +10,7 @@ environment:
 
 dependencies:
   any_link_preview: ^3.0.0
+  app_settings: ^5.1.1
   audioplayers: ^6.0.0
   azlistview: ^2.0.0
   cached_network_image: ^3.3.1
