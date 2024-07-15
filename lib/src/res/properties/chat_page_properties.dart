@@ -23,6 +23,8 @@ class IsmChatPageProperties {
     this.messageSenderProfileUrl,
     this.messageInfoAcknowldge,
     this.isSendMediaAllowed,
+    this.mentionUserName,
+    this.mentionUserProfileUrl,
   });
 
   final Widget? placeholder;
@@ -45,6 +47,10 @@ class IsmChatPageProperties {
   final MessageSenderInfoCallback? messageSenderName;
 
   final MessageSenderInfoCallback? messageSenderProfileUrl;
+
+  final UserDetailsStringCallback? mentionUserName;
+
+  final UserDetailsStringCallback? mentionUserProfileUrl;
 
   /// It is an optional parameter which take List of `IsmChatAttachmentType` which is an enum.
   /// Pass in the types of attachments that you want to allow.
