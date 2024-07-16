@@ -121,8 +121,8 @@ class AuthController extends GetxController {
     if (result != null) {
       var croppedFile = await ImageCropper().cropImage(
         sourcePath: result.path,
-        cropStyle: CropStyle.circle,
         compressQuality: 100,
+        cropStyle: CropStyle.circle,
         uiSettings: [
           AndroidUiSettings(
             toolbarTitle: 'Cropper'.tr,

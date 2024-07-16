@@ -15,10 +15,10 @@ dependencies:
   camera: ^0.10.3+2
   carousel_slider: ^4.2.1
   connectivity_plus: ^3.0.6
-  device_info_plus: ^8.0.0
+  device_info_plus: ^10.1.0
   dio: ^5.2.1+1
   emoji_picker_flutter: ^1.5.4
-  file_picker: ^5.2.10
+  file_picker: ^8.0.6
   file_saver: ^0.2.5
   flutter:
     sdk: flutter
