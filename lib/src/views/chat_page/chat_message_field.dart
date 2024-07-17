@@ -783,6 +783,7 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
           ],
           IconButton(
             onPressed: () async {
+              IsmChatUtility.hideKeyboard();
               if (!(controller.conversation?.isChattingAllowed == true)) {
                 controller.showDialogCheckBlockUnBlock();
               } else {
