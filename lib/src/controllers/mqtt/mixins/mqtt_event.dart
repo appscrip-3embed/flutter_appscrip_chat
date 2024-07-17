@@ -322,7 +322,7 @@ mixin IsmChatMqttEventMixin {
       return;
     }
     unawaited(chatController.getMessagesFromDB(message.conversationId ?? ''));
-    await Future.delayed(const Duration(milliseconds: 30));
+    await Future.delayed(const Duration(milliseconds: 50));
     if (_controller.isAppInBackground == false) {
       await chatController.readSingleMessage(
         conversationId: message.conversationId ?? '',
@@ -497,6 +497,10 @@ mixin IsmChatMqttEventMixin {
     if (actionModel.userDetails!.userId == _controller.userConfig.userId) {
       return;
     }
+    if (messageId == actionModel.sentAt.toString()) {
+      return;
+    }
+    messageId = actionModel.sentAt.toString();
 
     var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: actionModel.conversationId);
@@ -511,7 +515,6 @@ mixin IsmChatMqttEventMixin {
       if (message != null) {
         var isDelivered = message.deliveredTo
             ?.any((e) => e.userId == actionModel.userDetails?.userId);
-
         if (isDelivered == false) {
           message.deliveredTo?.add(
             MessageStatus(
@@ -550,12 +553,16 @@ mixin IsmChatMqttEventMixin {
   }
 
   void _handleMessageRead(IsmChatMqttActionModel actionModel) async {
+    await Future.delayed(const Duration(milliseconds: 100));
     if (actionModel.userDetails?.userId == _controller.userConfig.userId) {
       return;
     }
+    if (messageId == actionModel.sentAt.toString()) {
+      return;
+    }
+    messageId = actionModel.sentAt.toString();
     var conversation = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: actionModel.conversationId!);
-
     if (conversation != null) {
       var message =
           conversation.messages?.cast<IsmChatMessageModel?>().firstWhere(
@@ -575,14 +582,19 @@ mixin IsmChatMqttEventMixin {
         }
         message.readByAll =
             message.readBy?.length == (conversation.membersCount ?? 0) - 1;
-        conversation.messages?.last = message;
 
-        conversation = conversation.copyWith(
-          lastMessageDetails: conversation.lastMessageDetails?.copyWith(
-            readCount: message.readBy?.length,
-            readBy: message.readBy,
-          ),
-        );
+        final messageIndex = conversation.messages
+            ?.indexWhere((e) => e.messageId == actionModel.messageId);
+        if (messageIndex != -1) {
+          conversation.messages?[
+              messageIndex ?? conversation.messages?.length ?? 0] = message;
+          conversation = conversation.copyWith(
+            lastMessageDetails: conversation.lastMessageDetails?.copyWith(
+              readCount: message.readBy?.length,
+              readBy: message.readBy,
+            ),
+          );
+        }
         await IsmChatConfig.dbWrapper!
             .saveConversation(conversation: conversation);
         if (Get.isRegistered<IsmChatPageController>()) {

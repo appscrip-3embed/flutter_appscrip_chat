@@ -253,7 +253,6 @@ class IsmChatDBWrapper {
       case IsmChatDbBox.main:
         var conversation = await getConversation(
             conversationId: message.conversationId, dbBox: dbBox);
-
         conversation?.messages?.add(message);
         await saveConversation(conversation: conversation!, dbBox: dbBox);
         break;
@@ -268,8 +267,8 @@ class IsmChatDBWrapper {
               conversation: pendingConversation, dbBox: dbBox);
           return;
         }
-        conversation.messages?.add(message);
 
+        conversation.messages?.add(message);
         await saveConversation(conversation: conversation, dbBox: dbBox);
         break;
     }

@@ -91,6 +91,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         );
       }
     }
+    _controller.isMessageSent = false;
   }
 
   void sendMedia() async {
@@ -1109,6 +1110,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     required String conversationId,
     required String userId,
     bool pushNotifications = true,
+    required int sentAt,
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
@@ -1130,7 +1132,8 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       unawaited(
           _controller.getConverstaionDetails(conversationId: conversationId));
     }
-    var sentAt = DateTime.now().millisecondsSinceEpoch;
+
+    IsmChatLog.error('step $sentAt');
     var textMessage = IsmChatMessageModel(
       body: _controller.chatInputController.text.trim(),
       conversationId: conversationId,
@@ -1183,7 +1186,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     _controller.messages.add(textMessage);
     _controller.isreplying = false;
     _controller.chatInputController.clear();
-    _controller.isMessageSent = false;
+
     if (!_controller.isTemporaryChat) {
       await IsmChatConfig.dbWrapper!
           .saveMessage(textMessage, IsmChatDbBox.pending);

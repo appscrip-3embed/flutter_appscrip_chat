@@ -123,6 +123,7 @@ class IsmChatMessageField extends StatelessWidget {
                                   userId: controller.conversation
                                           ?.opponentDetails?.userId ??
                                       '',
+                                  sentAt: DateTime.now().millisecondsSinceEpoch,
                                 );
                               }
                             }
@@ -455,12 +456,14 @@ class _MicOrSendButton extends StatelessWidget {
                     if (controller.chatInputController.text.trim().isNotEmpty &&
                         controller.isMessageSent == false) {
                       controller.isMessageSent = true;
+
                       controller.sendTextMessage(
                         conversationId:
                             controller.conversation?.conversationId ?? '',
                         userId:
                             controller.conversation?.opponentDetails?.userId ??
                                 '',
+                        sentAt: DateTime.now().millisecondsSinceEpoch,
                       );
                     }
                   }
@@ -552,7 +555,7 @@ class _MicOrSendButton extends StatelessWidget {
                 scale: animation,
                 child: child,
               ),
-              child: controller.showSendButton
+              child: controller.showSendButton && !controller.isMessageSent
                   ? Icon(
                       Icons.send_rounded,
                       key: UniqueKey(),

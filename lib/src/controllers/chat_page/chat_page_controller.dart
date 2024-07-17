@@ -562,6 +562,7 @@ class IsmChatPageController extends GetxController
             conversationId: conversation?.conversationId ?? '',
             userId: conversation?.opponentDetails?.userId ?? '',
             pushNotifications: conversation?.pushNotifications ?? true,
+            sentAt: DateTime.now().millisecondsSinceEpoch,
           );
         }
       } else if (conversation?.outSideMessage?.imageUrl != null) {
