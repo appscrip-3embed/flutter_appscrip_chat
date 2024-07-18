@@ -36,7 +36,7 @@ class IsmChatPageHeaderProperties {
   final void Function(IsmChatConversationModel?)? onProfileTap;
   final double? Function(
     BuildContext,
-    IsmChatConversationModel,
+    IsmChatConversationModel?,
   )? height;
   final ShapeBorder? shape;
 }

@@ -17,7 +17,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
     if (Get.isRegistered<IsmChatPageController>()) {
       return Size.fromHeight(IsmChatProperties.chatPageProperties.header?.height
               ?.call(Get.context!,
-                  Get.find<IsmChatPageController>().conversation!) ??
+                  Get.find<IsmChatPageController>().conversation) ??
           IsmChatDimens.appBarHeight);
     }
 
