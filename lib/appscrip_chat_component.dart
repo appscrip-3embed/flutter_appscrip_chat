@@ -423,4 +423,9 @@ class IsmChat {
       pushNotifications: pushNotifications,
     );
   }
+
+  Future<void> getMessageOnChatPage({
+    bool isBroadcast = false,
+  }) async =>
+      await _delegate.getMessageOnChatPage(isBroadcast: isBroadcast);
 }

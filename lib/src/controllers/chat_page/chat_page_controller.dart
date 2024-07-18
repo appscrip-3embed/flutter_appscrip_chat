@@ -380,9 +380,9 @@ class IsmChatPageController extends GetxController
   set searchMessages(List<IsmChatMessageModel> value) =>
       _searchMessages.value = value;
 
-  final RxBool _isTemporaryChat = false.obs;
-  bool get isTemporaryChat => _isTemporaryChat.value;
-  set isTemporaryChat(bool value) => _isTemporaryChat.value = value;
+  final RxBool _isBroadcast = false.obs;
+  bool get isBroadcast => _isBroadcast.value;
+  set isBroadcast(bool value) => _isBroadcast.value = value;
 
   final RxInt _mediaDownloadProgress = 0.obs;
   int get mediaDownloadProgress => _mediaDownloadProgress.value;
@@ -485,7 +485,7 @@ class IsmChatPageController extends GetxController
   }
 
   void startInit({
-    bool isTemporaryChats = false,
+    bool isBroadcasts = false,
   }) async {
     isActionAllowed = false;
     _generateReactionList();
@@ -496,8 +496,7 @@ class IsmChatPageController extends GetxController
       _currentUser();
       conversation = conversationController.currentConversation;
       await Future.delayed(Duration.zero);
-      isTemporaryChat =
-          arguments['isTemporaryChat'] as bool? ?? isTemporaryChats;
+      isBroadcast = arguments['isBroadcast'] as bool? ?? isBroadcasts;
       if (conversation?.conversationId?.isNotEmpty == true) {
         await callFunctionsWithConversationId(
             conversation?.conversationId ?? '');
@@ -596,7 +595,7 @@ class IsmChatPageController extends GetxController
 
   Future<void> callFunctionsWithConversationId(String conversationId) async {
     _getBackGroundAsset();
-    if (!isTemporaryChat) {
+    if (!isBroadcast) {
       await getMessagesFromDB(conversationId);
       await Future.wait([
         getMessagesFromAPI(),
@@ -613,7 +612,7 @@ class IsmChatPageController extends GetxController
       );
       checkUserStatus();
     } else {
-      await getBroadcastMessages(isTemporaryChat: isTemporaryChat);
+      await getBroadcastMessages(isBroadcast: isBroadcast);
       isMessagesLoading = false;
     }
   }
@@ -1549,6 +1548,10 @@ class IsmChatPageController extends GetxController
             messages.last.customType != IsmChatCustomMessageType.removeMember) {
           chatConversation = chatConversation.copyWith(
             lastMessageDetails: chatConversation.lastMessageDetails?.copyWith(
+              audioOnly: messages.last.audioOnly,
+              meetingId: messages.last.meetingId,
+              meetingType: messages.last.meetingType,
+              callDurations: messages.last.callDurations,
               sentByMe: messages.last.sentByMe,
               showInConversation: true,
               senderId: messages.last.senderInfo?.userId ?? '',
@@ -1573,6 +1576,7 @@ class IsmChatPageController extends GetxController
               messageId: messages.last.messageId ?? '',
               conversationId: messages.last.conversationId ?? '',
               body: messages.last.body,
+              action: messages.last.action,
               customType: messages.last.customType,
               readCount: messages.last.messageId?.isNotEmpty == true
                   ? chatConversation.isGroup ?? false

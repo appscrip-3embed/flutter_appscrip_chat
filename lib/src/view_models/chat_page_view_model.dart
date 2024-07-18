@@ -6,8 +6,6 @@ class IsmChatPageViewModel {
 
   final IsmChatPageRepository _repository;
 
-  final _commonController = Get.find<IsmChatCommonController>();
-
   Future<List<IsmChatMessageModel>> getChatMessages({
     required String conversationId,
     required int lastMessageTimestamp,
@@ -15,7 +13,7 @@ class IsmChatPageViewModel {
     int skip = 0,
     String? searchText,
     bool isLoading = false,
-    bool isTemporaryChat = false,
+    bool isBroadcast = false,
   }) async {
     var messages = await _repository.getChatMessages(
       conversationId: conversationId,
@@ -42,7 +40,7 @@ class IsmChatPageViewModel {
         messages.removeWhere(
             (e) => e.messageId == controller.messages.last.messageId);
       }
-      if (!isTemporaryChat) {
+      if (!isBroadcast) {
         var conversation = await IsmChatConfig.dbWrapper!
             .getConversation(conversationId: conversationId);
 
@@ -52,10 +50,10 @@ class IsmChatPageViewModel {
               .saveConversation(conversation: conversation);
         }
       } else {
-        messages = _commonController.sortMessages(messages);
+        messages = messages;
       }
     } else {
-      messages = _commonController.sortMessages(messages);
+      messages = messages;
     }
     return messages;
   }
@@ -74,7 +72,7 @@ class IsmChatPageViewModel {
     String? attachmentTypes,
     String? showInConversation,
     String? parentMessageId,
-    bool isTemporaryChat = false,
+    bool isBroadcast = false,
   }) async {
     var messages = await _repository.getBroadcastMessages(
       groupcastId: groupcastId,
@@ -112,9 +110,9 @@ class IsmChatPageViewModel {
         messages.removeWhere(
             (e) => e.messageId == controller.messages.last.messageId);
       }
-      messages = _commonController.sortMessages(messages);
+      messages = messages;
     } else {
-      messages = _commonController.sortMessages(messages);
+      messages = messages;
     }
     return messages;
   }

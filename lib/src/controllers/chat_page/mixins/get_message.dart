@@ -20,7 +20,9 @@ mixin IsmChatPageGetMessageMixin on GetxController {
       messages?.addAll(pendingmessages ?? []);
     }
 
-    _controller.messages = _controller.commonController.sortMessages(messages!);
+    _controller.messages = _controller.commonController
+        .sortMessages(filterMessages(messages ?? []));
+
     if (_controller.messages.isEmpty) {
       return;
     }
@@ -28,11 +30,42 @@ mixin IsmChatPageGetMessageMixin on GetxController {
     _controller._generateIndexedMessageList();
   }
 
+  List<IsmChatMessageModel> filterMessages(List<IsmChatMessageModel> messages) {
+    var filterMessage = IsmChatMessageModel(
+        body: '', sentAt: 0, customType: null, sentByMe: false);
+    var dummymessages = List<IsmChatMessageModel>.from(messages);
+    for (var x in dummymessages) {
+      if (x.customType != IsmChatCustomMessageType.oneToOneCall) {
+        continue;
+      }
+      if (x.meetingId != filterMessage.meetingId) {
+        filterMessage = x;
+        continue;
+      }
+      if (x.action == IsmChatActionEvents.meetingCreated.name) {
+        filterMessage = filterMessage.copyWith(meetingType: x.meetingType);
+      } else {
+        filterMessage = x.copyWith(
+          meetingType: filterMessage.meetingType,
+        );
+      }
+      messages.removeWhere((e) =>
+          e.action == IsmChatActionEvents.meetingCreated.name &&
+          e.meetingId == x.meetingId);
+
+      var fliterIndex = messages.indexWhere((e) => e.meetingId == x.meetingId);
+      if (fliterIndex != -1) {
+        messages[fliterIndex] = filterMessage;
+      }
+    }
+    return messages;
+  }
+
   Future<void> getMessagesFromAPI({
     String conversationId = '',
     bool forPagination = false,
     int? lastMessageTimestamp,
-    bool isTemporaryChat = false,
+    bool isBroadcast = false,
   }) async {
     if (Get.isRegistered<IsmChatPageController>()) {
       if (_controller.canCallCurrentApi) return;
@@ -56,13 +89,13 @@ mixin IsmChatPageGetMessageMixin on GetxController {
         skip: forPagination ? messagesList.length.pagination() : 0,
         conversationId: conversationID,
         lastMessageTimestamp: timeStamp,
-        isTemporaryChat: isTemporaryChat,
+        isBroadcast: isBroadcast,
       );
 
       if (_controller.messages.isEmpty) {
         _controller.isMessagesLoading = false;
       }
-      if (data.isNotEmpty && !_controller.isTemporaryChat) {
+      if (data.isNotEmpty && !_controller.isBroadcast) {
         await getMessagesFromDB(conversationID);
       } else {
         _controller.messages.addAll(data);
@@ -72,11 +105,11 @@ mixin IsmChatPageGetMessageMixin on GetxController {
   }
 
   Future<void> getBroadcastMessages({
-     String groupcastId = '',
+    String groupcastId = '',
     int? lastMessageTimestamp,
     bool isLoading = false,
     String? searchText,
-    bool isTemporaryChat = false,
+    bool isBroadcast = false,
     bool forPagination = false,
   }) async {
     if (Get.isRegistered<IsmChatPageController>()) {
@@ -99,7 +132,7 @@ mixin IsmChatPageGetMessageMixin on GetxController {
         skip: forPagination ? messagesList.length.pagination() : 0,
         groupcastId: groupcastID,
         lastMessageTimestamp: timeStamp,
-        isTemporaryChat: isTemporaryChat,
+        isBroadcast: isBroadcast,
       );
       if (_controller.messages.isEmpty) {
         _controller.isMessagesLoading = false;

@@ -36,7 +36,7 @@ class IsmChatFocusMenu extends StatelessWidget {
                   ? CrossAxisAlignment.end
                   : CrossAxisAlignment.start,
               children: [
-                if (canReact && !controller.isTemporaryChat)
+                if (canReact && !controller.isBroadcast)
                   _FocusAnimationBuilder(
                     animation: animation,
                     child: ReactionGrid(message),
@@ -146,7 +146,7 @@ class IsmChatFocusMenu extends StatelessWidget {
                             ? CrossAxisAlignment.end
                             : CrossAxisAlignment.start,
                         children: [
-                          if (canReact && !controller.isTemporaryChat)
+                          if (canReact && !controller.isBroadcast)
                             _FocusAnimationBuilder(
                               animation: animation,
                               child: ReactionGrid(message),

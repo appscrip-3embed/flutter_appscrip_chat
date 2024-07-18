@@ -195,7 +195,7 @@ class _IsmChatPageView extends StatelessWidget {
                             : controller.isActionAllowed == false
                                 ? () {
                                     if (controller.isActionAllowed == false &&
-                                        controller.isTemporaryChat == false) {
+                                        controller.isBroadcast == false) {
                                       if (!(controller
                                                   .conversation
                                                   ?.lastMessageDetails

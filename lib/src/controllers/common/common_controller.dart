@@ -70,7 +70,7 @@ class IsmChatCommonController extends GetxController {
     String? customType,
     List<Map<String, dynamic>>? attachments,
     List<String>? searchableTags,
-    bool isTemporaryChat = false,
+    bool isBroadcast = false,
     bool isUpdateMesage = true,
   }) async =>
       await viewModel.sendMessage(
@@ -86,7 +86,7 @@ class IsmChatCommonController extends GetxController {
           attachments: attachments,
           customType: customType,
           events: events,
-          isTemporaryChat: isTemporaryChat,
+          isBroadcast: isBroadcast,
           mentionedUsers: mentionedUsers,
           metaData: metaData,
           parentMessageId: parentMessageId,
@@ -135,7 +135,16 @@ class IsmChatCommonController extends GetxController {
           messagingDisabled: conversation.messagingDisabled,
           membersCount: conversation.membersCount,
           unreadMessagesCount: conversation.unreadMessagesCount,
-          messages: [],
+          messages: [
+            IsmChatMessageModel(
+              body: '',
+              customType: IsmChatCustomMessageType.conversationCreated,
+              sentAt: DateTime.now().millisecondsSinceEpoch,
+              sentByMe: false,
+              conversationId: conversationId,
+              action: 'conversationCreated',
+            )
+          ],
           opponentDetails: conversation.opponentDetails,
           lastMessageDetails:
               conversation.lastMessageDetails?.copyWith(deliverCount: 0),
