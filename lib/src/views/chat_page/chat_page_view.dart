@@ -371,7 +371,7 @@ class _IsmChatPageView extends StatelessWidget {
                                                         .call(
                                                             context,
                                                             controller
-                                                                .conversation!) ??
+                                                                .conversation) ??
                                                     '',
                                               )
                                             : Container(

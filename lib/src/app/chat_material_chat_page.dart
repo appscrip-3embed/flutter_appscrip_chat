@@ -34,8 +34,8 @@ class IsmMaterialChatPage extends StatefulWidget {
     IsmChatConfig.conversationParser = conversationParser;
     IsmChatProperties.loadingDialog = loadingDialog;
     IsmChatConfig.useDatabase = useDataBase;
-    IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
     IsmChatConfig.isShowMqttConnectErrorDailog = isShowMqttConnectErrorDailog;
+    IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
 
