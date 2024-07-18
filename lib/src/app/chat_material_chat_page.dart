@@ -279,8 +279,7 @@ class IsmMaterialChatPage extends StatefulWidget {
     bool isShowMqttConnectErrorDailog = false,
   }) {
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
-    IsmChatConfig.chatDarkTheme =
-        chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
+    IsmChatConfig.chatDarkTheme = chatDarkTheme ?? IsmChatThemeData.dark();
     IsmChatConfig.communicationConfig = communicationConfig;
     IsmChatConfig.configInitilized = true;
 
@@ -305,7 +304,11 @@ class IsmMaterialChatPage extends StatefulWidget {
       String,
       String,
     )? showNotification,
+    IsmChatThemeData? chatTheme,
+    IsmChatThemeData? chatDarkTheme,
   }) {
+    IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
+    IsmChatConfig.chatDarkTheme = chatDarkTheme ?? IsmChatThemeData.dark();
     IsmChatConfig.communicationConfig = communicationConfig;
     IsmChatConfig.configInitilized = true;
     IsmChatConfig.isMqttInitializedFromOutSide = true;
