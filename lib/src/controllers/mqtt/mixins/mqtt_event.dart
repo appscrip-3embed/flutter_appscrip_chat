@@ -6,6 +6,7 @@ import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mqtt_helper/mqtt_helper.dart';
 
 mixin IsmChatMqttEventMixin {
   IsmChatMqttController get _controller => Get.find<IsmChatMqttController>();
@@ -17,6 +18,10 @@ mixin IsmChatMqttEventMixin {
 
   var actionListeners = <Function(Map<String, dynamic>)>[];
 
+  var eventStreamController = StreamController<EventModel>.broadcast();
+
+  var eventListeners = <Function(EventModel)>[];
+
   final RxList<IsmChatTypingModel> _typingUsers = <IsmChatTypingModel>[].obs;
   List<IsmChatTypingModel> get typingUsers => _typingUsers;
   set typingUsers(List<IsmChatTypingModel> value) => _typingUsers.value = value;
@@ -25,7 +30,13 @@ mixin IsmChatMqttEventMixin {
   bool get isAppInBackground => _isAppBackground.value;
   set isAppInBackground(bool value) => _isAppBackground.value = value;
 
-  Future<void> onMqttEvent({required Map<String, dynamic> payload}) async {
+  Future<void> onMqttData({required Map<String, dynamic> data}) async {
+    _controller.actionStreamController.add(data);
+  }
+
+  Future<void> onMqttEvent({required EventModel event}) async {
+    _controller.eventStreamController.add(event);
+    final payload = event.payload;
     if (payload['action'] != null) {
       var action = payload['action'];
       if (IsmChatActionEvents.values
@@ -34,7 +45,6 @@ mixin IsmChatMqttEventMixin {
         var actionModel = IsmChatMqttActionModel.fromMap(payload);
         await _handleAction(actionModel);
       }
-      _controller.actionStreamController.add(payload);
     } else {
       var message = IsmChatMessageModel.fromMap(payload);
       _handleLocalNotification(message);
@@ -575,23 +585,27 @@ mixin IsmChatMqttEventMixin {
         }
         message.readByAll =
             message.readBy?.length == (conversation.membersCount ?? 0) - 1;
-        conversation.messages?.last = message;
-
-        conversation = conversation.copyWith(
-          lastMessageDetails: conversation.lastMessageDetails?.copyWith(
-            readCount: message.readBy?.length,
-            readBy: message.readBy,
-          ),
-        );
-        await IsmChatConfig.dbWrapper!
-            .saveConversation(conversation: conversation);
-        if (Get.isRegistered<IsmChatPageController>()) {
-          await Get.find<IsmChatPageController>()
-              .getMessagesFromDB(actionModel.conversationId!);
-        }
-        if (Get.isRegistered<IsmChatConversationsController>()) {
-          unawaited(Get.find<IsmChatConversationsController>()
-              .getConversationsFromDB());
+        final messageIndex = conversation.messages
+            ?.indexWhere((e) => e.messageId == actionModel.messageId);
+        if (messageIndex != -1) {
+          conversation.messages?[
+              messageIndex ?? conversation.messages?.length ?? 0] = message;
+          conversation = conversation.copyWith(
+            lastMessageDetails: conversation.lastMessageDetails?.copyWith(
+              readCount: message.readBy?.length,
+              readBy: message.readBy,
+            ),
+          );
+          await IsmChatConfig.dbWrapper!
+              .saveConversation(conversation: conversation);
+          if (Get.isRegistered<IsmChatPageController>()) {
+            await Get.find<IsmChatPageController>()
+                .getMessagesFromDB(actionModel.conversationId!);
+          }
+          if (Get.isRegistered<IsmChatConversationsController>()) {
+            unawaited(Get.find<IsmChatConversationsController>()
+                .getConversationsFromDB());
+          }
         }
       }
     }
@@ -723,7 +737,8 @@ mixin IsmChatMqttEventMixin {
   }
 
   void _handleBlockUserOrUnBlock(IsmChatMqttActionModel actionModel) async {
-    if (actionModel.initiatorDetails!.userId == _controller.userConfig?.userId) {
+    if (actionModel.initiatorDetails!.userId ==
+        _controller.userConfig?.userId) {
       return;
     }
 

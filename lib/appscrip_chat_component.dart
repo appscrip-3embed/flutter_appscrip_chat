@@ -8,6 +8,7 @@ import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart'
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mqtt_helper/mqtt_helper.dart';
 
 export 'src/app/app.dart';
 export 'src/controllers/controllers.dart';
@@ -79,14 +80,14 @@ class IsmChat {
   /// [_initialized] this variable must be true
   /// You can call this funcation after MQTT controller intilized
   Future<void> listenMqttEvent({
-    required Map<String, dynamic> payload,
+    required Map<String, dynamic> data,
     NotificaitonCallback? showNotification,
   }) async {
     assert(_initialized,
         '''MQTT Controller must be initialized before adding listener.
     Either call IsmChat.initialize() or add listener after IsmChatApp is called''');
     await _delegate.listenMqttEvent(
-        payload: payload, showNotification: showNotification);
+        data: data, showNotification: showNotification);
   }
 
   /// Call this funcation on to listener for mqtt events
@@ -112,6 +113,31 @@ class IsmChat {
         '''MQTT Controller must be initialized before adding listener.
     Either call IsmChat.initialize() or add listener after IsmChat is called''');
     await _delegate.removeListener(listener);
+  }
+
+  /// Call this funcation on to listener for mqtt events
+  ///
+  /// [_initialized] this variable must be true
+  ///
+  /// You can call this funcation after initialize mqtt [initialize] funcation
+  StreamSubscription<EventModel> addEventListener(
+      Function(EventModel) listener) {
+    assert(_initialized,
+        '''MQTT Controller must be initialized before adding listener.
+    Either call IsmChat.initialize() or add listener after IsmChat is called''');
+    return _delegate.addEventListener(listener);
+  }
+
+  /// Call this funcation on to remove listener for mqtt events
+  ///
+  /// [_initialized] this variable must be true
+  ///
+  /// You can call this funcation after initialize mqtt [initialize] funcation
+  Future<void> removeEventListener(Function(EventModel) listener) async {
+    assert(_initialized,
+        '''MQTT Controller must be initialized before adding listener.
+    Either call IsmChat.initialize() or add listener after IsmChat is called''');
+    await _delegate.removeEventListener(listener);
   }
 
   /// Call this function for show outside widget

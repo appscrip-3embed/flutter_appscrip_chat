@@ -53,13 +53,13 @@ class IsmChatDelegate {
   }
 
   Future<void> listenMqttEvent({
-    required Map<String, dynamic> payload,
+    required Map<String, dynamic> data,
     NotificaitonCallback? showNotification,
   }) async {
     if (Get.isRegistered<IsmChatMqttController>()) {
       IsmChatConfig.showNotification = showNotification;
-      await Get.find<IsmChatMqttController>().onMqttEvent(
-        payload: payload,
+      await Get.find<IsmChatMqttController>().onMqttData(
+        data: data,
       );
     }
   }
@@ -80,6 +80,25 @@ class IsmChatDelegate {
     await mqttController.actionStreamController.stream.drain();
     for (var listener in mqttController.actionListeners) {
       mqttController.actionStreamController.stream.listen(listener);
+    }
+  }
+
+  StreamSubscription<EventModel> addEventListener(
+      Function(EventModel) listener) {
+    if (!Get.isRegistered<IsmChatMqttController>()) {
+      IsmChatMqttBinding().dependencies();
+    }
+    var mqttController = Get.find<IsmChatMqttController>();
+    mqttController.eventListeners.add(listener);
+    return mqttController.eventStreamController.stream.listen(listener);
+  }
+
+  Future<void> removeEventListener(Function(EventModel) listener) async {
+    var mqttController = Get.find<IsmChatMqttController>();
+    mqttController.eventListeners.remove(listener);
+    await mqttController.eventStreamController.stream.drain();
+    for (var listener in mqttController.eventListeners) {
+      mqttController.eventStreamController.stream.listen(listener);
     }
   }
 
