@@ -9,7 +9,7 @@ typedef ConversationCardCallback = Widget Function(
 
 typedef ConversationWidgetCallback = Widget? Function(
   BuildContext,
-  IsmChatConversationModel,
+  IsmChatConversationModel?,
   String,
 );
 
@@ -20,17 +20,17 @@ typedef UserDetailsWidgetCallback = Widget? Function(
 
 typedef WidgetCallback = Widget? Function(
   BuildContext,
-  IsmChatConversationModel,
+  IsmChatConversationModel?,
 );
 
 typedef PopupItemListCallback = List<IsmChatPopupMenuItem> Function(
   BuildContext,
-  IsmChatConversationModel,
+  IsmChatConversationModel?,
 );
 
 typedef ConversationVoidCallback = void Function(
   BuildContext,
-  IsmChatConversationModel,
+  IsmChatConversationModel?,
 );
 
 typedef FutureConversationVoidCallback = Future<bool> Function(
@@ -41,13 +41,13 @@ typedef FutureConversationVoidCallback = Future<bool> Function(
 
 typedef ConversationStringCallback = String? Function(
   BuildContext,
-  IsmChatConversationModel,
+  IsmChatConversationModel?,
   String,
 );
 
 typedef UserDetailsStringCallback = String? Function(
   BuildContext,
-  UserDetails,
+  UserDetails?,
 );
 
 typedef MessageWidgetBuilder = Widget? Function(
@@ -60,18 +60,18 @@ typedef MessageWidgetBuilder = Widget? Function(
 typedef MessageSenderInfoBuilder = Widget? Function(
   BuildContext,
   IsmChatMessageModel,
-  IsmChatConversationModel,
+  IsmChatConversationModel?,
 );
 
 typedef MessageSenderInfoCallback = String? Function(
   BuildContext,
   IsmChatMessageModel,
-  IsmChatConversationModel,
+  IsmChatConversationModel?,
 );
 
 typedef ConversationWidgetBuilder = Widget? Function(
   BuildContext,
-  IsmChatConversationModel,
+  IsmChatConversationModel?,
   bool,
 );
 

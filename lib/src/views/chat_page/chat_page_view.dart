@@ -187,7 +187,7 @@ class _IsmChatPageView extends StatelessWidget {
                             null
                         ? () => IsmChatProperties
                             .chatPageProperties.header?.onProfileTap
-                            ?.call(controller.conversation!)
+                            ?.call(controller.conversation)
                         : IsmChatProperties.chatPageProperties.header
                                     ?.profileImageBuilder !=
                                 null
@@ -361,7 +361,7 @@ class _IsmChatPageView extends StatelessWidget {
                                                     .isShowTextfiledConfig!
                                                     .isShowMessageAllowed
                                                     .call(context,
-                                                        controller.conversation!)
+                                                        controller.conversation)
                                             ? _MessgeNotAllowdWidget(
                                                 showMessage: IsmChatProperties
                                                         .chatPageProperties

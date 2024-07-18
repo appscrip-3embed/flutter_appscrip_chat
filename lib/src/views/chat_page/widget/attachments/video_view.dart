@@ -109,7 +109,7 @@ class _IsmChatVideoViewState extends State<IsmChatVideoView> {
 
                     if (await IsmChatProperties.chatPageProperties
                             .messageAllowedConfig?.isMessgeAllowed
-                            ?.call(Get.context!, controller.conversation!) ??
+                            ?.call(context, controller.conversation) ??
                         true) {
                       await controller.sendVideo(
                         caption: textEditingController.text,

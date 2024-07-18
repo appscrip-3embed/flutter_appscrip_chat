@@ -6,7 +6,7 @@ mixin IsmChatGroupAdminMixin on GetxController {
   /// Add members to a conversation
   Future<void> addMembers(
       {required List<String> memberIds, bool isLoading = false}) async {
-    var conversationId = _controller.conversation!.conversationId!;
+    var conversationId = _controller.conversation?.conversationId ?? '';
     var response = await _controller.viewModel.addMembers(
         memberList: memberIds,
         conversationId: conversationId,
@@ -71,7 +71,7 @@ mixin IsmChatGroupAdminMixin on GetxController {
 
   ///Remove members from conversation
   Future<void> removeMember(String userId) async {
-    var conversationId = _controller.conversation!.conversationId!;
+    var conversationId = _controller.conversation?.conversationId ?? '';
     var response = await _controller.viewModel.removeMember(
       conversationId: conversationId,
       userId: userId,
@@ -156,7 +156,7 @@ mixin IsmChatGroupAdminMixin on GetxController {
     String userName, [
     bool updateConversation = true,
   ]) async {
-    var conversationId = _controller.conversation!.conversationId!;
+    var conversationId = _controller.conversation?.conversationId ?? '';
 
     var response = await _controller.viewModel
         .makeAdmin(memberId: memberId, conversationId: conversationId);
@@ -176,7 +176,7 @@ mixin IsmChatGroupAdminMixin on GetxController {
 
   ///Remove member as admin from conversation
   Future<void> removeAdmin(String memberId, String userName) async {
-    var conversationId = _controller.conversation!.conversationId!;
+    var conversationId = _controller.conversation?.conversationId ?? '';
     var response = await _controller.viewModel.removeAdmin(
       conversationId: conversationId,
       memberId: memberId,

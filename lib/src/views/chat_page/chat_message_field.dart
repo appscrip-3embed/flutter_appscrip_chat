@@ -291,8 +291,8 @@ class _ReplyMessage extends StatelessWidget {
                   controller.replayMessage?.sentByMe ?? false
                       ? IsmChatStrings.you
                       : IsmChatProperties.chatPageProperties.header?.title
-                              ?.call(context, controller.conversation!,
-                                  controller.conversation!.chatName) ??
+                              ?.call(context, controller.conversation,
+                                  controller.conversation?.chatName ?? '') ??
                           controller.conversation?.chatName.capitalizeFirst ??
                           '',
                   style: IsmChatStyles.w600White14,
@@ -377,7 +377,7 @@ class _MicOrSendButton extends StatelessWidget {
                 return;
               } else if (!(await IsmChatProperties
                       .chatPageProperties.isSendMediaAllowed
-                      ?.call(context, controller.conversation!) ??
+                      ?.call(context, controller.conversation) ??
                   true)) {
                 return;
               }
@@ -780,8 +780,8 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
               null) ...[
             IsmChatProperties.chatPageProperties.messageFieldSuffix?.call(
                     context,
-                    controller.conversation!,
-                    controller.conversation?.isChattingAllowed == true) ??
+                    controller.conversation,
+                    controller.conversation?.isChattingAllowed ?? false) ??
                 IsmChatDimens.box0
           ],
           IconButton(
@@ -792,7 +792,7 @@ class _AttachmentIcon extends GetView<IsmChatPageController> {
               } else {
                 if (await IsmChatProperties
                         .chatPageProperties.isSendMediaAllowed
-                        ?.call(context, controller.conversation!) ??
+                        ?.call(context, controller.conversation) ??
                     true) {
                   await Get.bottomSheet(
                     const IsmChatAttachmentCard(),

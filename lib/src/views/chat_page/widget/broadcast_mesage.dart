@@ -101,7 +101,7 @@ class _BroadCastMessage extends StatelessWidget {
                   ),
                   if (controller.messages.isNotEmpty)
                     Text(
-                      controller.conversation!.members!
+                      (controller.conversation?.members ?? [])
                           .map((e) => e.userName)
                           .join(','),
                       style: IsmChatConfig

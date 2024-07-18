@@ -84,7 +84,7 @@ class MessageBubble extends GetView<IsmChatPageController> {
                           : CrossAxisAlignment.start,
                       children: [
                         if (!showMessageInCenter &&
-                            (controller.conversation!.isGroup ?? false) &&
+                            (controller.conversation?.isGroup ?? false) &&
                             !_message.sentByMe) ...[
                           Padding(
                             padding: IsmChatDimens.edgeInsetsL2,
@@ -96,7 +96,7 @@ class MessageBubble extends GetView<IsmChatPageController> {
                                         ?.call(
                                       context,
                                       _message,
-                                      controller.conversation!,
+                                      controller.conversation,
                                     ) !=
                                     null) {
                                   name = IsmChatProperties
@@ -104,7 +104,7 @@ class MessageBubble extends GetView<IsmChatPageController> {
                                           ?.call(
                                         context,
                                         _message,
-                                        controller.conversation!,
+                                        controller.conversation,
                                       ) ??
                                       '';
                                 } else {
@@ -116,7 +116,7 @@ class MessageBubble extends GetView<IsmChatPageController> {
                                         ?.call(
                                       context,
                                       _message,
-                                      controller.conversation!,
+                                      controller.conversation,
                                     ) ??
                                     Text(
                                       name.trim().isNotEmpty
@@ -238,7 +238,9 @@ class MessageBubble extends GetView<IsmChatPageController> {
                                 controller.messageHoldOverlayEntry != null) {
                               controller.closeOverlay();
                             } else {
-                              if (!controller.conversation!.isChattingAllowed) {
+                              if (!(controller
+                                      .conversation?.isChattingAllowed ==
+                                  true)) {
                                 controller.showDialogCheckBlockUnBlock();
                               } else {
                                 controller.holdController?.forward();

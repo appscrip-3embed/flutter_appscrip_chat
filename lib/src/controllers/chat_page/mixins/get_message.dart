@@ -159,7 +159,7 @@ mixin IsmChatPageGetMessageMixin on GetxController {
           metaData: _controller.conversation?.metaData,
         );
         IsmChatProperties.chatPageProperties.onCoverstaionStatus
-            ?.call(Get.context!, _controller.conversation!);
+            ?.call(Get.context!, _controller.conversation);
 
         // controller.medialist is storing media i.e. Image, Video and Audio. //
         _controller.conversationController.mediaList = _controller.messages
@@ -272,13 +272,13 @@ mixin IsmChatPageGetMessageMixin on GetxController {
         userProfileImageUrl:
             IsmChatProperties.chatPageProperties.header?.profileImageUrl?.call(
                     Get.context!,
-                    _controller.conversation!,
+                    _controller.conversation,
                     _controller.conversation?.profileUrl ?? '') ??
                 _controller.conversation?.profileUrl ??
                 '',
         userName: IsmChatProperties.chatPageProperties.header?.title?.call(
                 Get.context!,
-                _controller.conversation!,
+                _controller.conversation,
                 _controller.conversation?.chatName ?? '') ??
             _controller.conversation?.chatName ??
             '',

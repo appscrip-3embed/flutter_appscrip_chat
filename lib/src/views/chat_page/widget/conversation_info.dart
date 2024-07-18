@@ -137,7 +137,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                         onTap: controller.conversation?.isGroup ?? false
                             ? () {
                                 controller.groupTitleController.text =
-                                    controller.conversation!.chatName;
+                                    controller.conversation?.chatName ?? '';
                                 controller.showDialogForChangeGroupTitle();
                               }
                             : null,
@@ -198,8 +198,8 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                           .opponentSubTitle
                                           ?.call(
                                               context,
-                                              controller.conversation!
-                                                  .opponentDetails!) ??
+                                              controller.conversation
+                                                  ?.opponentDetails) ??
                                       '',
                                 ),
                               ],
@@ -262,7 +262,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                         ),
                       ],
                     ),
-                    if (controller.conversation!.isGroup ?? false) ...[
+                    if (controller.conversation?.isGroup ?? false) ...[
                       IsmChatDimens.boxHeight10,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -275,7 +275,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                             ),
                           ),
                           if (controller
-                                  .conversation!.usersOwnDetails?.isAdmin ??
+                                  .conversation?.usersOwnDetails?.isAdmin ??
                               false)
                             IconButton(
                               onPressed: () {
@@ -336,11 +336,11 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                             var member = controller.groupMembers[index];
                             return ListTile(
                               onTap: member.isAdmin
-                                  ? (controller.conversation!.usersOwnDetails
+                                  ? (controller.conversation?.usersOwnDetails
                                                   ?.isAdmin ??
                                               false) &&
-                                          controller.conversation!
-                                                  .usersOwnDetails?.memberId !=
+                                          controller.conversation
+                                                  ?.usersOwnDetails?.memberId !=
                                               member.userId
                                       ? () {
                                           Get.dialog(
@@ -363,7 +363,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                                 fromMessagePage: false,
                                               );
                                             }
-                                  : controller.conversation!.usersOwnDetails
+                                  : controller.conversation?.usersOwnDetails
                                               ?.isAdmin ??
                                           false
                                       ? () {
@@ -393,7 +393,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                           color: IsmChatConfig
                                               .chatTheme.primaryColor),
                                     )
-                                  : controller.conversation!.usersOwnDetails
+                                  : controller.conversation?.usersOwnDetails
                                               ?.isAdmin ??
                                           false
                                       ? const Icon(

@@ -147,7 +147,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                                 ?.call(
                               context,
                               widget._message!,
-                              controller.conversation!,
+                              controller.conversation,
                             ) ??
                             IsmChatTapHandler(
                               onTap: () async {
@@ -161,7 +161,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                                         ?.call(
                                       context,
                                       widget._message!,
-                                      controller.conversation!,
+                                      controller.conversation,
                                     ) ??
                                     widget._message?.senderInfo?.profileUrl ??
                                     '',
@@ -185,7 +185,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                                     .chatPageProperties.header?.profileImageUrl
                                     ?.call(
                                         context,
-                                        controller.conversation!,
+                                        controller.conversation,
                                         controller.conversation?.profileUrl ??
                                             '') ??
                                 controller.conversation?.profileUrl ??
@@ -194,7 +194,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
                                     .chatPageProperties.header?.title
                                     ?.call(
                                         context,
-                                        controller.conversation!,
+                                        controller.conversation,
                                         controller.conversation?.chatName ??
                                             '') ??
                                 controller.conversation?.chatName,

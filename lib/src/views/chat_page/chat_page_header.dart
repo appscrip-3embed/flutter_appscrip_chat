@@ -90,7 +90,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                     ?.profileImageBuilder
                                     ?.call(
                                         context,
-                                        controller.conversation!,
+                                        controller.conversation,
                                         controller.conversation?.profileUrl ??
                                             '') ??
                                 IsmChatImage.profile(
@@ -98,7 +98,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                           ?.profileImageUrl
                                           ?.call(
                                               context,
-                                              controller.conversation!,
+                                              controller.conversation,
                                               controller.conversation
                                                       ?.profileUrl ??
                                                   '') ??
@@ -108,7 +108,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                           .chatPageProperties.header?.title
                                           ?.call(
                                               context,
-                                              controller.conversation!,
+                                              controller.conversation,
                                               controller
                                                       .conversation?.chatName ??
                                                   '') ??
@@ -120,7 +120,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                               ?.profileImageUrl
                                               ?.call(
                                                   context,
-                                                  controller.conversation!,
+                                                  controller.conversation,
                                                   controller.conversation
                                                           ?.profileUrl ??
                                                       '') ??
@@ -143,7 +143,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                             .header?.titleBuilder
                                             ?.call(
                                                 context,
-                                                controller.conversation!,
+                                                controller.conversation,
                                                 controller.conversation
                                                         ?.chatName ??
                                                     '') ??
@@ -152,7 +152,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                                   .header?.title
                                                   ?.call(
                                                       context,
-                                                      controller.conversation!,
+                                                      controller.conversation,
                                                       controller.conversation
                                                               ?.chatName ??
                                                           '') ??
@@ -175,7 +175,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                             ?.subtitleBuilder
                                             ?.call(
                                           context,
-                                          controller.conversation!,
+                                          controller.conversation,
                                         ) ??
                                         IsmChatDimens.box0
                                   ] else ...[
@@ -188,8 +188,9 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                                         ?.isSomeoneTyping ==
                                                     true
                                                 ? Text(
-                                                    controller.conversation!
-                                                        .typingUsers,
+                                                    controller.conversation
+                                                            ?.typingUsers ??
+                                                        '',
                                                     maxLines: 1,
                                                     overflow:
                                                         TextOverflow.ellipsis,
@@ -310,7 +311,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                               null) ...[
                             IsmChatProperties
                                     .chatPageProperties.header?.actionBuilder
-                                    ?.call(context, controller.conversation!) ??
+                                    ?.call(context, controller.conversation) ??
                                 const SizedBox.square()
                           ],
                           PopupMenuButton<int>(
@@ -394,7 +395,9 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                       ),
                                       IsmChatDimens.boxWidth8,
                                       Text(
-                                        controller.conversation!.isBlockedByMe
+                                        controller.conversation
+                                                    ?.isBlockedByMe ??
+                                                false
                                             ? IsmChatStrings.unBlockUser
                                             : IsmChatStrings.blockUser,
                                         style: IsmChatConfig
@@ -468,14 +471,14 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                     .chatPageProperties
                                     .header!
                                     .popupItems!
-                                        (context, controller.conversation!)
+                                        (context, controller.conversation)
                                     .map(
                                   (e) => PopupMenuItem(
                                     value: IsmChatProperties
                                             .chatPageProperties
                                             .header!
                                             .popupItems!(context,
-                                                controller.conversation!)
+                                                controller.conversation)
                                             .indexOf(e) +
                                         6,
                                     child: Row(
@@ -528,14 +531,14 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                     IsmChatProperties.chatPageProperties.header
                                             ?.popupItems
                                             ?.call(context,
-                                                controller.conversation!)
+                                                controller.conversation)
                                             .isNotEmpty ==
                                         true) {
                                   IsmChatProperties
-                                      .chatPageProperties.header!.popupItems!
+                                      .chatPageProperties.header?.popupItems!
                                       .call(context,
-                                          controller.conversation!)[value - 6]
-                                      .onTap(controller.conversation!);
+                                          controller.conversation)[value - 6]
+                                      .onTap(controller.conversation);
                                 }
                               }
                             },
@@ -544,7 +547,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     ),
                     IsmChatProperties.chatPageProperties.header?.bottom
-                            ?.call(context, controller.conversation!) ??
+                            ?.call(context, controller.conversation) ??
                         const SizedBox.shrink(),
                   ],
                 ),

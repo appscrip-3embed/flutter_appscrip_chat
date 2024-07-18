@@ -41,18 +41,22 @@ class ReactionGrid extends StatelessWidget {
                     reaction: Reaction(
                       reactionType: IsmChatEmoji.fromEmoji(reaciton),
                       messageId: message.messageId ?? '',
-                      conversationId: _controller.conversation!.conversationId!,
+                      conversationId:
+                          _controller.conversation?.conversationId ?? '',
                     ),
                   );
                 },
                 config: Config(
-                  categoryViewConfig: CategoryViewConfig(
-                      indicatorColor: IsmChatConfig.chatTheme.primaryColor!),
-                  emojiViewConfig: EmojiViewConfig(
-                    emojiSizeMax: IsmChatDimens.twentyFour,
-                    backgroundColor: IsmChatConfig.chatTheme.backgroundColor!,
-                  ),
-                ),
+                    categoryViewConfig: CategoryViewConfig(
+                        indicatorColor: IsmChatConfig.chatTheme.primaryColor ??
+                            IsmChatColors.primaryColorLight),
+                    emojiViewConfig: EmojiViewConfig(
+                      emojiSizeMax: IsmChatDimens.twentyFour,
+                      backgroundColor:
+                          IsmChatConfig.chatTheme.backgroundColor ??
+                              IsmChatConfig.chatTheme.primaryColor ??
+                              IsmChatColors.primaryColorLight,
+                    )),
               );
             },
           ),
