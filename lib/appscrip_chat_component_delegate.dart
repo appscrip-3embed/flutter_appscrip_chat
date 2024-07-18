@@ -289,6 +289,21 @@ class IsmChatDelegate {
     return null;
   }
 
+  Future<void> getMessageOnChatPage({
+    bool isBroadcast = false,
+  }) async {
+    if (Get.isRegistered<IsmChatPageController>()) {
+      final controller = Get.find<IsmChatPageController>();
+      await controller.getMessagesFromAPI(
+        isBroadcast: isBroadcast,
+        conversationId: controller.conversation?.conversationId ?? '',
+        lastMessageTimestamp: controller.messages.isNotEmpty
+            ? controller.messages.last.sentAt
+            : 0,
+      );
+    }
+  }
+
   Future<void> logout() async {
     await IsmChatConfig.dbWrapper?.deleteChatLocalDb();
     await Future.wait([

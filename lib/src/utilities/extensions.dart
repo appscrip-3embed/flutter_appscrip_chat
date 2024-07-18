@@ -116,6 +116,22 @@ extension DurationExtensions on Duration {
     var random = Random();
     return List.generate(number, (i) => (random.nextInt(130) + 30).toDouble());
   }
+
+  String get formatFullDuration {
+    var h = inHours.toString().padLeft(2, '0');
+    var m = (inMinutes % 60).toString().padLeft(2, '0');
+    var s = (inSeconds % 60).toString().padLeft(2, '0');
+    if (h != '00') {
+      h = '$h Hours';
+    }
+    if (m != '00') {
+      m = '$m Mins';
+    }
+    if (s != '00') {
+      s = '$s Secs';
+    }
+    return [h, m, s].where((e) => e != '00').join(' ');
+  }
 }
 
 extension IntToTimeLeft on int {
@@ -518,7 +534,7 @@ extension ModelConversion on IsmChatConversationModel {
       if (!(lastMessageDetails?.sentByMe ?? false)) {
         return const SizedBox.shrink();
       }
-      if (lastMessageDetails!.messageBody.isEmpty) {
+      if (lastMessageDetails?.messageBody.isEmpty == true) {
         return const SizedBox.shrink();
       }
 
@@ -634,13 +650,20 @@ extension LastMessageBody on LastMessageDetails {
         return sentByMe
             ? IsmChatStrings.deletedMessage
             : IsmChatStrings.wasDeletedMessage;
+      case IsmChatCustomMessageType.oneToOneCall:
+        if (action == IsmChatActionEvents.meetingCreated.name) {
+          return '${meetingType == 0 ? 'Voice' : 'Video'} call • In call';
+        } else if (callDurations?.length == 2) {
+          return '${meetingType == 0 ? 'Voice' : 'Video'} call';
+        } else {
+          return 'Missed ${meetingType == 0 ? 'voice' : 'video'} call';
+        }
       case IsmChatCustomMessageType.link:
       case IsmChatCustomMessageType.forward:
       case IsmChatCustomMessageType.date:
       case IsmChatCustomMessageType.text:
       default:
         var isReacted = action == IsmChatActionEvents.reactionAdd.name;
-
         return reactionType?.isNotEmpty == true
             ? sentByMe
                 ? 'You ${isReacted ? 'reacted' : 'removed'} ${reactionType?.reactionString} ${isReacted ? 'to' : 'from'} a message'
@@ -697,6 +720,15 @@ extension LastMessageBody on LastMessageDetails {
         break;
       case IsmChatCustomMessageType.deletedForEveryone:
         iconData = Icons.remove_circle_outline_rounded;
+        break;
+      case IsmChatCustomMessageType.oneToOneCall:
+        iconData = meetingType == 0
+            ? sentByMe
+                ? Icons.call_outlined
+                : Icons.phone_callback_outlined
+            : sentByMe
+                ? Icons.video_call_outlined
+                : Icons.missed_video_call_outlined;
         break;
       case IsmChatCustomMessageType.addAdmin:
       case IsmChatCustomMessageType.removeAdmin:
@@ -849,7 +881,7 @@ extension MentionMessage on IsmChatMessageModel {
         .contains(IsmChatFeature.forward)) {
       menu.remove(IsmChatFocusMenuType.forward);
     }
-    if (Get.find<IsmChatPageController>().isTemporaryChat) {
+    if (Get.find<IsmChatPageController>().isBroadcast) {
       menu.removeWhere((e) => [
             IsmChatFocusMenuType.info,
             IsmChatFocusMenuType.delete,

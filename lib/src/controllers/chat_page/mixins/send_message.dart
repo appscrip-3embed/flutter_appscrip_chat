@@ -22,7 +22,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     List<Map<String, dynamic>>? mentionedUsers,
     String? customType,
     List<Map<String, dynamic>>? attachments,
-    bool isTemporaryChat = false,
+    bool isBroadcast = false,
     bool sendPushNotification = true,
   }) async {
     if (_controller.conversation?.customType != IsmChatStrings.broadcast) {
@@ -45,9 +45,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         notificationTitle: notificationTitle,
         body: body,
         createdAt: createdAt,
-        isTemporaryChat: isTemporaryChat,
+        isBroadcast: isBroadcast,
       );
-      if (isMessageSent && !isTemporaryChat) {
+      if (isMessageSent && !isBroadcast) {
         _controller.didReactedLast = false;
         await _controller.getMessagesFromDB(conversationId);
         if (kIsWeb && Responsive.isWeb(Get.context!)) {
@@ -272,7 +272,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
 
     _controller.messages.add(audioMessage);
 
-    if (!_controller.isTemporaryChat) {
+    if (!_controller.isBroadcast) {
       await IsmChatConfig.dbWrapper!
           .saveMessage(audioMessage, IsmChatDbBox.pending);
 
@@ -412,7 +412,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       _controller.messages.add(documentMessage);
       _controller.isreplying = false;
 
-      if (!_controller.isTemporaryChat) {
+      if (!_controller.isBroadcast) {
         await IsmChatConfig.dbWrapper!
             .saveMessage(documentMessage, IsmChatDbBox.pending);
         if (kIsWeb && Responsive.isWeb(Get.context!)) {
@@ -559,7 +559,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     _controller.messages.add(videoMessage);
     _controller.isreplying = false;
 
-    if (!_controller.isTemporaryChat) {
+    if (!_controller.isBroadcast) {
       await IsmChatConfig.dbWrapper!
           .saveMessage(videoMessage, IsmChatDbBox.pending);
 
@@ -676,7 +676,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     _controller.messages.add(imageMessage);
     _controller.isreplying = false;
 
-    if (!_controller.isTemporaryChat) {
+    if (!_controller.isBroadcast) {
       await IsmChatConfig.dbWrapper!
           .saveMessage(imageMessage, IsmChatDbBox.pending);
 
@@ -711,7 +711,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
-    if (chatConversationResponse == null && !_controller.isTemporaryChat) {
+    if (chatConversationResponse == null && !_controller.isBroadcast) {
       _controller.conversation =
           await _controller.commonController.createConversation(
         conversation: _controller.conversation!,
@@ -768,7 +768,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
 
     _controller.messages.add(imageMessage);
     _controller.isreplying = false;
-    if (!_controller.isTemporaryChat) {
+    if (!_controller.isBroadcast) {
       await IsmChatConfig.dbWrapper!
           .saveMessage(imageMessage, IsmChatDbBox.pending);
 
@@ -793,7 +793,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       attachments: imageMessage.attachments != null
           ? [imageMessage.attachments!.first.toMap().removeNullValues()]
           : null,
-      isTemporaryChat: _controller.isTemporaryChat,
+      isBroadcast: _controller.isBroadcast,
       parentMessageId: imageMessage.parentMessageId,
       sendPushNotification: sendPushNotification,
     );
@@ -862,7 +862,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     _controller.isreplying = false;
     _controller.chatInputController.clear();
 
-    if (!_controller.isTemporaryChat) {
+    if (!_controller.isBroadcast) {
       await IsmChatConfig.dbWrapper!
           .saveMessage(locationMessage, IsmChatDbBox.pending);
 
@@ -888,7 +888,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       attachments: locationMessage.attachments != null
           ? [locationMessage.attachments!.first.toMap().removeNullValues()]
           : null,
-      isTemporaryChat: _controller.isTemporaryChat,
+      isBroadcast: _controller.isBroadcast,
       parentMessageId: locationMessage.parentMessageId,
     );
   }
@@ -951,7 +951,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     _controller.messages.add(contactMessage);
     _controller.isreplying = false;
 
-    if (!_controller.isTemporaryChat) {
+    if (!_controller.isBroadcast) {
       await IsmChatConfig.dbWrapper!
           .saveMessage(contactMessage, IsmChatDbBox.pending);
     }
@@ -970,7 +970,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       messageType: contactMessage.messageType?.value ?? 0,
       notificationBody: IsmChatStrings.sentContact,
       notificationTitle: notificationTitle,
-      isTemporaryChat: _controller.isTemporaryChat,
+      isBroadcast: _controller.isBroadcast,
       parentMessageId: contactMessage.parentMessageId,
     );
   }
@@ -1035,7 +1035,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     _controller.isreplying = false;
     _controller.chatInputController.clear();
     _controller.isMessageSent = false;
-    if (!_controller.isTemporaryChat) {
+    if (!_controller.isBroadcast) {
       await IsmChatConfig.dbWrapper!
           .saveMessage(textMessage, IsmChatDbBox.pending);
       if (kIsWeb && Responsive.isWeb(Get.context!)) {
@@ -1049,7 +1049,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             '';
 
     sendMessage(
-      isTemporaryChat: _controller.isTemporaryChat,
+      isBroadcast: _controller.isBroadcast,
       metaData: textMessage.metaData,
       deviceId: textMessage.deviceId ?? '',
       body: textMessage.body,
@@ -1084,7 +1084,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
   }) async {
     try {
       PresignedUrlModel? presignedUrlModel;
-      if (_controller.isTemporaryChat) {
+      if (_controller.isBroadcast) {
         presignedUrlModel = await _controller.commonController.getPresignedUrl(
           isLoading: isLoading,
           mediaExtension:
@@ -1107,13 +1107,12 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       var thumbnailUrlPath = '';
       if (presignedUrlModel != null) {
         mediaUrlPath = presignedUrlModel.mediaUrl ?? '';
-        mediaId = _controller.isTemporaryChat
-            ? mediaId
-            : presignedUrlModel.mediaId ?? '';
+        mediaId =
+            _controller.isBroadcast ? mediaId : presignedUrlModel.mediaId ?? '';
       }
       if (!(imageAndFile ?? false)) {
         PresignedUrlModel? presignedUrlModel;
-        if (_controller.isTemporaryChat) {
+        if (_controller.isBroadcast) {
           presignedUrlModel =
               await _controller.commonController.getPresignedUrl(
             isLoading: isLoading,
@@ -1134,7 +1133,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         }
 
         if (presignedUrlModel != null) {
-          thumbnailUrlPath = _controller.isTemporaryChat
+          thumbnailUrlPath = _controller.isBroadcast
               ? presignedUrlModel.mediaUrl ?? ''
               : presignedUrlModel.thumbnailUrl ?? '';
         }
@@ -1166,7 +1165,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           attachments: attachment,
           customType: ismChatChatMessageModel.customType?.value,
           metaData: ismChatChatMessageModel.metaData,
-          isTemporaryChat: _controller.isTemporaryChat,
+          isBroadcast: _controller.isBroadcast,
           parentMessageId: ismChatChatMessageModel.parentMessageId,
         );
       }
@@ -1257,7 +1256,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
-    if (chatConversationResponse == null && !_controller.isTemporaryChat) {
+    if (chatConversationResponse == null && !_controller.isBroadcast) {
       _controller.conversation =
           await _controller.commonController.createConversation(
         conversation: _controller.conversation!,
@@ -1315,7 +1314,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     );
     _controller.messages.add(aboutTextMessage);
     _controller.isreplying = false;
-    if (!_controller.isTemporaryChat) {
+    if (!_controller.isBroadcast) {
       await IsmChatConfig.dbWrapper!
           .saveMessage(aboutTextMessage, IsmChatDbBox.pending);
       if (kIsWeb && Responsive.isWeb(Get.context!)) {
@@ -1327,7 +1326,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             conversationController.userDetails?.userName ??
             '';
     sendMessage(
-      isTemporaryChat: _controller.isTemporaryChat,
+      isBroadcast: _controller.isBroadcast,
       metaData: aboutTextMessage.metaData,
       deviceId: aboutTextMessage.deviceId ?? '',
       body: aboutTextMessage.body,
@@ -1365,8 +1364,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       {String? userId}) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
-    if (chatConversationResponse == null &&
-        _controller.isTemporaryChat == false) {
+    if (chatConversationResponse == null && _controller.isBroadcast == false) {
       _controller.conversation =
           await _controller.commonController.createConversation(
         conversation: _controller.conversation!,
@@ -1383,7 +1381,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       conversationId = _controller.conversation?.conversationId ?? '';
       unawaited(
           _controller.getConverstaionDetails(conversationId: conversationId));
-    } else if (_controller.isTemporaryChat && _controller.messages.isEmpty) {
+    } else if (_controller.isBroadcast && _controller.messages.isEmpty) {
       conversationId = await _controller.createBroadcastConversation(
             groupcastImageUrl:
                 'https://png.pngtree.com/element_our/20190528/ourmid/pngtree-speaker-broadcast-icon-image_1144351.jpg',

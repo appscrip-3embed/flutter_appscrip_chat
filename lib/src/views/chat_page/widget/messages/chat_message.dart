@@ -90,9 +90,10 @@ class IsmChatMessageWrapper extends StatelessWidget {
 
       case IsmChatCustomMessageType.observerJoin:
         return IsmChatObserverLeaveAndJoin(message);
-
       case IsmChatCustomMessageType.observerLeave:
         return IsmChatObserverLeaveAndJoin(message, didLeft: true);
+      case IsmChatCustomMessageType.oneToOneCall:
+        return IsmOneToOneCallMessage(message);
     }
   }
 }
@@ -189,6 +190,9 @@ class IsmChatMessageWrapperWithMetaData extends StatelessWidget {
 
       case IsmChatCustomMessageType.observerLeave:
         return IsmChatObserverLeaveAndJoin(message, didLeft: true);
+
+      case IsmChatCustomMessageType.oneToOneCall:
+        return IsmOneToOneCallMessage(message);
     }
   }
 }

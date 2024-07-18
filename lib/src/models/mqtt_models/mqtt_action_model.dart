@@ -49,7 +49,9 @@ class IsmChatMqttActionModel {
             : null,
         sentAt: map['sentAt'] as int? ?? 0,
         lastMessageSentAt: map['lastMessageSentAt'] as int? ?? 0,
-        initiatorId: map['initiatorId'] as String? ?? '',
+        initiatorId: map['createdBy'] != null
+            ? map['createdBy'] as String? ?? ''
+            : map['initiatorId'] as String? ?? '',
         initiatorName: map['initiatorName'] as String? ?? '',
         memberId: map['memberId'] as String? ?? '',
         memberName: map['memberName'] as String? ?? '',
@@ -108,6 +110,7 @@ class IsmChatMqttActionModel {
   final String? body;
   final List<AttachmentModel>? attachments;
   final IsmChatMetaData? metaData;
+
   IsmChatMqttActionModel({
     this.conversationId,
     this.userDetails,

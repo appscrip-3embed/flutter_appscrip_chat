@@ -11,15 +11,15 @@ class IsmChatRouteManagement {
     Get.toNamed(IsmChatPageView.route);
   }
 
-  static void goToBroadcastMessagePage({bool isTemporaryChat = false}) {
+  static void goToBroadcastMessagePage({bool isBroadcast = false}) {
     Get.toNamed(IsmChatBoradcastMessagePage.route, arguments: {
-      'isTemporaryChat': isTemporaryChat,
+      'isBroadcast': isBroadcast,
     });
   }
 
-  static void goToOpenChatMessagePage({bool isTemporaryChat = false}) {
+  static void goToOpenChatMessagePage({bool isBroadcast = false}) {
     Get.toNamed(IsmChatOpenChatMessagePage.route, arguments: {
-      'isTemporaryChat': isTemporaryChat,
+      'isBroadcast': isBroadcast,
     });
   }
 
