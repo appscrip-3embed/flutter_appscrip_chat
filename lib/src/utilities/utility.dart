@@ -62,14 +62,9 @@ class IsmChatUtility {
   /// Returns true if the internet connection is available.
   static Future<bool> get isNetworkAvailable async {
     final connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.mobile) {
-      return true;
-    } else if (connectivityResult == ConnectivityResult.wifi) {
-      return true;
-    } else if (connectivityResult == ConnectivityResult.ethernet) {
-      return true;
-    }
-    return false;
+    return connectivityResult.contains(ConnectivityResult.mobile) ||
+        connectivityResult.contains(ConnectivityResult.wifi) ||
+        connectivityResult.contains(ConnectivityResult.ethernet);
   }
 
   /// common header for All api

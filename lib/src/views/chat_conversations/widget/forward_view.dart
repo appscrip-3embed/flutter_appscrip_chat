@@ -34,7 +34,7 @@ class IsmChatForwardView extends StatelessWidget {
           children: <Widget>[
             Text(
               susTag,
-              textScaleFactor: 1.5,
+              textScaler: const TextScaler.linear(1.5),
               style: IsmChatStyles.w600Black14,
             ),
             SizedBox(

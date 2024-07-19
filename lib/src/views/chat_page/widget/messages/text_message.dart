@@ -58,7 +58,7 @@ class IsmChatTextMessage extends StatelessWidget {
                                   }
                                 },
                               text: e.text,
-                              style: (message.style).copyWith(
+                              style: message.style.copyWith(
                                 color: e.isMentioned
                                     ? message.sentByMe
                                         ? IsmChatConfig.chatTheme.mentionColor

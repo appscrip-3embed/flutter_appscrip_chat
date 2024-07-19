@@ -166,7 +166,6 @@ class IsmChatApp extends StatelessWidget {
     await Get.find<IsmChatConversationsController>().getChatConversations();
   }
 
-
   /// Call this function for unblock user form out side
   static Future<void> unblockUser({
     required String opponentId,
@@ -238,7 +237,7 @@ class IsmChatApp extends StatelessWidget {
     IsmChatConfig.onSnckBarTap = onSnckBarTap;
   }
 
-    /// Call this funcation on to listener for mqtt events
+  /// Call this funcation on to listener for mqtt events
   ///
   /// [IsmChatConfig.configInitilized] this variable must be true
   ///
@@ -267,8 +266,7 @@ class IsmChatApp extends StatelessWidget {
   //   mqttController.actionStreamController.stream.listen(listener);
   // }
 
-
-   /// Call this funcation on to remove listener for mqtt events
+  /// Call this funcation on to remove listener for mqtt events
   ///
   /// [IsmChatConfig.configInitilized] this variable must be true
   ///
@@ -285,8 +283,6 @@ class IsmChatApp extends StatelessWidget {
       mqttController.actionStreamController.stream.listen(listener);
     }
   }
-
-
 
   /// This function can be used to directly go to chatting page and start chatting from anywhere in the app
   ///

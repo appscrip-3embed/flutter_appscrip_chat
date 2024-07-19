@@ -74,11 +74,8 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
   Widget build(BuildContext context) =>
       GetX<IsmChatPageController>(builder: (controller) {
         if (controller.listOfAssetsPath.isNotEmpty) {
-          return WillPopScope(
-            onWillPop: () async {
-              controller.listOfAssetsPath.clear();
-              return true;
-            },
+          return PopScope(
+            onPopInvoked: (_) async => controller.listOfAssetsPath.clear(),
             child: Scaffold(
               appBar: AppBar(
                 title: Text(

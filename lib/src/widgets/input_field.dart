@@ -29,7 +29,7 @@ class IsmChatInputField extends StatelessWidget {
   final TextStyle? style;
   final TextStyle? hintStyle;
   final bool? autofocus;
-  final  Function(String)? onFieldSubmitted;
+  final Function(String)? onFieldSubmitted;
 
   @override
   Widget build(BuildContext context) => Padding(

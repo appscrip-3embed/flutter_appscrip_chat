@@ -248,27 +248,26 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                                   );
                                   if (addresses == null) return;
                                   if (addresses.isEmpty) return;
-                                    IsmChatLog.error(addresses.first);
-                                    controller.sendLocation(
-                                      conversationId: controller
-                                              .conversation?.conversationId ??
-                                          '',
-                                      userId: controller.conversation
-                                              ?.opponentDetails?.userId ??
-                                          '',
-                                      opponentName: controller.conversation
-                                              ?.opponentDetails?.userName ??
-                                          '',
-                                      latitude: latLng!.latitude,
-                                      longitude: latLng!.longitude,
-                                      placeId: '',
-                                      locationName: '${addresses.first.name}',
-                                      locationSubName:
-                                          '${addresses.first.subLocality} ${addresses.first.subAdministrativeArea}',
-                                    );
-                                    IsmChatUtility.closeLoader();
-                                    Get.back<void>();
-                                  
+                                  IsmChatLog.error(addresses.first);
+                                  controller.sendLocation(
+                                    conversationId: controller
+                                            .conversation?.conversationId ??
+                                        '',
+                                    userId: controller.conversation
+                                            ?.opponentDetails?.userId ??
+                                        '',
+                                    opponentName: controller.conversation
+                                            ?.opponentDetails?.userName ??
+                                        '',
+                                    latitude: latLng!.latitude,
+                                    longitude: latLng!.longitude,
+                                    placeId: '',
+                                    locationName: '${addresses.first.name}',
+                                    locationSubName:
+                                        '${addresses.first.subLocality} ${addresses.first.subAdministrativeArea}',
+                                  );
+                                  IsmChatUtility.closeLoader();
+                                  Get.back<void>();
                                 },
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
