@@ -2061,6 +2061,12 @@ class IsmChatPageController extends GetxController
       return IsmChatStrings.location;
     } else if (replayMessage?.customType == IsmChatCustomMessageType.contact) {
       return IsmChatStrings.contact;
+    } else if (replayMessage?.customType ==
+        IsmChatCustomMessageType.oneToOneCall) {
+      return (replayMessage?.callDurations?.length != 1 ||
+              replayMessage?.action == IsmChatActionEvents.meetingCreated.name)
+          ? '${replayMessage?.meetingType == 0 ? 'Voice' : 'Video'} call'
+          : 'Missed ${replayMessage?.meetingType == 0 ? 'voice' : 'video'} call';
     } else {
       return replayMessage?.body ?? '';
     }
