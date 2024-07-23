@@ -366,14 +366,16 @@ class _IsmMaterialChatPageState extends State<IsmMaterialChatPage> {
     if (!Get.isRegistered<IsmChatMqttController>()) {
       IsmChatMqttBinding().dependencies();
     }
-    if (!Get.isRegistered<IsmChatConversationsController>()) {
+    if (!Get.isRegistered<IsmChatCommonController>()) {
       IsmChatCommonBinding().dependencies();
+    }
+    if (!Get.isRegistered<IsmChatConversationsController>()) {
       IsmChatConversationsBinding().dependencies();
     }
-    while (!Get.isRegistered<IsmChatConversationsController>()) {
+    final conversationController = Get.find<IsmChatConversationsController>();
+    while (!conversationController.intilizedContrller) {
       await Future.delayed(const Duration(milliseconds: 500));
     }
-    final conversationController = Get.find<IsmChatConversationsController>();
     conversationController.navigateToMessages(widget.conversation);
   }
 

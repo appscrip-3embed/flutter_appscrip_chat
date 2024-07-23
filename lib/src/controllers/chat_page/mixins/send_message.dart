@@ -1133,7 +1133,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
           _controller.getConverstaionDetails(conversationId: conversationId));
     }
 
-    IsmChatLog.error('step $sentAt');
     var textMessage = IsmChatMessageModel(
       body: _controller.chatInputController.text.trim(),
       conversationId: conversationId,
