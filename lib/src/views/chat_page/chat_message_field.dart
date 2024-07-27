@@ -157,7 +157,7 @@ class IsmChatMessageField extends StatelessWidget {
                                   messageBody: messageBody,
                                 ),
                               Row(
-                                children: [
+                                children: [ 
                                   Expanded(
                                     child: TextFormField(
                                       enableSuggestions: false,

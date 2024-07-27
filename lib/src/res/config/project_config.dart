@@ -1,7 +1,25 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class IsmChatProjectConfig {
+  factory IsmChatProjectConfig.fromMap(Map<String, dynamic> map) =>
+      IsmChatProjectConfig(
+        accountId: map['accountId'] as String,
+        appSecret: map['appSecret'] as String,
+        userSecret: map['userSecret'] as String,
+        keySetId: map['keySetId'] as String,
+        licenseKey: map['licenseKey'] as String,
+        projectId: map['projectId'] as String,
+        deviceId: map['deviceId'] as String,
+        chatApisBaseUrl: map['chatApisBaseUrl'] != null
+            ? map['chatApisBaseUrl'] as String
+            : null,
+        googleApiKey:
+            map['googleApiKey'] != null ? map['googleApiKey'] as String : null,
+        appName: map['appName'] as String,
+      );
+
+  factory IsmChatProjectConfig.fromJson(String source) =>
+      IsmChatProjectConfig.fromMap(json.decode(source) as Map<String, dynamic>);
   const IsmChatProjectConfig({
     required this.accountId,
     required this.appSecret,
@@ -37,26 +55,6 @@ class IsmChatProjectConfig {
         'googleApiKey': googleApiKey,
         'appName': appName,
       };
-
-  factory IsmChatProjectConfig.fromMap(Map<String, dynamic> map) =>
-      IsmChatProjectConfig(
-        accountId: map['accountId'] as String,
-        appSecret: map['appSecret'] as String,
-        userSecret: map['userSecret'] as String,
-        keySetId: map['keySetId'] as String,
-        licenseKey: map['licenseKey'] as String,
-        projectId: map['projectId'] as String,
-        deviceId: map['deviceId'] as String,
-        chatApisBaseUrl: map['chatApisBaseUrl'] != null
-            ? map['chatApisBaseUrl'] as String
-            : null,
-        googleApiKey:
-            map['googleApiKey'] != null ? map['googleApiKey'] as String : null,
-        appName: map['appName'] as String,
-      );
-
-  factory IsmChatProjectConfig.fromJson(String source) =>
-      IsmChatProjectConfig.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() =>

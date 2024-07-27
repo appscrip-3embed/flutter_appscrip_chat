@@ -327,9 +327,11 @@ class IsmChatDelegate {
     );
   }
 
-  Future<bool> deleteChatFormDB(String isometrickChatId) async =>
+  Future<bool> deleteChatFormDB(String isometrickChatId,
+          {String conversationId = ''}) async =>
       await Get.find<IsmChatMqttController>().deleteChatFormDB(
         isometrickChatId,
+        conversationId: conversationId
       );
 
   Future<void> exitGroup(
