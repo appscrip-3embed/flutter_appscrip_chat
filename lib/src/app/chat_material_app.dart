@@ -25,7 +25,7 @@ class IsmChatApp extends StatelessWidget {
     this.conversationModifier,
   }) {
     assert(IsmChatConfig.isInitialized,
-        'ChatHiveBox is not initialized\nYou are getting this error because the Database class is not initialized, to initialize ChatHiveBox class call AppscripChatComponent.initialize() before your runApp()');
+        'ChatHiveBox is not initialized\nYou are getting this error because the Database class is not initialized, to initialize ChatHiveBox class call IsometrikChat.initialize() before your runApp()');
     assert(IsmChatConfig.configInitilized || communicationConfig != null,
         '''communicationConfig of type IsmChatCommunicationConfig must be initialized
     1. Either initialize using IsmChatApp.initializeMqtt() by passing  communicationConfig.

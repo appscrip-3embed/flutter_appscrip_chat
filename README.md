@@ -21,7 +21,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final deviceConfig = Get.put(IsmChatDeviceConfig());
   deviceConfig.init();
-  await AppscripChatComponent.initialize();
+  await IsometrikChat.initialize();
   await LocalNoticeService().setup();
   runApp(MyApp());
 }
@@ -35,7 +35,7 @@ Registers IsmChatDeviceConfig with GetX for dependency injection. This step is c
 `deviceConfig.init()`:
 Initializes the device configuration. This step ensures that all device-specific settings are applied before initializing the chat component.
 
-`await AppscripChatComponent.initialize()`:
+`await IsometrikChat.initialize()`:
 Initializes the Isometrik Flutter Chat SDK. This step sets up the core functionalities needed for the chat system to operate.
 
 `await LocalNoticeService().setup()`:
