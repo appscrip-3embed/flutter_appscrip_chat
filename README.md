@@ -19,25 +19,12 @@ Before using the Isometrik Flutter Chat SDK, you need to ensure the necessary in
 ```dart
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final deviceConfig = Get.put(IsmChatDeviceConfig());
-  deviceConfig.init();
-  await AppscripChatComponent.initialize();
   await LocalNoticeService().setup();
   runApp(MyApp());
 }
 ```
 
 ## Explanation
-
-`Get.put(IsmChatDeviceConfig())`:
-Registers IsmChatDeviceConfig with GetX for dependency injection. This step is crucial to configure device-specific settings needed for the chat functionality.
-
-`deviceConfig.init()`:
-Initializes the device configuration. This step ensures that all device-specific settings are applied before initializing the chat component.
-
-`await AppscripChatComponent.initialize()`:
-Initializes the Isometrik Flutter Chat SDK. This step sets up the core functionalities needed for the chat system to operate.
-
 `await LocalNoticeService().setup()`:
 Sets up the local notification service. This ensures that the app can handle in-app notifications properly.
 
