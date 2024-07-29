@@ -17,7 +17,7 @@ dependencies:
   camera: ^0.11.0
   carousel_slider: ^4.2.1
   connectivity_plus: ^6.0.3
-  device_info_plus: ^10.1.0
+  device_info_plus: ^9.1.2
   dio: ^5.2.1+1
   elegant_notification: ^2.1.2
   emoji_picker_flutter: ^2.0.0
@@ -67,8 +67,6 @@ dependencies:
   video_trimmer: ^3.0.1
   visibility_detector: ^0.4.0+2
 
-dependency_overrides:
-  device_info_plus: ^10.1.0
 
 dev_dependencies:
   flutter_lints: ^4.0.0
