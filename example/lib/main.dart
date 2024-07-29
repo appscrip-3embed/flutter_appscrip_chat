@@ -37,7 +37,7 @@ Future<void> initialize() async {
   await AppConfig.getUserData();
   await Future.wait(
     [
-      IsometrikChat.initialize(),
+      AppscripChatComponent.initialize(),
       LocalNoticeService().setup(),
     ],
   );

@@ -1,6 +1,6 @@
-# Isometrik Flutter Chat SDK
+# Appscrip Flutter Chat SDK
 
-`Isometrik Flutter Chat SDK` is a package to support chat functionality for flutter projects
+`Appscrip Flutter Chat SDK` is a package to support chat functionality for flutter projects
 
 ## Setup
 
@@ -14,14 +14,14 @@ For detailed setup instructions, please refer to the platform-specific guides:
 
 ## Initialization
 
-Before using the Isometrik Flutter Chat SDK, you need to ensure the necessary initializations are done.
+Before using the Appscrip Flutter Chat SDK, you need to ensure the necessary initializations are done.
 
 ```dart
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final deviceConfig = Get.put(IsmChatDeviceConfig());
   deviceConfig.init();
-  await IsometrikChat.initialize();
+  await AppscripChatComponent.initialize();
   await LocalNoticeService().setup();
   runApp(MyApp());
 }
@@ -35,15 +35,15 @@ Registers IsmChatDeviceConfig with GetX for dependency injection. This step is c
 `deviceConfig.init()`:
 Initializes the device configuration. This step ensures that all device-specific settings are applied before initializing the chat component.
 
-`await IsometrikChat.initialize()`:
-Initializes the Isometrik Flutter Chat SDK. This step sets up the core functionalities needed for the chat system to operate.
+`await AppscripChatComponent.initialize()`:
+Initializes the Appscrip Flutter Chat SDK. This step sets up the core functionalities needed for the chat system to operate.
 
 `await LocalNoticeService().setup()`:
 Sets up the local notification service. This ensures that the app can handle in-app notifications properly.
 
 ## Usage
 
-The Isometrik Flutter Chat SDK supports various use cases to enhance your chat functionality:
+The Appscrip Flutter Chat SDK supports various use cases to enhance your chat functionality:
 
 1. Configuration : Set the configuration for account ID, project ID, keyset ID, license key, app secret, user secret, MQTT host, and port.
 2. Attachments and Features: Specify the types of attachments and features you need in the chat.(e.g., image, video, location, contat, voice)

@@ -16,7 +16,7 @@ export 'src/view_models/view_models.dart';
 export 'src/views/views.dart';
 export 'src/widgets/widgets.dart';
 
-class IsometrikChat {
+class AppscripChatComponent {
   Future<String?> getPlatformVersion() =>
       ChatComponentPlatform.instance.getPlatformVersion();
 

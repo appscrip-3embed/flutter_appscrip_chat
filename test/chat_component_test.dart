@@ -19,7 +19,7 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    var chatComponentPlugin = IsometrikChat();
+    var chatComponentPlugin = AppscripChatComponent();
     var fakePlatform = MockChatComponentPlatform();
     ChatComponentPlatform.instance = fakePlatform;
 
