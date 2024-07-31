@@ -134,6 +134,12 @@ class IsmChatPageController extends GetxController
   bool get showSendButton => _showSendButton.value;
   set showSendButton(bool value) => _showSendButton.value = value;
 
+  final RxBool _isRecordPlay = true.obs;
+  bool get isRecordPlay => _isRecordPlay.value;
+  set isRecordPlay(bool value) {
+    _isRecordPlay.value = value;
+  }
+
   final RxBool _isreplying = false.obs;
   bool get isreplying => _isreplying.value;
   set isreplying(bool value) => _isreplying.value = value;
@@ -241,8 +247,6 @@ class IsmChatPageController extends GetxController
   bool get isEnableRecordingAudio => _isEnableRecordingAudio.value;
   set isEnableRecordingAudio(bool value) =>
       _isEnableRecordingAudio.value = value;
-
-  final recordAudio = AudioRecorder();
 
   final RxInt _seconds = 0.obs;
   int get seconds => _seconds.value;
@@ -391,6 +395,8 @@ class IsmChatPageController extends GetxController
     _mediaDownloadProgress.value = value;
   }
 
+  late final AudioRecorder recordVoice;
+
   var _cameras = <CameraDescription>[];
 
   late CameraController _frontCameraController;
@@ -401,7 +407,7 @@ class IsmChatPageController extends GetxController
 
   Timer? conversationDetailsApTimer;
 
-  Timer? forVideoRecordTimer;
+  Timer? forRecordTimer;
 
   List<SelectedForwardUser> groupEligibleUserDuplicate = [];
 
@@ -488,6 +494,7 @@ class IsmChatPageController extends GetxController
   void startInit({
     bool isTemporaryChats = false,
   }) async {
+    recordVoice = AudioRecorder();
     isActionAllowed = false;
     _generateReactionList();
     _startAnimated();
@@ -594,6 +601,7 @@ class IsmChatPageController extends GetxController
       _frontCameraController.dispose();
       _backCameraController.dispose();
     }
+    cameraController.dispose();
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
     searchMessageScrollController.dispose();
@@ -838,10 +846,12 @@ class IsmChatPageController extends GetxController
     Get.back<void>();
     switch (attachmentType) {
       case IsmChatAttachmentType.camera:
-        await initializeCamera();
-        Responsive.isWeb(Get.context!)
-            ? isCameraView = true
-            : IsmChatRouteManagement.goToCameraView();
+        final initialize = await initializeCamera();
+        if (initialize) {
+          Responsive.isWeb(Get.context!)
+              ? isCameraView = true
+              : IsmChatRouteManagement.goToCameraView();
+        }
 
         break;
       case IsmChatAttachmentType.gallery:
@@ -1280,20 +1290,33 @@ class IsmChatPageController extends GetxController
   }
 
   void startTimer() {
-    forVideoRecordTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+    forRecordTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       var seconds = myDuration.inSeconds + 1;
       myDuration = Duration(seconds: seconds);
     });
   }
 
-  Future<void> initializeCamera() async {
+  Future<bool> initializeCamera() async {
     if (areCamerasInitialized && !kIsWeb) {
-      return;
+      return true;
     }
-    _cameras = await availableCameras();
+    try {
+      _cameras = await availableCameras();
+    } on CameraException catch (e) {
+      if (e.code == 'CameraAccessDenied') {
+        await Get.dialog(
+          const IsmChatAlertDialogBox(
+            title: IsmChatStrings.cameraPermissionBlock,
+            cancelLabel: IsmChatStrings.okay,
+          ),
+        );
+      }
+      return false;
+    }
     if (_cameras.isNotEmpty) {
-      await toggleCamera();
+      return await toggleCamera();
     }
+    return true;
   }
 
   Future<void> leaveGroup({
@@ -1479,7 +1502,7 @@ class IsmChatPageController extends GetxController
     }
   }
 
-  Future<void> toggleCamera() async {
+  Future<bool> toggleCamera() async {
     areCamerasInitialized = false;
     if (Responsive.isMobile(Get.context!) && !kIsWeb) {
       isFrontCameraSelected = !isFrontCameraSelected;
@@ -1497,26 +1520,47 @@ class IsmChatPageController extends GetxController
         imageFormatGroup: ImageFormatGroup.jpeg,
       );
     }
-    await cameraController
-        .initialize()
-        .then((e) {})
-        .catchError((Object e) async {
-      if (e is CameraException) {
+
+    try {
+      await cameraController.initialize();
+    } on CameraException catch (e) {
+      if (kIsWeb) {
+        final state = await IsmChatBlob.checkPermission('microphone');
+        if (state == 'denied') {
+          unawaited(Get.dialog(
+            const IsmChatAlertDialogBox(
+              title: IsmChatStrings.micePermissionBlock,
+              cancelLabel: IsmChatStrings.okay,
+            ),
+          ));
+          return false;
+        }
+      } else {
         IsmChatLog.error(
-            'camera permission error ${e.code} == ${e.description}');
+            'Camera permission error ${e.code} == ${e.description}');
         await AppSettings.openAppSettings();
         await checkCameraPermission();
       }
-    });
+    }
     await checkCameraPermission();
+    return true;
   }
 
   Future<void> checkCameraPermission() async {
-    if (await Permission.camera.isGranted &&
-        await Permission.microphone.isGranted) {
-      areCamerasInitialized = true;
+    if (kIsWeb) {
+      final state = await IsmChatBlob.checkPermission('camera');
+      if (state == 'granted') {
+        areCamerasInitialized = true;
+      } else {
+        areCamerasInitialized = false;
+      }
     } else {
-      areCamerasInitialized = false;
+      if (await Permission.camera.isGranted &&
+          await Permission.microphone.isGranted) {
+        areCamerasInitialized = true;
+      } else {
+        areCamerasInitialized = false;
+      }
     }
   }
 
@@ -2060,7 +2104,7 @@ class IsmChatPageController extends GetxController
   }
 
   Future<bool> isEncoderSupported(AudioEncoder encoder) async {
-    final isSupported = await recordAudio.isEncoderSupported(
+    final isSupported = await recordVoice.isEncoderSupported(
       encoder,
     );
 
@@ -2068,11 +2112,32 @@ class IsmChatPageController extends GetxController
       IsmChatLog.success('${encoder.name} is not supported on this platform.');
       IsmChatLog.success('Supported encoders are:');
       for (final e in AudioEncoder.values) {
-        if (await recordAudio.isEncoderSupported(e)) {
+        if (await recordVoice.isEncoderSupported(e)) {
           debugPrint('- ${encoder.name}');
         }
       }
     }
     return isSupported;
+  }
+
+  void recordDelete() {
+    isEnableRecordingAudio = false;
+    showSendButton = false;
+    forRecordTimer?.cancel();
+    seconds = 0;
+  }
+
+  Future<void> recordPlayPauseVoice() async {
+    if (await recordVoice.isPaused()) {
+      await recordVoice.resume();
+      isRecordPlay = true;
+      forRecordTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+        seconds++;
+      });
+    } else {
+      await recordVoice.pause();
+      isRecordPlay = false;
+      forRecordTimer?.cancel();
+    }
   }
 }

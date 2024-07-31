@@ -43,7 +43,6 @@ class WebMediaPreview extends StatelessWidget {
                           controller.isVideoVisible = false;
                           controller.isCameraView = false;
                           Get.back<void>();
-
                           await controller.initializeCamera();
                           controller.isCameraView = true;
                         },
