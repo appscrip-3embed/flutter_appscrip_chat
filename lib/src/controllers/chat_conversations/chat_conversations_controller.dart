@@ -436,6 +436,7 @@ class IsmChatConversationsController extends GetxController {
       case IsRenderConversationScreen.blockView:
         return const IsmChatBlockedUsersView();
       case IsRenderConversationScreen.broadCastListView:
+        IsmChatBroadcastBinding().dependencies();
         return const IsmChatBroadCastView();
       case IsRenderConversationScreen.groupUserView:
         return IsmChatCreateConversationView(
@@ -451,6 +452,8 @@ class IsmChatConversationsController extends GetxController {
         return const IsmChatOpenConversationView();
       case IsRenderConversationScreen.publicConverationView:
         return const IsmChatPublicConversationView();
+      // case IsRenderConversationScreen.editbroadCast:
+      //   return IsmChatEditBroadcastView();
     }
   }
 

@@ -57,8 +57,8 @@ class IsmChatMessageField extends StatelessWidget {
                           },
                           child: Icon(
                             controller.isRecordPlay
-                                ? Icons.play_circle_outline_outlined
-                                : Icons.pause_circle_outline_outlined,
+                                ? Icons.pause_circle_outline_outlined
+                                : Icons.play_circle_outline_outlined,
                             size: IsmChatDimens.thirty,
                             color: IsmChatConfig.chatTheme.primaryColor ??
                                 IsmChatColors.blackColor,

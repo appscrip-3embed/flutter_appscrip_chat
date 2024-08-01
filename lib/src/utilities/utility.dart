@@ -27,7 +27,6 @@ class IsmChatUtility {
     FocusScope.of(Get.context!).unfocus();
   }
 
-
   /// Method for Do Work After Frame Call Back
   static void doLater(VoidCallback? work) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -182,7 +181,8 @@ class IsmChatUtility {
       'licenseKey': IsmChatConfig.communicationConfig.projectConfig.licenseKey,
       'appSecret': IsmChatConfig.communicationConfig.projectConfig.appSecret,
       'userToken': IsmChatConfig.communicationConfig.userConfig.userToken,
-      'Authorization': IsmChatConfig.communicationConfig.userConfig.accessToken ?? ''
+      'Authorization':
+          IsmChatConfig.communicationConfig.userConfig.accessToken ?? ''
     };
     if (isDefaultContentType == true) {
       header.addAll({
@@ -218,15 +218,22 @@ class IsmChatUtility {
     );
   }
 
-  static Future<List<XFile?>> pickMedia(ImageSource source, {bool isVideoAndImage = false}) async {
+  static Future<List<XFile?>> pickMedia(ImageSource source,
+      {bool isVideoAndImage = false}) async {
     List<XFile?> result;
+
     if (isVideoAndImage) {
       result = await ImagePicker().pickMultipleMedia(
         imageQuality: 25,
         requestFullMetadata: true,
       );
     } else {
-      result = [await ImagePicker().pickImage(imageQuality: 25, source: source)];
+      result = [
+        await ImagePicker().pickImage(
+          imageQuality: 25,
+          source: source,
+        )
+      ];
     }
 
     if (result.isEmpty) {
@@ -261,7 +268,17 @@ class IsmChatUtility {
   static String formatBytes(int size, [int fractionDigits = 2]) {
     if (size <= 0) return '0 B';
     final multiple = (log(size) / log(1024)).floor();
-    return '${(size / pow(1024, multiple)).toStringAsFixed(fractionDigits)} ${['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][multiple]}';
+    return '${(size / pow(1024, multiple)).toStringAsFixed(fractionDigits)} ${[
+      'B',
+      'KB',
+      'MB',
+      'GB',
+      'TB',
+      'PB',
+      'EB',
+      'ZB',
+      'YB'
+    ][multiple]}';
   }
 
   /// Returns data size representation of a provided file
@@ -270,7 +287,8 @@ class IsmChatUtility {
     try {
       bytes = file.readAsBytesSync();
     } catch (_) {
-      bytes = Uint8List.fromList(await File.fromUri(Uri.parse(file.path)).readAsBytes());
+      bytes = Uint8List.fromList(
+          await File.fromUri(Uri.parse(file.path)).readAsBytes());
     }
     var dataSize = IsmChatUtility.formatBytes(
       int.parse(bytes.length.toString()),
@@ -296,7 +314,8 @@ class IsmChatUtility {
     }
   }
 
-  static Future<File> makeDirectoryWithUrl({required String urlPath, required String fileName}) async {
+  static Future<File> makeDirectoryWithUrl(
+      {required String urlPath, required String fileName}) async {
     File? file;
     String? path;
 
@@ -304,14 +323,16 @@ class IsmChatUtility {
       final url = Uri.parse(urlPath);
       final response = await http.get(url);
       final bytes = response.bodyBytes;
-      final documentsDir = (await path_provider.getApplicationDocumentsDirectory()).path;
+      final documentsDir =
+          (await path_provider.getApplicationDocumentsDirectory()).path;
       path = '$documentsDir/$fileName';
       if (!File(path).existsSync()) {
         file = File(path);
         await file.writeAsBytes(bytes);
       }
     } else {
-      final documentsDir = (await path_provider.getApplicationDocumentsDirectory()).path;
+      final documentsDir =
+          (await path_provider.getApplicationDocumentsDirectory()).path;
       path = '$documentsDir/$fileName';
       if (!File(path).existsSync()) {
         file = File(path);
@@ -343,7 +364,9 @@ class IsmChatUtility {
     return false;
   }
 
-  static Widget circularProgressBar([Color? backgroundColor, Color? animatedColor, double? value]) => DecoratedBox(
+  static Widget circularProgressBar(
+          [Color? backgroundColor, Color? animatedColor, double? value]) =>
+      DecoratedBox(
         decoration: BoxDecoration(
           color: backgroundColor?.withOpacity(.5),
           borderRadius: BorderRadius.circular(15),
@@ -542,7 +565,7 @@ class IsmChatUtility {
     // }
   }
 
- static  Widget buildSusWidget(String susTag) => Container(
+  static Widget buildSusWidget(String susTag) => Container(
         padding: IsmChatDimens.edgeInsets10_0,
         height: IsmChatDimens.forty,
         width: double.infinity,

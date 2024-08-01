@@ -682,6 +682,8 @@ enum IsRenderConversationScreen {
   broadcastView,
   openConverationView,
   publicConverationView,
+  // editbroadCast,
+  // broadCastEligible,
 }
 
 enum IsRenderChatPageScreen {
