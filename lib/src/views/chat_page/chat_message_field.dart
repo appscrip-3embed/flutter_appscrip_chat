@@ -40,19 +40,31 @@ class IsmChatMessageField extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         IsmChatTapHandler(
-                          onTap: () async {
-                            controller.isEnableRecordingAudio = false;
-                            controller.showSendButton = false;
-                            // await controller.recordAudio.dispose();
-                            controller.forVideoRecordTimer?.cancel();
-                            controller.seconds = 0;
+                          onTap: () {
+                            controller.recordDelete();
                           },
                           child: Icon(
                             Icons.delete_outlined,
-                            size: IsmChatDimens.twentyFive,
+                            size: IsmChatDimens.thirty,
+                            color: IsmChatConfig.chatTheme.primaryColor ??
+                                IsmChatColors.blackColor,
                           ),
                         ),
-                        IsmChatDimens.boxWidth8,
+                        IsmChatDimens.boxWidth12,
+                        IsmChatTapHandler(
+                          onTap: () async {
+                            await controller.recordPlayPauseVoice();
+                          },
+                          child: Icon(
+                            controller.isRecordPlay
+                                ? Icons.play_circle_outline_outlined
+                                : Icons.pause_circle_outline_outlined,
+                            size: IsmChatDimens.thirty,
+                            color: IsmChatConfig.chatTheme.primaryColor ??
+                                IsmChatColors.blackColor,
+                          ),
+                        ),
+                        IsmChatDimens.boxWidth12,
                         const Icon(
                           Icons.radio_button_checked_outlined,
                           color: Colors.red,
@@ -157,7 +169,7 @@ class IsmChatMessageField extends StatelessWidget {
                                   messageBody: messageBody,
                                 ),
                               Row(
-                                children: [ 
+                                children: [
                                   Expanded(
                                     child: TextFormField(
                                       enableSuggestions: false,
@@ -383,8 +395,8 @@ class _MicOrSendButton extends StatelessWidget {
 
               if (controller.showSendButton) {
                 if (controller.isEnableRecordingAudio) {
-                  var audioPath = await controller.recordAudio.stop() ?? '';
-                  controller.forVideoRecordTimer?.cancel();
+                  var audioPath = await controller.recordVoice.stop() ?? '';
+                  controller.forRecordTimer?.cancel();
                   controller.showSendButton = false;
                   controller.isEnableRecordingAudio = false;
                   String? sizeMedia;
@@ -485,7 +497,7 @@ class _MicOrSendButton extends StatelessWidget {
                         cancelLabel: IsmChatStrings.okay,
                       ),
                     ));
-                    await controller.recordAudio.hasPermission();
+                    await controller.recordVoice.hasPermission();
                     return;
                   } else if (state == 'denied') {
                     await Get.dialog(
@@ -498,7 +510,7 @@ class _MicOrSendButton extends StatelessWidget {
                     allowPermission = true;
                   }
                 } else {
-                  if (await controller.recordAudio.hasPermission()) {
+                  if (await controller.recordVoice.hasPermission()) {
                     allowPermission = true;
                   }
                 }
@@ -511,7 +523,7 @@ class _MicOrSendButton extends StatelessWidget {
                               .communicationConfig.userConfig.userId)) {
                     controller.isEnableRecordingAudio = true;
                     controller.showSendButton = true;
-                    controller.forVideoRecordTimer =
+                    controller.forRecordTimer =
                         Timer.periodic(const Duration(seconds: 1), (_) {
                       controller.seconds++;
                     });
@@ -533,16 +545,16 @@ class _MicOrSendButton extends StatelessWidget {
                         return;
                       }
                       final devs =
-                          await controller.recordAudio.listInputDevices();
+                          await controller.recordVoice.listInputDevices();
                       IsmChatLog.info(devs.toString());
                       const config =
                           RecordConfig(encoder: encoder, numChannels: 1);
-                      await controller.recordAudio.start(
+                      await controller.recordVoice.start(
                         config,
                         path: audioPath,
                       );
                     } else {
-                      await controller.recordAudio.start(
+                      await controller.recordVoice.start(
                         const RecordConfig(encoder: AudioEncoder.wav),
                         path: audioPath,
                       );

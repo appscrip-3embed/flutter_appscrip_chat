@@ -83,6 +83,8 @@ class IsmChatStrings {
       'Please provide microphone access in order to send audio.';
   static const String micePermissionBlock =
       'The browser has disabled microphone access; please allow it to send audio.';
+  static const String cameraPermissionBlock =
+      'The browser has disabled camera access; please allow it to send photo and video.';
   static const String block = 'Block';
 
   static const String unblock = 'Unblock';
