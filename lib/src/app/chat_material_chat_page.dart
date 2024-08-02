@@ -4,6 +4,7 @@ import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mqtt_helper/mqtt_helper.dart';
 
 class IsmMaterialChatPage extends StatefulWidget {
   IsmMaterialChatPage({
@@ -152,7 +153,7 @@ class IsmMaterialChatPage extends StatefulWidget {
   /// [IsmChatConfig.configInitilized] this variable must be true
   /// You can call this funcation after MQTT controller intilized
   static Future<void> listenMqttEventFromOutSide({
-    required Map<String, dynamic> payload,
+    required EventModel event,
     void Function(
       String,
       String,
@@ -165,7 +166,7 @@ class IsmMaterialChatPage extends StatefulWidget {
     if (Get.isRegistered<IsmChatMqttController>()) {
       IsmChatConfig.showNotification = showNotification;
       await Get.find<IsmChatMqttController>().onMqttEvent(
-        payload: payload,
+        event: event,
       );
     }
   }
@@ -328,13 +329,30 @@ class IsmMaterialChatPage extends StatefulWidget {
   /// [IsmChatConfig.configInitilized] this variable must be true
   ///
   /// You can call this funcation after initialize mqtt [initializeMqtt] funcation
-  static StreamSubscription<Map<String, dynamic>> addListener(
-      Function(Map<String, dynamic>) listener) {
+  static StreamSubscription<EventModel> addEventListener(
+      Function(EventModel) listener) {
     assert(IsmChatConfig.configInitilized,
         '''MQTT Controller must be initialized before adding listener.
     Either call IsmChatApp.initializeMqtt() or add listener after IsmChatApp is called''');
     var mqttController = Get.find<IsmChatMqttController>();
-    return mqttController.actionStreamController.stream.listen(listener);
+    return mqttController.eventStreamController.stream.listen(listener);
+  }
+
+  /// Call this funcation on to remove listener for mqtt events
+  ///
+  /// [IsmChatConfig.configInitilized] this variable must be true
+  ///
+  /// You can call this funcation after initialize mqtt [initializeMqtt] funcation
+  static Future<void> removeEventListener(Function(EventModel) listener) async {
+    assert(IsmChatConfig.configInitilized,
+        '''MQTT Controller must be initialized before adding listener.
+    Either call IsmChatApp.initializeMqtt() or add listener after IsmChatApp is called''');
+    var mqttController = Get.find<IsmChatMqttController>();
+    mqttController.eventListeners.remove(listener);
+    await mqttController.eventStreamController.stream.drain();
+    for (var listener in mqttController.eventListeners) {
+      mqttController.eventStreamController.stream.listen(listener);
+    }
   }
 
   /// This variable use for store conversation unread count value

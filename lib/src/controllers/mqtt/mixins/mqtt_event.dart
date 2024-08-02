@@ -6,16 +6,16 @@ import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mqtt_helper/mqtt_helper.dart';
 
 mixin IsmChatMqttEventMixin {
   IsmChatMqttController get _controller => Get.find<IsmChatMqttController>();
 
   String messageId = '';
 
-  var actionStreamController =
-      StreamController<Map<String, dynamic>>.broadcast();
+  var eventStreamController = StreamController<EventModel>.broadcast();
 
-  var actionListeners = <Function(Map<String, dynamic>)>[];
+  var eventListeners = <Function(EventModel)>[];
 
   final RxList<IsmChatTypingModel> _typingUsers = <IsmChatTypingModel>[].obs;
   List<IsmChatTypingModel> get typingUsers => _typingUsers;
@@ -25,7 +25,9 @@ mixin IsmChatMqttEventMixin {
   bool get isAppInBackground => _isAppBackground.value;
   set isAppInBackground(bool value) => _isAppBackground.value = value;
 
-  Future<void> onMqttEvent({required Map<String, dynamic> payload}) async {
+  Future<void> onMqttEvent({required EventModel event}) async {
+    _controller.eventStreamController.add(event);
+    final payload = event.payload;
     if (payload['action'] != null) {
       var action = payload['action'];
       if (IsmChatActionEvents.values
@@ -34,7 +36,6 @@ mixin IsmChatMqttEventMixin {
         var actionModel = IsmChatMqttActionModel.fromMap(payload);
         await _handleAction(actionModel);
       }
-      _controller.actionStreamController.add(payload);
     } else {
       var message = IsmChatMessageModel.fromMap(payload);
       _handleLocalNotification(message);
