@@ -13,11 +13,6 @@ mixin IsmChatMqttEventMixin {
 
   String messageId = '';
 
-  var actionStreamController =
-      StreamController<Map<String, dynamic>>.broadcast();
-
-  var actionListeners = <Function(Map<String, dynamic>)>[];
-
   var eventStreamController = StreamController<EventModel>.broadcast();
 
   var eventListeners = <Function(EventModel)>[];
@@ -29,10 +24,6 @@ mixin IsmChatMqttEventMixin {
   final RxBool _isAppBackground = false.obs;
   bool get isAppInBackground => _isAppBackground.value;
   set isAppInBackground(bool value) => _isAppBackground.value = value;
-
-  Future<void> onMqttData({required Map<String, dynamic> data}) async {
-    _controller.actionStreamController.add(data);
-  }
 
   Future<void> onMqttEvent({required EventModel event}) async {
     _controller.eventStreamController.add(event);

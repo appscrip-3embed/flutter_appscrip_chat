@@ -53,33 +53,14 @@ class IsmChatDelegate {
   }
 
   Future<void> listenMqttEvent({
-    required Map<String, dynamic> data,
+    required EventModel event,
     NotificaitonCallback? showNotification,
   }) async {
     if (Get.isRegistered<IsmChatMqttController>()) {
       IsmChatConfig.showNotification = showNotification;
-      await Get.find<IsmChatMqttController>().onMqttData(
-        data: data,
+      await Get.find<IsmChatMqttController>().onMqttEvent(
+        event: event,
       );
-    }
-  }
-
-  StreamSubscription<Map<String, dynamic>> addListener(
-      Function(Map<String, dynamic>) listener) {
-    if (!Get.isRegistered<IsmChatMqttController>()) {
-      IsmChatMqttBinding().dependencies();
-    }
-    var mqttController = Get.find<IsmChatMqttController>();
-    mqttController.actionListeners.add(listener);
-    return mqttController.actionStreamController.stream.listen(listener);
-  }
-
-  Future<void> removeListener(Function(Map<String, dynamic>) listener) async {
-    var mqttController = Get.find<IsmChatMqttController>();
-    mqttController.actionListeners.remove(listener);
-    await mqttController.actionStreamController.stream.drain();
-    for (var listener in mqttController.actionListeners) {
-      mqttController.actionStreamController.stream.listen(listener);
     }
   }
 
@@ -329,10 +310,8 @@ class IsmChatDelegate {
 
   Future<bool> deleteChatFormDB(String isometrickChatId,
           {String conversationId = ''}) async =>
-      await Get.find<IsmChatMqttController>().deleteChatFormDB(
-        isometrickChatId,
-        conversationId: conversationId
-      );
+      await Get.find<IsmChatMqttController>()
+          .deleteChatFormDB(isometrickChatId, conversationId: conversationId);
 
   Future<void> exitGroup(
       {required int adminCount, required bool isUserAdmin}) async {

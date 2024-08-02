@@ -100,59 +100,16 @@ class IsmChat {
   ///
   /// Throws an [AssertionError] if the MQTT controller has not been initialized.
   Future<void> listenMqttEvent({
-    required Map<String, dynamic> data,
+    required EventModel event,
     NotificaitonCallback? showNotification,
   }) async {
     assert(_initialized,
         '''MQTT Controller must be initialized before adding listener.
     Either call IsmChat.initialize() or add listener after IsmChatApp is called''');
     await _delegate.listenMqttEvent(
-        data: data, showNotification: showNotification);
-  }
-
-  /// Adds a listener for MQTT events.
-  ///
-  /// This function must be called after initializing the MQTT controller using
-  /// [initialize]. The listener will be called with a [Map<String, dynamic>] object
-  /// containing the event data.
-  ///
-  /// Example:
-  /// ```dart
-  /// StreamSubscription<Map<String, dynamic>> subscription = addListener((event) {
-  ///   print('Received MQTT event: $event');
-  /// });
-  ///
-  StreamSubscription<Map<String, dynamic>> addListener(
-      Function(Map<String, dynamic>) listener) {
-    assert(_initialized,
-        '''MQTT Controller must be initialized before adding listener.
-    Either call IsmChat.initialize() or add listener after IsmChat is called''');
-    return _delegate.addListener(listener);
-  }
-
-  /// Removes a listener for MQTT events.
-  ///
-  /// This function must be called after initializing the MQTT controller using
-  /// [initialize]. The listener to be removed must be the same instance that was
-  /// added using [addListener].
-  ///
-  /// Example:
-  /// ```dart
-  /// void myListener(Map<String, dynamic> event) {
-  ///   print('Received MQTT event: $event');
-  /// }
-  ///
-  /// // Add the listener
-  /// StreamSubscription<Map<String, dynamic>> subscription = addListener(myListener);
-  ///
-  /// // Remove the listener
-  /// await removeListener(myListener);
-  /// `
-  Future<void> removeListener(Function(Map<String, dynamic>) listener) async {
-    assert(_initialized,
-        '''MQTT Controller must be initialized before adding listener.
-    Either call IsmChat.initialize() or add listener after IsmChat is called''');
-    await _delegate.removeListener(listener);
+      event: event,
+      showNotification: showNotification,
+    );
   }
 
   /// Adds a listener for MQTT events with a specific event model.
