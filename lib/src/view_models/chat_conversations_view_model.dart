@@ -308,11 +308,11 @@ class IsmChatConversationsViewModel {
         IsmChatActionEvents.userBlockConversation.name,
         IsmChatActionEvents.observerJoin.name,
         IsmChatActionEvents.observerLeave.name,
-        // if (e.memberId !=
-        //     IsmChatConfig.communicationConfig.userConfig.userId) ...[
         IsmChatActionEvents.removeAdmin.name,
         IsmChatActionEvents.addAdmin.name,
-        // ]
+        IsmChatActionEvents.meetingCreated.name,
+        IsmChatActionEvents.meetingEndedByHost.name,
+        IsmChatActionEvents.meetingEndedDueToRejectionByAll.name,
       ].contains(e.action),
     );
     return messages;
