@@ -600,8 +600,9 @@ class IsmChatPageController extends GetxController
     if (areCamerasInitialized) {
       _frontCameraController.dispose();
       _backCameraController.dispose();
+      cameraController.dispose();
     }
-    cameraController.dispose();
+
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
     searchMessageScrollController.dispose();
