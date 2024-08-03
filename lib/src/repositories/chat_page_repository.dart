@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class IsmChatPageRepository {

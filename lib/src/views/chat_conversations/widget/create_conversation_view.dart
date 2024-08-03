@@ -1,12 +1,11 @@
 import 'dart:async';
 
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 
 class IsmChatCreateConversationView extends StatelessWidget {
   IsmChatCreateConversationView(
@@ -559,7 +558,7 @@ class _GroupChatImageAndName extends StatelessWidget {
                   right: IsmChatDimens.four,
                   child: IsmChatTapHandler(
                     onTap: () {
-                      if (Responsive.isWeb(context)) {
+                      if (IsmChatResponsive.isWeb(context)) {
                         controller.ismUploadImage(ImageSource.gallery);
                       } else {
                         Get.bottomSheet<void>(

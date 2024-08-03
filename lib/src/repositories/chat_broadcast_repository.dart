@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 
 class IsmChatBroadcastRepository {
   final _apiWrapper = IsmChatApiWrapper();
@@ -181,7 +181,7 @@ class IsmChatBroadcastRepository {
   Future<IsmChatResponseModel?> addEligibleMembers({
     required String groupcastId,
     bool isloading = false,
-    required List<Map<String,dynamic>> members,
+    required List<Map<String, dynamic>> members,
   }) async {
     try {
       final payload = {

@@ -1,11 +1,10 @@
 import 'dart:async';
 
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 import 'package:mqtt_helper/mqtt_helper.dart';
 
 mixin IsmChatMqttEventMixin {
@@ -178,7 +177,7 @@ mixin IsmChatMqttEventMixin {
 
     // To handle and show last message & unread count in conversation list
     conversation = conversation.copyWith(
-      unreadMessagesCount: Responsive.isWeb(Get.context!) &&
+      unreadMessagesCount: IsmChatResponsive.isWeb(Get.context!) &&
               (Get.isRegistered<IsmChatPageController>() &&
                   Get.find<IsmChatPageController>()
                           .conversation
@@ -279,7 +278,7 @@ mixin IsmChatMqttEventMixin {
 
     // To handle and show last message & unread count in conversation list
     conversation = conversation.copyWith(
-      unreadMessagesCount: Responsive.isWeb(Get.context!) &&
+      unreadMessagesCount: IsmChatResponsive.isWeb(Get.context!) &&
               (Get.isRegistered<IsmChatPageController>() &&
                   Get.find<IsmChatPageController>()
                           .conversation
@@ -386,7 +385,7 @@ mixin IsmChatMqttEventMixin {
         '${message.senderInfo?.metaData?.firstName ?? ''} ${message.senderInfo?.metaData?.lastName ?? ''}'
             .trim();
 
-    if (!Responsive.isWeb(Get.context!)) {
+    if (!IsmChatResponsive.isWeb(Get.context!)) {
       if (isAppInBackground) {
         showPushNotification(
             title: notificationTitle.isNotEmpty

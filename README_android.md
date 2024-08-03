@@ -1,4 +1,4 @@
-# Appscrip Chat Component
+# Isometrik Flutter Chat SDK
 
 ## Android
 

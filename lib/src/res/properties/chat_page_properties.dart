@@ -1,4 +1,4 @@
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 import 'package:flutter/material.dart';
 
 class IsmChatPageProperties {
@@ -109,7 +109,6 @@ class IsmChatPageProperties {
   /// Primarily designed for check messgae info
   ///
   final IsmChatPageMessageAcknowldgeProperties? messageInfoAcknowldge;
-
 
   final Future<bool?>? Function(BuildContext, IsmChatConversationModel)?
       isSendMediaAllowed;

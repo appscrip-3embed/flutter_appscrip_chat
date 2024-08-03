@@ -1,9 +1,9 @@
-import 'package:appscrip_chat_component/src/controllers/chat_page/chat_page_controller.dart';
-import 'package:appscrip_chat_component/src/res/res.dart';
-import 'package:appscrip_chat_component/src/utilities/utilities.dart';
-import 'package:appscrip_chat_component/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:isometrik_flutter_chat/src/controllers/chat_page/chat_page_controller.dart';
+import 'package:isometrik_flutter_chat/src/res/res.dart';
+import 'package:isometrik_flutter_chat/src/utilities/utilities.dart';
+import 'package:isometrik_flutter_chat/src/widgets/widgets.dart';
 
 class MentionUserList extends StatelessWidget {
   const MentionUserList({super.key});
@@ -24,7 +24,7 @@ class MentionUserList extends StatelessWidget {
               // ? IsmChatDimens.percentHeight(0.08)
               : controller.mentionSuggestions.take(4).length *
                   IsmChatDimens.percentHeight(0.07),
-          width: Responsive.isWeb(context)
+          width: IsmChatResponsive.isWeb(context)
               ? IsmChatDimens.percentWidth(.4)
               : IsmChatDimens.percentWidth(.8),
           child: controller.mentionSuggestions.isEmpty

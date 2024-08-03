@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +8,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 
 extension ScaffoldExtenstion on Scaffold {
   Widget withUnfocusGestureDetctor(BuildContext context) => GestureDetector(
@@ -1038,7 +1037,7 @@ extension Conversation on IsmChatConversationType {
       case IsmChatConversationType.private:
         break;
       case IsmChatConversationType.public:
-        if (Responsive.isWeb(Get.context!)) {
+        if (IsmChatResponsive.isWeb(Get.context!)) {
           controller.isRenderScreen =
               IsRenderConversationScreen.publicConverationView;
           Scaffold.of(controller.isDrawerContext!).openDrawer();
@@ -1048,7 +1047,7 @@ extension Conversation on IsmChatConversationType {
 
         break;
       case IsmChatConversationType.open:
-        if (Responsive.isWeb(Get.context!)) {
+        if (IsmChatResponsive.isWeb(Get.context!)) {
           controller.isRenderScreen =
               IsRenderConversationScreen.openConverationView;
           Scaffold.of(controller.isDrawerContext!).openDrawer();

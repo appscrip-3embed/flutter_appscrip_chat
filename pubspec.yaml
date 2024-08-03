@@ -1,4 +1,4 @@
-name: appscrip_chat_component
+name: isometrik_flutter_chat
 description: A new Flutter plugin project.
 version: 1.0.0
 publish_to: none
@@ -92,13 +92,13 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.example.appscrip_chat_component
-        pluginClass: ChatComponentPlugin
+        package: com.example.isometrik_flutter_chat
+        pluginClass: IsometrikFlutterChatPlugin
       ios:
-        pluginClass: ChatComponentPlugin
+        pluginClass: IsometrikFlutterChatPlugin
       web:
         pluginClass: ChatComponentWeb
-        fileName: appscrip_chat_component_web.dart
+        fileName: isometrik_flutter_chat_web.dart
 
   # To add assets to your plugin package, add an assets section, like this:
   uses-material-design: true

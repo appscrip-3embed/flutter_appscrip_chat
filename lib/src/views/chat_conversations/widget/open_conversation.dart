@@ -1,7 +1,6 @@
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 
 class IsmChatOpenConversationView extends StatefulWidget {
   const IsmChatOpenConversationView({super.key});
@@ -114,7 +113,7 @@ class _IsmChatOpenConversationViewState
                                     .onChatTap!(Get.context!, data);
                                 controller.navigateToMessages(data);
 
-                                if (Responsive.isWeb(Get.context!)) {
+                                if (IsmChatResponsive.isWeb(Get.context!)) {
                                   Get.back();
 
                                   if (!Get.isRegistered<

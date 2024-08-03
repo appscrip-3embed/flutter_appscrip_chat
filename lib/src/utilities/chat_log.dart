@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:appscrip_chat_component/src/res/strings.dart';
+import 'package:isometrik_flutter_chat/src/res/strings.dart';
 import 'package:flutter/foundation.dart';
 
 class IsmChatLog {

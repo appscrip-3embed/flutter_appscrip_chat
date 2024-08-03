@@ -1,8 +1,8 @@
 class IsmChatStrings {
   const IsmChatStrings._();
 
-  static const String name = 'Appscrip Chat Component';
-  static const String dbname = 'appscrip_chat_component';
+  static const String name = 'Isometrik Flutter Chat';
+  static const String dbname = 'isometrik_flutter_chat';
   static const String userData = 'userData';
   static const String user = 'user';
 

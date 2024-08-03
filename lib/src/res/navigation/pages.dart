@@ -1,5 +1,5 @@
-import 'package:appscrip_chat_component/src/controllers/controllers.dart';
-import 'package:appscrip_chat_component/src/views/views.dart';
+import 'package:isometrik_flutter_chat/src/controllers/controllers.dart';
+import 'package:isometrik_flutter_chat/src/views/views.dart';
 import 'package:get/get.dart';
 
 class IsmChatPages {
@@ -64,18 +64,16 @@ class IsmChatPages {
       page: IsmChatBroadCastView.new,
       binding: IsmChatBroadcastBinding(),
     ),
-     GetPage(
+    GetPage(
       name: IsmChatEditBroadcastView.route,
       page: IsmChatEditBroadcastView.new,
       binding: IsmChatBroadcastBinding(),
     ),
-     GetPage(
+    GetPage(
       name: IsmChatEligibleMembersView.route,
       page: IsmChatEligibleMembersView.new,
       binding: IsmChatBroadcastBinding(),
     ),
-
-    
     GetPage(
       name: IsmChatUserSearchView.route,
       page: IsmChatUserSearchView.new,

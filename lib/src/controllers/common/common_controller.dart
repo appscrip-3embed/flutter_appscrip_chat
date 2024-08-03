@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 

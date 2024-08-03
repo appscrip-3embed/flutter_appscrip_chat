@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 import 'package:chat_component_example/data/network/network.dart';
 import 'package:chat_component_example/main.dart';
 import 'package:chat_component_example/models/models.dart';

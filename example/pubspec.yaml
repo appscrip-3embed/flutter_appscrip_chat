@@ -1,5 +1,5 @@
 name: chat_component_example
-description: Demonstrates how to use the appscrip_chat_component plugin.
+description: Demonstrates how to use the isometrik_flutter_chat plugin.
 version: 1.0.1
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -17,9 +17,9 @@ environment:
 dependencies:
   app_settings: ^5.1.1
 
-  appscrip_chat_component:
+  isometrik_flutter_chat:
     # When depending on this package from a real application you should use:
-    #   appscrip_chat_component: ^x.y.z
+    #   isometrik_flutter_chat: ^x.y.z
     # See https://dart.dev/tools/pub/dependencies#version-constraints
     # The example app is bundled with the plugin so we use a path dependency on
     # the parent directory to use the current plugin's version.

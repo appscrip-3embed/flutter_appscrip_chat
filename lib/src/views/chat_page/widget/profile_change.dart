@@ -1,5 +1,5 @@
-import 'package:appscrip_chat_component/src/controllers/controllers.dart';
-import 'package:appscrip_chat_component/src/res/res.dart';
+import 'package:isometrik_flutter_chat/src/controllers/controllers.dart';
+import 'package:isometrik_flutter_chat/src/res/res.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

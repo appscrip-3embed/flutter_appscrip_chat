@@ -1,12 +1,12 @@
-import 'package:appscrip_chat_component/appscrip_chat_component_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat_platform_interface.dart';
 
-/// An implementation of [ChatComponentPlatform] that uses method channels.
-class MethodChannelChatComponent extends ChatComponentPlatform {
+/// An implementation of [IsometrikFlutterChatPlatform] that uses method channels.
+class MethodChannelIsometrikFlutterChat extends IsometrikFlutterChatPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  final methodChannel = const MethodChannel('appscrip_chat_component');
+  final methodChannel = const MethodChannel('isometrik_flutter_chat');
 
   @override
   Future<String?> getPlatformVersion() async {
