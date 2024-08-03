@@ -1,9 +1,8 @@
 import 'dart:async';
 
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 
 class IsmMaterialChatPage extends StatefulWidget {
   IsmMaterialChatPage({
@@ -21,7 +20,7 @@ class IsmMaterialChatPage extends StatefulWidget {
     required this.conversation,
   }) {
     // assert(IsmChatConfig.isInitialized,
-    //     'ChatHiveBox is not initialized\nYou are getting this error because the Database class is not initialized, to initialize ChatHiveBox class call AppscripChatComponent.initialize() before your runApp()');
+    //     'ChatHiveBox is not initialized\nYou are getting this error because the Database class is not initialized, to initialize ChatHiveBox class call IsmChat.i.initialize() before your runApp()');
     assert(IsmChatConfig.configInitilized || communicationConfig != null,
         '''communicationConfig of type IsmChatCommunicationConfig must be initialized
     1. Either initialize using IsmChatApp.initializeMqtt() by passing  communicationConfig.
@@ -76,7 +75,7 @@ class IsmMaterialChatPage extends StatefulWidget {
 
   /// databaseName is to be provided if you want to specify some name for the local database file.
   ///
-  /// If not provided `appscrip_chat_component` will be used by default
+  /// If not provided `isometrik_flutter_chat` will be used by default
   final String? databaseName;
 
   /// This callback is to be used if you want to make certain changes while conversation data is being parsed from the API

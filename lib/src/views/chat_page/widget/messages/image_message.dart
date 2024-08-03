@@ -1,6 +1,6 @@
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 
 class IsmChatImageMessage extends StatelessWidget {
   const IsmChatImageMessage(this.message, {super.key});
@@ -17,7 +17,7 @@ class IsmChatImageMessage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
-                  height: Responsive.isWeb(context)
+                  height: IsmChatResponsive.isWeb(context)
                       ? IsmChatDimens.percentHeight(.3)
                       : kIsWeb
                           ? IsmChatDimens.percentHeight(.3)

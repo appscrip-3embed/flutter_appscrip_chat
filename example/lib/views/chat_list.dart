@@ -1,10 +1,10 @@
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/controllers/controllers.dart';
 import 'package:chat_component_example/res/res.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 
 class ChatList extends StatelessWidget {
   const ChatList({super.key});
@@ -126,14 +126,14 @@ class ChatList extends StatelessWidget {
               allowDelete: true,
               onCreateTap: () {},
               onChatTap: (_, conversation) {},
-              isHeaderAppBar: Responsive.isWeb(context) ? false : true,
+              isHeaderAppBar: IsmChatResponsive.isWeb(context) ? false : true,
               header: IsmChatListHeader(
                 onSignOut: () {
                   controller.onSignOut();
                 },
                 onSearchTap: (p0, p1, p2) {},
                 showSearch: false,
-                width: Responsive.isWeb(context)
+                width: IsmChatResponsive.isWeb(context)
                     ? IsmChatDimens.percentWidth(.3)
                     : null,
               ),

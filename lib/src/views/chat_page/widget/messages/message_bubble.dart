@@ -1,7 +1,6 @@
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 
 class MessageBubble extends GetView<IsmChatPageController> {
   MessageBubble({
@@ -16,7 +15,7 @@ class MessageBubble extends GetView<IsmChatPageController> {
               customType: IsmChatCustomMessageType.text,
               sentByMe: true,
             ),
-        _globalKey = Responsive.isWeb(Get.context!)
+        _globalKey = IsmChatResponsive.isWeb(Get.context!)
             ? GlobalKey()
             : Get.find<IsmChatPageController>()
                 .getGlobalKey(message?.sentAt ?? 0);
@@ -28,7 +27,7 @@ class MessageBubble extends GetView<IsmChatPageController> {
 
   @override
   Widget build(BuildContext context) => Container(
-        key: Responsive.isWeb(context) ? _globalKey : null,
+        key: IsmChatResponsive.isWeb(context) ? _globalKey : null,
         margin: _message.reactions?.isNotEmpty == true && !showMessageInCenter
             ? IsmChatDimens.edgeInsetsB25
             : null,
@@ -40,10 +39,10 @@ class MessageBubble extends GetView<IsmChatPageController> {
               )
             : IsmChatConfig.chatTheme.chatPageTheme?.constraints ??
                 BoxConstraints(
-                  maxWidth: (Responsive.isWeb(context))
+                  maxWidth: (IsmChatResponsive.isWeb(context))
                       ? context.width * .2
                       : context.width * .7,
-                  minWidth: Responsive.isWeb(context)
+                  minWidth: IsmChatResponsive.isWeb(context)
                       ? IsmChatDimens.ninty
                       : context.width * .25,
                 ),
@@ -227,7 +226,7 @@ class MessageBubble extends GetView<IsmChatPageController> {
               ),
               Obx(
                 () => (controller.onMessageHoverIndex == index &&
-                        Responsive.isWeb(context))
+                        IsmChatResponsive.isWeb(context))
                     ? Positioned(
                         top: IsmChatDimens.four,
                         right: IsmChatDimens.five,

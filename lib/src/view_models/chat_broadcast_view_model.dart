@@ -1,4 +1,4 @@
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 
 class IsmChatBroadcastViewModel {
   IsmChatBroadcastViewModel(this._repository);
@@ -114,7 +114,7 @@ class IsmChatBroadcastViewModel {
   Future<IsmChatResponseModel?> addEligibleMembers({
     required String groupcastId,
     bool isloading = false,
-    required List<Map<String,dynamic>> members,
+    required List<Map<String, dynamic>> members,
   }) async =>
       await _repository.addEligibleMembers(
         groupcastId: groupcastId,

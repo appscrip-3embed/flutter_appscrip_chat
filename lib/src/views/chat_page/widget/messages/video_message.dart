@@ -1,6 +1,6 @@
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 
 class IsmChatVideoMessage extends StatelessWidget {
   const IsmChatVideoMessage(this.message, {super.key});
@@ -16,7 +16,7 @@ class IsmChatVideoMessage extends StatelessWidget {
             Column(
               children: [
                 SizedBox(
-                  height: Responsive.isWeb(context)
+                  height: IsmChatResponsive.isWeb(context)
                       ? IsmChatDimens.percentHeight(.3)
                       : kIsWeb
                           ? IsmChatDimens.percentHeight(.3)

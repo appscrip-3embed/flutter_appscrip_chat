@@ -4,11 +4,6 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:app_settings/app_settings.dart';
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
-import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
-    if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
-import 'package:appscrip_chat_component/src/views/chat_page/widget/profile_change.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:camera/camera.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -24,6 +19,10 @@ import 'package:get/get.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
+import 'package:isometrik_flutter_chat/src/utilities/blob_io.dart'
+    if (dart.library.html) 'package:isometrik_flutter_chat/src/utilities/blob_html.dart';
+import 'package:isometrik_flutter_chat/src/views/chat_page/widget/profile_change.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:pdfx/pdfx.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -627,7 +626,7 @@ class IsmChatPageController extends GetxController
   }
 
   Future<void> callFunctions() async {
-    if (Responsive.isWeb(Get.context!)) {
+    if (IsmChatResponsive.isWeb(Get.context!)) {
       messages.clear();
     }
     if (conversation?.isGroup ?? false) {
@@ -742,7 +741,7 @@ class IsmChatPageController extends GetxController
       required String reactionType,
       required int index}) async {
     userReactionList.clear();
-    if (Responsive.isWeb(Get.context!)) {
+    if (IsmChatResponsive.isWeb(Get.context!)) {
       await Get.dialog(
         IsmChatPageDailog(
           child: ImsChatShowUserReaction(
@@ -768,7 +767,7 @@ class IsmChatPageController extends GetxController
   }
 
   void addWallpaper() async {
-    if (Responsive.isWeb(Get.context!)) {
+    if (IsmChatResponsive.isWeb(Get.context!)) {
       await Get.dialog(
         const IsmChatPageDailog(
           child: ImsChatShowWallpaper(),
@@ -870,7 +869,7 @@ class IsmChatPageController extends GetxController
       case IsmChatAttachmentType.camera:
         final initialize = await initializeCamera();
         if (initialize) {
-          Responsive.isWeb(Get.context!)
+          IsmChatResponsive.isWeb(Get.context!)
               ? isCameraView = true
               : IsmChatRouteManagement.goToCameraView();
         }
@@ -978,7 +977,7 @@ class IsmChatPageController extends GetxController
         }
       }
       IsmChatUtility.closeLoader();
-      if (Responsive.isMobile(Get.context!)) {
+      if (IsmChatResponsive.isMobile(Get.context!)) {
         IsmChatRouteManagement.goToWebMediaPreview();
       }
     }
@@ -1059,7 +1058,7 @@ class IsmChatPageController extends GetxController
       case IsmChatFocusMenuType.forward:
         conversationController.forwardedList.clear();
 
-        if (Responsive.isWeb(Get.context!)) {
+        if (IsmChatResponsive.isWeb(Get.context!)) {
           await Get.dialog(
             IsmChatPageDailog(
               child: IsmChatForwardView(
@@ -1389,7 +1388,7 @@ class IsmChatPageController extends GetxController
               ].contains(item.customType))
           .toList();
       var selectedMediaIndex = mediaList.indexOf(message);
-      if (Responsive.isWeb(Get.context!)) {
+      if (IsmChatResponsive.isWeb(Get.context!)) {
         {
           await Get.dialog(IsmWebMessageMediaPreview(
             mediaIndex: selectedMediaIndex,
@@ -1461,7 +1460,7 @@ class IsmChatPageController extends GetxController
           .toList();
       var selectedMediaIndex = mediaList.indexOf(message);
 
-      if (Responsive.isWeb(Get.context!)) {
+      if (IsmChatResponsive.isWeb(Get.context!)) {
         {
           await Get.dialog(IsmWebMessageMediaPreview(
             mediaIndex: selectedMediaIndex,
@@ -1526,7 +1525,7 @@ class IsmChatPageController extends GetxController
 
   Future<bool> toggleCamera() async {
     areCamerasInitialized = false;
-    if (Responsive.isMobile(Get.context!) && !kIsWeb) {
+    if (IsmChatResponsive.isMobile(Get.context!) && !kIsWeb) {
       isFrontCameraSelected = !isFrontCameraSelected;
     }
     if (isFrontCameraSelected) {
@@ -1754,7 +1753,7 @@ class IsmChatPageController extends GetxController
           thumbnailBytes: Uint8List(0),
         ),
       );
-      if (Responsive.isMobile(Get.context!)) {
+      if (IsmChatResponsive.isMobile(Get.context!)) {
         IsmChatRouteManagement.goToWebMediaPreview();
       }
     } else {
@@ -1817,7 +1816,7 @@ class IsmChatPageController extends GetxController
         getMessageDeliverTime(message),
       ],
     ));
-    if (Responsive.isWeb(Get.context!)) {
+    if (IsmChatResponsive.isWeb(Get.context!)) {
       conversationController.message = message;
       conversationController.isRenderChatPageaScreen =
           IsRenderChatPageScreen.messgaeInfoView;
@@ -2039,7 +2038,7 @@ class IsmChatPageController extends GetxController
     }
     conversationController.contactDetails = user;
     conversationController.userConversationId = conversationId;
-    if (Responsive.isWeb(Get.context!)) {
+    if (IsmChatResponsive.isWeb(Get.context!)) {
       conversationController.isRenderChatPageaScreen =
           IsRenderChatPageScreen.userInfoView;
     } else {

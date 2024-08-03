@@ -1,4 +1,4 @@
-import 'package:appscrip_chat_component/src/res/res.dart';
+import 'package:isometrik_flutter_chat/src/res/res.dart';
 import 'package:flutter/material.dart';
 
 class IsmChatTheme extends StatelessWidget {

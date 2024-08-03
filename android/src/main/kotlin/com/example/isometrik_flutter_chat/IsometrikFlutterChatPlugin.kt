@@ -1,4 +1,4 @@
-package com.example.appscrip_chat_component
+package com.example.isometrik_flutter_chat
 
 import androidx.annotation.NonNull
 
@@ -8,8 +8,8 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 
-/** ChatComponentPlugin */
-class ChatComponentPlugin: FlutterPlugin, MethodCallHandler {
+/** IsometrikFlutterChatPlugin */
+class IsometrikFlutterChatPlugin: FlutterPlugin, MethodCallHandler {
   /// The MethodChannel that will the communication between Flutter and native Android
   ///
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -17,7 +17,7 @@ class ChatComponentPlugin: FlutterPlugin, MethodCallHandler {
   private lateinit var channel : MethodChannel
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "appscrip_chat_component")
+    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "isometrik_flutter_chat")
     channel.setMethodCallHandler(this)
   }
 

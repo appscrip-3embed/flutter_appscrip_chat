@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
-import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
-    if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
+import 'package:isometrik_flutter_chat/src/utilities/blob_io.dart'
+    if (dart.library.html) 'package:isometrik_flutter_chat/src/utilities/blob_html.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
@@ -79,7 +78,7 @@ class IsmChatMessageField extends StatelessWidget {
                   ),
                 ),
               ] else ...[
-                if (Responsive.isWeb(context)) ...[
+                if (IsmChatResponsive.isWeb(context)) ...[
                   IsmChatDimens.boxWidth8,
                   Container(
                     margin: IsmChatDimens.edgeInsetsBottom4,
@@ -210,16 +209,17 @@ class IsmChatMessageField extends StatelessWidget {
                                             IsmChatConfig
                                                 .chatTheme.backgroundColor,
                                         contentPadding:
-                                            Responsive.isWeb(context)
+                                            IsmChatResponsive.isWeb(context)
                                                 ? IsmChatDimens.edgeInsets12
                                                 : IsmChatDimens.edgeInsets8,
-                                        prefixIcon: Responsive.isWeb(context)
-                                            ? null
-                                            : _EmojiButton(IsmChatConfig
-                                                .chatTheme
-                                                .chatPageTheme
-                                                ?.textFiledThemData
-                                                ?.emojiColor),
+                                        prefixIcon:
+                                            IsmChatResponsive.isWeb(context)
+                                                ? null
+                                                : _EmojiButton(IsmChatConfig
+                                                    .chatTheme
+                                                    .chatPageTheme
+                                                    ?.textFiledThemData
+                                                    ?.emojiColor),
                                         enabledBorder: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(
                                               IsmChatDimens.twenty),
@@ -253,7 +253,7 @@ class IsmChatMessageField extends StatelessWidget {
                                   ),
                                   if (IsmChatProperties.chatPageProperties
                                           .attachments.isNotEmpty &&
-                                      !Responsive.isWeb(context)) ...[
+                                      !IsmChatResponsive.isWeb(context)) ...[
                                     const _AttachmentIcon()
                                   ]
                                 ],

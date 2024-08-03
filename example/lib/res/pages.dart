@@ -1,4 +1,4 @@
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 import 'package:chat_component_example/controllers/controllers.dart';
 import 'package:chat_component_example/views/signup_view.dart';
 import 'package:chat_component_example/views/views.dart';

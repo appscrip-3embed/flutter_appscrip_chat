@@ -1,10 +1,10 @@
 import Flutter
 import UIKit
 
-public class ChatComponentPlugin: NSObject, FlutterPlugin {
+public class IsometrikFlutterChatPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "appscrip_chat_component", binaryMessenger: registrar.messenger())
-    let instance = ChatComponentPlugin()
+    let channel = FlutterMethodChannel(name: "isometrik_flutter_chat", binaryMessenger: registrar.messenger())
+    let instance = IsometrikFlutterChatPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 

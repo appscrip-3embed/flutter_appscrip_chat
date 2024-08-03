@@ -1,8 +1,7 @@
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 
 class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
   IsmChatPageHeader({
@@ -58,7 +57,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          if (!Responsive.isWeb(context)) ...[
+                          if (!IsmChatResponsive.isWeb(context)) ...[
                             IconButton(
                               onPressed: () async {
                                 Get.back<void>();
@@ -204,8 +203,8 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                                             ?.isGroup ==
                                                         true
                                                     ? SizedBox(
-                                                        width: Responsive.isWeb(
-                                                                context)
+                                                        width: IsmChatResponsive
+                                                                .isWeb(context)
                                                             ? null
                                                             : IsmChatDimens
                                                                 .percentWidth(
@@ -508,7 +507,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                               } else if (value == 2) {
                                 controller.addWallpaper();
                               } else if (value == 1) {
-                                if (Responsive.isWeb(context)) {
+                                if (IsmChatResponsive.isWeb(context)) {
                                   Get.find<IsmChatConversationsController>()
                                           .isRenderChatPageaScreen =
                                       IsRenderChatPageScreen.messageSearchView;

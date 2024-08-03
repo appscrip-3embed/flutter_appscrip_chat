@@ -1,13 +1,12 @@
-library appscrip_chat_component;
+library isometrik_flutter_chat;
 
 import 'dart:async';
 
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/appscrip_chat_component_platform_interface.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat_platform_interface.dart';
 import 'package:mqtt_helper/mqtt_helper.dart';
 
 export 'src/app/app.dart';
@@ -15,15 +14,16 @@ export 'src/controllers/controllers.dart';
 export 'src/data/data.dart';
 export 'src/models/models.dart';
 export 'src/repositories/repositories.dart';
+export 'src/res/properties/properties.dart';
 export 'src/res/res.dart';
 export 'src/utilities/utilities.dart';
 export 'src/view_models/view_models.dart';
 export 'src/views/views.dart';
 export 'src/widgets/widgets.dart';
 
-part 'appscrip_chat_component_delegate.dart';
+part 'isometrik_flutter_chat_delegate.dart';
 
-/// The main class for interacting with the AppScrip Chat Component.
+/// The main class for interacting with the Isometrik Flutter Chat SDK.
 class IsmChat {
   /// Factory constructor for creating a new instance of [IsmChat].
   factory IsmChat() => instance;
@@ -64,7 +64,7 @@ class IsmChat {
   bool get isMqttConnected => _delegate.isMqttConnected;
 
   Future<String?> getPlatformVersion() =>
-      ChatComponentPlatform.instance.getPlatformVersion();
+      IsometrikFlutterChatPlatform.instance.getPlatformVersion();
 
   /// Initializes the MQTT controller.
   ///

@@ -1,7 +1,7 @@
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 
 class ReactionGrid extends StatelessWidget {
   ReactionGrid(this.message, {super.key})
@@ -16,11 +16,12 @@ class ReactionGrid extends StatelessWidget {
         borderRadius: BorderRadius.circular(IsmChatDimens.sixteen),
         child: Container(
           alignment: Alignment.center,
-          height: Responsive.isWeb(context)
+          height: IsmChatResponsive.isWeb(context)
               ? IsmChatDimens.seventy
               : IsmChatDimens.hundred + IsmChatDimens.eight,
-          width:
-              Responsive.isWeb(context) ? IsmChatDimens.twoHundredFifty : null,
+          width: IsmChatResponsive.isWeb(context)
+              ? IsmChatDimens.twoHundredFifty
+              : null,
           child: GridView.builder(
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

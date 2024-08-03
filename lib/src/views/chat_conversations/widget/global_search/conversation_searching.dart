@@ -1,7 +1,6 @@
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class IsmChatConversationSearchView extends StatelessWidget {
@@ -46,10 +45,11 @@ class IsmChatConversationSearchView extends StatelessWidget {
                         return Column(
                           children: [
                             IsmChatConversationCard(
-                              isShowBackgroundColor: Responsive.isWeb(context)
-                                  ? controller.currentConversationId ==
-                                      conversation.conversationId
-                                  : false,
+                              isShowBackgroundColor:
+                                  IsmChatResponsive.isWeb(context)
+                                      ? controller.currentConversationId ==
+                                          conversation.conversationId
+                                      : false,
                               name: IsmChatProperties.conversationProperties
                                   .cardElementBuilders?.name,
                               nameBuilder: IsmChatProperties

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,6 +14,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:permission_handler/permission_handler.dart';
@@ -579,7 +579,7 @@ class IsmChatUtility {
                     textScaler: const TextScaler.linear(1.5),
                     style: IsmChatStyles.w600Black14,
                   ),
-                  if (!Responsive.isWeb(Get.context!))
+                  if (!IsmChatResponsive.isWeb(Get.context!))
                     SizedBox(
                         width: IsmChatDimens.percentWidth(.8),
                         child: Divider(

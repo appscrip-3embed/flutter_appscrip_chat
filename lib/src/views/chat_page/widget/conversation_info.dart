@@ -1,8 +1,7 @@
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 
 class IsmChatConverstaionInfoView extends StatelessWidget {
   IsmChatConverstaionInfoView({super.key});
@@ -28,7 +27,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
         builder: (controller) => Scaffold(
           backgroundColor: IsmChatColors.blueGreyColor,
           appBar: IsmChatAppBar(
-            onBack: !Responsive.isWeb(context)
+            onBack: !IsmChatResponsive.isWeb(context)
                 ? null
                 : () {
                     Get.find<IsmChatConversationsController>()
@@ -216,7 +215,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                           ),
                           child: IsmChatTapHandler(
                             onTap: () {
-                              if (Responsive.isWeb(context)) {
+                              if (IsmChatResponsive.isWeb(context)) {
                                 Get.find<IsmChatConversationsController>()
                                         .isRenderChatPageaScreen =
                                     IsRenderChatPageScreen.coversationMediaView;
@@ -281,7 +280,7 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                               onPressed: () {
                                 controller.participnatsEditingController
                                     .clear();
-                                if (Responsive.isWeb(context)) {
+                                if (IsmChatResponsive.isWeb(context)) {
                                   Get.find<IsmChatConversationsController>()
                                           .isRenderChatPageaScreen =
                                       IsRenderChatPageScreen.groupEligibleView;

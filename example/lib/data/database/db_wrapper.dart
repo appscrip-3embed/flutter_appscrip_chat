@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -26,7 +26,7 @@ class DBWrapper {
   }
 
   static Future<DBWrapper> create([String? databaseName]) async {
-    var dbName = databaseName ?? 'appscrip_chat_component_example';
+    var dbName = databaseName ?? 'isometrik_flutter_chat_example';
     Directory? directory;
 
     if (!kIsWeb) {

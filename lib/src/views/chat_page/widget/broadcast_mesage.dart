@@ -1,13 +1,12 @@
 import 'dart:async';
 
-import 'package:appscrip_chat_component/src/controllers/controllers.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
-import 'package:appscrip_chat_component/src/res/res.dart';
-import 'package:appscrip_chat_component/src/utilities/utilities.dart';
-import 'package:appscrip_chat_component/src/views/views.dart';
-import 'package:appscrip_chat_component/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:isometrik_flutter_chat/src/controllers/controllers.dart';
+import 'package:isometrik_flutter_chat/src/res/res.dart';
+import 'package:isometrik_flutter_chat/src/utilities/utilities.dart';
+import 'package:isometrik_flutter_chat/src/views/views.dart';
+import 'package:isometrik_flutter_chat/src/widgets/widgets.dart';
 
 class IsmChatBoradcastMessagePage extends StatelessWidget {
   const IsmChatBoradcastMessagePage({super.key});
@@ -20,7 +19,7 @@ class IsmChatBoradcastMessagePage extends StatelessWidget {
     var controller = Get.find<IsmChatPageController>();
     var conversationController = Get.find<IsmChatConversationsController>();
 
-    if (Responsive.isWeb(context)) {
+    if (IsmChatResponsive.isWeb(context)) {
       var controller = Get.find<IsmChatPageController>();
       controller.isBroadcast = false;
       conversationController.currentConversation = null;
@@ -84,7 +83,7 @@ class _BroadCastMessage extends StatelessWidget {
               child: Padding(
                 padding: IsmChatDimens.edgeInsetsLeft10,
                 child: Icon(
-                  Responsive.isWeb(context)
+                  IsmChatResponsive.isWeb(context)
                       ? Icons.close_rounded
                       : Icons.arrow_back_rounded,
                   color:

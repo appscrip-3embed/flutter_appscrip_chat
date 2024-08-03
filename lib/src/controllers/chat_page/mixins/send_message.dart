@@ -50,7 +50,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       if (isMessageSent && !isBroadcast) {
         _controller.didReactedLast = false;
         await _controller.getMessagesFromDB(conversationId);
-        if (kIsWeb && Responsive.isWeb(Get.context!)) {
+        if (kIsWeb && IsmChatResponsive.isWeb(Get.context!)) {
           await conversationController.getConversationsFromDB();
         }
       }
@@ -276,7 +276,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await IsmChatConfig.dbWrapper!
           .saveMessage(audioMessage, IsmChatDbBox.pending);
 
-      if (kIsWeb && Responsive.isWeb(Get.context!)) {
+      if (kIsWeb && IsmChatResponsive.isWeb(Get.context!)) {
         _controller.updateLastMessagOnCurrentTime(audioMessage);
       }
     }
@@ -415,7 +415,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       if (!_controller.isBroadcast) {
         await IsmChatConfig.dbWrapper!
             .saveMessage(documentMessage, IsmChatDbBox.pending);
-        if (kIsWeb && Responsive.isWeb(Get.context!)) {
+        if (kIsWeb && IsmChatResponsive.isWeb(Get.context!)) {
           _controller.updateLastMessagOnCurrentTime(documentMessage);
         }
       }
@@ -563,7 +563,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await IsmChatConfig.dbWrapper!
           .saveMessage(videoMessage, IsmChatDbBox.pending);
 
-      if (kIsWeb && Responsive.isWeb(Get.context!)) {
+      if (kIsWeb && IsmChatResponsive.isWeb(Get.context!)) {
         _controller.updateLastMessagOnCurrentTime(videoMessage);
       }
     }
@@ -680,7 +680,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await IsmChatConfig.dbWrapper!
           .saveMessage(imageMessage, IsmChatDbBox.pending);
 
-      if (kIsWeb && Responsive.isWeb(Get.context!)) {
+      if (kIsWeb && IsmChatResponsive.isWeb(Get.context!)) {
         _controller.updateLastMessagOnCurrentTime(imageMessage);
       }
     }
@@ -772,7 +772,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await IsmChatConfig.dbWrapper!
           .saveMessage(imageMessage, IsmChatDbBox.pending);
 
-      if (kIsWeb && Responsive.isWeb(Get.context!)) {
+      if (kIsWeb && IsmChatResponsive.isWeb(Get.context!)) {
         _controller.updateLastMessagOnCurrentTime(imageMessage);
       }
     }
@@ -866,7 +866,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       await IsmChatConfig.dbWrapper!
           .saveMessage(locationMessage, IsmChatDbBox.pending);
 
-      if (kIsWeb && Responsive.isWeb(Get.context!)) {
+      if (kIsWeb && IsmChatResponsive.isWeb(Get.context!)) {
         _controller.updateLastMessagOnCurrentTime(locationMessage);
       }
     }
@@ -1038,7 +1038,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     if (!_controller.isBroadcast) {
       await IsmChatConfig.dbWrapper!
           .saveMessage(textMessage, IsmChatDbBox.pending);
-      if (kIsWeb && Responsive.isWeb(Get.context!)) {
+      if (kIsWeb && IsmChatResponsive.isWeb(Get.context!)) {
         _controller.updateLastMessagOnCurrentTime(textMessage);
       }
     }
@@ -1317,7 +1317,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     if (!_controller.isBroadcast) {
       await IsmChatConfig.dbWrapper!
           .saveMessage(aboutTextMessage, IsmChatDbBox.pending);
-      if (kIsWeb && Responsive.isWeb(Get.context!)) {
+      if (kIsWeb && IsmChatResponsive.isWeb(Get.context!)) {
         _controller.updateLastMessagOnCurrentTime(aboutTextMessage);
       }
     }

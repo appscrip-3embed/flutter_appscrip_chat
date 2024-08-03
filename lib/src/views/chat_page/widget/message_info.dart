@@ -1,8 +1,7 @@
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 
 // / The view part of the [IsmChatPageView], which will be used to
 /// show the Message Information view page
@@ -34,7 +33,7 @@ class IsmChatMessageInfo extends StatelessWidget {
                 ),
             elevation: 0,
             leading: IconButton(
-              onPressed: Responsive.isWeb(context)
+              onPressed: IsmChatResponsive.isWeb(context)
                   ? () {
                       Get.find<IsmChatConversationsController>()
                               .isRenderChatPageaScreen =
@@ -42,7 +41,7 @@ class IsmChatMessageInfo extends StatelessWidget {
                     }
                   : Get.back,
               icon: Icon(
-                Responsive.isWeb(context)
+                IsmChatResponsive.isWeb(context)
                     ? Icons.close_rounded
                     : Icons.arrow_back_rounded,
                 color: IsmChatConfig.chatTheme.chatPageHeaderTheme?.iconColor ??

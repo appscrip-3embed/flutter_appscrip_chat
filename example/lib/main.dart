@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:app_settings/app_settings.dart';
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/res/res.dart';
 import 'package:chat_component_example/utilities/utilities.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,6 +10,7 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 import 'data/data.dart';
@@ -71,9 +71,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       useInheritedMediaQuery: true,
-      designSize: Responsive.isWeb(context)
+      designSize: IsmChatResponsive.isWeb(context)
           ? const Size(1450, 745)
-          : Responsive.isTablet(context)
+          : IsmChatResponsive.isTablet(context)
               ? const Size(1100, 745)
               : const Size(375, 745),
       minTextAdapt: true,
@@ -92,11 +92,7 @@ class _MyAppState extends State<MyApp> {
           Locale('en', 'US'),
         ],
         theme: ThemeData.light(useMaterial3: true).copyWith(
-          primaryColor: AppColors.primaryColorLight,
-          extensions: [
-            
-          ]
-        ),
+            primaryColor: AppColors.primaryColorLight, extensions: []),
         // darkTheme: ThemeData.dark(useMaterial3: true)
         //     .copyWith(primaryColor: AppColors.primaryColorDark),
         // darkTheme: ThemeData.dark(useMaterial3: true)

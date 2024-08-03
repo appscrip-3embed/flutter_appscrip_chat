@@ -1,7 +1,6 @@
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 
 class IsmChatMessage extends StatefulWidget {
   IsmChatMessage(
@@ -86,7 +85,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
               : () async {
                   if (widget._message?.customType !=
                       IsmChatCustomMessageType.deletedForEveryone) {
-                    if (!Responsive.isWeb(context)) {
+                    if (!IsmChatResponsive.isWeb(context)) {
                       if (!(controller.conversation?.isChattingAllowed ??
                           false)) {
                         controller.showDialogCheckBlockUnBlock();

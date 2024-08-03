@@ -1,9 +1,8 @@
 import 'dart:ui';
 
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 
 class IsmChatFocusMenu extends StatelessWidget {
   IsmChatFocusMenu(
@@ -24,7 +23,7 @@ class IsmChatFocusMenu extends StatelessWidget {
   final controller = Get.find<IsmChatPageController>();
 
   @override
-  Widget build(BuildContext context) => Responsive.isWeb(context)
+  Widget build(BuildContext context) => IsmChatResponsive.isWeb(context)
       ? IsmChatTapHandler(
           onTap: controller.closeOverlay,
           child: Padding(
@@ -110,7 +109,7 @@ class IsmChatFocusMenu extends StatelessWidget {
         )
       : IsmChatTapHandler(
           onTap: () {
-            if (Responsive.isWeb(context)) {
+            if (IsmChatResponsive.isWeb(context)) {
               var controller = Get.find<IsmChatPageController>();
               controller.closeOverlay();
             } else {

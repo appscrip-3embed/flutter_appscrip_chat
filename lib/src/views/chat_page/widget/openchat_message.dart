@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:appscrip_chat_component/src/controllers/controllers.dart';
-import 'package:appscrip_chat_component/src/res/res.dart';
-import 'package:appscrip_chat_component/src/utilities/utilities.dart';
-import 'package:appscrip_chat_component/src/views/views.dart';
-import 'package:appscrip_chat_component/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:isometrik_flutter_chat/src/controllers/controllers.dart';
+import 'package:isometrik_flutter_chat/src/res/res.dart';
+import 'package:isometrik_flutter_chat/src/utilities/utilities.dart';
+import 'package:isometrik_flutter_chat/src/views/views.dart';
+import 'package:isometrik_flutter_chat/src/widgets/widgets.dart';
 
 class IsmChatOpenChatMessagePage extends StatelessWidget {
   const IsmChatOpenChatMessagePage({super.key});
@@ -16,7 +16,7 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
   void _back(BuildContext context, IsmChatPageController controller) async {
     var controller = Get.find<IsmChatPageController>();
     final conversationController = Get.find<IsmChatConversationsController>();
-    if (Responsive.isWeb(context)) {
+    if (IsmChatResponsive.isWeb(context)) {
       controller.isBroadcast = false;
       conversationController.currentConversation = null;
       conversationController.currentConversationId = '';
@@ -48,7 +48,7 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
               leading: IsmChatTapHandler(
                 onTap: () => _back(context, controller),
                 child: Icon(
-                  Responsive.isWeb(context)
+                  IsmChatResponsive.isWeb(context)
                       ? Icons.close_rounded
                       : Icons.arrow_back_rounded,
                   color:
@@ -95,7 +95,7 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
               action: [
                 IconButton(
                   onPressed: () async {
-                    if (Responsive.isWeb(context)) {
+                    if (IsmChatResponsive.isWeb(context)) {
                       await Get.dialog(IsmChatPageDailog(
                         child: IsmChatObserverUsersView(
                           conversationId:

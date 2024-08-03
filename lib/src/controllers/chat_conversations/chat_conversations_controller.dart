@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
@@ -13,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -505,7 +504,7 @@ class IsmChatConversationsController extends GetxController {
 
   Future<AssetsModel?> getAssetFilesList() async {
     var jsonString = await rootBundle.loadString(
-        'packages/appscrip_chat_component/assets/assets_backgroundAssets.json');
+        'packages/isometrik_flutter_chat/assets/assets_backgroundAssets.json');
     var filesList = jsonDecode(jsonString);
     if (filesList != null) {
       return AssetsModel.fromMap(filesList);
@@ -1087,7 +1086,7 @@ class IsmChatConversationsController extends GetxController {
   }
 
   Future<void> goToChatPage() async {
-    if (Responsive.isWeb(Get.context!)) {
+    if (IsmChatResponsive.isWeb(Get.context!)) {
       if (!Get.isRegistered<IsmChatPageController>()) {
         IsmChatPageBinding().dependencies();
         return;
@@ -1608,7 +1607,7 @@ class IsmChatConversationsController extends GetxController {
     );
 
     navigateToMessages(conversation);
-    if (Responsive.isWeb(Get.context!)) {
+    if (IsmChatResponsive.isWeb(Get.context!)) {
       Get.back();
       if (!Get.isRegistered<IsmChatPageController>()) {
         IsmChatPageBinding().dependencies();

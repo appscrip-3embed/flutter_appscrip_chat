@@ -1,8 +1,7 @@
-import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:appscrip_chat_component/src/res/properties/chat_properties.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 
 class IsmChatForwardView extends StatelessWidget {
   IsmChatForwardView({
@@ -39,7 +38,7 @@ class IsmChatForwardView extends StatelessWidget {
             ),
             SizedBox(
                 width: IsmChatDimens.percentWidth(
-                  Responsive.isWeb(Get.context!) ? .23 : .7,
+                  IsmChatResponsive.isWeb(Get.context!) ? .23 : .7,
                 ),
                 child: Divider(
                   height: .0,
