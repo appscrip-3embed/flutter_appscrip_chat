@@ -95,7 +95,7 @@ class IsmChat {
 
   /// Listens for MQTT events.
   ///
-  /// [data] is the data to listen for.
+  /// data is the data to listen for.
   /// [showNotification] is the callback for showing notifications.
   ///
   /// Throws an [AssertionError] if the MQTT controller has not been initialized.

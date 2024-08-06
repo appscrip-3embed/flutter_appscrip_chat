@@ -19,10 +19,10 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    var IsometrikFlutterChatPlugin = IsmChat();
+    var isometrikFlutterChatPlugin = IsmChat();
     var fakePlatform = MockChatComponentPlatform();
     IsometrikFlutterChatPlatform.instance = fakePlatform;
 
-    expect(await IsometrikFlutterChatPlugin.getPlatformVersion(), '42');
+    expect(await isometrikFlutterChatPlugin.getPlatformVersion(), '42');
   });
 }

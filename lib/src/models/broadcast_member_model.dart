@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 import 'package:collection/collection.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 
 class BroadcastMemberModel {
   BroadcastMemberModel({
