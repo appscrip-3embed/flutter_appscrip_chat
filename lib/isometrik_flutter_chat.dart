@@ -99,8 +99,8 @@ class IsmChat {
   /// [showNotification] is the callback for showing notifications.
   ///
   /// Throws an [AssertionError] if the MQTT controller has not been initialized.
-  Future<void> listenMqttEvent({
-    required EventModel event,
+  Future<void> listenMqttEvent(
+    EventModel event, {
     NotificaitonCallback? showNotification,
   }) async {
     assert(_initialized,
