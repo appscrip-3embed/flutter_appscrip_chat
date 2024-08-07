@@ -6,7 +6,7 @@ import 'dart:math';
 import 'package:app_settings/app_settings.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:camera/camera.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart' as carousel_slider;
 import 'package:dio/dio.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
@@ -56,7 +56,7 @@ class IsmChatPageController extends GetxController
 
   var searchMessageScrollController = ScrollController();
 
-  var carouselController = CarouselController();
+  var carouselController = carousel_slider.CarouselController();
 
   final textEditingController = TextEditingController();
 

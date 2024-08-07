@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 import 'package:isometrik_flutter_chat/isometrik_flutter_chat_platform_interface.dart';
-import 'package:mqtt_helper/mqtt_helper.dart';
 
+export 'package:mqtt_helper/mqtt_helper.dart';
 export 'src/app/app.dart';
 export 'src/controllers/controllers.dart';
 export 'src/data/data.dart';

@@ -1,11 +1,11 @@
-import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
-import 'package:isometrik_flutter_chat/src/utilities/blob_io.dart'
-    if (dart.library.html) 'package:isometrik_flutter_chat/src/utilities/blob_html.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart' as carousel_slider;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
+import 'package:isometrik_flutter_chat/src/utilities/blob_io.dart'
+    if (dart.library.html) 'package:isometrik_flutter_chat/src/utilities/blob_html.dart';
 import 'package:photo_view/photo_view.dart';
 
 class IsmWebMessageMediaPreview extends StatefulWidget {
@@ -53,7 +53,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
   /// Page controller for handing the PageView pages
   PageController pageController = PageController();
   final chatPageController = Get.find<IsmChatPageController>();
-  late CarouselController carouselController;
+  late carousel_slider.CarouselController carouselController;
 
   String mediaTime = '';
   String mediaSize = '';
@@ -67,7 +67,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
   }
 
   startInit() {
-    carouselController = CarouselController();
+    carouselController = carousel_slider.CarouselController();
     initiated = widget._initiated ?? false;
     chatPageController.assetsIndex = widget._mediaIndex ?? 0;
     final timeStamp =
@@ -178,7 +178,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  CarouselSlider.builder(
+                  carousel_slider.CarouselSlider.builder(
                     carouselController: carouselController,
                     itemBuilder:
                         (BuildContext context, int index, int realIndex) {
@@ -207,7 +207,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                             )
                           : VideoViewPage(path: url);
                     },
-                    options: CarouselOptions(
+                    options: carousel_slider.CarouselOptions(
                       height: IsmChatDimens.percentHeight(1),
                       scrollPhysics: const NeverScrollableScrollPhysics(),
                       aspectRatio: 16 / 9,
@@ -297,7 +297,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                                       .deliverTime ??
                                   '';
                               updateState();
-                              await carouselController.animateToPage(
+                              await  carouselController.animateToPage(
                                 chatPageController.assetsIndex,
                                 curve: Curves.linear,
                                 duration: const Duration(milliseconds: 100),
