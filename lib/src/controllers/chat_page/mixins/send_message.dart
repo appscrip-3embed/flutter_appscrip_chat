@@ -1110,7 +1110,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     required String conversationId,
     required String userId,
     bool pushNotifications = true,
-    required int sentAt,
   }) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
@@ -1132,6 +1131,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       unawaited(
           _controller.getConverstaionDetails(conversationId: conversationId));
     }
+    var sentAt = DateTime.now().millisecondsSinceEpoch;
 
     var textMessage = IsmChatMessageModel(
       body: _controller.chatInputController.text.trim(),

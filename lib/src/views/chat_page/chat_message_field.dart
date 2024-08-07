@@ -135,7 +135,6 @@ class IsmChatMessageField extends StatelessWidget {
                                   userId: controller.conversation
                                           ?.opponentDetails?.userId ??
                                       '',
-                                  sentAt: DateTime.now().millisecondsSinceEpoch,
                                 );
                               }
                             }
@@ -474,7 +473,6 @@ class _MicOrSendButton extends StatelessWidget {
                         userId:
                             controller.conversation?.opponentDetails?.userId ??
                                 '',
-                        sentAt: DateTime.now().millisecondsSinceEpoch,
                       );
                     }
                   }

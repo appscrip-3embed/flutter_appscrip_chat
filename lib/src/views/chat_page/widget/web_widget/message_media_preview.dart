@@ -1,7 +1,6 @@
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
     if (dart.library.html) 'package:appscrip_chat_component/src/utilities/blob_html.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -53,7 +52,6 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
   /// Page controller for handing the PageView pages
   PageController pageController = PageController();
   final chatPageController = Get.find<IsmChatPageController>();
-  late CarouselController carouselController;
 
   String mediaTime = '';
   String mediaSize = '';
@@ -67,7 +65,6 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
   }
 
   startInit() {
-    carouselController = CarouselController();
     initiated = widget._initiated ?? false;
     chatPageController.assetsIndex = widget._mediaIndex ?? 0;
     final timeStamp =
@@ -178,10 +175,12 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  CarouselSlider.builder(
-                    carouselController: carouselController,
-                    itemBuilder:
-                        (BuildContext context, int index, int realIndex) {
+                  PageView.builder(
+                    controller: pageController,
+                    itemBuilder: (
+                      BuildContext context,
+                      int index,
+                    ) {
                       var url = widget._messageData?[index].attachments!.first
                               .mediaUrl ??
                           '';
@@ -207,29 +206,17 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                             )
                           : VideoViewPage(path: url);
                     },
-                    options: CarouselOptions(
-                      height: IsmChatDimens.percentHeight(1),
-                      scrollPhysics: const NeverScrollableScrollPhysics(),
-                      aspectRatio: 16 / 9,
-                      viewportFraction: 1,
-                      enlargeCenterPage: true,
-                      initialPage: widget._mediaIndex ?? 0,
-                      enableInfiniteScroll: false,
-                      animateToClosest: false,
-                      onPageChanged: (index, _) {
-                        initiated =
-                            widget._messageData?[index].sentByMe ?? false;
-                        mediaTime =
-                            widget._messageData?[index].sentAt.deliverTime ??
-                                '';
-                        chatPageController.assetsIndex = index;
-                        mediaSize = IsmChatUtility.formatBytes(
-                          int.parse(
-                              '${widget._messageData![index].attachments?.first.size}'),
-                        );
-                        updateState();
-                      },
-                    ),
+                    onPageChanged: (index) {
+                      initiated = widget._messageData?[index].sentByMe ?? false;
+                      mediaTime =
+                          widget._messageData?[index].sentAt.deliverTime ?? '';
+                      chatPageController.assetsIndex = index;
+                      mediaSize = IsmChatUtility.formatBytes(
+                        int.parse(
+                            '${widget._messageData![index].attachments?.first.size}'),
+                      );
+                      updateState();
+                    },
                     itemCount: widget._messageData?.length ?? 0,
                   ),
                   Padding(
@@ -254,7 +241,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                                       .deliverTime ??
                                   '';
                               updateState();
-                              await carouselController.animateToPage(
+                              await pageController.animateToPage(
                                   chatPageController.assetsIndex,
                                   curve: Curves.linear,
                                   duration: const Duration(milliseconds: 100));
@@ -297,7 +284,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
                                       .deliverTime ??
                                   '';
                               updateState();
-                              await carouselController.animateToPage(
+                              await pageController.animateToPage(
                                 chatPageController.assetsIndex,
                                 curve: Curves.linear,
                                 duration: const Duration(milliseconds: 100),
@@ -351,7 +338,7 @@ class _WebMessageMediaPreviewState extends State<IsmWebMessageMediaPreview> {
 
                       chatPageController.assetsIndex = index;
                       chatPageController.isVideoVisible = false;
-                      await carouselController.animateToPage(index,
+                      await pageController.animateToPage(index,
                           curve: Curves.linear,
                           duration: const Duration(milliseconds: 100));
                       updateState();
