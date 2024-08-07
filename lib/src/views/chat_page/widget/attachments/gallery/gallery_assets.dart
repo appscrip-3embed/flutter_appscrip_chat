@@ -291,7 +291,7 @@ class IsmChatGalleryAssetsView extends StatelessWidget {
                               controller.isVideoVisible = false;
                               await controller.pageController.animateToPage(
                                   index,
-                                  duration: const Duration(milliseconds: 500),
+                                  duration: const Duration(milliseconds: 100),
                                   curve: Curves.linear);
                               controller.dataSize =
                                   await IsmChatUtility.fileToSize(
