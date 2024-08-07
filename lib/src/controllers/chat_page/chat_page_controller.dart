@@ -11,7 +11,6 @@ import 'package:appscrip_chat_component/src/utilities/blob_io.dart'
 import 'package:appscrip_chat_component/src/views/chat_page/widget/profile_change.dart';
 import 'package:azlistview/azlistview.dart';
 import 'package:camera/camera.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dio/dio.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
@@ -55,7 +54,7 @@ class IsmChatPageController extends GetxController
 
   var searchMessageScrollController = ScrollController();
 
-  var carouselController = CarouselController();
+  var pageController = PageController();
 
   final textEditingController = TextEditingController();
 

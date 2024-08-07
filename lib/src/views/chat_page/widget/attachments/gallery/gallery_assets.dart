@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -213,17 +212,14 @@ class IsmChatGalleryAssetsView extends StatelessWidget {
               ),
               backgroundColor: IsmChatColors.blackColor,
               body: SafeArea(
-                child: CarouselSlider.builder(
-                  carouselController: controller.carouselController,
-                  itemBuilder:
-                      (BuildContext context, int index, int realIndex) {
-                    final url = controller.listOfAssetsPath[realIndex]
-                            .attachmentModel.mediaUrl ??
+                child: PageView.builder(
+                  controller: controller.pageController,
+                  itemBuilder: (BuildContext context, int index) {
+                    final url = controller
+                            .listOfAssetsPath[index].attachmentModel.mediaUrl ??
                         '';
                     return IsmChatConstants.imageExtensions.contains(controller
-                            .listOfAssetsPath[realIndex]
-                            .attachmentModel
-                            .mediaUrl!
+                            .listOfAssetsPath[index].attachmentModel.mediaUrl!
                             .split('.')
                             .last)
                         ? PhotoView(
@@ -239,24 +235,19 @@ class IsmChatGalleryAssetsView extends StatelessWidget {
                             showVideoPlaying: true,
                           );
                   },
-                  options: CarouselOptions(
-                    height: IsmChatDimens.percentHeight(1),
-                    viewportFraction: 1,
-                    enlargeCenterPage: true,
-                    initialPage: 0,
-                    enableInfiniteScroll: false,
-                    onPageChanged: (index, _) async {
-                      controller.textEditingController.text =
-                          controller.listOfAssetsPath[index].caption;
-                      controller.assetsIndex = index;
-                      controller.isVideoVisible = false;
-                      controller.dataSize = await IsmChatUtility.fileToSize(
-                        File(controller.listOfAssetsPath[controller.assetsIndex]
-                                .attachmentModel.mediaUrl ??
-                            ''),
-                      );
-                    },
-                  ),
+                  onPageChanged: (
+                    index,
+                  ) async {
+                    controller.textEditingController.text =
+                        controller.listOfAssetsPath[index].caption;
+                    controller.assetsIndex = index;
+                    controller.isVideoVisible = false;
+                    controller.dataSize = await IsmChatUtility.fileToSize(
+                      File(controller.listOfAssetsPath[controller.assetsIndex]
+                              .attachmentModel.mediaUrl ??
+                          ''),
+                    );
+                  },
                   itemCount: controller.listOfAssetsPath.length,
                 ),
               ),
@@ -287,8 +278,10 @@ class IsmChatGalleryAssetsView extends StatelessWidget {
                                   media.caption;
                               controller.assetsIndex = index;
                               controller.isVideoVisible = false;
-                              await controller.carouselController
-                                  .animateToPage(index);
+                              await controller.pageController.animateToPage(
+                                  index,
+                                  curve: Curves.linear,
+                                  duration: const Duration(milliseconds: 500));
                               controller.dataSize =
                                   await IsmChatUtility.fileToSize(
                                 File(controller
