@@ -1,9 +1,8 @@
 import 'dart:async';
 
+import 'package:get/get.dart';
 import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 import 'package:isometrik_flutter_chat/src/controllers/mqtt/mixins/mqtt_event.dart';
-import 'package:get/get.dart';
-import 'package:mqtt_helper/mqtt_helper.dart';
 
 class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
   IsmChatMqttController(this.viewModel);

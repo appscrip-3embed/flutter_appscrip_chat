@@ -2,7 +2,7 @@ import 'package:chat_component_example/controllers/controllers.dart';
 import 'package:chat_component_example/res/res.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 
