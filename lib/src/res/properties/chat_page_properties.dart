@@ -48,7 +48,7 @@ class IsmChatPageProperties {
 
   final MessageSenderInfoCallback? messageSenderProfileUrl;
 
-   final UserDetailsStringCallback? mentionUserName;
+  final UserDetailsStringCallback? mentionUserName;
 
   final UserDetailsStringCallback? mentionUserProfileUrl;
 

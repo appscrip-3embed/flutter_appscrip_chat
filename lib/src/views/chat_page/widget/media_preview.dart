@@ -49,7 +49,6 @@ class IsmMediaPreview extends StatefulWidget {
 }
 
 class _MediaPreviewState extends State<IsmMediaPreview> {
-  
   final chatPageController = Get.find<IsmChatPageController>();
 
   String mediaTime = '';
