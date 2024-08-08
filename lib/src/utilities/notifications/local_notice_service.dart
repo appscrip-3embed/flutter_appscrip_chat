@@ -41,10 +41,10 @@ library;
 
 import 'dart:convert';
 
-import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
-import 'package:flutter/foundation.dart';
 // #1
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 // #2
 import 'package:timezone/timezone.dart' as tz;
@@ -60,27 +60,20 @@ class LocalNoticeService {
 
   final _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  AndroidNotificationChannel channel = const AndroidNotificationChannel(
-    'high_importance_channel', // id
-    'High Importance Notifications', // title
-    description:
-        'This channel is used for important notifications.', // description
+  final _channel = const AndroidNotificationChannel(
+    'high_importance_channel',
+    'High Importance Notifications',
+    description: 'This channel is used for important notifications.',
     importance: Importance.high,
   );
 
   Future<void> setup() async {
-    final androidSetting = AndroidInitializationSettings(
-        IsmChatConfig.notificationIconPath ?? '@mipmap/ic_launcher');
-    const iosSetting =
-        DarwinInitializationSettings(requestSoundPermission: true);
-
-    final initSettings =
-        InitializationSettings(android: androidSetting, iOS: iosSetting);
-
-    await _localNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestNotificationsPermission();
+    final status = await Permission.notification.status;
+    if (status != PermissionStatus.granted) {
+      try {
+        await Permission.notification.request();
+      } catch (_) {}
+    }
 
     /// Create an Android Notification Channel.
     ///
@@ -89,48 +82,49 @@ class LocalNoticeService {
     await _localNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
+        ?.createNotificationChannel(_channel);
 
-    await _localNotificationsPlugin
-        .initialize(
-      initSettings,
-    )
-        .then((_) {
-      debugPrint('setupPlugin: setup success');
-    }).catchError((Object error) {
-      debugPrint('Error: $error');
-    });
-  }
-
-  void showFlutterNotification(String title, String body,
-      {required String conversataionId}) {
-    _localNotificationsPlugin.show(
-      0,
-      title,
-      body,
-      NotificationDetails(
-        iOS: const DarwinNotificationDetails(
-          presentBadge: true,
-          presentAlert: true,
-          presentSound: true,
+    await _localNotificationsPlugin.initialize(
+      InitializationSettings(
+        android: AndroidInitializationSettings(
+          IsmChatConfig.notificationIconPath ?? '@mipmap/ic_launcher',
         ),
-        android: AndroidNotificationDetails(
-          channel.id,
-          channel.name,
-          channelDescription: channel.description ?? '',
-          importance: Importance.high,
-          priority: Priority.high,
-          ticker: 'ticker',
-          playSound: true,
-          icon: IsmChatConfig.notificationIconPath ?? '@mipmap/ic_launcher',
-          color: IsmChatConfig.chatTheme.notificationColor,
-        ),
+        iOS: const DarwinInitializationSettings(),
       ),
-      payload: jsonEncode({
-        'conversationId': conversataionId,
-      }),
     );
   }
+
+  void showFlutterNotification(
+    String title,
+    String body, {
+    required String conversataionId,
+  }) =>
+      _localNotificationsPlugin.show(
+        0,
+        title,
+        body,
+        NotificationDetails(
+          iOS: const DarwinNotificationDetails(
+            presentBadge: true,
+            presentAlert: true,
+            presentSound: true,
+          ),
+          android: AndroidNotificationDetails(
+            _channel.id,
+            _channel.name,
+            channelDescription: _channel.description ?? '',
+            importance: Importance.high,
+            priority: Priority.high,
+            ticker: 'ticker',
+            playSound: true,
+            icon: IsmChatConfig.notificationIconPath ?? '@mipmap/ic_launcher',
+            color: IsmChatConfig.chatTheme.notificationColor,
+          ),
+        ),
+        payload: jsonEncode({
+          'conversationId': conversataionId,
+        }),
+      );
 
   void addNotification(
     String title,
