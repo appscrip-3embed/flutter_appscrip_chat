@@ -128,6 +128,11 @@ class _MessageCardState extends State<MessageCard>
                   ].contains(widget.message.customType)) {
                     controller.tapForMediaPreview(widget.message);
                   }
+                  IsmChatProperties.chatPageProperties.onMessageTap?.call(
+                    context,
+                    widget.message,
+                    controller.conversation!,
+                  );
                 },
                 child: Stack(
                   clipBehavior: Clip.none,

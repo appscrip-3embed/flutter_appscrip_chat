@@ -29,7 +29,6 @@ class IsmChatApp extends StatelessWidget {
     IsmChatProperties.noChatSelectedPlaceholder = noChatSelectedPlaceholder;
     IsmChatConfig.context = context;
     IsmChatConfig.chatLightTheme = chatTheme ?? IsmChatThemeData.light();
-
     IsmChatConfig.chatDarkTheme =
         chatDarkTheme ?? chatTheme ?? IsmChatThemeData.dark();
     if (chatPageProperties != null) {

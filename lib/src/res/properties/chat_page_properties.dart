@@ -1,5 +1,5 @@
-import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 import 'package:flutter/material.dart';
+import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
 
 class IsmChatPageProperties {
   IsmChatPageProperties({
@@ -25,6 +25,7 @@ class IsmChatPageProperties {
     this.isSendMediaAllowed,
     this.mentionUserName,
     this.mentionUserProfileUrl,
+    this.onMessageTap,
   });
 
   final Widget? placeholder;
@@ -48,7 +49,7 @@ class IsmChatPageProperties {
 
   final MessageSenderInfoCallback? messageSenderProfileUrl;
 
-   final UserDetailsStringCallback? mentionUserName;
+  final UserDetailsStringCallback? mentionUserName;
 
   final UserDetailsStringCallback? mentionUserProfileUrl;
 
@@ -118,4 +119,6 @@ class IsmChatPageProperties {
 
   final Future<bool?>? Function(BuildContext, IsmChatConversationModel)?
       isSendMediaAllowed;
+
+  final MessageCallback? onMessageTap;
 }

@@ -170,8 +170,6 @@ PODS:
     - nanopb/encode (= 2.30910.0)
   - nanopb/decode (2.30910.0)
   - nanopb/encode (2.30910.0)
-  - notification_permissions (0.4.4):
-    - Flutter
   - open_filex (0.0.2):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -235,7 +233,6 @@ DEPENDENCIES:
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - isometrik_flutter_chat (from `.symlinks/plugins/isometrik_flutter_chat/ios`)
   - just_audio (from `.symlinks/plugins/just_audio/ios`)
-  - notification_permissions (from `.symlinks/plugins/notification_permissions/ios`)
   - open_filex (from `.symlinks/plugins/open_filex/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - pdfx (from `.symlinks/plugins/pdfx/ios`)
@@ -320,8 +317,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/isometrik_flutter_chat/ios"
   just_audio:
     :path: ".symlinks/plugins/just_audio/ios"
-  notification_permissions:
-    :path: ".symlinks/plugins/notification_permissions/ios"
   open_filex:
     :path: ".symlinks/plugins/open_filex/ios"
   path_provider_foundation:
@@ -386,7 +381,6 @@ SPEC CHECKSUMS:
   just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
-  notification_permissions: 825ea1bf2a52ab585c53fd7b5e8e96876d735d4b
   open_filex: 6e26e659846ec990262224a12ef1c528bb4edbe4
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   pdfx: 7b876b09de8b7a0bf444a4f82b439ffcff4ee1ec
