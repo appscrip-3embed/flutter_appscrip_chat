@@ -14,7 +14,7 @@ dependencies:
   azlistview: ^2.0.0
   cached_network_image: ^3.2.3
   camera: ^0.10.3+2
-  connectivity_plus: ^5.0.2
+  connectivity_plus: ^6.0.5
   device_info_plus: ^9.0.0
   dio: ^5.2.1+1
   elegant_notification: ^1.11.0
