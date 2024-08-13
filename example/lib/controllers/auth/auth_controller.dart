@@ -123,7 +123,6 @@ class AuthController extends GetxController {
       if (!Responsive.isWebAndTablet(Get.context!)) {
         var croppedFile = await ImageCropper().cropImage(
           sourcePath: result.path,
-          cropStyle: CropStyle.circle,
           compressQuality: 100,
           uiSettings: [
             AndroidUiSettings(
@@ -131,21 +130,23 @@ class AuthController extends GetxController {
               toolbarColor: Colors.black,
               toolbarWidgetColor: Colors.white,
               initAspectRatio: CropAspectRatioPreset.original,
+              cropStyle: CropStyle.circle,
               lockAspectRatio: false,
             ),
             IOSUiSettings(
               title: 'Cropper',
+              cropStyle: CropStyle.circle,
             ),
             WebUiSettings(
               context: Get.context!,
-              customDialogBuilder: (cropper, crop, rotate) {
+              customDialogBuilder: (_, __, ___, ____, _____) {
                 return Dialog(
                   child: Builder(
                     builder: (context) {
                       return SizedBox(
                         height: 200,
                         width: 200,
-                        child: cropper,
+                        child: _,
                       );
                     },
                   ),

@@ -215,7 +215,6 @@ class IsmChatUtility {
     }
     var croppedFile = await ImageCropper().cropImage(
       sourcePath: result.first?.path ?? '',
-      cropStyle: CropStyle.circle,
       compressQuality: 100,
       uiSettings: [
         AndroidUiSettings(
@@ -224,10 +223,9 @@ class IsmChatUtility {
           toolbarWidgetColor: IsmChatColors.whiteColor,
           initAspectRatio: CropAspectRatioPreset.original,
           lockAspectRatio: false,
+          cropStyle: CropStyle.circle,
         ),
-        IOSUiSettings(
-          title: 'Cropper',
-        )
+        IOSUiSettings(title: 'Cropper', cropStyle: CropStyle.circle)
       ],
     );
     return [XFile(croppedFile!.path)];

@@ -56,14 +56,14 @@ class _ImagePainterWidgetState extends State<IsmChatImagePainterWidget> {
                 IsmChatLog.success('Image edit file $imgFile');
               },
               style: ButtonStyle(
-                  side: const MaterialStatePropertyAll(
+                  side: const WidgetStatePropertyAll(
                     BorderSide(
                       color: IsmChatColors.whiteColor,
                     ),
                   ),
-                  padding: MaterialStatePropertyAll(IsmChatDimens.edgeInsets10),
+                  padding: WidgetStatePropertyAll(IsmChatDimens.edgeInsets10),
                   textStyle:
-                      MaterialStateProperty.all(IsmChatStyles.w400White16)),
+                      WidgetStateProperty.all(IsmChatStyles.w400White16)),
               child: Text(
                 'Done',
                 style: IsmChatStyles.w600White16,
