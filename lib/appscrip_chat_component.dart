@@ -5,6 +5,7 @@ import 'package:appscrip_chat_component/appscrip_chat_component_platform_interfa
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
+export 'package:mqtt_helper/mqtt_helper.dart';
 export 'src/app/app.dart';
 export 'src/controllers/controllers.dart';
 export 'src/data/data.dart';
