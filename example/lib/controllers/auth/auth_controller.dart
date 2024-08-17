@@ -132,7 +132,6 @@ class AuthController extends GetxController {
               initAspectRatio: CropAspectRatioPreset.original,
               lockAspectRatio: false,
               cropStyle: CropStyle.circle,
-
             ),
             IOSUiSettings(
               title: 'Cropper',
@@ -141,7 +140,7 @@ class AuthController extends GetxController {
             WebUiSettings(
               context: Get.context!,
               customDialogBuilder: (
-                _,
+                child,
                 __,
                 ___,
                 ____,
@@ -153,7 +152,7 @@ class AuthController extends GetxController {
                       return SizedBox(
                         height: 200,
                         width: 200,
-                        child: _,
+                        child: child,
                       );
                     },
                   ),

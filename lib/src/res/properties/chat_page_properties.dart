@@ -116,7 +116,6 @@ class IsmChatPageProperties {
   ///
   final IsmChatPageMessageAcknowldgeProperties? messageInfoAcknowldge;
 
-
   final Future<bool?>? Function(BuildContext, IsmChatConversationModel?)?
       isSendMediaAllowed;
 }

@@ -698,15 +698,22 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     File? compressedFile;
     var sentAt = DateTime.now().millisecondsSinceEpoch;
     if (webMediaModel == null) {
-      compressedFile = await FlutterNativeImage.compressImage(
+      IsmChatUtility.showLoader();
+      final targetFile =
+          await IsmChatUtility.convertToJpeg(imagePath ?? File(''));
+      IsmChatUtility.closeLoader();
+      final xFile = await FlutterImageCompress.compressAndGetFile(
         imagePath?.path ?? '',
+        targetFile.path,
         quality: 60,
-        percentage: 70,
       );
-      bytes = compressedFile.readAsBytesSync();
-      nameWithExtension = compressedFile.path.split('/').last;
-      mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
-      extension = nameWithExtension.split('.').last;
+      if (xFile != null && xFile.path.isNotEmpty) {
+        compressedFile = File(xFile.path);
+        bytes = compressedFile.readAsBytesSync();
+        nameWithExtension = compressedFile.path.split('/').last;
+        mediaId = nameWithExtension.replaceAll(RegExp(r'[^0-9]'), '');
+        extension = nameWithExtension.split('.').last;
+      }
     } else {
       bytes = webMediaModel.platformFile.bytes;
       nameWithExtension = webMediaModel.platformFile.name;
@@ -786,7 +793,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       bytes: bytes,
       createdAt: sentAt,
       ismChatChatMessageModel: imageMessage,
-      mediaId: mediaId,
+      mediaId: mediaId ?? '',
       mediaType: IsmChatMediaType.image.value,
       nameWithExtension: nameWithExtension ?? '',
       notificationBody: IsmChatStrings.sentImage,

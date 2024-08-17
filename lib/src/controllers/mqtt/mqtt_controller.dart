@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/controllers/mqtt/mixins/mqtt_event.dart';
 import 'package:get/get.dart';
-import 'package:mqtt_helper/mqtt_helper.dart';
 
 class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
   IsmChatMqttController(this.viewModel);
