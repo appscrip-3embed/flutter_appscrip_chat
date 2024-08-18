@@ -152,7 +152,7 @@ PODS:
     - TOCropViewController (~> 2.7.4)
   - image_picker_ios (0.0.1):
     - Flutter
-  - isometrik_flutter_chat (0.0.1):
+  - isometrik_chat_flutter (0.0.1):
     - Flutter
   - just_audio (0.0.1):
     - Flutter
@@ -240,7 +240,7 @@ DEPENDENCIES:
   - google_maps_flutter_ios (from `.symlinks/plugins/google_maps_flutter_ios/ios`)
   - image_cropper (from `.symlinks/plugins/image_cropper/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
-  - isometrik_flutter_chat (from `.symlinks/plugins/isometrik_flutter_chat/ios`)
+  - isometrik_chat_flutter (from `.symlinks/plugins/isometrik_chat_flutter/ios`)
   - just_audio (from `.symlinks/plugins/just_audio/ios`)
   - open_filex (from `.symlinks/plugins/open_filex/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
@@ -324,8 +324,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/image_cropper/ios"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
-  isometrik_flutter_chat:
-    :path: ".symlinks/plugins/isometrik_flutter_chat/ios"
+  isometrik_chat_flutter:
+    :path: ".symlinks/plugins/isometrik_chat_flutter/ios"
   just_audio:
     :path: ".symlinks/plugins/just_audio/ios"
   open_filex:
@@ -388,7 +388,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   image_cropper: 37d40f62177c101ff4c164906d259ea2c3aa70cf
   image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
-  isometrik_flutter_chat: e466369d7192d6bc503edd56812f55f6785f0d8b
+  isometrik_chat_flutter: b2e6f4021599d52c0adf3ed0190f222fcb675cf3
   just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d

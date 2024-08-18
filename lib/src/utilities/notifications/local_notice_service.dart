@@ -44,7 +44,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 // #1
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
+import 'package:isometrik_chat_flutter/isometrik_chat_flutter.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 // #2
 import 'package:timezone/timezone.dart' as tz;

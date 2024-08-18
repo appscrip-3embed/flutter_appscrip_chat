@@ -18,10 +18,10 @@ import 'package:get/get.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
-import 'package:isometrik_flutter_chat/src/utilities/blob_io.dart'
-    if (dart.library.html) 'package:isometrik_flutter_chat/src/utilities/blob_html.dart';
-import 'package:isometrik_flutter_chat/src/views/chat_page/widget/profile_change.dart';
+import 'package:isometrik_chat_flutter/isometrik_chat_flutter.dart';
+import 'package:isometrik_chat_flutter/src/utilities/blob_io.dart'
+    if (dart.library.html) 'package:isometrik_chat_flutter/src/utilities/blob_html.dart';
+import 'package:isometrik_chat_flutter/src/views/chat_page/widget/profile_change.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:pdfx/pdfx.dart';
 import 'package:permission_handler/permission_handler.dart';
