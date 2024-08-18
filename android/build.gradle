@@ -1,4 +1,4 @@
-group 'com.example.isometrik_flutter_chat'
+group 'com.example.isometrik_chat_flutter'
 version '1.0-SNAPSHOT'
 
 buildscript {
@@ -25,7 +25,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    namespace 'com.example.isometrik_flutter_chat'
+    namespace 'com.example.isometrik_chat_flutter'
     compileSdkVersion 31
 
     compileOptions {

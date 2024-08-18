@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
+import 'package:isometrik_chat_flutter/isometrik_chat_flutter.dart';
 
 class IsmChatPage extends StatefulWidget {
   IsmChatPage({
@@ -63,7 +63,7 @@ class IsmChatPage extends StatefulWidget {
 
   /// databaseName is to be provided if you want to specify some name for the local database file.
   ///
-  /// If not provided `isometrik_flutter_chat` will be used by default
+  /// If not provided `isometrik_chat_flutter` will be used by default
   final String? databaseName;
 
   /// This callback is to be used if you want to make certain changes while conversation data is being parsed from the API

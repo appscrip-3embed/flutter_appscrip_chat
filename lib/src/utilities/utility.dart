@@ -15,7 +15,7 @@ import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as img;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
+import 'package:isometrik_chat_flutter/isometrik_chat_flutter.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:path_provider/path_provider.dart';

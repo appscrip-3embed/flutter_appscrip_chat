@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:isometrik_flutter_chat/isometrik_flutter_chat.dart';
+import 'package:isometrik_chat_flutter/isometrik_chat_flutter.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 import 'data/data.dart';
