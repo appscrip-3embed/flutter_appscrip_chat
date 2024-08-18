@@ -265,8 +265,8 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                         );
                                         Get.back<void>();
                                         IsmChatProperties
-                                            .conversationProperties.onChatTap!
-                                            .call(_, ismChatConversation);
+                                            .conversationProperties.onChatTap
+                                            ?.call(_, ismChatConversation);
                                         controller.navigateToMessages(
                                             ismChatConversation);
                                         await controller.goToChatPage();
