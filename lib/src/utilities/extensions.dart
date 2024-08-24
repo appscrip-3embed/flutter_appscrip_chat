@@ -880,7 +880,7 @@ extension MentionMessage on IsmChatMessageModel {
         .contains(IsmChatFeature.forward)) {
       menu.remove(IsmChatFocusMenuType.forward);
     }
-    if (Get.find<IsmChatPageController>().isBroadcast) {
+    if (Get.find<IsmChatPageController>(tag: IsmChat.i.tag).isBroadcast) {
       menu.removeWhere((e) => [
             IsmChatFocusMenuType.info,
             IsmChatFocusMenuType.delete,

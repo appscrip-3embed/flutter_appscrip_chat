@@ -8,7 +8,10 @@ import 'package:isometrik_chat_flutter/isometrik_chat_flutter.dart';
 class IsmChatPageView extends StatefulWidget {
   const IsmChatPageView({
     super.key,
+    this.viewTag,
   });
+
+  final String? viewTag;
 
   static const String route = IsmPageRoutes.chatPage;
 
@@ -22,7 +25,8 @@ class _IsmChatPageViewState extends State<IsmChatPageView>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    if (!Get.isRegistered<IsmChatPageController>()) {
+    IsmChat.i.tag = widget.viewTag;
+    if (!Get.isRegistered<IsmChatPageController>(tag: IsmChat.i.tag)) {
       IsmChatPageBinding().dependencies();
     }
   }
@@ -56,7 +60,8 @@ class _IsmChatPageViewState extends State<IsmChatPageView>
     }
   }
 
-  IsmChatPageController get controller => Get.find<IsmChatPageController>();
+  IsmChatPageController get controller =>
+      Get.find<IsmChatPageController>(tag: IsmChat.i.tag);
 
   Future<bool> navigateBack() async {
     if (controller.isMessageSeleted) {
@@ -101,6 +106,7 @@ class _IsmChatPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
+        tag: IsmChat.i.tag,
         builder: (controller) => DecoratedBox(
           decoration: BoxDecoration(
             color: controller.backgroundColor.isNotEmpty

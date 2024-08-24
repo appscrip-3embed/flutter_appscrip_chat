@@ -13,10 +13,12 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize {
-    if (Get.isRegistered<IsmChatPageController>()) {
+    if (Get.isRegistered<IsmChatPageController>(tag: IsmChat.i.tag)) {
       return Size.fromHeight(IsmChatProperties.chatPageProperties.header?.height
-              ?.call(Get.context!,
-                  Get.find<IsmChatPageController>().conversation!) ??
+              ?.call(
+                  Get.context!,
+                  Get.find<IsmChatPageController>(tag: IsmChat.i.tag)
+                      .conversation!) ??
           IsmChatDimens.appBarHeight);
     }
 
@@ -28,6 +30,7 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) => GetBuilder<IsmChatPageController>(
+        tag: IsmChat.i.tag,
         builder: (controller) => PreferredSize(
           preferredSize: preferredSize,
           child: AnnotatedRegion<SystemUiOverlayStyle>(
