@@ -413,7 +413,7 @@ class IsmChatDelegate {
 
     (onNavigateToChat ?? IsmChatProperties.conversationProperties.onChatTap)
         ?.call(Get.context!, conversation);
-    controller.navigateToMessages(conversation);
+    controller.updateLocalConversation(conversation);
     if (storyMediaUrl == null) {
       await controller.goToChatPage();
     } else {
@@ -450,7 +450,7 @@ class IsmChatDelegate {
 
     (onNavigateToChat ?? IsmChatProperties.conversationProperties.onChatTap)
         ?.call(Get.context!, ismChatConversation);
-    controller.navigateToMessages(ismChatConversation);
+    controller.updateLocalConversation(ismChatConversation);
     await controller.goToChatPage();
   }
 
@@ -512,7 +512,23 @@ class IsmChatDelegate {
 
     (onNavigateToChat ?? IsmChatProperties.conversationProperties.onChatTap)
         ?.call(Get.context!, conversation);
-    controller.navigateToMessages(conversation);
+    controller.updateLocalConversation(conversation);
     await controller.goToChatPage();
+  }
+
+  Future<IsmChatConversationModel?> getConversation({
+    required String userId,
+  }) async {
+    if (!Get.isRegistered<IsmChatConversationsController>()) {
+      IsmChatCommonBinding().dependencies();
+      IsmChatConversationsBinding().dependencies();
+      await Future.delayed(const Duration(seconds: 2));
+    }
+    var controller = Get.find<IsmChatConversationsController>();
+    final conversation = controller.getConversation(userId);
+    if (conversation != null) {
+      controller.updateLocalConversation(conversation);
+    }
+    return conversation;
   }
 }

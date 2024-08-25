@@ -797,7 +797,6 @@ class IsmChat {
   /// );
   /// ```
   ///
-
   Future<void> createGroupFromOutside({
     required String conversationImageUrl,
     required String conversationTitle,
@@ -845,6 +844,12 @@ class IsmChat {
     bool isBroadcast = false,
   }) async =>
       await _delegate.getMessageOnChatPage(isBroadcast: isBroadcast);
+      
+
+  Future<IsmChatConversationModel?> getConversation({
+    required String userId,
+  }) async =>
+      _delegate.getConversation(userId: userId);
 
   final Rx<String?> _tag = Rx<String?>(null);
   String? get tag => _tag.value;

@@ -183,7 +183,7 @@ class _IsmChatUserInfoState extends State<IsmChatUserInfo> {
                           }
 
                           conversationController
-                              .navigateToMessages(conversationModel);
+                              .updateLocalConversation(conversationModel);
                           controller.messages.clear();
                           if (widget._fromMessagePage) {
                             Get.back();

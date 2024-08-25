@@ -753,7 +753,7 @@ class IsmChatConversationsController extends GetxController {
     return _viewModel.clearAllMessages(conversationId, fromServer: fromServer);
   }
 
-  void navigateToMessages(IsmChatConversationModel conversation) {
+  void updateLocalConversation(IsmChatConversationModel conversation) {
     currentConversation = conversation;
     currentConversationId = conversation.conversationId ?? '';
   }
@@ -779,7 +779,8 @@ class IsmChatConversationsController extends GetxController {
   }
 
   Future<void> getConversationsFromDB() async {
-    var dbConversations = await IsmChatConfig.dbWrapper!.getAllConversations();
+    var dbConversations =
+        await IsmChatConfig.dbWrapper?.getAllConversations() ?? [];
 
     if (dbConversations.isEmpty == true) {
       conversations.clear();
@@ -803,7 +804,18 @@ class IsmChatConversationsController extends GetxController {
     if (conversation.conversationId == null) {
       return '';
     }
-    return conversation.conversationId!;
+    return conversation.conversationId ?? '';
+  }
+
+  IsmChatConversationModel? getConversation(String userId) {
+    var conversation = conversations.firstWhere(
+        (element) => element.opponentDetails?.userId == userId,
+        orElse: IsmChatConversationModel.new);
+
+    if (conversation.conversationId == null) {
+      return null;
+    }
+    return conversation;
   }
 
   Future<void> getChatConversations(
@@ -826,7 +838,7 @@ class IsmChatConversationsController extends GetxController {
       await Future.wait(
         chats.map(
           (e) async =>
-              await IsmChatConfig.dbWrapper!.createAndUpdateConversation(e),
+              await IsmChatConfig.dbWrapper?.createAndUpdateConversation(e),
         ),
       );
     }
@@ -898,8 +910,13 @@ class IsmChatConversationsController extends GetxController {
           final indexOfAsset = assetList
               .indexWhere((e) => e.values.first.srNoBackgroundAssset == 100);
           if (indexOfAsset != -1) {
-            final pathName =
-                assetList[indexOfAsset].values.first.imageUrl!.split('/').last;
+            final pathName = assetList[indexOfAsset]
+                    .values
+                    .first
+                    .imageUrl
+                    ?.split('/')
+                    .last ??
+                '';
             var filePath = await IsmChatUtility.makeDirectoryWithUrl(
                 urlPath: assetList[indexOfAsset].values.first.imageUrl ?? '',
                 fileName: pathName);
@@ -1609,7 +1626,7 @@ class IsmChatConversationsController extends GetxController {
       conversationId: conversationId,
     );
 
-    navigateToMessages(conversation);
+    updateLocalConversation(conversation);
     if (IsmChatResponsive.isWeb(Get.context!)) {
       Get.back();
       if (!Get.isRegistered<IsmChatPageController>(tag: IsmChat.i.tag)) {

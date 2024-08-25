@@ -111,7 +111,7 @@ class _IsmChatOpenConversationViewState
                               if (response != null) {
                                 IsmChatProperties.conversationProperties
                                     .onChatTap!(Get.context!, data);
-                                controller.navigateToMessages(data);
+                                controller.updateLocalConversation(data);
 
                                 if (IsmChatResponsive.isWeb(Get.context!)) {
                                   Get.back();
