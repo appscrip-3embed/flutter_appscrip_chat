@@ -33,6 +33,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView>
 
   @override
   void dispose() {
+    IsmChat.i.tag = null;
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -74,7 +75,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView>
       final updateMessage = await controller.updateLastMessage();
       if (IsmChatProperties.chatPageProperties.header?.onBackTap != null) {
         IsmChatProperties.chatPageProperties.header?.onBackTap!
-            .call( updateMessage);
+            .call(updateMessage);
       }
       return true;
     }
