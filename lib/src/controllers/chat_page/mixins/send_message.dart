@@ -1,7 +1,8 @@
 part of '../chat_page_controller.dart';
 
 mixin IsmChatPageSendMessageMixin on GetxController {
-  IsmChatPageController get _controller => Get.find<IsmChatPageController>();
+  IsmChatPageController get _controller =>
+      Get.find<IsmChatPageController>(tag: IsmChat.i.tag);
 
   IsmChatConversationsController get conversationController =>
       Get.find<IsmChatConversationsController>();
@@ -93,8 +94,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       Get.back<void>();
       if (await IsmChatProperties
               .chatPageProperties.messageAllowedConfig?.isMessgeAllowed
-              ?.call(Get.context!,
-                  Get.find<IsmChatPageController>().conversation!) ??
+              ?.call(
+                  Get.context!,
+                  Get.find<IsmChatPageController>(tag: IsmChat.i.tag)
+                      .conversation!) ??
           true) {
         sendPhotoAndVideo();
       }
@@ -426,8 +429,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
               '';
       if (await IsmChatProperties
               .chatPageProperties.messageAllowedConfig?.isMessgeAllowed
-              ?.call(Get.context!,
-                  Get.find<IsmChatPageController>().conversation!) ??
+              ?.call(
+                  Get.context!,
+                  Get.find<IsmChatPageController>(tag: IsmChat.i.tag)
+                      .conversation!) ??
           true) {
         await ismPostMediaUrl(
           imageAndFile: false,

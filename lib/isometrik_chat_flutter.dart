@@ -30,13 +30,13 @@ class IsmChat {
   factory IsmChat() => instance;
 
   /// Private constructor for creating a new instance of [IsmChat].
-  const IsmChat._(this._delegate);
+  IsmChat._(this._delegate);
 
   /// The delegate used by this instance of [IsmChat].
   final IsmChatDelegate _delegate;
 
   /// The static instance of [IsmChat].
-  static IsmChat i = const IsmChat._(IsmChatDelegate());
+  static IsmChat i = IsmChat._(const IsmChatDelegate());
 
   /// The static instance of [IsmChat].
   static IsmChat instance = i;
@@ -845,4 +845,8 @@ class IsmChat {
     bool isBroadcast = false,
   }) async =>
       await _delegate.getMessageOnChatPage(isBroadcast: isBroadcast);
+
+  final Rx<String?> _tag = Rx<String?>(null);
+  String? get tag => _tag.value;
+  set tag(String? value) => _tag.value = value;
 }

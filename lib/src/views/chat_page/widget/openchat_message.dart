@@ -2,11 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:isometrik_chat_flutter/src/controllers/controllers.dart';
-import 'package:isometrik_chat_flutter/src/res/res.dart';
-import 'package:isometrik_chat_flutter/src/utilities/utilities.dart';
-import 'package:isometrik_chat_flutter/src/views/views.dart';
-import 'package:isometrik_chat_flutter/src/widgets/widgets.dart';
+import 'package:isometrik_chat_flutter/isometrik_chat_flutter.dart';
 
 class IsmChatOpenChatMessagePage extends StatelessWidget {
   const IsmChatOpenChatMessagePage({super.key});
@@ -14,7 +10,7 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
   static const String route = IsmPageRoutes.openChatMessagePage;
 
   void _back(BuildContext context, IsmChatPageController controller) async {
-    var controller = Get.find<IsmChatPageController>();
+    var controller = Get.find<IsmChatPageController>(tag: IsmChat.i.tag);
     final conversationController = Get.find<IsmChatConversationsController>();
     if (IsmChatResponsive.isWeb(context)) {
       controller.isBroadcast = false;
@@ -22,7 +18,7 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
       conversationController.currentConversationId = '';
       conversationController.isRenderChatPageaScreen =
           IsRenderChatPageScreen.none;
-      await Get.delete<IsmChatPageController>(force: true);
+      await Get.delete<IsmChatPageController>(force: true, tag: IsmChat.i.tag);
     } else {
       Get.back();
     }
@@ -34,6 +30,7 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
+        tag: IsmChat.i.tag,
         builder: (controller) => PopScope(
           canPop: true,
           onPopInvokedWithResult: (_, __) => _back(context, controller),

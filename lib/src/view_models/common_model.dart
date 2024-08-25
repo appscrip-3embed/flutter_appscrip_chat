@@ -115,7 +115,8 @@ class IsmChatCommonViewModel {
       if (messageId == null || messageId.isEmpty) return false;
       if (!isUpdateMesage) return false;
       if (isBroadcast) {
-        final chatPageController = Get.find<IsmChatPageController>();
+        final chatPageController =
+            Get.find<IsmChatPageController>(tag: IsmChat.i.tag);
         for (var x = 0; x < chatPageController.messages.length; x++) {
           var messages = chatPageController.messages[x];
           if (messages.messageId?.isNotEmpty == true ||

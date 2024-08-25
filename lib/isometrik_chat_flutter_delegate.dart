@@ -98,8 +98,8 @@ class IsmChatDelegate {
   }
 
   void showBlockUnBlockDialog() {
-    if (Get.isRegistered<IsmChatPageController>()) {
-      final controller = Get.find<IsmChatPageController>();
+    if (Get.isRegistered<IsmChatPageController>(tag: IsmChat.i.tag)) {
+      final controller = Get.find<IsmChatPageController>(tag: IsmChat.i.tag);
       if (!(controller.conversation?.isChattingAllowed == true)) {
         controller.showDialogCheckBlockUnBlock();
       }
@@ -114,8 +114,8 @@ class IsmChatDelegate {
   }
 
   void updateChatPageController() {
-    if (Get.isRegistered<IsmChatPageController>()) {
-      final controller = Get.find<IsmChatPageController>();
+    if (Get.isRegistered<IsmChatPageController>(tag: IsmChat.i.tag)) {
+      final controller = Get.find<IsmChatPageController>(tag: IsmChat.i.tag);
       var conversationModel = controller.conversation!;
       controller.conversation = null;
       controller.conversation = conversationModel;
@@ -206,11 +206,12 @@ class IsmChatDelegate {
     bool? includeMembers,
     required bool isLoading,
   }) async {
-    if (Get.isRegistered<IsmChatPageController>()) {
-      return await Get.find<IsmChatPageController>().getConverstaionDetails(
-          conversationId: conversationId,
-          includeMembers: includeMembers,
-          isLoading: isLoading);
+    if (Get.isRegistered<IsmChatPageController>(tag: IsmChat.i.tag)) {
+      return await Get.find<IsmChatPageController>(tag: IsmChat.i.tag)
+          .getConverstaionDetails(
+              conversationId: conversationId,
+              includeMembers: includeMembers,
+              isLoading: isLoading);
     }
     return null;
   }
@@ -221,8 +222,8 @@ class IsmChatDelegate {
     required bool isLoading,
     required bool fromUser,
   }) async {
-    if (Get.isRegistered<IsmChatPageController>()) {
-      await Get.find<IsmChatPageController>().unblockUser(
+    if (Get.isRegistered<IsmChatPageController>(tag: IsmChat.i.tag)) {
+      await Get.find<IsmChatPageController>(tag: IsmChat.i.tag).unblockUser(
         opponentId: opponentId,
         includeMembers: includeMembers,
         isLoading: isLoading,
@@ -238,8 +239,8 @@ class IsmChatDelegate {
     required bool isLoading,
     required bool fromUser,
   }) async {
-    if (Get.isRegistered<IsmChatPageController>()) {
-      await Get.find<IsmChatPageController>().blockUser(
+    if (Get.isRegistered<IsmChatPageController>(tag: IsmChat.i.tag)) {
+      await Get.find<IsmChatPageController>(tag: IsmChat.i.tag).blockUser(
         opponentId: opponentId,
         includeMembers: includeMembers,
         isLoading: isLoading,
@@ -273,8 +274,8 @@ class IsmChatDelegate {
   Future<void> getMessageOnChatPage({
     bool isBroadcast = false,
   }) async {
-    if (Get.isRegistered<IsmChatPageController>()) {
-      final controller = Get.find<IsmChatPageController>();
+    if (Get.isRegistered<IsmChatPageController>(tag: IsmChat.i.tag)) {
+      final controller = Get.find<IsmChatPageController>(tag: IsmChat.i.tag);
       await controller.getMessagesFromAPI(
         isBroadcast: isBroadcast,
         conversationId: controller.conversation?.conversationId ?? '',
@@ -315,8 +316,8 @@ class IsmChatDelegate {
 
   Future<void> exitGroup(
       {required int adminCount, required bool isUserAdmin}) async {
-    if (Get.isRegistered<IsmChatPageController>()) {
-      await Get.find<IsmChatPageController>().leaveGroup(
+    if (Get.isRegistered<IsmChatPageController>(tag: IsmChat.i.tag)) {
+      await Get.find<IsmChatPageController>(tag: IsmChat.i.tag).leaveGroup(
         adminCount: adminCount,
         isUserAdmin: isUserAdmin,
       );
@@ -327,8 +328,9 @@ class IsmChatDelegate {
     String conversationId, {
     bool fromServer = true,
   }) async {
-    if (Get.isRegistered<IsmChatPageController>()) {
-      await Get.find<IsmChatPageController>().clearAllMessages(
+    if (Get.isRegistered<IsmChatPageController>(tag: IsmChat.i.tag)) {
+      await Get.find<IsmChatPageController>(tag: IsmChat.i.tag)
+          .clearAllMessages(
         conversationId,
         fromServer: fromServer,
       );
