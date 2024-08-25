@@ -63,11 +63,13 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                           if (!IsmChatResponsive.isWeb(context)) ...[
                             IconButton(
                               onPressed: () async {
-                                Get.back<void>();
-
+                                var updateLastMessage = false;
                                 controller.closeOverlay();
-                                final updateLastMessage =
-                                    await controller.updateLastMessage();
+                                if (IsmChat.i.tag == null) {
+                                  Get.back<void>();
+                                  updateLastMessage =
+                                      await controller.updateLastMessage();
+                                }
                                 if (IsmChatProperties
                                         .chatPageProperties.header?.onBackTap !=
                                     null) {
@@ -77,7 +79,9 @@ class IsmChatPageHeader extends StatelessWidget implements PreferredSizeWidget {
                                 }
                               },
                               icon: Icon(
-                                Icons.arrow_back_rounded,
+                                IsmChat.i.tag == null
+                                    ? Icons.arrow_back_rounded
+                                    : Icons.close_rounded,
                                 color: IsmChatConfig.chatTheme
                                         .chatPageHeaderTheme?.iconColor ??
                                     IsmChatColors.whiteColor,

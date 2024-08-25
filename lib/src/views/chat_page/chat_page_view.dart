@@ -74,7 +74,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView>
       final updateMessage = await controller.updateLastMessage();
       if (IsmChatProperties.chatPageProperties.header?.onBackTap != null) {
         IsmChatProperties.chatPageProperties.header?.onBackTap!
-            .call(updateMessage);
+            .call( updateMessage);
       }
       return true;
     }
@@ -86,15 +86,17 @@ class _IsmChatPageViewState extends State<IsmChatPageView>
           if (!GetPlatform.isAndroid) {
             return false;
           }
-          return await navigateBack();
+          return IsmChat.i.tag == null ? await navigateBack() : false;
         },
         child: GetPlatform.isIOS
             ? GestureDetector(
-                onHorizontalDragEnd: (details) {
-                  if (details.velocity.pixelsPerSecond.dx > 50) {
-                    navigateBack();
-                  }
-                },
+                onHorizontalDragEnd: IsmChat.i.tag == null
+                    ? (details) {
+                        if (details.velocity.pixelsPerSecond.dx > 50) {
+                          navigateBack();
+                        }
+                      }
+                    : null,
                 child: const _IsmChatPageView(),
               )
             : const _IsmChatPageView(),
