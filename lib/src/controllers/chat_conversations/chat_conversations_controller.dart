@@ -807,9 +807,9 @@ class IsmChatConversationsController extends GetxController {
     return conversation.conversationId ?? '';
   }
 
-  IsmChatConversationModel? getConversation(String userId) {
+  IsmChatConversationModel? getConversation(String conversationId) {
     var conversation = conversations.firstWhere(
-        (element) => element.opponentDetails?.userId == userId,
+        (element) => element.conversationId == conversationId,
         orElse: IsmChatConversationModel.new);
 
     if (conversation.conversationId == null) {

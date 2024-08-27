@@ -517,7 +517,7 @@ class IsmChatDelegate {
   }
 
   Future<IsmChatConversationModel?> getConversation({
-    required String userId,
+    required String conversationId,
   }) async {
     if (!Get.isRegistered<IsmChatConversationsController>()) {
       IsmChatCommonBinding().dependencies();
@@ -525,7 +525,7 @@ class IsmChatDelegate {
       await Future.delayed(const Duration(seconds: 2));
     }
     var controller = Get.find<IsmChatConversationsController>();
-    final conversation = controller.getConversation(userId);
+    final conversation = controller.getConversation(conversationId);
     if (conversation != null) {
       controller.updateLocalConversation(conversation);
     }

@@ -844,12 +844,11 @@ class IsmChat {
     bool isBroadcast = false,
   }) async =>
       await _delegate.getMessageOnChatPage(isBroadcast: isBroadcast);
-      
 
   Future<IsmChatConversationModel?> getConversation({
-    required String userId,
+    required String conversationId,
   }) async =>
-      _delegate.getConversation(userId: userId);
+      _delegate.getConversation(conversationId: conversationId);
 
   final Rx<String?> _tag = Rx<String?>(null);
   String? get tag => _tag.value;
