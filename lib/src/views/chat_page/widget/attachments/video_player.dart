@@ -34,7 +34,7 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
   void initState() {
     chatPageController.isVideoVisible = true;
     _controller = widget.path.contains('http')
-        ? VideoPlayerController.network(widget.path)
+        ? VideoPlayerController.networkUrl(Uri.parse(widget.path))
         : VideoPlayerController.file(File(widget.path))
       ..addListener(() {
         setState(() {});
@@ -56,7 +56,7 @@ class VideoViewPageState extends State<VideoViewPage> with RouteAware {
       chatPageController.isVideoVisible = true;
       _controller.pause();
       _controller = widget.path.contains('http')
-          ? VideoPlayerController.network(widget.path)
+          ? VideoPlayerController.networkUrl(Uri.parse(widget.path))
           : VideoPlayerController.file(File(widget.path))
         ..addListener(() {
           setState(() {});

@@ -71,28 +71,29 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
 
   IsmChatPageController get controller => Get.find<IsmChatPageController>();
 
-  Future<bool> navigateBack() async {
+  void navigateBack() async {
     if (controller.isMessageSeleted) {
       controller.isMessageSeleted = false;
       controller.selectedMessage.clear();
-      return false;
     } else {
       Get.back<void>();
       await controller.updateLastMessage();
       if (widget.onBackTap != null) {
         widget.onBackTap!.call();
       }
-      return true;
     }
   }
 
   @override
-  Widget build(BuildContext context) => WillPopScope(
-        onWillPop: () async {
-          if (!GetPlatform.isAndroid) {
-            return false;
-          }
-          return await navigateBack();
+  Widget build(BuildContext context) => PopScope(
+        canPop: !GetPlatform.isAndroid
+            ? false
+            : controller.isMessageSeleted
+                ? false
+                : true,
+        onPopInvoked: (_) async {
+          if (!GetPlatform.isAndroid) return;
+          return navigateBack();
         },
         child: GetPlatform.isIOS
             ? GestureDetector(

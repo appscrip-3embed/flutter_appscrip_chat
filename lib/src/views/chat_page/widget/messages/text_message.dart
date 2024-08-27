@@ -19,58 +19,59 @@ class IsmChatTextMessage extends StatelessWidget {
           padding: IsmChatDimens.edgeInsets4,
           child: AbsorbPointer(
             absorbing: message.mentionedUsers.isNullOrEmpty,
-            ignoringSemantics: true,
-            child: GestureDetector(
-              child: RichText(
-                text: TextSpan(
-                  text: message.mentionedUsers.isNullOrEmpty
-                      ? message.body
-                      : null,
-                  style: message.style,
-                  children: message.mentionedUsers.isNullOrEmpty
-                      ? null
-                      : message.mentionList
-                          .map(
-                            (e) => TextSpan(
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () async {
-                                  if (e.isMentioned) {
-                                    var user = message.mentionedUsers
-                                        ?.where((user) =>
-                                            user.userName.toLowerCase() ==
-                                            e.text.substring(1).toLowerCase())
-                                        .toList();
+            child: ExcludeSemantics(
+              child: GestureDetector(
+                child: RichText(
+                  text: TextSpan(
+                    text: message.mentionedUsers.isNullOrEmpty
+                        ? message.body
+                        : null,
+                    style: message.style,
+                    children: message.mentionedUsers.isNullOrEmpty
+                        ? null
+                        : message.mentionList
+                            .map(
+                              (e) => TextSpan(
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () async {
+                                    if (e.isMentioned) {
+                                      var user = message.mentionedUsers
+                                          ?.where((user) =>
+                                              user.userName.toLowerCase() ==
+                                              e.text.substring(1).toLowerCase())
+                                          .toList();
 
-                                    if (!user.isNullOrEmpty) {
-                                      var controller = Get.find<
-                                          IsmChatConversationsController>();
-                                      var conversationId =
-                                          controller.getConversationId(
-                                              user!.first.userId);
-                                      await IsmChatUtility
-                                          .openFullScreenBottomSheet(
-                                        IsmChatUserInfo(
-                                          user: user.first,
-                                          conversationId: conversationId,
-                                        ),
-                                      );
+                                      if (!user.isNullOrEmpty) {
+                                        var controller = Get.find<
+                                            IsmChatConversationsController>();
+                                        var conversationId =
+                                            controller.getConversationId(
+                                                user!.first.userId);
+                                        await IsmChatUtility
+                                            .openFullScreenBottomSheet(
+                                          IsmChatUserInfo(
+                                            user: user.first,
+                                            conversationId: conversationId,
+                                          ),
+                                        );
+                                      }
                                     }
-                                  }
-                                },
-                              text: e.text,
-                              style: message.style.copyWith(
-                                color: e.isMentioned
-                                    ? message.sentByMe
-                                        ? IsmChatConfig.chatTheme.mentionColor
-                                        : IsmChatConfig.chatTheme.primaryColor
-                                    : null,
+                                  },
+                                text: e.text,
+                                style: message.style.copyWith(
+                                  color: e.isMentioned
+                                      ? message.sentByMe
+                                          ? IsmChatConfig.chatTheme.mentionColor
+                                          : IsmChatConfig.chatTheme.primaryColor
+                                      : null,
+                                ),
                               ),
-                            ),
-                          )
-                          .toList(),
+                            )
+                            .toList(),
+                  ),
+                  softWrap: true,
+                  maxLines: null,
                 ),
-                softWrap: true,
-                maxLines: null,
               ),
             ),
           ),

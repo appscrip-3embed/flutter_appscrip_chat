@@ -218,10 +218,8 @@ class IsmChatMqttController extends GetxController {
         _handleBlockUserOrUnBlock(actionModel);
         break;
       case IsmChatActionEvents.clearConversation:
-        // TODO: Handle this case.
         break;
       case IsmChatActionEvents.deleteConversationLocally:
-        // TODO: Handle this case.
         break;
       case IsmChatActionEvents.memberLeave:
         _handleMemberLeave(actionModel);

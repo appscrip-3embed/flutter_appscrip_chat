@@ -43,7 +43,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 // #1
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest.dart' as tzData;
+import 'package:timezone/data/latest.dart' as tz_data;
 // #2
 import 'package:timezone/timezone.dart' as tz;
 
@@ -80,43 +80,38 @@ class LocalNoticeService {
     String channel = 'default',
     required Map<String, dynamic> payload,
   }) async {
-    tzData.initializeTimeZones();
-
+    tz_data.initializeTimeZones();
     final scheduleTime =
         tz.TZDateTime.fromMillisecondsSinceEpoch(tz.local, endTime);
-
-    // #3
-    final iosDetail = sound == ''
+    final iosDetail = sound.isEmpty
         ? null
         : DarwinNotificationDetails(presentSound: true, sound: sound);
-
     final soundFile = sound.replaceAll('.mp3', '');
     final notificationSound =
-        sound == '' ? null : RawResourceAndroidNotificationSound(soundFile);
-
+        sound.isEmpty ? null : RawResourceAndroidNotificationSound(soundFile);
     final androidDetail = AndroidNotificationDetails(
-        channel, // channel Id
-        channel, // channel Name
-        playSound: true,
-        sound: notificationSound);
+      channel,
+      channel,
+      playSound: true,
+      sound: notificationSound,
+    );
 
     final noticeDetail = NotificationDetails(
       iOS: iosDetail,
       android: androidDetail,
     );
-
-    // #4
-    const id = 0;
-
     await _localNotificationsPlugin.zonedSchedule(
-        id, title, body, scheduleTime, noticeDetail,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-        androidAllowWhileIdle: true,
-        payload: jsonEncode(payload));
+      0,
+      title,
+      body,
+      scheduleTime,
+      noticeDetail,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      payload: jsonEncode(payload),
+    );
   }
 
-  void cancelAllNotification() {
-    _localNotificationsPlugin.cancelAll();
-  }
+  void cancelAllNotification() => _localNotificationsPlugin.cancelAll();
 }

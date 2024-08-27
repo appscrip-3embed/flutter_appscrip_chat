@@ -59,19 +59,20 @@ class _IsmDocsViewState extends State<IsmDocsView>
                         physics: const ScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: value.length,
+                        // ignore: prefer_expression_function_bodies
                         itemBuilder: (context, valueIndex) {
                           // return Text('${value[valueIndex]}');
-                          var url = value[valueIndex].customType ==
-                                  IsmChatCustomMessageType.image
-                              ? value[valueIndex].attachments!.first.mediaUrl!
-                              : value[valueIndex]
-                                  .attachments!
-                                  .first
-                                  .thumbnailUrl!;
-                          var iconData = value[valueIndex].customType ==
-                                  IsmChatCustomMessageType.audio
-                              ? Icons.audio_file_rounded
-                              : Icons.description_rounded;
+                          // var url = value[valueIndex].customType ==
+                          //         IsmChatCustomMessageType.image
+                          //     ? value[valueIndex].attachments!.first.mediaUrl!
+                          //     : value[valueIndex]
+                          //         .attachments!
+                          //         .first
+                          //         .thumbnailUrl!;
+                          // var iconData = value[valueIndex].customType ==
+                          //         IsmChatCustomMessageType.audio
+                          //     ? Icons.audio_file_rounded
+                          //     : Icons.description_rounded;
                           return GestureDetector(
                             onTap: () => Get.find<IsmChatPageController>()
                                 .tapForMediaPreview(value[valueIndex]),

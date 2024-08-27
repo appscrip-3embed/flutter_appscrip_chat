@@ -23,24 +23,17 @@ class IsmChatBlockedUsersView extends StatelessWidget {
               : ListView.builder(
                   itemCount: controller.blockUsers.length,
                   itemBuilder: (_, index) {
-                    var user = controller.blockUsers[index];
+                    final user = controller.blockUsers[index];
                     return ListTile(
                       leading: IsmChatImage.profile(user.profileUrl),
-                      title: Text(
-                        user.userName,
-                      ),
-                      subtitle: Text(
-                        user.userIdentifier,
-                      ),
-                      // TODO: Implement unblock API here
+                      title: Text(user.userName),
+                      subtitle: Text(user.userIdentifier),
                       trailing: ElevatedButton(
-                        onPressed: () {
-                          controller.unblockUser(
-                              opponentId: user.userId, isLoading: true);
-                        },
-                        child: const Text(
-                          IsmChatStrings.unblock,
+                        onPressed: () => controller.unblockUser(
+                          opponentId: user.userId,
+                          isLoading: true,
                         ),
+                        child: const Text(IsmChatStrings.unblock),
                       ),
                     );
                   },
