@@ -470,7 +470,6 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     String? thumbnailNameWithExtension;
     String? thumbnailMediaId;
     String? mediaId;
-
     String? extension;
     File? thumbnailFile;
     MediaInfo? videoCopress;
@@ -488,7 +487,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
               );
       if (videoCopress != null) {
         IsmChatUtility.closeLoader();
-        bytes = videoCopress.file!.readAsBytesSync();
+        bytes = videoCopress.file?.readAsBytesSync();
         thumbnailBytes = thumbnailFile.readAsBytesSync();
         thumbnailNameWithExtension = thumbnailFile.path.split('/').last;
         thumbnailMediaId =
@@ -1140,10 +1139,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             mediaType: thumbanilMediaType ?? 0,
             mediaId: thumbnailMediaId ?? '',
             isLoading: isLoading,
-            bytes: bytes,
+            bytes: thumbnailBytes ?? Uint8List(0),
+            isUpdateThumbnail: true,
           );
         }
-
         if (presignedUrlModel != null) {
           thumbnailUrlPath = _controller.isBroadcast
               ? presignedUrlModel.mediaUrl ?? ''

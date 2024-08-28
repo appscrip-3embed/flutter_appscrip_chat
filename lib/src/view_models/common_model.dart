@@ -54,6 +54,7 @@ class IsmChatCommonViewModel {
     required String mediaId,
     required bool isLoading,
     required Uint8List bytes,
+    bool isUpdateThumbnail = false,
   }) async {
     final responseMedia = await _repository.postMediaUrl(
       conversationId: conversationId,
@@ -66,7 +67,9 @@ class IsmChatCommonViewModel {
       final response = await updatePresignedUrl(
         bytes: bytes,
         isLoading: isLoading,
-        presignedUrl: responseMedia.mediaPresignedUrl,
+        presignedUrl: isUpdateThumbnail
+            ? responseMedia.thumbnailPresignedUrl
+            : responseMedia.mediaPresignedUrl,
       );
       if (response == 200) {
         return responseMedia;
