@@ -27,6 +27,8 @@ class IsmChatDelegate {
     BuildContext? context,
     String databaseName = IsmChatStrings.dbname,
     bool shouldSetupMqtt = false,
+    List<String>? topics,
+    List<String>? topicChannels,
   }) async {
     _config = config;
     IsmChatConfig.context = context;
@@ -37,18 +39,29 @@ class IsmChatDelegate {
     IsmChatConfig.configInitilized = true;
     IsmChatConfig.showNotification = showNotification;
     IsmChatConfig.dbWrapper = await IsmChatDBWrapper.create();
-    await _initializeMqtt(config: _config, shouldSetupMqtt: shouldSetupMqtt);
+    await _initializeMqtt(
+      config: _config,
+      shouldSetupMqtt: shouldSetupMqtt,
+      topics: topics,
+      topicChannels: topicChannels,
+    );
   }
 
   Future<void> _initializeMqtt({
     IsmChatCommunicationConfig? config,
     required bool shouldSetupMqtt,
+    List<String>? topics,
+    List<String>? topicChannels,
   }) async {
     if (!Get.isRegistered<IsmChatMqttController>()) {
       IsmChatMqttBinding().dependencies();
     }
     if (!shouldSetupMqtt) {
-      await Get.find<IsmChatMqttController>().setup(config: config);
+      await Get.find<IsmChatMqttController>().setup(
+        config: config,
+        topics: topics,
+        topicChannels: topicChannels,
+      );
     }
   }
 

@@ -82,6 +82,8 @@ class IsmChat {
     NotificaitonCallback? showNotification,
     BuildContext? context,
     bool shouldSetupMqtt = false,
+    List<String>? topics,
+    List<String>? topicChannels,
   }) async {
     await _delegate.initialize(
       communicationConfig,
@@ -90,6 +92,8 @@ class IsmChat {
       context: context,
       databaseName: databaseName,
       shouldSetupMqtt: shouldSetupMqtt,
+      topics: topics,
+      topicChannels: topicChannels,
     );
     _initialized = true;
   }
