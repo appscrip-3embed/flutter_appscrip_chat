@@ -51,14 +51,16 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
         '/${projectConfig?.accountId}/${projectConfig?.projectId}/Status/${userConfig?.userId}';
     await mqttHelper.initialize(
       MqttConfig(
-        projectConfig: ProjectConfig.fromMap(projectConfig?.toMap() ?? {}),
+        projectConfig: ProjectConfig(
+          deviceId: projectConfig?.deviceId ?? '',
+          userIdentifier: userConfig?.userId ?? '',
+          username: _config?.username ?? '',
+          password: _config?.password ?? '',
+        ),
         serverConfig: ServerConfig(
           hostName: mqttConfig?.hostName ?? '',
           port: mqttConfig?.port ?? 0,
         ),
-        userId: userConfig?.userId ?? '',
-        username: _config?.username,
-        password: _config?.password,
         enableLogging: true,
         secure: false,
         webSocketConfig: WebSocketConfig(
