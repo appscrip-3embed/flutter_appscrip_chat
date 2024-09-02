@@ -20,6 +20,11 @@ class IsmChatDelegate {
   bool get isMqttConnected => _isMqttConnected.value;
   set isMqttConnected(bool value) => _isMqttConnected.value = value;
 
+
+ static final Rx<String?> _tag = Rx<String?>(null);
+  String? get tag => _tag.value;
+  set tag(String? value) => _tag.value = value;
+
   Future<void> initialize(
     IsmChatCommunicationConfig config, {
     bool useDatabase = true,
@@ -543,5 +548,17 @@ class IsmChatDelegate {
       controller.updateLocalConversation(conversation);
     }
     return conversation;
+  }
+
+  void subscribeTopics(List<String> topic) {
+    if (Get.isRegistered<IsmChatMqttController>()) {
+      Get.find<IsmChatMqttController>().subscribeTopics(topic);
+    }
+  }
+
+  void unSubscribeTopics(List<String> topic) {
+    if (Get.isRegistered<IsmChatMqttController>()) {
+      Get.find<IsmChatMqttController>().unSubscribeTopics(topic);
+    }
   }
 }

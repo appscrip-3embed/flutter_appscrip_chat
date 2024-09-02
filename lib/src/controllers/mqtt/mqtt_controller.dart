@@ -10,7 +10,7 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
 
   final mqttHelper = MqttHelper();
 
-  final List<String> subscribeTopics = [];
+  final List<String> subscribedTopics = [];
 
   IsmChatProjectConfig? projectConfig;
 
@@ -63,7 +63,7 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
         ?.map((e) => '$topicPrefix/$e/${userConfig?.userId ?? ''}')
         .toList();
 
-    subscribeTopics.addAll([
+    subscribedTopics.addAll([
       ...?topics,
       ...?channelTopics,
       userTopic,
@@ -99,7 +99,7 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
         pongCallback: _pong,
       ),
       autoSubscribe: true,
-      topics: subscribeTopics,
+      topics: subscribedTopics,
     );
     mqttHelper.onConnectionChange((value) {
       chatDelegate.isMqttConnected = value;
@@ -146,5 +146,19 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
 
   void _pong() {
     IsmChatLog.info('MQTT pong');
+  }
+
+  void subscribeTopics(List<String> topic) {
+    if (chatDelegate.isMqttConnected &&
+        connectionState == IsmChatConnectionState.connected) {
+      mqttHelper.subscribeTopics(topic);
+    }
+  }
+
+  void unSubscribeTopics(List<String> topic) {
+    if (chatDelegate.isMqttConnected &&
+        connectionState == IsmChatConnectionState.connected) {
+      mqttHelper.unsubscribeTopics(topic);
+    }
   }
 }
