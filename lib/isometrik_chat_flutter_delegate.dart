@@ -20,8 +20,7 @@ class IsmChatDelegate {
   bool get isMqttConnected => _isMqttConnected.value;
   set isMqttConnected(bool value) => _isMqttConnected.value = value;
 
-
- static final Rx<String?> _tag = Rx<String?>(null);
+  static final Rx<String?> _tag = Rx<String?>(null);
   String? get tag => _tag.value;
   set tag(String? value) => _tag.value = value;
 
@@ -551,7 +550,10 @@ class IsmChatDelegate {
   }
 
   void subscribeTopics(List<String> topic) {
+    IsmChatLog.error('delegate log Step1');
     if (Get.isRegistered<IsmChatMqttController>()) {
+      IsmChatLog.error('delegate log Step2');
+
       Get.find<IsmChatMqttController>().subscribeTopics(topic);
     }
   }
