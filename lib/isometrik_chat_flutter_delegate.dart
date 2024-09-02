@@ -550,10 +550,7 @@ class IsmChatDelegate {
   }
 
   void subscribeTopics(List<String> topic) {
-    IsmChatLog.error('delegate log Step1');
     if (Get.isRegistered<IsmChatMqttController>()) {
-      IsmChatLog.error('delegate log Step2');
-
       Get.find<IsmChatMqttController>().subscribeTopics(topic);
     }
   }
