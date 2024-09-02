@@ -149,6 +149,9 @@ class IsmChatMqttController extends GetxController with IsmChatMqttEventMixin {
   }
 
   void subscribeTopics(List<String> topic) {
+    IsmChatLog.error('step1');
+    IsmChatLog.error('step1 ${chatDelegate.isMqttConnected}');
+    IsmChatLog.error('step1 $connectionState');
     if (chatDelegate.isMqttConnected &&
         connectionState == IsmChatConnectionState.connected) {
       mqttHelper.subscribeTopics(topic);
