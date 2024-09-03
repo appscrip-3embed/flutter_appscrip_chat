@@ -393,7 +393,7 @@ class IsmChatPageController extends GetxController
     _mediaDownloadProgress.value = value;
   }
 
-  late final AudioRecorder recordVoice;
+  late  AudioRecorder recordVoice;
 
   var _cameras = <CameraDescription>[];
 
