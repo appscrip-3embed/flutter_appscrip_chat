@@ -15,9 +15,9 @@ class UserDetails {
         online: map['online'] as bool? ?? false,
         memberName: map['memberName'] as String? ?? '',
         memberId: map['memberId'] as String? ?? '',
-        metaData: map['metaData'] == null
-            ? IsmChatMetaData()
-            : IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
+        // metaData: map['metaData'] == null
+        //     ? IsmChatMetaData()
+        //     : IsmChatMetaData.fromMap(map['metaData'] as Map<String, dynamic>),
         lastSeen: map['lastSeen'] as int? ?? 0,
         timestamp: map['timestamp'] as int? ?? 0,
         visibility: map['visibility'] as bool? ?? false,
@@ -112,7 +112,7 @@ class UserDetails {
         'userIdentifier': userIdentifier,
         'userId': userId,
         'online': online,
-        'metaData': metaData?.toMap(),
+        // 'metaData': metaData?.toMap(),
         'lastSeen': lastSeen,
         'visibility': visibility,
         'notification': notification,
