@@ -160,6 +160,7 @@ class IsmChatConversationsRepository {
 
       return user;
     } catch (e, st) {
+      print('GetUserDataError $e, $st');
       IsmChatLog.error('GetUserDataError $e', st);
       return null;
     }

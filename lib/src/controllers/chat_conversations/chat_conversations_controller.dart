@@ -917,42 +917,47 @@ class IsmChatConversationsController extends GetxController {
   }
 
   Future<void> getUserData({bool isLoading = false}) async {
-    var user = await _viewModel.getUserData(isLoading: isLoading);
-    if (user != null) {
-      userDetails = user;
-      if (!kIsWeb) {
-        if (userDetails?.metaData?.assetList?.isNotEmpty == true) {
-          final assetList = userDetails?.metaData?.assetList?.toList() ?? [];
-          final indexOfAsset = assetList
-              .indexWhere((e) => e.values.first.srNoBackgroundAssset == 100);
-          if (indexOfAsset != -1) {
-            final pathName = assetList[indexOfAsset]
-                    .values
-                    .first
-                    .imageUrl
-                    ?.split('/')
-                    .last ??
-                '';
-            var filePath = await IsmChatUtility.makeDirectoryWithUrl(
-                urlPath: assetList[indexOfAsset].values.first.imageUrl ?? '',
-                fileName: pathName);
-            assetList[indexOfAsset] = {
-              '${assetList[indexOfAsset].keys}': IsmChatBackgroundModel(
-                color: assetList[indexOfAsset].values.first.color,
-                isImage: assetList[indexOfAsset].values.first.isImage,
-                imageUrl: filePath.path,
-                srNoBackgroundAssset:
-                    assetList[indexOfAsset].values.first.srNoBackgroundAssset,
-              )
-            };
+    try {
+      var user = await _viewModel.getUserData(isLoading: isLoading);
+      if (user != null) {
+        userDetails = user;
+        if (!kIsWeb) {
+          if (userDetails?.metaData?.assetList?.isNotEmpty == true) {
+            final assetList = userDetails?.metaData?.assetList?.toList() ?? [];
+            final indexOfAsset = assetList
+                .indexWhere((e) => e.values.first.srNoBackgroundAssset == 100);
+            if (indexOfAsset != -1) {
+              final pathName = assetList[indexOfAsset]
+                      .values
+                      .first
+                      .imageUrl
+                      ?.split('/')
+                      .last ??
+                  '';
+              var filePath = await IsmChatUtility.makeDirectoryWithUrl(
+                  urlPath: assetList[indexOfAsset].values.first.imageUrl ?? '',
+                  fileName: pathName);
+              assetList[indexOfAsset] = {
+                '${assetList[indexOfAsset].keys}': IsmChatBackgroundModel(
+                  color: assetList[indexOfAsset].values.first.color,
+                  isImage: assetList[indexOfAsset].values.first.isImage,
+                  imageUrl: filePath.path,
+                  srNoBackgroundAssset:
+                      assetList[indexOfAsset].values.first.srNoBackgroundAssset,
+                )
+              };
+            }
+            userDetails = userDetails?.copyWith(
+                metaData:
+                    userDetails?.metaData?.copyWith(assetList: assetList));
           }
-          userDetails = userDetails?.copyWith(
-              metaData: userDetails?.metaData?.copyWith(assetList: assetList));
         }
-      }
 
-      await IsmChatConfig.dbWrapper?.userDetailsBox
-          .put(IsmChatStrings.userData, userDetails!.toJson());
+        await IsmChatConfig.dbWrapper?.userDetailsBox
+            .put(IsmChatStrings.userData, userDetails?.toJson() ?? '');
+      }
+    } catch (e, st) {
+      print('getUserData $e == stackTree $st');
     }
   }
 
