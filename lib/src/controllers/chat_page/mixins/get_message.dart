@@ -21,11 +21,14 @@ mixin IsmChatPageGetMessageMixin on GetxController {
       messages.addAll(pendingmessages ?? []);
     }
 
-    print('updatedMessage $messages');
-    print('updatedMessage length ${messages.length}');
+    print('updatedMessage without filter $messages');
+    print('updatedMessage length without filter ${messages.length}');
 
     _controller.messages =
         _controller.commonController.sortMessages(filterMessages(messages));
+
+    print('updatedMessage filter ${_controller.messages}');
+    print('updatedMessage length  filter ${_controller.messages}');
 
     if (_controller.messages.isEmpty) {
       return;
