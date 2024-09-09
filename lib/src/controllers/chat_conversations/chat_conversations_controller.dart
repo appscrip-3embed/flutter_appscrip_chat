@@ -339,37 +339,48 @@ class IsmChatConversationsController extends GetxController {
   @override
   onInit() async {
     super.onInit();
-    intilizedContrller = false;
-    _isInterNetConnect();
-    await _generateReactionList();
-    var users = await IsmChatConfig.dbWrapper?.userDetailsBox
-        .get(IsmChatStrings.userData);
-    if (users != null) {
-      userDetails = UserDetails.fromJson(users);
-    } else {
-      await getUserData();
-    }
     try {
+      print('step1');
+      intilizedContrller = false;
+      _isInterNetConnect();
+      print('step2');
+      await _generateReactionList();
+      print('step3');
+      var users = await IsmChatConfig.dbWrapper?.userDetailsBox
+          .get(IsmChatStrings.userData);
+      if (users != null) {
+        userDetails = UserDetails.fromJson(users);
+      } else {
+        await getUserData();
+      }
+      print('step4');
+
       await getConversationsFromDB();
+      print('step5');
+
+      await getChatConversations();
+      print('step6');
+      if (Get.isRegistered<IsmChatMqttController>()) {
+        await Get.find<IsmChatMqttController>()
+            .getChatConversationsUnreadCount();
+        print('step7');
+      }
+      await getBackGroundAssets();
+      print('step8');
+      await getUserMessges(
+        senderIds: [
+          IsmChatConfig.communicationConfig.userConfig.userId.isNotEmpty
+              ? IsmChatConfig.communicationConfig.userConfig.userId
+              : userDetails?.userId ?? ''
+        ],
+      );
+      print('step9');
+      intilizedContrller = true;
+      scrollListener();
+      sendPendingMessgae();
     } catch (e, st) {
       print('eerro $e  stackTree $st');
     }
-
-    await getChatConversations();
-    if (Get.isRegistered<IsmChatMqttController>()) {
-      await Get.find<IsmChatMqttController>().getChatConversationsUnreadCount();
-    }
-    await getBackGroundAssets();
-    await getUserMessges(
-      senderIds: [
-        IsmChatConfig.communicationConfig.userConfig.userId.isNotEmpty
-            ? IsmChatConfig.communicationConfig.userConfig.userId
-            : userDetails?.userId ?? ''
-      ],
-    );
-    intilizedContrller = true;
-    scrollListener();
-    sendPendingMessgae();
   }
 
   @override
