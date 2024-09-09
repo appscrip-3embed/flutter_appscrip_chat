@@ -112,7 +112,7 @@ class UserDetails {
         'userIdentifier': userIdentifier,
         'userId': userId,
         'online': online,
-        // 'metaData': metaData?.toMap(),
+        'metaData': metaData?.toMap(),
         'lastSeen': lastSeen,
         'visibility': visibility,
         'notification': notification,
