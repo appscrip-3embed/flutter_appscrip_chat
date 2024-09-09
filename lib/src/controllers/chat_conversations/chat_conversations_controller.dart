@@ -349,7 +349,12 @@ class IsmChatConversationsController extends GetxController {
     } else {
       await getUserData();
     }
-    await getConversationsFromDB();
+    try {
+      await getConversationsFromDB();
+    } catch (e, st) {
+      print('eerro $e  stackTree $st');
+    }
+
     await getChatConversations();
     if (Get.isRegistered<IsmChatMqttController>()) {
       await Get.find<IsmChatMqttController>().getChatConversationsUnreadCount();

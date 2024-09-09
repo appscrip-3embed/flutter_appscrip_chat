@@ -127,7 +127,7 @@ class IsmChatDBWrapper {
     }
 
     return conversations
-        .map((e) => IsmChatConversationModel.fromJson(e!))
+        .map((e) => IsmChatConversationModel.fromJson(e ?? ''))
         .toList();
   }
 

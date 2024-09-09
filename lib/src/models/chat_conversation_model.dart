@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -328,16 +327,28 @@ class IsmChatConversationModel {
 }
 
 class OutSideMessage {
-  final String? imageUrl;
-  final String? messageFromOutSide;
-  final String? caption;
-  final AboutTextModel? aboutText;
   OutSideMessage({
     this.imageUrl,
     this.messageFromOutSide,
     this.caption,
     this.aboutText,
   });
+
+  factory OutSideMessage.fromMap(Map<String, dynamic> map) => OutSideMessage(
+        imageUrl: map['imageUrl'] as String? ?? '',
+        messageFromOutSide: map['messageFromOutSide'] as String? ?? '',
+        caption: map['caption'] as String? ?? '',
+        aboutText: map['aboutText'] != null
+            ? AboutTextModel.fromMap(map['aboutText'] as Map<String, dynamic>)
+            : null,
+      );
+
+  factory OutSideMessage.fromJson(String source) =>
+      OutSideMessage.fromMap(json.decode(source) as Map<String, dynamic>);
+  final String? imageUrl;
+  final String? messageFromOutSide;
+  final String? caption;
+  final AboutTextModel? aboutText;
 
   OutSideMessage copyWith({
     String? imageUrl,
@@ -359,19 +370,7 @@ class OutSideMessage {
         'aboutText': aboutText?.toMap(),
       };
 
-  factory OutSideMessage.fromMap(Map<String, dynamic> map) => OutSideMessage(
-        imageUrl: map['imageUrl'] as String? ?? '',
-        messageFromOutSide: map['messageFromOutSide'] as String? ?? '',
-        caption: map['caption'] as String? ?? '',
-        aboutText: map['aboutText'] != null
-            ? AboutTextModel.fromMap(map['aboutText'] as Map<String, dynamic>)
-            : null,
-      );
-
   String toJson() => json.encode(toMap());
-
-  factory OutSideMessage.fromJson(String source) =>
-      OutSideMessage.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() =>
@@ -396,12 +395,20 @@ class OutSideMessage {
 }
 
 class AboutTextModel {
-  final String? title;
-  final String? subTitle;
   AboutTextModel({
     this.title,
     this.subTitle,
   });
+
+  factory AboutTextModel.fromMap(Map<String, dynamic> map) => AboutTextModel(
+        title: map['title'] as String? ?? '',
+        subTitle: map['subTitle'] as String? ?? '',
+      );
+
+  factory AboutTextModel.fromJson(String source) =>
+      AboutTextModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  final String? title;
+  final String? subTitle;
 
   AboutTextModel copyWith({
     String? title,
@@ -417,15 +424,7 @@ class AboutTextModel {
         'subTitle': subTitle,
       };
 
-  factory AboutTextModel.fromMap(Map<String, dynamic> map) => AboutTextModel(
-        title: map['title'] as String? ?? '',
-        subTitle: map['subTitle'] as String? ?? '',
-      );
-
   String toJson() => json.encode(toMap());
-
-  factory AboutTextModel.fromJson(String source) =>
-      AboutTextModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() => 'AboutTextModel(title: $title, subTitle: $subTitle)';
