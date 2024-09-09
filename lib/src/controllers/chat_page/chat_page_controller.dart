@@ -393,7 +393,7 @@ class IsmChatPageController extends GetxController
     _mediaDownloadProgress.value = value;
   }
 
-  late  AudioRecorder recordVoice;
+  late AudioRecorder recordVoice;
 
   var _cameras = <CameraDescription>[];
 
@@ -1258,7 +1258,8 @@ class IsmChatPageController extends GetxController
   void closeAttachmentOverlayForWeb() async {
     if (fabAnimationController != null && attchmentOverlayEntry != null) {
       await fabAnimationController?.reverse();
-      if (fabAnimationController?.isDismissed == true) {
+      if (fabAnimationController?.isDismissed == true &&
+          attchmentOverlayEntry != null) {
         attchmentOverlayEntry?.remove();
         attchmentOverlayEntry = null;
         showAttachment = !showAttachment;
@@ -1334,9 +1335,11 @@ class IsmChatPageController extends GetxController
       }
       return false;
     }
+
     if (_cameras.isNotEmpty) {
       return toggleCamera();
     }
+
     return true;
   }
 
@@ -1544,7 +1547,7 @@ class IsmChatPageController extends GetxController
     try {
       await cameraController.initialize();
     } on CameraException catch (e) {
-      if (kIsWeb) {
+      if (IsmChatResponsive.isWeb(Get.context!) && kIsWeb) {
         final state = await IsmChatBlob.checkPermission('microphone');
         if (state == 'denied') {
           unawaited(Get.dialog(
@@ -1567,7 +1570,7 @@ class IsmChatPageController extends GetxController
   }
 
   Future<void> checkCameraPermission() async {
-    if (kIsWeb) {
+    if (IsmChatResponsive.isWeb(Get.context!) && kIsWeb) {
       final state = await IsmChatBlob.checkPermission('camera');
       if (state == 'granted') {
         areCamerasInitialized = true;
@@ -1575,8 +1578,7 @@ class IsmChatPageController extends GetxController
         areCamerasInitialized = false;
       }
     } else {
-      if (await Permission.camera.isGranted &&
-          await Permission.microphone.isGranted) {
+      if (await Permission.camera.isGranted) {
         areCamerasInitialized = true;
       } else {
         areCamerasInitialized = false;
