@@ -9,7 +9,8 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
 
   static const String route = IsmPageRoutes.openChatMessagePage;
 
-  void _back(BuildContext context, IsmChatPageController controller) async {
+  Future<bool> _back(
+      BuildContext context, IsmChatPageController controller) async {
     var controller = Get.find<IsmChatPageController>(tag: IsmChat.i.tag);
     final conversationController = Get.find<IsmChatConversationsController>();
     if (IsmChatResponsive.isWeb(context)) {
@@ -26,14 +27,14 @@ class IsmChatOpenChatMessagePage extends StatelessWidget {
       conversationController.leaveObserver(
           conversationId: controller.conversation?.conversationId ?? ''),
     );
+    return true;
   }
 
   @override
   Widget build(BuildContext context) => GetX<IsmChatPageController>(
         tag: IsmChat.i.tag,
-        builder: (controller) => PopScope(
-          canPop: true,
-          onPopInvokedWithResult: (_, __) => _back(context, controller),
+        builder: (controller) => WillPopScope(
+          onWillPop: () async => await _back(context, controller),
           child: Scaffold(
             backgroundColor:
                 IsmChatConfig.chatTheme.chatPageTheme?.backgroundColor ??

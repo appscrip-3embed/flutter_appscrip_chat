@@ -339,48 +339,32 @@ class IsmChatConversationsController extends GetxController {
   @override
   onInit() async {
     super.onInit();
-    try {
-      print('step1');
-      intilizedContrller = false;
-      _isInterNetConnect();
-      print('step2');
-      await _generateReactionList();
-      print('step3');
-      var users = await IsmChatConfig.dbWrapper?.userDetailsBox
-          .get(IsmChatStrings.userData);
-      if (users != null) {
-        userDetails = UserDetails.fromJson(users);
-      } else {
-        await getUserData();
-      }
-      print('step4');
-
-      await getConversationsFromDB();
-      print('step5');
-
-      await getChatConversations();
-      print('step6');
-      if (Get.isRegistered<IsmChatMqttController>()) {
-        await Get.find<IsmChatMqttController>()
-            .getChatConversationsUnreadCount();
-        print('step7');
-      }
-      await getBackGroundAssets();
-      print('step8');
-      await getUserMessges(
-        senderIds: [
-          IsmChatConfig.communicationConfig.userConfig.userId.isNotEmpty
-              ? IsmChatConfig.communicationConfig.userConfig.userId
-              : userDetails?.userId ?? ''
-        ],
-      );
-      print('step9');
-      intilizedContrller = true;
-      scrollListener();
-      sendPendingMessgae();
-    } catch (e, st) {
-      print('eerro $e  stackTree $st');
+    intilizedContrller = false;
+    _isInterNetConnect();
+    await _generateReactionList();
+    var users = await IsmChatConfig.dbWrapper?.userDetailsBox
+        .get(IsmChatStrings.userData);
+    if (users != null) {
+      userDetails = UserDetails.fromJson(users);
+    } else {
+      await getUserData();
     }
+    await getConversationsFromDB();
+    await getChatConversations();
+    if (Get.isRegistered<IsmChatMqttController>()) {
+      await Get.find<IsmChatMqttController>().getChatConversationsUnreadCount();
+    }
+    await getBackGroundAssets();
+    await getUserMessges(
+      senderIds: [
+        IsmChatConfig.communicationConfig.userConfig.userId.isNotEmpty
+            ? IsmChatConfig.communicationConfig.userConfig.userId
+            : userDetails?.userId ?? ''
+      ],
+    );
+    intilizedContrller = true;
+    scrollListener();
+    sendPendingMessgae();
   }
 
   @override
@@ -917,47 +901,42 @@ class IsmChatConversationsController extends GetxController {
   }
 
   Future<void> getUserData({bool isLoading = false}) async {
-    try {
-      var user = await _viewModel.getUserData(isLoading: isLoading);
-      if (user != null) {
-        userDetails = user;
-        if (!kIsWeb) {
-          if (userDetails?.metaData?.assetList?.isNotEmpty == true) {
-            final assetList = userDetails?.metaData?.assetList?.toList() ?? [];
-            final indexOfAsset = assetList
-                .indexWhere((e) => e.values.first.srNoBackgroundAssset == 100);
-            if (indexOfAsset != -1) {
-              final pathName = assetList[indexOfAsset]
-                      .values
-                      .first
-                      .imageUrl
-                      ?.split('/')
-                      .last ??
-                  '';
-              var filePath = await IsmChatUtility.makeDirectoryWithUrl(
-                  urlPath: assetList[indexOfAsset].values.first.imageUrl ?? '',
-                  fileName: pathName);
-              assetList[indexOfAsset] = {
-                '${assetList[indexOfAsset].keys}': IsmChatBackgroundModel(
-                  color: assetList[indexOfAsset].values.first.color,
-                  isImage: assetList[indexOfAsset].values.first.isImage,
-                  imageUrl: filePath.path,
-                  srNoBackgroundAssset:
-                      assetList[indexOfAsset].values.first.srNoBackgroundAssset,
-                )
-              };
-            }
-            userDetails = userDetails?.copyWith(
-                metaData:
-                    userDetails?.metaData?.copyWith(assetList: assetList));
+    var user = await _viewModel.getUserData(isLoading: isLoading);
+    if (user != null) {
+      userDetails = user;
+      if (!kIsWeb) {
+        if (userDetails?.metaData?.assetList?.isNotEmpty == true) {
+          final assetList = userDetails?.metaData?.assetList?.toList() ?? [];
+          final indexOfAsset = assetList
+              .indexWhere((e) => e.values.first.srNoBackgroundAssset == 100);
+          if (indexOfAsset != -1) {
+            final pathName = assetList[indexOfAsset]
+                    .values
+                    .first
+                    .imageUrl
+                    ?.split('/')
+                    .last ??
+                '';
+            var filePath = await IsmChatUtility.makeDirectoryWithUrl(
+                urlPath: assetList[indexOfAsset].values.first.imageUrl ?? '',
+                fileName: pathName);
+            assetList[indexOfAsset] = {
+              '${assetList[indexOfAsset].keys}': IsmChatBackgroundModel(
+                color: assetList[indexOfAsset].values.first.color,
+                isImage: assetList[indexOfAsset].values.first.isImage,
+                imageUrl: filePath.path,
+                srNoBackgroundAssset:
+                    assetList[indexOfAsset].values.first.srNoBackgroundAssset,
+              )
+            };
           }
+          userDetails = userDetails?.copyWith(
+              metaData: userDetails?.metaData?.copyWith(assetList: assetList));
         }
-        // Todo
-        // await IsmChatConfig.dbWrapper?.userDetailsBox
-        //     .put(IsmChatStrings.userData, userDetails?.toJson() ?? '');
       }
-    } catch (e, st) {
-      print('getUserData $e == stackTree $st');
+
+      await IsmChatConfig.dbWrapper?.userDetailsBox
+          .put(IsmChatStrings.userData, userDetails?.toJson() ?? '');
     }
   }
 
