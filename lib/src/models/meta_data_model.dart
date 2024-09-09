@@ -160,7 +160,7 @@ class IsmChatMetaData {
         'phone': phone,
         'countryCode': countryCode,
         'aboutText': aboutText?.toMap()
-      }.removeNullValues();
+      }; // removeNullValues()
 
   String toJson() => json.encode(toMap());
 

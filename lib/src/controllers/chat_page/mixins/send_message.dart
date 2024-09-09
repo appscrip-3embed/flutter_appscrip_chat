@@ -802,7 +802,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       notificationBody: IsmChatStrings.sentImage,
       notificationTitle: notificationTitle,
       attachments: imageMessage.attachments != null
-          ? [imageMessage.attachments!.first.toMap().removeNullValues()]
+          ? [imageMessage.attachments!.first.toMap()] // .removeNullValues()
           : null,
       isBroadcast: _controller.isBroadcast,
       parentMessageId: imageMessage.parentMessageId,
@@ -897,7 +897,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
       notificationBody: IsmChatStrings.sentLocation,
       notificationTitle: notificationTitle,
       attachments: locationMessage.attachments != null
-          ? [locationMessage.attachments!.first.toMap().removeNullValues()]
+          ? [locationMessage.attachments!.first.toMap()] //.removeNullValues()
           : null,
       isBroadcast: _controller.isBroadcast,
       parentMessageId: locationMessage.parentMessageId,
@@ -1162,7 +1162,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
             extension: ismChatChatMessageModel.attachments?.first.extension,
             attachmentType:
                 ismChatChatMessageModel.attachments?.first.attachmentType,
-          ).toMap().removeNullValues()
+          ).toMap() //.removeNullValues()
         ];
 
         sendMessage(

@@ -79,7 +79,7 @@ class IsmChatCommonRepository {
         'conversationId': conversationId,
         'body': body,
         'parentMessageId': parentMessageId,
-        'metaData': metaData?.toMap().removeNullValues(),
+        'metaData': metaData?.toMap(), // .removeNullValues()
         'events': events,
         'customType': customType,
         'attachments': attachments,
