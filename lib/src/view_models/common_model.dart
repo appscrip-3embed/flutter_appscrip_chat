@@ -161,13 +161,15 @@ class IsmChatCommonViewModel {
               await dbBox.getConversation(conversationId: conversationId);
 
           if (conversationModel != null) {
-            conversationModel.messages?.add(pendingMessage);
+            final messages = conversationModel.messages ?? [];
+            messages.add(pendingMessage);
             conversationModel = conversationModel.copyWith(
               lastMessageDetails:
                   conversationModel.lastMessageDetails?.copyWith(
                 reactionType: '',
                 messageId: pendingMessage.messageId,
               ),
+              messages: messages,
             );
           }
           await dbBox.saveConversation(conversation: conversationModel!);

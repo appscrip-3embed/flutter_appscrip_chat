@@ -10,19 +10,22 @@ mixin IsmChatPageGetMessageMixin on GetxController {
 
     var messages =
         await IsmChatConfig.dbWrapper?.getMessage(conversationId, dbBox);
-    if (messages?.isEmpty ?? false || messages == null) {
+    if (messages == null || (messages.isEmpty)) {
       _controller.messages.clear();
       return;
     }
 
     var pendingmessages = await IsmChatConfig.dbWrapper!
         .getMessage(conversationId, IsmChatDbBox.pending);
-    if (pendingmessages?.isNotEmpty ?? false || pendingmessages != null) {
-      messages?.addAll(pendingmessages ?? []);
+    if (pendingmessages != null || (pendingmessages?.isNotEmpty == true)) {
+      messages.addAll(pendingmessages ?? []);
     }
 
-    _controller.messages = _controller.commonController
-        .sortMessages(filterMessages(messages ?? []));
+    print('updatedMessage $messages');
+    print('updatedMessage length ${messages.length}');
+
+    _controller.messages =
+        _controller.commonController.sortMessages(filterMessages(messages));
 
     if (_controller.messages.isEmpty) {
       return;
