@@ -952,9 +952,9 @@ class IsmChatConversationsController extends GetxController {
                     userDetails?.metaData?.copyWith(assetList: assetList));
           }
         }
-
-        await IsmChatConfig.dbWrapper?.userDetailsBox
-            .put(IsmChatStrings.userData, userDetails?.toJson() ?? '');
+        // Todo
+        // await IsmChatConfig.dbWrapper?.userDetailsBox
+        //     .put(IsmChatStrings.userData, userDetails?.toJson() ?? '');
       }
     } catch (e, st) {
       print('getUserData $e == stackTree $st');
