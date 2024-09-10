@@ -254,7 +254,7 @@ class IsmChatConversationModel {
         'customType': customType,
         'pushNotifications': pushNotifications,
         'isCreateGroupFromOutSide': isCreateGroupFromOutSide,
-      };
+      }.removeNullValues();
 
   String toJson() => json.encode(toMap());
 
@@ -368,7 +368,7 @@ class OutSideMessage {
         'messageFromOutSide': messageFromOutSide,
         'caption': caption,
         'aboutText': aboutText?.toMap(),
-      };
+      }.removeNullValues();
 
   String toJson() => json.encode(toMap());
 
@@ -422,7 +422,7 @@ class AboutTextModel {
   Map<String, dynamic> toMap() => <String, dynamic>{
         'title': title,
         'subTitle': subTitle,
-      };
+      }.removeNullValues();
 
   String toJson() => json.encode(toMap());
 
