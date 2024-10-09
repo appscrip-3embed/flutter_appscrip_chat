@@ -19,16 +19,31 @@ class IsmChatAudioPlayer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              VoiceMessage(
-                audioSrc: message.attachments!.first.mediaUrl!,
-                played: false,
-                me: message.sentByMe,
-                meBgColor: IsmChatConfig.chatTheme.primaryColor!,
-                mePlayIconColor: IsmChatConfig.chatTheme.primaryColor!,
-                contactBgColor: IsmChatConfig.chatTheme.primaryColor!,
-                contactPlayIconColor: IsmChatConfig.chatTheme.primaryColor!,
-                contactFgColor: IsmChatConfig.chatTheme.backgroundColor!,
-                onPlay: () {},
+              VoiceMessageView(
+                controller: VoiceController(
+                  audioSrc: message.attachments?.first.mediaUrl ?? '',
+                  maxDuration: const Duration(seconds: 10),
+                  isFile: false,
+                  onComplete: () {
+                    /// do something on complete
+                  },
+                  onPause: () {
+                    /// do something on pause
+                  },
+                  onPlaying: () {
+                    /// do something on playing
+                  },
+                ),
+
+                backgroundColor: IsmChatConfig.chatTheme.primaryColor!,
+                innerPadding: 12,
+                cornerRadius: 20,
+
+                // mePlayIconColor: IsmChatConfig.chatTheme.primaryColor!,
+                // contactBgColor: IsmChatConfig.chatTheme.primaryColor!,
+                // contactPlayIconColor: IsmChatConfig.chatTheme.primaryColor!,
+                // contactFgColor: IsmChatConfig.chatTheme.backgroundColor!,
+                // onPlay: () {},
               ),
               IconButton(
                   onPressed: Get.back,

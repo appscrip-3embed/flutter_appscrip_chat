@@ -17,14 +17,36 @@ class EmojiBoard extends StatelessWidget {
           child: EmojiPicker(
             textEditingController: controller.chatInputController,
             config: Config(
-              emojiSizeMax: IsmChatDimens.twentyFour,
-              columns: 8,
-              bgColor: IsmChatConfig.chatTheme.backgroundColor!,
-              indicatorColor: IsmChatConfig.chatTheme.primaryColor!,
-              iconColorSelected: IsmChatConfig.chatTheme.primaryColor!,
-              skinToneDialogBgColor: IsmChatConfig.chatTheme.backgroundColor!,
-              skinToneIndicatorColor: IsmChatConfig.chatTheme.primaryColor!,
-              backspaceColor: IsmChatConfig.chatTheme.primaryColor!,
+              bottomActionBarConfig: BottomActionBarConfig(
+                showBackspaceButton: true,
+                enabled: true,
+                buttonIconColor: IsmChatColors.blackColor,
+                buttonColor: IsmChatConfig.chatTheme.backgroundColor ??
+                    IsmChatColors.whiteColor,
+                backgroundColor: IsmChatConfig.chatTheme.backgroundColor ??
+                    IsmChatColors.whiteColor,
+              ),
+              categoryViewConfig: CategoryViewConfig(
+                indicatorColor: IsmChatConfig.chatTheme.primaryColor ??
+                    IsmChatColors.primaryColorLight,
+                iconColorSelected: IsmChatConfig.chatTheme.primaryColor ??
+                    IsmChatColors.primaryColorLight,
+                backspaceColor: IsmChatConfig.chatTheme.primaryColor ??
+                    IsmChatColors.primaryColorLight,
+              ),
+              skinToneConfig: SkinToneConfig(
+                dialogBackgroundColor:
+                    IsmChatConfig.chatTheme.backgroundColor ??
+                        IsmChatColors.whiteColor,
+                indicatorColor: IsmChatConfig.chatTheme.primaryColor ??
+                    IsmChatColors.primaryColorLight,
+              ),
+              emojiViewConfig: EmojiViewConfig(
+                emojiSizeMax: IsmChatDimens.twentyFour,
+                columns: 8,
+                backgroundColor: IsmChatConfig.chatTheme.backgroundColor ??
+                    IsmChatColors.whiteColor,
+              ),
             ),
             onBackspacePressed: () {
               controller.chatInputController.text = controller

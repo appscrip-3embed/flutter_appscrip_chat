@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:record/record.dart';
 
 class IsmChatMessageField extends StatelessWidget {
   const IsmChatMessageField({
@@ -282,7 +283,8 @@ class _MicOrSendButton extends StatelessWidget {
                                   const Duration(seconds: 1), (_) {
                                 controller.seconds++;
                               });
-                              await controller.recordAudio.start();
+                              await controller.recordAudio
+                                  .start(const RecordConfig(), path: '');
                             }
                           }
                         }

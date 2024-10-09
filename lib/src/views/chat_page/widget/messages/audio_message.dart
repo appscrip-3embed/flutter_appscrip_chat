@@ -15,16 +15,32 @@ class IsmChatAudioMessage extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          VoiceMessage(
-            audioSrc: url,
-            played: false,
-            me: message.sentByMe,
-            meBgColor: IsmChatConfig.chatTheme.primaryColor!,
-            mePlayIconColor: IsmChatConfig.chatTheme.primaryColor!,
-            contactBgColor: IsmChatConfig.chatTheme.backgroundColor!,
-            contactPlayIconColor: IsmChatConfig.chatTheme.backgroundColor!,
-            contactFgColor: IsmChatConfig.chatTheme.primaryColor!,
-            onPlay: () {},
+          VoiceMessageView(
+            controller: VoiceController(
+              audioSrc: url,
+              maxDuration: const Duration(seconds: 10),
+              isFile: false,
+              onComplete: () {
+                /// do something on complete
+              },
+              onPause: () {
+                /// do something on pause
+              },
+              onPlaying: () {
+                /// do something on playing
+              },
+            ),
+            innerPadding: 12,
+            cornerRadius: 20,
+            backgroundColor: IsmChatConfig.chatTheme.primaryColor!,
+            // played: false,
+            // me: message.sentByMe,
+            // meBgColor: IsmChatConfig.chatTheme.primaryColor!,
+            // mePlayIconColor: IsmChatConfig.chatTheme.primaryColor!,
+            // contactBgColor: IsmChatConfig.chatTheme.backgroundColor!,
+            // contactPlayIconColor: IsmChatConfig.chatTheme.backgroundColor!,
+            // contactFgColor: IsmChatConfig.chatTheme.primaryColor!,
+            // onPlay: () {},
           ),
           if (message.isUploading == true)
             IsmChatUtility.circularProgressBar(

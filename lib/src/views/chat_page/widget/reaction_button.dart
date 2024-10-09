@@ -26,6 +26,7 @@ class ReactionGrid extends StatelessWidget {
             itemBuilder: (_, index) {
               var reaciton = _controller.reactions[index];
               return EmojiCell.fromConfig(
+                emojiBoxSize: 20,
                 emoji: reaciton,
                 emojiSize: IsmChatDimens.twenty,
                 onEmojiSelected: (_, emoji) {
@@ -39,9 +40,12 @@ class ReactionGrid extends StatelessWidget {
                   );
                 },
                 config: Config(
-                  emojiSizeMax: IsmChatDimens.twentyFour,
-                  bgColor: IsmChatConfig.chatTheme.backgroundColor!,
-                  indicatorColor: IsmChatConfig.chatTheme.primaryColor!,
+                  categoryViewConfig: CategoryViewConfig(
+                      indicatorColor: IsmChatConfig.chatTheme.primaryColor!),
+                  emojiViewConfig: EmojiViewConfig(
+                    emojiSizeMax: IsmChatDimens.twentyFour,
+                    backgroundColor: IsmChatConfig.chatTheme.backgroundColor!,
+                  ),
                 ),
               );
             },

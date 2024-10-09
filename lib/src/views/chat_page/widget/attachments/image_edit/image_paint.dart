@@ -7,8 +7,7 @@ import 'package:image_painter/image_painter.dart';
 import 'package:path_provider/path_provider.dart';
 
 class IsmChatImagePainterWidget extends StatefulWidget {
-  const IsmChatImagePainterWidget({Key? key, required this.file})
-      : super(key: key);
+  const IsmChatImagePainterWidget({super.key, required this.file});
 
   final File file;
 
@@ -17,8 +16,13 @@ class IsmChatImagePainterWidget extends StatefulWidget {
 }
 
 class _ImagePainterWidgetState extends State<IsmChatImagePainterWidget> {
-  final _imageKey = GlobalKey<ImagePainterState>();
+  final ImagePainterController _controller = ImagePainterController(
+    color: IsmChatColors.primaryColorLight,
+    strokeWidth: 4,
+    mode: PaintMode.line,
+  );
   final _key = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) => Scaffold(
         key: _key,
@@ -41,7 +45,7 @@ class _ImagePainterWidgetState extends State<IsmChatImagePainterWidget> {
               ),
               onTap: () async {
                 IsmChatUtility.showLoader();
-                final image = await _imageKey.currentState?.exportImage();
+                final image = await _controller.exportImage();
                 final extensionSplite = widget.file.path.split('.');
                 final extension = extensionSplite[1];
                 final directory =
@@ -63,12 +67,13 @@ class _ImagePainterWidgetState extends State<IsmChatImagePainterWidget> {
         backgroundColor: IsmChatColors.blackColor,
         body: ImagePainter.file(
           File(widget.file.path),
-          key: _imageKey,
+          controller: _controller,
+          // key: _imageKey,
           scalable: true,
-          initialStrokeWidth: 2,
+          // initialStrokeWidth: 2,
           // textDelegate: DutchTextDelegate(),
-          initialColor: Colors.red,
-          initialPaintMode: PaintMode.line,
+          // initialColor: Colors.red,
+          // initialPaintMode: PaintMode.line,
           controlsAtTop: false,
 
           // clearAllIcon: ,
