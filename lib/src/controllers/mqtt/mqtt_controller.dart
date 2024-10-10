@@ -335,7 +335,7 @@ class IsmChatMqttController extends GetxController {
     } else if (message.customType == IsmChatCustomMessageType.link) {
       mqttMessage = message.notificationBody;
     } else {
-      mqttMessage = message.notificationBody;
+      mqttMessage = message.body;
     }
     if (Get.isRegistered<IsmChatPageController>()) {
       var chatController = Get.find<IsmChatPageController>();
