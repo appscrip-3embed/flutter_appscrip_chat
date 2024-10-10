@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:appscrip_chat_component/src/controllers/mqtt/clients/mobile_client.dart'
     if (dart.library.html) 'clients/web_client.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 
@@ -357,25 +356,24 @@ class IsmChatMqttController extends GetxController {
         //     'conversationId': message.conversationId ?? '',
         //   },
         // );
-        if (Platform.isAndroid) {
-          Get.snackbar(
-            message.notificationTitle ?? '',
-            mqttMessage ?? '',
-            icon: const Icon(Icons.message),
-            onTap: (snack) {
-              if (IsmChatConfig.onSnckBarTap != null) {
-                IsmChatConfig.onSnckBarTap?.call(message);
-              }
-            },
-          );
-        }
+        // if (Platform.isAndroid) {
+        //   Get.snackbar(
+        //     message.notificationTitle ?? '',
+        //     mqttMessage ?? '',
+        //     icon: const Icon(Icons.message),
+        //     onTap: (snack) {
+        //       if (IsmChatConfig.onSnckBarTap != null) {
+        //         IsmChatConfig.onSnckBarTap?.call(message);
+        //       }
+        //     },
+        //   );
+        // }
         messageId = message.messageId!;
       }
     } else {
       try {
-        IsmChatLog('step1 chat1');
         // LocalNoticeService().cancelAllNotification();
-        IsmChatLog('step1 chat2');
+
         LocalNoticeService().showFlutterNotification(
           title: message.notificationTitle ?? '',
           body: mqttMessage ?? '',
@@ -391,19 +389,19 @@ class IsmChatMqttController extends GetxController {
         //     'conversationId': message.conversationId ?? '',
         //   },
         // );
-        IsmChatLog('step1 chat3');
-        if (Platform.isAndroid) {
-          Get.snackbar(
-            message.notificationTitle ?? '',
-            mqttMessage ?? '',
-            icon: const Icon(Icons.message),
-            onTap: (snack) async {
-              if (IsmChatConfig.onSnckBarTap != null) {
-                IsmChatConfig.onSnckBarTap?.call(message);
-              }
-            },
-          );
-        }
+
+        // if (Platform.isAndroid) {
+        //   Get.snackbar(
+        //     message.notificationTitle ?? '',
+        //     mqttMessage ?? '',
+        //     icon: const Icon(Icons.message),
+        //     onTap: (snack) async {
+        //       if (IsmChatConfig.onSnckBarTap != null) {
+        //         IsmChatConfig.onSnckBarTap?.call(message);
+        //       }
+        //     },
+        //   );
+        // }
         messageId = message.messageId!;
       } catch (e, st) {
         IsmChatLog.error('error $e stackTree $st');
