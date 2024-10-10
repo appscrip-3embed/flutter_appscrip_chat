@@ -367,27 +367,31 @@ class IsmChatMqttController extends GetxController {
         messageId = message.messageId!;
       }
     } else {
-      LocalNoticeService().cancelAllNotification();
-      LocalNoticeService().addNotification(message.notificationTitle ?? '',
-          mqttMessage ?? '', DateTime.now().millisecondsSinceEpoch + 1 * 1000,
-          sound: '',
-          channel: 'message',
-          payload: {
-            'conversationId': message.conversationId ?? '',
-          });
-      if (Platform.isAndroid) {
-        Get.snackbar(
-          message.notificationTitle ?? '',
-          mqttMessage ?? '',
-          icon: const Icon(Icons.message),
-          onTap: (snack) async {
-            if (IsmChatConfig.onSnckBarTap != null) {
-              IsmChatConfig.onSnckBarTap?.call(message);
-            }
-          },
-        );
+      try {
+        LocalNoticeService().cancelAllNotification();
+        LocalNoticeService().addNotification(message.notificationTitle ?? '',
+            mqttMessage ?? '', DateTime.now().millisecondsSinceEpoch + 1 * 1000,
+            sound: '',
+            channel: 'message',
+            payload: {
+              'conversationId': message.conversationId ?? '',
+            });
+        if (Platform.isAndroid) {
+          Get.snackbar(
+            message.notificationTitle ?? '',
+            mqttMessage ?? '',
+            icon: const Icon(Icons.message),
+            onTap: (snack) async {
+              if (IsmChatConfig.onSnckBarTap != null) {
+                IsmChatConfig.onSnckBarTap?.call(message);
+              }
+            },
+          );
+        }
+        messageId = message.messageId!;
+      } catch (e, st) {
+        IsmChatLog.error('error $e stackTree $st');
       }
-      messageId = message.messageId!;
     }
   }
 
