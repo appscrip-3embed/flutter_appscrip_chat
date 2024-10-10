@@ -111,7 +111,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         conversationId: conversationId,
         notificationBody: notificationBody,
         notificationTitle: notificationTitle,
-        body: IsmChatUtility.encodePayload(body),
+        body: body,
         createdAt: createdAt,
       );
 
