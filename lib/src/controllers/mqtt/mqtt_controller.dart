@@ -368,7 +368,9 @@ class IsmChatMqttController extends GetxController {
       }
     } else {
       try {
+        IsmChatLog('step1 chat1');
         LocalNoticeService().cancelAllNotification();
+        IsmChatLog('step1 chat2');
         LocalNoticeService().addNotification(message.notificationTitle ?? '',
             mqttMessage ?? '', DateTime.now().millisecondsSinceEpoch + 1 * 1000,
             sound: '',
@@ -376,6 +378,7 @@ class IsmChatMqttController extends GetxController {
             payload: {
               'conversationId': message.conversationId ?? '',
             });
+        IsmChatLog('step1 chat3');
         if (Platform.isAndroid) {
           Get.snackbar(
             message.notificationTitle ?? '',
