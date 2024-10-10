@@ -341,17 +341,22 @@ class IsmChatMqttController extends GetxController {
       var chatController = Get.find<IsmChatPageController>();
       if (chatController.conversation?.conversationId !=
           message.conversationId) {
-        LocalNoticeService().cancelAllNotification();
-        LocalNoticeService().addNotification(
-          message.notificationTitle ?? '', // Add the  sender user name here
-          mqttMessage ?? '', // MessageName
-          DateTime.now().millisecondsSinceEpoch + 1 * 1000,
-          sound: '',
-          channel: 'message',
-          payload: {
-            'conversationId': message.conversationId ?? '',
-          },
+        // LocalNoticeService().cancelAllNotification();
+        LocalNoticeService().showFlutterNotification(
+          title: message.notificationTitle ?? '',
+          body: mqttMessage ?? '',
+          conversationId: message.conversationId ?? '',
         );
+        // LocalNoticeService().addNotification(
+        //   message.notificationTitle ?? '', // Add the  sender user name here
+        //   mqttMessage ?? '', // MessageName
+        //   DateTime.now().millisecondsSinceEpoch + 1 * 1000,
+        //   sound: '',
+        //   channel: 'message',
+        //   payload: {
+        //     'conversationId': message.conversationId ?? '',
+        //   },
+        // );
         if (Platform.isAndroid) {
           Get.snackbar(
             message.notificationTitle ?? '',
@@ -369,15 +374,23 @@ class IsmChatMqttController extends GetxController {
     } else {
       try {
         IsmChatLog('step1 chat1');
-        LocalNoticeService().cancelAllNotification();
+        // LocalNoticeService().cancelAllNotification();
         IsmChatLog('step1 chat2');
-        LocalNoticeService().addNotification(message.notificationTitle ?? '',
-            mqttMessage ?? '', DateTime.now().millisecondsSinceEpoch + 1 * 1000,
-            sound: '',
-            channel: 'message',
-            payload: {
-              'conversationId': message.conversationId ?? '',
-            });
+        LocalNoticeService().showFlutterNotification(
+          title: message.notificationTitle ?? '',
+          body: mqttMessage ?? '',
+          conversationId: message.conversationId ?? '',
+        );
+        // LocalNoticeService().addNotification(
+        //   message.notificationTitle ?? '',
+        //   mqttMessage ?? '',
+        //   DateTime.now().millisecondsSinceEpoch + 1 * 1000,
+        //   sound: '',
+        //   channel: 'message',
+        //   payload: {
+        //     'conversationId': message.conversationId ?? '',
+        //   },
+        // );
         IsmChatLog('step1 chat3');
         if (Platform.isAndroid) {
           Get.snackbar(

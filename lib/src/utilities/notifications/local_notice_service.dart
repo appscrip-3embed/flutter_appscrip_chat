@@ -9,6 +9,7 @@
 /// sell copies of the Software, and to permit persons to whom
 /// the Software is furnished to do so, subject to the following
 /// conditions:
+library;
 
 /// The above copyright notice and this permission notice shall be
 /// included in all copies or substantial portions of the Software.
@@ -70,6 +71,45 @@ class LocalNoticeService {
     }).catchError((Object error) {
       debugPrint('Error: $error');
     });
+  }
+
+  /// Channel Name
+  final channel = const AndroidNotificationChannel(
+    'high_importance_channel',
+    'High Importance Notifications',
+    description: 'This channel is used for important notifications.',
+    importance: Importance.high,
+  );
+
+  /// Show Notification Method
+  void showFlutterNotification({
+    required String title,
+    required String body,
+    required String conversationId,
+  }) async {
+    await _localNotificationsPlugin.show(
+      title.hashCode,
+      title,
+      body,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          channel.id,
+          channel.name,
+          playSound: true,
+          priority: Priority.high,
+          importance: Importance.high,
+          ticker: 'ticker',
+          channelDescription: channel.description ?? '',
+          icon: '@drawable/ic_notification',
+        ),
+        iOS: const DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      ),
+      payload: jsonEncode({'conversationId': conversationId}),
+    );
   }
 
   void addNotification(
