@@ -26,7 +26,7 @@ mixin IsmChatMqttEventMixin on GetxController {
   set isAppInBackground(bool value) => _isAppBackground.value = value;
 
   Future<void> onMqttEvent({required Map<String, dynamic> payload}) async {
-    if (payload['action'] != null) {
+    if (payload['action'] != 'chatMessageSent') {
       var action = payload['action'];
       if (IsmChatActionEvents.values
           .map((e) => e.toString())
