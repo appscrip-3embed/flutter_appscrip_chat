@@ -18,6 +18,18 @@ class IsmChatImagePainterWidget extends StatefulWidget {
 class _ImagePainterWidgetState extends State<IsmChatImagePainterWidget> {
   final _imageKey = GlobalKey<ImagePainterState>();
   final _key = GlobalKey<ScaffoldState>();
+  final _imagePainterController = ImagePainterController(
+    strokeWidth: 2,
+    color: Colors.red,
+    mode: PaintMode.line,
+  );
+
+  @override
+  void dispose() {
+    _imagePainterController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
         key: _key,
@@ -27,20 +39,16 @@ class _ImagePainterWidgetState extends State<IsmChatImagePainterWidget> {
               Icons.arrow_back,
               color: IsmChatColors.whiteColor,
             ),
-            onTap: () {
-              Get.back<File>(result: widget.file);
-            },
+            onTap: () => Get.back<File>(result: widget.file),
           ),
           backgroundColor: IsmChatConfig.chatTheme.primaryColor,
           actions: [
             TextButton(
               onPressed: () async {
                 IsmChatUtility.showLoader();
-                final image = await _imageKey.currentState?.exportImage();
-
+                final image = await _imagePainterController.exportImage();
                 final pathSplite = widget.file.path.split('/').last;
                 final extensionSplite = pathSplite.split('.');
-
                 final extension = extensionSplite.last;
 
                 final directory =
@@ -75,14 +83,11 @@ class _ImagePainterWidgetState extends State<IsmChatImagePainterWidget> {
         backgroundColor: IsmChatColors.blackColor,
         body: ImagePainter.file(
           File(widget.file.path),
+          controller: _imagePainterController,
           key: _imageKey,
           scalable: true,
-          initialStrokeWidth: 2,
-          // textDelegate: DutchTextDelegate(),
-          initialColor: Colors.red,
-          initialPaintMode: PaintMode.line,
           controlsAtTop: false,
-
+          // textDelegate: DutchTextDelegate(),
           // clearAllIcon: ,
         ),
       );

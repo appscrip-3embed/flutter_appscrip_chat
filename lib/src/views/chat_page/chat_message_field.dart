@@ -217,12 +217,13 @@ class IsmChatMessageField extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      onChanged: (_) {
+                                      onChanged: (value) {
                                         if (controller.conversation
                                                 ?.conversationId?.isNotEmpty ??
                                             false) {
                                           controller.notifyTyping();
-                                          controller.showMentionsUserList(_);
+                                          controller
+                                              .showMentionsUserList(value);
                                         }
                                       },
                                     ),

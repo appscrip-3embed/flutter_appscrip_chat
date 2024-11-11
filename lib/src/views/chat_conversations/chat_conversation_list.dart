@@ -87,10 +87,10 @@ class _ConversationList extends StatelessWidget {
         controller: controller.conversationScrollController,
         separatorBuilder: (_, __) => IsmChatDimens.boxHeight8,
         addAutomaticKeepAlives: true,
-        itemBuilder: (_, index) {
+        itemBuilder: (child, index) {
           var conversation = controller.userConversations[index];
           return IsmChatProperties.conversationProperties.cardBuilder
-                  ?.call(_, conversation, index) ??
+                  ?.call(child, conversation, index) ??
               Slidable(
                 direction: Axis.horizontal,
                 closeOnScroll: true,
@@ -210,7 +210,9 @@ class _ConversationList extends StatelessWidget {
                             ),
                     onTap: () async {
                       IsmChatProperties.conversationProperties.onChatTap!(
-                          _, conversation);
+                        child,
+                        conversation,
+                      );
                       controller.navigateToMessages(conversation);
                       await controller.goToChatPage();
                     },

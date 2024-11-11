@@ -199,7 +199,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                             needRebuild: true,
                             indexHintHeight: IsmChatDimens.percentHeight(.2),
                           ),
-                          itemBuilder: (_, int index) {
+                          itemBuilder: (child, int index) {
                             var user = controller.forwardedList[index];
                             var susTag = user.getSuspensionTag();
                             if (user.userDetails.userId ==
@@ -261,7 +261,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                         Get.back<void>();
                                         IsmChatProperties
                                             .conversationProperties.onChatTap!
-                                            .call(_, ismChatConversation);
+                                            .call(child, ismChatConversation);
                                         controller.navigateToMessages(
                                             ismChatConversation);
                                         await controller.goToChatPage();

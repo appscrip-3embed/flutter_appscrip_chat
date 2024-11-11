@@ -281,8 +281,8 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                 Icons.search_rounded,
                                 color: IsmChatConfig.chatTheme.primaryColor,
                               ),
-                        onChanged: (_) {
-                          controller.onGroupSearch(_);
+                        onChanged: (value) {
+                          controller.onGroupSearch(value);
                           controller.update();
                         },
                       ),

@@ -139,14 +139,14 @@ class AuthController extends GetxController {
             ),
             WebUiSettings(
               context: Get.context!,
-              customDialogBuilder: (_, __, ___, ____, _____) {
+              customDialogBuilder: (child, __, ___, ____, _____) {
                 return Dialog(
                   child: Builder(
                     builder: (context) {
                       return SizedBox(
                         height: 200,
                         width: 200,
-                        child: _,
+                        child: child,
                       );
                     },
                   ),
