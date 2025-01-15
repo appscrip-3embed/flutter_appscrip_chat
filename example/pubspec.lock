@@ -224,6 +224,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  custom_will_pop_scope:
+    dependency: transitive
+    description:
+      name: custom_will_pop_scope
+      sha256: c32bd1ac2836fc4f93a9f72955e04473361873f36035b38fe6c3cc9c5a8d5a6b
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.1"
   dbus:
     dependency: transitive
     description:
