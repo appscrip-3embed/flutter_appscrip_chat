@@ -91,7 +91,7 @@ class _IsmChatPageViewState extends State<IsmChatPageView> {
             : controller.isMessageSeleted
                 ? false
                 : true,
-        onPopInvoked: (_) async {
+        onPopInvokedWithResult: (_, __) {
           if (!GetPlatform.isAndroid) return;
           return navigateBack();
         },
@@ -360,7 +360,7 @@ class _IsmChatPageView extends StatelessWidget {
                             child: Container(
                               decoration: BoxDecoration(
                                 color: IsmChatConfig.chatTheme.backgroundColor!
-                                    .withOpacity(0.5),
+                                    .applyIsmOpacity(0.5),
                                 border: Border.all(
                                   color: IsmChatConfig.chatTheme.primaryColor!,
                                   width: 1.5,

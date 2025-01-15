@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 class IsmChatTheme extends StatelessWidget {
   const IsmChatTheme({
-    Key? key,
+    super.key,
     required this.chatThemeData,
     required this.child,
-  }) : super(key: key);
+  });
 
   final IsmChatThemeData chatThemeData;
   final Widget child;

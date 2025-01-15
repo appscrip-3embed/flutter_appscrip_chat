@@ -8,11 +8,11 @@ import 'package:video_trimmer/video_trimmer.dart';
 // Todo refactor code
 class IsmVideoTrimmerView extends StatefulWidget {
   const IsmVideoTrimmerView({
-    Key? key,
+    super.key,
     required this.file,
     required this.durationInSeconds,
     this.index,
-  }) : super(key: key);
+  });
   final File file;
   final double durationInSeconds;
   final int? index;

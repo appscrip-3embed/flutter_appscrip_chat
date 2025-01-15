@@ -241,8 +241,8 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                                 Icons.search_rounded,
                                 color: IsmChatConfig.chatTheme.primaryColor,
                               ),
-                        onChanged: (_) {
-                          controller.onGroupSearch(_);
+                        onChanged: (value) {
+                          controller.onGroupSearch(value);
                           controller.update();
                         },
                       ),
@@ -349,8 +349,8 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                             IsmChatDimens.boxHeight10,
                             Divider(
                               thickness: 1,
-                              color:
-                                  IsmChatColors.greyColorLight.withOpacity(.3),
+                              color: IsmChatColors.greyColorLight
+                                  .applyIsmOpacity(.3),
                             ),
                             IsmChatDimens.boxHeight5,
                             TextButton.icon(
@@ -407,8 +407,8 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                             IsmChatDimens.boxHeight10,
                             Divider(
                               thickness: 1,
-                              color:
-                                  IsmChatColors.greyColorLight.withOpacity(.3),
+                              color: IsmChatColors.greyColorLight
+                                  .applyIsmOpacity(.3),
                             ),
                             IsmChatDimens.boxHeight5,
                             InkWell(
@@ -440,8 +440,8 @@ class IsmChatConverstaionInfoView extends StatelessWidget {
                             IsmChatDimens.boxHeight10,
                             Divider(
                               thickness: 1,
-                              color:
-                                  IsmChatColors.greyColorLight.withOpacity(.3),
+                              color: IsmChatColors.greyColorLight
+                                  .applyIsmOpacity(.3),
                             ),
                             IsmChatDimens.boxHeight5,
                             InkWell(

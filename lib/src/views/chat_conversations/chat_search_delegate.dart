@@ -59,12 +59,12 @@ class IsmChatSearchDelegate extends SearchDelegate<void> {
             )
           : ListView.builder(
               itemCount: _controller.suggestions.length,
-              itemBuilder: (_, index) {
+              itemBuilder: (context, index) {
                 var conversation = _controller.suggestions[index];
                 return GestureDetector(
                   onTap: () {
                     _controller.navigateToMessages(conversation);
-                    onChatTap(_, conversation);
+                    onChatTap(context, conversation);
                   },
                   child: IsmChatConversationCard(
                     _controller.suggestions[index],

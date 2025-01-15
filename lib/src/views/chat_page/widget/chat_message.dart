@@ -86,7 +86,7 @@ class _IsmChatMessageState extends State<IsmChatMessage>
           color: controller.selectedMessage.contains(widget.message)
               ? (IsmChatConfig.chatTheme.chatPageTheme?.messageSelectionColor ??
                       IsmChatConfig.chatTheme.primaryColor!)
-                  .withOpacity(.2)
+                  .applyIsmOpacity(.2)
               : null,
           child: UnconstrainedBox(
             clipBehavior: Clip.antiAlias,

@@ -102,7 +102,7 @@ class _NetworkImage extends StatelessWidget {
         placeholder: (context, url) => Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: IsmChatConfig.chatTheme.primaryColor!.withOpacity(0.2),
+            color: IsmChatConfig.chatTheme.primaryColor!.applyIsmOpacity(0.2),
             shape: _isProfileImage ? BoxShape.circle : BoxShape.rectangle,
           ),
           child: _isProfileImage
@@ -139,7 +139,7 @@ class _ErrorImage extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: IsmChatConfig.chatTheme.primaryColor!.withOpacity(0.2),
+          color: IsmChatConfig.chatTheme.primaryColor!.applyIsmOpacity(0.2),
           shape: _isProfileImage ? BoxShape.circle : BoxShape.rectangle,
         ),
         child: _isProfileImage
@@ -153,7 +153,7 @@ class _ErrorImage extends StatelessWidget {
               )
             : Container(
                 decoration: BoxDecoration(
-                  color: IsmChatColors.greyColor.withOpacity(0.2),
+                  color: IsmChatColors.greyColor.applyIsmOpacity(0.2),
                   borderRadius: BorderRadius.circular(IsmChatDimens.eight),
                 ),
                 alignment: Alignment.center,

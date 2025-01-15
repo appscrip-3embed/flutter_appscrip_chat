@@ -1,15 +1,13 @@
 import 'dart:async';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
+import 'package:chat_component_example/data/data.dart';
 import 'package:chat_component_example/res/res.dart';
 import 'package:chat_component_example/utilities/utilities.dart';
+import 'package:chat_component_example/views/views.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
-import 'data/data.dart';
-import 'views/views.dart';
 
 DBWrapper? dbWrapper;
 
@@ -47,31 +45,29 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      useInheritedMediaQuery: true,
-      designSize: const Size(375, 745),
-      builder: (_, child) => child!,
-      child: GetMaterialApp(
-        key: const Key('ChatApp'),
-        navigatorKey: navigatorKey,
-        locale: const Locale('en', 'US'),
-        // localizationsDelegates: GlobalMaterialLocalizations.delegates,
-        supportedLocales: const [
-          Locale('en', 'US'),
-        ],
-        theme: ThemeData.light(useMaterial3: true)
-            .copyWith(primaryColor: AppColors.primaryColorLight),
-        // darkTheme: ThemeData.dark(useMaterial3: true)
-        //     .copyWith(primaryColor: AppColors.primaryColorDark),
-        // darkTheme: ThemeData.dark(useMaterial3: true)
-        //     .copyWith(primaryColor: AppColors.primaryColorDark),
-        debugShowCheckedModeBanner: false,
-        translations: AppTranslations(),
-        initialRoute:
-            AppConfig.userDetail != null ? ChatList.route : LoginView.route,
-        getPages: AppPages.pages,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => ScreenUtilInit(
+        useInheritedMediaQuery: true,
+        designSize: const Size(375, 745),
+        builder: (_, child) => child!,
+        child: GetMaterialApp(
+          key: const Key('ChatApp'),
+          navigatorKey: navigatorKey,
+          locale: const Locale('en', 'US'),
+          // localizationsDelegates: GlobalMaterialLocalizations.delegates,
+          supportedLocales: const [
+            Locale('en', 'US'),
+          ],
+          theme: ThemeData.light(useMaterial3: true)
+              .copyWith(primaryColor: AppColors.primaryColorLight),
+          // darkTheme: ThemeData.dark(useMaterial3: true)
+          //     .copyWith(primaryColor: AppColors.primaryColorDark),
+          // darkTheme: ThemeData.dark(useMaterial3: true)
+          //     .copyWith(primaryColor: AppColors.primaryColorDark),
+          debugShowCheckedModeBanner: false,
+          translations: AppTranslations(),
+          initialRoute:
+              AppConfig.userDetail != null ? ChatList.route : LoginView.route,
+          getPages: AppPages.pages,
+        ),
+      );
 }

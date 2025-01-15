@@ -407,6 +407,7 @@ extension LastMessageWidget on String {
 
 extension GetLink on String {
   /// Here we are extracting location coordinates from the url of the app
+  // ignore: unintended_html_in_doc_comment
   /// <BaseUrl>?<Params>&query=`Lat`%2C`Lng`&<Rest Params>
   LatLng get position {
     if (!contains('map')) {

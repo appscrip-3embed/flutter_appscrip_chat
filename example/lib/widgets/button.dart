@@ -4,34 +4,32 @@ import 'package:flutter/material.dart';
 
 class Button extends StatelessWidget {
   const Button({
-    Key? key,
+    super.key,
     required this.onTap,
     required this.label,
-  }) : super(key: key);
+  });
 
   final VoidCallback onTap;
   final String label;
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 56,
-      width: double.maxFinite,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryColorLight,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(
-              Dimens.sixTeen,
+  Widget build(BuildContext context) => SizedBox(
+        height: 56,
+        width: double.maxFinite,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primaryColorLight,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(
+                Dimens.sixTeen,
+              ),
             ),
+            foregroundColor: AppColors.whiteColor,
           ),
-          foregroundColor: AppColors.whiteColor,
+          onPressed: onTap,
+          child: Text(
+            label,
+          ),
         ),
-        onPressed: onTap,
-        child: Text(
-          label,
-        ),
-      ),
-    );
-  }
+      );
 }

@@ -230,7 +230,7 @@ class IsmChatForwardView extends StatelessWidget {
                                           tileColor: user.isUserSelected
                                               ? IsmChatConfig
                                                   .chatTheme.primaryColor!
-                                                  .withOpacity(.2)
+                                                  .applyIsmOpacity(.2)
                                               : null,
                                           leading: IsmChatImage.profile(
                                             user.userDetails
@@ -261,7 +261,7 @@ class IsmChatForwardView extends StatelessWidget {
                           color: Colors.white,
                           border: Border(
                             top: BorderSide(
-                              color: Colors.grey.withOpacity(0.5),
+                              color: Colors.grey.applyIsmOpacity(0.5),
                             ),
                           ),
                         ),

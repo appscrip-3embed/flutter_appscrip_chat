@@ -207,7 +207,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                             needRebuild: true,
                             indexHintHeight: IsmChatDimens.percentHeight(.2),
                           ),
-                          itemBuilder: (_, int index) {
+                          itemBuilder: (context, int index) {
                             var user = controller.forwardedList[index];
                             var susTag = user.getSuspensionTag();
                             if (user.userDetails.userId ==
@@ -243,7 +243,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                   controller
                                       .navigateToMessages(ismChatConversation);
                                   (onChatTap ?? IsmChatConfig.onChatTap)
-                                      .call(_, ismChatConversation);
+                                      .call(context, ismChatConversation);
                                 }
                               },
                               child: Column(
@@ -280,7 +280,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                                             decoration: BoxDecoration(
                                               color: IsmChatConfig
                                                   .chatTheme.primaryColor
-                                                  ?.withOpacity(.2),
+                                                  ?.applyIsmOpacity(.2),
                                               borderRadius:
                                                   BorderRadius.circular(
                                                       IsmChatDimens.eight),
@@ -311,7 +311,7 @@ class IsmChatCreateConversationView extends StatelessWidget {
                           color: Colors.white,
                           border: Border(
                             top: BorderSide(
-                              color: Colors.grey.withOpacity(0.5),
+                              color: Colors.grey.applyIsmOpacity(0.5),
                             ),
                           ),
                         ),

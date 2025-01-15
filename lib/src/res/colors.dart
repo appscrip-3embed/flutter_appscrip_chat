@@ -33,3 +33,7 @@ class IsmChatColors {
 
   static const Color darkBlueGreyColor = Color(0xFFEFF0FC);
 }
+
+extension ColorExt on Color {
+  Color applyIsmOpacity(double opacity) => withValues(alpha: opacity);
+}

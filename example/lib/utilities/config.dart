@@ -2,8 +2,7 @@
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:chat_component_example/main.dart';
-
-import '../models/models.dart';
+import 'package:chat_component_example/models/models.dart';
 
 class AppConfig {
   const AppConfig._();

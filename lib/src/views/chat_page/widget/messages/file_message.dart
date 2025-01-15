@@ -44,7 +44,7 @@ class IsmChatFileMessage extends StatelessWidget {
                   color: (message.sentByMe
                           ? IsmChatColors.whiteColor
                           : IsmChatColors.greyColor)
-                      .withOpacity(0.2),
+                      .applyIsmOpacity(0.2),
                   padding: IsmChatDimens.edgeInsets4,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,

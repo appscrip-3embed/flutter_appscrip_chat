@@ -6,10 +6,7 @@ import 'package:get/get.dart';
 
 /// show the Video editing view page
 class IsmChatVideoView extends StatefulWidget {
-  const IsmChatVideoView({
-    Key? key,
-    required this.file,
-  }) : super(key: key);
+  const IsmChatVideoView({super.key, required this.file});
   final File file;
 
   @override

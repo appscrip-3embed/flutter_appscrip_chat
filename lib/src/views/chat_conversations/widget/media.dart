@@ -7,12 +7,12 @@ import 'package:get/get.dart';
 
 /// IsmMedia class is for showing the conversation media
 class IsmMedia extends StatefulWidget {
-  const IsmMedia(
-      {Key? key,
-      required this.mediaList,
-      required this.mediaListLinks,
-      required this.mediaListDocs})
-      : super(key: key);
+  const IsmMedia({
+    super.key,
+    required this.mediaList,
+    required this.mediaListLinks,
+    required this.mediaListDocs,
+  });
 
   final List<IsmChatMessageModel> mediaList;
   final List<IsmChatMessageModel> mediaListLinks;
@@ -76,7 +76,7 @@ class _IsmMediaState extends State<IsmMedia> with TickerProviderStateMixin {
                 Container(
                   height: IsmChatDimens.twenty,
                   width: IsmChatDimens.two,
-                  color: IsmChatColors.greyColor.withOpacity(.1),
+                  color: IsmChatColors.greyColor.applyIsmOpacity(.1),
                 )
             ],
           ),
@@ -97,7 +97,7 @@ class _IsmMediaState extends State<IsmMedia> with TickerProviderStateMixin {
                 Container(
                   height: IsmChatDimens.twenty,
                   width: IsmChatDimens.two,
-                  color: IsmChatColors.greyColor.withOpacity(.1),
+                  color: IsmChatColors.greyColor.applyIsmOpacity(.1),
                 ),
               Container(
                   margin: IsmChatDimens.edgeInsets4,

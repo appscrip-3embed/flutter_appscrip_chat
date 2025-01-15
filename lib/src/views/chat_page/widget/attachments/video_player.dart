@@ -7,9 +7,11 @@ import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoViewPage extends StatefulWidget {
-  const VideoViewPage(
-      {Key? key, required this.path, this.showVideoPlaying = false})
-      : super(key: key);
+  const VideoViewPage({
+    super.key,
+    required this.path,
+    this.showVideoPlaying = false,
+  });
   final String path;
   final bool showVideoPlaying;
 

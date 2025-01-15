@@ -5,9 +5,11 @@ import 'package:get/get.dart';
 // / The view part of the [IsmChatPageView], which will be used to
 /// show the Message Information view page
 class IsmChatMessageInfo extends StatelessWidget {
-  const IsmChatMessageInfo(
-      {Key? key, required this.message, required this.isGroup})
-      : super(key: key);
+  const IsmChatMessageInfo({
+    super.key,
+    required this.message,
+    required this.isGroup,
+  });
 
   final IsmChatMessageModel message;
   final bool isGroup;

@@ -221,7 +221,6 @@ class ApiWrapper {
       case 500:
       case 503:
       case 522:
-
       default:
         return IsmChatResponseModel(
           data: response.body,

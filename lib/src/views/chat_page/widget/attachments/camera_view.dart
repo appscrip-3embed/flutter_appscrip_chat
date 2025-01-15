@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class IsmChatCameraView extends StatefulWidget {
-  const IsmChatCameraView({Key? key}) : super(key: key);
+  const IsmChatCameraView({super.key});
 
   @override
   State<IsmChatCameraView> createState() => _CameraScreenViewState();

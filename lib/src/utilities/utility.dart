@@ -9,9 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:image/image.dart' as img;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class IsmChatUtility {
@@ -120,9 +122,8 @@ class IsmChatUtility {
     if (result == null) {
       return null;
     }
-    var croppedFile = await ImageCropper().cropImage(
+    final croppedFile = await ImageCropper().cropImage(
       sourcePath: result.path,
-      cropStyle: CropStyle.circle,
       compressQuality: 100,
       uiSettings: [
         AndroidUiSettings(
@@ -131,10 +132,9 @@ class IsmChatUtility {
           toolbarWidgetColor: IsmChatColors.whiteColor,
           initAspectRatio: CropAspectRatioPreset.original,
           lockAspectRatio: false,
+          cropStyle: CropStyle.circle,
         ),
-        IOSUiSettings(
-          title: 'Cropper',
-        )
+        IOSUiSettings(title: 'Cropper', cropStyle: CropStyle.circle)
       ],
     );
     return File(croppedFile!.path);
@@ -220,15 +220,34 @@ class IsmChatUtility {
     return false;
   }
 
-  static Widget circularProgressBar(
-          [Color? backgroundColor, Color? animatedColor]) =>
+  static Widget circularProgressBar([
+    Color? backgroundColor,
+    Color? animatedColor,
+  ]) =>
       DecoratedBox(
         decoration: BoxDecoration(
-            color: backgroundColor?.withOpacity(.5),
+            color: backgroundColor?.applyIsmOpacity(.5),
             borderRadius: BorderRadius.circular(15)),
         child: CircularProgressIndicator(
           backgroundColor: animatedColor,
-          valueColor: AlwaysStoppedAnimation(backgroundColor?.withOpacity(.5)),
+          valueColor:
+              AlwaysStoppedAnimation(backgroundColor?.applyIsmOpacity(.5)),
         ),
       );
+
+  static Future<File> convertToJpeg(File file) async {
+    var imageBytes = await file.readAsBytes();
+    var image = img.decodeImage(imageBytes);
+    if (image == null) return file;
+    List<int> jpegBytes = img.encodeJpg(image);
+    final savedFile = File(
+        await getSavePath('${DateTime.now().millisecondsSinceEpoch}.jpeg'));
+    await savedFile.writeAsBytes(jpegBytes);
+    return savedFile;
+  }
+
+  static Future<String> getSavePath(String filename) async {
+    final directory = await getTemporaryDirectory();
+    return '${directory.path}/$filename';
+  }
 }

@@ -12,7 +12,7 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_native_image/flutter_native_image.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -451,14 +451,16 @@ class IsmChatPageController extends GetxController
     ifTimerMounted();
   }
 
-  _generateReactionList() async {
-    reactions = await Future.wait(
-      IsmChatEmoji.values.map(
-        (e) async => (await EmojiPickerUtils()
-                .searchEmoji(e.emojiKeyword, defaultEmojiSet))
-            .first,
-      ),
-    );
+  void _generateReactionList() async {
+    reactions.clear();
+    for (final emoji in IsmChatEmoji.values) {
+      final emojiList = await EmojiPickerUtils().searchEmoji(
+        emoji.emojiKeyword,
+        defaultEmojiSet,
+      );
+      if (emojiList.isEmpty) continue;
+      reactions.add(emojiList.first);
+    }
   }
 
   _getBackGroundAsset() {

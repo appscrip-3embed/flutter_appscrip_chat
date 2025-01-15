@@ -1,7 +1,6 @@
-import 'package:chat_component_example/view_models/chat_list_view_model.dart';
+import 'package:chat_component_example/controllers/controllers.dart';
+import 'package:chat_component_example/view_models/view_models.dart';
 import 'package:get/get.dart';
-
-import 'chat_list.dart';
 
 class ChatConversationBinding extends Bindings {
   @override

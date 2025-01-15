@@ -11,7 +11,7 @@ import 'package:uuid/uuid.dart';
 
 /// show the Forward Message View
 class IsmChatLocationWidget extends StatefulWidget {
-  const IsmChatLocationWidget({Key? key}) : super(key: key);
+  const IsmChatLocationWidget({super.key});
 
   @override
   State<IsmChatLocationWidget> createState() => _IsmLocationWidgetViewState();
@@ -200,7 +200,7 @@ class _IsmLocationWidgetViewState extends State<IsmChatLocationWidget> {
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.white.applyIsmOpacity(0.8),
                           ),
                           height: 35,
                           width: 35,

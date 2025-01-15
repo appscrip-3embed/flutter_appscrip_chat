@@ -152,13 +152,12 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                   controller: controller.conversationScrollController,
                   separatorBuilder: (_, __) => IsmChatDimens.boxHeight8,
                   addAutomaticKeepAlives: true,
-                  itemBuilder: (_, index) {
-                    var conversation = controller.conversations[index];
-
+                  itemBuilder: (context, index) {
+                    final conversation = controller.conversations[index];
                     if (widget.itemBuilder != null) {
-                      return widget.itemBuilder!.call(_, index, conversation);
+                      return widget.itemBuilder!
+                          .call(context, index, conversation);
                     }
-
                     return Slidable(
                       direction: Axis.horizontal,
                       closeOnScroll: true,
@@ -239,7 +238,7 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
                                   ),
                           onTap: () {
                             controller.navigateToMessages(conversation);
-                            widget.onChatTap(_, conversation);
+                            widget.onChatTap(context, conversation);
                           },
                         ),
                       ),
@@ -255,10 +254,10 @@ class _IsmChatConversationListState extends State<IsmChatConversationList>
 
 class AppState extends InheritedWidget {
   const AppState({
-    Key? key,
+    super.key,
     required this.direction,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   final Axis direction;
 

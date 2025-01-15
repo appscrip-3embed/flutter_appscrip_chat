@@ -8,7 +8,5 @@ class UserListPageView extends StatelessWidget {
   static const String route = AppRoutes.userListPage;
 
   @override
-  Widget build(BuildContext context) {
-    return IsmChatCreateConversationView();
-  }
+  Widget build(BuildContext context) => IsmChatCreateConversationView();
 }

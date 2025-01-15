@@ -8,13 +8,13 @@ import 'package:photo_view/photo_view.dart';
 /// show the All media Preview view page
 class IsmMediaPreview extends StatefulWidget {
   const IsmMediaPreview({
-    Key? key,
+    super.key,
     required this.messageData,
     required this.mediaIndex,
     required this.mediaUserName,
     required this.initiated,
     required this.mediaTime,
-  }) : super(key: key);
+  });
 
   final List<IsmChatMessageModel> messageData;
 

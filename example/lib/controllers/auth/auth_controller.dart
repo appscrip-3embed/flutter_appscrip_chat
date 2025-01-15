@@ -12,8 +12,8 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AuthController extends GetxController {
-  final AuthViewModel _viewModel;
   AuthController(this._viewModel);
+  final AuthViewModel _viewModel;
 
   var loginFormKey = GlobalKey<FormState>();
   var signFormKey = GlobalKey<FormState>();
@@ -37,7 +37,7 @@ class AuthController extends GetxController {
 
     if (response.data != null) {
       await AppConfig.getUserData();
-      Get.offAllNamed(AppRoutes.chatList);
+      await Get.offAllNamed(AppRoutes.chatList);
     } else if (response.statusCode == 401) {
       Get.back();
       await Get.dialog(
@@ -119,10 +119,9 @@ class AuthController extends GetxController {
       );
     }
     if (result != null) {
-      var croppedFile = await ImageCropper().cropImage(
+      final croppedFile = await ImageCropper().cropImage(
         sourcePath: result.path,
         compressQuality: 100,
-        cropStyle: CropStyle.circle,
         uiSettings: [
           AndroidUiSettings(
             toolbarTitle: 'Cropper'.tr,
@@ -130,14 +129,13 @@ class AuthController extends GetxController {
             toolbarWidgetColor: Colors.white,
             initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: false,
+            cropStyle: CropStyle.circle,
           ),
-          IOSUiSettings(
-            title: 'Cropper',
-          )
+          IOSUiSettings(title: 'Cropper', cropStyle: CropStyle.circle)
         ],
       );
       bytes = File(croppedFile!.path).readAsBytesSync();
-      var extension = result.name.split('.').last;
+      final extension = result.name.split('.').last;
       await ismGetPresignedUrl(extension, bytes!);
     }
   }
@@ -154,7 +152,7 @@ class AuthController extends GetxController {
         await _viewModel.postCreateUser(isLoading: true, createUser: creatUser);
     if (response.data != null) {
       await AppConfig.getUserData();
-      Get.offAllNamed(AppRoutes.chatList);
+      await Get.offAllNamed(AppRoutes.chatList);
     } else if (response.statusCode == 409) {
       Get.back();
       await Get.dialog(
