@@ -17,7 +17,7 @@ class IsmChatConversationCreatedMessage extends StatelessWidget {
         child: Text(
           message.isGroup == true
               ? '${message.userName} created group'
-              : 'Messages are end to end encrypted. No one outside of this chat can read to them.',
+              : 'Report / block unwanted solicitation by clicking the 3 dots in the top right corner.', //  'Messages are end to end encrypted. No one outside of this chat can read to them.',
           style: IsmChatStyles.w500Black12.copyWith(
             color: message.centerMessageColor,
           ),
