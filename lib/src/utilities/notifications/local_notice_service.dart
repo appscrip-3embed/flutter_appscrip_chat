@@ -146,8 +146,6 @@ class LocalNoticeService {
       body,
       scheduleTime,
       noticeDetail,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       payload: jsonEncode(payload),
     );
