@@ -14,6 +14,13 @@ class ChatList extends StatelessWidget {
   Widget build(BuildContext context) => GetBuilder<ChatListController>(
       builder: (controller) => Scaffold(
               body: IsmChatApp(
+            showNotification: (title, body, data) {
+              LocalNoticeService().showFlutterNotification(
+                title: title,
+                body: body,
+                data: data,
+              );
+            },
             chatTheme: IsmChatThemeData(
               primaryColor: AppColors.primaryColorLight,
               chatPageTheme: IsmChatPageThemeData(

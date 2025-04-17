@@ -34,4 +34,10 @@ class IsmChatConfig {
   static MessageAllowedConfig? messageAllowedConfig;
 
   static String? fontFamily;
+
+  static void Function(
+    String,
+    String,
+    Map<String, dynamic>,
+  )? showNotification;
 }

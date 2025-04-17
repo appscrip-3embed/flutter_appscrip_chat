@@ -20,15 +20,10 @@ void main() async {
 
 Future<void> initialize() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   dbWrapper = await DBWrapper.create();
   await AppConfig.getUserData();
-  await Future.wait(
-    [
-      AppscripChatComponent.initialize(),
-      LocalNoticeService().setup(),
-    ],
-  );
+  await LocalNoticeService().setup();
+  await AppscripChatComponent.initialize();
 }
 
 class MyApp extends StatefulWidget {

@@ -85,7 +85,7 @@ class LocalNoticeService {
   void showFlutterNotification({
     required String title,
     required String body,
-    required String conversationId,
+    required Map<String, dynamic> data,
   }) async {
     await _localNotificationsPlugin.show(
       title.hashCode,
@@ -108,7 +108,7 @@ class LocalNoticeService {
           presentSound: true,
         ),
       ),
-      payload: jsonEncode({'conversationId': conversationId}),
+      payload: jsonEncode(data),
     );
   }
 

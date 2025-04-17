@@ -35,6 +35,7 @@ class IsmChatApp extends StatelessWidget {
     this.useDataBase = true,
     this.itemBuilder,
     this.fontFamily,
+    this.showNotification,
   }) {
     assert(IsmChatConfig.isInitialized,
         'ChatHiveBox is not initialized\nYou are getting this error because the Database class is not initialized, to initialize ChatHiveBox class call AppscripChatComponent.initialize() before your runApp()');
@@ -65,6 +66,7 @@ class IsmChatApp extends StatelessWidget {
     IsmChatConfig.onChatTap = onChatTap;
 
     IsmChatConfig.isGroupChatEnabled = enableGroupChat;
+    IsmChatConfig.showNotification = showNotification;
   }
 
   /// Required field
@@ -143,6 +145,12 @@ class IsmChatApp extends StatelessWidget {
   final bool useDataBase;
 
   final String? fontFamily;
+
+  final void Function(
+    String,
+    String,
+    Map<String, dynamic>,
+  )? showNotification;
 
   /// The `itemBuilder` callback can be provided if you want to change how the chat items are rendered on the screen.
   ///

@@ -340,68 +340,26 @@ class IsmChatMqttController extends GetxController {
       var chatController = Get.find<IsmChatPageController>();
       if (chatController.conversation?.conversationId !=
           message.conversationId) {
-        // LocalNoticeService().cancelAllNotification();
-        LocalNoticeService().showFlutterNotification(
-          title: message.notificationTitle ?? '',
-          body: mqttMessage ?? '',
-          conversationId: message.conversationId ?? '',
+        IsmChatConfig.showNotification?.call(
+          message.notificationTitle ?? '',
+          mqttMessage ?? '',
+          {
+            'conversationId': message.conversationId ?? '',
+            'senderInfo': message.senderInfo?.toMap()
+          },
         );
-        // LocalNoticeService().addNotification(
-        //   message.notificationTitle ?? '', // Add the  sender user name here
-        //   mqttMessage ?? '', // MessageName
-        //   DateTime.now().millisecondsSinceEpoch + 1 * 1000,
-        //   sound: '',
-        //   channel: 'message',
-        //   payload: {
-        //     'conversationId': message.conversationId ?? '',
-        //   },
-        // );
-        // if (Platform.isAndroid) {
-        //   Get.snackbar(
-        //     message.notificationTitle ?? '',
-        //     mqttMessage ?? '',
-        //     icon: const Icon(Icons.message),
-        //     onTap: (snack) {
-        //       if (IsmChatConfig.onSnckBarTap != null) {
-        //         IsmChatConfig.onSnckBarTap?.call(message);
-        //       }
-        //     },
-        //   );
-        // }
         messageId = message.messageId!;
       }
     } else {
       try {
-        // LocalNoticeService().cancelAllNotification();
-
-        LocalNoticeService().showFlutterNotification(
-          title: message.notificationTitle ?? '',
-          body: mqttMessage ?? '',
-          conversationId: message.conversationId ?? '',
+        IsmChatConfig.showNotification?.call(
+          message.notificationTitle ?? '',
+          mqttMessage ?? '',
+          {
+            'conversationId': message.conversationId ?? '',
+            'senderInfo': message.senderInfo?.toMap()
+          },
         );
-        // LocalNoticeService().addNotification(
-        //   message.notificationTitle ?? '',
-        //   mqttMessage ?? '',
-        //   DateTime.now().millisecondsSinceEpoch + 1 * 1000,
-        //   sound: '',
-        //   channel: 'message',
-        //   payload: {
-        //     'conversationId': message.conversationId ?? '',
-        //   },
-        // );
-
-        // if (Platform.isAndroid) {
-        //   Get.snackbar(
-        //     message.notificationTitle ?? '',
-        //     mqttMessage ?? '',
-        //     icon: const Icon(Icons.message),
-        //     onTap: (snack) async {
-        //       if (IsmChatConfig.onSnckBarTap != null) {
-        //         IsmChatConfig.onSnckBarTap?.call(message);
-        //       }
-        //     },
-        //   );
-        // }
         messageId = message.messageId!;
       } catch (e, st) {
         IsmChatLog.error('error $e stackTree $st');
