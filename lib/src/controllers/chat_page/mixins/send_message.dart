@@ -123,6 +123,7 @@ mixin IsmChatPageSendMessageMixin on GetxController {
 
   void sendMedia() async {
     var isMaxSize = false;
+
     for (var x in _controller.listOfAssetsPath) {
       var sizeMedia = await IsmChatUtility.fileToSize(File(x.mediaUrl!));
       if (sizeMedia.split(' ').last == 'KB') {
@@ -133,9 +134,10 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         break;
       }
     }
+
     if (isMaxSize == false) {
-      Get.back();
       sendPhotoAndVideo();
+      Get.back();
     } else {
       await Get.dialog(
         const IsmChatAlertDialogBox(

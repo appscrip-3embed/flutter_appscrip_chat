@@ -819,6 +819,7 @@ extension SizeOfMedia on String {
     if (split(' ').last == 'KB') {
       return true;
     }
+
     if (double.parse(split(' ').first) >= limit) {
       return true;
     }
