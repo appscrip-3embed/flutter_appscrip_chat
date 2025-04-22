@@ -177,31 +177,31 @@ mixin GalleryPageMixin<T extends StatefulWidget> on State<T> {
                             children: [
                               IconButton(
                                 onPressed: () async {
-                                  controller.isVideoVisible = true;
-                                  var mediaFile =
-                                      await Get.to<File>(IsmVideoTrimmerView(
-                                    index: controller.assetsIndex,
-                                    file: File(
-                                      controller
-                                          .listOfAssetsPath[
-                                              controller.assetsIndex]
-                                          .mediaUrl
-                                          .toString(),
-                                    ),
-                                    durationInSeconds: 30,
-                                  ));
+                                  // controller.isVideoVisible = true;
+                                  // var mediaFile =
+                                  //     await Get.to<File>(IsmVideoTrimmerView(
+                                  //   index: controller.assetsIndex,
+                                  //   file: File(
+                                  //     controller
+                                  //         .listOfAssetsPath[
+                                  //             controller.assetsIndex]
+                                  //         .mediaUrl
+                                  //         .toString(),
+                                  //   ),
+                                  //   durationInSeconds: 30,
+                                  // ));
 
-                                  controller.listOfAssetsPath[
-                                      controller
-                                          .assetsIndex] = controller
-                                      .listOfAssetsPath[controller.assetsIndex]
-                                      .copyWith(mediaUrl: mediaFile?.path);
-                                  dataSize = await IsmChatUtility.fileToSize(
-                                    File(ismChatPageController
-                                        .listOfAssetsPath[
-                                            ismChatPageController.assetsIndex]
-                                        .mediaUrl!),
-                                  );
+                                  // controller.listOfAssetsPath[
+                                  //     controller
+                                  //         .assetsIndex] = controller
+                                  //     .listOfAssetsPath[controller.assetsIndex]
+                                  //     .copyWith(mediaUrl: mediaFile?.path);
+                                  // dataSize = await IsmChatUtility.fileToSize(
+                                  //   File(ismChatPageController
+                                  //       .listOfAssetsPath[
+                                  //           ismChatPageController.assetsIndex]
+                                  //       .mediaUrl!),
+                                  // );
                                 },
                                 icon: const Icon(
                                   Icons.content_cut_rounded,

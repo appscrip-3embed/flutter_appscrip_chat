@@ -317,54 +317,36 @@ class IsmChatMqttController extends GetxController {
     }
 
     String? mqttMessage;
-    if (message.customType == IsmChatCustomMessageType.image) {
-      mqttMessage = message.notificationBody;
-    } else if (message.customType == IsmChatCustomMessageType.video) {
-      mqttMessage = message.notificationBody;
-    } else if (message.customType == IsmChatCustomMessageType.file) {
-      mqttMessage = message.notificationBody;
-    } else if (message.customType == IsmChatCustomMessageType.audio) {
-      mqttMessage = message.notificationBody;
-    } else if (message.customType == IsmChatCustomMessageType.location) {
-      mqttMessage = message.notificationBody;
-    } else if (message.customType == IsmChatCustomMessageType.reply) {
-      mqttMessage = message.notificationBody;
-    } else if (message.customType == IsmChatCustomMessageType.forward) {
-      mqttMessage = message.notificationBody;
-    } else if (message.customType == IsmChatCustomMessageType.link) {
-      mqttMessage = message.notificationBody;
-    } else {
-      mqttMessage = message.body;
+    switch (message.customType) {
+      case IsmChatCustomMessageType.image:
+      case IsmChatCustomMessageType.video:
+      case IsmChatCustomMessageType.file:
+      case IsmChatCustomMessageType.audio:
+      case IsmChatCustomMessageType.location:
+      case IsmChatCustomMessageType.reply:
+      case IsmChatCustomMessageType.forward:
+      case IsmChatCustomMessageType.link:
+        mqttMessage = message.notificationBody;
+        break;
+      default:
+        mqttMessage = message.body;
     }
     if (Get.isRegistered<IsmChatPageController>()) {
       var chatController = Get.find<IsmChatPageController>();
-      if (chatController.conversation?.conversationId !=
+      if (chatController.conversation?.conversationId ==
           message.conversationId) {
-        IsmChatConfig.showNotification?.call(
-          message.notificationTitle ?? '',
-          mqttMessage ?? '',
-          {
-            'conversationId': message.conversationId ?? '',
-            'senderInfo': message.senderInfo?.toMap()
-          },
-        );
-        messageId = message.messageId!;
-      }
-    } else {
-      try {
-        IsmChatConfig.showNotification?.call(
-          message.notificationTitle ?? '',
-          mqttMessage ?? '',
-          {
-            'conversationId': message.conversationId ?? '',
-            'senderInfo': message.senderInfo?.toMap()
-          },
-        );
-        messageId = message.messageId!;
-      } catch (e, st) {
-        IsmChatLog.error('error $e stackTree $st');
+        return;
       }
     }
+    IsmChatConfig.showNotification?.call(
+      message.notificationTitle ?? '',
+      mqttMessage ?? '',
+      {
+        'conversationId': message.conversationId ?? '',
+        'senderInfo': message.senderInfo?.toMap()
+      },
+    );
+    messageId = message.messageId!;
   }
 
   void _handleTypingEvent(IsmChatMqttActionModel actionModel) {

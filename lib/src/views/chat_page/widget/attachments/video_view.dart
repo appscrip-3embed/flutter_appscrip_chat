@@ -46,12 +46,12 @@ class _IsmChatVideoViewState extends State<IsmChatVideoView> {
           actions: [
             IconButton(
               onPressed: () async {
-                var trimFile = await Get.to<File>(
-                  IsmVideoTrimmerView(file: widget.file, durationInSeconds: 30),
-                );
-                videoFile = trimFile;
-                dataSize = await IsmChatUtility.fileToSize(videoFile!);
-                setState(() {});
+                // var trimFile = await Get.to<File>(
+                //   IsmVideoTrimmerView(file: widget.file, durationInSeconds: 30),
+                // );
+                // videoFile = trimFile;
+                // dataSize = await IsmChatUtility.fileToSize(videoFile!);
+                // setState(() {});
               },
               icon: const Icon(
                 Icons.content_cut_rounded,

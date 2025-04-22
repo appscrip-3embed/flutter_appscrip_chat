@@ -41,6 +41,7 @@ library;
 
 import 'dart:convert';
 
+import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/foundation.dart';
 // #1
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -66,7 +67,16 @@ class LocalNoticeService {
     const initSettings =
         InitializationSettings(android: androidSetting, iOS: iosSetting);
 
-    await _localNotificationsPlugin.initialize(initSettings).then((_) {
+    await _localNotificationsPlugin.initialize(
+      initSettings,
+      onDidReceiveNotificationResponse: (details) {
+        IsmChatLog.error('Yes i am calling onDidReceiveNotificationResponse');
+      },
+      onDidReceiveBackgroundNotificationResponse: (details) {
+        IsmChatLog.error(
+            'Yes i am calling onDidReceiveBackgroundNotificationResponse');
+      },
+    ).then((_) {
       debugPrint('setupPlugin: setup success');
     }).catchError((Object error) {
       debugPrint('Error: $error');
