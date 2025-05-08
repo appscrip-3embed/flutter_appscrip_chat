@@ -8,6 +8,7 @@ class IsmChatCommunicationConfig {
     required this.mqttConfig,
     String? username,
     String? password,
+    this.autoReconnect,
   })  : username =
             username ?? '2${projectConfig.accountId}${projectConfig.projectId}',
         password =
@@ -18,4 +19,5 @@ class IsmChatCommunicationConfig {
   final IsmChatMqttConfig mqttConfig;
   final String? username;
   final String? password;
+  final bool? autoReconnect;
 }

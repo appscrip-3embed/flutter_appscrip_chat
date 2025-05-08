@@ -61,7 +61,7 @@ class IsmChatMqttController extends GetxController {
     client?.onUnsubscribed = _onUnSubscribed;
     client?.onSubscribeFail = _onSubscribeFailed;
     client?.logging(on: true);
-    client?.autoReconnect = true;
+    client?.autoReconnect = _communicationConfig.autoReconnect ?? true;
     client?.pongCallback = _pong;
     client?.setProtocolV311();
 
@@ -282,7 +282,7 @@ class IsmChatMqttController extends GetxController {
 
     conversation.messages?.add(message);
 
-    await IsmChatConfig.dbWrapper!.saveConversation(conversation: conversation);
+    await IsmChatConfig.dbWrapper?.saveConversation(conversation: conversation);
     unawaited(conversationController.getConversationsFromDB());
     await conversationController.pingMessageDelivered(
       conversationId: message.conversationId!,
