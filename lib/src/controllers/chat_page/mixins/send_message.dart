@@ -255,6 +255,9 @@ mixin IsmChatPageSendMessageMixin on GetxController {
         sentAt: sentAt,
         sentByMe: true,
         isUploading: true,
+        metaData: IsmChatMetaData(
+          duration: duration,
+        ),
       );
     }
 
