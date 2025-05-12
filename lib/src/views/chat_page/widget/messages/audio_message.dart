@@ -26,25 +26,28 @@ class IsmChatAudioMessage extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          VoiceMessage(
-            decoration: decoration,
-            audioSrc: url,
-            noise: noise,
-            me: message.sentByMe,
-            meBgColor: IsmChatConfig.chatTheme.primaryColor ??
-                IsmChatColors.primaryColorLight,
-            mePlayIconColor: IsmChatConfig.chatTheme.primaryColor ??
-                IsmChatColors.primaryColorLight,
-            contactBgColor: IsmChatConfig.chatTheme.chatPageTheme
-                    ?.opponentMessageTheme?.backgroundColor ??
-                IsmChatConfig.chatTheme.backgroundColor!,
-            contactPlayIconColor: IsmChatConfig.chatTheme.chatPageTheme
-                    ?.opponentMessageTheme?.backgroundColor ??
-                IsmChatConfig.chatTheme.backgroundColor!,
-            contactFgColor: IsmChatConfig
-                    .chatTheme.chatPageTheme?.opponentMessageTheme?.textColor ??
-                IsmChatConfig.chatTheme.primaryColor!,
-            duration: duration,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(IsmChatDimens.ten),
+            child: VoiceMessage(
+              decoration: decoration,
+              audioSrc: url,
+              noise: noise,
+              me: message.sentByMe,
+              meBgColor: IsmChatConfig.chatTheme.primaryColor ??
+                  IsmChatColors.primaryColorLight,
+              mePlayIconColor: IsmChatConfig.chatTheme.primaryColor ??
+                  IsmChatColors.primaryColorLight,
+              contactBgColor: IsmChatConfig.chatTheme.chatPageTheme
+                      ?.opponentMessageTheme?.backgroundColor ??
+                  IsmChatConfig.chatTheme.backgroundColor!,
+              contactPlayIconColor: IsmChatConfig.chatTheme.chatPageTheme
+                      ?.opponentMessageTheme?.backgroundColor ??
+                  IsmChatConfig.chatTheme.backgroundColor!,
+              contactFgColor: IsmChatConfig.chatTheme.chatPageTheme
+                      ?.opponentMessageTheme?.textColor ??
+                  IsmChatConfig.chatTheme.primaryColor!,
+              duration: duration,
+            ),
           ),
           if (message.isUploading == true)
             IsmChatUtility.circularProgressBar(
