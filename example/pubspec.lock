@@ -48,6 +48,62 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.25"
+  audioplayers:
+    dependency: transitive
+    description:
+      name: audioplayers
+      sha256: a5341380a4f1d3a10a4edde5bb75de5127fe31e0faa8c4d860e64d2f91ad84c7
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.4.0"
+  audioplayers_android:
+    dependency: transitive
+    description:
+      name: audioplayers_android
+      sha256: f8c90823a45b475d2c129f85bbda9c029c8d4450b172f62e066564c6e170f69a
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.0"
+  audioplayers_darwin:
+    dependency: transitive
+    description:
+      name: audioplayers_darwin
+      sha256: "405cdbd53ebdb4623f1c5af69f275dad4f930ce895512d5261c07cd95d23e778"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.2.0"
+  audioplayers_linux:
+    dependency: transitive
+    description:
+      name: audioplayers_linux
+      sha256: "7e0d081a6a527c53aef9539691258a08ff69a7dc15ef6335fbea1b4b03ebbef0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.0"
+  audioplayers_platform_interface:
+    dependency: transitive
+    description:
+      name: audioplayers_platform_interface
+      sha256: "77e5fa20fb4a64709158391c75c1cca69a481d35dc879b519e350a05ff520373"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.1.0"
+  audioplayers_web:
+    dependency: transitive
+    description:
+      name: audioplayers_web
+      sha256: bd99d8821114747682a2be0adcdb70233d4697af989b549d3a20a0f49f6c9b13
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.0"
+  audioplayers_windows:
+    dependency: transitive
+    description:
+      name: audioplayers_windows
+      sha256: "871d3831c25cd2408ddc552600fd4b32fba675943e319a41284704ee038ad563"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.0"
   azlistview:
     dependency: transitive
     description:
@@ -883,10 +939,10 @@ packages:
     dependency: transitive
     description:
       name: just_audio
-      sha256: f978d5b4ccea08f267dae0232ec5405c1b05d3f3cd63f82097ea46c015d5c09e
+      sha256: "90421d34e9ee9a407c3722e9db6a45c57b90620b51fcf3a172bae4c3c3278ed5"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.46"
+    version: "0.10.2"
   just_audio_platform_interface:
     dependency: transitive
     description:
@@ -1516,14 +1572,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "29.1.41"
-  syncfusion_flutter_sliders:
-    dependency: transitive
-    description:
-      name: syncfusion_flutter_sliders
-      sha256: "842a452fd73fd61fbebbff72d726ffea4cdaacf088ca2738aeaf7f4454b3861e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "25.2.7"
   syncfusion_pdfviewer_macos:
     dependency: transitive
     description:
@@ -1796,14 +1844,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "14.3.1"
-  voice_message_package:
-    dependency: transitive
-    description:
-      name: voice_message_package
-      sha256: cd7a717751e60908d37624309c6995c1c62c1bab6b54f7d15c2d71289f0b0cb6
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.1"
   web:
     dependency: transitive
     description:

@@ -266,6 +266,18 @@ class IsmChatPageController extends GetxController
     ),
   ];
 
+  var noises = <int, Widget>{};
+
+  Widget getNoise(int sentAt, [bool sentByMe = true]) {
+    if (!noises.keys.contains(sentAt)) {
+      var color = sentByMe ? Colors.white : Colors.grey;
+      var noiseList = List.generate(27, (index) => $SingleNoise(color: color));
+      var noise = Noises(noises: noiseList);
+      noises[sentAt] = noise;
+    }
+    return noises[sentAt]!;
+  }
+
   bool canCallEligibleApi = false;
 
   final _groupEligibleUser = <SelectedForwardUser>[].obs;
@@ -358,13 +370,33 @@ class IsmChatPageController extends GetxController
 
   final ismChatDebounce = IsmChatDebounce();
 
+  late AudioRecorder recordVoice;
+
   final RxString _audioPaht = ''.obs;
   String get audioPaht => _audioPaht.value;
   set audioPaht(String value) => _audioPaht.value = value;
 
+  Future<bool> isEncoderSupported(AudioEncoder encoder) async {
+    final isSupported = await recordVoice.isEncoderSupported(
+      encoder,
+    );
+
+    if (!isSupported) {
+      IsmChatLog.success('${encoder.name} is not supported on this platform.');
+      IsmChatLog.success('Supported encoders are:');
+      for (final e in AudioEncoder.values) {
+        if (await recordVoice.isEncoderSupported(e)) {
+          debugPrint('- ${encoder.name}');
+        }
+      }
+    }
+    return isSupported;
+  }
+
   @override
   void onInit() async {
     super.onInit();
+    recordVoice = AudioRecorder();
     _generateReactionList();
     if (_conversationController.currentConversation != null) {
       conversation = _conversationController.currentConversation!;
@@ -436,6 +468,7 @@ class IsmChatPageController extends GetxController
     }
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
+    recordAudio.dispose();
     ifTimerMounted();
   }
 
@@ -448,6 +481,7 @@ class IsmChatPageController extends GetxController
     }
     conversationDetailsApTimer?.cancel();
     messagesScrollController.dispose();
+    recordAudio.dispose();
     ifTimerMounted();
   }
 

@@ -3,6 +3,8 @@ PODS:
     - Flutter
   - audio_session (0.0.1):
     - Flutter
+  - audioplayers_darwin (0.0.1):
+    - Flutter
   - camera_avfoundation (0.0.1):
     - Flutter
   - connectivity_plus (0.0.1):
@@ -88,17 +90,17 @@ PODS:
   - just_audio (0.0.1):
     - Flutter
     - FlutterMacOS
-  - libwebp (1.3.2):
-    - libwebp/demux (= 1.3.2)
-    - libwebp/mux (= 1.3.2)
-    - libwebp/sharpyuv (= 1.3.2)
-    - libwebp/webp (= 1.3.2)
-  - libwebp/demux (1.3.2):
+  - libwebp (1.5.0):
+    - libwebp/demux (= 1.5.0)
+    - libwebp/mux (= 1.5.0)
+    - libwebp/sharpyuv (= 1.5.0)
+    - libwebp/webp (= 1.5.0)
+  - libwebp/demux (1.5.0):
     - libwebp/webp
-  - libwebp/mux (1.3.2):
+  - libwebp/mux (1.5.0):
     - libwebp/demux
-  - libwebp/sharpyuv (1.3.2)
-  - libwebp/webp (1.3.2):
+  - libwebp/sharpyuv (1.5.0)
+  - libwebp/webp (1.5.0):
     - libwebp/sharpyuv
   - Mantle (2.2.0):
     - Mantle/extobjc (= 2.2.0)
@@ -117,9 +119,9 @@ PODS:
     - FlutterMacOS
   - record_ios (1.0.0):
     - Flutter
-  - SDWebImage (5.20.0):
-    - SDWebImage/Core (= 5.20.0)
-  - SDWebImage/Core (5.20.0)
+  - SDWebImage (5.21.0):
+    - SDWebImage/Core (= 5.21.0)
+  - SDWebImage/Core (5.21.0)
   - SDWebImageWebPCoder (0.14.6):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.17)
@@ -146,6 +148,7 @@ PODS:
 DEPENDENCIES:
   - appscrip_chat_component (from `.symlinks/plugins/appscrip_chat_component/ios`)
   - audio_session (from `.symlinks/plugins/audio_session/ios`)
+  - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
   - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
@@ -197,6 +200,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/appscrip_chat_component/ios"
   audio_session:
     :path: ".symlinks/plugins/audio_session/ios"
+  audioplayers_darwin:
+    :path: ".symlinks/plugins/audioplayers_darwin/ios"
   camera_avfoundation:
     :path: ".symlinks/plugins/camera_avfoundation/ios"
   connectivity_plus:
@@ -265,6 +270,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   appscrip_chat_component: e4292174a8f86e81cdca6974a88d1af3b26b53d4
   audio_session: 9bb7f6c970f21241b19f5a3658097ae459681ba0
+  audioplayers_darwin: ccf9c770ee768abb07e26d90af093f7bab1c12ab
   camera_avfoundation: be3be85408cd4126f250386828e9b1dfa40ab436
   connectivity_plus: cb623214f4e1f6ef8fe7403d580fdad517d2f7dd
   device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
@@ -288,7 +294,7 @@ SPEC CHECKSUMS:
   image_gallery_saver: 14711d79da40581063e8842a11acf1969d781ed7
   image_picker_ios: 7fe1ff8e34c1790d6fff70a32484959f563a928a
   just_audio: 4e391f57b79cad2b0674030a00453ca5ce817eed
-  libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
+  libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d
   notification_permissions: 454258a93937e9820d50a6891bd17359680bda28
   open_filex: 432f3cd11432da3e39f47fcc0df2b1603854eff1
@@ -296,7 +302,7 @@ SPEC CHECKSUMS:
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   photo_manager: d2fbcc0f2d82458700ee6256a15018210a81d413
   record_ios: fee1c924aa4879b882ebca2b4bce6011bcfc3d8b
-  SDWebImage: 73c6079366fea25fa4bb9640d5fb58f0893facd8
+  SDWebImage: f84b0feeb08d2d11e6a9b843cb06d75ebf5b8868
   SDWebImageWebPCoder: e38c0a70396191361d60c092933e22c20d5b1380
   share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7

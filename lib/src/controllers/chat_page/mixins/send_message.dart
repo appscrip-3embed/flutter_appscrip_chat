@@ -175,15 +175,15 @@ mixin IsmChatPageSendMessageMixin on GetxController {
     _controller.listOfAssetsPath.clear();
   }
 
-  void sendAudio({
-    String? path,
-    SendMessageType sendMessageType = SendMessageType.pendingMessage,
-    bool forwardMessgeForMulitpleUser = false,
-    IsmChatMessageModel? ismChatChatMessageModel,
-    required String conversationId,
-    required String userId,
-    required String opponentName,
-  }) async {
+  void sendAudio(
+      {String? path,
+      SendMessageType sendMessageType = SendMessageType.pendingMessage,
+      bool forwardMessgeForMulitpleUser = false,
+      IsmChatMessageModel? ismChatChatMessageModel,
+      required String conversationId,
+      required String userId,
+      required String opponentName,
+      Duration? duration}) async {
     final chatConversationResponse = await IsmChatConfig.dbWrapper!
         .getConversation(conversationId: conversationId);
     if (chatConversationResponse == null) {

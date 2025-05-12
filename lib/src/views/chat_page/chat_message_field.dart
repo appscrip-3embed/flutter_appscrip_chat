@@ -1,10 +1,8 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:appscrip_chat_component/appscrip_chat_component.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:record/record.dart';
 
 class IsmChatMessageField extends StatelessWidget {
   const IsmChatMessageField({
@@ -26,7 +24,8 @@ class IsmChatMessageField extends StatelessWidget {
 
           return Row(
             mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (controller.isEnableRecordingAudio) ...[
                 Expanded(
@@ -246,114 +245,118 @@ class _MicOrSendButton extends StatelessWidget {
   const _MicOrSendButton();
 
   @override
-  Widget build(BuildContext context) => Container(
-        margin: IsmChatDimens.edgeInsetsBottom10,
-        height: IsmChatDimens.inputFieldHeight,
-        child: AspectRatio(
-          aspectRatio: 1,
-          child: GetX<IsmChatPageController>(
-            builder: (controller) => GestureDetector(
-              onLongPressStart: (controller.showSendButton &&
-                          controller.isEnableRecordingAudio) ||
-                      controller.isActionAllowed
-                  ? null
-                  : (val) async {
-                      final isMessgeAllowed = await IsmChatConfig
-                              .messageAllowedConfig?.isMessgeAllowed
-                              ?.call(context, controller.conversation!) ??
-                          true;
-                      if (isMessgeAllowed) {
-                        if (!controller.conversation!.isChattingAllowed) {
-                          controller.showDialogCheckBlockUnBlock();
-                        } else {
-                          var isPermission = false;
-                          if (await controller.recordAudio.hasPermission()) {
-                            isPermission = true;
-                          }
-                          if (!(controller.conversation?.lastMessageDetails
-                                      ?.customType ==
-                                  IsmChatCustomMessageType.removeMember &&
-                              controller.conversation?.lastMessageDetails
-                                      ?.userId ==
-                                  IsmChatConfig
-                                      .communicationConfig.userConfig.userId)) {
-                            if (isPermission) {
-                              controller.isEnableRecordingAudio = true;
-                              controller.forVideoRecordTimer = Timer.periodic(
-                                  const Duration(seconds: 1), (_) {
-                                controller.seconds++;
-                              });
-                              await controller.recordAudio
-                                  .start(const RecordConfig(), path: '');
-                            }
-                          }
-                        }
-                      }
-                    },
-              onLongPressEnd:
-                  controller.showSendButton && controller.isEnableRecordingAudio
-                      ? null
-                      : (val) async {
-                          final isMessgeAllowed = await IsmChatConfig
-                                  .messageAllowedConfig?.isMessgeAllowed
-                                  ?.call(context, controller.conversation!) ??
-                              true;
-                          if (isMessgeAllowed) {
-                            var allowPermission = false;
-                            if (await controller.recordAudio.hasPermission()) {
-                              allowPermission = true;
-                            }
-                            if (allowPermission) {
-                              controller.forVideoRecordTimer?.cancel();
-                              controller.showSendButton = true;
-                              controller.audioPaht =
-                                  await controller.recordAudio.stop() ?? '';
-                            }
-                          }
-                        },
-              onTap: () async {
-                final isMessgeAllowed = await IsmChatConfig
-                        .messageAllowedConfig?.isMessgeAllowed
-                        ?.call(context, controller.conversation!) ??
-                    true;
+  Widget build(BuildContext context) => DecoratedBox(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: IsmChatConfig.chatTheme.primaryColor,
+        ),
+        child: GetX<IsmChatPageController>(
+          builder: (controller) => IconButton(
+            // onLongPressStart: (controller.showSendButton &&
+            //             controller.isEnableRecordingAudio) ||
+            //         controller.isActionAllowed
+            //     ? null
+            //     : (val) async {
+            //         final isMessgeAllowed = await IsmChatConfig
+            //                 .messageAllowedConfig?.isMessgeAllowed
+            //                 ?.call(context, controller.conversation!) ??
+            //             true;
+            //         if (isMessgeAllowed) {
+            //           if (!controller.conversation!.isChattingAllowed) {
+            //             controller.showDialogCheckBlockUnBlock();
+            //           } else {
+            //             var isPermission = false;
+            //             if (await controller.recordAudio.hasPermission()) {
+            //               isPermission = true;
+            //             }
+            //             if (!(controller.conversation?.lastMessageDetails
+            //                         ?.customType ==
+            //                     IsmChatCustomMessageType.removeMember &&
+            //                 controller
+            //                         .conversation?.lastMessageDetails?.userId ==
+            //                     IsmChatConfig
+            //                         .communicationConfig.userConfig.userId)) {
+            //               if (isPermission) {
+            //                 controller.isEnableRecordingAudio = true;
+            //                 controller.forVideoRecordTimer =
+            //                     Timer.periodic(const Duration(seconds: 1), (_) {
+            //                   controller.seconds++;
+            //                 });
+            //                 String? audioPath;
+            //                 if (!kIsWeb) {
+            //                   final dir =
+            //                       await getApplicationDocumentsDirectory();
+            //                   audioPath = p.join(
+            //                     dir.path,
+            //                     'audio_${DateTime.now().millisecondsSinceEpoch}.m4a',
+            //                   );
+            //                 } else {
+            //                   audioPath =
+            //                       'audio_${DateTime.now().millisecondsSinceEpoch}.m4a';
+            //                 }
+            //                 const encoder = AudioEncoder.aacLc;
+            //                 if (!await controller.isEncoderSupported(encoder)) {
+            //                   return;
+            //                 }
 
-                if (controller.showSendButton && isMessgeAllowed) {
-                  if (!controller.conversation!.isChattingAllowed) {
-                    controller.showDialogCheckBlockUnBlock();
-                  } else {
-                    if (controller.isEnableRecordingAudio) {
-                      if (controller.audioPaht.isNotEmpty) {
-                        controller.isEnableRecordingAudio = false;
-                        controller.showSendButton = false;
-                        await controller.recordAudio.dispose();
-                        controller.seconds = 0;
-                        var sizeMedia = await IsmChatUtility.fileToSize(
-                            File(controller.audioPaht));
-                        if (sizeMedia.size()) {
-                          controller.sendAudio(
-                            path: controller.audioPaht,
-                            conversationId:
-                                controller.conversation?.conversationId ?? '',
-                            userId: controller
-                                    .conversation?.opponentDetails?.userId ??
-                                '',
-                            opponentName: controller
-                                    .conversation?.opponentDetails?.userName ??
-                                '',
-                          );
-                        } else {
-                          await Get.dialog(
-                            const IsmChatAlertDialogBox(
-                              title: 'You can not send audio more than 20 MB.',
-                              cancelLabel: 'Okay',
-                            ),
-                          );
-                        }
-                      }
-                    } else {
-                      await controller.getMentionedUserList(
-                          controller.chatInputController.text.trim());
-                      controller.sendTextMessage(
+            //                 const config =
+            //                     RecordConfig(encoder: encoder, numChannels: 1);
+            //                 await controller.recordVoice.start(
+            //                   config,
+            //                   path: audioPath,
+            //                 );
+            //                 await controller.recordAudio
+            //                     .start(const RecordConfig(), path: audioPath);
+            //               }
+            //             }
+            //           }
+            //         }
+            //       },
+            // onLongPressEnd:
+            //     controller.showSendButton && controller.isEnableRecordingAudio
+            //         ? null
+            //         : (val) async {
+            //             final isMessgeAllowed = await IsmChatConfig
+            //                     .messageAllowedConfig?.isMessgeAllowed
+            //                     ?.call(context, controller.conversation!) ??
+            //                 true;
+
+            //             if (isMessgeAllowed) {
+            //               var allowPermission = false;
+            //               if (await controller.recordAudio.hasPermission()) {
+            //                 allowPermission = true;
+            //               }
+
+            //               if (allowPermission) {
+            //                 controller.forVideoRecordTimer?.cancel();
+            //                 controller.showSendButton = true;
+            //                 controller.audioPaht =
+            //                     await controller.recordAudio.stop() ?? '';
+            //                 IsmChatLog.info(
+            //                     'step3 audioPaht ${controller.audioPaht}');
+            //               }
+            //             }
+            //           },
+            onPressed: () async {
+              final isMessgeAllowed = await IsmChatConfig
+                      .messageAllowedConfig?.isMessgeAllowed
+                      ?.call(context, controller.conversation!) ??
+                  true;
+              if (controller.showSendButton && isMessgeAllowed) {
+                if (!controller.conversation!.isChattingAllowed) {
+                  controller.showDialogCheckBlockUnBlock();
+                } else {
+                  if (controller.isEnableRecordingAudio) {
+                    if (controller.audioPaht.isNotEmpty) {
+                      controller.isEnableRecordingAudio = false;
+                      controller.showSendButton = false;
+                      await controller.recordAudio.dispose();
+
+                      var sizeMedia = await IsmChatUtility.fileToSize(
+                          File(controller.audioPaht));
+                      if (sizeMedia.size()) {
+                        controller.sendAudio(
+                          path: controller.audioPaht,
                           conversationId:
                               controller.conversation?.conversationId ?? '',
                           userId: controller
@@ -361,35 +364,52 @@ class _MicOrSendButton extends StatelessWidget {
                               '',
                           opponentName: controller
                                   .conversation?.opponentDetails?.userName ??
-                              '');
+                              '',
+                          duration: Duration(seconds: controller.seconds),
+                        );
+                        controller.seconds = 0;
+                      } else {
+                        await Get.dialog(
+                          const IsmChatAlertDialogBox(
+                            title: 'You can not send audio more than 20 MB.',
+                            cancelLabel: 'Okay',
+                          ),
+                        );
+                      }
                     }
+                  } else {
+                    await controller.getMentionedUserList(
+                        controller.chatInputController.text.trim());
+                    controller.sendTextMessage(
+                        conversationId:
+                            controller.conversation?.conversationId ?? '',
+                        userId:
+                            controller.conversation?.opponentDetails?.userId ??
+                                '',
+                        opponentName: controller
+                                .conversation?.opponentDetails?.userName ??
+                            '');
                   }
                 }
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: IsmChatConfig.chatTheme.primaryColor,
-                ),
-                child: AnimatedSwitcher(
-                  duration: IsmChatConfig.animationDuration,
-                  transitionBuilder: (child, animation) => ScaleTransition(
-                    scale: animation,
-                    child: child,
-                  ),
-                  child: controller.showSendButton
-                      ? Icon(
-                          Icons.send_rounded,
-                          key: UniqueKey(),
-                          color: IsmChatColors.whiteColor,
-                        )
-                      : Icon(
-                          Icons.mic_rounded,
-                          key: UniqueKey(),
-                          color: IsmChatColors.whiteColor,
-                        ),
-                ),
+              }
+            },
+            icon: AnimatedSwitcher(
+              duration: IsmChatConfig.animationDuration,
+              transitionBuilder: (child, animation) => ScaleTransition(
+                scale: animation,
+                child: child,
               ),
+              child: controller.showSendButton
+                  ? Icon(
+                      Icons.send_rounded,
+                      key: UniqueKey(),
+                      color: IsmChatColors.whiteColor,
+                    )
+                  : Icon(
+                      Icons.mic_rounded,
+                      key: UniqueKey(),
+                      color: IsmChatColors.whiteColor,
+                    ),
             ),
           ),
         ),

@@ -10,6 +10,7 @@ environment:
 
 dependencies:
   any_link_preview: ^3.0.3
+  audioplayers: ^6.4.0
   azlistview: ^2.0.0
   cached_network_image: ^3.4.1
   camera: ^0.11.1
@@ -44,6 +45,7 @@ dependencies:
   image_painter: ^0.7.1
   image_picker: ^1.1.2
   intl: ^0.20.2
+  just_audio: ^0.10.2
   link_preview_generator: ^1.2.0
   mqtt_client: ^10.8.0
   open_filex: ^4.7.0
@@ -64,7 +66,6 @@ dependencies:
   video_player: ^2.9.5
   video_trimmer: ^5.0.0
   visibility_detector: ^0.4.0+2
-  voice_message_package: ^2.2.1
   wechat_assets_picker: ^9.5.0
 
 dependency_overrides:
