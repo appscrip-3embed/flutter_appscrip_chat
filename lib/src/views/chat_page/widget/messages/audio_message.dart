@@ -32,10 +32,9 @@ class IsmChatAudioMessage extends StatelessWidget {
             noise: noise,
             me: message.sentByMe,
             meBgColor: IsmChatConfig.chatTheme.primaryColor ??
-                IsmChatColors.primaryColorDark,
-            mePlayIconColor: IsmChatConfig.chatTheme.chatPageTheme
-                    ?.selfMessageTheme?.backgroundColor ??
-                IsmChatConfig.chatTheme.primaryColor!,
+                IsmChatColors.primaryColorLight,
+            mePlayIconColor: IsmChatConfig.chatTheme.primaryColor ??
+                IsmChatColors.primaryColorLight,
             contactBgColor: IsmChatConfig.chatTheme.chatPageTheme
                     ?.opponentMessageTheme?.backgroundColor ??
                 IsmChatConfig.chatTheme.backgroundColor!,
