@@ -692,13 +692,13 @@ extension LastMessageBody on LastMessageDetails {
 
 extension ReactionLastMessgae on String {
   String get reactionString {
-    var reactionValue = IsmChatEmoji.values.firstWhere((e) => e.value == this);
-
-    var reaction = Get.find<IsmChatConversationsController>()
-        .reactions
-        .firstWhere((e) => e.name == reactionValue.emojiKeyword);
-
-    return reaction.emoji;
+    final reactionValue =
+        IsmChatEmoji.values.firstWhere((e) => e.value == this);
+    for (final x in Get.find<IsmChatConversationsController>().reactions) {
+      if (x.name != reactionValue.emojiKeyword) return '';
+      return x.emoji;
+    }
+    return '';
   }
 }
 

@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 
 DBWrapper? dbWrapper;
 
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   await initialize();
@@ -26,18 +26,8 @@ Future<void> initialize() async {
   await AppscripChatComponent.initialize();
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) => ScreenUtilInit(
@@ -49,11 +39,10 @@ class _MyAppState extends State<MyApp> {
           navigatorKey: navigatorKey,
           locale: const Locale('en', 'US'),
           // localizationsDelegates: GlobalMaterialLocalizations.delegates,
-          supportedLocales: const [
-            Locale('en', 'US'),
-          ],
-          theme: ThemeData.light(useMaterial3: true)
-              .copyWith(primaryColor: AppColors.primaryColorLight),
+          supportedLocales: const [Locale('en', 'US')],
+          theme: ThemeData.light(useMaterial3: true).copyWith(
+            primaryColor: AppColors.primaryColorLight,
+          ),
           // darkTheme: ThemeData.dark(useMaterial3: true)
           //     .copyWith(primaryColor: AppColors.primaryColorDark),
           // darkTheme: ThemeData.dark(useMaterial3: true)
