@@ -107,16 +107,24 @@ class IsmChatMessageField extends StatelessWidget {
                                 true)) {
                               controller.showDialogCheckBlockUnBlock();
                             } else {
-                              await controller.getMentionedUserList(
-                                  controller.chatInputController.text.trim());
-                              controller.sendTextMessage(
-                                conversationId:
-                                    controller.conversation?.conversationId ??
-                                        '',
-                                userId: controller.conversation?.opponentDetails
-                                        ?.userId ??
-                                    '',
-                              );
+                              if (await IsmChatProperties.chatPageProperties
+                                      .messageAllowedConfig?.isMessgeAllowed
+                                      ?.call(
+                                          Get.context!,
+                                          Get.find<IsmChatPageController>()
+                                              .conversation!) ??
+                                  true) {
+                                await controller.getMentionedUserList(
+                                    controller.chatInputController.text.trim());
+                                controller.sendTextMessage(
+                                  conversationId:
+                                      controller.conversation?.conversationId ??
+                                          '',
+                                  userId: controller.conversation
+                                          ?.opponentDetails?.userId ??
+                                      '',
+                                );
+                              }
                             }
                           }
                           return null;
@@ -374,7 +382,6 @@ class _MicOrSendButton extends StatelessWidget {
                       var audioPath = await controller.recordAudio.stop() ?? '';
                       controller.forVideoRecordTimer?.cancel();
                       controller.showSendButton = false;
-
                       controller.isEnableRecordingAudio = false;
                       String? sizeMedia;
                       WebMediaModel? webMediaModel;
